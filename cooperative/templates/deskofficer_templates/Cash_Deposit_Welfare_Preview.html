@@ -1,0 +1,110 @@
+{% extends 'deskofficer_templates/base_template.html' %}
+{% load static %}
+
+{% block content %}
+            <div class="page-content fade-in-up">
+                
+                <div class="row">
+                   
+
+                    <div class="col-md-7">
+                        <div class="ibox">
+                            <div class="ibox-head">
+                                <div class="ibox-title">Cash Deposit For Welfare | {{member.member.get_full_name}}</div>
+                                
+                            </div>
+                            <div class="form-group">
+                                  {% if messages %}
+                                    
+                                      {% for message in messages %}
+                                      {% if message.tags == "error" %}
+                                      <div class="alert alert-danger" style="margin-top:10px">{{message}}</div>
+                                      
+                                      {% endif %}
+
+                                      {% if message.tags == "success" %}
+                                      <div class="alert alert-success" style="margin-top:10px">{{message}}</div>
+                                      
+                                      {% endif %}
+                                       {% if message.tags == "info" %}
+                                      <div class="alert alert-info" style="margin-top:10px">{{message}}</div>
+                                      
+                                      {% endif %}
+                                      {% endfor %}
+                                  
+                                  {% endif %}
+                              </div>
+                            <div class="ibox-body">
+                                <form class="form-horizontal" method="POST" action="" enctype="multipart/form-data" novalidate>
+                                    {% csrf_token %}
+
+                                {% if member.transaction.receipt_type.title == 'MANUAL' %}
+                                    <div class="form-group row">
+                                        <label class="col-sm-4 col-form-label">Receipt No</label>
+                                        <div class="col-sm-8">
+                                            {{form.receipt_no}}
+                                        </div>
+                                    </div>
+                                {% endif %}
+                                    <div class="form-group row">
+                                        <label class="col-sm-4 col-form-label">Amount</label>
+                                        <div class="col-sm-8">
+                                            {{form.amount}}
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-sm-4 col-form-label">Payment Reference</label>
+                                        <div class="col-sm-8">
+                                           {{form.payment_reference}}
+                                        </div>
+                                    </div>   
+                                    <div class="form-group row">
+                                        <label class="col-sm-4 col-form-label">Account Number</label>
+                                        <div class="col-sm-8">
+                                           {{form.account}}
+                                        </div>
+                                    </div>        
+                                    <div class="form-group row">
+                                        <label class="col-sm-4 col-form-label">Narration</label>
+                                        <div class="col-sm-8">
+                                           {{form.narration}}
+                                        </div>
+                                    </div>                                    
+                                    <div class="form-group row">
+                                        <label class="col-sm-4 col-form-label">Payment Eveidience</label>
+                                        <div class="col-sm-8">
+                                           {{form.image}}
+                                        </div>
+                                    </div>       
+                                    <div class="form-group row">
+                                        <label class="col-sm-4 col-form-label">Payment Year</label>
+                                        <div class="col-sm-8">
+                                           {{form.year}}
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-sm-4 col-form-label">Payment Date</label>
+                                        <div class="col-sm-8">
+                                           {{form.payment_date}}
+                                        </div>
+                                    </div>
+                                 
+                                    <div class="form-group row">
+                                        <div class="col-sm-8 ml-sm-auto">
+                                            <button class="btn btn-info" type="submit">Submit</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+
+
+    <div class="sidenav-backdrop backdrop"></div>
+    <div class="preloader-backdrop">
+        <div class="page-preloader">Loading</div>
+    </div>
+{% endblock %}

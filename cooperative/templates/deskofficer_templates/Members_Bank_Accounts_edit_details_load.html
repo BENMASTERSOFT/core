@@ -1,0 +1,63 @@
+{% extends 'deskofficer_templates/base_template.html' %}
+{% load static %}
+
+{% block content %}
+            <div class="page-content fade-in-up">
+                
+               
+
+                 <div class="row">
+                   
+
+                   
+
+                        <div class="col-xl-10">
+                        <div class="ibox">
+                            <div class="ibox-head">
+                                <div class="ibox-title">Active Account Details</div>
+                            </div>
+                            <div class="ibox-body">
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Account Name</th>
+                                            <th>Account Numbere</th>
+                                            <th>Account Type</th>
+                                            <th>Bank</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for account in accounts %}
+                                        <tr>
+                                            <td>{{forloop.counter}}</td>
+                                            <td>{{account.account_name}}</td>
+                                            <td>{{account.account_number}}</td>
+                                            <td>{{account.account_type.title}}</td>
+                                            <td>{{account.bank.title}}</td>
+                                            <td>
+                                                <a href="{% url 'Members_Bank_Accounts_update_form' account.pk return_pk %}" class="btn btn-success">Update</a>  
+                                                
+                                                {% if account.lock_status.title == 'OPEN' %}
+                                                <a href="{% url 'Members_Bank_Accounts_delete' account.pk return_pk %}" class="btn btn-danger">Remove</a>
+                                                {% endif %}
+                                            </td>
+                                          
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+
+
+    <div class="sidenav-backdrop backdrop"></div>
+    <div class="preloader-backdrop">
+        <div class="page-preloader">Loading</div>
+    </div>
+{% endblock %}

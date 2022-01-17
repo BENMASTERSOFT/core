@@ -1,0 +1,66 @@
+{% extends 'master_templates/base_template.html' %}
+{% load static %}
+
+{% block content %}
+            <div class="page-content fade-in-up">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="ibox">
+                            <div class="ibox-head">
+                                <div class="ibox-title">Basic form</div>
+                                
+                            </div>
+                            <div class="form-group">
+                              {% if messages %}
+                                
+                                  {% for message in messages %}
+                                  {% if message.tags == "error" %}
+                                  <div class="alert alert-danger" style="margin-top:10px">{{message}}</div>
+                                  
+                                  {% endif %}
+
+                                  {% if message.tags == "success" %}
+                                  <div class="alert alert-success" style="margin-top:10px">{{message}}</div>
+                                  
+                                  {% endif %}
+                                  {% endfor %}
+                              
+                              {% endif %}
+                          </div>
+                            <div class="ibox-body">
+                                <form class="form-horizontal" action="" method="POST">
+                                    {% csrf_token %}
+                                    <div class="row">
+                                        <div class="col-sm-4 form-group">
+                                            <label>Prefix</label>
+                                            {{form.prefix_title}}
+                                        </div>
+                                        <div class="col-sm-4 form-group">
+                                            <label>Year</label>
+                                            {{form.prefix_year}}
+                                        </div>
+                                        <div class="col-sm-4 form-group">
+                                            <label>Member ID</label>
+                                            {{form.member_id}}
+                                        </div>
+                                    </div>
+                                   
+                                    <div class="form-group">
+                                        <button class="btn btn-default" type="submit">Submit</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+                   
+                </div>
+            </div>
+            
+
+
+    <div class="sidenav-backdrop backdrop"></div>
+    <div class="preloader-backdrop">
+        <div class="page-preloader">Loading</div>
+    </div>
+{% endblock %}

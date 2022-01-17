@@ -1,0 +1,162 @@
+{% extends 'deskofficer_templates/base_template.html' %}
+{% load static %}
+
+{% block content %}
+            <div class="page-content fade-in-up">
+                
+                <div class="row">
+                   
+
+                    <div class="col-md-6">
+                        <div class="ibox">
+                            <div class="ibox-head">
+                                <div class="ibox-title">LOAN UPLOAD | {{member.admin.first_name}} {{member.admin.first_name}} {{member.middle_name}}</div>
+                                
+                            </div>
+                            <div class="form-group">
+                                  {% if messages %}
+                                    
+                                      {% for message in messages %}
+                                      {% if message.tags == "error" %}
+                                      <div class="alert alert-danger" style="margin-top:10px">{{message}}</div>
+                                      
+                                      {% endif %}
+
+                                      {% if message.tags == "success" %}
+                                      <div class="alert alert-success" style="margin-top:10px">{{message}}</div>
+                                      
+                                      {% endif %}
+                                      {% endfor %}
+                                  
+                                  {% endif %}
+                              </div>
+                            <div class="ibox-body">
+                                <form class="form-horizontal" method="POST" action="" enctype="multipart/form-data" novalidate>
+                                    {% csrf_token %}
+                                    <div class="form-group row">
+                                        <label class="col-sm-4 col-form-label">Loans</label>
+                                        <div class="col-sm-8">
+                                           {{form.transactions}}
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-sm-4 col-form-label">Loan Amount</label>
+                                        <div class="col-sm-6">
+                                            {{form.loan_amount}}
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-sm-4 col-form-label">Balance Brought Forward</label>
+                                        <div class="col-sm-6">
+                                            {{form.balance}}
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-sm-4 col-form-label">Monthly Repayment</label>
+                                        <div class="col-sm-6">
+                                            {{form.repayment}}
+                                        </div>
+                                    </div>   
+                                    <div class="form-group row">
+                                        <label class="col-sm-4 col-form-label">Interest Rate</label>
+                                        <div class="col-sm-6">
+                                            {{form.interest_rate}}
+                                        </div>
+                                    </div>   
+                                     <div class="form-group row">
+                                        <label class="col-sm-4 col-form-label">Duration</label>
+                                        <div class="col-sm-6">
+                                            {{form.duration}}
+                                        </div>
+                                    </div>   
+                                    <div class="form-group row">
+                                        <label class="col-sm-4 col-form-label">Interest Deduction</label>
+                                        <div class="col-sm-6">
+                                            {{form.interest_deductions}}
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-sm-4 col-form-label">Start Date</label>
+                                        <div class="col-sm-6">
+                                            {{form.start_date}}
+                                        </div>
+                                    </div>
+                             
+                                    
+                                    <div class="form-group row">
+                                        <div class="col-sm-8 ml-sm-auto">
+                                            <button class="btn btn-info" type="submit">Submit</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            <div class="row">
+                    
+                    <div class="col-xl-12">
+                        <div class="ibox">
+                            <div class="ibox-head">
+                                <div class="ibox-title">UPLOADED SAVINGS | 
+                                    <a href="{% url 'Uploading_Existing_Loans_validate' member.pk %}" class="btn btn-primary">Validate</a>
+                                </div>
+                            </div>
+                            <div class="ibox-body">
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Description</th>
+                                            <th>Particulars</th>
+                                            <th>Loan Amount</th>
+                                            <th>Amount Paid</th>
+                                            <th>Balance</th>
+                                            <th>Repayment</th>
+                                            <th>Duration</th>
+                                            <th>Interest Rate</th>
+                                            <th>Interest Deduction</th>
+                                            <th>Start Date</th>
+                                            <th>Stop Date</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for record in records %}
+                                        <tr>
+                                            <td>{{forloop.counter}}</td>
+                                            <td>{{record.transaction.name}}</td>
+                                            <td>{{record.particulars}}</td>
+                                            <td>{{record.loan_amount}}</td>
+                                            <td>{{record.amount_paid}}</td>
+                                            <td>{{record.balance}}</td>
+                                            <td>{{record.repayment}}</td>
+                                            <td>{{record.duration}}</td>
+                                            <td>{{record.interest_rate}}</td>
+                                            <td>{{record.interest_deduction}}</td>
+                                            <td>{{record.start_date}}</td>
+                                            <td>{{record.stop_date}}</td>
+                                       
+                                            <td>
+                                                {% if record.status.title == 'UNTREATED' %}
+                                                <a href="{% url 'Uploading_Existing_Loans_delete' record.pk return_pk %}" class="btn btn-danger">Remove</a>
+                                                {% endif %}
+
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+
+
+    <div class="sidenav-backdrop backdrop"></div>
+    <div class="preloader-backdrop">
+        <div class="page-preloader">Loading</div>
+    </div>
+{% endblock %}

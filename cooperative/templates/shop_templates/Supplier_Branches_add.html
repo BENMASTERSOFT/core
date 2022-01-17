@@ -1,0 +1,88 @@
+{% extends 'shop_templates/base_template.html' %}
+{% load static %}
+
+{% block content %}
+            <div class="page-content fade-in-up">
+                <div class="row">
+                 
+
+                    <div class="col-md-6">
+                        <div class="ibox">
+                            <div class="ibox-head">
+                                <div class="ibox-title">Add Supplier Branches | {{supplier.name}}</div>
+                                
+                            </div>
+                            <div class="ibox-body">
+                               <form class="form-horizontal" method="POST" action="" enctype="multipart/form-data" novalidate>
+                                    {% csrf_token %}
+                                    <div class="form-group row">
+                                        <label class="col-sm-4 col-form-label">Name</label>
+                                        <div class="col-sm-8">
+                                           {{form.address}}
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-sm-4 col-form-label">Phone No.</label>
+                                        <div class="col-sm-8">
+                                            {{form.phone}}
+                                        </div>
+                                    </div>
+                                    
+                                    
+                                    <div class="form-group row">
+                                        <div class="col-sm-8 ml-sm-auto">
+                                            <button class="btn btn-info" type="submit">Submit</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-xl-8">
+                        <div class="ibox">
+                            <div class="ibox-head">
+                                <div class="ibox-title">SUPPLIER BRANCHES</div>
+                            </div>
+                            <div class="ibox-body">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Location</th>
+                                            <th>Phone No</th>
+                                            <th></th>
+                                         
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for item in branches %}
+                                        <tr>
+                                            <td>{{forloop.counter}}</td>
+                                            <td>{{item.address}}</td>
+                                            <td>{{item.phone}}</td>
+                                            <td><a href="{% url 'Supplier_Branches_edit' item.pk %}" class="btn btn-primary">Edit</a></td>
+
+                                       
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                
+                </div>
+            </div>
+
+
+        
+
+
+    <div class="sidenav-backdrop backdrop"></div>
+    <div class="preloader-backdrop">
+        <div class="page-preloader">Loading</div>
+    </div>
+{% endblock %}

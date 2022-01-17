@@ -1,0 +1,94 @@
+{% extends 'deskofficer_templates/base_template.html' %}
+{% load static %}
+
+{% block content %}
+            <div class="page-content fade-in-up">
+                
+                <div class="row">
+                 
+
+                    <div class="col-md-6">
+                        <div class="ibox">
+                            <div class="ibox-head">
+                                <div class="ibox-title">LIST OF LOANS | {{member.get_full_name}}</div>
+                                
+                            </div>
+                            <div class="ibox-body">
+                                <form class="form-horizontal" method="POST" action="{% url 'Transaction_Loan_adjustment_Transaction_Preview' member.pk 0 %}">
+                                    {% csrf_token %}
+                                    <div class="form-group row">
+                                        <label class="col-sm-2 col-form-label">Loans</label>
+                                        <div class="col-sm-10">
+                                            <select class="form-control" name="loan">
+                                              {% for record in records %}
+                                                <option value={{record.id}}> {{record.transaction.name}} - {{record.loan_number}}</option>
+                                              {% endfor %}
+                                            </select>
+                                        </div>
+                                    </div>
+                                    
+                                    
+                                    
+                                    <div class="form-group row">
+                                        <div class="col-sm-10 ml-sm-auto">
+                                            <button class="btn btn-info" type="submit">Submit</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-xl-8">
+                        <div class="ibox">
+                            <div class="ibox-head">
+                                <div class="ibox-title">INCOMPLETE ADJUSTMENT REQUEST</div>
+                            </div>
+                            <div class="ibox-body">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Description</th>
+                                            <th>Loan Number</th>
+                                            <th>Repayment</th>
+                                            <th>Amount</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for item in existing_requests %}
+                                        <tr>
+                                            <td>{{forloop.counter}}</td>
+                                            <td>{{item.member.transaction.name}}</td>
+                                            <td>{{item.member.loan_number}}</td>
+                                            <td>{{item.member.repayment}}</td>
+                                            <td>{{item.amount}}</td>
+                                            <td>
+                                            {% if item.approval_status.title == 'PENDING' %}
+                                                <a href="{% url 'Transaction_Loan_adjustment_Transaction_Cancel' item.pk %}" class="btn btn-danger">Cancel</a>
+                                            {% endif %}
+
+                                            </td>
+                                         
+                                         
+                                        </tr>
+                                    {% endfor %} 
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                 
+                </div>
+            </div>
+            
+
+
+    <div class="sidenav-backdrop backdrop"></div>
+    <div class="preloader-backdrop">
+        <div class="page-preloader">Loading</div>
+    </div>
+{% endblock %}

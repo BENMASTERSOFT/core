@@ -1,0 +1,37 @@
+{% extends 'shop_templates/base_template.html' %}
+{% load static %}
+
+{% block content %}
+
+           
+    <div class="container-fluid" id="wrapper">
+        <div class="row">
+            <div class="col-lg-6 col-lg-offset-4" id="content">
+                <h2>{{title}}</h2>
+                <form action="{% url 'Manage_Stock_Product_load' %}" method="POST" role="form">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <div class="input-group">
+                         {{form.title}}
+                             <span class="input-group-btn">
+                                <button type="submit" class="btn btn-primary" id="add-btn">Search </button> 
+                             </span>
+                        </div>
+                    </div>
+                 
+                </form>
+                    
+            </div>
+        </div>
+    </div>
+  
+    <!-- BEGIN THEME CONFIG PANEL-->
+   
+    <!-- END THEME CONFIG PANEL-->
+    <!-- BEGIN PAGA BACKDROPS-->
+    <div class="sidenav-backdrop backdrop"></div>
+    <div class="preloader-backdrop">
+        <div class="page-preloader">Loading</div>
+    </div>
+  {% include 'cooperative/includes/emptyspace.html' %} 
+{% endblock %}

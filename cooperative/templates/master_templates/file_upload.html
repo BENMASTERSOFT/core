@@ -1,0 +1,28 @@
+
+{% extends 'master_templates/base_template.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+  {% block content %}
+
+
+
+{% if messages %}
+    {% for message in messages %}
+        <div>
+            <strong>{{message|safe}}</strong>
+        </div>
+    {% endfor %}
+{% else %}
+        {{order}}
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <label>Upload a file</label>
+            <input type="file" name="file" class="btn btn-primary">
+            <p>Only accepts CSV files</p> 
+            <button type="submit" class="btn btn-success">Upload</button>
+        </form>
+{% endif %}
+{% include 'cooperative/includes/emptyspace.html' %}
+ {% endblock content %}

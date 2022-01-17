@@ -1,0 +1,66 @@
+{% extends 'shop_templates/base_template.html' %}
+{% load static %}
+
+{% block content %}
+
+            <div class="page-content fade-in-up">
+              
+                <div class="row">
+                  
+                    <div class="col-xl-12">
+                        <div class="ibox">
+                            <div class="ibox-head">
+                                <div class="ibox-title">Hover rows</div>
+                            </div>
+                            <div class="ibox-body">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Member ID</th>
+                                            <th>Name</th>
+                                            <th>Ticket</th>
+                                            <th>Debit</th>
+                                            <th>Credit</th>
+                                            <th>Balance</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for item in items %}
+                                        <tr>
+                                            <td>{{forloop.counter}}</td>
+                                            <td>{{item.trans_code.member.member_id}}</td>
+                                            <td>{{item.trans_code.member.get_full_name}}</td>
+                                            <td>{{item.trans_code.ticket}}</td>
+                                            <td>{{item.debit}}</td>
+                                            <td>{{item.credit}}</td>
+                                            <td>{{item.balance}}{{approval_status}}</td>
+                                            <td>
+                                            {% if approval_status1.title == 'APPROVED' %}
+                                                <a href="{% url 'members_credit_purchases_approved_item_details' item.trans_code.ticket %}" class='btn btn-success'>Process</a> 
+
+                                            {% else %}
+
+                                                  <a href="" class='btn btn-success'>View Comments</a>
+                                            {% endif %}
+                                            
+                                            
+                                            </td>
+                                           
+                                        </tr>
+                                {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+              
+           
+            </div>
+  <div class="sidenav-backdrop backdrop"></div>
+    <div class="preloader-backdrop">
+        <div class="page-preloader">Loading</div>
+    </div>
+{% endblock %}

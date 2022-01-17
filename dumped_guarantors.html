@@ -1,0 +1,222 @@
+    guarantors=applicant.loan.guarantors
+
+
+    guarantor_lists = LoanGuarantors.objects.filter(loan=applicant)
+
+    guarantors_status=False
+    if int(guarantors)>0:
+        guarantors_status=True                  
+
+
+
+    'guarantors_status':guarantors_status,
+    'guarantor_lists':guarantor_lists,
+
+
+
+amount|floatformat:2
+
+
+
+num = 123.4567
+formatted_num = '{0:.2f}'.format(num) # to 2 decimal places
+# formatted_num = '123.46'
+
+
+print(format(432.456, ".2f"))
+
+>> 432.45
+
+print(format(321,".2f"))
+
+>> 321.00
+
+
+
+>>> x = 13.949999999999999999
+>>> x
+13.95
+>>> g = float("{0:.2f}".format(x))
+>>> g
+13.95
+>>> x == g
+True
+>>> h = round(x, 2)
+>>> h
+13.95
+>>> x == h
+True
+
+
+print ("{0:.2f}".format(a)) 
+
+
+
+# round a value to 2 decimal points
+value_to_print = 123.456
+print(f'value is {round(value_to_print, 2)}')
+# prints: value is 123.46
+
+
+
+print(round(a, 2))
+
+
+
+if request.method=='POST' and 'btnform1' in request.POST:
+    do something...
+if request.method=='POST' and 'btnform2' in request.POST:
+    do something...
+    
+
+
+
+
+
+                    <div class="col-xl-6">
+                        <div class="row">
+                            <div class="col-xl-12">
+                                <div class="ibox">
+                                <div class="ibox-head">
+                                    <div class="ibox-title">Guarantors 
+                                    {% if guarantors_status %}
+                                        <a href="{% url 'AddLoanGuarantors' applicant.pk %}">Add</a>
+                                  
+                                   
+                                    {% endif %}
+
+                                    </div>
+                                   
+                                </div>
+                                <div class="ibox-body">
+                                    <table class="table table-bordered">
+                                        <thead>
+                                            <tr>
+                                                <th>#</th>
+                                                <th>Member ID</th>
+                                                <th>Name</th>
+                                                <th>Gross Pay</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+
+                                        {% for guarantor in guarantor_lists %}
+                                            <tr>
+                                                <td>{{forloop.counter}}</td>
+                                                <td>{{guarantor.guarantor.member_id}}</td>
+                                                <td>{{guarantor.guarantor.admin.first_name}} {{guarantor.guarantor.admin.last_name}} {{guarantor.guarantor.middle_name}}</td>
+                                                <td>{{guarantor.guarantor.gross_pay}}</td>
+                                               
+                                            </tr>
+                                        {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                                </div>
+                            </div>
+
+                        <div class="col-xl-12">
+                                <div class="ibox">
+                                <div class="ibox-head">
+                                    <div class="ibox-title">Next of Kin 
+                                        <a href="{% url 'AddLoanGuarantors' applicant.pk %}">Add</a>
+                                    </div>
+                                   
+                                </div>
+                                <div class="ibox-body">
+                                    <table class="table table-bordered">
+                                        <thead>
+                                            <tr>
+                                                <th>#</th>
+                                             
+                                                <th>Name</th>
+                                                <th>Relationship</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+
+                                        {% for guarantor in guarantor_lists %}
+                                            <tr>
+                                                <td>{{forloop.counter}}</td>
+                                          
+                                                <td></td>
+                                                <td></td>
+                                               
+                                            </tr>
+                                        {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+if transaction.source.title == 'LOAN':
+                        if PersonalLedger.objects.filter(account_number=deduction.account_number).exists():
+                            ledger=PersonalLedger.objects.filter(account_number=deduction.account_number).last()
+                            balance=ledger.balance
+                            new_balance=float(balance) + float(ledger_amount)
+                            
+                            member=record.member
+                            account_number=deduction.account_number
+                        
+                            ledger_record=PersonalLedger(member=member,transaction=transaction,account_number=account_number,particulars="Loan Repayment for the Period of ",debit=0,credit=ledger_amount,balance=new_balance,transaction_period=transaction_period).save()
+                            # ledger_record.save()
+                        else:
+                            
+                            new_balance= float(ledger_amount)
+                            new_ledger=PersonalLedger(member=record.member,
+                                                    transaction=transaction,
+                                                    account_number=deduction.account_number,
+                                                    particulars="Loan Repayment for the Period of " + str(transaction_period.transaction_period),
+                                                    debit=0,credit=ledger_amount,
+                                                    balance=new_balance,
+                                                    transaction_period=transaction_period
+                                )
+                            # new_ledger.save()
+
+
+                    elif transaction.source.title == 'SAVINGS':
+                        if PersonalLedger.objects.filter(account_number=deduction.account_number).exists():
+                            ledger=PersonalLedger.objects.filter(account_number=deduction.account_number).last()
+                            balance=ledger.balance
+                            new_balance=float(balance) + float(ledger_amount)
+                            new_ledger=PersonalLedger(member=record.member,
+                                                    transaction=transaction,
+                                                    account_number=deduction.account_number,
+                                                    particulars="Monthly Contribution for the Period of " +  str(transaction_period.transaction_period),
+                                                    debit=0,credit=ledger_amount,
+                                                    balance=new_balance,
+                                                    transaction_period=transaction_period
+                                )
+                            # new_ledger.save()
+                        else:
+                            
+                            new_balance= float(ledger_amount)
+                            new_ledger=PersonalLedger(member=record.member,
+                                                    transaction=transaction,
+                                                    account_number=deduction.account_number,
+                                                    particulars="Monthly Contribution for the Period of " + str(transaction_period.transaction_period),
+                                                    debit=0,credit=ledger_amount,
+                                                    balance=new_balance,
+                                                    transaction_period=transaction_period
+                                )
+                            # new_ledger.save()

@@ -1,0 +1,61 @@
+{% extends 'master_templates/base_template.html' %}
+{% load static %}
+
+{% block content %}
+            <div class="page-content fade-in-up">
+                <div class="ibox">
+                    <div class="ibox-head">
+                        <div class="ibox-title">Responsive Table</div>
+                    </div>
+                    <div class="ibox-body">
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        
+                                        <th>#</th>
+                                        <th>Code</th>
+                                        <th>Description</th> 
+
+                                        <th>Rank</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                {% for item in records %}
+                                    <tr>
+                                        
+                                        <td>{{forloop.counter}}</td>
+                                        <td>{{item.code}}</td>
+                                        <td><a href="{% url 'loan_settings_details_load' item.pk %}">{{item.name}}</a></td> 
+
+                                       
+
+                                        <td>{{item.rank}}</td>
+                                        
+                                        <td>
+                                        <a href="{% url 'loan_settings_details_load' item.pk %}" class="btn btn-default btn-xs m-r-5"><i class="fa fa-pencil font-14"></i></a> 
+                                        {% comment %}
+                                        <a href="" class="btn btn-default btn-xs"><i class="fa fa-trash font-14"></i></a>
+                                        {% endcomment %}
+                                        </td>
+                                 
+                                         
+                                    </tr>
+                                {% endfor %}
+                                    
+                                    
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+             
+           
+            </div>
+  
+    <div class="sidenav-backdrop backdrop"></div>
+    <div class="preloader-backdrop">
+        <div class="page-preloader">Loading</div>
+    </div>
+{% endblock %}

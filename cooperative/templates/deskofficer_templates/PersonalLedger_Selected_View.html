@@ -1,0 +1,103 @@
+{% extends 'deskofficer_templates/base_template.html' %}
+{% load static %}
+{% load humanize %}
+<!-- {{ my_num|intcomma }} -->
+
+{% block content %}
+            <div class="page-content fade-in-up">
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="ibox">
+                            <div class="ibox-head">
+                                <div class="ibox-title">PERSONAL LEDGER | {{member.admin.last_name}} {{member.admin.first_name}} {{member.get_middle_name}}</div>
+                                
+                            </div>
+                            <div class="ibox-body">
+                                 <form class="form-horizontal" method="POST" action="" enctype="multipart/form-data" novalidate>
+                                    {% csrf_token %}
+                                    <div class="row">
+                                        <div class="col-sm-6 form-group">
+                                            <label>Date Starting</label>
+                                            {{form.start_date}}
+                                        </div>
+                                        <div class="col-sm-6 form-group">
+                                            <label>Date Ending</label>
+                                            {{form.stop_date}}
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Transaction Type</label>
+                                       {{form.transactions}}
+                                    </div>
+                                  
+                                
+                                    <div class="form-group">
+                                        <button class="btn btn-default" type="submit">View</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                   <div class="row">
+                 
+                    <div class="col-xl-12">
+                        <div class="ibox">
+                            <div class="ibox-head">
+                                <div class="ibox-title">PERSONAL LEDGER DISPLAY | {{transaction.name}}</div>
+                            </div>
+                            <div class="ibox-body">
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Particulars</th>
+                                            <th>Debit</th>
+                                            <th>Credit</th>
+                                            <th>Balance</th>
+                                            <th>Transaction Period</th>
+                                            <th>Date Posted</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for record in records %}
+                                        <tr>
+                                            <td>{{forloop.counter}}</td>
+                                            <td>{{record.particulars}}</td>
+                                            <td>{{record.debit|intcomma}}</td>
+                                            <td>{{record.credit|intcomma}}</td>
+                                            <td>
+                                       
+                                       {% if   record.balance >= 0 %} 
+                                             {{ record.balance|stringformat:"d"|intcomma }}
+                                        {% elif record.balance <  0 %}
+                                             ({{ record.balance|stringformat:"d"|cut:"-"|intcomma }})
+                                        {% endif %}
+
+
+                                          
+                                        
+                                            </td>
+                                            <td>{{record.transaction_period}}</td>
+                                            <td>{{record.created_at|date:"M d, Y" }}</td>
+                                          
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+
+
+    <div class="sidenav-backdrop backdrop"></div>
+    <div class="preloader-backdrop">
+        <div class="page-preloader">Loading</div>
+    </div>
+{% endblock %}

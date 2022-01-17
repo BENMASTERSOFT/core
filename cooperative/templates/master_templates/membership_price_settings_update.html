@@ -1,0 +1,32 @@
+{% extends 'master_templates/base_template.html' %}
+{% load static %}
+
+{% block content %}
+            <div class="page-content fade-in-up">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="ibox">
+                            <div class="ibox-head">
+                                <div class="ibox-title">{{title}}</div>
+                                
+                            </div>
+                       
+                            <div class="ibox-body">
+                {% url url as action_path %}
+                {% include "master_templates/form_template.html" with messages=messages form=form action_path=action_path button_text=button_text %}
+                            </div>
+                        </div>
+                    </div>
+
+                   
+                </div>
+            
+            </div>
+            
+
+
+    <div class="sidenav-backdrop backdrop"></div>
+    <div class="preloader-backdrop">
+        <div class="page-preloader">Loading</div>
+    </div>
+{% endblock %}

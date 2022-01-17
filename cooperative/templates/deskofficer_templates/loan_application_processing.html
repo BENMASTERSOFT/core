@@ -1,0 +1,301 @@
+{% extends 'deskofficer_templates/base_template.html' %}
+{% load static %}
+
+{% block content %}
+            <div class="page-content fade-in-up">
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="ibox">
+                            <div class="ibox-head">
+                                <div class="ibox-title">Loan Application | {{applicant.applicant.member.get_full_name}}</div>
+                               
+                            </div>
+                             <div class="form-group">
+                                  {% if messages %}
+                                    
+                                      {% for message in messages %}
+                                      {% if message.tags == "error" %}
+                                      <div class="alert alert-danger" style="margin-top:10px">{{message}}</div>
+                                      
+                                      {% endif %}
+
+                                      {% if message.tags == "success" %}
+                                      <div class="alert alert-success" style="margin-top:10px">{{message}}</div>
+                                      
+                                      {% endif %}
+                                      {% if message.tags == "info" %}
+                                      <div class="alert alert-info" style="margin-top:10px">{{message}}</div>
+                                      
+                                      {% endif %}
+
+                                      {% endfor %}
+                                  
+                                  {% endif %}
+                              </div>
+                            <div class="ibox-body">
+                                <form class="form-horizontal" method="POST" action="" enctype="multipart/form-data" novalidate>
+                                    {% csrf_token %}
+                                    <div class="form-group row">
+                                        <label class="col-sm-3 col-form-label">Loan Type</label>
+                                        <div class="col-sm-9">
+                                           {{form.loan_type}}
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-sm-3 col-form-label">Loan Amount</label>
+                                        <div class="col-sm-9">
+                                            {{form.loan_amount}}
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-sm-3 col-form-label">Loan New Amount</label>
+                                        <div class="col-sm-9">
+                                            {{form.loan_new_amount}}
+                                        </div>
+                                    </div>
+                                  
+                                    
+                                    <div class="form-group row">
+                                        <div class="col-sm-9 ml-sm-auto">
+                                            <button class="btn btn-info" type="submit" name="application">Submit</button>
+                                            {% if new_amount > 0 %}
+                                            <a href="{% url 'loan_application_preview' loan_pk %}" class="btn btn-success">Preview</a>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-12">
+                                <div class="ibox">
+                                    <div class="ibox-head">
+                                        <div class="ibox-title">Next of Kin</div>
+                                        
+                                    </div>
+
+                                      <div class="ibox-body">
+                                        <form class="form-horizontal" method="POST" action="" enctype="multipart/form-data" novalidate>
+                                    {% csrf_token %}
+                                            <div class="form-group row">
+                                                <label class="col-sm-2 col-form-label">Name</label>
+                                                <div class="col-sm-10">
+                                                <select class="form-control" name="nok">
+                                                  {% for nok in noks %}
+                                                        <option value={{nok.id }}> {{nok.name}} - {{nok.relationships.title}} </option>
+                                                      {% endfor %}
+                                                </select>
+                                                </div>
+                                            </div>
+                                            
+                                            
+                                            <div class="form-group row">
+                                                <div class="col-sm-10 ml-sm-auto">
+                                                {% if new_amount > 0 %}
+                                                    <button class="btn btn-info" type="submit" name="btn_nok">Submit</button>
+                                                {% endif %}
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+
+
+                                  
+                                </div>
+                            </div>
+                            <div class="col-xl-12">
+                                <div class="ibox">
+                                   
+                                    <div class="ibox-body">
+                                    <table class="table table-bordered">
+                                        <thead>
+                                            <tr>
+                                                <th>#</th>
+                                                <th>Name</th>
+                                                <th>Relationship</th>
+                                               
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>1</td>
+                                                <td>{{new_loan.nok.name}}</td>
+                                                <td>{{new_loan.nok.relationships}}</td>
+                                               
+                                            </tr>
+                                            
+                                        </tbody>
+                                    </table>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-12">
+                                <div class="ibox">
+                                    <div class="ibox-head">
+                                        <div class="ibox-title">Guarantors</div>
+                                        
+                                    </div>
+                                    <div class="ibox-body">
+                                        <form class="form-horizontal" method="POST" action="" enctype="multipart/form-data" novalidate>
+                                    {% csrf_token %}
+                                            <div class="form-group row">
+                                                <label class="col-sm-2 col-form-label">Guarantor</label>
+                                                <div class="col-sm-10">
+                                                <select class="form-control" name="guarantor">
+                                                  {% for guarantor in guarantors %}
+                                                    <option value={{guarantor.id }}>{{guarantor.get_full_name}}-{{guarantor.gross_pay}} </option>
+                                                  {% endfor %}
+                                                </select>
+                                                </div>
+                                            </div>
+                                            
+                                            
+                                            <div class="form-group row">
+                                                <div class="col-sm-10 ml-sm-auto">
+                                                {% if new_amount > 0 %}
+                                                    <button class="btn btn-info" type="submit" name='btn_guarantor'>Submit</button>
+                                                {% endif %}
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xl-12">
+                                <div class="ibox">
+                                    
+                                    <div class="ibox-body">
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Member ID</th>
+                                            <th>Name</th>
+                                            <th>Gross Pay</th>
+                                         
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for seleected_guarantor in seleected_guarantors %}
+                                        <tr>
+                                            <td>{{forloop.counter}}</td>
+                                            <td>{{seleected_guarantor.applicant.applicant.applicant.member.member_id}}</td>
+                                            <td>{{seleected_guarantor.guarantor.admin.first_name}} {{seleected_guarantor.guarantor.admin.last_name}} {{seleected_guarantor.guarantor.middle_name}}</td>
+                                            <td>{{seleected_guarantor.guarantor.gross_pay}}</td>
+                                           
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                              <div class="col-md-12">
+                                <div class="ibox">
+                                    <div class="ibox-head">
+                                        <div class="ibox-title">Bank Account Details</div>
+                                        
+                                    </div>
+                                    <div class="ibox-body">
+                                        <form class="form-horizontal" method="POST" action="" enctype="multipart/form-data" novalidate>
+                                    {% csrf_token %}
+                                            <div class="form-group row">
+                                                <label class="col-sm-2 col-form-label">Account Name</label>
+                                                <div class="col-sm-10">
+                                                   <select class="form-control" name="account">
+                                                  {% for bank_account in bank_accounts %}
+                                                        <option value={{bank_account.id }}> {{bank_account.account_name}} - {{bank_account.account_number}}  - {{bank_account.bank.title}}</option>
+                                                      {% endfor %}
+                                                </select>
+                                                </div>
+                                            </div>
+                                            
+                                            
+                                            <div class="form-group row">
+                                                <div class="col-sm-10 ml-sm-auto">
+                                                {% if new_amount > 0 %}
+                                                    <button class="btn btn-info" type="submit" name="btn_account">Submit</button>
+                                                {% endif %}
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xl-12">
+                                <div class="ibox">
+                                    
+                                    <div class="ibox-body">
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Bamk Name</th>
+                                            <th>Account Name</th>
+                                            <th>Account Number</th>
+                                       
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>1</td>
+                                            <td>{{new_loan.bank_account.bank.title}}</td>
+                                            <td>{{new_loan.bank_account.account_name}}</td>
+                                            <td>{{new_loan.bank_account.account_number}}</td>
+                                            
+                                            
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                     <div class="col-xl-6">
+                        <div class="ibox">
+                            <div class="ibox-head">
+                                <div class="ibox-title">Loan Criteria Settings for Loan Request</div>
+                            </div>
+                            <div class="ibox-body">
+                                <table class="table table-bordered">
+                                    <thead>
+                                       <tr>
+                                            <th>#</th>
+                                            <th>Description</th>
+                                            <th>Values</th>
+                                         
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for item in loan_settings %}
+                                        <tr>
+                                            <td>{{forloop.counter}}</td>
+                                            <td>{{item.description}}</td>
+                                            <td>{{item.value}}</td>
+                                           
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+
+
+    <div class="sidenav-backdrop backdrop"></div>
+    <div class="preloader-backdrop">
+        <div class="page-preloader">Loading</div>
+    </div>
+{% endblock %}

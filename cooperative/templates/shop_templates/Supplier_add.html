@@ -1,0 +1,108 @@
+{% extends 'shop_templates/base_template.html' %}
+{% load static %}
+
+{% block content %}
+            <div class="page-content fade-in-up">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="ibox">
+                            <div class="ibox-head">
+                                <div class="ibox-title">Add Suppliers</div>
+                               
+                            </div>
+                            <div class="form-group">
+                                  {% if messages %}
+                                    
+                                      {% for message in messages %}
+                                      {% if message.tags == "info" %}
+                                      <div class="alert alert-info" style="margin-top:10px">{{message}}</div>
+                                      
+                                      {% endif %}
+
+                                    {% if message.tags == "success" %}
+                                      <div class="alert alert-success" style="margin-top:10px">{{message}}</div>
+                                      
+                                      {% endif %}
+
+                                      {% endfor %}
+                                  
+                                  {% endif %}
+                              </div>
+                            <div class="ibox-body">
+                                 <form class="form-horizontal" method="POST" action="" enctype="multipart/form-data" novalidate>
+                                    {% csrf_token %}
+                                    <div class="form-group row">
+                                        <label class="col-sm-4 col-form-label">Short Name (Abbrev. Name)</label>
+                                        <div class="col-sm-8">
+                                            {{form.prefix}}
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-sm-4 col-form-label">Name of Supplier (Business Name)</label>
+                                        <div class="col-sm-8">
+                                            {{form.name}}
+                                        </div>
+                                    </div>
+                                    
+                                   
+                                    <div class="form-group row">
+                                        <div class="col-sm-8 ml-sm-auto">
+                                            <button class="btn btn-info" type="submit">Submit</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-xl-8">
+                        <div class="ibox">
+                            <div class="ibox-head">
+                                <div class="ibox-title">LIST OF SUPPLIERS</div>
+                            </div>
+                            <div class="ibox-body">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Prefix</th>
+                                            <th>Suppliers</th>
+                                            <th></th>
+                                            <th>Branches</th>
+                                            <th>Personnels</th>
+                                         
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for item in suppliers %}
+                                        <tr>
+                                            <td>{{forloop.counter}}</td>
+                                            <td>{{item.prefix |default_if_none:""}}</td>
+                                            <td>{{item.name}}</td>
+                                            <td><a href="{% url 'Supplier_edit' item.pk %}" class="btn btn-success">Edit</a></td>
+                                            <td><a href="{% url 'Supplier_Branches_add' item.pk %}" class="btn btn-primary">Add</a></td>
+
+                                            <td><a href="{% url 'Supplier_Personnel_add' item.pk %}" class="btn btn-secondary">Add</a></td>
+                                           
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                
+                </div>
+            </div>
+
+
+        
+
+
+    <div class="sidenav-backdrop backdrop"></div>
+    <div class="preloader-backdrop">
+        <div class="page-preloader">Loading</div>
+    </div>
+{% endblock %}

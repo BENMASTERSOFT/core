@@ -1,0 +1,117 @@
+{% extends 'deskofficer_templates/base_template.html' %}
+{% load static %}
+
+{% block content %}
+            <div class="page-content fade-in-up">
+                <form class="form-horizontal" method="POST" action="" enctype="multipart/form-data" novalidate>
+                    {% csrf_token %}
+                    <div class="row">                  
+
+                    <div class="col-md-6">
+                        <div class="ibox">
+                            <div class="ibox-head">
+                            <div class="ibox-title">CASH WITHDRAWAL | {{member.get_full_name}}</div>
+                                
+                            </div>
+                            <div class="form-group">
+                                  {% if messages %}
+                                    
+                                      {% for message in messages %}
+                                      {% if message.tags == "error" %}
+                                      <div class="alert alert-danger" style="margin-top:10px">{{message}}</div>
+                                      
+                                      {% endif %}
+
+                                      {% if message.tags == "success" %}
+                                      <div class="alert alert-success" style="margin-top:10px">{{message}}</div>
+                                      
+                                      {% endif %} 
+                                      {% if message.tags == "info" %}
+                                      <div class="alert alert-info" style="margin-top:10px">{{message}}</div>
+                                      
+                                      {% endif %}
+                                      {% endfor %}
+                                  
+                                  {% endif %}
+                              </div>
+                            <div class="ibox-body">
+                               
+                                    <div class="form-group row">
+                                        <label class="col-sm-4 col-form-label">SAVINGS</label>
+                                        <div class="col-sm-8">
+                                            {{form.transactions}}
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="form-group row">
+                                        <div class="col-sm-8 ml-sm-auto">
+                                            <button class="btn btn-info" type="submit" name='btn_fetch'>Fetch Details</button>
+                                        </div>
+                                    </div>
+                              
+                            </div>
+                        </div>
+                    </div>
+                    </div>
+            
+             <div class="row">                  
+
+                    <div class="col-md-6">
+                        <div class="ibox">
+                            
+                            <div class="ibox-body">
+                               
+                                    <div class="form-group row">
+                                        <label class="col-sm-4 col-form-label">Account Number</label>
+                                        
+                                         <label class="col-sm-8 "> {{account_number}}</label>
+
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-sm-4 col-form-label">Ledger Balance </label>
+                                       
+                                        <label class="col-sm-8 "> {{ledger_blance}}</label>
+                                        
+                                           
+                                        
+                                    </div>
+                                    
+                                    <div class="form-group row">
+                                        <label class="col-sm-4 col-form-label">Amount</label>
+                                        <div class="col-sm-8">
+                                            {{form.amount}}
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-sm-4 col-form-label">Narration</label>
+                                        <div class="col-sm-8">
+                                            {{form.narration}}
+                                        </div>
+                                    </div>     
+                                    <div class="form-group row">
+                                        <label class="col-sm-4 col-form-label">Approval Officer</label>
+                                        <div class="col-sm-8">
+                                            {{form.approval_officers}}
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="form-group row">
+                                        <div class="col-sm-8 ml-sm-auto">
+                                            <button class="btn btn-info" name="btn_submit" type="submit">Submit</button>
+                                        </div>
+                                    </div>
+                              
+                            </div>
+                        </div>
+                    </div>
+                    </div>
+                </form> 
+            </div>
+        
+
+
+    <div class="sidenav-backdrop backdrop"></div>
+    <div class="preloader-backdrop">
+        <div class="page-preloader">Loading</div>
+    </div>
+{% endblock %}

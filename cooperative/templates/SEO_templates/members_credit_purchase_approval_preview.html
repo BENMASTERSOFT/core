@@ -1,0 +1,196 @@
+{% extends 'SEO_templates/base_template.html' %}
+{% load static %}
+
+{% block content %}
+<div class="page-content fade-in-up">
+    
+    <div class="row">
+        <div class="col-xl-6">
+            <div class="ibox">
+                <div class="ibox-head">
+                    <div class="ibox-title">Preview of Selected Transaction </div>
+                </div>
+                <div class="ibox-body">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                
+                                <th>Description</th>
+                                <th>Debit</th>
+                                <th>Credit</th>
+                                <th>Balance</th>
+                               
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for record in records %}
+                            <tr>
+                               
+                                <td>{{record.particulars}}</td>
+                                <td>{{record.debit}}</td>
+                                <td>{{record.credit}}</td>
+                                <td></td>
+                             
+                             
+                            </tr>
+                            
+                            {% endfor %}
+
+                            <tr>
+                               
+                                <td>SUMMARY</td>
+                                <td>{{debit_amount}}</td>
+                                <td>{{credit_amount}}</td>
+                                <td>{{balance_amount}}</td>
+                             
+                             
+                            </tr>
+                               
+                           
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-6">
+            <div class="row">
+               
+                
+            <div class="col-md-12">
+            <div class="ibox">
+                <div class="ibox-head">
+                    <div class="ibox-title">Approval Officer Section</div>
+                    
+                </div>
+                <div class="ibox-body">
+
+                   <form class="form-horizontal" method="POST" action="">
+                        {% csrf_token %}
+                        <div class="form-group row">
+                            <label class="col-sm-2 col-form-label">Approval Status</label>
+                            <div class="col-sm-10">
+                                {{form.approval_status}}
+                            </div>
+                        </div>
+                        
+                        <div class="form-group row">
+                            <label class="col-sm-2 col-form-label">Comment if Any</label>
+                            <div class="col-sm-10">
+                                {{form.comment}}
+                            </div>
+                        </div>
+                        
+                        <div class="form-group row">
+                            <div class="col-sm-10 ml-sm-auto">
+                                <button class="btn btn-info" type="submit">Submit</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        
+                </div>
+            </div>
+        </div>
+
+    </div> 
+
+    <div class="row">
+        
+        <div class="col-xl-7">
+            <div class="ibox">
+                <div class="ibox-head">
+                    <div class="ibox-title">Selected Items</div>
+                </div>
+                <div class="ibox-body">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Code</th>
+                                <th>Description</th>
+                                <th>Quantity</th>
+                                <th>Unit Price</th>
+                                <th>Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        {% for item in selected_items %}
+                            <tr>
+                                <td>{{forloop.counter}}</td>
+                                <td>{{item.product.code}}</td>
+                                <td>{{item.product.item_name}}</td>
+                                <td>{{item.quantity}}</td>
+                                <td>{{item.unit_selling_price}}</td>
+                                <td>{{item.total}}</td>
+                                
+                              
+                            </tr>
+                        {% endfor %}
+                          <tr>
+                                <td colspan="3">SUMMARY</td>
+                             
+                                <td>{{total_item_count}}</td>
+                            <td></td>
+                                <td>{{total_amount}}</td>
+                                
+                              
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+                    <div class="col-xl-5">
+                        <div class="ibox">
+                            <div class="ibox-head">
+                                <div class="ibox-title">LEGEND</div>
+                            </div>
+                            <div class="ibox-body">
+                                <table class="table">
+                                    <thead class="thead-default">
+                                        <tr>
+                                            <th>#</th>
+                                            <th>PARTICULARS</th>
+                                            <th>DEBIT</th>
+                                            <th>CREDIT</th>
+                                            <th>BALANCE</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>1</td>
+                                            <td>BASIC INCOME</td>
+                                            <td>0.00</td>
+                                            <td>{{credit_amount}}</td>
+                                            <td>{{credit_amount}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>2</td>
+                                            <td>Serviceable Contributions and Loans</td>
+                                            <td>{{debit_amount}}</td>
+                                            <td>0.00</td>
+                                            <td>{{balance1}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>3</td>
+                                            <td>Current Purchases</td>
+                                            <td>0.00</td>
+                                            <td>{{total_amount}}</td>
+                                            <td>{{balance2}}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+    </div>
+    
+</div>
+  <div class="sidenav-backdrop backdrop"></div>
+<div class="preloader-backdrop">
+    <div class="page-preloader">Loading</div>
+</div>
+{% endblock %}

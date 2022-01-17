@@ -1,0 +1,110 @@
+{% extends 'deskofficer_templates/base_template.html' %}
+{% load static %}
+
+{% block content %}
+            <div class="page-content fade-in-up">
+                
+                <div class="row">
+                  
+
+                    <div class="col-md-6">
+                        <div class="ibox">
+                            <div class="ibox-head">
+                                <div class="ibox-title">Loan Form Issuance | {{loan.member.admin.first_name}} {{loan.member.admin.last_name}}{{loan.member.get_middle_name}}</div>
+                                
+                            </div>
+                            <div class="form-group">
+                              {% if messages %}
+                                
+                                  {% for message in messages %}
+                                  {% if message.tags == "error" %}
+                                  <div class="alert alert-danger" style="margin-top:10px">{{message}}</div>
+                                  
+                                  {% endif %}
+
+                                  {% if message.tags == "success" %}
+                                  <div class="alert alert-success" style="margin-top:10px">{{message}}</div>
+                                  
+                                  {% endif %}
+                                  {% endfor %}
+                              
+                              {% endif %}
+                            </div>
+                            <div class="ibox-body">
+                                <form class="form-horizontal" method="POST">
+                                            {% csrf_token %}
+                                    <div class="form-group row">
+                                        <label class="col-sm-3 col-form-label">Admin Charge</label>
+                                        <div class="col-sm-9">
+                                            {{form.amount}}
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-sm-3 col-form-label">Receipt No</label>
+                                        <div class="col-sm-9">
+                                            {{form.receipt}}
+                                        </div>
+                                    </div>
+                             
+                                    
+                                    <div class="form-group row">
+                                        <div class="col-sm-9 ml-sm-auto">
+                                            <button class="btn btn-info" type="submit">Submit</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+
+
+    <div class="sidenav-backdrop backdrop"></div>
+    <div class="preloader-backdrop">
+        <div class="page-preloader">Loading</div>
+    </div>
+{% endblock %}
+{% block custom_js %}
+ <script>
+    $(document).ready(function(){
+      
+        $("#id_receipt").keyup(function(){
+            var receipt_no=$(this).val();
+
+            if(receipt_no!=""){
+              $.ajax({
+                url:'{% url "check_receipt_no_already_used" %}',
+                type:'POST',
+                data:{receipt_no:receipt_no}
+                })
+                  .done(function(response){
+                  console.log(response);
+                  if(response == "True"){
+                    $(".receipt_no_error").remove();
+                    
+                        $("<span class='receipt_no_error' style='padding: 5px; color: red;font-weight: bold;'>Receipt Not Available</span>").insertAfter("#id_receipt");
+                  }
+                  else{
+                  $(".receipt_no_error").remove();
+                   // $("<span class='alert alert-success email_error'>Email Available</span>").insertAfter("#id_email");
+                    $("<span class='receipt_no_error' style='padding: 5px;color: green;font-weight: bold;'>Receipt Available</span>").insertAfter("#id_receipt");
+                      
+                  }
+              })
+              .fail(function(){
+                  console.log("Failed");
+              })
+
+            }
+            else{
+            $(".receipt_no_error").remove();
+          }
+
+          });
+      
+
+    })
+ </script>
+{% endblock %}

@@ -1,0 +1,291 @@
+{% load static %}
+        <nav class="page-sidebar" id="sidebar">
+            <div id="sidebar-collapse">
+                <div class="admin-block d-flex">
+                    <div>
+                        <img src="{% static '/cooperative/assets/img/admin-avatar.png' %}" width="45px" />
+                    </div>
+                    <div class="admin-info">
+                        <div class="font-strong">{{request.user}}</div><small>Administrator</small></div>
+                </div>
+                <ul class="side-menu metismenu">
+                    <li>
+                        <a class="active" href="{% url 'shop_home' %}"><i class="sidebar-item-icon fa fa-th-large"></i>
+                            <span class="nav-label">Dashboard</span>
+                        </a>
+                    </li>
+                    <li class="heading">FEATURES</li>
+                        <li><a href="{% url 'editable_invoice' %}">Editable Invoice</a></li>
+                    <li>
+                        <a href="javascript:;"><i class="sidebar-item-icon fa fa-sitemap"></i>
+                            <span class="nav-label">Sales Desk</span><i class="fa fa-angle-left arrow"></i></a>
+                        <ul class="nav-2-level collapse">
+                            
+                            <li>
+                                <a href="javascript:;">
+                                    <span class="nav-label">Cash Sales</span><i class="fa fa-angle-left arrow"></i></a>
+                                <ul class="nav-3-level collapse">
+                               
+                                    <li>
+                                   
+
+                                        <a href="{% url 'general_cash_sales_dashboard' %}"><i class="sidebar-item-icon fa fa-calendar"></i>
+                                            <span class="nav-label">General Cash Sales</span>
+                                        </a>
+                                    </li> 
+                                    <li>
+
+                                        <a href="{% url 'members_cash_sales_search' %}"><i class="sidebar-item-icon fa fa-calendar"></i>
+                                            <span class="nav-label">Members Cash Sales</span>
+                                        </a>
+                                    </li> 
+                                    
+                                </ul>
+                            </li>
+
+                            <li>
+                                <a href="javascript:;">
+                                    <span class="nav-label">Members Credit Sales</span><i class="fa fa-angle-left arrow"></i></a>
+                                <ul class="nav-3-level collapse">
+
+                                    <li>
+
+                                        <a href="{% url 'Members_Credit_sales_list_search' %}"><i class="sidebar-item-icon fa fa-calendar"></i>
+                                            <span class="nav-label">Credit Sales Request</span>
+                                        </a>
+                                    </li> 
+                                    <li>
+
+                                        <a href="{% url 'members_credit_purchase_manage' %}"><i class="sidebar-item-icon fa fa-calendar"></i>
+                                            <span class="nav-label">Manage Credit Sales</span>
+                                        </a>
+                                    </li> 
+
+                                    <li>
+
+                                        <a href="{% url 'members_credit_purchases_approved_list' %}"><i class="sidebar-item-icon fa fa-calendar"></i>
+                                            <span class="nav-label">Approved Credit Sales</span>
+                                        </a>
+                                    </li> 
+
+
+                                </ul>
+                                <li>
+
+                                    <a href="{% url 'members_credit_purchases_approved_list' %}"><i class="sidebar-item-icon fa fa-calendar"></i>
+                                        <span class="nav-label">Daily Sales Summary</span>
+                                    </a>
+                                </li> 
+
+                            </li>
+                        </ul>
+                    </li>  
+                    {% comment %}
+                    <li>
+                        <a href="javascript:;"><i class="sidebar-item-icon fa fa-sitemap"></i>
+                            <span class="nav-label">Teller Desk</span><i class="fa fa-angle-left arrow"></i></a>
+                        <ul class="nav-2-level collapse">
+                           
+                            
+                            <li>
+                                <a href="javascript:;">
+                                    <span class="nav-label">Cash Sales</span><i class="fa fa-angle-left arrow"></i></a>
+                                <ul class="nav-3-level collapse">
+                                    <li>
+                                        <a href="{% url 'general_cash_sales_dashboard' %}">General Cash Sales </a>
+                                    </li>
+                                    <li>
+                                        <a href="{% url 'members_cash_sales_search' %}">Members Cash Sales </a>
+                                    </li> 
+                                   
+                                   
+
+
+                                </ul>
+                            </li>
+                            <li>
+                                <a href="javascript:;">
+                                    <span class="nav-label">Members Credit Sales</span><i class="fa fa-angle-left arrow"></i></a>
+                                <ul class="nav-3-level collapse">
+                                    <li>
+                                        <a href="{% url 'Members_Credit_sales_list_search' %}">Credit Sales Request </a>
+                                    </li>
+                                    <li>
+                                        <a href="{% url 'members_credit_purchase_manage' %}">Manage Credit Sales </a>
+                                    </li> 
+                                    <li>
+                                        <a href="{% url 'members_credit_purchases_approved_list' %}">Approved Credit Sales </a>
+                                    </li>
+
+
+                                </ul>
+                            </li>
+                        </ul>
+                    </li> {% endcomment %}
+                {% if user_level == '1' %}
+                    <li>
+                        <a href="javascript:;"><i class="sidebar-item-icon fa fa-edit"></i>
+                            <span class="nav-label">Monthly Deductions  </span><i class="fa fa-angle-left arrow"></i></a>
+                        <ul class="nav-2-level collapse">
+                           
+                            <li>
+                                <a href="{% url 'monthly_deductions_salary_institution_select' %}">Generate Deductions</a>
+                            </li>
+                            <li>
+                                <a href="">Process Deductions</a>
+                            </li>
+                        </ul>
+                    </li>   
+                {% endif %}
+                     <li>
+                        <a href="javascript:;"><i class="sidebar-item-icon fa fa-edit"></i>
+                            <span class="nav-label">Cash Deposit  </span><i class="fa fa-angle-left arrow"></i></a>
+                        <ul class="nav-2-level collapse">
+                           
+                            <li>
+                                <a href="{% url 'Members_Credit_sales_Cash_Deposit_search' %}">Credit Sales</a>
+                            </li>
+
+                        </ul>
+                    </li>
+
+                    <li>
+                        <a href="javascript:;"><i class="sidebar-item-icon fa fa-edit"></i>
+                            <span class="nav-label">Product Purchase </span><i class="fa fa-angle-left arrow"></i></a>
+                        <ul class="nav-2-level collapse">
+                           
+                            <li>
+                                <a href="{% url 'Product_Purchase' %}">Purchase</a>
+                            </li>
+                        {% if user_level == '1' %}
+                            <li>
+                                <a href="{% url 'Purchase_Certification_List_load' %}">Purchase Confirmation</a>
+                            </li>
+                        {% endif %}
+                        </ul>
+                    </li>
+                    
+                         
+                    <li>
+                        <a href="javascript:;"><i class="sidebar-item-icon fa fa-edit"></i>
+                            <span class="nav-label">Personal Ledger </span><i class="fa fa-angle-left arrow"></i></a>
+                        <ul class="nav-2-level collapse">
+                           
+                            <li>
+                                <a href="{% url 'Members_Credit_sales_ledger_search' %}">Credit Sales</a>
+                            </li>                     
+                        </ul>
+                    </li>
+
+                    {% if user_level == '1' %}
+                          <li>
+                                <a href="javascript:;"><i class="sidebar-item-icon fa fa-sitemap"></i>
+                                    <span class="nav-label">Utilities</span><i class="fa fa-angle-left arrow"></i></a>
+                                <ul class="nav-2-level collapse">
+                            
+                            <li>
+                                <a href="javascript:;">
+                                    <span class="nav-label">Products</span><i class="fa fa-angle-left arrow"></i></a>
+                                <ul class="nav-3-level collapse">
+                                    <li>
+                                        <a href="{% url 'Stock_Category_Load' %}">Add Products</a>
+                                    </li>
+                                    <li>
+                                        <a href="{% url 'Manage_Stock_search' %}">Manage Products</a>
+                                    </li> 
+                                    <li>
+                                        <a href="{% url 'Manage_Stock_Product_Lock' %}">Lock Products</a>
+                                    </li>
+                                </ul>
+                                <li>
+                                    <a href="{% url 'Item_Write_off_search' %}">Item Write-Off Reasons</a>
+                                </li>
+                            </li>
+
+
+                            <li>
+                                <a href="javascript:;">
+                                    <span class="nav-label">Suppliers</span><i class="fa fa-angle-left arrow"></i></a>
+                                <ul class="nav-3-level collapse">
+                                    <li>
+                                        <a href="{% url 'Supplier_add' %}">Add Suppliers</a>
+                                    </li>
+                                    <li>
+                                        <a href="javascript:;">Manage Suppliers</a>
+                                    </li>
+                                </ul>
+                            </li>
+
+
+
+                        </ul>
+                    </li>
+
+                {% endif %}
+
+                    <li>
+                        <a href="javascript:;"><i class="sidebar-item-icon fa fa-sitemap"></i>
+                            <span class="nav-label">Reports</span><i class="fa fa-angle-left arrow"></i></a>
+                        <ul class="nav-2-level collapse">
+                            
+                            <li>
+                                <a href="javascript:;">
+                                    <span class="nav-label">Stock Levels</span><i class="fa fa-angle-left arrow"></i></a>
+                                <ul class="nav-3-level collapse">
+                               
+                                    <li>
+                                        <a href="{% url 'All_Stock_Status' %}"><i class="sidebar-item-icon fa fa-calendar"></i>
+                                            <span class="nav-label">All Stocks</span>
+                                        </a>
+                                    </li> 
+                                    <li>
+                                        <a href="{% url 'Stock_Status' %}"><i class="sidebar-item-icon fa fa-calendar"></i>
+                                            <span class="nav-label">Re-Order Level</span>
+                                        </a>
+                                    </li> 
+                                    
+                                </ul>
+                            </li>
+
+                            <li>
+                                <a href="javascript:;">
+                                    <span class="nav-label">Purchases</span><i class="fa fa-angle-left arrow"></i></a>
+                                <ul class="nav-3-level collapse">
+                                    <li>
+                                        <a href="{% url 'Purchase_Summary' %}">Purchase Summary</a>
+                                    </li>
+                                    <li>
+                                        <a href="javascript:;">Level 3</a>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </li>   
+
+                    <li class="heading">IMPORT/EXPORT</li>
+                    
+
+                 
+                  
+                    <li>
+                        <a href="javascript:;"><i class="sidebar-item-icon fa fa-sitemap"></i>
+                            <span class="nav-label">Menu Levels</span><i class="fa fa-angle-left arrow"></i></a>
+                        <ul class="nav-2-level collapse">
+                            
+                            <li>
+                                <a href="javascript:;">
+                                    <span class="nav-label">Level 2</span><i class="fa fa-angle-left arrow"></i></a>
+                                <ul class="nav-3-level collapse">
+                                    <li>
+                                        <a href="javascript:;">Level 3</a>
+                                    </li>
+                                    <li>
+                                        <a href="javascript:;">Level 3</a>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </nav>

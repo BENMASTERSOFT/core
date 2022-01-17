@@ -1,0 +1,221 @@
+{% extends 'president_templates/base_template.html' %}
+{% load static %}
+
+{% block content %}
+            <div class="page-content fade-in-up">
+                        <div class="form-group">
+                              {% if messages %}
+                                
+                                  {% for message in messages %}
+                                  {% if message.tags == "error" %}
+                                  <div class="alert alert-danger" style="margin-top:10px">{{message}}</div>
+                                  
+                                  {% endif %}
+
+                                  {% if message.tags == "success" %}
+                                  <div class="alert alert-success" style="margin-top:10px">{{message}}</div>
+                                  
+                                  {% endif %}
+                                  {% endfor %}
+                              
+                              {% endif %}
+                        </div>
+               
+
+
+           
+                    <div class="row">
+                      <div class="col-xl-6">
+                            <div class="ibox">
+                                <div class="ibox-head">
+                                    <div class="ibox-title">Additional Info</div>
+                                    <div class="ibox-title"><a href="{% url 'MemberShipRequest_approval_submit' pk %}" class="btn btn-success">Submit</a> </div>
+                                </div>
+                                <div class="ibox-body">
+                                    <table class="table table-bordered">
+                                        <thead>
+                                            <tr>
+                                                <th>#</th>
+                                                <th>Comments</th>
+                                                <th>Officer</th>
+                                                
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                        {% for existing_info in existing_infos %}
+                                            <tr>
+                                                <td>{{forloop.counter}}</td>
+                                                <td>{{existing_info.comment}}</td>
+                                                <td>{{existing_info.officer.username}}</td>
+                                               
+                                            </tr>
+                                        {% endfor %}   
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xl-6">
+                            <div class="ibox">
+                                <div class="ibox-head">
+                                    <div class="ibox-title">Attached Files</div>
+                                </div>
+                                <div class="ibox-body">
+                                    <table class="table table-bordered">
+                                        <thead>
+                                            <tr>
+                                                <th>#</th>
+                                                <th>Caption</th>
+                                                <th>Image</th>
+                                                <th>Officer</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                        {% for existing_attachment in existing_attachments %}
+                                            <tr>
+                                                <td>{{forloop.counter}}</td>
+                                                <td>{{existing_attachment.caption}}</td>
+                                               <td>{% if existing_attachment.image %}<img src="{{existing_attachment.image}}" style="width:100px">{% endif %}</td>
+                                                <td>{{existing_attachment.officer.username}}</td>
+                                            </tr>
+                                      {% endfor %}   
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="ibox">
+                                <div class="ibox-head">
+                                    <div class="ibox-title">Approval Comment</div>
+                                    
+                                </div>
+                                <div class="ibox-body">
+                                        <form class="form-horizontal" method="POST" action="{% url 'membership_request_approval_comment_save' pk %}">
+                                            {% csrf_token %}
+                                        <div class="form-group row">
+                                            <label class="col-sm-3 col-form-label">Comment</label>
+                                            <div class="col-sm-9">
+                                                {{form_comment.comment}}
+                                            </div>
+                                        </div>
+                                       
+                                        <div class="form-group row">
+                                            <div class="col-sm-9 ml-sm-auto">
+                                                <button class="btn btn-info" name="btn_info" type="submit">Submit</button>
+                                            </div>
+                                        </div>
+                                </form>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="col-xl-6">
+                            <div class="ibox">
+                                <div class="ibox-head">
+                                    <div class="ibox-title">Approval Comments</div>
+                                </div>
+                                <div class="ibox-body">
+                                    <table class="table table-bordered">
+                                        <thead>
+                                            <tr>
+                                                <th>#</th>
+                                                <th>Comments</th>                                           
+                                                <th>Action</th>                                           
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                        {% for existing_info in approval_comments %}
+                                            <tr>
+                                                <td>{{forloop.counter}}</td>
+                                                <td>{{existing_info.comment}}</td>
+                                                <td><a href="{% url 'membership_request_approval_info_delete' existing_info.pk %}" class="btn btn-danger">Remove</a></td>
+                                            </tr>
+                                        {% endfor %}   
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="ibox">
+                                <div class="ibox-head">
+                                    <div class="ibox-title">Approval Attachment</div>
+                                    
+                                </div>
+                                <div class="ibox-body">
+                                        <form class="form-horizontal" method="POST" action="{% url 'membership_request_approval_attachment_save' pk %}" enctype="multipart/form-data">
+                                                {% csrf_token %}
+                                        <div class="form-group row">
+                                            <label class="col-sm-3 col-form-label">Description</label>
+                                            <div class="col-sm-9">
+                                                {{form_attachment.caption}}
+                                            </div>
+                                        </div>  
+                                        <div class="form-group row">
+                                            <label class="col-sm-3 col-form-label">Evidiences</label>
+                                            <div class="col-sm-9">
+                                                {{form_attachment.image}}
+                                            </div>
+                                        </div>
+                                       
+                                        <div class="form-group row">
+                                            <div class="col-sm-9 ml-sm-auto">
+                                                <button class="btn btn-info" name="btn_attachment" type="submit">Submit</button>
+                                            </div>
+                                        </div>
+                                 </form>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="col-xl-6">
+                            <div class="ibox">
+                                <div class="ibox-head">
+                                    <div class="ibox-title">Attachment</div>
+                                </div>
+                                <div class="ibox-body">
+                                    <table class="table table-bordered">
+                                        <thead>
+                                            <tr>
+                                                <th>#</th>
+                                                <th>Description</th>
+                                                <th>Image</th>                                  
+                                                <th>Action</th>                                           
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                        {% for item in approval_attachments %}
+                                           <tr>
+                                                <td>{{forloop.counter}}</td>
+                                                <td>{{item.caption}}</td>
+                                               <td>{% if item.image %}<img src="{{item.image}}" style="width:100px">{% endif %}</td>
+                                                <td><a href="{% url 'membership_request_approval_attachment_delete' item.pk %}">Remove</a></td>
+                                            </tr>
+                                        {% endfor %}   
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>        
+              
+            </div>
+            
+
+
+    <div class="sidenav-backdrop backdrop"></div>
+    <div class="preloader-backdrop">
+        <div class="page-preloader">Loading</div>
+    </div>
+{% endblock %}

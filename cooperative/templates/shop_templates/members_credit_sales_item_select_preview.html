@@ -1,0 +1,212 @@
+{% extends 'shop_templates/base_template.html' %}
+{% load static %}
+
+{% block content %}
+            <div class="page-content fade-in-up">
+                <div class="row">
+                    <div class="col-xl-6">
+                        <div class="row">
+                            <div class="col-xl-12">
+                                <div class="ibox">
+                            <div class="ibox-head">
+                                <div class="ibox-title">Preview of Selected Transaction</div>
+                            </div>
+                            <div class="ibox-body">
+                                <table class="table table-striped">
+                                    <thead>
+                                        <tr>
+                                            
+                                            <th>Description</th>
+                                            <th>Debit</th>
+                                            <th>Credit</th>
+                                            
+                                           
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+
+                                        <tr>
+                                           
+                                            <td>{{member.gross_pay_as_at}}</td>
+                                            <td>0.00</td>
+                                            <td>{{member.gross_pay}}</td>
+                                        
+                                         
+                                        </tr>
+                                        {% for monthly_contribution in monthly_contributions %}
+                                            <tr>
+                                               
+                                                <td>{{monthly_contribution.transaction.transaction.name}}</td>
+                                                <td>{{monthly_contribution.amount}}</td>
+                                                <td>0.00</td>
+                                                
+                                             
+                                            </tr>
+                                        {% endfor %}
+                                    
+                                    {% for loan_repayment in loan_repayments %}
+                                            <tr>
+                                               
+                                                <td>{{loan_repayment.transaction.name}}</td>
+                                                <td>{{loan_repayment.repayment}}</td>
+                                                <td>0.00</td>
+                                             
+                                             
+                                            </tr>
+                                        {% endfor %}
+
+                                        {% for item in external_fascilities %}
+                                            <tr>
+                                               
+                                                <td>{{item.member.description}}</td>
+                                                <td>{{item.member.amount}}</td>
+                                                <td>0.00</td>
+                                                
+                                             
+                                            </tr>
+                                        {% endfor %}
+
+                                            <tr>
+                                               
+                                                <td>Cooperative Ledger Balance</td>
+                                                <td>
+                                                {% if ledger_balance.balance < 0 %}
+                                                    {% widthratio ledger_balance.balance 1 -1 %}
+                                                {% else %}
+                                                    {{ ledger_balance.balance }}
+                                                {% endif %}
+
+                                                 </td>
+                                                <td>0.00</td>
+                                                
+                                             
+                                            </tr> 
+                                            
+                                       
+                                    </tbody>
+                                </table>
+                            </div>
+                                </div>
+                            </div>
+                       
+
+                            <div class="col-xl-12">
+                                <div class="ibox">
+                                        <div class="ibox-head">
+                                            <div class="ibox-title">Current Sales</div>
+                                        </div>
+                                        <div class="ibox-body">
+                                            <table class="table table-bordered">
+                                                <thead class="thead-default">
+                                                    <tr>
+                                                        <th>#</th>
+                                                        <th>Code</th>
+                                                        <th>Description</th>
+                                                        <th>Quantity</th>
+                                                        <th>Unit Price</th>
+                                                        <th>Total</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                {% for sale in sales %}
+                                                    <tr>
+                                                        <td>{{forloop.counter}}</td>
+                                                        <td>{{sale.product.code}}</td>
+                                                        <td>{{sale.product.item_name}}</td>
+                                                    <td>{{sale.quantity}}</td>
+                                                    <td>{{sale.unit_selling_price}}</td>
+                                                    <td>{{sale.total}}</td>
+                                                       
+                                                    </tr>
+                                                {% endfor %}
+
+                                                <tr>
+                                                    <td colspan="5">TOTAL</td>
+                                                    
+                                                    <td>{{sum_total}}</td>
+                                                       
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+               
+                    <div class="col-xl-6">
+                        <div class="row">
+                            <div class="col-xl-12"> 
+                        
+                                <div class="ibox">
+                                    <div class="ibox-head">
+                                        <div class="ibox-title">SUMMARY SHEET</div>
+                                    </div>
+                                    <div class="ibox-body">
+                                        <table class="table table-bordered">
+                                            <thead class="thead-default">
+                                                <tr>
+                                                    <th>#</th>
+                                                    <th>DEBIT</th>
+                                                    <th>CREDIT</th>
+                                                    <th>BALANCE</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>1</td>
+                                                    <td>{{debit}}</td>
+                                                    <td>{{credit}}</td>
+                                                    <td>{{balance}}</td>
+                                                </tr> 
+                                                
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                             </div>
+
+                            
+                        <div class="col-md-12">
+                        <div class="ibox">
+                            <div class="ibox-head">
+                                <div class="ibox-title">Approval Officer Section</div>
+                                
+                            </div>
+                            <div class="ibox-body">
+
+                               <form class="form-horizontal" method="POST" action="">
+                                    {% csrf_token %}
+                                    <div class="form-group row">
+                                        <label class="col-sm-2 col-form-label">Approval Officer</label>
+                                        <div class="col-sm-10">
+                                            {{form.approval_officers}}
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="form-group row">
+                                        <label class="col-sm-2 col-form-label">Comment if Any</label>
+                                        <div class="col-sm-10">
+                                            {{form.comment}}
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="form-group row">
+                                        <div class="col-sm-10 ml-sm-auto">
+                                            <button class="btn btn-info" type="submit">Submit</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    
+                            </div>
+                        </div>
+                    </div>
+                </div> 
+            </div>
+  <div class="sidenav-backdrop backdrop"></div>
+    <div class="preloader-backdrop">
+        <div class="page-preloader">Loading</div>
+    </div>
+{% endblock %}

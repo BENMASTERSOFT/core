@@ -1,0 +1,84 @@
+{% extends 'deskofficer_templates/base_template.html' %}
+{% load static %}
+
+{% block content %}
+            <div class="page-content fade-in-up">
+                
+                <div class="row">
+                   
+
+                    <div class="col-md-7">
+                        <div class="ibox">
+                            <div class="ibox-head">
+                                <div class="ibox-title">LOAN REPAYMENT ADJUSTMENT | {{member.get_full_name}} </div>
+                                
+                            </div> 
+                            <div class="ibox-head">
+                                <div class="ibox-title">LOAN NUMBER | {{loan.loan_number}}</div>
+                                
+                            </div>
+                            <div class="form-group">
+                                  {% if messages %}
+                                    
+                                      {% for message in messages %}
+                                      {% if message.tags == "info" %}
+                                      <div class="alert alert-info" style="margin-top:10px">{{message}}</div>
+                                      
+                                      {% endif %}
+
+                                      {% if message.tags == "success" %}
+                                      <div class="alert alert-success" style="margin-top:10px">{{message}}</div>
+                                      
+                                      {% endif %}
+                                      {% endfor %}
+                                  
+                                  {% endif %}
+                              </div>
+                            <div class="ibox-body">
+                                 <form class="form-horizontal" method="POST" action="{% url 'Transaction_Loan_adjustment_Transaction_Process' member.pk loan.pk %}">
+                                    {% csrf_token %}
+                                 
+                                    <div class="form-group row">
+                                        <label class="col-sm-4 col-form-label">Monthly Repayment</label>
+                                        <div class="col-sm-8">
+                                           <input class="form-control" type="text" name="repayment" value="{{loan.repayment}}" readonly="true">
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-sm-4 col-form-label">New Amount</label>
+                                        <div class="col-sm-8">
+                                           {{form.amount}}
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-sm-4 col-form-label">Reason</label>
+                                        <div class="col-sm-8">
+                                           {{form.purpose}}
+                                        </div>
+                                    </div>    
+                                    <div class="form-group row">
+                                        <label class="col-sm-4 col-form-label">Approval Officer</label>
+                                        <div class="col-sm-8">
+                                           {{form.approval_officers}}
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="form-group row">
+                                        <div class="col-sm-8 ml-sm-auto">
+                                            <button class="btn btn-info" type="submit">Submit</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+
+
+    <div class="sidenav-backdrop backdrop"></div>
+    <div class="preloader-backdrop">
+        <div class="page-preloader">Loading</div>
+    </div>
+{% endblock %}

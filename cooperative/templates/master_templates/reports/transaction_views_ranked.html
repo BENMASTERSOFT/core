@@ -1,0 +1,48 @@
+{% extends 'master_templates/base_template.html' %}
+{% load static %}
+
+{% block content %}
+            <div class="page-content fade-in-up">
+               
+                <div class="row">
+                  
+                    <div class="col-xl-6">
+                        <div class="ibox">
+                            <div class="ibox-head">
+                                <div class="ibox-title">LIST OF TRANSACTION</div>
+                            </div>
+                            <div class="ibox-body">
+                                <table class="table table-bordered">
+                                    <thead class="thead-default">
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Code</th>
+                                            <th>Description</th>
+                                            <th>Rank</th>
+                                         
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for transaction in transactions %}
+                                        <tr>
+                                            <td>{{forloop.counter}}</td>
+                                            <td>{{transaction.code}}</td>
+                                            <td>{{transaction.name}}</td>
+                                            <td>{{transaction.rank}}</td>
+                                          
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+           
+            </div>
+  <div class="sidenav-backdrop backdrop"></div>
+    <div class="preloader-backdrop">
+        <div class="page-preloader">Loading</div>
+    </div>
+{% endblock %}

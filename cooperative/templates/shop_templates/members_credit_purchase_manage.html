@@ -1,0 +1,58 @@
+{% extends 'shop_templates/base_template.html' %}
+{% load static %}
+
+{% block content %}
+            <div class="page-content fade-in-up">
+         
+                <div class="row">
+               
+                    <div class="col-xl-12">
+                        <div class="ibox">
+                            <div class="ibox-head">
+                                <div class="ibox-title">Pending Purchase Requests</div>
+                            </div>
+                            <div class="ibox-body">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Member ID</th>
+                                            <th>Name</th>
+                                            <th>Ticket</th>
+                                            <th>Debit</th>
+                                            <th>Credit</th>
+                                            <th>Balance</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for record in records %}
+                                        <tr>
+                                            <td>{{forloop.counter}}</td>
+                                            <td>{{record.trans_code.member.member_id}}</td>
+                                            <td>{{record.trans_code.member.admin.first_name}} {{record.trans_code.member.admin.last_name}} {{record.trans_code.member.middle_name}}</td>
+                                            <td>{{record.trans_code.ticket}}</td>
+                                            <td>{{record.debit}}</td>
+                                            <td>{{record.credit}}</td>
+                                            <td>{{record.balance}}</td>
+                                            <td><a href="{% url 'members_credit_purchase_manage_preview' record.trans_code.ticket %} " class='btn btn-success'>Update</a>
+                                            <a href="{% url 'members_credit_purchase_selection_discard_confirmation' record.trans_code.ticket %}" class="btn btn-danger">Discard</a>
+                                            </td>
+                                           
+                                        </tr>
+                                {% endfor %}
+                                    </tbody>
+                               
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+              
+           
+            </div>
+  <div class="sidenav-backdrop backdrop"></div>
+    <div class="preloader-backdrop">
+        <div class="page-preloader">Loading</div>
+    </div>
+{% endblock %}

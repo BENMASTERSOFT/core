@@ -1,0 +1,182 @@
+{% extends 'shop_templates/base_template.html' %}
+{% load static %}
+{% block custom_css %}
+    <!-- PLUGINS STYLES-->
+    <link href="{% static '/cooperative/assets/vendors/DataTables/datatables.min.css' %}" rel="stylesheet" />
+   {% endblock custom_css %}
+{% block content %}
+
+      
+            <div class="page-content fade-in-up">
+                <div class="ibox">
+                    <div class="ibox-head">
+                        <div class="ibox-title">List of Products|{{invoice.branch.supplier.name}} | {{invoice.invoice}}|{{invoice.invoice_date}}
+<a class="btn btn-xs btn-success m-l-5" href="{% url 'Purchase_Certification_item_Add_Stock' invoice.pk %}">Add New Product</a> 
+                        </div>
+                    </div>
+                    <div class="ibox-body">
+                        <table class="table table-striped table-bordered table-hover" id="example-table" cellspacing="0" width="100%">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Code</th>
+                                    <th>Item Name</th>
+                                    <th>Description</th>
+                                    <th>Unit Selling Price</th>
+                                    <th></th>
+                                   
+                                </tr>
+                            </thead>
+                            <tfoot>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Code</th>
+                                    <th>Item Name</th>
+                                    <th>Description</th>
+                                    <th>Unit Selling Price</th>
+                                    <th></th>
+                                   
+                                </tr>
+                            </tfoot>
+                            <tbody>
+                             {% for product in products %}
+                                <tr>
+                                    <td>{{forloop.counter}}</td>
+                                    <td>{{product.code}}</td>
+                                    <td>{{product.item_name}}</td>
+                                    <td>{{product.details}}</td>
+                                    <td>{{product.unit_selling_price}}</td>
+                                   
+                                    <td><a href="{% url 'Purchase_Certification_Product_Purchase_Details_Select' product.pk invoice.pk %}" class="btn btn-primary">Select</a></td>
+                                
+                                </tr>
+                                
+                            {% endfor %} 
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xl-12">
+                        <div class="ibox">
+                            <div class="ibox-head">
+                                <div class="ibox-title">INVOICE CONTENT</div>
+                            </div>
+                            <div class="ibox-body">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Code</th>
+                                            <th>Item Name</th>
+                                            <th>Quantity</th>
+                                            <th>Unit Cost</th>
+                                            <th>Total Cost</th>
+                                            <th>Unit S. Price</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for item in items %}
+                                        <tr>
+                                            <td>{{forloop.counter}}</td>
+                                            <td>{{item.product.code}}</td>
+                                            <td>{{item.product.item_name}}</td>
+                                            <td>{{item.quantity}}</td>
+                                            <td>{{item.cost_price}}</td>
+                                            <td>{{item.total_cost}}</td>
+                                            <td>{{item.selling_price}}</td>
+                                            <td>
+                                                <a href="{% url 'Product_Purchase_Details_Select_Edit' item.pk %}" class="btn btn-primary">Edit</a> 
+
+                                                <a href="{% url 'Product_Purchase_Details_Select_Remove' item.pk %}" class="btn btn-danger">Remove</a> 
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                    <tr>
+                                        <td colspan="3">Summary</td>
+                                        <td>{{total_item}}</td>
+                                        <td></td>
+                                        <td>{{total_cost}}</td>
+                                        <td colspan="2"></td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="4"></td>
+                                        <td colspan="2" style="text-align: center;"><a href="{% url 'Purchase_Certification_item_Preview_Reload' invoice.pk %}" class="btn btn-success">Continue...</a></td>
+                                        <td colspan="2" ></td>
+                                        
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                  
+                </div>
+
+                {% comment %}
+                <div class="row">
+                      <div class="col-md-6">
+                        <div class="ibox">
+                            <div class="ibox-head">
+                                <div class="ibox-title">Supplier's Personnel  <a class="btn btn-xs btn-success m-l-5" href="{% url 'Product_Purchase_Add_Supplier_Personnel' invoice.branch.supplier.pk invoice.pk %}">Add Personnel</a></div>
+                                
+                            </div>
+                            <div class="ibox-body">
+                                <form class="form-horizontal" method="POST" action="">
+                                    {% csrf_token %}
+                                    <div class="form-group row">
+                                        <label class="col-sm-3 col-form-label">Personnel</label>
+                                        <div class="col-sm-9">
+                                           <select name="personnel" id="personnel" class="form-control">
+                                                <option value="">---select personnel---</option>
+                                                {% for personnel in personnels %}
+                                                <option value="{{personnel.id}}">{{personnel.name}}</option>
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <div class="col-sm-9 ml-sm-auto">
+                                            <button class="btn btn-info" type="submit">Process</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endcomment %}
+            </div>
+  
+    
+    <!-- BEGIN PAGA BACKDROPS-->
+    <div class="sidenav-backdrop backdrop"></div>
+    <div class="preloader-backdrop">
+        <div class="page-preloader">Loading</div>
+    </div>
+    <!-- END PAGA BACKDROPS-->
+{% endblock content %}
+
+{% block custom_js %}
+    <!-- PAGE LEVEL PLUGINS-->
+    <script src="{% static '/cooperative//assets/vendors/DataTables/datatables.min.js' %}" type="text/javascript"></script>
+   
+    <!-- PAGE LEVEL SCRIPTS-->
+    <script type="text/javascript">
+        $(function() {
+            $('#example-table').DataTable({
+                pageLength: 10,
+                //"ajax": './assets/demo/data/table_data.json',
+                /*"columns": [
+                    { "data": "name" },
+                    { "data": "office" },
+                    { "data": "extn" },
+                    { "data": "start_date" },
+                    { "data": "salary" }
+                ]*/
+            });
+        })
+    </script>
+{% endblock custom_js %}

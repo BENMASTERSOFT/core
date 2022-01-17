@@ -1,0 +1,65 @@
+{{ client.user|default_if_none:"&nbsp;" }}
+{{ client.user|default_if_none:"" }}
+
+
+<td>{{record.member_account|default_if_none:"&nbsp;" }}</td>
+
+
+{% if client %} {{client.user}} {% else %} &nbsp; {% endif %}
+
+
+
+
+PARENTHESES
+
+ ({% widthratio record.balance 1 -1 %})
+
+
+
+ {% if record.balance < 0 %}
+    ({% widthratio record.balance 1 -1 % })
+
+{% else %}
+     {{record.balance}}
+{% endif %}
+
+
+
+
+   loan_code=applicant.applicant.applicant.loan.code
+   loan_number_selector_id=LoanNumber.objects.first()
+   loan_number_selector=loan_number_selector_id.code
+
+   current_time= str(now.year) + str(now.month) + str(now.day) + str(now.hour) + str(now.minute)  
+   loan_number=str(loan_code) + str(my_id) + str(current_time) + str(loan_number_selector).zfill(5)
+   loan_number_selector_id.code=int(loan_number_selector)+1
+   loan_number_selector_id.save()
+
+
+In Models
+
+class EmpModel(models.Model):
+   empId = models.IntegerField(primary_key=True)
+   empname = models.CharField(max_length=100)
+   age=models.IntegerField()
+
+   class Meta:
+      db_table="employeetable"
+
+
+   obj = EmpModel.objects.raw('select * from employeetable group by empname having count(empname>1')
+
+
+
+from django.shortcuts import render, redirect
+
+
+return redirect('../../')
+
+
+<button type="button" class="close" data-dismiss="modal">&times;</button>
+<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+
+
+
+queryset = StockHistory.objects.filter(item_name__icontains=form['item_name'].value(),last_updated__range=[form['start_date'].value(),form['end_date'].value()])

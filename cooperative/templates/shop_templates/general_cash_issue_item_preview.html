@@ -1,0 +1,226 @@
+{% extends 'shop_templates/base_template.html' %}
+{% load static %}
+
+{% block content %}
+            <div class="page-content fade-in-up">
+                <form class="form-horizontal" action="" method="POST">
+                     {% csrf_token %}
+                    <div class="row">
+                        <div class="col-xl-6">
+                            
+                            <div class="row">
+                                <div class="col-xl-12">                            
+                                    <div class="ibox">
+                                        <div class="ibox-head">
+                                            <div class="ibox-title">Item Selection Preview</div>
+                                        </div>
+                                        <div class="form-group">
+                                          {% if messages %}
+                                            
+                                              {% for message in messages %}
+                                              {% if message.tags == "error" %}
+                                              <div class="alert alert-danger" style="margin-top:10px">{{message}}</div>
+                                              
+                                              {% endif %}
+
+                                              {% if message.tags == "success" %}
+                                              <div class="alert alert-success" style="margin-top:10px">{{message}}</div>
+                                              
+                                              {% endif %}
+                                              {% if message.tags == "info" %}
+                                              <div class="alert alert-info" style="margin-top:10px">{{message}}</div>
+                                              
+                                              {% endif %}
+                                              {% endfor %}
+                                          
+                                          {% endif %}
+                                        </div>
+                                        <div class="ibox-body">
+                                            <table class="table table-bordered">
+                                                <thead>
+                                                    <tr>
+                                                        <th>#</th>
+                                                        <th>Code</th>
+                                                        <th>Item Name</th>
+                                                        <th>Quantity</th>
+                                                        <th>Unit Price</th>
+                                                        <th>Total</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {% for item in select_items %}
+                                                    <tr>
+                                                        <td>{{forloop.counter}}</td>
+                                                        <td>{{item.product.code}}</td>
+                                                        <td>{{item.product.item_name}}</td>
+                                                        <td>{{item.quantity}}</td>
+                                                        <td>{{item.unit_selling_price}}</td>
+                                                        <td>{{item.total}}</td>
+                                                      
+                                                    </tr>
+                                                   {% endfor %}
+
+                                                    <tr>
+                                                        <td colspan="3">TOTAL</td>
+                                                 
+                                                        <td>{{total_item}}</td>
+                                                        <td></td>
+                                                        <td>{{total_amount}}</td>
+                                                      
+                                                    </tr>
+
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                      
+
+                             {% if cash %}
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="ibox">                            
+                                        <div class="ibox-body">
+                                    <div class="form-group row">
+                                          <label class="col-sm-12 col-form-label"> <b>CASH PAYMENT</b>  </label>                                        
+                                    </div>
+
+                                    
+                                    <div class="form-group row">
+                                            <label class="col-sm-3 col-form-label">Receipt Types</label>
+                                            <div class="col-sm-9">
+                                                {{form.receipt_types}}
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="col-sm-3 col-form-label">Receipt No</label>
+                                            <div class="col-sm-9">
+                                                {{form.receipt}}
+                                            </div>
+                                        </div>
+
+                                        <div class="col-sm-9 ml-sm-auto">
+                                         
+                                           
+                                                 <button class="btn btn-success" name="btn_submit" type="submit">Submit</button>
+                                               
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                             </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="ibox">
+                                <div class="ibox-head">
+                                    <div class="ibox-title">Customer Details and Payment Info</div>
+                                    
+                                </div>
+                               
+                                <div class="ibox-body">
+                                  
+                                        
+                                        <div class="form-group row">
+                                            <label class="col-sm-3 col-form-label">Customer Name</label>
+                                            <div class="col-sm-9">
+                                                {{form.name}}
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="col-sm-3 col-form-label">Address</label>
+                                            <div class="col-sm-9">
+                                                {{form.address}}
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="col-sm-3 col-form-label">Phone Number</label>
+                                            <div class="col-sm-9">
+                                                {{form.phone_no}}
+                                            </div>
+                                        </div>
+                                        <hr>
+                                       
+                                        <div class="form-group row">
+                                            <label class="col-sm-3 col-form-label">Payment Channels</label>
+                                            <div class="col-sm-9">
+                                               {{form.channels}}
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group row">
+                                            <div class="col-sm-9 ml-sm-auto">
+                                                <button class="btn btn-info" name="btn_fetch" type="submit">Fetch</button>
+                                                
+                                            </div>
+                                        </div>
+
+
+
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+             
+              
+
+
+
+              </form>
+            </div>
+
+
+        
+
+
+    <div class="sidenav-backdrop backdrop"></div>
+    <div class="preloader-backdrop">
+        <div class="page-preloader">Loading</div>
+    </div>
+{% endblock %}
+
+{% block custom_js %}
+ <script>
+    $(document).ready(function(){
+      
+        $("#id_receipt").keyup(function(){
+            var receipt_no=$(this).val();
+
+            if(receipt_no!=""){
+              $.ajax({
+                url:'{% url "check_receipt_no_exist" %}',
+                type:'POST',
+                data:{receipt_no:receipt_no}
+                })
+                  .done(function(response){
+                  console.log(response);
+                  if(response == "True"){
+                    $(".receipt_no_error").remove();
+                    
+                        $("<span class='receipt_no_error' style='padding: 5px; color: red;font-weight: bold;'>Receipt Not Available</span>").insertAfter("#id_receipt");
+                  }
+                  else{
+                  $(".receipt_no_error").remove();
+                   // $("<span class='alert alert-success email_error'>Email Available</span>").insertAfter("#id_email");
+                    $("<span class='receipt_no_error' style='padding: 5px;color: green;font-weight: bold;'>Receipt Available</span>").insertAfter("#id_receipt");
+                      
+                  }
+              })
+              .fail(function(){
+                  console.log("Failed");
+              })
+
+            }
+            else{
+            $(".receipt_no_error").remove();
+          }
+
+          });
+      
+
+    })
+ </script>
+{% endblock %}

@@ -1,0 +1,91 @@
+{% extends 'shop_templates/base_template.html' %}
+{% load static %}
+{% block custom_js %}
+ <link href="{% static '/cooperative/assets/css/style.css' %}" rel="stylesheet" />
+{% endblock custom_js %}
+
+{% block content %}
+            <div class="page-content fade-in-up">
+                <DIV class="row">
+                    <div class="col-md-6">
+                        <div class="ibox">
+                            <div class="ibox-head">
+                                <div class="ibox-title">PURCHASE SUMMARY</div>
+                                
+                            </div>
+                            <div class="ibox-body">
+                               <form method="post" enctype="multipart/form-data">
+                                     {% csrf_token %}
+                                    <div class="row">
+                                        <div class="col-sm-6 form-group">
+                                            <label>Start Date</label>
+                                            {{form.start_date}}
+                                        </div>
+                                        <div class="col-sm-6 form-group">
+                                            <label>Stop Date</label>
+                                            {{form.stop_date}}
+                                        </div>
+                                    </div>
+                                    
+                                   
+                                    <div class="form-group">
+                                        <button class="btn btn-default" type="submit">Filter</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </DIV>
+                <div class="row">
+                  
+                    <div class="col-xl-10">
+                        <div class="ibox">
+                            <div class="ibox-head">
+                                <div class="ibox-title">PURCHASE SUMMARY RESULT</div>
+                            </div>
+                            <div class="ibox-body">
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Invoice No.</th>
+                                            <th>Invoice Date</th>
+                                            <th>Supplier</th>
+                                            <th>Branch</th>
+                                            <th>Amount</th>
+                                      
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for record in records %}
+                                        <tr>
+                                            <td>{{forloop.counter}}</td>
+                                            <td>{{record.invoice}}</td>
+                                            <td>{{record.invoice_date}}</td>
+                                            <td>{{record.branch.supplier.name}}</td>
+                                            <td>{{record.branch.address}}</td>
+                                            <td>{{record.total_amount}}</td>
+                                            <td><a href="{% url 'Purchase_Summary_Details' record.invoice %}" class="btn btn-primary">View Details</a> </td>
+                                        </tr>
+                                    {% endfor %}
+                                    <tr>
+                                        <td colspan="3"></td>
+                                        <td colspan="2" class="summary">TOTAL AMOUNT</td>
+                                        <td  class="summary">{{total_cost}}</td>
+                                        <td></td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+               
+           
+            </div>
+  <div class="sidenav-backdrop backdrop"></div>
+    <div class="preloader-backdrop">
+        <div class="page-preloader">Loading</div>
+    </div>
+{% endblock %}

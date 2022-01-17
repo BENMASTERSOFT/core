@@ -1,0 +1,58 @@
+{% extends 'shop_templates/base_template.html' %}
+{% load static %}
+
+{% block content %}
+            <div class="page-content fade-in-up">               
+                <div class="row">
+                    <div class="col-xl-10">
+                        <div class="ibox">
+                            <div class="ibox-head">
+                                <div class="ibox-title">PURCHASE DETAILS</div>
+                            </div>
+                            <div class="ibox-body">
+                                <table class="table table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Code</th>
+                                            <th>Item Name</th>
+                                            <th>Quantity</th>
+                                            <th>Unit Cost Price</th>
+                                            <th>Total Cost</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for record in records %}
+                                            <tr>
+                                                <td>{{forloop.counter}}</td>
+                                                <td>{{record.product.code}}</td>
+                                                <td>{{record.product.item_name}}</td>
+                                                <td>{{record.quantity}}</td>
+                                                <td>{{record.cost_price}}</td>
+                                                <td>{{record.total_cost}}</td>
+                                              
+                                            </tr>
+                                        {% endfor %}
+
+                                        <tr>
+                                            <td colspan="2"></td>
+                                            <td>SUMMARY</td>
+                                            <td>{{total_item}}</td>
+                                            <td></td>
+                                            <td>{{total_cost}}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                 
+                </div>
+              
+           
+            </div>
+  <div class="sidenav-backdrop backdrop"></div>
+    <div class="preloader-backdrop">
+        <div class="page-preloader">Loading</div>
+    </div>
+{% endblock %}

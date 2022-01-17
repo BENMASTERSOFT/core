@@ -1,0 +1,141 @@
+{% extends 'deskofficer_templates/base_template.html' %}
+{% load static %}
+
+{% block content %}
+            <div class="page-content fade-in-up">
+                <div class="row">
+                    
+
+                    <div class="col-md-6">
+                        <div class="ibox">
+                            <div class="ibox-head">
+                                <div class="ibox-title">Membership Request</div>
+                                
+                            </div>
+                            <div class="form-group">
+                              {% if messages %}
+                                
+                                  {% for message in messages %}
+                                  {% if message.tags == "error" %}
+                                  <div class="alert alert-danger" style="margin-top:10px">{{message}}</div>
+                                  
+                                  {% endif %}
+
+                                  {% if message.tags == "success" %}
+                                  <div class="alert alert-success" style="margin-top:10px">{{message}}</div>
+                                  
+                                  {% endif %}
+                                  {% endfor %}
+                              
+                              {% endif %}
+                          </div>
+                            <div class="ibox-body">
+                                <form class="form-horizontal" method="POST" action="">
+                                    {% csrf_token %}
+                                    <div class="form-group row">
+                                        <label class="col-sm-3 col-form-label">Titles</label>
+                                        <div class="col-sm-9">
+                                           {{form.titles}}
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-sm-3 col-form-label">Last Name</label>
+                                        <div class="col-sm-9">
+                                            {{form.last_name}}
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-sm-3 col-form-label">First Name</label>
+                                        <div class="col-sm-9">
+                                            {{form.first_name}}
+                                        </div>
+                                    </div>
+
+                                    
+                                    <div class="form-group row">
+                                        <label class="col-sm-3 col-form-label">Middle Name</label>
+                                        <div class="col-sm-9">
+                                            {{form.middle_name}}
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-sm-3 col-form-label">Phone Number</label>
+                                        <div class="col-sm-9">
+                                            {{form.phone_no}}
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group row">
+                                        <label class="col-sm-3 col-form-label">Gender</label>
+                                        <div class="col-sm-9">
+                                            {{form.gender}}
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-sm-3 col-form-label">Departments</label>
+                                        <div class="col-sm-9">
+                                            {{form.department}}
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="form-group row">
+                                        <div class="col-sm-9 ml-sm-auto">
+                                            <button class="btn btn-info" type="submit">Submit</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+
+
+    <div class="sidenav-backdrop backdrop"></div>
+    <div class="preloader-backdrop">
+        <div class="page-preloader">Loading</div>
+    </div>
+{% endblock %}
+{% block custom_js %}
+ <script>
+    $(document).ready(function(){
+
+        $("#id_phone_no").keyup(function(){
+            var phone_no=$(this).val();
+
+            if(phone_no!=""){
+              $.ajax({
+                url:'{% url "check_membership_phone_no_exist" %}',
+                type:'POST',
+                data:{phone_no:phone_no}
+                })
+                  .done(function(response){
+                  console.log(response);
+                  if(response == "True"){
+                    $(".phone_no_error").remove();
+                    
+                        $("<span class='phone_no_error' style='padding: 5px; color: red;font-weight: bold;'>Phone No Not Available</span>").insertAfter("#id_phone_no");
+                  }
+                  else{
+                  $(".phone_no_error").remove();
+                   // $("<span class='alert alert-success email_error'>Email Available</span>").insertAfter("#id_email");
+                    $("<span class='phone_no_error' style='padding: 5px;color: green;font-weight: bold;'>Phone Number Available</span>").insertAfter("#id_phone_no");
+                      
+                  }
+              })
+              .fail(function(){
+                  console.log("Failed");
+              })
+
+            }
+            else{
+            $(".phone_no_error").remove();
+          }
+
+          });
+      
+
+    })
+ </script>
+{% endblock %}

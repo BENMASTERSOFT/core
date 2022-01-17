@@ -1,0 +1,164 @@
+SET  @num := 0;
+
+UPDATE cooperative_members SET id = @num := (@num+1);
+
+ALTER TABLE cooperative_members AUTO_INCREMENT =1;
+
+UPDATE cooperative_MemberShipRequest SET id = @num := (@num+1);
+ALTER TABLE cooperative_MemberShipRequest AUTO_INCREMENT =1;
+
+UPDATE cooperative_MemberShipRequestAdditionalInfo SET id = @num := (@num+1);
+ALTER TABLE cooperative_MemberShipRequestAdditionalInfo AUTO_INCREMENT =1;
+
+UPDATE cooperative_MemberShipRequestAdditionalAttachment SET id = @num := (@num+1);
+ALTER TABLE cooperative_MemberShipRequestAdditionalAttachment AUTO_INCREMENT =1;
+
+UPDATE cooperative_MemberShipFormSales SET id = @num := (@num+1);
+ALTER TABLE cooperative_MemberShipFormSales AUTO_INCREMENT =1;
+
+UPDATE cooperative_Members SET id = @num := (@num+1);
+ALTER TABLE cooperative_Members AUTO_INCREMENT =1;
+
+
+UPDATE cooperative_AccountDeductions SET id = @num := (@num+1);
+ALTER TABLE cooperative_AccountDeductions AUTO_INCREMENT =1;
+
+UPDATE cooperative_ApprovableTransactions SET id = @num := (@num+1);
+ALTER TABLE cooperative_ApprovableTransactions AUTO_INCREMENT =1;
+
+UPDATE cooperative_ApprovalOfficers SET id = @num := (@num+1);
+ALTER TABLE cooperative_ApprovalOfficers AUTO_INCREMENT =1;;
+
+UPDATE cooperative_TransactionPeriods SET id = @num := (@num+1);
+ALTER TABLE cooperative_TransactionPeriods AUTO_INCREMENT =1;
+
+UPDATE cooperative_Receipts SET id = @num := (@num+1);
+ALTER TABLE cooperative_Receipts AUTO_INCREMENT =1;
+
+UPDATE cooperative_CooperativeBankAccounts SET id = @num := (@num+1);
+ALTER TABLE cooperative_CooperativeBankAccounts AUTO_INCREMENT =1;
+
+UPDATE cooperative_CertifiableTransactions SET id = @num := (@num+1);
+ALTER TABLE cooperative_CertifiableTransactions AUTO_INCREMENT =1;
+
+UPDATE cooperative_CertificationOfficers SET id = @num := (@num+1);
+ALTER TABLE cooperative_CertificationOfficers AUTO_INCREMENT =1;
+
+
+
+UPDATE cooperative_SavingsUploaded SET id = @num := (@num+1);
+ALTER TABLE cooperative_SavingsUploaded AUTO_INCREMENT =1;
+
+UPDATE cooperative_LoansUploaded SET id = @num := (@num+1);
+ALTER TABLE cooperative_LoansUploaded AUTO_INCREMENT =1;
+
+UPDATE cooperative_MembersExclusiveness SET id = @num := (@num+1);
+ALTER TABLE cooperative_MembersExclusiveness AUTO_INCREMENT =1;
+
+UPDATE cooperative_MembersNextOfKins SET id = @num := (@num+1);
+ALTER TABLE cooperative_MembersNextOfKins AUTO_INCREMENT =1;
+
+UPDATE cooperative_StandingOrderAccounts SET id = @num := (@num+1);
+ALTER TABLE cooperative_StandingOrderAccounts AUTO_INCREMENT =1;
+
+UPDATE cooperative_LoanRequest SET id = @num := (@num+1);
+ALTER TABLE cooperative_LoanRequest AUTO_INCREMENT =1;
+
+UPDATE cooperative_LoanGuarantors SET id = @num := (@num+1);
+ALTER TABLE cooperative_LoanGuarantors AUTO_INCREMENT =1;
+
+UPDATE cooperative_ExternalFascilitiesTemp SET id = @num := (@num+1);
+ALTER TABLE cooperative_ExternalFascilitiesTemp AUTO_INCREMENT =1;
+
+UPDATE cooperative_ExternalFascilitiesMain SET id = @num := (@num+1);
+ALTER TABLE cooperative_ExternalFascilitiesMain AUTO_INCREMENT =1;
+
+UPDATE cooperative_LoanRequestAttachments SET id = @num := (@num+1);
+ALTER TABLE cooperative_LoanRequestAttachments AUTO_INCREMENT =1;
+
+UPDATE cooperative_LoanRequestSettings SET id = @num := (@num+1);
+ALTER TABLE cooperative_LoanRequestSettings AUTO_INCREMENT =1;
+
+UPDATE cooperative_LoanFormIssuance SET id = @num := (@num+1);
+ALTER TABLE cooperative_LoanFormIssuance AUTO_INCREMENT =1;
+
+UPDATE cooperative_LoanApplication SET id = @num := (@num+1);
+ALTER TABLE cooperative_LoanApplication AUTO_INCREMENT =1;
+
+UPDATE cooperative_LoanApplicationGuarnators SET id = @num := (@num+1);
+ALTER TABLE cooperative_LoanApplicationGuarnators AUTO_INCREMENT =1;
+
+UPDATE cooperative_LoanApplicationSettings SET id = @num := (@num+1);
+ALTER TABLE cooperative_LoanApplicationSettings AUTO_INCREMENT =1;
+
+UPDATE cooperative_LoansDisbursed SET id = @num := (@num+1);
+ALTER TABLE cooperative_LoansDisbursed AUTO_INCREMENT =1;
+
+UPDATE cooperative_LoansCleared SET id = @num := (@num+1);
+ALTER TABLE cooperative_LoansCleared AUTO_INCREMENT =1;
+
+UPDATE cooperative_MonthlyDeductionList SET id = @num := (@num+1);
+ALTER TABLE cooperative_MonthlyDeductionList AUTO_INCREMENT =1;
+
+UPDATE cooperative_MonthlyGeneratedTransactions SET id = @num := (@num+1);
+ALTER TABLE cooperative_MonthlyGeneratedTransactions AUTO_INCREMENT =1;
+
+UPDATE cooperative_MonthlyDeductionListGenerated SET id = @num := (@num+1);
+ALTER TABLE cooperative_MonthlyDeductionListGenerated AUTO_INCREMENT =1;
+
+UPDATE cooperative_MonthlyGroupGeneratedTransactions SET id = @num := (@num+1);
+ALTER TABLE cooperative_MonthlyGroupGeneratedTransactions AUTO_INCREMENT =1;
+
+UPDATE cooperative_AccountDeductions SET id = @num := (@num+1);
+ALTER TABLE cooperative_AccountDeductions AUTO_INCREMENT =1;
+
+UPDATE cooperative_NonMemberAccountDeductions SET id = @num := (@num+1);
+ALTER TABLE cooperative_NonMemberAccountDeductions AUTO_INCREMENT =1;
+
+UPDATE cooperative_MembersSalaryUpdateRequest SET id = @num := (@num+1);
+ALTER TABLE cooperative_MembersSalaryUpdateRequest AUTO_INCREMENT =1;
+
+UPDATE cooperative_PersonalLedger SET id = @num := (@num+1);
+ALTER TABLE cooperative_PersonalLedger AUTO_INCREMENT =1;
+
+UPDATE cooperative_CashBook SET id = @num := (@num+1);
+ALTER TABLE cooperative_CashBook AUTO_INCREMENT =1;
+
+UPDATE cooperative_NorminalRoll SET id = @num := (@num+1);
+ALTER TABLE cooperative_NorminalRoll AUTO_INCREMENT =1;
+
+UPDATE cooperative_Stock SET id = @num := (@num+1);
+ALTER TABLE cooperative_Stock AUTO_INCREMENT =1;
+
+UPDATE cooperative_Members_Credit_Sales_Selected SET id = @num := (@num+1);
+ALTER TABLE cooperative_Members_Credit_Sales_Selected AUTO_INCREMENT =1;
+
+UPDATE cooperative_Members_Credit_Sales_external_fascilities SET id = @num := (@num+1);
+ALTER TABLE cooperative_Members_Credit_Sales_external_fascilities AUTO_INCREMENT =1;;
+
+UPDATE cooperative_members_credit_purchase_summary SET id = @num := (@num+1);
+ALTER TABLE cooperative_members_credit_purchase_summary AUTO_INCREMENT =1;
+
+UPDATE cooperative_members_credit_purchase_analysis SET id = @num := (@num+1);
+ALTER TABLE cooperative_members_credit_purchase_analysis AUTO_INCREMENT =1;
+
+UPDATE cooperative_CustomerID SET id = @num := (@num+1);
+ALTER TABLE cooperative_CustomerID AUTO_INCREMENT =1;
+
+UPDATE cooperative_Customers SET id = @num := (@num+1);
+ALTER TABLE cooperative_Customers AUTO_INCREMENT =1;
+
+UPDATE cooperative_General_Cash_Sales_Selected SET id = @num := (@num+1);
+ALTER TABLE cooperative_General_Cash_Sales_Selected AUTO_INCREMENT =1;
+
+UPDATE cooperative_Daily_Sales SET id = @num := (@num+1);
+ALTER TABLE cooperative_Daily_Sales AUTO_INCREMENT =1;
+
+UPDATE cooperative_Daily_Sales_Summary SET id = @num := (@num+1);
+ALTER TABLE cooperative_Daily_Sales_Summary AUTO_INCREMENT =1;
+
+UPDATE cooperative_Cheque_Table SET id = @num := (@num+1);
+ALTER TABLE cooperative_Cheque_Table AUTO_INCREMENT =1;
+
+UPDATE cooperative_CooperativeShopLedger SET id = @num := (@num+1);
+ALTER TABLE cooperative_CooperativeShopLedger AUTO_INCREMENT =1;

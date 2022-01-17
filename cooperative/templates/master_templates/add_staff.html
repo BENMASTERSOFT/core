@@ -1,0 +1,208 @@
+{% extends 'master_templates/base_template.html' %}
+{% load static %}
+
+{% block content %}
+            <div class="page-content fade-in-up">
+                <div class="row">                   
+                    <div class="col-md-6">
+                        <div class="ibox">
+                            <div class="ibox-head">
+                                <div class="ibox-title">Add System Users</div>
+                            </div>
+                        
+                            <div class="ibox-body">
+                                {% url url as action_path %}
+                                {% include "master_templates/form_template.html" with messages=messages form=form action_path=action_path button_text=button_text %}
+                            </div>
+                        </div>
+                    </div>
+
+                                        <div class="col-xl-6">
+                        <div class="ibox">
+                            <div class="ibox-head">
+                                <div class="ibox-title">User Types</div>
+                            </div>
+                            <div class="ibox-body">
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Description</th>
+                                            <th>Code</th>
+                                        
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for item in items %}
+                                        <tr>
+                                            <td>{{forloop.counter}}</td>
+                                            <td>{{item.title}}</td>
+                                            <td>{{item.code}}</td>
+                                         
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xl-12">
+                        <div class="ibox">
+                            <div class="ibox-head">
+                                <div class="ibox-title">Available  System Users</div>
+                            </div>
+                            <div class="ibox-body">
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>First Name</th>
+                                            <th>Last Name</th>
+                                            <th>Middle Name</th>
+                                            <th>Username</th>
+                                            <th>User Type</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for user in users %}
+                                        <tr>
+                                            <td>{{forloop.counter}}</td>
+                                            <td>{{user.first_name}}</td>
+                                            <td>{{user.last_name}}</td>
+                                            <td>{{user.staff.middle_name}}</td>
+                                            <td>{{user.username}}</td>
+                                            <td>{{user.user_type}}</td>
+                                        
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+
+             
+            </div>
+            
+
+
+    <div class="sidenav-backdrop backdrop"></div>
+    <div class="preloader-backdrop">
+        <div class="page-preloader">Loading</div>
+    </div>
+{% endblock %}
+{% block custom_js %}
+ <script>
+    $(document).ready(function(){
+        $("#id_email").keyup(function(){
+            var email=$(this).val();
+
+        if(email!=""){
+            $.ajax({
+              url:'{% url "check_email_exist" %}',
+              type:'POST',
+              data:{email:email}
+            })
+            .done(function(response){
+                console.log(response);
+                if(response == "True"){
+                  $(".email_error").remove();
+                  
+                      $("<span class='email_error' style='padding: 5px; color: red;font-weight: bold;'>Email Not Available</span>").insertAfter("#id_email");
+                }
+                else{
+                $(".email_error").remove();
+                 // $("<span class='alert alert-success email_error'>Email Available</span>").insertAfter("#id_email");
+                  $("<span class='email_error' style='padding: 5px;color: green;font-weight: bold;'>Email Available</span>").insertAfter("#id_email");
+                    
+                }
+            })
+            .fail(function(){
+                console.log("Failed");
+            })
+          }
+          else{
+            $(".email_error").remove();
+          }
+        });
+
+
+        $("#id_username").keyup(function(){
+            var username=$(this).val();
+
+            if(username!=""){
+              $.ajax({
+                url:'{% url "check_username_exist" %}',
+                type:'POST',
+                data:{username:username}
+                })
+                  .done(function(response){
+                  console.log(response);
+                  if(response == "True"){
+                    $(".username_error").remove();
+                    
+                        $("<span class='username_error' style='padding: 5px; color: red;font-weight: bold;'>Username Not Available</span>").insertAfter("#id_username");
+                  }
+                  else{
+                  $(".username_error").remove();
+                   // $("<span class='alert alert-success email_error'>Email Available</span>").insertAfter("#id_email");
+                    $("<span class='username_error' style='padding: 5px;color: green;font-weight: bold;'>Username Available</span>").insertAfter("#id_username");
+                      
+                  }
+              })
+              .fail(function(){
+                  console.log("Failed");
+              })
+
+            }
+            else{
+            $(".username_error").remove();
+          }
+
+          });
+      
+    
+
+        $("#id_phone_no").keyup(function(){
+            var phone_no=$(this).val();
+
+            if(phone_no!=""){
+              $.ajax({
+                url:'{% url "check_phone_no_exist" %}',
+                type:'POST',
+                data:{phone_no:phone_no}
+                })
+                  .done(function(response){
+                  console.log(response);
+                  if(response == "True"){
+                    $(".phone_no_error").remove();
+                    
+                        $("<span class='phone_no_error' style='padding: 5px; color: red;font-weight: bold;'>Phone No Not Available</span>").insertAfter("#id_phone_no");
+                  }
+                  else{
+                  $(".phone_no_error").remove();
+                   // $("<span class='alert alert-success email_error'>Email Available</span>").insertAfter("#id_email");
+                    $("<span class='phone_no_error' style='padding: 5px;color: green;font-weight: bold;'>Phone Number Available</span>").insertAfter("#id_phone_no");
+                      
+                  }
+              })
+              .fail(function(){
+                  console.log("Failed");
+              })
+
+            }
+            else{
+            $(".phone_no_error").remove();
+          }
+
+          });
+      
+
+    })
+ </script>
+{% endblock %}

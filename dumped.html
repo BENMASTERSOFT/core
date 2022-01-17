@@ -1,0 +1,147 @@
+class UserProfileForm(forms.ModelForm):
+    phone = forms.IntegerField(validators = [custom_validator,])
+
+
+widgets = {
+    'my_integer': forms.NumberInput(attrs={
+        'id': 'number_field',    
+        'style': 'width:6ch',
+        'oninput': 'limit_input()'
+    }),
+}
+
+
+
+
+Now in Django 2.1.7 you can use size in NumberInput attrs
+
+widgets = {
+    'bank_account_number': form.NumberInput(attrs={'size': '20'}),
+}
+
+
+
+class SomeForm(forms.ModelForm):
+    class Meta:
+        model = SomeTable
+        fields = ('field1', 'field2')
+        widgets = {
+             'field2': forms.NumberInput(attrs={'style': 'width: 100px'}),
+            }
+
+
+
+
+
+from django import forms
+
+class NumberFieldForm(forms.Form):
+    Number = forms.IntegerField(label='Enter Number', label_suffix=" : ", min_value=1, max_value=100, required=False,
+                                 widget=forms.NumberInput(attrs={'class': 'form-control'}),
+                                help_text="This value is greater than or equal to 1 & less than or equal to 100.",
+                                disabled = False, error_messages={'required': "Please Enter Number."})
+
+
+
+
+
+from django import forms 
+  
+class NumberFieldForm(forms.Form):
+ 
+    fees = forms.DecimalField(label='Student Fees', label_suffix=" : ", min_value=1, max_value=100, max_digits=4,
+                              widget=forms.NumberInput(attrs={'class': 'form-control'}),
+                              decimal_places=1, required=False,
+                              help_text="This value is greater than or equal to 1 & less than or equal to 100. "
+                                        "Also that there are no more than 4 digits in total.",
+                              disabled = False,
+                              error_messages={'required': "Please Enter Fees amount."})
+
+
+
+from django import forms 
+  
+class NumberFieldForm(forms.Form):
+    rate = forms.FloatField(label='Student Fees', label_suffix=" : ", min_value=1, max_value=100, required=False,
+                            widget=forms.NumberInput(attrs={'class': 'form-control'}),
+                            help_text="This value is greater than or equal to 1 & less than or equal to 100.",  disabled = False,
+                            error_messages={'required': "Please Enter rate value."})
+
+
+
+from django import forms
+
+# Create your forms here.
+
+class ExampleForm(forms.Form):
+    comment = forms.CharField(widget=forms.Textarea(attrs={'rows':3}))
+
+
+
+
+from django import forms
+
+# Create your forms here.
+
+class ExampleForm(forms.Form):
+    email = forms.EmailField()
+
+
+
+from django import forms
+
+# Create your forms here.
+
+class ExampleForm(forms.Form):
+    agree = forms.BooleanField()
+
+
+
+
+DateField() with NumberInput widget attribute
+
+
+from django import forms
+from django.forms.widgets import NumberInput
+
+# Create your forms here.
+
+
+class ExampleForm(forms.Form):
+    birth_date = forms.DateField(widget=NumberInput(attrs={'type': 'date'}))
+
+
+
+
+
+DateField() with SelectDateWidget widget
+
+
+from django import forms
+
+
+# Create your forms here.
+
+BIRTH_YEAR_CHOICES = ['1980', '1981', '1982']
+
+class ExampleForm(forms.Form):
+        birth_year = forms.DateField(widget=forms.SelectDateWidget(years=BIRTH_YEAR_CHOICES))
+
+
+
+
+DecimalField()
+
+
+from django import forms
+
+# Create your forms here.
+
+class ExampleForm(forms.Form):
+    value = forms.DecimalField()
+
+
+##########################################
+################ NULL ##################
+
+# Book.objects.filter(author__isnull=True)

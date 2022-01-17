@@ -1,0 +1,553 @@
+{% load static %}
+        <nav class="page-sidebar" id="sidebar">
+            <div id="sidebar-collapse">
+                <div class="admin-block d-flex">
+                    <div>
+                        <img src="{% static '/cooperative/assets/img/admin-avatar.png' %}" width="45px" />
+                    </div>
+                    <div class="admin-info">
+                        <div class="font-strong">{{request.user}}</div><small>Desk Office</small></div>
+                </div>
+                <ul class="side-menu metismenu">
+                    <li>
+                        <a class="active" href="{% url 'deskofficer_home' %}"><i class="sidebar-item-icon fa fa-th-large"></i>
+                            <span class="nav-label">Dashboard</span>
+                        </a>
+                    </li>
+                    <li class="heading">FEATURES</li>
+                        
+
+                    <li>
+                        <a href="javascript:;"><i class="sidebar-item-icon fa fa-edit"></i>
+                            <span class="nav-label">Membership  </span><i class="fa fa-angle-left arrow"></i></a>
+                        <ul class="nav-2-level collapse">
+                           
+                            <li>
+                                <a href="{% url 'membership_request' %}">Add Request</a>
+                            </li>
+                            <li>
+                                <a href="{% url 'membership_request_complete_search' %}">Complete Request</a>
+                            </li>
+                            <li>
+                                <a href="{% url 'membership_form_sales_list_load' %}">Membership Form Sales</a>
+                            </li>
+                            <li>
+                                <a href="{% url 'membership_registration_list_load' %}">Membership Registration</a>
+                            </li>  
+                           
+                            <li>
+                                <a href="{% url 'Members_Account_Creation_Search' %}">Single Account Creations</a>
+                            </li> 
+                            <li>
+                                <a href="{% url 'Members_Multiple_Account_Creation_preview' %}">Multiple Account Creations</a>
+                            </li>
+                           
+                            
+
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="javascript:;"><i class="sidebar-item-icon fa fa-edit"></i>
+                            <span class="nav-label">Standing Order</span><i class="fa fa-angle-left arrow"></i></a>
+                        <ul class="nav-2-level collapse">
+                           
+                            <li>
+                                <a href="{% url 'standing_order_list_load' %}">Group Standing Orders</a>
+                            </li>
+                            <li>
+                                <a href="{% url 'standing_order_selected_search' %}">Selected Standing Order</a>
+                            </li>
+
+                        </ul>
+                    </li>
+
+                     <li>
+                        <a href="javascript:;"><i class="sidebar-item-icon fa fa-sitemap"></i>
+                            <span class="nav-label">Transaction Adjustment</span><i class="fa fa-angle-left arrow"></i></a>
+                        <ul class="nav-2-level collapse">
+                           <li>
+                                <a href="javascript:;">
+                                    <span class="nav-label">Savings</span><i class="fa fa-angle-left arrow"></i></a>
+                                <ul class="nav-3-level collapse">
+                                    <li>
+                                        <a href="{% url 'Transaction_adjustment_search' %}">Place Request</a>
+                                    </li>
+                                    <li>
+                                        <a href="{% url 'Transaction_Adjustment_Approved_List_Load' %}">Process Request</a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li>
+                                <a href="javascript:;">
+                                    <span class="nav-label">Loan</span><i class="fa fa-angle-left arrow"></i></a>
+                                <ul class="nav-3-level collapse">
+                                    <li>
+                                        <a href="{% url 'Transaction_Loan_adjustment_search' %}">Place Request</a>
+                                    </li>
+                                    <li>
+                                        <a href="{% url 'Transaction_Loan_adjustment_Transaction_Approved_List_Load' %}">Process Request</a>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </li>
+
+
+                    
+                    <li>
+                        <a href="javascript:;"><i class="sidebar-item-icon fa fa-edit"></i>
+                            <span class="nav-label">Cash Deposit</span><i class="fa fa-angle-left arrow"></i></a>
+                        <ul class="nav-2-level collapse">
+                           
+                            <li>
+                                <a href="{% url 'Cash_Deposit_Savings_Search' %}">Savings</a>
+                            </li>
+                            <li>
+                                <a href="{% url 'Cash_Deposit_Loans_Search' %}">Loan</a>
+                            </li>
+                            <li>
+                                <a href="{% url 'Cash_Deposit_Welfare_Search' %}">Welfare</a>
+                            </li>
+                            <li>
+                                <a href="{% url 'Cash_Deposit_Shares_Search' %}">Shares</a>
+                            </li>
+
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="javascript:;"><i class="sidebar-item-icon fa fa-edit"></i>
+                            <span class="nav-label">Cash Withdrawal</span><i class="fa fa-angle-left arrow"></i></a>
+                        <ul class="nav-2-level collapse">
+                           
+                            <li>
+                                <a href="{% url 'Cash_Withdrawal_Search' %}">Withdrawal Request</a>
+                            </li>
+                           
+                            <li>
+                                <a href="{% url 'Cash_Withdrawal_Transactions_Approved_list_Search' %}">Request Status</a>
+                            </li>
+                           
+
+                        </ul>
+                    </li>
+
+
+
+
+                    <li>
+                        <a href="javascript:;"><i class="sidebar-item-icon fa fa-sitemap"></i>
+                            <span class="nav-label">Personnel Info</span><i class="fa fa-angle-left arrow"></i></a>
+                        <ul class="nav-2-level collapse">
+                           <li>
+                                <a href="{% url 'Norminal_Roll' %}">Norminal Roll</a>
+                            </li>
+                           
+                            
+                          
+                            <li>
+                                <a href="javascript:;">
+                                    <span class="nav-label">Title</span><i class="fa fa-angle-left arrow"></i></a>
+                                <ul class="nav-3-level collapse">
+                                     <li>
+                                        <a href="{% url 'Updating_Title_list_load' %}">Group Title</a>
+                                     </li>
+                                      <li>
+                                        <a href="{% url 'Updating_Title_selected_search' %}">Selected Title</a>
+                                     </li> 
+                                     
+                                </ul>
+                            </li> 
+                            <li>
+                                <a href="javascript:;">
+                                    <span class="nav-label">Departments</span><i class="fa fa-angle-left arrow"></i></a>
+                                <ul class="nav-3-level collapse">
+                                     <li>
+                                        <a href="{% url 'Updating_Department_list_load' %}">Group Departments</a>
+                                     </li>
+                                      <li>
+                                        <a href="{% url 'Updating_Department_selected_search' %}">Selected Departments</a>
+                                     </li>
+                                     
+                                </ul>
+                            </li> 
+
+                               <li>
+                                <a href="javascript:;">
+                                    <span class="nav-label">Gender</span><i class="fa fa-angle-left arrow"></i></a>
+                                <ul class="nav-3-level collapse">
+                                    
+                                  
+                                     <li>
+                                        <a href="{% url 'Updating_Gender_list_load' %}">Group Records</a>
+                                     </li>
+                                      <li>
+                                        <a href="{% url 'Updating_Gender_selected_search' %}">Selected Records</a>
+                                     </li>
+
+                                </ul>
+                            </li> 
+                        </ul>
+                    </li>
+                     <li>
+                        <a href="javascript:;"><i class="sidebar-item-icon fa fa-sitemap"></i>
+                            <span class="nav-label">Shares Manager</span><i class="fa fa-angle-left arrow"></i></a>
+                            <ul class="nav-2-level collapse">
+                            
+                                <li>
+                                    <a href="javascript:;">
+                                        <span class="nav-label">Initial Shares Record</span><i class="fa fa-angle-left arrow"></i></a>
+                                    <ul class="nav-3-level collapse">
+                                        <li>
+                                            <a href="{% url 'Members_Initial_Shares_update_Search' %}">Update Request</a>
+                                        </li>
+                                        <li>
+                                            <a href="{% url 'Members_Initial_Shares_update_approved_list_load' %}">Process Update Request</a>
+                                         </li>
+                                    
+                                     </ul>
+                                </li>
+
+
+                                <li>
+                                    <a href="javascript:;">
+                                        <span class="nav-label">Shares Requesition</span><i class="fa fa-angle-left arrow"></i></a>
+                                    <ul class="nav-3-level collapse">
+                                        <li>
+                                            <a href="{% url 'Members_Share_Purchase_Request_Search' %}">Request for Shares</a>
+                                        </li>
+                                        <li>
+                                            <a href="">Manage Request</a>
+                                         </li>
+                                        <li>
+                                            <a href="{% url 'Members_Share_Purchase_Request_Process' %}">Process Request</a>
+                                        </li>
+                                     </ul>
+                                </li>
+                        </ul>
+                    </li>
+
+                 
+                    <li>
+                        <a href="javascript:;"><i class="sidebar-item-icon fa fa-edit"></i>
+                            <span class="nav-label">Next of Kin</span><i class="fa fa-angle-left arrow"></i></a>
+                        <ul class="nav-2-level collapse">
+                           
+                            <li>
+                                <a href="{% url 'Members_Next_Of_Kins_search' %}">Add Next of Kin</a>
+                            </li>
+                            <li>
+                                <a href="{% url 'Members_Next_Of_Kins_Manage_search' %}">Manage Next of Kin</a>
+                            </li>
+
+                        </ul>
+                    </li>
+
+                    <li>
+                        <a href="javascript:;"><i class="sidebar-item-icon fa fa-edit"></i>
+                            <span class="nav-label">Salary Update</span><i class="fa fa-angle-left arrow"></i></a>
+                        <ul class="nav-2-level collapse">
+                           
+                            <li>
+                                <a href="{% url 'Members_Salary_Update_request_search' %}">Salary Update Request</a>
+                            </li>
+                            <li>
+                                <a href="{% url 'Members_Salary_Update_Request_approval_Load' %}">Process Salary Update</a>
+                            </li>
+
+                        </ul>
+                    </li>
+
+
+                   <li>
+                            <a href="javascript:;"><i class="sidebar-item-icon fa fa-sitemap"></i>
+                                <span class="nav-label">Exclusiveness</span><i class="fa fa-angle-left arrow"></i></a>
+                            <ul class="nav-3-level collapse">
+                                <li>
+                                    <a href="{% url 'members_exclusiveness_request_search' %}">Exclusive Request</a>
+                                </li>
+                                <li>
+                                    <a href="{% url 'members_exclusiveness_approved_list_load' %}">Approved Exclusiveness</a>
+                                </li>                                        
+                            </ul>
+                        </li>
+                   
+                    <li>
+                        <a href="javascript:;"><i class="sidebar-item-icon fa fa-edit"></i>
+                            <span class="nav-label">Loan Manager</span><i class="fa fa-angle-left arrow"></i></a>
+                        <ul class="nav-2-level collapse">
+                           
+                           <li>
+                                <a href="{% url 'loan_request_search' %}">Loan Request</a>
+                            </li>
+                            <li>
+                                <a href="{% url 'loan_request_approved_list_load' %}">Loan Form Sales</a>
+                            </li>
+                            <li>
+                                <a href="{% url 'loan_application_list_load' %}">Loan Application</a>
+                            </li> 
+                            <li>
+                                <a href="{% url 'loan_application_approved_list_load' %}">Loan Processing</a>
+                            </li>
+                            
+
+                        </ul>
+                    </li>
+
+                    <li>
+                        <a href="javascript:;"><i class="sidebar-item-icon fa fa-edit"></i>
+                            <span class="nav-label">External Fascilities</span><i class="fa fa-angle-left arrow"></i></a>
+                        <ul class="nav-2-level collapse">
+                            <li>
+                              <a href="{% url 'external_fascility_update_search' %}">Add Fascility Update</a> 
+                            </li>
+                            <li>
+                              <a href="{% url 'external_fascility_update_approved_list_load' %}">Approved Fascility</a> 
+                            </li>
+                             <li>
+                              <a href="">Request Fascility Liquidation</a> 
+                            </li> 
+                            <li>
+                              <a href="">Process Fascility Liquidation</a> 
+                            </li>
+                            
+
+                        </ul>
+                    </li>
+
+
+                    <li>
+                        <a href="javascript:;"><i class="sidebar-item-icon fa fa-table"></i>
+                            <span class="nav-label">Monthly Deductions</span><i class="fa fa-angle-left arrow"></i></a>
+                        <ul class="nav-2-level collapse">                        
+
+                          <li>
+                            <a href="{% url 'TransactionPeriodManager' %}">Transaction Period Manager</a>
+                        </li> 
+                        <li>
+                            <a href="{% url 'Monthly_Deduction_Salary_Institution_Load' %}">Individual Transactions</a>
+                        </li> 
+                        <li>
+                            <a href="{% url 'Monthly_Group_transaction_Institution_Load' %}">Group Transactions</a>
+                        </li> 
+                        <li>
+                            <a href="{% url 'Monthly_Deduction_excel_Export_Institution_Load' %}">Exporting To Excel</a>
+                        </li> 
+                        <li>
+                            <a href="{% url 'Monthly_Account_deduction_Excel_import_Institution_Load' %}">Import Account Deductions</a>
+                        </li>
+                        <li>
+                            <a href="{% url 'Monthly_Account_deduction_Processing_Institution_Load' %}">Process Account Deductions</a>
+                        </li>
+                        <li>
+                            <a href="{% url 'monthly_wrongful_deduction_transaction_period_load' %}">Monthly Wringful Deductions</a>
+                        </li>
+                        <li>
+                            <a href="{% url 'Monthly_Unbalanced_transactions' %}">Non Balanced Deductions</a>
+                        </li>
+                        <li>
+                            <a href="{% url 'Monthly_deduction_ledger_posting_preview' %}">Deductions Ledger Posting</a>
+                        </li>
+                           
+                        </ul>
+                    </li>
+
+
+                    <li>
+                        <a href="javascript:;"><i class="sidebar-item-icon fa fa-bar-chart"></i>
+                            <span class="nav-label">Bank Accounts</span><i class="fa fa-angle-left arrow"></i></a>
+                        <ul class="nav-2-level collapse">
+                            <li>
+                                <a href="{% url 'MembersBankAccounts_list_search' %}">Add Account</a>
+                            </li>
+                            <li>
+                                <a href="{% url 'Members_Bank_Accounts_edit_search' %}">Manage Accounts</a>
+                            </li>
+                            
+                        </ul>
+                    </li>
+                <li>
+                        <a href="javascript:;"><i class="sidebar-item-icon fa fa-sitemap"></i>
+                            <span class="nav-label">General Reports</span><i class="fa fa-angle-left arrow"></i></a>
+                        <ul class="nav-2-level collapse">
+
+                             <li>
+                                <a href="{% url 'Cash_Deposit_Report_Date_Load' %}">Cash Deposit</a>
+                            </li>
+                            <li>
+                                <a href="{% url 'Norminal_Roll_List_Load' %}">Norminal Roll</a>
+                            </li>
+                            <li>
+                                <a href="javascript:;">
+                                    <span class="nav-label">Ledger</span><i class="fa fa-angle-left arrow"></i></a>
+                                <ul class="nav-3-level collapse">
+                                    <li>
+                                        <a href="{% url 'PersonalLedger_Selected_Search' %}">Personal Ledger</a>
+                                    </li>
+                                    <li>
+                                        <a href="javascript:;">Level 3</a>
+                                    </li>
+                                </ul>
+                            </li>
+
+                            <li>
+                                <a href="javascript:;">
+                                    <span class="nav-label">Loan</span><i class="fa fa-angle-left arrow"></i></a>
+                                <ul class="nav-3-level collapse">
+                                    <li>
+                                        <a href="{% url 'Load_Active_loans' %}">Active Loans</a>
+                                    </li>
+                                    <li>
+                                        <a href="javascript:;">Currently Cleared Loans</a>
+                                    </li>
+                                </ul>
+                            </li>
+
+                        </ul>
+                    </li>
+
+
+                   {% comment %} {% if values.status.title == 'ACTIVE' %}{% endcomment %}
+                    <li>
+                        <a href="javascript:;"><i class="sidebar-item-icon fa fa-sitemap"></i>
+                            <span class="nav-label">Data Capture</span><i class="fa fa-angle-left arrow"></i></a>
+                        <ul class="nav-2-level collapse">
+                          
+                            <li>
+                                <a href="javascript:;">
+                                    <span class="nav-label">Norminal Roll</span><i class="fa fa-angle-left arrow"></i></a>
+                                <ul class="nav-3-level collapse">
+                                    <li>
+                                        <a href="{% url 'upload_norminal_roll' %}">Compound Norminal Roll</a>
+                                    </li>
+                                    <li>
+                                        <a href="{% url 'upload_distinct_norminal_roll' %}">Distinct Norminal Roll</a>
+                                    </li>
+                                   <li>
+                                        <a href="{% url 'Norminal_Roll_Preview' %}">Process Norminal Roll</a>
+                                     </li>  
+                                     
+                                     
+                                </ul>
+                            </li> 
+                          
+                          
+                            
+                            <li>
+                                <a href="javascript:;">
+                                    <span class="nav-label">Savings</span><i class="fa fa-angle-left arrow"></i></a>
+                                <ul class="nav-3-level collapse">
+                                    <li>
+                                        <a href="{% url 'Uploading_Existing_Savings' %}">Savings Upload</a>
+                                    </li> 
+                                    <li>
+                                        <a href="{% url 'Uploading_Existing_Savings_Additional_search' %}">Additional Savings</a>
+                                    </li>
+                                {% comment %}
+                                   <li>
+                                        <a href="{% url 'Uploading_Existing_Savings_Verification_load' %}">Savings Varification</a>
+                                     </li>
+                                {% endcomment %}
+                                </ul>
+                            </li>
+
+                             <li>
+                                <a href="javascript:;">
+                                    <span class="nav-label">Loan</span><i class="fa fa-angle-left arrow"></i></a>
+                                <ul class="nav-3-level collapse">
+                                    <li>
+                                       <a href="{% url 'Uploading_Existing_Loans' %}">Uploading Loans</a>
+                                    </li>
+                                    <li>
+                                       <a href="{% url 'Uploading_Existing_Aditional_Loans' %}">Additional Loan</a>
+                                    </li>
+                                   
+                                   
+                                </ul>
+                            </li>
+                            
+                            <li>
+                                <a href="javascript:;">
+                                    <span class="nav-label">Salary GrossPay</span><i class="fa fa-angle-left arrow"></i></a>
+                                <ul class="nav-3-level collapse">
+                                    <li>
+                                       <a href="{% url 'Updating_Gross_Pay' %}">Group Salary GrossPay</a>
+                                    </li>
+                                       <li>
+                                       <a href="{% url 'Updating_Gross_Pay_selected_search' %}">Selected Salary GrossPay</a>
+                                    </li>
+                                   <li>
+                                        <a href="">Manage Salary GrossPay</a>
+                                     </li>
+                                </ul>
+                            </li>
+                             <li>
+                                <a href="javascript:;">
+                                    <span class="nav-label">Date Joined</span><i class="fa fa-angle-left arrow"></i></a>
+                                <ul class="nav-3-level collapse">
+                                    <li>
+                                       <a href="{% url 'Updating_Date_Joined' %}">Uploading Date Joined</a>
+                                    </li>
+                                   <li>
+                                        <a href="{% url 'Updating_Date_Joined_Manage_List_load' %}">Manage Data Joined</a>
+                                     </li>
+                                </ul>
+                            </li>
+                            <li>
+                                <a href="javascript:;">
+                                    <span class="nav-label">Shares</span><i class="fa fa-angle-left arrow"></i></a>
+                                <ul class="nav-3-level collapse">
+                                    <li>
+                                       <a href="{% url 'Members_Shares_Upload_list_load' %}">Uploading Shares</a>
+                                    </li>
+                                   
+                                </ul>
+                            </li>
+
+                            <li>
+                                <a href="javascript:;">
+                                    <span class="nav-label">Annual Welfare</span><i class="fa fa-angle-left arrow"></i></a>
+                                <ul class="nav-3-level collapse">
+                                    <li>
+                                       <a href="{% url 'Members_Welfare_Upload_list_load' %}">Uploading Welfare</a>
+                                    </li>
+                                  
+
+                                </ul>
+                            </li>
+
+
+                        </ul>
+                    </li>
+
+                    {% comment %} {% endif %} {% endcomment %}
+                    
+                    <li>
+                        <a href="javascript:;"><i class="sidebar-item-icon fa fa-calendar"></i>
+                            <span class="nav-label">Calendar</span>
+                        </a>
+                    </li>
+                   
+                    <li>
+                        <a href="javascript:;"><i class="sidebar-item-icon fa fa-sitemap"></i>
+                            <span class="nav-label">Menu Levels</span><i class="fa fa-angle-left arrow"></i></a>
+                        <ul class="nav-2-level collapse">
+                            <li>
+                                <a href="javascript:;">Level 2</a>
+                            </li>
+                            <li>
+                                <a href="javascript:;">
+                                    <span class="nav-label">Level 2</span><i class="fa fa-angle-left arrow"></i></a>
+                                <ul class="nav-3-level collapse">
+                                    <li>
+                                        <a href="javascript:;">Level 3</a>
+                                    </li>
+                                    <li>
+                                        <a href="javascript:;">Level 3</a>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </nav>

@@ -1,0 +1,96 @@
+from datetime import datetime
+from dateutil.relativedelta import relativedelta
+given_date = '21/1/2021'
+print('Give Date: ', given_date)
+date_format = '%d/%m/%Y'
+dtObj = datetime.strptime(given_date, date_format)
+# Add 20 months to a given datetime object
+n = 20
+future_date = dtObj + relativedelta(months=n)
+print('Date after 20 months: ', future_date)
+print('Date after 20 months: ', future_date.date())
+# Convert datetime object to string in required format
+future_date_str = future_date.strftime(date_format)
+print('Date after 20 months (as string): ', future_date_str)
+
+
+
+
+
+from datetime import datetime
+import pandas as pd
+given_date = '1/21/2021'
+print('Give Date: ', given_date)
+# Convert date string to datetime object
+date_format = '%m/%d/%Y'
+dtObj = datetime.strptime(given_date, date_format)
+# Add 10 months to a given datetime object
+n = 10
+future_date = dtObj + pd.DateOffset(months=n)
+print('Date after 10 months: ', future_date)
+print('Date after 10 months: ', future_date.date())
+# Convert datetime object to string in required format
+future_date_str = future_date.strftime(date_format)
+print('Date after 10 months (as string): ', future_date_str)
+
+
+
+
+
+from django.db.models.functions import ExtractYear
+
+qs = Purchases.objects.annotate(year=ExtractYear('date')).filter(year = today.year)
+
+import datetime
+today = datetime.date.today()
+purchases = Purchases.objects.filter(datatime__year=today.year)
+
+from django.utils.dateparse import parse_date
+date_str = request.POST.get('date')
+date = parse_date(date_str)
+
+from django.utils.dateparse import parse_datetime
+date = parse_datetime(datetime_str)
+
+>>> s = "2014-04-07"
+>>> datetime.datetime.strptime(s, "%Y-%m-%d").date()
+datetime.date(2014, 4, 7)
+
+
+
+import datetime
+
+date_time_str = '2018-06-29 08:15:27.243860'
+date_time_obj = datetime.datetime.strptime(date_time_str, '%Y-%m-%d %H:%M:%S.%f')
+
+print('Date:', date_time_obj.date())
+print('Time:', date_time_obj.time())
+print('Date-time:', date_time_obj)
+
+
+
+
+{% for record in records %}
+    <tr>
+        <td>{{forloop.counter}}</td>
+        <td>{{record.particulars}}</td>
+        <td>
+            
+            {{record.debit|floatformat:2|intcomma}}
+            
+        </td>
+        <td>{{record.credit|floatformat:2|intcomma}}</td>
+        <td>
+            {% if record.balance < 0 %}
+                ({% widthratio record.balance 1 -1 %} )
+
+            {% else %}
+                 {{record.balance|floatformat:2|intcomma}}
+            {% endif %}
+          
+        </td>
+        <td>{{record.transaction_period}}</td>
+        <td>{{record.created_at|date:"D, d M, Y"}}</td>
+     
+    </tr>
+{% endfor %}

@@ -1,0 +1,80 @@
+{% extends 'shop_templates/base_template.html' %}
+{% load static %}
+
+{% block content %}
+            <div class="page-content fade-in-up">
+                <div class="row">
+             
+                    <div class="col-xl-10">
+
+                    <div class="ibox">
+                            <div class="ibox-head">
+                                <div class="ibox-title">LIST OF ITEMS | {{record.invoice}}  
+<a class="btn btn-xs btn-secondary m-l-5" href="{% url 'Purchase_Certification_item_Add_Item' record.pk %}">Add Item</a>
+                                </div>
+                                <div class="ibox-tools">
+                                   
+                                    <div class="form-group row">
+                                        <div class="col-sm-10 ml-sm-auto">
+                                            <a href="{% url 'Purchase_Certification_item_Preview_Processed' record.pk %}"  class="btn btn-success">Process</a>
+                                        </div>
+                                    </div>
+                                
+                                </div>
+                            </div>
+
+
+                        
+                            <div class="ibox-body">
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Code</th>
+                                            <th>Item Name</th>
+                                            <th>Quantity</th>
+                                            <th>Unit Cost</th>
+                                            <th>Total Cost</th>
+                                            <th>Unit S. Price</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for item in items %}
+                                        <tr>
+                                            <td>{{forloop.counter}}</td>
+                                            <td>{{item.product.code}}</td>
+                                            <td>{{item.product.item_name}}</td>
+                                            <td>{{item.quantity}}</td>
+                                            <td>{{item.cost_price}}</td>
+                                            <td>{{item.total_cost}}</td>
+                                            <td>{{item.selling_price}}</td>
+                                            <td>
+                                                <a href="{% url 'Purchase_Certification_item_Edit' item.pk %}" class="btn btn-primary">Edit</a> 
+                                                 <a href="{% url 'Purchase_Certification_item_Preview_Remove' item.pk %}" class="btn btn-danger">Delete</a>
+
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                    <tr>
+                                        <td colspan="3">Summary</td>
+                                        <td>{{total_item}}</td>
+                                        <td></td>
+                                        <td>{{total_cost}}</td>
+                                        <td colspan="2"></td>
+                                    </tr>
+                                    
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+           
+            </div>
+  <div class="sidenav-backdrop backdrop"></div>
+    <div class="preloader-backdrop">
+        <div class="page-preloader">Loading</div>
+    </div>
+{% endblock %}

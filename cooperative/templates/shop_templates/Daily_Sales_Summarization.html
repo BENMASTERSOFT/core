@@ -1,0 +1,166 @@
+{% extends 'shop_templates/base_template.html' %}
+{% load static %}
+
+{% block content %}
+            <div class="page-content fade-in-up">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="ibox">
+                            <div class="ibox-head">
+                                <div class="ibox-title">Daily Sales Summary </div>
+                               
+                            </div>
+                            <div class="ibox-body">
+                               <form class="form-horizontal" method="POST" action="">
+                                    {% csrf_token %}
+                                    <div class="form-group row">
+                                        <label class="col-sm-4 col-form-label">Current Date</label>
+                                        <div class="col-sm-8">
+                                            {{form.current_date}}
+                                        </div>
+                                    </div>
+                                   
+                                    <div class="form-group row">
+                                        <div class="col-sm-8 ml-sm-auto">
+                                            <button class="btn btn-info" name="btn_fetch" type="submit">Fetch</button>
+                                            {% if button_show == True %}
+                                            <button class="btn btn-success" name="btn_submit" type="submit">SUBMIT</button>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                       <div class="col-xl-6">
+                        <div class="ibox">
+                            <div class="ibox-head">
+                                <div class="ibox-title">CASH FLOW LEGEND </div>
+                            </div>
+                            <div class="ibox-body">
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>DESCRIPTION</th>
+                                            <th>AMOUNT</th>
+                                     
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>1</td>
+                                            <td>CASH SALES</td>
+                                            <td>{{total_cash_amount | default_if_none:"&nbsp;"}}</td>
+                                          
+                                        </tr>
+                                        <tr>
+                                            <td>2</td>
+                                            <td>CREDIT SALES</td>
+                                            <td>{{total_credit_amount| default_if_none:"&nbsp;"}}</td>
+                                       
+                                        </tr>
+                                        <tr>
+                                            <td></td>
+                                            <td>GRAND TOTAL</td>
+                                            <td>{{total_amount |default_if_none:"&nbsp;"}}</td>
+                                       
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="row">
+                    <div class="col-xl-12">
+                        <div class="ibox">
+                            <div class="ibox-head">
+                                <div class="ibox-title">Summarized Sales</div>
+                            </div>
+                            <div class="ibox-body">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Customer Name</th>
+                                            <th>Phone Number</th>
+                                            <th>Address</th>
+                                            <th>Amount</th>
+                                            <th>Receipt No</th>
+                                            <th>Category</th>
+                                            <th>Details</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for record in records %}
+                                        <tr>
+                                            <td>{{forloop.counter}}</td>
+                                            <td>{{record.sale.name}}</td>
+                                            <td>{{record.sale.phone_no}}</td>
+                                            <td>{{record.sale.address}}</td>
+                                            <td>{{record.amount}}</td>
+                                            <td>{{record.receipt}}</td>
+                                            <td>{{record.sales_category.title}}</td>
+                                            <td><a href="{% url 'Daily_Sales_Summary_Detail' record.receipt %}" class="btn btn-primary">View</a></td>
+                                        </tr>
+                                    {% endfor %}
+                                    <tr>
+                                        <td colspan="4">GRAND TOTAL</td>
+                                        <td>{{total_amount}}</td>
+                                        <td colspan="3"></td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% comment %}
+                <div class="row">
+                  
+                    <div class="col-xl-12">
+                        <div class="ibox">
+                            <div class="ibox-head">
+                                <div class="ibox-title">Summarized Detail Sales</div>
+                            </div>
+                            <div class="ibox-body">
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Code</th>
+                                            <th>Description</th>
+                                            <th>Quantity</th>
+                                            <th>Unit Price</th>
+                                            <th>Total</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for item in items %}
+                                        <tr>
+                                            <td>{{forloop.counter}}</td>
+                                            <td>{{item}}</td>
+                                            <td>Otto</td>
+                                            <td>@mdo</td>
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>{% endcomment %}
+            </div>
+
+
+        
+
+
+    <div class="sidenav-backdrop backdrop"></div>
+    <div class="preloader-backdrop">
+        <div class="page-preloader">Loading</div>
+    </div>
+{% endblock %}

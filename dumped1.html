@@ -1,0 +1,267 @@
+posts = Post.objects.filter(published_date__lte=timezone.now()).order_by('published_date')
+
+
+from django.db.models.functions import Abs
+from django.db.models import Sum
+<YourModel>.objects.aggregate(s=Sum(Abs("vote_threshold")))
+
+
+###################################################
+
+
+objects = Vote.objects.extra(select={'abs_vote_threshold': 'abs(vote_threshold)'}).values('abs_vote_threshold')
+earning = sum([obj['abs_vote_threshold'] for obj in objects])
+
+
+###################################################
+
+votes = Vote.objects.all()
+earning = sum(abs(v.vote_threshold) for v in votes) 
+
+###################################################
+The second option is latest() and earliest(). Latest() returns the latest object in the table based on the given fields, and earliest returns the earliest object in the table based on given fields:
+
+from django.contrib.auth.models import User
+
+>>> User.objects.latest('date_joined')
+
+>>> User.objects.earliest('date_joined')
+
+###################################################
+Field lookups
+Field lookups deal with how you specify the SQL WHERE clause. Basic lookup keyword arguments take the form field__lookuptype=value. For example:
+
+from datetime import datetime
+## Get all users whose date_joined is less than today's date.
+>>> User.objects.filter(date_joined__lte=datetime.today())
+
+###################################################
+
+Searching the specific string (case sensitive):
+
+## Get all user whose username string contains "user"
+>>> User.objects.filter(username__contains = "user")
+
+
+
+###################################################
+Or case insensitive:
+
+## Get all user whose username string contains "user" (case insensitive)
+>>> User.objects.filter(username__icontains = "user")
+
+
+###################################################
+
+Or, starts-with and ends-with search:
+
+## Get all user whose username string starts with "user"
+>>> User.objects.filter(username__startswith = "user")
+## Get all user whose username string ends with "user"
+>>> User.objects.filter(username__endswith = "user")
+You could also use case-insensitive versions called istartswith and iendswith.
+
+
+###################################################
+
+Ordering QuerySets
+After filtering the QuerySet, you can order it ascending or descending based on the given field(s).
+
+The below query will first filter the users based on is_active, then by username in ascending order, and finally by date_joined in descending order. Note that - indicates the descending order of date_joined:
+
+from django.contrib.auth.models import User
+
+>>> User.objects.filter(is_active=True).order_by('username', '-date_joined')
+
+
+
+###################################################
+Chaining filters
+Django gives the option to add several filters to chain refinements together:
+
+import datetime
+from django.contrib.auth.models import User
+
+>>> User.objects.filter(
+... username__startswith='user'
+... ).filter(
+... date_joined__gte=datetime.date.today()
+... ).exclude(
+... is_active=False
+... )
+The above query initially takes all users, adds two filters, and excludes one. The final result is a QuerySet containing all users whose username starts with user, their date_joined being greater or equal to today’s date, and finally, excludes the inactive users.
+
+
+
+
+###################################################
+Advanced queries
+Now, that you understand the basic QuerySet operations, let’s now jump to advanced queries and QuerySet operations.
+
+Set operations
+Union() uses SQL UNION operator to combine the results of two or more QuerySets:
+
+>>> qs1.union(qs2, qs3, ...)
+Intersection() uses the SQL INTERSECTION operator to find common(shared) results of two or more QuerySets:
+
+>>> qs1.intersection(qs2, qs3, ...)
+Difference() uses the SQL EXCEPT operator to find elements present in the QuerySet but not in some other QuerySets:
+
+>>> qs1.difference(qs2, qs3, ...)
+
+
+
+###################################################
+Q objects
+A Q() object represents an SQL condition that can be used in database-related operations. If you want to execute complex queries that contain OR, AND, and NOT statements, you can use Q() objects:
+
+>>> from django.db.models import Q
+
+>>> Q(username__startswith='user')
+
+<!-- <Q: (AND: ('username__startswith', 'user'))> -->
+For example, let’s find all users who are either staff or superusers:
+
+>>> from django.contrib.auth.models import User
+
+>>> User.objects.filter(Q(is_staff=True) | Q(is_superuser=True))
+Similarly, you could use AND and NOT. In the below query, it finds all the users who are staff and whose usernames do not start with user:
+
+>>> User.objects.filter(Q(is_staff=True) & ~Q(username__startswith='user'))
+
+###################################################
+
+F objects
+The F() object represents the value of a model field or annotated column. It makes it possible to refer to model field values and perform database operations using them without actually having to pull them out of the database into Python memory.
+
+Let’s take an example of incrementing a hit count by one with the HitCount model of id=1.
+Normally, one obvious way is to save it in memory, increment the count, and then save it:
+
+site = HitCount.objects.get(id=1)
+site.hits += 1
+site.save()
+The other way we can deal with this entirely by the database is by introducing the F() objects. When Django encounters an instance of F(), it overrides the standard Python operators to create an encapsulated SQL expression:
+
+from django.db.models import F
+
+site = HitCount.objects.get(id=1)
+site.hits = F('hits') + 1
+site.save()
+F() offers performance advantages by:
+
+Getting the database, rather than Python, to perform operations
+Reducing the number of queries some operations require
+
+
+
+###################################################
+
+Aggregation
+Grouping by queries is fairly common SQL operations, and sometimes becomes a source of confusion when it comes to ORM. In this section, we will dive into applying GROUP BY and aggregations.
+
+Basic GROUP BY and aggregations
+Let’s start with basic count operations, which will return the dict containing the count of users:
+
+>>> User.objects.aggregate(total_users=Count('id'))
+
+###################################################
+Using annotate
+Aggregate is used to the aggregate whole table. Most of the time we want to apply the aggregations to groups of rows, and for that, annotate can be used.
+
+Let’s look at an example to group users based on is_staff:
+
+from django.db.models import Count
+
+
+>>> User.objects.values("is_staff").annotate(user_count=Count('*')
+
+queryset = Customer.objects.aggregate(total_count=Count('id'))
+
+queryset = User.objects.values('is_active').annotate(count=Count('id')).order_by()
+
+queryset = User.objects.values('is_active').filter(is_staff=True).annotate(total_count=Count('id'))
+
+queryset = Customer.objects.values('country').annotate(count=Count('country'))
+
+ queryset = User.objects.values('is_active','is_staff').annotate(total_count=Count('id'))
+
+
+ queryset = Employee.objects.values('joining_date__year').annotate(total_count=Count('id'))
+
+
+To perform group by in ORM style, we have to use the two methods values and annotate as follows:
+
+values(<col>): Mention the fields for what to group by
+annotate(<aggr function>): Mention what to aggregate using functions such as SUM, COUNT, MAX, MIN, and AVG
+
+
+###################################################
+Python Django group by distinct
+
+>>> from myApp.models import Customer
+>>> from django.db.models import Count
+>>>
+>>> queryset = Customer.objects.values('country').annotate(count=Count('id'),unique_names=Count('country',distinct=True))
+>>>
+>>> print(queryset)
+
+
+
+###################################################
+Multiple aggregations and fields
+For multiple aggregations, we need to add multiple fields by which you want to group. In the below example, we have executed a query group by columns (is_active, is_staff):
+
+>>> User.objects.values("is_active", "is_staff").annotate(user_count = Count("*"))
+
+
+
+
+###################################################
+HAVING clause
+The HAVING clause is used to filter groups. In the below query, I have filtered the group which has a count greater than one:
+
+>>> User.objects.values("is_staff").annotate(user_count=Count("*")).filter(user_count__gt = 1)
+
+
+
+
+###################################################
+from django.db.models import Sum
+
+ModelName.objects.filter(field_name__isnull=True).aggregate(Sum('field_name'))
+# returns {'field_name__sum': 1000} for example
+
+###################################################
+More on Aggregations
+
+For example, when you are working with blog entries, you may want to know the number of authors that have contributed blog entries:
+
+>>> from django.db.models import Count
+>>> q = Blog.objects.aggregate(Count('entry'))
+{'entry__count': 16}
+By using a keyword argument to specify the aggregate function, you can control the name of the aggregation value that is returned:
+
+>>> q = Blog.objects.aggregate(number_of_entries=Count('entry'))
+{'number_of_entries': 16}
+For an in-depth discussion of aggregation, see the topic guide on Aggregation.
+
+
+
+
+###################################################
+from blog.models import Article
+from django.db.models import Sum, Avg, IntegerField
+print Article.objects.all().aggregate(Sum("view_count"))
+OUTPUT
+{'view_count__sum': 450}
+print Article.objects.all().aggregate(Avg("view_count"))
+OUTPUT
+{'view_count__avg': 45.0}
+print Article.objects.all().aggregate(
+    Avg("view_count", output_field=IntegerField()))
+OUTPUT
+{'view_count__avg': 45}
+###################################################
+###################################################
+###################################################
+###################################################

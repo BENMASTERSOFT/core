@@ -1,0 +1,50 @@
+{% extends 'deskofficer_templates/base_template.html' %}
+{% load static %}
+
+{% block content %}
+            <div class="page-content fade-in-up">
+                <div class="row">
+                    
+                    <div class="col-xl-8">
+                        <div class="ibox">
+                            <div class="ibox-head">
+                                <div class="ibox-title">List of Next of Kins | {{member.admin.first_name}} {{member.admin.last_name}} {{member.get_middle_name}}</div>
+                            </div>
+                            <div class="ibox-body">
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Name</th>
+                                            <th>Address</th>
+                                            <th>Phone</th>
+                                            <th>Relationship</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for nok in noks %}
+                                        <tr>
+                                            <td>{{forloop.counter}}</td>
+                                            <td>{{nok.name}}</td>
+                                            <td>{{nok.address}}</td>
+                                            <td>{{nok.phone_number}}</td>
+                                            <td>{{nok.relationships}}</td>
+                                            <td><a href="{% url 'Members_Next_Of_Kins_Manage_NOK_Update' nok.pk member_id %}" class="btn btn-success">Update</a></td>
+                                         
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            
+           
+            </div>
+  <div class="sidenav-backdrop backdrop"></div>
+    <div class="preloader-backdrop">
+        <div class="page-preloader">Loading</div>
+    </div>
+{% endblock %}

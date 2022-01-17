@@ -1,0 +1,227 @@
+{% extends 'secretary_templates/base_template.html' %}
+{% load static %}
+
+{% block content %}
+            <div class="page-content fade-in-up">
+                        <div class="form-group">
+                              {% if messages %}
+                                
+                                  {% for message in messages %}
+                                  {% if message.tags == "error" %}
+                                  <div class="alert alert-danger" style="margin-top:10px">{{message}}</div>
+                                  
+                                  {% endif %}
+
+                                  {% if message.tags == "success" %}
+                                  <div class="alert alert-success" style="margin-top:10px">{{message}}</div>
+                                  
+                                  {% endif %}
+                                  {% endfor %}
+                              
+                              {% endif %}
+                        </div>
+                <div class="row">
+                  <div class="col-xl-6">
+                        <div class="ibox">
+                            <div class="ibox-head">
+                                <div class="ibox-title">Additional Info</div>
+                                <div class="ibox-title"><a href="{% url 'MemberShipRequest_certification_submit' pk %}" class="btn btn-success">Submit</a> </div>
+                            </div>
+                            <div class="ibox-body">
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Comments</th>
+                                            <th>Officer</th>
+                                            
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for existing_info in existing_infos %}
+                                        <tr>
+                                            <td>{{forloop.counter}}</td>
+                                            <td>{{existing_info.comment}}</td>
+                                            <td>{{existing_info.officer.username}}</td>
+                                           
+                                        </tr>
+                                    {% endfor %}   
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-6">
+                        <div class="ibox">
+                            <div class="ibox-head">
+                                <div class="ibox-title">Attached Files</div>
+                            </div>
+                            <div class="ibox-body">
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Caption</th>
+                                            <th>Image</th>
+                                            <th>Officer</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for existing_attachment in existing_attachments %}
+                                        <tr>
+                                            <td>{{forloop.counter}}</td>
+                                            <td>{{existing_attachment.caption}}</td>
+                                           <td>{% if existing_attachment.image %}<img src="{{existing_attachment.image}}" style="width:100px">{% endif %}</td>
+                                            <td>{{existing_attachment.officer.username}}</td>
+                                        </tr>
+                                  {% endfor %}   
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="ibox">
+                            <div class="ibox-head">
+                                <div class="ibox-title">Certification Additional Info</div>
+                                
+                            </div>
+                            <div class="ibox-body">
+                                <form class="form-horizontal" method="POST" action="{% url 'membership_request_certification_additional_info_save' pk %}" enctype="multipart/form-data" novalidate>
+                                    {% csrf_token %}
+                                    <div class="form-group row">
+                                        <label class="col-sm-2 col-form-label">Comment</label>
+                                        <div class="col-sm-10">
+                                            {{comment_form.comment}}
+                                        </div>
+                                    </div>
+                                    
+                                    
+                                    <div class="form-group row">
+                                        <div class="col-sm-10 ml-sm-auto">
+                                            <button class="btn btn-info" type="submit">Submit</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-6">
+                        <div class="ibox">
+                            <div class="ibox-head">
+                                <div class="ibox-title">Certification Additional Info</div>
+                            </div>
+                            <div class="ibox-body">
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <tr>
+                                            <th>#</th>
+                                            <th>Comments</th>
+                                            <th>Action</th>
+                                            
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for record in records %}
+                                        <tr>
+                                            <td>{{forloop.counter}}</td>
+                                            <td>{{record.comment}}</td>
+                                            <td><a href="{% url 'membership_request_certification_additional_info_delete' record.id pk %}">Remove</a> </td>
+                                           
+                                        </tr>
+                                {% endfor %}
+                                    </tbody>
+                            
+                                 
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+
+                
+                <div class="row">
+                                        <div class="col-md-6">
+                        <div class="ibox">
+                            <div class="ibox-head">
+                                <div class="ibox-title">Certification Attached Files</div>
+                                
+                            </div>
+                            <div class="ibox-body">
+                                <form class="form-horizontal" method="POST" action="{% url 'MemberShipRequestAdditionalAttachment_certification_save' pk %}" enctype="multipart/form-data" novalidate>
+                                    {% csrf_token %}
+                                    <div class="form-group row">
+                                        <label class="col-sm-2 col-form-label">Caption</label>
+                                        <div class="col-sm-10">
+                                            {{attachment_form.caption}}
+                                        </div>
+                                    </div>
+                                     <div class="form-group row">
+                                        <label class="col-sm-2 col-form-label">Image</label>
+                                        <div class="col-sm-10">
+                                             {{attachment_form.image}}
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="form-group row">
+                                        <div class="col-sm-10 ml-sm-auto">
+                                            <button class="btn btn-info" type="submit">Submit</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-xl-6">
+                        <div class="ibox">
+                            <div class="ibox-head">
+                                <div class="ibox-title">Certification Attached Files</div>
+                            </div>
+                            <div class="ibox-body">
+                                <table class="table">
+                                    <thead>
+                                         <tr>
+                                            <th>#</th>
+                                            <th>Caption</th>
+                                            <th>Image</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for attachment in attachments %}
+                                        <tr>
+                                            <td>{{forloop.counter}}</td>
+                                            <td>{{attachment.caption}}</td>
+                                            <td>{% if attachment.image %}<img src="{{attachment.image}}" style="width:100px">{% endif %}</td>
+                                           <td><a href="{% url 'MemberShipRequestAdditionalAttachment_certification_delete' attachment.id pk %}">Remove</a> </td>
+                                        </tr>
+                                    {% endfor %} 
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                   
+                </div>
+               
+               
+       
+            </div>
+            
+
+
+    <div class="sidenav-backdrop backdrop"></div>
+    <div class="preloader-backdrop">
+        <div class="page-preloader">Loading</div>
+    </div>
+{% endblock %}

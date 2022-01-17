@@ -1,0 +1,195 @@
+{% extends 'deskofficer_templates/base_template.html' %}
+{% load static %}
+
+{% block content %}
+            <div class="page-content fade-in-up">
+            
+                
+               
+                <div class="ibox">
+                    <div class="ibox-head">
+                        <div class="ibox-title">Settings Details</div>
+                    </div>
+                    <div class="ibox-head">
+                            <div class="ibox-title">{{applicant.member.member_id}} | {{applicant.member.get_full_name}} | {{applicant.loan.name}}  </div>
+                            
+
+                            </div>
+                        <div class="form-group">
+                              {% if messages %}
+                                
+                                  {% for message in messages %}
+                                  {% if message.tags == "info" %}
+                                  <div class="alert alert-info" style="margin-top:10px">{{message}}</div>
+                                  
+                                  {% endif %}
+
+                                  
+                                  {% endfor %}
+                              
+                              {% endif %}
+                          </div>
+                    <div class="ibox-body">
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <tr>                                      
+                                        <th>Description</th>
+                                        <th>Debit</th>
+                                        <th>Credit</th>
+                                        <th>Balance</th>
+                                       
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                     
+                                        <td>{{applicant.member.gross_pay_as_at}}</td>
+                                        <td>0</td>
+                                        <td>{{applicant.member.gross_pay}}</td>
+                                   
+                                        <td></td>
+                                       
+                                    </tr>
+                                    {% if shops.particulars %}
+                                    <tr>
+                                     
+                                        <td>{{shops.particulars}}</td>
+                                        <td>{{shop_balance}}</td>
+                                        <td>0</td>
+                                   
+                                        <td></td>
+                                     
+                                    </tr>
+                                    {% endif %}
+
+                                {% for saving in savings %}
+                                    <tr>
+                                        <td>{{saving.transaction.transaction.name}}</td>
+                                        <td>{{saving.amount}}</td>
+                                        <td>0</td>
+                                   
+                                        <td> </td>
+                                     
+                                    </tr>
+                                {% endfor %}                                
+
+                            {% for loan in loans %}
+                                    <tr>
+                                        <td>{{loan.transaction.name}}</td>
+                                        <td>{{loan.repayment}}</td>
+                                        <td>0</td>
+                                   
+                                        <td></td>
+                                       
+                                    </tr>
+                                {% endfor %} 
+
+                                {% for record in records %}
+                                    <tr>
+                                        <td>{{record.description}}</td>
+                                        <td>{{record.amount}}</td>
+                                        <td>0</td>
+                                        <td></td>
+                                   
+                                       
+                                    </tr>
+                                {% endfor %}
+
+                                <tr>
+                                        <td>SUMMARY</td>
+                                        <td>{{total_debit}}</td>
+                                        <td>{{gross_pay}}</td>
+                                        <td>{{balance}}</td>
+                                        
+                                   
+                                      
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+               
+               <div class="row">
+                   
+
+                    <div class="col-md-6">
+                        <div class="ibox">
+                            <div class="ibox-head">
+                                <div class="ibox-title">Documents Attachment</div>
+                                
+                            </div>
+                            <div class="ibox-body">
+                                <form class="form-horizontal" method="POST" action="" enctype="multipart/form-data" novalidate>
+                                    {% csrf_token %}
+                                    <div class="form-group row">
+                                        <label class="col-sm-2 col-form-label">Description</label>
+                                        <div class="col-sm-10">
+                                            {{attachment_form.description}}
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-sm-2 col-form-label">Image</label>
+                                        <div class="col-sm-10">
+                                            {{attachment_form.image}}
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="form-group row">
+                                        <div class="col-sm-10 ml-sm-auto">
+                                            <button class="btn btn-info" type="submit" name="attachment">Submit</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+                       <div class="col-xl-6">
+                        <div class="ibox">
+                            <div class="ibox-head">
+                                <div class="ibox-title">Available Attachments</div>
+                            </div>
+                            <div class="ibox-body">
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Description</th>
+                                            <th>Image</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for item in items %}
+                                        <tr>
+                                            <td>{{forloop.counter}}</td>
+                                            <td>{{item.description}}</td>
+                                            <td><img src="{{item.image}}" style="width:100px"></td>
+                                            <td><a href="{% url 'LoanRequestAttachments_delete' item.pk pk %}">Remove</a></td>
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            <div class="row">
+                       <div class="col-xl-12">
+                        <div class="ibox">
+                            <div class="ibox-head">
+                                
+<div class="ibox-title" style="position: absolute;top: 20%;left: 50%;"><a href="{% url 'loan_request_preview' applicant.id %}" class="btn btn-success">Continue</a></div>
+                            </div>
+                       
+                        </div>
+                    </div>
+                </div>
+            </div>
+  <div class="sidenav-backdrop backdrop"></div>
+    <div class="preloader-backdrop">
+        <div class="page-preloader">Loading</div>
+    </div>
+{% endblock %}

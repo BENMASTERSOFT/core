@@ -1,0 +1,57 @@
+{% extends 'deskofficer_templates/base_template.html' %}
+{% load static %}
+
+{% block content %}
+            <div class="page-content fade-in-up">
+                <div class="row">
+                 
+                    <div class="col-xl-8">
+                        <div class="ibox">
+                            <div class="ibox-head">
+                                <div class="ibox-title">DEDUCTION BREAKDOWN FOR | {{transaction_period.transaction_period}} 
+
+                                   
+                                </div>
+                            </div>
+                            <div class="ibox-body">
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>ACCOUNT NUMBER</th>
+                                            <th>CODE</th>
+                                            <th>DESCRIPTION</th>
+                                            <th>AMOUNT</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for record in records %}
+                                        <tr>
+                                            <td>{{forloop.counter}}</td>
+                                            <td>{{record.account_number}}</td>
+                                            <td>{{record.transaction.code}}</td>
+                                            <td>{{record.transaction.name}}</td>
+                                         
+                                            <td>{{record.amount|floatformat:2}}</td>
+                                         
+                                        </tr>
+                                {% endfor %}  
+                                <tr>
+                                    <td></td>
+                                    <td colspan="3">TOTAL</td>
+                                    <td>{{total_deductions|floatformat:2}}</td>
+                                </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+             
+           
+            </div>
+  <div class="sidenav-backdrop backdrop"></div>
+    <div class="preloader-backdrop">
+        <div class="page-preloader">Loading</div>
+    </div>
+{% endblock %}

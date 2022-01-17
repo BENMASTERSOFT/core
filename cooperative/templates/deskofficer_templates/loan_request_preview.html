@@ -1,0 +1,273 @@
+{% extends 'deskofficer_templates/base_template.html' %}
+{% load static %}
+
+{% block content %}
+            <div class="page-content fade-in-up">
+                
+                <div class="row">
+                   
+                    <div class="col-xl-6">
+                        <div class="ibox">
+                            <div class="ibox-head">
+                                <div class="ibox-title">Loan Application Analysis Preview | {{applicant.member.get_full_name}}</div>
+                            </div>
+                            <div class="ibox-body">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Description</th>
+                                            <th>Value</th>
+                                           
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                         <tr>
+                                            <td>1</td>
+                                            <td> Gross Pay </td>
+                                            <td>{{gross_pay}}</td>
+                                            
+                                        </tr>
+                                        <tr>
+                                            <td>2</td>
+                                            <td>Salary Balance After Deductions</td>
+                                            <td>{{balance}}</td>
+                                            
+                                        </tr> <tr>
+                                            <td>3</td>
+                                            <td>{{loan_type}}</td>
+                                            <td>{{loan_amount}}</td>
+                                            
+                                        </tr>
+                                       
+                                        <tr>
+                                            <td>4</td>
+                                            <td>Monthly Contributions</td>
+                                            <td>{{total_savings}}</td>
+                                           
+                                        </tr> 
+                                        <tr>
+                                            <td>5</td>
+                                            <td>Loan Monthly Repayment </td>
+                                            <td>{{total_loans}}</td>
+                                           
+                                        </tr>
+                                        <tr>
+                                            <td>6</td>
+                                            <td>Cooperative Shop </td>
+                                            <td>{{shop_balance}}</td>
+                                           
+                                        </tr> 
+                                        <tr>
+                                            <td>7</td>
+                                            <td>External Fascilities </td>
+                                            <td>{{records_amount}}</td>
+                                           
+                                        </tr> 
+                                        <tr>
+                                            <td>8</td>
+                                            <td>Loan Duration </td>
+                                            <td>{{duration}} Months</td>
+                                           
+                                        </tr>  
+                                        <tr>
+                                            <td>9</td>
+                                            <td>Salary Loan Relationship </td>
+                                            <td>{{salary_loan_relationship}}%</td>
+                                           
+                                        </tr>  
+                                        <tr>
+                                            <td>10</td>
+                                            <td>Salary Loan Relationship Computed</td>
+                                            <td>{{salary_loan_relationship_computed}}</td>
+                                           
+                                        </tr> 
+
+                                         <tr>
+                                            <td>11</td>
+                                            <td>Loan Age </td>
+                                            <td>{{loan_age}} Months</td>
+                                           
+                                        </tr>
+                                         <tr>
+                                            <td>12</td>
+                                            <td>Date Joined </td>
+                                            <td>{{date_joined}}</td>
+                                           
+                                        </tr>
+                                        <tr>
+                                            <td>13</td>
+                                            <td>Members Age </td>
+                                            <td>{{members_age}} Months</td>
+                                           
+                                        </tr>
+
+                                        
+
+
+                                        <tr>
+                                            <td>14</td>
+                                            <td>Loan Interest Rate </td>
+                                            <td>{{interest_rate}}%</td>
+                                           
+                                        </tr>  
+                                        <tr>
+                                            <td>15</td>
+                                            <td>Interest Deduction </td>
+                                            <td>{{interest_deduction}}</td>
+                                           
+                                        </tr> 
+                                        <tr>
+                                            <td>16</td>
+                                            <td>Loan Interest </td>
+                                            <td>=N={{interest}}</td>
+                                           
+                                        </tr>
+                                        <tr>
+                                            <td>17</td>
+                                            <td>Amount Scheduled </td>
+                                            <td>=N={{amount_scheduled}}</td>
+                                           
+                                        </tr>
+                                       <tr>
+                                            <td>18</td>
+                                            <td>Monthly Repayment </td>
+                                            <td>=N={{monthly_repayment|floatformat:2}}</td>
+                                           
+                                        </tr>
+                                        <tr>
+                                            <td>19</td>
+                                            <td>Loan Based Savings </td>
+                                            <td>{{loan_based_saving.savings.name}}</td>
+                                           
+                                        </tr>  
+                                        <tr>
+                                            <td>20</td>
+                                            <td>Loan Based Savings Rate</td>
+                                            <td>{{loan_based_saving_rating}}%</td>
+                                           
+                                        </tr>
+                                       
+                                      
+
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-xl-6"> 
+                        <div class="row"> 
+                            <div class="col-xl-12">
+
+                                <div class="ibox">
+                            <div class="ibox-head">
+                                <div class="ibox-title">Loan Application Summary Preview</div>
+                            </div>
+                            <div class="ibox-body">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Description</th>
+                                            <th>Value</th>
+                                           
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        
+                                       
+                                        
+                                        <tr>
+                                            <td>1</td>
+                                            <td>Member Status </td>
+                                            <td>{{Member_Status}}</td>
+                                           
+                                        </tr>  
+                                        <tr>
+                                            <td>2</td>
+                                            <td>Exclusive Status </td>
+                                            <td>{{exclusive}}</td>
+                                           
+                                        </tr> 
+                                        <tr>
+                                            <td>3</td>
+                                            <td>Same Type loan Exist </td>
+                                            <td>{{same_type_loan}}</td>
+                                           
+                                        </tr>
+
+
+                                       
+                                       
+                                       <tr>
+                                            <td>4</td>
+                                            <td>Salary Status </td>
+                                            <td>{{salary_status}}</td>
+                                           
+                                        </tr>
+                                        <tr>
+                                            <td>5</td>
+                                            <td>Loan Based Savings Status</td>
+                                            <td>{{loan_savings_status}}</td>
+                                           
+                                        </tr>
+
+                                    </tbody>
+                                </table>
+                            </div>
+                                </div> 
+                            </div>
+
+                        <div class="col-md-12">
+                        <div class="ibox">
+                            <div class="ibox-head">
+                                <div class="ibox-title">Loan Request Submission</div>
+                                
+                            </div>
+                            <div class="ibox-body">
+                               <form class="form-horizontal" method="POST" action="" enctype="multipart/form-data" novalidate>
+                                    {% csrf_token %}
+                                    <div class="form-group row">
+                                        <label class="col-sm-3 col-form-label">Certification Officer</label>
+                                        <div class="col-sm-9">
+                                            <select class="form-control" name="officer">
+                                                {% for officer in certification_officers %}
+                                                    <option value="{{ officer.id}}">{{officer.officer.username}}</option>
+                                                {% endfor %}
+                                         </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-sm-3 col-form-label">Comments (If any)</label>
+                                        <div class="col-sm-9">
+                                            <input class="form-control" type="text"  name="comment" placeholder="Enter Comment">
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="form-group row">
+                                        <div class="col-sm-9 ml-sm-auto">
+
+                                       {% if button_enabled %}
+                                            <button class="btn btn-info" type="submit">Submit</button>
+                                       {% endif %}
+                                      
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                        </div>
+                    </div>
+                </div>
+       
+ 
+
+           
+            </div>
+  <div class="sidenav-backdrop backdrop"></div>
+    <div class="preloader-backdrop">
+        <div class="page-preloader">Loading</div>
+    </div>
+{% endblock %}

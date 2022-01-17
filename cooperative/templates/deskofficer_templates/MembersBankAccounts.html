@@ -1,0 +1,118 @@
+{% extends 'deskofficer_templates/base_template.html' %}
+{% load static %}
+
+{% block content %}
+            <div class="page-content fade-in-up">
+                
+                <div class="row">
+                   
+
+                    <div class="col-md-8">
+                        <div class="ibox">
+                            <div class="ibox-head">
+                                <div class="ibox-title">Members Bank Account Info</div>
+                                
+                            </div>
+                            <div class="form-group">
+                                  {% if messages %}
+                                    
+                                      {% for message in messages %}
+                                      {% if message.tags == "error" %}
+                                      <div class="alert alert-danger" style="margin-top:10px">{{message}}</div>
+                                      
+                                      {% endif %}
+
+                                      {% if message.tags == "success" %}
+                                      <div class="alert alert-success" style="margin-top:10px">{{message}}</div>
+                                      
+                                      {% endif %}
+                                      {% endfor %}
+                                  
+                                  {% endif %}
+                              </div>
+                            <div class="ibox-body">
+                                <form class="form-horizontal" method="POST" action="" enctype="multipart/form-data" novalidate>
+                                    {% csrf_token %}
+                                    <div class="form-group row">
+                                        <label class="col-sm-3 col-form-label">Bank</label>
+                                        <div class="col-sm-9">
+                                            {{form.banks}}
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-sm-3 col-form-label">Account Type</label>
+                                        <div class="col-sm-9">
+                                            {{form.account_types}}
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-sm-3 col-form-label">Account Name</label>
+                                        <div class="col-sm-9">
+                                            {{form.account_name}}
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-sm-3 col-form-label">Account Number</label>
+                                        <div class="col-sm-9">
+                                            {{form.account_number}}
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="form-group row">
+                                        <div class="col-sm-9 ml-sm-auto">
+                                            <button class="btn btn-info" type="submit">Submit</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                 <div class="row">
+                        <div class="col-xl-8">
+                        <div class="ibox">
+                            <div class="ibox-head">
+                                <div class="ibox-title">Active Account Details | <a href="{% url 'Members_Bank_Accounts_lock' member.pk %}" class="btn btn-secondary">LOCK</a> </div>
+                            </div>
+                            <div class="ibox-body">
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Account Name</th>
+                                            <th>Account Numbere</th>
+                                            <th>Account Type</th>
+                                            <th>Bank</th>
+                                            <th>Action</th>
+                                           
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for account in accounts %}
+                                        <tr>
+                                            <td>{{forloop.counter}}</td>
+                                            <td>{{account.account_name}}</td>
+                                            <td>{{account.account_number}}</td>
+                                            <td>{{account.account_type.title}}</td>
+                                            <td>{{account.bank.title}}</td>
+                                            <td>
+                                                {% if account.lock_status.title == 'OPEN' %}
+                                                <a href="{% url 'Members_Bank_Accounts_remove' account.pk %}" class="btn btn-danger">Remove</a>
+                                               {% endif %}
+
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    <div class="sidenav-backdrop backdrop"></div>
+    <div class="preloader-backdrop">
+        <div class="page-preloader">Loading</div>
+    </div>
+{% endblock %}

@@ -1,0 +1,107 @@
+{% extends 'president_templates/base_template.html' %}
+{% load static %}
+
+{% block content %}
+            <div class="page-content fade-in-up">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="ibox">
+                            <div class="ibox-head">
+                                <div class="ibox-title">Basic form</div>
+                                <div class="ibox-tools">
+                                    <a class="ibox-collapse"><i class="fa fa-minus"></i></a>
+                                    <a class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-ellipsis-v"></i></a>
+                                    <div class="dropdown-menu dropdown-menu-right">
+                                        <a class="dropdown-item">option 1</a>
+                                        <a class="dropdown-item">option 2</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="ibox-body">
+                                <form>
+                                    <div class="row">
+                                        <div class="col-sm-6 form-group">
+                                            <label>First Name</label>
+                                            <input class="form-control" type="text" placeholder="First Name">
+                                        </div>
+                                        <div class="col-sm-6 form-group">
+                                            <label>Last Name</label>
+                                            <input class="form-control" type="text" placeholder="First Name">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Email</label>
+                                        <input class="form-control" type="text" placeholder="Email address">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Password</label>
+                                        <input class="form-control" type="password" placeholder="Password">
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="ui-checkbox">
+                                            <input type="checkbox">
+                                            <span class="input-span"></span>Remamber me</label>
+                                    </div>
+                                    <div class="form-group">
+                                        <button class="btn btn-default" type="submit">Submit</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="ibox">
+                            <div class="ibox-head">
+                                <div class="ibox-title">Horizontal Form</div>
+                                <div class="ibox-tools">
+                                    <a class="ibox-collapse"><i class="fa fa-minus"></i></a>
+                                    <a class="fullscreen-link"><i class="fa fa-expand"></i></a>
+                                </div>
+                            </div>
+                            <div class="ibox-body">
+                                <form class="form-horizontal">
+                                    <div class="form-group row">
+                                        <label class="col-sm-2 col-form-label">Email</label>
+                                        <div class="col-sm-10">
+                                            <input class="form-control" type="text" placeholder="Email address">
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-sm-2 col-form-label">Password</label>
+                                        <div class="col-sm-10">
+                                            <input class="form-control" type="password" placeholder="Password">
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-sm-2 col-form-label">Gender</label>
+                                        <div class="col-sm-10">
+                                            <input class="form-control" type="password" placeholder="Password">
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <div class="col-sm-10 ml-sm-auto">
+                                            <label class="ui-checkbox ui-checkbox-gray">
+                                                <input type="checkbox">
+                                                <span class="input-span"></span>Remamber me</label>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <div class="col-sm-10 ml-sm-auto">
+                                            <button class="btn btn-info" type="submit">Submit</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+
+
+    <div class="sidenav-backdrop backdrop"></div>
+    <div class="preloader-backdrop">
+        <div class="page-preloader">Loading</div>
+    </div>
+{% endblock %}

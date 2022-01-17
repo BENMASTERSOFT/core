@@ -1,0 +1,128 @@
+{% extends 'finsec_templates/base_template.html' %}
+{% load static %}
+
+{% block content %}
+<div class="page-content fade-in-up">
+    <form class="form-horizontal" method="POST" action="">
+           {% csrf_token %}
+        <div class="row">
+            <div class="col-md-8">
+                <div class="ibox">
+                    <div class="ibox-head">
+                        <div class="ibox-title">Cash Withdrawals</div>           
+                    </div>
+                     <div class="form-group">
+                              {% if messages %}
+                                
+                                  {% for message in messages %}
+                                  {% if message.tags == "error" %}
+                                  <div class="alert alert-danger" style="margin-top:10px">{{message}}</div>
+                                  
+                                  {% endif %}
+
+                                  {% if message.tags == "success" %}
+                                  <div class="alert alert-success" style="margin-top:10px">{{message}}</div>
+                                  
+                                  {% endif %}
+                                  {% endfor %}
+                              
+                              {% endif %}
+                          </div>
+                    <div class="ibox-body">
+                               
+                        <div class="form-group row">
+                             <label class="col-sm-4 col-form-label">Disbursement Officer</label>
+                            <div class="col-sm-8">
+                                {{form.officers}}
+                            </div>
+                        </div>    
+                        <div class="form-group row">
+                             <label class="col-sm-4 col-form-label">Amount</label>
+                            <div class="col-sm-8">
+                                {{form.amount}}
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-4 col-form-label">Payment Date</label>
+                            <div class="col-sm-8">
+                                {{form.payment_date}}
+                            </div>
+                        </div>
+                           
+                        <div class="form-group row">
+                            <label class="col-sm-4 col-form-label">Payment Channels</label>
+                            <div class="col-sm-8">
+                                {{form.channels}}
+                            </div>
+                        </div>
+                                
+                            
+                        <div class="form-group row">
+                            <div class="col-sm-8 ml-sm-auto">
+                                <button class="btn btn-info" name="btn_fetch" type="submit">Fetch</button>
+                          {% if cheque or transfer or cash %} 
+                                <button class="btn btn-success" name="btn_submit" type="submit">Submit</button>
+                             {% endif %}  
+                            </div>
+                        </div>
+                
+                    </div>
+                </div>
+            </div>
+        </div>
+         
+            <div class="row">
+                <div class="col-md-8">
+                    <div class="ibox">
+                      
+                        <div class="ibox-body">
+                              {% if cheque or transfer %}  
+                            <div class="form-group row">
+                                <label class="col-sm-4 col-form-label">Coop. Accounts</label>
+                                <div class="col-sm-8">
+                                    {{form.account}}
+                                </div>
+                            </div> 
+                            {% endif %}
+
+                            {% if cheque %}        
+                            <div class="form-group row">
+                                 <label class="col-sm-4 col-form-label">Cheque Number</label>
+                                <div class="col-sm-8">
+                                    {{form.cheque_number}}
+                                </div>
+                            </div> 
+                            {% endif %}
+
+                            {% if transfer %}        
+                            <div class="form-group row">
+                                 <label class="col-sm-4 col-form-label">Member Account Details</label>
+                                <div class="col-sm-8">
+                                     <select class="form-control" name="member_account">
+                                      {% for item in member_accounts %}
+                                        <option value={{item.id }}> {{item.account_name}} - {{item.account_number}} - {{item.bank.title}} </option>
+
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div> 
+                            {% endif %}
+
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+        
+    </form>
+</div>
+
+
+        
+
+
+    <div class="sidenav-backdrop backdrop"></div>
+    <div class="preloader-backdrop">
+        <div class="page-preloader">Loading</div>
+    </div>
+{% endblock %}

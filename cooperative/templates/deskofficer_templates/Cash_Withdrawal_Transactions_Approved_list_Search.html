@@ -1,0 +1,50 @@
+{% extends 'deskofficer_templates/base_template.html' %}
+{% load static %}
+
+{% block content %}
+            <div class="page-content fade-in-up">
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="ibox">
+                            <div class="ibox-head">
+                                <div class="ibox-title">{{title}}</div>
+                                
+                            </div>
+                            <div class="ibox-body">
+                                <form c method ="POST" action="{% url 'Cash_Withdrawal_Transactions_Approved_list_Load' %}">
+                            {% csrf_token %}
+                                    <div class="row">
+                                        <div class="col-sm-6 form-group">
+                                            <label>Start Date</label>
+                                            {{form.start_date}}
+                                        </div>
+                                        <div class="col-sm-6 form-group">
+                                            <label>Stop Date</label>
+                                            {{form.stop_date}}
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Search</label>
+                                        {{form.title}}
+                                    </div>
+                                   
+                                    <div class="form-group">
+                                        <button class="btn btn-default" type="submit">Submit</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+                 
+                </div>
+            </div>
+            
+
+
+    <div class="sidenav-backdrop backdrop"></div>
+    <div class="preloader-backdrop">
+        <div class="page-preloader">Loading</div>
+    </div>
+{% endblock %}

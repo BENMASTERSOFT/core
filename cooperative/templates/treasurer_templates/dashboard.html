@@ -1,0 +1,18 @@
+{% extends 'treasurer_templates/base_template.html' %}
+
+{% load static %}
+
+{% block content %}
+	            
+{% include 'treasurer_templates/includes/scrumbs.html' %}
+
+{% comment %}
+{% include 'cooperative/includes/statistics.html' %}
+{% include 'cooperative/includes/visitors.html' %}
+{% include 'cooperative/includes/orders.html' %}
+{% include 'cooperative/includes/advert.html' %}
+{% endcomment %}
+
+{% include 'cooperative/includes/emptyspace.html' %}
+
+{% endblock content %}

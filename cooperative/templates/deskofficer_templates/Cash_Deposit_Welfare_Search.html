@@ -1,0 +1,38 @@
+{% extends 'deskofficer_templates/base_template.html' %}
+{% load static %}
+
+{% block content %}
+            <div class="page-content fade-in-up">
+             <div class="col-md-6">
+                <div class="ibox">
+                    <div class="ibox-head">
+                        <div class="ibox-title">{{title}}</div>
+                    </div>
+
+                    <div class="ibox-body">
+                        <form class="form-inline" method ="POST" action="{% url 'Cash_Deposit_Welfare_list_load' %}">
+                            {% csrf_token %}
+                            
+                            <label class="sr-only" for="search">Search</label>
+                            {{form.title}}
+                           
+                            <button class="btn btn-success" type="submit">Search</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+               
+             
+            </div>
+            
+    
+    <!-- BEGIN THEME CONFIG PANEL-->
+   
+    <!-- END THEME CONFIG PANEL-->
+    <!-- BEGIN PAGA BACKDROPS-->
+    <div class="sidenav-backdrop backdrop"></div>
+    <div class="preloader-backdrop">
+        <div class="page-preloader">Loading</div>
+    </div>
+  {% include 'cooperative/includes/emptyspace.html' %} 
+{% endblock %}

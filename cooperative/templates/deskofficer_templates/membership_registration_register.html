@@ -1,0 +1,171 @@
+{% extends 'deskofficer_templates/base_template.html' %}
+{% load static %}
+
+{% block content %}
+            <div class="page-content fade-in-up">
+                
+                <div class="row">
+                    
+
+                    <div class="col-md-6">
+                        <div class="ibox">
+                            <div class="ibox-head">
+                                <div class="ibox-title">Member Registration</div>
+                                
+                            </div>
+                            <div class="form-group">
+                                  {% if messages %}
+                                    
+                                      {% for message in messages %}
+                                      {% if message.tags == "error" %}
+                                      <div class="alert alert-danger" style="margin-top:10px">{{message}}</div>
+                                      
+                                      {% endif %}
+
+                                      {% if message.tags == "success" %}
+                                      <div class="alert alert-success" style="margin-top:10px">{{message}}</div>
+                                      
+                                      {% endif %}
+                                      {% endfor %}
+                                  
+                                  {% endif %}
+                              </div>
+                            <div class="ibox-body">
+                                <form class="form-horizontal" method="POST" action="" enctype="multipart/form-data" novalidate>
+                                    {% csrf_token %}
+                                    <div class="form-group row">
+                                        <label class="col-sm-3 col-form-label">Title</label>
+                                        <div class="col-sm-9">
+                                           {{form.title}}
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-sm-3 col-form-label">First Name</label>
+                                        <div class="col-sm-9">
+                                            {{form.first_name}}
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-sm-3 col-form-label">Last Name</label>
+                                        <div class="col-sm-9">
+                                            {{form.last_name}}
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-sm-3 col-form-label">Middle Name</label>
+                                        <div class="col-sm-9">
+                                            {{form.middle_name}}
+                                        </div>
+                                    </div>
+                                    
+
+                                     <div class="form-group row">
+                                        <label class="col-sm-3 col-form-label">Gender</label>
+                                        <div class="col-sm-9">
+                                            {{form.gender}}
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-sm-3 col-form-label">Phone Number</label>
+                                        <div class="col-sm-9">
+                                            {{form.phone_number}}
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-sm-3 col-form-label">Residential Address</label>
+                                        <div class="col-sm-9">
+                                            {{form.residential_address}}
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-sm-3 col-form-label">Permanent Home Address</label>
+                                        <div class="col-sm-9">
+                                            {{form.permanent_home_address}}
+                                        </div>
+                                    </div>
+
+
+                                     <div class="form-group row">
+                                        <label class="col-sm-3 col-form-label">Department</label>
+                                        <div class="col-sm-9">
+                                            {{form.department}}
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-sm-3 col-form-label">State</label>
+                                        <div class="col-sm-9">
+                                            {{form.state}}
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-sm-3 col-form-label">LGA</label>
+                                        <div class="col-sm-9">
+                                            {{form.lga}}
+                                        </div>
+                                    </div>
+                                    
+                                     <div class="form-group row">
+                                        <label class="col-sm-3 col-form-label">Salary Institution</label>
+                                        <div class="col-sm-9">
+                                            {{form.salary_institution}}
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-sm-3 col-form-label">File No</label>
+                                        <div class="col-sm-9">
+                                            {{form.file_no}}
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-sm-3 col-form-label">IPPIS No/Non IPPIS No</label>
+                                        <div class="col-sm-9">
+                                            {{form.ippis_no}}
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-sm-3 col-form-label">Email Address</label>
+                                        <div class="col-sm-9">
+                                            {{form.email}}
+                                        </div>
+                                    </div> 
+                                    <div class="form-group row">
+                                        <label class="col-sm-3 col-form-label">Username</label>
+                                        <div class="col-sm-9">
+                                            {{form.username}}
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-sm-3 col-form-label">Date Joined</label>
+                                        <div class="col-sm-9">
+                                            {{form.date_joined}}
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="form-group row">
+                                        <label class="col-sm-3 col-form-label">Profile Pic</label>
+                                        <div class="col-sm-9">
+                                            {{form.profile_pic}}
+                                        </div>
+                                    </div>
+                                    
+
+                                    
+                                    <div class="form-group row">
+                                        <div class="col-sm-9 ml-sm-auto">
+                                            <button class="btn btn-info" type="submit">Submit</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+
+
+    <div class="sidenav-backdrop backdrop"></div>
+    <div class="preloader-backdrop">
+        <div class="page-preloader">Loading</div>
+    </div>
+{% endblock %}

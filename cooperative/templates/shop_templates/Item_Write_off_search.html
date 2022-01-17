@@ -1,0 +1,50 @@
+{% extends 'shop_templates/base_template.html' %}
+{% load static %}
+
+{% block content %}
+
+           
+    <div class="container-fluid" id="wrapper">
+        <div class="row">
+            <div class="col-lg-6 col-lg-offset-4" id="content">
+                <h2>{{title}}</h2>
+                <form action="{% url 'Item_Write_off_product_load' %}" method="POST" role="form">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <div class="input-group">
+                         {{form.title}}
+                             <span class="input-group-btn">
+                                <button type="submit" class="btn btn-primary" id="add-btn">Search </button> 
+                             </span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                      {% if messages %}
+                        
+                          {% for message in messages %}
+                          {% if message.tags == "info" %}
+                          <div class="alert alert-info" style="margin-top:10px">{{message}}</div>
+                          
+                          {% endif %}
+
+                          
+                          {% endfor %}
+                      
+                      {% endif %}
+                  </div>
+                </form>
+                    
+            </div>
+        </div>
+    </div>
+  
+    <!-- BEGIN THEME CONFIG PANEL-->
+   
+    <!-- END THEME CONFIG PANEL-->
+    <!-- BEGIN PAGA BACKDROPS-->
+    <div class="sidenav-backdrop backdrop"></div>
+    <div class="preloader-backdrop">
+        <div class="page-preloader">Loading</div>
+    </div>
+  {% include 'cooperative/includes/emptyspace.html' %} 
+{% endblock %}

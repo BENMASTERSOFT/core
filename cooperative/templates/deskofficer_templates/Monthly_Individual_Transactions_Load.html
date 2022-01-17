@@ -1,0 +1,127 @@
+{% extends 'deskofficer_templates/base_template.html' %}
+{% load static %}
+
+{% block content %}
+            <div class="page-content fade-in-up">
+                <div class="form-group">
+                                  {% if messages %}
+                                    
+                                      {% for message in messages %}
+                                      {% if message.tags == "error" %}
+                                      <div class="alert alert-danger" style="margin-top:10px">{{message}}</div>
+                                      
+                                      {% endif %}
+
+                                      {% if message.tags == "info" %}
+                                      <div class="alert alert-info" style="margin-top:10px">{{message}}</div>
+                                      
+                                      {% endif %}
+                                      {% endfor %}
+                                  
+                                  {% endif %}
+                            </div>
+                <div class="row">
+
+                  <div class="col-xl-6">
+                        <div class="ibox">
+                            <div class="ibox-head">
+                                <div class="ibox-title">SAVINGS | {{salary_institution.title}} | {{transaction_period.transaction_period}}</div>
+                            </div>
+                            <div class="ibox-body">
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>CODE</th>
+                                            <th>DESCRIPTION</th>
+                                            <th>ACTION</th>
+                                          
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for item in transactions1 %}
+                                        <tr>
+                                            <td>{{forloop.counter}}</td>
+                                            <td>{{item.code}}</td>
+                                            <td>{{item.name}}</td>
+                                            <td><a href="{% url 'Monthly_Savings_Contribution_preview' item.pk salary_institution.pk %}" class="btn btn-primary">Preview</a></td>
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-6">
+                        <div class="ibox">
+                            <div class="ibox-head">
+                                <div class="ibox-title"> GENERATED TRANSACTIONS | {{transaction_period.transaction_period}}</div>
+                            </div>
+                            <div class="ibox-body">
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>CODE</th>
+                                            <th>DESCRIPTION</th>
+                                           
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for item in generated_transactions %}
+                                        <tr>
+                                            <td>{{forloop.counter}}</td>
+                                            <td>{{item.transaction.code}}</td>
+                                            <td>{{item.transaction.name}}</td>
+                                         
+                                           
+                                        </tr>
+                                {% endfor %}
+                                    </tbody>
+                               
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xl-6">
+                        <div class="ibox">
+                            <div class="ibox-head">
+                                <div class="ibox-title">LOANS</div>
+                            </div>
+                            <div class="ibox-body">
+                                <table class="table">
+                                    <thead class="thead-default">
+                                        <tr>
+                                            <th>#</th>
+                                            <th>CODE</th>
+                                            <th>DESCRIPTION</th>
+                                            <th>ACTION</th>
+                                          
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for item in transactions2 %}
+                                        <tr>
+                                            <td>{{forloop.counter}}</td>
+                                            <td>{{item.code}}</td>
+                                            <td>{{item.name}}</td>
+                                            <td><a href="{% url 'Monthly_loan_repayement_preview' item.pk salary_institution.pk %}" class="btn btn-primary">Preview</a></td>
+                                        </tr>
+                                    {% endfor %}
+                                       
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    
+                </div>
+               
+            </div>
+  <div class="sidenav-backdrop backdrop"></div>
+    <div class="preloader-backdrop">
+        <div class="page-preloader">Loading</div>
+    </div>
+{% endblock %}

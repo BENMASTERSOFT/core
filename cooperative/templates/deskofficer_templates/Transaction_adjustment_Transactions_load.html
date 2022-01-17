@@ -1,0 +1,97 @@
+{% extends 'deskofficer_templates/base_template.html' %}
+{% load static %}
+
+{% block content %}
+            <div class="page-content fade-in-up">
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="ibox">
+                            <div class="ibox-head">
+                                <div class="ibox-title">TRANSACTION SOURCES | {{member.get_full_name}}</div>
+                                
+                            </div>
+                            <div class="form-group">
+                                  {% if messages %}
+                                    
+                                      {% for message in messages %}
+                                      
+                                      {% if message.tags == "info" %}
+                                      <div class="alert alert-info" style="margin-top:10px">{{message}}</div>
+                                      
+                                      {% endif %}
+                                      {% endfor %}
+                                  
+                                  {% endif %}
+                              </div>
+                            <div class="ibox-body">
+                                <form class="form-horizontal" method="POST" action="" enctype="multipart/form-data" novalidate>
+                                    {% csrf_token %}
+                                    <div class="row">
+                                        <div class="col-sm-6 form-group">
+                                            <label>Savings</label>
+                                           {{form.transactions}}
+                                        </div>
+                                        <div class="col-sm-6 form-group">
+                                            <br>
+                                             <button class="btn btn-success" name="btn_transaction" type="submit">Process</button>
+                                        </div>
+                                    </div>                                
+
+                                  
+                                   
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                   
+                </div>
+                <div class="row">
+                    <div class="col-xl-6">
+                        <div class="ibox">
+                            <div class="ibox-head">
+                                <div class="ibox-title">Active Adjustment Request</div>
+                            </div>
+                            <div class="ibox-body">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Description</th>
+                                            <th>Account Number</th>
+                                            <th>Amount</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for record in records %}
+                                        <tr>
+                                            <td>{{forloop.counter}}</td>
+                                            <td>{{record.member.transaction.name}}</td>
+                                            <td>{{record.member.account_number}}</td>
+                                            <td>{{record.amount}}</td>
+                                            <td>
+                                            {% if record.approval_status.title == 'PENDING' %}
+                                                <a href="{% url 'Transaction_adjustment_Transactions_Accounts_Remove' record.pk %}" class="btn btn-danger">Cancel</a>
+                                           {% endif %}
+
+                                            </td>
+                                      
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+            
+
+
+    <div class="sidenav-backdrop backdrop"></div>
+    <div class="preloader-backdrop">
+        <div class="page-preloader">Loading</div>
+    </div>
+{% endblock %}

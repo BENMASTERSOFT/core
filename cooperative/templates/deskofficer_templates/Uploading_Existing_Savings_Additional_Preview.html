@@ -1,0 +1,118 @@
+{% extends 'deskofficer_templates/base_template.html' %}
+{% load static %}
+
+{% block content %}
+            <div class="page-content fade-in-up">
+                
+                <div class="row">
+                   
+
+                    <div class="col-md-6">
+                        <div class="ibox">
+                            <div class="ibox-head">
+                                <div class="ibox-title">SAVINGS UPLOAD | {{member.admin.first_name}} {{member.admin.first_name}} {{member.middle_name}}</div>
+                                
+                            </div>
+                            <div class="form-group">
+                                  {% if messages %}
+                                    
+                                      {% for message in messages %}
+                                      {% if message.tags == "error" %}
+                                      <div class="alert alert-danger" style="margin-top:10px">{{message}}</div>
+                                      
+                                      {% endif %}
+
+                                      {% if message.tags == "success" %}
+                                      <div class="alert alert-success" style="margin-top:10px">{{message}}</div>
+                                      
+                                      {% endif %}
+                                      {% endfor %}
+                                  
+                                  {% endif %}
+                              </div>
+                            <div class="ibox-body">
+                                <form class="form-horizontal" method="POST" action="" enctype="multipart/form-data" novalidate>
+                                    {% csrf_token %}
+                                    <div class="form-group row">
+                                        <label class="col-sm-6 col-form-label">Savings</label>
+                                        <div class="col-sm-6">
+                                           {{form.transactions}}
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-sm-6 col-form-label">Balance Brought Forward</label>
+                                        <div class="col-sm-6">
+                                            {{form.balance}}
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-sm-6 col-form-label">Standing Order Amount</label>
+                                        <div class="col-sm-6">
+                                            {{form.schedule_amount}}
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="form-group row">
+                                        <div class="col-sm-6 ml-sm-auto">
+                                            <button class="btn btn-info" type="submit">Submit</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            <div class="row">
+                    
+                    <div class="col-xl-8">
+                        <div class="ibox">
+                            <div class="ibox-head">
+                                <div class="ibox-title">UPLOADED SAVINGS | 
+                                    <a href="{% url 'Uploading_Existing_Savings_Additional_validate' member.pk %}" class="btn btn-primary">Validate</a>
+                                </div>
+                            </div>
+                            <div class="ibox-body">
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Accpint No</th>
+                                            <th>Description</th>
+                                            <th>Particulars</th>
+                                            <th>Balance</th>
+                                            <th>Amount</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for record in records %}
+                                        <tr>
+                                            <td>{{forloop.counter}}</td>
+                                            <td>{{record.transaction.account_number}}</td>
+                                            <td>{{record.transaction.transaction.name}}</td>
+                                            <td>{{record.particulars}}</td>
+                                            <td>{{record.balance}}</td>
+                                            <td>{{record.schedule_amount}}</td>
+                                       
+                                            <td>
+                                                {% if record.status.title != 'TREATED' %}
+                                                <a href="{% url 'Uploading_Existing_Savings_Additional_delete' record.pk return_pk %}" class="btn btn-danger">Remove</a>
+                                               {% endif %}
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+
+
+    <div class="sidenav-backdrop backdrop"></div>
+    <div class="preloader-backdrop">
+        <div class="page-preloader">Loading</div>
+    </div>
+{% endblock %}

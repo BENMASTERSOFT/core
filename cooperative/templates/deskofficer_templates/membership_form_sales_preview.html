@@ -1,0 +1,77 @@
+{% extends 'deskofficer_templates/base_template.html' %}
+{% load static %}
+
+{% block content %}
+            <div class="page-content fade-in-up">
+                <div class="row">
+                  
+                    <div class="col-xl-6">
+                        <div class="ibox">
+                            <div class="ibox-head">
+                                <div class="ibox-title">LIST COMMENTS/RECOMMENDATIONS | <a href="{% url 'membership_form_sales_issue' applicant.pk %}" class="btn btn-primary" >Issue Form</a></div>
+                            </div>
+                            <div class="ibox-body">
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Comment</th>
+                                            <th>Officer</th>
+                                            <th>Date</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for comment in comments %}
+                                        <tr>
+                                            <td>{{forloop.counter}}</td>
+                                            <td>{{comment.comment}}</td>
+                                            <td>{{comment.officer.username}}</td>
+                                             <td>{{comment.created_at}}</td>
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xl-8">
+                        <div class="ibox">
+                            <div class="ibox-head">
+                                <div class="ibox-title">ATTACHMENT</div>
+                            </div>
+                            <div class="ibox-body">
+                                <table class="table">
+                                    <thead class="thead-default">
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Caption</th>
+                                            <th>Image</th>
+                                            <th>Officer</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for item in attachments %}
+                                        <tr>
+                                            <td>{{forloop.counter}}</td>
+                                            <td>{{item.caption}}</td>
+                                            <td><img src="{{item.image}}" style="width:100px"></td>
+                                            <td>{{item.officer.username}}</td>
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    
+                </div>
+              
+           
+            </div>
+  <div class="sidenav-backdrop backdrop"></div>
+    <div class="preloader-backdrop">
+        <div class="page-preloader">Loading</div>
+    </div>
+{% endblock %}

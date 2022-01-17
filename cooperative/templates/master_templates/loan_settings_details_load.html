@@ -1,0 +1,143 @@
+{% extends 'master_templates/base_template.html' %}
+{% load static %}
+
+{% block content %}
+            <div class="page-content fade-in-up">
+                <div class="row">
+                    <div class="col-xl-8">
+                        <div class="ibox">
+                            <div class="ibox-head">
+                                <div class="ibox-title">Loan Settings | {{record.name}}</div>
+                            </div>
+                            <div class="ibox-body">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Description</th>
+                                            <th>Value</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>1</td>
+                                            <td>Category</td>
+                                            <td>{{record.category}}</td>
+                                          <td><a href="{% url 'loan_category_update' record.id %}">Update</a></td>
+                                        </tr> 
+                                        <tr>
+                                            <td>2</td>
+                                            <td>Duration</td>
+                                            <td>{{record.duration}}</td>
+                                          <td><a href="{% url 'loan_duration_update' record.id %}">Update</a></td>
+                                        </tr>
+                                         <tr>
+                                            <td>3</td>
+                                            <td>Name</td>
+                                            <td>{{record.name}}</td>
+                                          <td><a href="{% url 'loan_name_update' record.pk %}">Update</a></td>
+                                        </tr>
+                                        <tr>
+                                            <td>4</td>
+                                            <td>Interest Rate</td>
+                                            <td>{{record.interest_rate}}</td>
+                                             <td><a href="{% url 'loan_interest_rate_update' record.pk %}">Update</a></td>
+                                        </tr>
+
+
+                                        <tr>
+                                            <td>5</td>
+                                            <td>Interest Deduction Source</td>
+                                            <td>{{record.interest_deduction}}</td>
+                                            <td><a href="{% url 'loan_interest_deduction_soucrces_update' record.pk %}">Update</a></td>
+                                        </tr>
+                                        <tr>
+                                            <td>6</td>
+                                            <td>Maximum Amount</td>
+                                            <td>{{record.maximum_amount}}</td>
+                                            <td><a href="{% url 'loan_maximum_amount_update' record.pk %}">Update</a></td>
+                                        </tr>
+
+                                        <tr>
+                                            <td>7</td>
+                                            <td>Rank </td>
+                                            <td>{{record.rank}}</td>
+                                            <td><a href="{% url 'loan_rank_update_update' record.pk %}">Update</a></td>
+                                        </tr>
+
+                                         <tr>
+                                            <td>8</td>
+                                            <td>Admin Charges Rating </td>
+                                            <td>{{record.admin_charges_rating}}</td>
+                                            <td><a href="{% url 'loan_admin_charges_rate_update' record.pk %}">Update</a></td>
+                                        </tr>
+                                        <tr>
+                                            <td>9</td>
+                                            <td>Admin Charges </td>
+                                            <td>{{record.admin_charges}}</td>
+                                            <td><a href="{% url 'loan_admin_charges_update' record.pk %}">Update</a></td>
+                                        </tr>
+
+                                        <tr>
+                                            <td>10</td>
+                                            <td>Admin Charges Minimum </td>
+                                            <td>{{record.admin_charges_minimum}}</td>
+                                            <td><a href="{% url 'loan_admin_charges_minimum_update' record.pk %}">Update</a></td>
+                                        </tr> 
+                                        <tr>
+                                            <td>11</td>
+                                            <td>Salary Loan Relationship </td>
+                                            <td>{{record.salary_loan_relationship}}</td>
+                                            <td><a href="{% url 'loan_salary_relationship_update' record.pk %}">Update</a></td>
+                                        </tr>
+                                         <tr>
+                                            <td>12</td>
+                                            <td>Loan Age </td>
+                                            <td>{{record.loan_age}}</td>
+                                            <td><a href="{% url 'loan_loan_age_update' record.pk %}">Update</a></td>
+                                        </tr>
+                                        <tr>
+                                            <td>13</td>
+                                            <td>Guarnators </td>
+                                            <td>{{record.guarantors}}</td>
+                                            <td><a href="{% url 'loan_guarantors_update' record.pk %}">Update</a></td>
+                                        </tr>
+                                        <tr>
+                                            <td>14</td>
+                                            <td>Loan Savings Based </td>
+                                            <td>{{record.savings_rate}}</td>
+                                            <td><a href="{% url 'loan_savings_based_update' record.pk %}">Update</a></td>
+                                        </tr>
+                                       <tr>
+                                            <td>15</td>
+                                            <td>Default Admin Charges </td>
+                                            <td>{{record.default_admin_charges}}</td>
+                                            <td><a href="{% url 'default_admin_charges_update' record.pk %}">Update</a></td>
+                                        </tr>
+                                        <tr>
+                                            <td>16</td>
+                                            <td>Multiple Loan Status </td>
+                                            <td>{{record.multiple_loan_status}}</td>
+                                            <td><a href="{% url 'MultipleLoanStatus_update' record.pk %}">Update</a></td>
+                                        </tr>
+                                       
+
+                                       
+
+
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                
+                </div>
+               
+           
+            </div>
+  <div class="sidenav-backdrop backdrop"></div>
+    <div class="preloader-backdrop">
+        <div class="page-preloader">Loading</div>
+    </div>
+{% endblock %}

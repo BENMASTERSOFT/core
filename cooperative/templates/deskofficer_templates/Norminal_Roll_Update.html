@@ -1,0 +1,92 @@
+{% extends 'deskofficer_templates/base_template.html' %}
+{% load static %}
+
+{% block content %}
+            <div class="page-content fade-in-up">
+                
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="ibox">
+                            <div class="ibox-head">
+                                <div class="ibox-title">Personnel Data</div>
+                                
+                            </div>
+                            <div class="ibox-body">
+                                 <form class="form-horizontal" method="POST" action="" enctype="multipart/form-data" novalidate>
+                                    {% csrf_token %}
+                                    <div class="form-group">
+                                       <label>Title</label>
+                                        {{form.title}}
+                                    </div>
+                                     <div class="form-group">
+                                       <label>Last Name</label>
+                                            {{form.last_name}}
+                                    </div>
+                                    <div class="form-group">
+                                       <label>First Name</label>
+                                            {{form.first_name}}
+                                    </div>
+                                    <div class="form-group">
+                                      <label>Middle Name</label>
+                                            {{form.middle_name}}
+                                    </div>
+
+
+                                    <div class="form-group">
+                                        <label>Gender</label>
+                                        {{form.gender}}
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Phone Number</label>
+                                        {{form.phone_number}}
+                                    </div>
+                                   
+                                    <div class="form-group">
+                                        <label>Department</label>
+                                        {{form.department}}
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Salary Institution</label>
+                                        {{form.salary_institution}}
+                                    </div>
+                                     <div class="form-group">
+                                        <label>Residential Address</label>
+                                        {{form.residential_address}}
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label>Permanent Home Address</label>
+                                        {{form.permanent_home_address}}
+                                    </div> 
+                                    <div class="form-group">
+                                        <label>File No</label>
+                                        {{form.file_no}}
+                                    </div> 
+                                    <div class="form-group">
+                                        <label>IPPIS/ Non-IPPIS</label>
+                                        {{form.ippis_no}}
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Date Joined</label>
+                                        {{form.date_joined}}
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <button class="btn btn-primary" type="submit">Submit</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+                  
+                </div>
+            </div>
+            
+
+
+    <div class="sidenav-backdrop backdrop"></div>
+    <div class="preloader-backdrop">
+        <div class="page-preloader">Loading</div>
+    </div>
+{% endblock %}

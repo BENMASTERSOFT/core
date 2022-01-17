@@ -1,0 +1,94 @@
+{% extends 'president_templates/base_template.html' %}
+{% load static %}
+
+{% block content %}
+            <div class="page-content fade-in-up">
+                <div class="row">
+                  
+                    <div class="col-md-6">
+                        <div class="ibox">
+                            <div class="ibox-head">
+                                <div class="ibox-title">CASH WITHDRAWAL | {{applicant.member.transaction.name}} |{{applicant.member.member.get_full_name}}</div> 
+                        
+                                <div class="ibox-tools">
+                                   {{applicant.member.get_full_name}}
+                                </div>
+                            </div>
+                            <div class="form-group">
+                              {% if messages %}
+                                
+                                  {% for message in messages %}
+                                  {% if message.tags == "error" %}
+                                  <div class="alert alert-danger" style="margin-top:10px">{{message}}</div>
+                                  
+                                  {% endif %}
+
+                                  {% if message.tags == "success" %}
+                                  <div class="alert alert-success" style="margin-top:10px">{{message}}</div>
+                                  
+                                  {% endif %}
+                                  {% endfor %}
+                              
+                              {% endif %}
+                        </div>
+                            <div class="ibox-body">
+                                <form class="form-horizontal" method="POST" action="" enctype="multipart/form-data">
+                                                {% csrf_token %}
+                                    <div class="form-group row">
+                                        <label class="col-sm-5 col-form-label">Ledger Balance</label>
+                                        <div class="col-sm-7">
+                                            {{form.ledger_balance}}
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-sm-5 col-form-label">Amount Applied</label>
+                                        <div class="col-sm-7">
+                                            {{form.amount_applied}}
+                                        </div>
+                                    </div>  
+                                    <div class="form-group row">
+                                        <label class="col-sm-5 col-form-label">Amount Approved</label>
+                                        <div class="col-sm-7">
+                                            {{form.amount_approved}}
+                                        </div>
+                                    </div>   
+                                    <div class="form-group row">
+                                        <label class="col-sm-5 col-form-label">Comment</label>
+                                        <div class="col-sm-7">
+                                            {{form.comment}}
+                                        </div>
+                                    </div>                                    
+                                    <div class="form-group row">
+                                        <label class="col-sm-5 col-form-label">Financial Sec.</label>
+                                        <div class="col-sm-7">
+                                            {{form.certification_officers}}
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-sm-5 col-form-label">Approval Status</label>
+                                        <div class="col-sm-7">
+                                            {{form.status}}
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="form-group row">
+                                        <div class="col-sm-7 ml-sm-auto">
+                                            {% if submission_status %}
+                                            <button class="btn btn-info" type="submit">Submit</button>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+
+
+    <div class="sidenav-backdrop backdrop"></div>
+    <div class="preloader-backdrop">
+        <div class="page-preloader">Loading</div>
+    </div>
+{% endblock %}

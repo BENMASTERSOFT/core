@@ -1,0 +1,152 @@
+{% extends 'master_templates/base_template.html' %}
+{% load static %}
+
+{% block content %}
+            <div class="page-content fade-in-up">
+                <div class="row">
+                   
+
+                    <div class="col-md-6">
+                        <div class="ibox">
+                            <div class="ibox-head">
+                                <div class="ibox-title">Add TRansaction Types</div>
+                                
+                            </div>
+                            <div class="form-group">
+                              {% if messages %}
+                                
+                                  {% for message in messages %}
+                                  {% if message.tags == "error" %}
+                                  <div class="alert alert-danger" style="margin-top:10px">{{message}}</div>
+                                  
+                                  {% endif %}
+
+                                  {% if message.tags == "success" %}
+                                  <div class="alert alert-success" style="margin-top:10px">{{message}}</div>
+                                  
+                                  {% endif %}
+                                  {% endfor %}
+                              
+                              {% endif %}
+                          </div>
+                            <div class="ibox-body">
+                                <form class="form-horizontal" action="" method="POST">
+                                    {% csrf_token %}
+                                    <div class="form-group row">
+                                        <label class="col-sm-4 col-form-label">Source</label>
+                                        <div class="col-sm-8">
+                                            {{form.source}}
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-sm-4 col-form-label">Code</label>
+                                        <div class="col-sm-8">
+                                            {{form.code}}
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-sm-4 col-form-label">Name</label>
+                                        <div class="col-sm-8">
+                                           {{form.name}}
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-sm-4 col-form-label">Maximum Amount</label>
+                                        <div class="col-sm-8">
+                                           {{form.maximum_amount}}
+                                        </div>
+                                    </div> 
+                                    <div class="form-group row">
+                                        <label class="col-sm-4 col-form-label">Minimum Amount</label>
+                                        <div class="col-sm-8">
+                                           {{form.minimum_amount}}
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-sm-4 col-form-label">Receipts</label>
+                                        <div class="col-sm-8">
+                                           {{form.receipts}}
+                                        </div>
+                                    </div> 
+                                    <div class="form-group row">
+                                        <label class="col-sm-4 col-form-label">Share Min. Units</label>
+                                        <div class="col-sm-8">
+                                           {{form.share_unit_min}}
+                                        </div>
+                                    </div>                                    
+                                    <div class="form-group row">
+                                        <label class="col-sm-4 col-form-label">Share Max. Units</label>
+                                        <div class="col-sm-8">
+                                           {{form.share_unit_max}}
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-sm-4 col-form-label">Rank</label>
+                                        <div class="col-sm-8">
+                                           {{form.rank}}
+                                        </div>
+                                    </div>
+                                   
+                                    <div class="form-group row">
+                                        <div class="col-sm-8 ml-sm-auto">
+                                            <button class="btn btn-info" type="submit">Submit</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+      
+                
+                <div class="ibox">
+                    <div class="ibox-head">
+                        <div class="ibox-title">Responsive Table</div>
+                    </div>
+                    <div class="ibox-body">
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        
+                                        <th>#</th>
+                                        <th>Code</th>
+                                        <th>Description</th>
+                                        <th>Maximun Amount</th>
+                                        <th>Minimun Amount</th>
+                                        <th>Rank</th>
+                                        <th>Source</th>
+                                      
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                {% for item in transaction_types %}
+                                    <tr>
+                                        
+                                        <td>{{forloop.counter}}</td>
+                                        <td>{{item.code}}</td>
+                                        <td>{{item.name}}</td>
+                                        <td>{{item.maximum_amount}}</td>
+                                        <td>{{item.minimum_amount}}</td>
+                                        <td>{{item.rank}}</td>
+                                        <td>{{item.source.title}}</td>
+                                        
+                                        
+                                    </tr>
+                                {% endfor %}
+                                    
+                                    
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+             
+           
+            </div>
+  
+    <div class="sidenav-backdrop backdrop"></div>
+    <div class="preloader-backdrop">
+        <div class="page-preloader">Loading</div>
+    </div>
+{% endblock %}

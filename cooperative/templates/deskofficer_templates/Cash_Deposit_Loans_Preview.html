@@ -1,0 +1,138 @@
+{% extends 'deskofficer_templates/base_template.html' %}
+{% load static %}
+
+{% block content %}
+            <div class="page-content fade-in-up">
+                 <form class="form-horizontal" method="POST" action="" enctype="multipart/form-data" novalidate>
+                                    {% csrf_token %}
+                <div class="row">
+
+                    <div class="col-md-8">
+                        <div class="ibox">
+                            <div class="ibox-head">
+                                <div class="ibox-title">SAVINGS CASH DEPOSIT | {{member.admin.last_name}} {{member.admin.first_name}} {{member.get_middle_name}}</div>
+                                
+                            </div>
+                            <div class="form-group">
+                                  {% if messages %}
+                                    
+                                      {% for message in messages %}
+                                      {% if message.tags == "error" %}
+                                      <div class="alert alert-danger" style="margin-top:10px">{{message}}</div>
+                                      
+                                      {% endif %}
+
+                                      {% if message.tags == "success" %}
+                                      <div class="alert alert-success" style="margin-top:10px">{{message}}</div>
+                                      
+                                      {% endif %}
+                                       {% if message.tags == "info" %}
+                                      <div class="alert alert-info" style="margin-top:10px">{{message}}</div>
+                                      
+                                      {% endif %}
+                                      {% endfor %}
+                                  
+                                  {% endif %}
+                              </div>
+                            <div class="ibox-body">
+                                
+                                      <div class="form-group row">
+                                        <label class="col-sm-4 col-form-label">Payment Date</label>
+                                        <div class="col-sm-8">
+                                           {{form.payment_date}}
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group row">
+                                        <label class="col-sm-4 col-form-label">LOAN TYPES</label>
+                                        <div class="col-sm-8">
+                                           {{form.transactions}}
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group row">
+                                        <label class="col-sm-4 col-form-label">Bank Accounts</label>
+                                        <div class="col-sm-8">
+                                            {{form.bank_accounts}}
+                                        </div>
+                                    </div>     
+                                   
+                                                                  
+                                    
+                                 
+                                    <div class="form-group row">
+                                        <div class="col-sm-8 ml-sm-auto">
+                                            <button class="btn btn-info" type="submit" name='btn_display'>Display</button>
+                                        </div>
+                                    </div>
+                               
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="ibox">                            
+                            <div class="ibox-body">
+                                 
+                                      
+
+                                    <div class="form-group row">
+                                        <label class="col-sm-4 col-form-label"> Transaction Account</label>
+                                        <div class="col-sm-8">
+                                          <select class="form-control" name="account_number">
+                                              {% for loan in loans %}
+                                                <option value={{loan.id }}> {{loan.loan_number}} </option>
+                                              {% endfor %}
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                     
+                                    <div class="form-group row">
+                                        <label class="col-sm-4 col-form-label">Amount Paid</label>
+                                        <div class="col-sm-8">
+                                            {{form.amount}}
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group row">
+                                        <label class="col-sm-4 col-form-label">Payment Ref. ID</label>
+                                        <div class="col-sm-8">
+                                           {{form.payment_reference}}
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-sm-4 col-form-label">Purpose</label>
+                                        <div class="col-sm-8">
+                                           {{form.purpose}}
+                                        </div>
+                                    </div>
+                                
+                                    <div class="form-group row">
+                                        <label class="col-sm-4 col-form-label">Payment Evidience</label>
+                                        <div class="col-sm-8">
+                                           {{form.payment_evidience}}
+                                        </div>
+                                    </div>
+                                 
+                                    <div class="form-group row">
+                                        <div class="col-sm-8 ml-sm-auto">
+                                            <button class="btn btn-info" type="submit" name='btn_submit'>Submit</button>
+                                        </div>
+                                    </div>
+                              
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+
+
+    <div class="sidenav-backdrop backdrop"></div>
+    <div class="preloader-backdrop">
+        <div class="page-preloader">Loading</div>
+    </div>
+{% endblock %}

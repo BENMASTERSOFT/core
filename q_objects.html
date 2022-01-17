@@ -1,0 +1,402 @@
+Object Relational Mapping(ORM)
+<!-- Models -->
+What we'ii see Today
+1. Q and F objects
+2. Datbase functions
+	=> Extract, Concat, Replace, ...
+
+3. Conditional Expressions
+	=> When, Case, ....
+
+Query Expressions
+. Functions to compute values on qyery expression
+. It's possible to do:
+	Queries with OR and NOT
+	String manipulations (i.e Concat)
+	Calculations (i.e F objects)
+	Conditional queries (Case, When)
+	Much More...
+. Avoid creation of unnecessary columns
+. Help with performance
+
+
+class Person(models.Model):
+	first_name = models.CharField(max_length=255)
+	last_name = models.CharField(max_length=255)
+	birthdate = models.DateField()
+
+
+
+
+
+
+To determine if one is born in a Leap Year
+
+import calendar
+
+year=(
+	Person.objects.annotate_born_in_leap_year()
+	.filter(born_in_leap_year=True)
+	.values_list('birthsate__year', flat=True)
+)
+
+for year in years:
+	# print(...)
+	assert calendar.isleap(year)
+
+
+Person.objects.filter(first_name__icontains="Alex")
+
+
+================================================
+Q Objects
+================================================
+
+=> Encapsulate Keywords
+=> Accepts | (OR), ~ (NOT), & (AND)
+
+<!-- Views -->
+from django.db.models import Q
+
+
+<!-- Working with OR (|) -->
+Person.objects.filter(
+	Q(birthdate__year__range=(1981,1996))
+	| Q(birthdate__year__range=(1946,1964))
+)
+
+<!-- Working with AND {&} -->
+
+Person.objects.filter(
+	Q(
+		Q(birthdate__year__range=(1981,1996))
+		| Q(birthdate__year__range=(1946,1964))
+	)
+		& Q(location__postal_code="CA")
+)
+
+
+<!-- More Queries....... -->
+# Millennials or baby boomers....
+
+Person.objects.filter(
+	Q(
+		Q(birthdate__year__range=(1981,1996))
+		| Q(birthdate__year__range=(1946,1964))
+	)
+		# ... that live in California
+
+		& Q(location__postal_code="CA")
+
+		# ... but aren't from A blood group
+		& ~Q(blood_type__startswith='A')
+
+		# ---or are developers who don't live in california
+
+		| Q(
+			Q(job__name="Developer")
+			 & !Q(job__location__postal_code='CA')
+		)
+)
+
+
+Filtering data on our API
+
+from django.db.models import Q
+
+
+value = params['value']
+user_filter = Q(
+	Q(first_name__icontains=value)
+	| Q(lastt_name__icontains=value)
+	| Q(email__icontains=value)
+	| Q(job__name__icontains=value)
+)
+
+Person.objects.filter(user_filter)
+
+
+from django.db.models import Q
+
+user_filter = Q(is_active=True)
+value=param['value']
+
+if 'name' in params:
+	user_filter.add(
+		Q(
+			Q(first_name__icontains=value)
+			|Q(last_name__icontains=value)
+		),
+		Q.OR,
+	)
+
+if 'job' in params:
+	user_filter.add(Q(job_name__icontains=value), Q.OR)
+
+if 'email' in params:
+	user_filter.add(Q(email__icontains=value), Q.OR)
+
+Person.objects.filter(user_filter)
+
+
+F Objects
+
+Class Person(models.Model):
+	#...Other Fields
+
+	last_donated = models.DateTimeField()
+	can_donate_on = models.DateTimeField()
+
+
+
+Person.objects.filter(
+	can_donate_on__lte=timezone.now()
+)
+
+
+1. Use to reference fields
+2. Avoid loading objects into memory
+
+
+from datetime import timedelta
+from django.db.models import F
+from django.utils import timezone
+
+person.objects.annotate(
+	can_donate_on=F("last_donated") + timedelta(days=56)
+).filter(can_donate_on__lt=timezone.now())
+
+
+
+1. Can be used with anootations
+2. Can be use with different fields (from the same model)
+
+from django.db.models import F
+
+BloodBank.objects.annotate(
+	existent_amount=Count("bloodbag_set"),
+	remaining=F("goal") - F("existent_amount"),
+).values_list('goal',"existent_amount","remaining")
+
+
+
+
+3. ExpressionWrapper (operations with different types)
+
+from django.db.models import (
+	ExpressionWrapper, F, DateTimeField
+)
+
+Event.objects.annotate(
+	ends_on=ExpressionWrapper(
+	F("starts_at") + F("duration"), 
+	output_field=DateTimeField()
+	) 
+)
+
+
+4. Working inside Q objects
+
+from django.db.models import F, Q
+
+
+Person.objects.filter(
+	Q(first_name=F("last_name"))
+	& ~Q(job__name__icontains="Mark")
+)
+
+
+
+
+
+DATABASE FUNCTIONS
+
+
+from django.db.models import Count
+
+Pet.objects.values('type').annotate(
+	Count('type')
+)
+
+<QuerySet [
+	{'type': 'Fish', 'type__count': 354},
+	{'type': 'Cat', 'type__count': 409},
+	{'type': 'Bird', 'type__count': 362},
+	{'type': 'Dog', 'type__count': 375},
+
+]>
+
+
+class Person(models.Model):
+	first_name = models.CharField(max_length=255)
+	last_name = models.CharField(max_length=255)
+	
+
+	@property
+	def full_name(self):
+		return f"{self.first_name} {self.last_name}"
+
+
+
+
+Query
+
+p = Person.objects.first()
+
+p.full_name
+
+>>> 'Glenn Parker'
+
+"nn p" in p.full_name
+
+>>> True
+
+
+from django.db.models import Value
+from django.db.models.functions import Concat
+
+
+
+# Important for performamnce (Concat example)
+Person.objects.annotate(
+	full_name=Concat("first_name", value(" "), "last_name")
+).filter(full_name__icontains="nn p").values_lst(
+	"full_name"
+)
+
+
+from utils import *
+from sampple.models import Person
+from django.db.models.functions import Concat
+from django.db.models import Value
+
+LIMIT = 5000000
+
+def load_full_name():
+	names = list(
+		Person.objects.annotate(
+			full_name=Concat("first_name", Value(" "), "last_name")
+		).values_list("full_name")[:LIMIT]
+	)
+	return names
+
+
+def load_full_names_from_property():
+	names=[person.full_name for person in person.objects.all()[:LIMIT]
+	return names
+
+
+
+
+. Tip: You can add annotations to Managers or QuerySets
+
+
+Class PersonQuerySet(models.QuerySet):
+	def annotate_full_name(self):
+		return self.annotate(
+			full_name=Concat(
+			"first_name", Value(" "), "last_name"
+			)
+		)
+
+class Person(models.Model):
+	#...other fields
+
+	objects = PersonQuerySet.as_manager()
+
+Person.objects.annotate_full_name().values_list("full_name")
+
+
+# Coalesce
+
+from django.db.models.functions import Coalesce
+
+class Person(models.Model):
+	first_name = models.CharField(max_lenght=255)
+	nickname = models.CharField(max_lenght=255, null=True, blank=True)
+
+
+# Not Optimal
+
+
+Person.objects.annotate(
+	goes_by=Coalesce("nickname", "first_name")
+).values_list("goes_by")
+
+
+
+# Optimal
+
+# Coalesce + NullIf
+
+
+from django.db.models.functions import Coalesce, NullIf
+from django.db.models import Value
+
+Person.objects.annotate(
+	goes_by=Coalesce(
+		NullIf("nickname", value(" ")),
+		"first_name"
+	)
+).values_list("goes_by")
+
+
+# Conditional Expression
+# Allow conditionals in queries
+
+class Order(models.model):
+	created = models.DateTimeField(
+		auto_now_add=True
+	)
+	customer=models.ForeignKey(
+	Person, related_name="orders",
+	on_delete=models.CASCADE,
+	)
+	total=models.PositiveIntegerField()
+
+
+
+
+# Views
+
+from django.utils import timezone
+
+
+
+# Not optimal
+
+
+orders=Order.objects.filter(
+	created__date=timezone.now().date()
+)
+
+from order in orders:
+	customer_joined_year = order.customer.joined_on.year
+
+	if (
+		customer_joined_year >= 2010
+		and customer_joined_year < 2019
+	):
+		order.total+=0.8
+		order.save()
+	elif(
+		customer_joined_year <= 2000
+		and customer_joined_year >= 1995
+	):
+		order.total+=0.6
+		order.save()
+
+
+# Optimal
+
+from django.db.models import Case, When
+
+orders.annotate(
+	discounted_total=Case(
+		When(
+			customer__joined_on__year__range=(2010, 2018),
+			then=F("total" * 0.6),
+		),
+		default='total',
+	)
+)

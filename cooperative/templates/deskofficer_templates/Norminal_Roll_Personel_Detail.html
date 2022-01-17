@@ -1,0 +1,98 @@
+{% extends 'deskofficer_templates/base_template.html' %}
+{% load static %}
+
+{% block content %}
+            <div class="page-content fade-in-up">
+                <div class="row">
+                
+                    <div class="col-xl-6">
+                        <div class="ibox">
+                            <div class="ibox-head">
+                                <div class="ibox-title">MEMBER DETAILS | <a href="" class="btn btn-primary">Update</a></div>
+                            </div>
+                            <div class="ibox-body">
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            
+                                            <th>Description</th>
+                                            <th>Value</th>
+                                           
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>Member ID</td>
+                                            <td>{{member.member_id}}</td>
+                                        </tr>
+                                        <tr>
+                                           
+                                            <td>Name</td>
+                                            <td>{{member.title.title}} {{member.get_full_name}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Gender</td>
+                                            <td>{{member.gender.title}}</td>
+                                        </tr> 
+                                        <tr>
+                                            <td>Department</td>
+                                            <td>{{member.department.title}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Department</td>
+                                            <td>{{member.department.title}}</td>
+                                        </tr> 
+                                        <tr>
+                                            <td>Phone Number</td>
+                                            <td>{{member.phone_number}}</td>
+                                        </tr> 
+                                        <tr>
+                                            <td>Residential Address</td>
+                                            <td>{{member.residential_address}}</td>
+                                        </tr> 
+                                        <tr>
+                                            <td>Permanent Home Address</td>
+                                            <td>{{member.permanent_home_address}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>State of Origin</td>
+                                            <td>{{member.state.title}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>LGA of Origin</td>
+                                            <td>{{member.lga.title}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Salary Instituttion</td>
+                                            <td>{{member.salary_institution.title}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>File No</td>
+                                            <td>{{member.file_no}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>IPPIS/Non-IPPIS</td>
+                                            <td>{{member.ippis_no}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Gross Pay</td>
+                                            <td>{{member.gross_pay}} - {{member.gross_pay_as_at}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Date Joined</td>
+                                            <td>{{member.date_joined}}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            
+           
+            </div>
+  <div class="sidenav-backdrop backdrop"></div>
+    <div class="preloader-backdrop">
+        <div class="page-preloader">Loading</div>
+    </div>
+{% endblock %}

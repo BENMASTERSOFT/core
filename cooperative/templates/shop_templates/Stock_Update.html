@@ -1,0 +1,179 @@
+{% extends 'shop_templates/base_template.html' %}
+{% load static %}
+{% block custom_css %}
+    <!-- PLUGINS STYLES-->
+    <link href="{% static '/cooperative/assets/vendors/DataTables/datatables.min.css' %}" rel="stylesheet" />
+   {% endblock custom_css %}
+{% block content %}
+
+      
+            <div class="page-content fade-in-up">
+                <div class="row">
+                    
+                    <div class="col-md-6">
+                        <div class="ibox">
+                            <div class="ibox-head">
+                                <div class="ibox-title">Add Items |Category {{category.title}}</div>
+                                
+                            </div>
+                            <div class="form-group">
+                                  {% if messages %}
+                                    
+                                      {% for message in messages %}
+                                      {% if message.tags == "error" %}
+                                      <div class="alert alert-danger" style="margin-top:10px">{{message}}</div>
+                                      
+                                      {% endif %}
+
+                                      {% if message.tags == "success" %}
+                                      <div class="alert alert-success" style="margin-top:10px">{{message}}</div>
+                                      
+                                      {% endif %}
+                                      {% endfor %}
+                                  
+                                  {% endif %}
+                              </div>
+
+
+                            <div class="ibox-body">
+                                 <form class="form-horizontal" method="POST" action="" enctype="multipart/form-data" novalidate>
+                                    {% csrf_token %}
+                                    <div class="form-group row">
+                                        <label class="col-sm-4 col-form-label">Category</label>
+                                        <div class="col-sm-8">
+                                           {{form.category}}
+                                        </div>
+                                    </div> 
+                                    <div class="form-group row">
+                                        <label class="col-sm-4 col-form-label">Code</label>
+                                        <div class="col-sm-8">
+                                           {{form.code}}
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-sm-4 col-form-label">Item Name</label>
+                                        <div class="col-sm-8">
+                                            {{form.item_name}}
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-sm-4 col-form-label">Description</label>
+                                        <div class="col-sm-8">
+                                            {{form.details}}
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-sm-4 col-form-label">Quantity</label>
+                                        <div class="col-sm-8">
+                                            {{form.quantity}}
+                                        </div>
+                                    </div>
+                                     <div class="form-group row">
+                                        <label class="col-sm-4 col-form-label">Unit Selling Price</label>
+                                        <div class="col-sm-8">
+                                            {{form.unit_selling_price}}
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-sm-4 col-form-label">Unit Cost Price</label>
+                                        <div class="col-sm-8">
+                                            {{form.unit_cost_price}}
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-sm-4 col-form-label">No_in_pack</label>
+                                        <div class="col-sm-8">
+                                            {{form.no_in_pack}}
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="form-group row">
+                                        <label class="col-sm-4 col-form-label">Re-Order Level</label>
+                                        <div class="col-sm-8">
+                                            {{form.re_order_level}}
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group row">
+                                        <div class="col-sm-8 ml-sm-auto">
+                                            <button class="btn btn-info" type="submit">Submit</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+
+            
+            </div>
+  
+    
+    <!-- BEGIN PAGA BACKDROPS-->
+    <div class="sidenav-backdrop backdrop"></div>
+    <div class="preloader-backdrop">
+        <div class="page-preloader">Loading</div>
+    </div>
+    <!-- END PAGA BACKDROPS-->
+{% endblock content %}
+
+{% block custom_js %}
+    <!-- PAGE LEVEL PLUGINS-->
+    <script src="{% static '/cooperative//assets/vendors/DataTables/datatables.min.js' %}" type="text/javascript"></script>
+   
+    <!-- PAGE LEVEL SCRIPTS-->
+    <script type="text/javascript">
+        $(function() {
+            $('#example-table').DataTable({
+                pageLength: 10,
+                //"ajax": './assets/demo/data/table_data.json',
+                /*"columns": [
+                    { "data": "name" },
+                    { "data": "office" },
+                    { "data": "extn" },
+                    { "data": "start_date" },
+                    { "data": "salary" }
+                ]*/
+            });
+
+          $("#id_code").keyup(function(){
+            var code=$(this).val();
+
+            if(code!=""){
+              $.ajax({
+                url:'{% url "check_code_exist" %}',
+                type:'POST',
+                data:{code:code}
+                })
+                  .done(function(response){
+                  console.log(response);
+                  if(response == "True"){
+                    $(".code_error").remove();
+                    
+                        $("<span class='code_error' style='padding: 5px; color: red;font-weight: bold;'>Code Not Available</span>").insertAfter("#id_code");
+                  }
+                  else{
+                  $(".code_error").remove();
+                   // $("<span class='alert alert-success email_error'>Email Available</span>").insertAfter("#id_email");
+                    $("<span class='code_error' style='padding: 5px;color: green;font-weight: bold;'>Code Available</span>").insertAfter("#id_code");
+                      
+                  }
+              })
+              .fail(function(){
+                  console.log("Failed");
+              })
+
+            }
+            else{
+            $(".code_error").remove();
+          }
+
+          });
+      
+   
+
+        })
+    </script>
+{% endblock custom_js %}

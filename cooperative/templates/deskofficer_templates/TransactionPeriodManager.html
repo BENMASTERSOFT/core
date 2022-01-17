@@ -1,0 +1,98 @@
+{% extends 'deskofficer_templates/base_template.html' %}
+{% load static %}
+
+{% block content %}
+            <div class="page-content fade-in-up">
+                
+                <div class="row">
+                   <div class="col-md-6">
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="ibox">
+                            <div class="ibox-head">
+                                <div class="ibox-title">Transaction Period Manager</div>
+                               
+                            </div>
+                            <div class="form-group">
+                                  {% if messages %}
+                                    
+                                      {% for message in messages %}
+                                      {% if message.tags == "error" %}
+                                      <div class="alert alert-danger" style="margin-top:10px">{{message}}</div>
+                                      
+                                      {% endif %}
+
+                                      {% if message.tags == "success" %}
+                                      <div class="alert alert-success" style="margin-top:10px">{{message}}</div>
+                                      
+                                      {% endif %}
+                                      {% endfor %}
+                                  
+                                  {% endif %}
+                              </div>
+                            <div class="ibox-body">
+                               <form class="form-horizontal" method="POST" action="" enctype="multipart/form-data" novalidate>
+                                    {% csrf_token %}
+                                    <div class="form-group row">
+                                        <label class="col-sm-2 col-form-label">Period</label>
+                                        <div class="col-sm-10">
+                                            {{form.transaction_period}}
+                                        </div>
+                                    </div>
+                                                                      
+                                    <div class="form-group row">
+                                        <div class="col-sm-10 ml-sm-auto">
+                                            <button class="btn btn-info" type="submit">Submit</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="ibox">
+                                    <div class="ibox-head">
+                                        <div class="ibox-title">Available Transactions</div>
+                                    </div>
+                                    <div class="ibox-body">
+                                        <table class="table table-bordered">
+                                            <thead>
+                                                <tr>
+                                                    <th>#</th>
+                                                    <th>Period</th>
+                                                    <th>Status</th>
+                                                    <th>Action</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                            {% for record in records %}
+                                                <tr>
+                                                    <td>{{forloop.counter}}</td>
+                                                    <td>{{record.transaction_period}}</td>
+                                                    <td>{{record.status}}</td>
+                                                    <td><a href="{% url 'TransactionPeriodsUpdate' record.pk %}" class="btn btn-primary">Update</a></td>
+                                                </tr>
+                                            {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+
+
+    <div class="sidenav-backdrop backdrop"></div>
+    <div class="preloader-backdrop">
+        <div class="page-preloader">Loading</div>
+    </div>
+{% endblock %}
+
+                   

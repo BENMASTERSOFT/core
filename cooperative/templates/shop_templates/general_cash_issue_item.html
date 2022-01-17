@@ -1,0 +1,91 @@
+{% extends 'shop_templates/base_template.html' %}
+{% load static %}
+
+{% block content %}
+ <div class="page-content fade-in-up">
+                <div class="row">
+                 
+
+                    <div class="col-md-7">
+                        <div class="ibox">
+                            <div class="ibox-head">
+                                <div class="ibox-title">Item Issuance | {{customer.name}} </div>
+                               
+                            </div>
+                            <div class="form-group">
+                                  {% if messages %}
+                                    
+                                      {% for message in messages %}
+                                      {% if message.tags == "error" %}
+                                      <div class="alert alert-danger" style="margin-top:10px">{{message}}</div>
+                                      
+                                      {% endif %}
+
+                                      {% if message.tags == "success" %}
+                                      <div class="alert alert-success" style="margin-top:10px">{{message}}</div>
+                                      
+                                      {% endif %}
+                                      {% endfor %}
+                                  
+                                  {% endif %}
+                            </div>
+                            <div class="ibox-body">
+                                        <form class="form-horizontal" method="POST" action="">
+                                    {% csrf_token %}
+                                    <div class="form-group row">
+                                        <label class="col-sm-4 col-form-label">Item Code</label>
+                                        <div class="col-sm-5">
+                                            {{form.code}}
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-sm-4 col-form-label">Item Name</label>
+                                        <div class="col-sm-8">
+                                           {{form.item_name}}
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-sm-4 col-form-label">Available Quantity</label>
+                                        <div class="col-sm-5">
+                                           {{form.available_quantity}}
+                                        </div>
+                                    </div> 
+                                    <div class="form-group row">
+                                        <label class="col-sm-4 col-form-label">Issueing Quantity</label>
+                                        <div class="col-sm-5">
+                                           {{form.issue_quantity}}
+                                        </div>
+                                    </div> 
+                                    <div class="form-group row">
+                                        <label class="col-sm-4 col-form-label">Unit Selling Price</label>
+                                        <div class="col-sm-5">
+                                           {{form.unit_selling_price}}
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="form-group row">
+                                        <div class="col-sm-8 ml-sm-auto">
+                                            <button class="btn btn-info" type="submit">Select</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+
+
+             
+            </div>
+            
+
+
+    <div class="sidenav-backdrop backdrop"></div>
+    <div class="preloader-backdrop">
+        <div class="page-preloader">Loading</div>
+    </div>
+
+{% endblock %}
+
