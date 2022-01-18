@@ -22,11 +22,9 @@ from django.utils.dateparse import parse_date
 from dateutil.relativedelta import relativedelta
 import xlwt
 from django.db.models import F
-
-
 from django.views.generic import View
 
-from yourproject.utils import render_to_pdf #created in step 4
+
 
 
 # now = datetime.datetime.now()
@@ -2444,6 +2442,8 @@ def All_Stock_Status(request):
 	}
 	return render(request,'shop_templates/All_Stock_Status.html',context)
 
+
+
 def Purchase_Summary(request):
 	form=Purchase_Summary_form(request.POST or None)
 
@@ -2500,38 +2500,3 @@ def load_branches(request):
     branches = Suppliers_Branches.objects.filter(supplier=supplier_id).order_by('address')
     return render(request, 'shop_templates/branches_dropdown_list_options.html',{'branches':branches})
  
-
-
-class GeneratePdf(View):
-    def get(self, request, *args, **kwargs):
-        data = {
-             'today': datetime.date.today(), 
-             'amount': 39.99,
-            'customer_name': 'Cooper Mann',
-            'order_id': 1233434,
-        }
-        pdf = render_to_pdf('pdf/invoice.html', data)
-        return HttpResponse(pdf, content_type='application/pdf')
-
-
-class GeneratePDF(View):
-    def get(self, request, *args, **kwargs):
-        template = get_template('invoice.html')
-        context = {
-            "invoice_id": 123,
-            "customer_name": "John Cooper",
-            "amount": 1399.99,
-            "today": "Today",
-        }
-        html = template.render(context)
-        pdf = render_to_pdf('invoice.html', context)
-        if pdf:
-            response = HttpResponse(pdf, content_type='application/pdf')
-            filename = "Invoice_%s.pdf" %("12341231")
-            content = "inline; filename='%s'" %(filename)
-            download = request.GET.get("download")
-            if download:
-                content = "attachment; filename='%s'" %(filename)
-            response['Content-Disposition'] = content
-            return response
-        return HttpResponse("Not found")
