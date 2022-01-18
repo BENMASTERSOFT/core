@@ -1,0 +1,76 @@
+{% extends 'master_templates/base_template.html' %}
+{% load static %}
+
+{% block content %}
+<div class="page-content fade-in-up">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="ibox">
+                <div class="ibox-head">
+                    <div class="ibox-title">Invoice Header</div>
+                    
+                </div>
+                <div class="form-group">
+                              {% if messages %}
+                                
+                                  {% for message in messages %}
+                                  {% if message.tags == "error" %}
+                                  <div class="alert alert-danger" style="margin-top:10px">{{message}}</div>
+                                  
+                                  {% endif %}
+
+                                  {% if message.tags == "success" %}
+                                  <div class="alert alert-success" style="margin-top:10px">{{message}}</div>
+                                  
+                                  {% endif %}
+                                  {% endfor %}
+                              
+                              {% endif %}
+                          </div>
+                <div class="ibox-body">
+                  <form class="form-horizontal" action="" method="POST">
+                                    {% csrf_token %}
+                        <div class="form-group row">
+                            <label class="col-sm-3 col-form-label">Title</label>
+                            <div class="col-sm-9">
+                                {{form.title}}
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-3 col-form-label">Address Line 1</label>
+                            <div class="col-sm-9">
+                                {{form.address1}}
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-3 col-form-label">Address Line 2</label>
+                            <div class="col-sm-9">
+                                 {{form.address2}}
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-3 col-form-label">Phone No.</label>
+                            <div class="col-sm-9">
+                                {{form.phone_no}}
+                            </div>
+                        </div>
+                        
+                        <div class="form-group row">
+                            <div class="col-sm-9 ml-sm-auto">
+                                <button class="btn btn-info" type="submit">Submit</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>        
+</div>
+
+
+
+<div class="sidenav-backdrop backdrop"></div>
+<div class="preloader-backdrop">
+    <div class="page-preloader">Loading</div>
+</div>
+{% endblock %}

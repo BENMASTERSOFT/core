@@ -71,6 +71,9 @@ urlpatterns = [
     path('addUserType/', master_views.addUserType,name='addUserType'),
     path('UserType_delete/<str:pk>/', master_views.UserType_delete,name='UserType_delete'),
     
+    path('Invoice_Title/', master_views.Invoice_Title,name='Invoice_Title'),
+    
+
     path('add_staff/', master_views.add_staff,name='add_staff'),
     path('add_staff_manage/', master_views.add_staff_manage,name='add_staff_manage'),
     path('add_staff_manage_view/<str:pk>/', master_views.add_staff_manage_view,name='add_staff_manage_view'),
@@ -633,6 +636,7 @@ urlpatterns = [
     path('members_cash_sales_product_load/<str:pk>/', shop_views.members_cash_sales_product_load,name='members_cash_sales_product_load'),
     path('members_cash_sales_item_issue/<str:pk>/<str:member_id>/', shop_views.members_cash_sales_item_issue,name='members_cash_sales_item_issue'),
     path('members_cash_sales_item_delete/<str:pk>/', shop_views.members_cash_sales_item_delete,name='members_cash_sales_item_delete'),
+    # path('members_cash_sales_receipt/<str:pk>/', shop_views.members_cash_sales_receipt,name='members_cash_sales_receipt'),
 
     path('Stock_Category_Load/', shop_views.Stock_Category_Load,name='Stock_Category_Load'),
     path('Stock_add/<str:pk>/', shop_views.Stock_add,name='Stock_add'),
@@ -675,6 +679,7 @@ urlpatterns = [
     
    
     path('general_cash_issue_item_preview/<str:ticket>/', shop_views.general_cash_issue_item_preview,name='general_cash_issue_item_preview'),
+    path('general_cash_issue_item_print_receipt/<str:ticket>/', shop_views.general_cash_issue_item_print_receipt,name='general_cash_issue_item_print_receipt'),
 
     path('general_cash_load_existing_customers_search/', shop_views.general_cash_load_existing_customers_search,name='general_cash_load_existing_customers_search'),
     path('general_cash_load_existing_customers/', shop_views.general_cash_load_existing_customers,name='general_cash_load_existing_customers'),

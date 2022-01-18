@@ -481,6 +481,16 @@ class TransactionPeriods(DateObjectsModels):
 
 
 
+class InvoiceHeader(DateObjectsModels):
+    title= models.CharField(max_length=255,default=1)
+    address1= models.CharField(max_length=255,default=1)
+    address2= models.CharField(max_length=255,default=1)
+    phone_no= models.CharField(max_length=255,default=1)
+    
+    class Meta(DateObjectsModels.Meta):
+        db_table="Invoice_Header"
+
+
 class AutoReceipt(DateObjectsModels):
     receipt= models.CharField(max_length=255,default=1)
     

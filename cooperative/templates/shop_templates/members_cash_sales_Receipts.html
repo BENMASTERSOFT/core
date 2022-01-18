@@ -1,0 +1,147 @@
+
+{% extends 'shop_templates/base_template.html' %}
+{% load static %}
+
+
+
+
+    {% block custom_css %}
+ <link href="{% static '/cooperative/assets/vendors/bootstrap/dist/css/bootstrap.min.css' %}" rel="stylesheet" />
+ <!-- <link href="{% static '/cooperative/assets/css/all.css' %}" rel="stylesheet" /> -->
+  
+    <!-- THEME STYLES-->
+    {% endblock custom_css %}
+
+  
+   
+
+{% block content %}
+
+
+   <div class="page-content fade-in-up">
+    <div class="row">
+        <div class="col-xl-12">
+            <div class="ibox">    
+               
+                   <div class="container">
+
+                        <div class="row">                      
+                            
+                            <div class="col-md-6 col-md-offset-3 body-main">
+                                
+                                <div class="ibox">
+                                    
+
+                                    <div class="col-md-12">
+                                    <div class="row">
+                                        
+                                        <div class="col-md-4 text-left">
+                                            <h5 style="color: #F81D2D;"><strong>{{record.title}}</strong></h5>
+                                            <p>{{record.address1}}</p>
+                                            <p>{{record.address2}}</p>
+                                            <p>{{record.phone_no}}</p>
+                                   
+
+                                        </div> 
+                                        <div class="col-md-4"> <img class="img" alt="Invoce Template" src="{% static '/cooperative/assets/images/shopping_cart.png' %}" /> </div>
+                                        
+                                        <div class="col-md-4 text-right">
+                                            <h4 style="color: #F81D2D;"><strong>{{customer.name}}</strong></h4>
+                                            <p>{{customer.address}}</p>
+                                            <p>{{customer.phone_no}}</p>
+                                           
+
+                                        </div>
+                                    </div> 
+                                    <div class="row">
+                                        <div class="col-md-4 text-center">
+                                            
+                                        </div> 
+                                        <div class="col-md-4 text-center">
+                                            <h4>INVOICE</h4>
+                                            <h5>{{sales_receipt}}</h5>
+                                        </div>  
+                                        <div class="col-md-4 text-right">
+                                           <p><b>Date :</b> {{sales_date|date:"D, d M, Y"}}</p> 
+                                        </div>
+                                    </div> 
+                                    <div>
+                                        <table class="table">
+                                            <thead>
+                                                <tr>
+                                                    <th>
+                                                        <h6>#</h6>
+                                                    </th>
+                                                    <th>
+                                                        <h6>Description</h6>
+                                                    </th>
+                                                    <th>
+                                                        <h6>Quantity</h6>
+                                                    </th>
+                                                    <th>
+                                                        <h6>Amount</h6>
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                            {% for item in select_items %}
+                                                <tr>
+                                                    <td class="col-md-1">{{forloop.counter}}</td>
+                                                    <td class="col-md-7 text-left" >{{item.product.item_name}}</td>
+                                                    <td class="col-md-2 text-center">{{item.quantity}}</td>
+                                                    <td class="col-md-2 text-right"><i class="fas fa-rupee-sign" area-hidden="true"></i> {{item.total}} </td>
+                                                </tr>
+                                                
+                                            {% endfor %}
+                                            <tr>
+                                                <td colspan="2">
+                                                    
+                                                    Please No Refund After Payment
+                                                </td>
+                                                <td class="text-left">TOTAL:</td>
+                                               
+                                                <td>
+                                                
+                                                 <h6><strong><i class="fas fa-rupee-sign" area-hidden="true"></i> #{{total_amount}} </strong></h6>
+                                            </td>
+                                            </tr>
+                                                
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div>
+                                        <div class="col-md-12">
+                                            
+                                            <p><b>Signature</b></p>
+                                            {{processed_by.username}}
+                                        </div>
+                                    </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                        </div>
+                    </div>
+              
+            </div>
+        </div>
+    </div>
+  
+
+    <!-- BEGIN PAGA BACKDROPS-->
+    <div class="sidenav-backdrop backdrop"></div>
+    <div class="preloader-backdrop">
+        <div class="page-preloader">Loading</div>
+    </div>
+  {% include 'cooperative/includes/emptyspace.html' %} 
+{% endblock %}
+ <!-- CORE PLUGINS-->
+
+    {% block custom_js %}
+  <script src="{% static '/cooperative/assets/vendors/bootstrap/dist/js/bootstrap.min.js' %}" type="text/javascript"></script>
+      <script src="{% static '/cooperative/assets/vendors/jquery/dist/jquery.min.js' %}" type="text/javascript"></script>
+    {% endblock custom_js %}
+
+  
+   

@@ -1570,6 +1570,46 @@ def loan_criteria_base_upload(request):
 ####################################################################
 ###################### USER ACCOUNT MANAGERS ######################
 ####################################################################
+def Invoice_Title(request):
+    form=Invoice_Title_form(request.POST or None)
+   
+    if InvoiceHeader.objects.all().count()>0:
+        record=InvoiceHeader.objects.first()
+      
+        form.fields['title'].initial = record.title
+        form.fields['address1'].initial = record.address1
+        form.fields['address2'].initial = record.address2
+        form.fields['phone_no'].initial = record.phone_no
+
+
+    if request.method == "POST":
+        title=request.POST.get("title")
+        address1=request.POST.get("address1")
+        address2=request.POST.get("address2")
+        phone_no=request.POST.get("phone_no")
+
+        if InvoiceHeader.objects.all().count()>0:
+            record=InvoiceHeader.objects.first()
+      
+            record.title=title
+            record.address1=address1
+            record.address2=address2
+            record.phone_no=phone_no
+            record.save()
+            messages.success(request,'Record Updated Successfully')
+        else:
+            record=InvoiceHeader(title=title,address1=address1,address2=address2,phone_no=phone_no)
+            record.save()
+            messages.success(request,'Record Added Successfully')
+        return HttpResponseRedirect(reverse('Invoice_Title'))
+    
+ 
+
+    context={
+    'form':form,
+    }
+    return render(request,'master_templates/Invoice_Title.html',context)
+
 def DataCapture_Manager(request):
     form=DataCapture_Manager_form(request.POST or None)
     item=[]

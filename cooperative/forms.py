@@ -1535,7 +1535,7 @@ class Stock_Update_form(forms.Form):
 
 
 class members_credit_issue_item_form(forms.Form):  
-   code=forms.CharField(label="Code",max_length=255,widget=forms.TextInput(attrs={"class":"form-control",'autocomplete':'off'}),disabled = True)
+   code=forms.CharField(label="Code",max_length=255,widget=forms.TextInput(attrs={"class":"form-control",'autocomplete':'off','readonly':'readonly'}))
    item_name=forms.CharField(label="Item Name",max_length=255,widget=forms.TextInput(attrs={"class":"form-control"}),disabled = True)
    details=forms.CharField(label="Details",max_length=255,widget=forms.TextInput(attrs={"class":"form-control"}),disabled = True)
    available_quantity = forms.IntegerField(initial=0,label='Available Quantity', label_suffix=" : ", min_value=0,  required=True,
@@ -2874,3 +2874,11 @@ class Purchase_Summary_form(forms.Form):
                              required=True, disabled=False,
                              widget=DateInput(attrs={'class': 'form-control'}),
                              error_messages={'required': "This field is required."})
+
+class Invoice_Title_form(forms.Form):
+   title=forms.CharField(label="Heading",max_length=250,widget=forms.TextInput(attrs={"class":"form-control",'required':'required'}))
+   address1=forms.CharField(label="Address 1",max_length=250,widget=forms.TextInput(attrs={"class":"form-control",'required':'required'}))
+   address2=forms.CharField(label="Address 2",max_length=250,widget=forms.TextInput(attrs={"class":"form-control"}))
+   phone_no=forms.CharField(label="Phone No.",max_length=250,widget=forms.TextInput(attrs={"class":"form-control",'required':'required'}))
+    
+
