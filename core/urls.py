@@ -719,8 +719,9 @@ urlpatterns = [
     path('Daily_Sales_Summarization/<str:pk>/', shop_views.Daily_Sales_Summarization,name='Daily_Sales_Summarization'),
     path('Daily_Sales_Summary_Detail/<str:pk>/', shop_views.Daily_Sales_Summary_Detail,name='Daily_Sales_Summary_Detail'),
 
-    path('Daily_Sales_Summary_Record/', shop_views.Daily_Sales_Summary_Record,name='Daily_Sales_Summary_Record'),
-    
+    path('Daily_Sales_Summary_Report/', shop_views.Daily_Sales_Summary_Report,name='Daily_Sales_Summary_Report'),
+    # path('Load_Credit_Sales/', shop_views.Load_Credit_Sales,name='Load_Credit_Sales'),
+
 
     path('Stock_Status/', shop_views.Stock_Status,name='Stock_Status'),
     path('Manage_Stock_Product_Lock/', shop_views.Manage_Stock_Product_Lock,name='Manage_Stock_Product_Lock'),

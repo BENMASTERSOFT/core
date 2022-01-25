@@ -93,7 +93,7 @@
                                 </ul>
                                 <li>
 
-                                    <a href="{% url 'Daily_Sales_Summary_Record' %}"><i class="sidebar-item-icon fa fa-calendar"></i>
+                                    <a href="{% url 'Daily_Sales_Summarization' request.user.id %}"><i class="sidebar-item-icon fa fa-calendar"></i>
                                         <span class="nav-label">Daily Sales Summary</span>
                                     </a>
                                 </li> 
@@ -340,6 +340,19 @@
                                 <ul class="nav-3-level collapse">
                                     <li>
                                         <a href="{% url 'Purchase_Summary' %}">Purchase Summary</a>
+                                    </li>
+                                    <li>
+                                        <a href="javascript:;">Level 3</a>
+                                    </li>
+                                </ul>
+                            </li>
+
+                             <li>
+                                <a href="javascript:;">
+                                    <span class="nav-label">Sales</span><i class="fa fa-angle-left arrow"></i></a>
+                                <ul class="nav-3-level collapse">
+                                    <li>
+                                        <a href="{% url 'Daily_Sales_Summary_Report' %}">Daily Sales Summary</a>
                                     </li>
                                     <li>
                                         <a href="javascript:;">Level 3</a>

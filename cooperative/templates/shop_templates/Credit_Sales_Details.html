@@ -4,40 +4,35 @@
 {% block content %}
             <div class="page-content fade-in-up">
                 <div class="row">
-                    <div class="col-xl-10">
+                    <div class="col-xl-12">
                         <div class="ibox">
                             <div class="ibox-head">
-                                <div class="ibox-title">{{title}} | {{receipt}} 
-                                    {% for record in records %}
-                                    {% if forloop.counter == 1 %}
-                                        | {{record.name}}
-                                    {% endif %}
-                                    {% endfor %}
-
-                                </div>
+                                <div class="ibox-title">Credit Sales Details</div>
                             </div>
                             <div class="ibox-body">
                                 <table class="table">
                                     <thead>
                                         <tr>
                                             <th>#</th>
-                                            <th>code</th>
-                                            <th>Description</th>
+                                            <th>Name</th>
+                                            <th>Code</th>
+                                            <th>Item Name</th>
                                             <th>Quantity</th>
                                             <th>Unit Price</th>
                                             <th>Total</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                    {% for record in records %}
+                                        {% for item in credit_sales %}
                                         <tr>
                                             <td>{{forloop.counter}}</td>
-                                            <td>{{record.item_code}}</td>
-                                            <td>{{record.item_name}}</td>
-                                            <td>{{record.quantity}}</td>
-                                            <td>{{record.unit_selling_price}}</td>
-                                            <td>{{record.total}}</td>
-                                  
+                                            <td>{{item.name}}</td>
+                                            <td>{{item.code}}</td>
+                                            <td>{{item.item_name}}</td>
+                                            <td>{{item.quantity}}</td>
+                                            <td>{{item.unit_selling_price}}</td>
+                                            <td>{{item.total}}</td>
+                                         
                                         </tr>
                                     {% endfor %}
                                     </tbody>
@@ -45,7 +40,7 @@
                             </div>
                         </div>
                     </div>
-                 
+                    
                 </div>
              
            

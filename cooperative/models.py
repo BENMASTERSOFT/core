@@ -812,7 +812,7 @@ class Members(DateObjectsModels):
    
 
     def __str__(self):
-        return '{} {} {}'.format(self.admin.last_name, self.admin.first_name)
+        return '{} {} {}'.format(self.admin.last_name, self.admin.first_name, self.admin.middle_name)
 
     @property
     def get_middle_name(self):
@@ -1626,7 +1626,8 @@ class General_Cash_Sales_Selected(DateObjectsModels):
     total=models.DecimalField(max_digits=20,decimal_places = 2)
     processed_by=models.ForeignKey(CustomUser,on_delete=models.CASCADE,blank=True,null=True)
     status=models.ForeignKey(TransactionStatus,on_delete=models.CASCADE,blank=True,null=True)
-   
+    tdate = models.DateField(blank=True,null=True)
+
     # class Meta(DateObjectsModels.Meta):
     #     db_table="General_Cash_Sales_Selected"
 
@@ -1640,7 +1641,7 @@ class General_Cash_Sales_SelectedTemp(DateObjectsModels):
     total=models.DecimalField(max_digits=20,decimal_places = 2)
     processed_by=models.ForeignKey(CustomUser,on_delete=models.CASCADE,blank=True,null=True)
     status=models.ForeignKey(TransactionStatus,on_delete=models.CASCADE,blank=True,null=True)
-    
+    tdate = models.DateField(blank=True,null=True)
 
     # class Meta(DateObjectsModels.Meta):
     #     db_table="General_Cash_Sales_Selected_Temp"
@@ -1653,17 +1654,13 @@ class Daily_Sales(DateObjectsModels):
     address=models.CharField(max_length=255,default='Anonymous')
     product=models.ForeignKey(Stock,on_delete=models.CASCADE,blank=True,null=True)
     
-    item_code=models.CharField(max_length=255)
-    item_name=models.CharField(max_length=255)
-
-    
     quantity=models.IntegerField(default=0)
     receipt=models.CharField(max_length=20,blank=True,null=True)
     unit_selling_price=models.DecimalField(max_digits=20,decimal_places = 2)
     total=models.DecimalField(max_digits=20,decimal_places = 2)
     status=models.ForeignKey(TransactionStatus,on_delete=models.CASCADE,blank=True,null=True)
     processed_by=models.ForeignKey(CustomUser,on_delete=models.CASCADE,blank=True,null=True)
-   
+    tdate = models.DateField(blank=True,null=True)
 
     # class Meta(DateObjectsModels.Meta):
     #     db_table="Daily_Sales"
@@ -1675,7 +1672,8 @@ class Daily_Sales_Summary(DateObjectsModels):
     amount=models.DecimalField(max_digits=20,decimal_places = 2)
     sales_category=models.ForeignKey(SalesCategory,on_delete=models.CASCADE,blank=True,null=True)
     status=models.ForeignKey(TransactionStatus,on_delete=models.CASCADE,blank=True,null=True)
-    
+    tdate = models.DateField(blank=True,null=True)
+
     # class Meta(DateObjectsModels.Meta):
     #     db_table="Daily_Sales_Summary"
 
@@ -1686,7 +1684,7 @@ class Daily_Sales_Cash_Flow_Summary(DateObjectsModels):
     sales_category=models.ForeignKey(SalesCategory,on_delete=models.CASCADE,blank=True,null=True)
     processed_by=models.ForeignKey(CustomUser,on_delete=models.CASCADE,blank=True,null=True)
     status=models.ForeignKey(TransactionStatus,on_delete=models.CASCADE,blank=True,null=True)
-    
+    tdate = models.DateField(blank=True,null=True)
 
     # class Meta(DateObjectsModels.Meta):
     #     db_table="Daily_Sales_Cash_Flow_Summary"

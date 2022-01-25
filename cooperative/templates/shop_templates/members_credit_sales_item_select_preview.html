@@ -72,8 +72,10 @@
                                                 <td>
                                                 {% if ledger_balance.balance < 0 %}
                                                     {% widthratio ledger_balance.balance 1 -1 %}
-                                                {% else %}
+                                                {% elif ledger_balance.balance  %}
                                                     {{ ledger_balance.balance }}
+                                                {% else  %}
+                                                    0.00
                                                 {% endif %}
 
                                                  </td>
