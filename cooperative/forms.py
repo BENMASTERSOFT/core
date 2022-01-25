@@ -233,6 +233,28 @@ class addStateForm(forms.ModelForm):
             raise forms.ValidationError(str(title) + ' is already created')
       return title
 
+
+class addItemWriteOffReasonsForm(forms.ModelForm):
+   class Meta:
+      model = ItemWriteOffReasons
+      fields=['title',]
+
+      widgets = {
+      'title': forms.TextInput(attrs={'class':'form-control','placeholder':"Enter Title"})
+      }
+
+
+   def clean_title(self):
+      title = self.cleaned_data.get('title')
+      if not title:
+         raise forms.ValidationError('This field is required')
+
+      for instance in ItemWriteOffReasons.objects.all():
+         if instance.title == title:
+            raise forms.ValidationError(str(title) + ' is already created')
+      return title
+
+
 class addNOKRelationshipsForm(forms.ModelForm):
    class Meta:
       model = States
@@ -1448,8 +1470,6 @@ class PersonalLedger_Transaction_Account_Load_form(forms.Form):
 
 
 
-
-
    ##################################################################
    ###################SHOP###########################################
 
@@ -1659,6 +1679,14 @@ class general_cash_issue_item_form(forms.Form):
    address=forms.CharField(label="Address",max_length=255,widget=forms.TextInput(attrs={"class":"form-control"}))
    phone_no=forms.CharField(label="Phone Number",max_length=11,required=False,widget=forms.TextInput(attrs={"class":"form-control"}))
    
+
+   STATUS = (
+        ('YES','YES'),
+        ('NO','NO')
+        )
+   autoprint = forms.ChoiceField(choices = STATUS)
+
+  
 
 class Shop_Cheque_Sales_Release_process_form(forms.Form):
    receipt_type_list=[]
@@ -2882,3 +2910,64 @@ class Invoice_Title_form(forms.Form):
    phone_no=forms.CharField(label="Phone No.",max_length=250,widget=forms.TextInput(attrs={"class":"form-control",'required':'required'}))
     
 
+
+class Item_Write_off_product_form(forms.Form):
+   reason_list=[]
+   try:
+      reasons = ItemWriteOffReasons.objects.all()                 
+      for reason in reasons:
+         small_reason=(reason.id,reason.title)
+         reason_list.append(small_reason)
+   except:
+      reason_list=[]
+   reasons = forms.ChoiceField(label="reasons", choices=reason_list,widget=forms.Select(attrs={"class":"form-control"}))
+
+   code=forms.CharField(label="Code",max_length=255,widget=forms.TextInput(attrs={"class":"form-control",'readonly':'readonly'}))
+   item_name=forms.CharField(label="Item Name",max_length=255,widget=forms.TextInput(attrs={"class":"form-control",'readonly':'readonly'}))
+   available_quantity = forms.IntegerField(label='Available Quantity', label_suffix=" : ",
+                  widget=forms.NumberInput(attrs={'class': 'form-control','autocomplete':'off','readonly':'readonly'}),
+                  disabled = False)
+   quantity = forms.IntegerField(label='Request Quantity', label_suffix=" : ",
+                  widget=forms.NumberInput(attrs={'class': 'form-control','autocomplete':'off'}),
+                  disabled = False)
+
+
+
+class Item_Write_off_Approval_(forms.Form):
+   code=forms.CharField(label="Code",max_length=255,widget=forms.TextInput(attrs={"class":"form-control",'readonly':'readonly'}))
+   item_name=forms.CharField(label="Item Name",max_length=255,widget=forms.TextInput(attrs={"class":"form-control",'readonly':'readonly'}))
+   quantity = forms.IntegerField(label='Request Quantity', label_suffix=" : ",
+                  widget=forms.NumberInput(attrs={'class': 'form-control','autocomplete':'off','readonly':'readonly'}),
+                  disabled = False)
+   reasons=forms.CharField(label="Reasons",max_length=255,widget=forms.TextInput(attrs={"class":"form-control",'readonly':'readonly'}))
+
+
+class FormAutoPrint_Settings_Form(forms.Form):
+   status_list=[]
+   try:
+      statuss = YesNo.objects.all()                 
+      for status in statuss:
+         small_status=(status.id,status.title)
+         status_list.append(small_status)
+   except:
+      status_list=[]
+   status = forms.ChoiceField(label="Status", choices=status_list,widget=forms.Select(attrs={"class":"form-control"}))
+
+   title=forms.CharField(label="Title",max_length=255,widget=forms.TextInput(attrs={"class":"form-control"}))
+
+
+
+class FormAutoPrint_Settings_Update_Form(forms.ModelForm):
+   class Meta:
+      model = FormAutoPrint
+      fields=['title','status']
+
+      widgets = {
+      'title': forms.TextInput(attrs={'class':'form-control','placeholder':"Enter Title"})
+      }
+
+class Daily_Sales_Summary_Form(forms.Form):
+   sales_date = forms.DateField(label='Date', label_suffix=" : ",
+                             required=True, disabled=False,
+                             widget=DateInput(attrs={'class': 'form-control'}),
+                             error_messages={'required': "This field is required."})

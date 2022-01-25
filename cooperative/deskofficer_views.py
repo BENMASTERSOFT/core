@@ -423,7 +423,7 @@ def membership_registration_list_load(request):
 def membership_registration_register(request,pk):
 	DataCapture=DataCaptureManager.objects.first()
 	applicant=MemberShipFormSalesRecord.objects.get(id=pk)
-	now = datetime.datetime.now()
+	# now = datetime.datetime.now()
 	processed_by = CustomUser.objects.get(id=request.user.id)
 
 	shares=applicant.shares

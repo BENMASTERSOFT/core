@@ -40,7 +40,7 @@
 
                                             <button class="btn btn-danger" type="submit">Delete</button>
 
-                                            <button class="btn btn-info" type="button">Cancel</button>    
+                                            <button class="btn btn-info" type="button" value="Close this window" onclick="windowClose();">Cancel</button>    
                                             
                                         </div>
                                     </div>
@@ -60,3 +60,12 @@
         <div class="page-preloader">Loading</div>
     </div>
 {% endblock %}
+
+{% block custom_js %}
+<script language="javascript" type="text/javascript">
+function windowClose() {
+window.open('','_parent','');
+window.close();
+}
+</script>
+{% endblock custom_js %}

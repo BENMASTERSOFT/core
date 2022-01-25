@@ -17,6 +17,27 @@
                     <li class="heading">FEATURES</li>
                         <li><a href="{% url 'editable_invoice' %}">Editable Invoice</a></li>
                     <li>
+                        <a href="javascript:;"><i class="sidebar-item-icon fa fa-edit"></i>
+                            <span class="nav-label">PDF FILES  </span><i class="fa fa-angle-left arrow"></i></a>
+                        <ul class="nav-2-level collapse">
+                           
+                            <li>
+                                <a href="{% url 'GeneratePdf' %}">PDF 1</a>
+                            </li> 
+                            <li>
+                                <a href="{% url 'GeneratePdf2' %}">PDF 2</a>
+                            </li>
+                            <li>
+                                <a href="{% url 'GeneratePdf3' %}">PDF 3</a>
+                            </li> <li>
+                                <a href="{% url 'GeneratePdf4' %}">PDF 4</a>
+                            </li>
+
+                        </ul>
+                    </li>
+
+
+                    <li>
                         <a href="javascript:;"><i class="sidebar-item-icon fa fa-sitemap"></i>
                             <span class="nav-label">Sales Desk</span><i class="fa fa-angle-left arrow"></i></a>
                         <ul class="nav-2-level collapse">
@@ -72,14 +93,17 @@
                                 </ul>
                                 <li>
 
-                                    <a href="{% url 'members_credit_purchases_approved_list' %}"><i class="sidebar-item-icon fa fa-calendar"></i>
+                                    <a href="{% url 'Daily_Sales_Summary_Record' %}"><i class="sidebar-item-icon fa fa-calendar"></i>
                                         <span class="nav-label">Daily Sales Summary</span>
                                     </a>
                                 </li> 
 
                             </li>
+                        
                         </ul>
                     </li>  
+                    
+
                     {% comment %}
                     <li>
                         <a href="javascript:;"><i class="sidebar-item-icon fa fa-sitemap"></i>
@@ -122,6 +146,8 @@
                             </li>
                         </ul>
                     </li> {% endcomment %}
+
+
                 {% if user_level == '1' %}
                     <li>
                         <a href="javascript:;"><i class="sidebar-item-icon fa fa-edit"></i>
@@ -137,6 +163,7 @@
                         </ul>
                     </li>   
                 {% endif %}
+                     
                      <li>
                         <a href="javascript:;"><i class="sidebar-item-icon fa fa-edit"></i>
                             <span class="nav-label">Cash Deposit  </span><i class="fa fa-angle-left arrow"></i></a>
@@ -150,16 +177,75 @@
                     </li>
 
                     <li>
+                        <a href="javascript:;"><i class="sidebar-item-icon fa fa-sitemap"></i>
+                            <span class="nav-label">Products</span><i class="fa fa-angle-left arrow"></i></a>
+                        <ul class="nav-2-level collapse">
+                            
+                            <li>
+                                <a href="javascript:;">
+                                    <span class="nav-label">Product Purchases</span><i class="fa fa-angle-left arrow"></i></a>
+                                <ul class="nav-3-level collapse">
+                                {% if user_level == '2'  %}
+                                    <li>
+                                        <a href="{% url 'Product_Purchase' %}">Purchase Tracking</a>
+                                    </li>
+                                {% endif %}
+                                
+
+
+
+                                {% if user_level == '1'  %}
+                                    <li>
+                                        <a href="{% url 'Purchase_Certification_List_load' %}">Purchase Confirmation</a>
+                                    </li>
+                                  {% endif %}
+                                </ul>
+                            </li>
+
+
+                            <li>
+                                <a href="javascript:;">
+                                    <span class="nav-label">Item Write-Off</span><i class="fa fa-angle-left arrow"></i></a>
+                                <ul class="nav-3-level collapse">
+                                {% if user_level == '2'  %}
+                                    <li>
+                                        <a href="{% url 'Item_Write_off_search' %}">Write-Off Request</a>
+                                    </li>                                    
+                                    <li>
+                                        <a href="{% url 'Item_Write_off_manage' %}">Manage Write-Off</a>
+                                    </li>
+
+                                    <li>
+                                        <a href="{% url 'Item_Write_off_Approved_List' %}">Write-Off Processing</a>
+                                    </li>
+                                {% endif %}
+                                
+
+
+
+                                {% if user_level == '1'  %}
+                                    <li>
+                                        <a href="{% url 'Item_Write_off_Approval' %}">Write-Off Approval</a>
+                                    </li>
+                                  {% endif %}
+                                </ul>
+                            </li>
+                        </ul>
+                    </li>
+
+
+
+                    <li>
                         <a href="javascript:;"><i class="sidebar-item-icon fa fa-edit"></i>
-                            <span class="nav-label">Product Purchase </span><i class="fa fa-angle-left arrow"></i></a>
+                            <span class="nav-label">Add Item </span><i class="fa fa-angle-left arrow"></i></a>
                         <ul class="nav-2-level collapse">
                            
                             <li>
-                                <a href="{% url 'Product_Purchase' %}">Purchase</a>
+                                <a href="">Purchase</a>
                             </li>
-                        {% if user_level == '1' %}
+                        {% if user_level == '1'  %}
                             <li>
-                                <a href="{% url 'Purchase_Certification_List_load' %}">Purchase Confirmation</a>
+                                <a href="">Purchase Confirmation</a>
                             </li>
                         {% endif %}
                         </ul>
@@ -177,7 +263,7 @@
                         </ul>
                     </li>
 
-                    {% if user_level == '1' %}
+                    {% if user_level == '1' or user_level == '3' %}
                           <li>
                                 <a href="javascript:;"><i class="sidebar-item-icon fa fa-sitemap"></i>
                                     <span class="nav-label">Utilities</span><i class="fa fa-angle-left arrow"></i></a>
@@ -196,10 +282,11 @@
                                     <li>
                                         <a href="{% url 'Manage_Stock_Product_Lock' %}">Lock Products</a>
                                     </li>
+                                    <li>
+                                        <a href="{% url 'Item_Write_off_Reasons' %}">Lock Item Write-Off Reasons</a>
+                                    </li>
                                 </ul>
-                                <li>
-                                    <a href="{% url 'Item_Write_off_search' %}">Item Write-Off Reasons</a>
-                                </li>
+                                
                             </li>
 
 

@@ -1,3 +1,42 @@
+from datetime import datetime, timedelta
+
+startdate = datetime.today()
+enddate = startdate + timedelta(days=6)
+Sample.objects.filter(date__range=[startdate, enddate])
+
+
+
+start = date(2012, 12, 11)
+end = date(2012, 12, 18)
+new_end = end + datetime.timedelta(days=1)
+
+ExampleModel.objects.filter(some_datetime_field__range=[start, new_end])
+
+
+
+
+from datetime import datetime, timedelta
+
+startdate = datetime.today()
+enddate = startdate + timedelta(days=6)
+Sample.objects.filter(date__range=[startdate, enddate])
+
+
+
+from datetime import datetime
+start_date=datetime(2009, 12, 30)
+end_date=datetime(2020,12,30)
+Sample.objects.filter(date__range=[start_date,end_date])
+
+
+Sample.objects.filter(date__range=["2011-01-01", "2011-01-31"])
+Or if you are just trying to filter month wise:
+
+Sample.objects.filter(date__year='2011', 
+                      date__month='01')
+
+
+
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 given_date = '21/1/2021'

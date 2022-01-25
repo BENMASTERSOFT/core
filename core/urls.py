@@ -62,6 +62,7 @@ urlpatterns = [
     path('MultipleLoanStatus_upload/',master_views.MultipleLoanStatus_upload, name='MultipleLoanStatus_upload'),
     path('LoanMergeStatus_upload/',master_views.LoanMergeStatus_upload, name='LoanMergeStatus_upload'),
     path('Product_Write_off_Reasons_upload/',master_views.Product_Write_off_Reasons_upload, name='Product_Write_off_Reasons_upload'),
+    path('YesNo_upload/',master_views.YesNo_upload, name='YesNo_upload'),
    
 
 
@@ -108,6 +109,8 @@ urlpatterns = [
     path('addTransactionTypes/', master_views.addTransactionTypes,name='addTransactionTypes'),
     path('TransactionTypes_Manage_Load/', master_views.TransactionTypes_Manage_Load,name='TransactionTypes_Manage_Load'),
     path('TransactionTypes_Update/<str:pk>/', master_views.TransactionTypes_Update, name='TransactionTypes_Update'),
+    path('FormAutoPrint_Settings/', master_views.FormAutoPrint_Settings,name='FormAutoPrint_Settings'),
+    path('FormAutoPrint_SettingsUpdate/<str:pk>/', master_views.FormAutoPrint_SettingsUpdate, name='FormAutoPrint_SettingsUpdate'),
 
     path('MembersCompulsorySavings/', master_views.MembersCompulsorySavings,name='MembersCompulsorySavings'),
     path('MembersCompulsorySavings_delete/<str:pk>/', master_views.MembersCompulsorySavings_delete, name='MembersCompulsorySavings_delete'),
@@ -629,6 +632,8 @@ urlpatterns = [
     path('advance_form/', shop_views.advance_form,name='advance_form'),
     path('editable_invoice/', shop_views.editable_invoice,name='editable_invoice'),
     
+
+    
     path('members_cash_sales_search/', shop_views.members_cash_sales_search,name='members_cash_sales_search'),
     path('members_cash_sales_list_load/', shop_views.members_cash_sales_list_load,name='members_cash_sales_list_load'),
     
@@ -642,9 +647,18 @@ urlpatterns = [
     path('Stock_add/<str:pk>/', shop_views.Stock_add,name='Stock_add'),
     path('Update_Stock/<str:pk>/<str:return_pk>/', shop_views.Update_Stock,name='Update_Stock'),
 
+    path('Item_Write_off_Reasons/', shop_views.Item_Write_off_Reasons,name='Item_Write_off_Reasons'),
+    
+    path('Item_Write_off_Reasons_delete/<str:pk>/', shop_views.Item_Write_off_Reasons_delete,name='Item_Write_off_Reasons_delete'),
     path('Item_Write_off_search/', shop_views.Item_Write_off_search,name='Item_Write_off_search'),
     path('Item_Write_off_product_load/', shop_views.Item_Write_off_product_load,name='Item_Write_off_product_load'),
     path('Item_Write_off_product_Preview/<str:pk>/', shop_views.Item_Write_off_product_Preview,name='Item_Write_off_product_Preview'),
+    path('Item_Write_off_manage/', shop_views.Item_Write_off_manage,name='Item_Write_off_manage'),
+    path('Item_Write_off_manage_Preview/<str:pk>/', shop_views.Item_Write_off_manage_Preview,name='Item_Write_off_manage_Preview'),
+    path('Item_Write_off_Approval/', shop_views.Item_Write_off_Approval,name='Item_Write_off_Approval'),
+    path('Item_Write_off_Approval_Preview/<str:pk>/', shop_views.Item_Write_off_Approval_Preview,name='Item_Write_off_Approval_Preview'),
+    path('Item_Write_off_Approved_List/', shop_views.Item_Write_off_Approved_List,name='Item_Write_off_Approved_List'),
+    path('Item_Write_off_Approved__Process/<str:pk>/', shop_views.Item_Write_off_Approved_Process,name='Item_Write_off_Approved_Process'),
     
 
 
@@ -705,6 +719,9 @@ urlpatterns = [
     path('Daily_Sales_Summarization/<str:pk>/', shop_views.Daily_Sales_Summarization,name='Daily_Sales_Summarization'),
     path('Daily_Sales_Summary_Detail/<str:pk>/', shop_views.Daily_Sales_Summary_Detail,name='Daily_Sales_Summary_Detail'),
 
+    path('Daily_Sales_Summary_Record/', shop_views.Daily_Sales_Summary_Record,name='Daily_Sales_Summary_Record'),
+    
+
     path('Stock_Status/', shop_views.Stock_Status,name='Stock_Status'),
     path('Manage_Stock_Product_Lock/', shop_views.Manage_Stock_Product_Lock,name='Manage_Stock_Product_Lock'),
     path('Manage_Stock_Product_Lock_Individuals/<str:pk>/', shop_views.Manage_Stock_Product_Lock_Individuals,name='Manage_Stock_Product_Lock_Individuals'),
@@ -753,6 +770,12 @@ urlpatterns = [
     ########################## REPORTS #############################
     ################################################################
 
+    path('GeneratePdf/', shop_views.GeneratePdf.as_view(),name='GeneratePdf'),
+    path('GeneratePdf2/', shop_views.GeneratePdf2.as_view(),name='GeneratePdf2'),
+    path('GeneratePdf3/', shop_views.GeneratePdf3.as_view(),name='GeneratePdf3'),
+    path('GeneratePdf4/', shop_views.GeneratePdf4.as_view(),name='GeneratePdf4'),
+    path('All_Stock_Status_Pdf/', shop_views.All_Stock_Status_Pdf,name='All_Stock_Status_Pdf'),
+    
     path('All_Stock_Status/', shop_views.All_Stock_Status,name='All_Stock_Status'),
     path('Purchase_Summary/', shop_views.Purchase_Summary,name='Purchase_Summary'),
     path('Purchase_Summary_Details/<str:pk>/', shop_views.Purchase_Summary_Details,name='Purchase_Summary_Details'),

@@ -205,6 +205,36 @@ def datatable_table(request):
 ###################### IMPORTS SECTION##############################
 ####################################################################
 @permission_required('admin.can_add_log_entry')
+def YesNo_upload(request):
+    template = "master_templates/file_upload.html"
+    
+    
+    prompt = {
+        'order': "Upload Yes/No Status, Order of the CSV should be Code, Title"
+    }
+    
+    if request.method == "GET":
+        return render(request, template, prompt)
+    
+    csv_file = request.FILES['file']
+    
+    if not csv_file.name.endswith('.csv'):
+        messages.error(request, "This id not a csv file")
+        
+    data_set = csv_file.read().decode('UTF-8')
+    io_string = io.StringIO(data_set)
+    next(io_string)
+    
+    for column in csv.reader(io_string, delimiter=',',  quotechar='|', quoting =csv.QUOTE_NONE):
+        _, created = YesNo.objects.update_or_create(
+            title=column[1],    
+        )
+        
+    context = {}
+    return render(request, template, context)
+
+
+@permission_required('admin.can_add_log_entry')
 def LoanMergeStatus_upload(request):
     template = "master_templates/file_upload.html"
     
@@ -2443,6 +2473,48 @@ def TransactionTypes_Update(request,pk):
     'transaction':transaction,
     }
     return render(request,'master_templates/TransactionTypes_Update.html',context)
+
+def FormAutoPrint_Settings(request):
+    form = FormAutoPrint_Settings_Form(request.POST or None)
+    items = FormAutoPrints.objects.all()
+    if request.method == 'POST':
+        form== FormAutoPrint_Settings_Form(request.POST)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect(reverse('FormAutoPrint_Settings'))
+    context={
+    'form':form,
+    'items':items,
+    }
+    return render(request,'master_templates/FormAutoPrint_Settings.html',context)
+
+
+
+def FormAutoPrint_SettingsUpdate(request,pk):
+    form = FormAutoPrint_Settings_Update_Form(request.POST or None)
+    item = FormAutoPrints.objects.get(id=pk)
+ 
+    if request.method == 'POST':
+        title=request.POST.get('title')
+        status_id=request.POST.get('status')
+        status=YesNo.objects.get(title=status_id)
+      
+       
+        item.title=title
+        item.status=status
+        item.save()
+        return HttpResponseRedirect(reverse('FormAutoPrint_Settings'))
+    form.fields['title'].initial=item.title
+    form.fields['status'].initial=item.status
+    context={
+    'form':form,
+    'items':item,
+    }
+    return render(request,'master_templates/FormAutoPrint_SettingsUpdate.html',context)
+
+
+
+
 
 
 ####################################################################

@@ -22,16 +22,113 @@ from django.utils.dateparse import parse_date
 from dateutil.relativedelta import relativedelta
 import xlwt
 from django.db.models import F
+
+# importing the necessary libraries
+from django.http import HttpResponse
 from django.views.generic import View
+from .process import html_to_pdf 
+from django.template.loader import render_to_string
+
+from django.http import FileResponse
+import io
+from reportlab.pdfgen import canvas
+from reportlab.lib.units import inch
+from reportlab.lib.pagesizes import letter
+
+from datetime import datetime
 
 
 
 
 # now = datetime.datetime.now()
-now = datetime.datetime.now(tz=timezone.utc) # you can use this value
+now = datetime.now(tz=timezone.utc) # you can use this value
 
+#Creating a class based view
+class GeneratePdf(View):
+     def get(self, request, *args, **kwargs):
+         
+        # getting the template
+        pdf = html_to_pdf('shop_templates/result.html')
+         
+         # rendering the template
+        return HttpResponse(pdf, content_type='application/pdf')
 
+class GeneratePdf2(View):
+     def get(self, request, *args, **kwargs):
+         
+        # getting the template
+        pdf = html_to_pdf('shop_templates/result2.html')
+         
+         # rendering the template
+        return HttpResponse(pdf, content_type='application/pdf')
 
+#Creating a class based view
+class GeneratePdf3(View):
+     def get(self, request, *args, **kwargs):
+        data = Staff.objects.all().order_by('admin__first_name')
+        open('templates/temp.html', "w").write(render_to_string('shop_templates/result3.html', {'data': data}))
+
+        # Converting the HTML template into a PDF file
+        pdf = html_to_pdf('temp.html')
+         
+         # rendering the template
+        return HttpResponse(pdf, content_type='application/pdf')
+
+#Creating a class based view
+class GeneratePdf4(View):
+   def get(self, request, *args, **kwargs):
+      data = Daily_Sales.objects.filter(receipt= 292).first()
+      records = Daily_Sales.objects.filter(receipt= 293)
+      open('templates/temp.html', "w").write(render_to_string('shop_templates/result4.html',{'data': data,'records':records} ))
+
+        # Converting the HTML template into a PDF file
+      pdf = html_to_pdf('temp.html')
+         
+         # rendering the template
+      return HttpResponse(pdf, content_type='application/pdf')
+
+def All_Stock_Status_Pdf(request):
+	# Create Bytestream Buffer
+	buf = io.BytesIO()
+
+	# Create a Canvas
+	c = canvas.Canvas(buf, pagesize=letter,bottomup=0)
+	# Create a text object
+
+	textob = c.beginText()
+	textob.setTextOrigin(inch, inch)
+	textob.setFont("Helvetica", 14)
+
+	# Add some lines of Text
+	# lines=[
+	# "This is line 1",
+	# "This is line 2",
+	# "This is line 3",
+	# "This is line 4",
+	# ]
+	products = Stock.objects.all()
+
+	lines=[]
+	for product in products:
+		lines.append(product.code)
+		lines.append(product.item_name)
+		lines.append(str(product.quantity))
+		lines.append(str(product.unit_selling_price))
+		lines.append(" ")
+	# loop
+	
+	for line in lines:
+		textob.textLine(line)
+	# Finish up
+
+	c.drawText(textob)
+	c.showPage()
+	c.save()
+	buf.seek(0)
+
+	# Return something
+
+	return FileResponse(buf, as_attachment=True,filename="Stock_list.pdf")
 
 
 def shop_home(request):
@@ -67,6 +164,30 @@ def datatable_table(request):
 
 def editable_invoice(request):
 	return render(request, 'shop_templates/basics/invoice_2.html')
+
+def Item_Write_off_Reasons(request):
+	form=addItemWriteOffReasonsForm(request.POST or None)
+	items=ItemWriteOffReasons.objects.all()
+	if request.method == 'POST':
+		form = addItemWriteOffReasonsForm(request.POST)
+		if form.is_valid():
+			form.save()
+			messages.success(request,'Record Successfully Added')
+			return HttpResponseRedirect(reverse('Item_Write_off_Reasons'))
+
+		messages.info(request,'Please enter title')
+		return HttpResponseRedirect(reverse('Item_Write_off_Reasons'))
+	context={
+	'form':form,
+	'items':items,
+	}
+	return render(request,'shop_templates/Item_Write_off_Reasons.html',context)
+
+def Item_Write_off_Reasons_delete(request,pk):
+	item =ItemWriteOffReasons.objects.get(id=pk)
+
+	item.delete()
+	return HttpResponseRedirect(reverse('Item_Write_off_Reasons')) 
 
 
 @csrf_exempt
@@ -105,6 +226,8 @@ def Stock_add(request,pk):
 	category=ProductCategory.objects.get(id=pk)
 	form=Stock_form(request.POST or None)
 
+	last_stock = Stock.objects.filter().last()
+	# print(last_stock.code)
 	products = Stock.objects.filter(category_id=category)
 	if request.method=="POST":
 		code=request.POST.get('code')
@@ -121,7 +244,7 @@ def Stock_add(request,pk):
 		return HttpResponseRedirect(reverse('Stock_add',args=(pk,)))
 
 	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
-
+	form.fields['code'].initial = int(last_stock.code) + 1
 	context={
 	'user_level':user_level.userlevel.title,
 	'form':form,
@@ -199,15 +322,19 @@ def Manage_Stock_Product_load(request):
 	title="Product List"
 	if request.method == "POST":
 		form = searchForm(request.POST)
-		stocks=Stock.objects.filter(Q(code__icontains=form['title'].value()) | Q(item_name__icontains=form['title'].value()))
-		user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
+		if form['title'].value():
+			stocks=Stock.objects.filter(Q(code__icontains=form['title'].value()) | Q(item_name__icontains=form['title'].value()))
+			user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
 
-		context={
-			'user_level':user_level.userlevel.title,
-			'stocks':stocks,
-			'title':title,
-		}
-		return render(request,'shop_templates/Manage_Stock_Product_load.html',context)
+			context={
+				'user_level':user_level.userlevel.title,
+				'stocks':stocks,
+				'title':title,
+			}
+			return render(request,'shop_templates/Manage_Stock_Product_load.html',context)
+		messages.info(request,'Please Enter Search')
+		return HttpResponseRedirect(reverse('Manage_Stock_search'))
+
 
 def Manage_Stock_Product_delete(request,pk):
 	product=Stock.objects.get(id=pk)
@@ -218,7 +345,10 @@ def Manage_Stock_Product_delete(request,pk):
 		else:
 			# record.delete()
 			return HttpResponseRedirect(reverse('Manage_Stock_search'))
+	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
+
 	context={
+	'user_level':user_level.userlevel.title,
 	'product':product,
 	}
 	return render(request,'shop_templates/Manage_Stock_Product_delete.html',context)
@@ -331,10 +461,162 @@ def Item_Write_off_product_load(request):
 			return HttpResponseRedirect(reverse("Item_Write_off_search"))
 
 def Item_Write_off_product_Preview(request,pk):
-	context={
+	form = Item_Write_off_product_form(request.POST or None)
+	item = Stock.objects.get(id=pk)
 
+	form.fields['code'].initial = item.code
+	form.fields['item_name'].initial = item.item_name
+	form.fields['available_quantity'].initial = item.quantity
+	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
+
+	if request.method =='POST':
+		status=TransactionStatus.objects.get(title="UNTREATED")
+		approval_status=ApprovalStatus.objects.get(title='PENDING')
+		processed_by=CustomUser.objects.get(id=request.user.id)
+		reason_id=request.POST.get('reasons')
+		reason=ItemWriteOffReasons.objects.get(id=reason_id)
+		available_quantity=item.quantity
+		cost_price = item.unit_cost_price
+		quantity=request.POST.get('quantity')
+		total_cost = float(quantity)* float(cost_price)
+		
+		record = ItemWriteOffTemp(product=item,reason=reason,quantity=quantity,cost_price=cost_price,total_cost=total_cost,processed_by=processed_by,approval_status=approval_status,status=status)
+		record.save()
+		return HttpResponseRedirect(reverse('Item_Write_off_search'))
+	context={
+	'user_level':user_level.userlevel.title,
+	'form':form,
 	}
 	return render(request,'shop_templates/Item_Write_off_product_Preview.html',context)
+
+
+def Item_Write_off_manage(request):
+	status=TransactionStatus.objects.get(title='UNTREATED')
+	approval_status=ApprovalStatus.objects.get(title='PENDING')
+	records =ItemWriteOffTemp.objects.filter(approval_status=approval_status,status=status)
+	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
+	context={
+	'user_level':user_level.userlevel.title,
+	'records':records,
+
+	}
+	return render(request,'shop_templates/Item_Write_off_manage.html',context)
+
+
+def Item_Write_off_manage_Preview(request,pk):
+	form = Item_Write_off_product_form(request.POST or None)
+	item = ItemWriteOffTemp.objects.get(id=pk)
+
+	form.fields['code'].initial = item.product.code
+	form.fields['item_name'].initial = item.product.item_name
+	form.fields['available_quantity'].initial = item.product.quantity
+	form.fields['quantity'].initial = item.quantity
+	form.fields['reasons'].initial = item.reason.id
+	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
+
+	if request.method =='POST':
+		processed_by=CustomUser.objects.get(id=request.user.id)
+		reason_id=request.POST.get('reasons')
+		reason=ItemWriteOffReasons.objects.get(id=reason_id)
+		available_quantity=item.product.quantity
+		cost_price = item.product.unit_cost_price
+		quantity=request.POST.get('quantity')
+		total_cost = float(quantity)* float(cost_price)
+		
+		item.reason=reason
+		item.quantity=quantity
+		item.cost_price=cost_price
+		item.total_cost=total_cost
+		item.processed_by=processed_by
+		item.save()
+		return HttpResponseRedirect(reverse('Item_Write_off_manage'))
+	context={
+	'user_level':user_level.userlevel.title,
+	'form':form,
+	}
+	return render(request,'shop_templates/Item_Write_off_manage_Preview.html',context)
+
+
+def Item_Write_off_Approval(request):
+	status=TransactionStatus.objects.get(title='UNTREATED')
+	approval_status=ApprovalStatus.objects.get(title='PENDING')
+	records =ItemWriteOffTemp.objects.filter(approval_status=approval_status,status=status)
+	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
+	context={
+	'user_level':user_level.userlevel.title,
+	'records':records,
+
+	}
+	return render(request,'shop_templates/Item_Write_off_Approval.html',context)
+
+
+def Item_Write_off_Approval_Preview(request,pk):
+	form = Item_Write_off_Approval_(request.POST or None)
+	item = ItemWriteOffTemp.objects.get(id=pk)
+
+	form.fields['code'].initial = item.product.code
+	form.fields['item_name'].initial = item.product.item_name
+	form.fields['quantity'].initial = item.quantity
+	form.fields['reasons'].initial = item.reason.title
+
+	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
+
+	if request.method =='POST':
+		approval_status=ApprovalStatus.objects.get(title='APPROVED')
+		item.approval_status=approval_status
+		item.save()
+		return HttpResponseRedirect(reverse('Item_Write_off_Approval'))
+	context={
+	'user_level':user_level.userlevel.title,
+	'form':form,
+	}
+	return render(request,'shop_templates/Item_Write_off_Approval_Preview.html',context)
+
+
+
+def Item_Write_off_Approved_List(request):
+	status=TransactionStatus.objects.get(title='UNTREATED')
+	approval_status=ApprovalStatus.objects.get(title='APPROVED')
+	records =ItemWriteOffTemp.objects.filter(approval_status=approval_status,status=status)
+	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
+	context={
+	'user_level':user_level.userlevel.title,
+	'records':records,
+
+	}
+	return render(request,'shop_templates/Item_Write_off_Approved_List.html',context)
+
+
+def Item_Write_off_Approved_Process(request,pk):
+	form = Item_Write_off_Approval_(request.POST or None)
+	item = ItemWriteOffTemp.objects.get(id=pk)
+
+	form.fields['code'].initial = item.product.code
+	form.fields['item_name'].initial = item.product.item_name
+	form.fields['quantity'].initial = item.quantity
+	form.fields['reasons'].initial = item.reason.title
+
+	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
+
+	if request.method =='POST':
+		status=TransactionStatus.objects.get(title='TREATED')
+		processed_by=CustomUser.objects.get(id=request.user.id)
+		record=ItemWriteOff(product=item,processed_by=processed_by,status=status)
+		record.save()
+
+		stock=Stock.objects.get(id=item.product_id)
+		stock.quantity=int(stock.quantity)-int(item.quantity)
+		stock.save()
+		
+		item.status=status
+		item.save()
+		return HttpResponseRedirect(reverse('Item_Write_off_Approved_List'))
+	context={
+	'user_level':user_level.userlevel.title,
+	'form':form,
+	}
+	return render(request,'shop_templates/Item_Write_off_Approved_Process.html',context)
+
 
 
 def Members_Credit_sales_ledger_search(request):
@@ -494,7 +776,7 @@ def members_credit_issue_item(request,pk,member_id):
 			ticket_id=Members_Credit_Sales_Selected.objects.filter(member=member,status=status).first()
 			selected_ticket=ticket_id.ticket
 		else:
-			now = datetime.datetime.now()
+			now = datetime.now()
 			selected_ticket=str(now.year) +  str(now.month) +  str(now.day) + str(now.hour) +  str(now.minute) + str(now.second)
 
 
@@ -1190,7 +1472,7 @@ def members_cash_sales_item_issue(request,pk,member_id):
 			ticket_id=Members_Cash_Sales_Selected.objects.filter(member=member,status=status).first()
 			selected_ticket=ticket_id.ticket
 		else:
-			now = datetime.datetime.now()
+			now = datetime.now()
 			selected_ticket=str(now.year) +  str(now.month) +  str(now.day) + str(now.hour) +  str(now.minute) + str(now.second)
 
 
@@ -1344,7 +1626,7 @@ def general_cash_issue_item(request,pk,cust_id):
 
 
 		else:
-			now = datetime.datetime.now()
+			now = datetime.now()
 			selected_ticket=str(now.year) +  str(now.month) +  str(now.day) + str(now.hour) +  str(now.minute) + str(now.second)
 
 			customer.status=status1
@@ -1379,11 +1661,14 @@ def general_cash_issue_item_preview(request,ticket):
 	form=general_cash_issue_item_form(request.POST or None)
 	select_items=General_Cash_Sales_Selected.objects.filter(ticket=ticket)
 	customer=Customers.objects.get(active_ticket=ticket)
+	autoprint=YesNo.objects.all()
+	autoFormPrint=FormAutoPrints.objects.get(title='SHOP SALES')
 
 	form.fields['name'].initial=customer.name
 	form.fields['address'].initial=customer.address
 	form.fields['phone_no'].initial=customer.phone_no
 	form.fields['receipt'].initial='00001'
+	form.fields['autoprint'].initial=autoFormPrint.status
 
 
 
@@ -1403,7 +1688,8 @@ def general_cash_issue_item_preview(request,ticket):
 			cash=True
 
 	if request.method=='POST' and 'btn_submit' in request.POST:
-		
+		autoprint_id = request.POST.get('autoprint')
+		autoprint=YesNo.objects.get(id=autoprint_id)
 		processed_by=CustomUser.objects.get(id=request.user.id)
 		status=TransactionStatus.objects.get(title='UNTREATED')
 		status1=TransactionStatus.objects.get(title='TREATED')
@@ -1475,9 +1761,15 @@ def general_cash_issue_item_preview(request,ticket):
 			if receipt_types.title == 'MANUAL':
 				Receipts_Shop.objects.filter(receipt=receipt_id).update(status=receipt_status)
 
-			General_Cash_Sales_Selected.objects.filter(ticket=ticket).delete()
+			
 
-		return HttpResponseRedirect(reverse('general_cash_issue_item_print_receipt',args=(ticket,)))
+			General_Cash_Sales_Selected.objects.filter(ticket=ticket).delete()
+	
+		if autoprint.title == "NO":
+			return HttpResponseRedirect(reverse('general_cash_sales_products_load_route'))
+		elif autoprint.title == 'YES':
+			return HttpResponseRedirect(reverse('general_cash_issue_item_print_receipt',args=(ticket,)))
+		
 	
 	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
 	
@@ -1488,7 +1780,8 @@ def general_cash_issue_item_preview(request,ticket):
 	'total_amount':total_amount,
 	'form':form,
 	'cash':cash,
-
+	'autoFormPrint':autoFormPrint,
+	'autoprint':autoprint,
 	}
 	return render(request,'shop_templates/general_cash_issue_item_preview.html',context)
 
@@ -1555,17 +1848,57 @@ def general_cash_load_existing_customers(request):
 
 
 
+def Daily_Sales_Summary_Record(request):
+	form = Daily_Sales_Summary_Form(request.POST or None)
+	processed_by = CustomUser.objects.get(id=request.user.id)
+	status=TransactionStatus.objects.get(title="UNTREATED")
+	# approval_status=ApprovalStatus.objects.get(title='PENDING')
+	# approval_status1=ApprovalStatus.objects.get(title='APPROVED')
+	items=[]
+	total_amount=0
+	
+	if request.method =='POST':
+		current_date=request.POST.get('sales_date')
+		print(type(current_date))
+		print(datetime.strptime(current_date, '%Y-%m-%d').date())
+		dtObj=datetime.strptime(current_date, '%Y-%m-%d').date()
+		
 
-# def general_cash_load_existing_customers(request):
-# 	# locked_status=LockedStatus.objects.get(title='OPEN')
-# 	customers=Customers.objects.filter(~Q(name='Anonymous'))
-# 	# Customers.objects.all().update(active_ticket=None,ticket_status=None,locked_status=locked_status)
-			
-# 	context={
-# 	'customers':customers,
-# 	'ticket':'0'
-# 	}
-# 	return render(request,'shop_templates/general_cash_load_existing_customers.html',context)
+		print(current_date)
+		year=dtObj.year
+		month=dtObj.month
+		day=dtObj.day
+		print(year)
+		print(month)
+		print(day)
+		print("================================")
+		item=Daily_Sales_Summary.objects.get(id=8)
+		print(item.created_at.year)
+		print(item.created_at.month)
+		print(item.created_at.day)
+
+		print("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&")
+		items=Daily_Sales_Summary.objects.filter(created_at__year=year,created_at__month= month,created_at__day= day)
+		
+# samples = Sample.objects.filter(sampledate__gte=datetime.date(2011, 1, 1),
+                                # sampledate__lte=datetime.date(2011, 1, 31))
+		# items=Daily_Sales_Summary.objects.filter(sale__processed_by=processed_by).filter(Q(created_at__year=year) & Q(created_at__month=month) & Q(created_at__day=day))
+		
+		queryset=Daily_Sales_Summary.objects.filter(sale__processed_by=processed_by).aggregate(total_amount=Sum('amount'))
+		total_amount=queryset['total_amount']
+		print(items)
+
+	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
+
+	form.fields['sales_date'].initial = now
+	context={
+	'user_level':user_level.userlevel.title,
+	'form':form,
+	'items':items,
+	'total_amount':total_amount,
+
+	}
+	return render(request,'shop_templates/Daily_Sales_Summary_Record.html',context)
 
 
 def monthly_deductions_salary_institution_select(request):
