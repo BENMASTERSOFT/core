@@ -7,7 +7,24 @@
 
 {% if client %} {{client.user}} {% else %} &nbsp; {% endif %}
 
+autoprint=YesNo.objects.all()
+autoFormPrint=FormAutoPrints.objects.get(title='SHOP SALES')
 
+
+autoprint_id = request.POST.get('autoprint')
+autoprint=YesNo.objects.get(id=autoprint_id)
+
+
+if autoprint.title == "NO":
+      
+         return HttpResponseRedirect(reverse('general_cash_sales_dashboard'))
+      elif autoprint.title == 'YES':
+         
+         return HttpResponseRedirect(reverse('general_cash_issue_item_print_receipt',args=(ticket,)))
+      
+   
+
+   
 
 
 PARENTHESES

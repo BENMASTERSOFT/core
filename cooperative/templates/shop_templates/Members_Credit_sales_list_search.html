@@ -17,6 +17,21 @@
                             {{form.title}}
                            
                             <button class="btn btn-success" type="submit">Search</button>
+
+                            <div class="form-group">
+                              {% if messages %}
+                                
+                                  {% for message in messages %}
+                                  {% if message.tags == "info" %}
+                                  <div class="alert alert-info" style="margin-top:10px">{{message}}</div>
+                                  
+                                  {% endif %}
+
+                                  
+                                  {% endfor %}
+                              
+                              {% endif %}
+                          </div>
                         </form>
                     </div>
                 </div>

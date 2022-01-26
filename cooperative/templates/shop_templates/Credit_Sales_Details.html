@@ -23,12 +23,12 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {% for item in credit_sales %}
+                                        {% for item in sales %}
                                         <tr>
                                             <td>{{forloop.counter}}</td>
                                             <td>{{item.name}}</td>
-                                            <td>{{item.code}}</td>
-                                            <td>{{item.item_name}}</td>
+                                            <td>{{item.product.code}}</td>
+                                            <td>{{item.product.item_name}}</td>
                                             <td>{{item.quantity}}</td>
                                             <td>{{item.unit_selling_price}}</td>
                                             <td>{{item.total}}</td>

@@ -1,3 +1,14 @@
+
+    tyear = now.year
+    tmonth = now.month
+    tday = now.day
+    tdate = date(tyear, tmonth, tday)
+
+
+
+
+
+
 from datetime import datetime, timedelta
 
 startdate = datetime.today()

@@ -32,8 +32,8 @@
                                     {% for record in records %}
                                         <tr>
                                             <td>{{forloop.counter}}</td>
-                                            <td>{{record.item_code}}</td>
-                                            <td>{{record.item_name}}</td>
+                                            <td>{{record.product.code}}</td>
+                                            <td>{{record.product.item_name}}</td>
                                             <td>{{record.quantity}}</td>
                                             <td>{{record.unit_selling_price}}</td>
                                             <td>{{record.total}}</td>
