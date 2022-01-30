@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 26, 2022 at 06:12 AM
+-- Generation Time: Jan 31, 2022 at 12:04 AM
 -- Server version: 10.4.21-MariaDB
 -- PHP Version: 7.3.31
 
@@ -665,7 +665,27 @@ INSERT INTO `auth_permission` (`id`, `name`, `content_type_id`, `codename`) VALU
 (601, 'Can add form auto prints', 150, 'add_formautoprints'),
 (602, 'Can change form auto prints', 150, 'change_formautoprints'),
 (603, 'Can delete form auto prints', 150, 'delete_formautoprints'),
-(604, 'Can view form auto prints', 150, 'view_formautoprints');
+(604, 'Can view form auto prints', 150, 'view_formautoprints'),
+(605, 'Can add general ticket', 151, 'add_generalticket'),
+(606, 'Can change general ticket', 151, 'change_generalticket'),
+(607, 'Can delete general ticket', 151, 'delete_generalticket'),
+(608, 'Can view general ticket', 151, 'view_generalticket'),
+(609, 'Can add day_ end_ sales_ transactions', 152, 'add_day_end_sales_transactions'),
+(610, 'Can change day_ end_ sales_ transactions', 152, 'change_day_end_sales_transactions'),
+(611, 'Can delete day_ end_ sales_ transactions', 152, 'delete_day_end_sales_transactions'),
+(612, 'Can view day_ end_ sales_ transactions', 152, 'view_day_end_sales_transactions'),
+(613, 'Can add cooperative_ shop_ cash_ deposit', 153, 'add_cooperative_shop_cash_deposit'),
+(614, 'Can change cooperative_ shop_ cash_ deposit', 153, 'change_cooperative_shop_cash_deposit'),
+(615, 'Can delete cooperative_ shop_ cash_ deposit', 153, 'delete_cooperative_shop_cash_deposit'),
+(616, 'Can view cooperative_ shop_ cash_ deposit', 153, 'view_cooperative_shop_cash_deposit'),
+(617, 'Can add daily_ cash_ deposit_ summary', 154, 'add_daily_cash_deposit_summary'),
+(618, 'Can change daily_ cash_ deposit_ summary', 154, 'change_daily_cash_deposit_summary'),
+(619, 'Can delete daily_ cash_ deposit_ summary', 154, 'delete_daily_cash_deposit_summary'),
+(620, 'Can view daily_ cash_ deposit_ summary', 154, 'view_daily_cash_deposit_summary'),
+(621, 'Can add day_ end_ desk_ office_ transactions', 155, 'add_day_end_desk_office_transactions'),
+(622, 'Can change day_ end_ desk_ office_ transactions', 155, 'change_day_end_desk_office_transactions'),
+(623, 'Can delete day_ end_ desk_ office_ transactions', 155, 'delete_day_end_desk_office_transactions'),
+(624, 'Can view day_ end_ desk_ office_ transactions', 155, 'view_day_end_desk_office_transactions');
 
 -- --------------------------------------------------------
 
@@ -682,7 +702,8 @@ CREATE TABLE `cooperative_accountdeductions` (
   `amount` decimal(20,2) NOT NULL,
   `salary_institution_id` int(11) NOT NULL,
   `transaction_period_id` int(11) NOT NULL,
-  `transaction_status_id` int(11) NOT NULL
+  `transaction_status_id` int(11) NOT NULL,
+  `tdate` date NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -773,7 +794,8 @@ INSERT INTO `cooperative_approvabletransactions` (`id`, `created_at`, `updated_a
 (5, '2021-12-16 07:43:13.266603', '2021-12-16 07:43:13.266603', 1, 1),
 (6, '2021-12-16 13:29:43.623352', '2021-12-16 13:29:43.623352', 1, 8),
 (8, '2021-12-31 07:07:57.480483', '2021-12-31 07:07:57.480483', 1, 12),
-(9, '2021-12-31 07:46:05.974015', '2021-12-31 07:46:05.974015', 1, 7);
+(9, '2021-12-31 07:46:05.974015', '2021-12-31 07:46:05.974015', 1, 7),
+(10, '2022-01-31 01:48:09.166553', '2022-01-31 01:48:09.166553', 1, 9);
 
 -- --------------------------------------------------------
 
@@ -805,7 +827,9 @@ INSERT INTO `cooperative_approvalofficers` (`id`, `created_at`, `updated_at`, `o
 (8, '2021-12-16 07:43:40.722433', '2021-12-16 07:43:40.722433', 3, 1, 5),
 (9, '2021-12-16 13:33:46.509407', '2021-12-16 13:33:46.509407', 2, 1, 6),
 (11, '2021-12-31 07:08:30.812343', '2021-12-31 07:08:30.812343', 11, 1, 8),
-(12, '2021-12-31 07:46:39.695344', '2021-12-31 07:46:39.695344', 11, 1, 9);
+(12, '2021-12-31 07:46:39.695344', '2021-12-31 07:46:39.695344', 11, 1, 9),
+(13, '2022-01-31 01:49:16.921563', '2022-01-31 01:49:16.921563', 2, 1, 10),
+(14, '2022-01-31 01:49:25.007785', '2022-01-31 01:49:25.007785', 3, 1, 10);
 
 -- --------------------------------------------------------
 
@@ -847,7 +871,7 @@ CREATE TABLE `cooperative_autoreceipt` (
 --
 
 INSERT INTO `cooperative_autoreceipt` (`id`, `created_at`, `updated_at`, `receipt`) VALUES
-(1, '2021-12-07 21:23:50.000000', '2022-01-26 06:20:07.485459', '355');
+(1, '2021-12-07 21:23:50.000000', '2022-01-30 21:26:20.092715', '445');
 
 -- --------------------------------------------------------
 
@@ -906,7 +930,8 @@ CREATE TABLE `cooperative_cashbook` (
   `balance` decimal(20,2) NOT NULL,
   `ref_no` varchar(255) NOT NULL,
   `processed_by_id` bigint(20) DEFAULT NULL,
-  `status_id` int(11) NOT NULL
+  `status_id` int(11) NOT NULL,
+  `tdate` date NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -955,7 +980,8 @@ CREATE TABLE `cooperative_certificationofficers` (
 INSERT INTO `cooperative_certificationofficers` (`id`, `created_at`, `updated_at`, `officer_id`, `status_id`, `transaction_id`) VALUES
 (1, '2021-12-15 05:12:08.342668', '2021-12-15 09:12:08.771353', 7, 2, 1),
 (2, '2021-12-16 07:43:07.573953', '2021-12-16 07:43:07.573953', 4, 1, 2),
-(3, '2021-12-16 13:34:00.213120', '2021-12-16 13:34:00.213120', 4, 1, 3);
+(3, '2021-12-16 13:34:00.213120', '2021-12-16 13:34:00.213120', 4, 1, 3),
+(4, '2022-01-31 01:39:24.565566', '2022-01-31 01:39:24.565566', 4, 1, 4);
 
 -- --------------------------------------------------------
 
@@ -1060,16 +1086,52 @@ CREATE TABLE `cooperative_cooperativeshopledger` (
   `member_id` int(11) DEFAULT NULL,
   `processed_by_id` bigint(20) DEFAULT NULL,
   `status_id` int(11) NOT NULL,
-  `receipt` varchar(20) DEFAULT NULL
+  `receipt` varchar(20) DEFAULT NULL,
+  `tdate` date NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `cooperative_cooperativeshopledger`
 --
 
-INSERT INTO `cooperative_cooperativeshopledger` (`id`, `created_at`, `updated_at`, `particulars`, `debit`, `credit`, `balance`, `member_id`, `processed_by_id`, `status_id`, `receipt`) VALUES
-(10, '2022-01-26 05:37:25.281999', '2022-01-26 05:37:25.281999', 'Purchases with receipt No AUT-00353', '9500.00', '0.00', '-9500.00', 717, 12, 1, 'AUT-00353'),
-(11, '2022-01-26 06:20:08.483772', '2022-01-26 06:20:08.483772', 'Purchases with receipt No AUT-00354', '19600.00', '0.00', '-19600.00', 718, 12, 1, 'AUT-00354');
+INSERT INTO `cooperative_cooperativeshopledger` (`id`, `created_at`, `updated_at`, `particulars`, `debit`, `credit`, `balance`, `member_id`, `processed_by_id`, `status_id`, `receipt`, `tdate`) VALUES
+(16, '2022-01-28 11:00:12.991851', '2022-01-28 15:25:34.510131', 'Purchases with receipt No AUT-00419', '18300.00', '0.00', '-38800.00', 716, 12, 2, 'AUT-00419', '2022-01-28'),
+(21, '2022-01-28 15:25:34.379735', '2022-01-28 15:25:34.379735', 'CASH DEPOSIT/4565 ON 2022-01-28 00:00:00', '0.00', '38800.00', '0.00', 716, 12, 1, 'AUT-00429', '2022-01-28'),
+(22, '2022-01-28 16:51:12.748785', '2022-01-28 18:35:50.877785', 'Purchases with receipt No AUT-00435', '5500.00', '0.00', '-5500.00', 716, 12, 2, 'AUT-00435', '2022-01-28'),
+(23, '2022-01-28 18:35:50.779216', '2022-01-28 18:35:50.779216', 'CASH DEPOSIT/67876 ON 2022-01-28 00:00:00', '0.00', '5500.00', '0.00', 716, 12, 1, 'AUT-00436', '2022-01-28'),
+(24, '2022-01-28 19:32:18.128149', '2022-01-28 20:27:57.603606', 'Purchases with receipt No AUT-00437', '6650.00', '0.00', '-6650.00', 713, 12, 2, 'AUT-00437', '2022-01-28'),
+(25, '2022-01-28 20:27:57.537649', '2022-01-28 20:27:57.537649', 'CASH DEPOSIT/5566556 ON 2022-01-28 00:00:00', '0.00', '6650.00', '0.00', 713, 12, 1, 'AUT-00439', '2022-01-28');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `cooperative_cooperative_shop_cash_deposit`
+--
+
+CREATE TABLE `cooperative_cooperative_shop_cash_deposit` (
+  `id` int(11) NOT NULL,
+  `created_at` datetime(6) NOT NULL,
+  `updated_at` datetime(6) NOT NULL,
+  `narrations` varchar(255) DEFAULT NULL,
+  `amount` decimal(20,2) NOT NULL,
+  `receipt` varchar(20) DEFAULT NULL,
+  `tdate` date NOT NULL,
+  `member_id` int(11) DEFAULT NULL,
+  `processed_by_id` bigint(20) DEFAULT NULL,
+  `status_id` int(11) NOT NULL,
+  `bank_id` int(11) DEFAULT NULL,
+  `coop_account_id` int(11) DEFAULT NULL,
+  `payment_reference` varchar(255) DEFAULT NULL,
+  `processing_status_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `cooperative_cooperative_shop_cash_deposit`
+--
+
+INSERT INTO `cooperative_cooperative_shop_cash_deposit` (`id`, `created_at`, `updated_at`, `narrations`, `amount`, `receipt`, `tdate`, `member_id`, `processed_by_id`, `status_id`, `bank_id`, `coop_account_id`, `payment_reference`, `processing_status_id`) VALUES
+(6, '2022-01-28 18:35:50.523624', '2022-01-28 18:35:50.523624', 'CASH DEPOSIT/67876 ON 2022-01-28 00:00:00', '5500.00', 'AUT-00436', '2022-01-28', 152, 12, 2, 1, 1, '67876', 1),
+(8, '2022-01-28 20:27:57.496674', '2022-01-28 20:27:57.496674', 'CASH DEPOSIT/5566556 ON 2022-01-28 00:00:00', '6650.00', 'AUT-00439', '2022-01-28', 151, 12, 2, 1, 1, '5566556', 1);
 
 -- --------------------------------------------------------
 
@@ -1089,7 +1151,7 @@ CREATE TABLE `cooperative_customerid` (
 --
 
 INSERT INTO `cooperative_customerid` (`id`, `created_at`, `updated_at`, `title`) VALUES
-(1, '2021-12-07 20:00:12.595090', '2022-01-26 04:31:00.366828', '00049');
+(1, '2021-12-07 20:00:12.595090', '2022-01-28 16:48:37.106662', '00106');
 
 -- --------------------------------------------------------
 
@@ -1119,8 +1181,7 @@ CREATE TABLE `cooperative_customers` (
 --
 
 INSERT INTO `cooperative_customers` (`id`, `created_at`, `updated_at`, `customer_id`, `name`, `phone_no`, `address`, `birthdate`, `active_ticket`, `cust_status_id`, `locked_status_id`, `status_id`, `ticket_status_id`, `processed_by_id`) VALUES
-(47, '2022-01-25 23:32:13.650996', '2022-01-26 04:30:15.496993', 'C00047', 'Anonymous', 'Anonymous', 'Anonymous', NULL, NULL, 1, 2, 2, NULL, 12),
-(48, '2022-01-26 04:31:00.311805', '2022-01-26 04:34:54.368435', 'C00048', 'Benjamin', '08064004355', 'Abakaliki', NULL, NULL, 1, 2, 2, NULL, 12);
+(104, '2022-01-28 16:48:01.437512', '2022-01-28 16:48:33.679596', 'C00104', 'Benjamin', '08064004355', 'Abakaliki', NULL, NULL, 1, 2, 2, NULL, 12);
 
 -- --------------------------------------------------------
 
@@ -1148,19 +1209,19 @@ CREATE TABLE `cooperative_customuser` (
 --
 
 INSERT INTO `cooperative_customuser` (`id`, `password`, `last_login`, `is_superuser`, `username`, `first_name`, `last_name`, `email`, `is_staff`, `is_active`, `date_joined`, `user_type`) VALUES
-(1, 'pbkdf2_sha256$260000$32YxiL3Ua8QNbmylDXX0qY$0UoeH/uqVA5iXYzN3bDPfxp18DfZUG3C7SeJmPhW/VE=', '2022-01-23 05:18:22.508281', 1, 'admin', '', '', 'admin@gmail.com', 1, 1, '2021-12-07 18:50:58.504932', '1'),
-(2, 'pbkdf2_sha256$260000$jTl5qFnl9pnVXlgGhzJhHu$Fywehh7bctwCKWQuTMJWF0GcuEvsgaXEuTCxAtCq8jg=', '2022-01-06 07:06:45.929102', 0, 'iyare', 'Festus', 'Iyare', 'iyare@gmail.com', 0, 1, '2021-12-07 19:42:36.060017', '2'),
+(1, 'pbkdf2_sha256$260000$32YxiL3Ua8QNbmylDXX0qY$0UoeH/uqVA5iXYzN3bDPfxp18DfZUG3C7SeJmPhW/VE=', '2022-01-29 23:46:24.034733', 1, 'admin', '', '', 'admin@gmail.com', 1, 1, '2021-12-07 18:50:58.504932', '1'),
+(2, 'pbkdf2_sha256$260000$jTl5qFnl9pnVXlgGhzJhHu$Fywehh7bctwCKWQuTMJWF0GcuEvsgaXEuTCxAtCq8jg=', '2022-01-29 03:33:11.093499', 0, 'iyare', 'Festus', 'Iyare', 'iyare@gmail.com', 0, 1, '2021-12-07 19:42:36.060017', '2'),
 (3, 'pbkdf2_sha256$260000$IC3rZOrx2NROW7OOHifwCC$SVAHRitbe5LvMZzlPSPPu5v4A1eih2Vx5dRZ1gt7zeU=', NULL, 0, 'mission', 'Mission', 'Egwu', 'mission@gmail.com', 0, 1, '2021-12-07 19:43:34.285541', '2'),
-(4, 'pbkdf2_sha256$260000$fCsaikrWD9JtSqMQumVW2e$e6AMZ7eZO844qm+PjwAkKjzNVxotEsR80G5XxdjkKzA=', '2022-01-01 08:44:19.812347', 0, 'benjamin', 'Benjamin', 'Akpueze', 'benjamin@gmail.com', 0, 1, '2021-12-07 19:44:24.871864', '3'),
+(4, 'pbkdf2_sha256$260000$fCsaikrWD9JtSqMQumVW2e$e6AMZ7eZO844qm+PjwAkKjzNVxotEsR80G5XxdjkKzA=', '2022-01-29 23:39:47.452722', 0, 'benjamin', 'Benjamin', 'Akpueze', 'benjamin@gmail.com', 0, 1, '2021-12-07 19:44:24.871864', '3'),
 (5, 'pbkdf2_sha256$260000$z4HJvupZucKQ1Fg5kj9b0d$Zh/TxnwykCZLz4Bk7YLZhFijCmcLVqqystgOdtQwMzc=', NULL, 0, 'kinsley', 'Kingsley', 'Igwe', 'kingsley@gmail.com', 0, 1, '2021-12-07 19:45:10.423954', '3'),
 (6, 'pbkdf2_sha256$260000$Sul8s1LLmb6LYHez8JS8Fe$lHin38O9hMseyeSpJsSoKTJTNprjw7P9py1rpQvIUac=', '2021-12-15 21:15:27.146672', 0, 'nneka', 'Nneka', 'Ogah', 'nneka@gmail.com', 0, 1, '2021-12-07 19:46:16.106235', '4'),
 (7, 'pbkdf2_sha256$260000$X65PJFMIcbqauOcXMUyUeO$+SUgcA+FxfpHrjl5kJ5aj7+c5DeKvOQUfq2mcbdxCJQ=', '2021-12-15 21:14:55.065539', 0, 'ofoke', 'Sunday', 'Ofoke', 'ofoke@gmail.com', 0, 1, '2021-12-07 19:47:20.327903', '5'),
 (8, 'pbkdf2_sha256$260000$Fjcn9NSpnhtPeUZBKxHtBT$3sYXRFc/kTpaZMIMmEG9F0VpBLfFy2uNQ/8K9cKYzQY=', NULL, 0, 'nnenna', 'Nnnenna', 'Udu', 'nnenna@gmail.com', 0, 1, '2021-12-07 19:48:22.291528', '9'),
-(9, 'pbkdf2_sha256$260000$52uRCNpA0H8eCurYpf0Eo3$ccpXbJhRFaznPmgT63fE6GGSTjNHz5Nu3YgYgVthIWs=', '2022-01-26 06:19:39.819204', 0, 'chinwendu', 'Chinwendu', 'Okafor', 'chinwendu@gmail.com', 0, 1, '2021-12-07 19:49:28.259710', '6'),
+(9, 'pbkdf2_sha256$260000$52uRCNpA0H8eCurYpf0Eo3$ccpXbJhRFaznPmgT63fE6GGSTjNHz5Nu3YgYgVthIWs=', '2022-01-30 23:30:31.396496', 0, 'chinwendu', 'Chinwendu', 'Okafor', 'chinwendu@gmail.com', 0, 1, '2021-12-07 19:49:28.259710', '6'),
 (10, 'pbkdf2_sha256$260000$W8TZuwETjwyHA6aqcUbxbO$4f8mJ7LgGgUoJCv/uhxGfUXHkzh/3bNUrtFyNPCVODQ=', '2021-12-23 02:12:43.335425', 0, 'omiko', 'Mary', 'Omiko', 'mary@gmail.com', 0, 1, '2021-12-07 19:50:04.034981', '6'),
-(11, 'pbkdf2_sha256$260000$4C8c2gTJjdoZmKJvgtMrst$CNXqAqWHlWxWoR+IO1gU0LLDq1aY7VVCX3S0RWkg8W8=', '2022-01-26 05:28:53.441267', 0, 'emmanuella', 'Nwankaego', 'Elijah', 'emmanuella@gmail.com', 0, 1, '2021-12-07 19:50:50.489249', '7'),
-(12, 'pbkdf2_sha256$260000$zBjS16wmKq77bRDASHYzTJ$ExM9Oz1tU8xjXlncOK96ZEFzgK283zczZP8rzoPaq5U=', '2022-01-25 09:00:48.811360', 0, 'onuoha', 'Esther', 'Onuoha', 'esther@gmail.com', 0, 1, '2021-12-07 19:51:52.194475', '8'),
-(13, 'pbkdf2_sha256$260000$dwnI1i4m1iDtSRD5kzGYWQ$Q12EEgxGbcpHyeRmhJtgELZMpgS4UpJT+eJ/Bv3z5uA=', '2022-01-25 09:31:25.849270', 0, 'onuoha1', 'Esther', 'Onuoha', 'esther1@gmail.com', 0, 1, '2021-12-07 19:52:48.700293', '8'),
+(11, 'pbkdf2_sha256$260000$4C8c2gTJjdoZmKJvgtMrst$CNXqAqWHlWxWoR+IO1gU0LLDq1aY7VVCX3S0RWkg8W8=', '2022-01-28 16:50:45.995933', 0, 'emmanuella', 'Nwankaego', 'Elijah', 'emmanuella@gmail.com', 0, 1, '2021-12-07 19:50:50.489249', '7'),
+(12, 'pbkdf2_sha256$260000$zBjS16wmKq77bRDASHYzTJ$ExM9Oz1tU8xjXlncOK96ZEFzgK283zczZP8rzoPaq5U=', '2022-01-30 23:30:04.614385', 0, 'onuoha', 'Esther', 'Onuoha', 'esther@gmail.com', 0, 1, '2021-12-07 19:51:52.194475', '8'),
+(13, 'pbkdf2_sha256$260000$dwnI1i4m1iDtSRD5kzGYWQ$Q12EEgxGbcpHyeRmhJtgELZMpgS4UpJT+eJ/Bv3z5uA=', '2022-01-28 12:46:10.427013', 0, 'onuoha1', 'Esther', 'Onuoha', 'esther1@gmail.com', 0, 1, '2021-12-07 19:52:48.700293', '8'),
 (167, 'pbkdf2_sha256$260000$yYpjxzGQ4BcAiedGvs6iU3$//88eAp4hMm3ANYQJQBu1jQ86+LooZFsiRPtFgAdtqg=', NULL, 0, 'BENIDAKA00001', 'BEN', 'IDAKA', 'BEN00001@gmail.com', 0, 1, '2021-12-07 21:04:28.256219', '10'),
 (168, 'pbkdf2_sha256$260000$Vz2cSFKoSbvIZ6O8WI4Sbm$7ByEWGUeDZcGi1EzzvmrLYqloaxVzqKeNbPkswiMxb4=', NULL, 0, 'UCHENNAOKOLI00002', 'UCHENNA', 'OKOLI', 'UCHENNA00002@gmail.com', 0, 1, '2021-12-07 21:04:29.704326', '10'),
 (169, 'pbkdf2_sha256$260000$dCw9Mr8Q41FmZLBuVfLCpI$2tkkfQYn4rSStlHvS9F19dKJu3No+cG66pE2boDOt/o=', NULL, 0, 'NKONYELUOKONKWO00003', 'NKONYELU', 'OKONKWO', 'NKONYELU00003@gmail.com', 0, 1, '2021-12-07 21:04:30.378892', '10'),
@@ -1211,7 +1272,14 @@ INSERT INTO `cooperative_customuser` (`id`, `password`, `last_login`, `is_superu
 (214, 'pbkdf2_sha256$260000$MgAx1kUQvooxDLbvgG5T1p$XMZ4eX6yyYBeKJhz+kt8tpOQEwPAxhuyzzDuQ+D2o68=', NULL, 0, 'NGOZIADUAKA00048', 'NGOZI', 'ADUAKA', 'NGOZI00048@gmail.com', 0, 1, '2021-12-07 21:05:05.133033', '10'),
 (215, 'pbkdf2_sha256$260000$lLz6ByLwxXFktz09mW6lm0$h4Bp1y+2YFF4k5F8gkv+v2x7DH+JgICCP/Na9K7EEuo=', NULL, 0, 'VIVIANADUAKA00049', 'VIVIAN', 'ADUAKA', 'VIVIAN00049@gmail.com', 0, 1, '2021-12-07 21:05:05.875124', '10'),
 (216, 'pbkdf2_sha256$260000$cFEPlxTshfE2JFJ04egUjf$ElkGoOL5WfMTU1yqes10zFocr8UVZFlF3GGZOrAp02U=', NULL, 0, 'ADAGBAADUWA00050', 'ADAGBA', 'ADUWA', 'ADAGBA00050@gmail.com', 0, 1, '2021-12-07 21:05:06.453588', '10'),
-(227, 'pbkdf2_sha256$260000$j9XsoFqb9p9zRNRyoWMTEx$LXXtTtuH5UkduAuBTT0ETByYMw6Vqgnn7LVB+aRT26I=', NULL, 0, 'fred11144', 'FRED', 'EKPE', 'fred1@gmail.com', 0, 1, '2021-12-16 10:06:52.288295', '10');
+(227, 'pbkdf2_sha256$260000$j9XsoFqb9p9zRNRyoWMTEx$LXXtTtuH5UkduAuBTT0ETByYMw6Vqgnn7LVB+aRT26I=', NULL, 0, 'fred11144', 'FRED', 'EKPE', 'fred1@gmail.com', 0, 1, '2021-12-16 10:06:52.288295', '10'),
+(228, 'pbkdf2_sha256$260000$YYMVHtw9m8hMhdM12i8GEC$f1zON7DYD5FH09p1jisC4kt+NlCdE8PcDyxahLAAyHA=', NULL, 0, 'philip', 'PHILIP', 'ALOKE', '5454@gmail.com', 0, 1, '2022-01-30 15:39:25.749463', '10'),
+(231, 'pbkdf2_sha256$260000$lLmzxLM29N3DEOsz2j9UOX$UTfert249kp4pS6h9SfMnw8E2EBLSG+SpjAaa8mhtC8=', NULL, 0, 'philipaloke', 'PHILIP', 'ALOKE', 'philip@gmail.com', 0, 1, '2022-01-30 16:00:12.415828', '10'),
+(232, 'pbkdf2_sha256$260000$2xsosq3B8IzQKoWszXA9UO$Eg6bdGug7LlhpBDdDawXKar6nUNcgwMhHDigg1Cgr1Q=', NULL, 0, 'igwechi', 'CHINYERE', 'IGWE', 'igwechi@gmail.com', 0, 1, '2022-01-30 17:06:07.261363', '10'),
+(233, 'pbkdf2_sha256$260000$1nQ3mH3nVyb0VdGJ520EDi$tqcdsBSW5wylZWGEVAwAODjy5kNN5tdtrLkuxlFZufA=', NULL, 0, 'emekanjoku', 'EMEKA', 'NJOKU', 'emekanjoku@gmail.com', 0, 1, '2022-01-30 17:07:19.252578', '10'),
+(234, 'pbkdf2_sha256$260000$EgkDURYxXgY4JsQY5jegvm$sDHWssW1IRzgBgkkiaX810kuTJptge0A2wgWQ1ZBXVA=', NULL, 0, 'onwe', 'EMMANUEL', 'ONWE', 'onwe@gmail.com', 0, 1, '2022-01-30 17:08:21.038406', '10'),
+(235, 'pbkdf2_sha256$260000$8mhda7Q8DzyPfDVYJnx5bu$ZjOwNyBoAnot9xmmWh3g0s3dGvDuczddA+0aLXL2Bsg=', NULL, 0, 'chuma', 'CHUKWUMA', 'NWEKPA', 'nwekpa@gmail.com', 0, 1, '2022-01-30 19:51:29.453228', '10'),
+(236, 'pbkdf2_sha256$260000$iRUUJWmJOFmho92aHvnGaQ$qJ/aoBvImseeFWjgS6si3NYj+wwC6cz3Ly86+aXlpnI=', NULL, 0, 'agunweke', 'NWEKE', 'AGU', 'agu@gmail.com', 0, 1, '2022-01-30 19:52:13.737523', '10');
 
 -- --------------------------------------------------------
 
@@ -1240,6 +1308,31 @@ CREATE TABLE `cooperative_customuser_user_permissions` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `cooperative_daily_cash_deposit_summary`
+--
+
+CREATE TABLE `cooperative_daily_cash_deposit_summary` (
+  `id` int(11) NOT NULL,
+  `created_at` datetime(6) NOT NULL,
+  `updated_at` datetime(6) NOT NULL,
+  `description` varchar(255) NOT NULL,
+  `amount` decimal(20,2) NOT NULL,
+  `tdate` date NOT NULL,
+  `processed_by_id` bigint(20) DEFAULT NULL,
+  `status_id` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `cooperative_daily_cash_deposit_summary`
+--
+
+INSERT INTO `cooperative_daily_cash_deposit_summary` (`id`, `created_at`, `updated_at`, `description`, `amount`, `tdate`, `processed_by_id`, `status_id`) VALUES
+(1, '2022-01-28 18:48:33.607634', '2022-01-28 18:48:33.607634', 'BANK DEPOSIT', '5500.00', '2022-01-28', 12, 1),
+(3, '2022-01-28 20:31:18.401080', '2022-01-28 20:31:18.401080', 'BANK DEPOSIT', '6650.00', '2022-01-28', 12, 1);
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `cooperative_daily_sales`
 --
 
@@ -1258,29 +1351,27 @@ CREATE TABLE `cooperative_daily_sales` (
   `status_id` int(11) DEFAULT NULL,
   `receipt` varchar(20) DEFAULT NULL,
   `product_id` int(11) DEFAULT NULL,
-  `tdate` date NOT NULL
+  `tdate` date NOT NULL,
+  `sales_category_id` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `cooperative_daily_sales`
 --
 
-INSERT INTO `cooperative_daily_sales` (`id`, `created_at`, `updated_at`, `ticket`, `name`, `phone_no`, `address`, `quantity`, `unit_selling_price`, `total`, `processed_by_id`, `status_id`, `receipt`, `product_id`, `tdate`) VALUES
-(98, '2022-01-26 04:30:15.712858', '2022-01-26 04:30:15.712858', '2022125233224', 'Anonymous', 'Anonymous', 'Anonymous', 4, '2300.00', '9200.00', 12, 1, 'AUT-00344', 917, '2022-01-26'),
-(99, '2022-01-26 04:30:15.949914', '2022-01-26 04:30:15.949914', '2022125233224', 'Anonymous', 'Anonymous', 'Anonymous', 2, '700.00', '1400.00', 12, 1, 'AUT-00344', 971, '2022-01-26'),
-(100, '2022-01-26 04:30:16.489417', '2022-01-26 04:30:16.489417', '2022125233224', 'Anonymous', 'Anonymous', 'Anonymous', 5, '350.00', '1750.00', 12, 1, 'AUT-00344', 946, '2022-01-26'),
-(101, '2022-01-26 04:32:05.751363', '2022-01-26 04:32:05.752364', '202212632923', 'Benjamin', '08064004355', 'Abakaliki', 3, '1200.00', '3600.00', 12, 1, 'AUT-00345', 918, '2022-01-26'),
-(102, '2022-01-26 04:34:54.600009', '2022-01-26 04:34:54.600009', '202212633351', 'Benjamin', '08064004355', 'Abakaliki', 3, '3500.00', '10500.00', 12, 1, 'AUT-00346', 922, '2022-01-26'),
-(103, '2022-01-26 04:34:54.795211', '2022-01-26 04:34:54.795211', '202212633351', 'Benjamin', '08064004355', 'Abakaliki', 1, '350.00', '350.00', 12, 1, 'AUT-00346', 946, '2022-01-26'),
-(106, '2022-01-26 04:53:11.533800', '2022-01-26 04:53:11.533800', '202212634829', 'CHIGOZI ABAGHAUGWU ', '08064004364', 'FETHA II CTCS', 5, '1200.00', '6000.00', 12, 1, 'AUT-348', 918, '2022-01-26'),
-(107, '2022-01-26 04:53:11.676763', '2022-01-26 04:53:11.676763', '202212634829', 'CHIGOZI ABAGHAUGWU ', '08064004364', 'FETHA II CTCS', 2, '350.00', '700.00', 12, 1, 'AUT-348', 946, '2022-01-26'),
-(108, '2022-01-26 04:54:20.743553', '2022-01-26 04:54:20.743553', '202212635359', 'UCHENNA OKOLI OBIA', '08064004356', 'FETHA II CTCS', 3, '2300.00', '6900.00', 12, 1, 'AUT-349', 917, '2022-01-26'),
-(109, '2022-01-26 04:55:17.920540', '2022-01-26 04:55:17.920540', '202212635359', 'OLADELE ABOKEDE AD', '08064004376', 'FETHA II CTCS', 10, '150.00', '1500.00', 12, 1, 'AUT-350', 1024, '2022-01-26'),
-(110, '2022-01-26 04:58:54.184746', '2022-01-26 04:58:54.184746', '202212635359', 'IBUKUN ADEOLU NGOZ', '08064004387', 'FETHA II CTCS', 2, '1450.00', '2900.00', 12, 1, 'AUT-351', 936, '2022-01-26'),
-(111, '2022-01-26 05:37:24.240383', '2022-01-26 05:37:24.240383', '202212641431', 'OBASI ABBA DORCAS', '08064004369', 'FETHA II CTCS', 5, '1200.00', '6000.00', 12, 1, 'AUT-00353', 918, '2022-01-26'),
-(112, '2022-01-26 05:37:24.530242', '2022-01-26 05:37:24.530242', '202212641431', 'OBASI ABBA DORCAS', '08064004369', 'FETHA II CTCS', 5, '700.00', '3500.00', 12, 1, 'AUT-00353', 971, '2022-01-26'),
-(113, '2022-01-26 06:20:07.573667', '2022-01-26 06:20:07.573667', '20221265219', 'IFEOMA AGBOWO MARY', '08064004360', 'FETHA II CTCS', 7, '2300.00', '16100.00', 12, 1, 'AUT-00354', 917, '2022-01-26'),
-(114, '2022-01-26 06:20:07.776533', '2022-01-26 06:20:07.777532', '20221265219', 'IFEOMA AGBOWO MARY', '08064004360', 'FETHA II CTCS', 1, '3500.00', '3500.00', 12, 1, 'AUT-00354', 922, '2022-01-26');
+INSERT INTO `cooperative_daily_sales` (`id`, `created_at`, `updated_at`, `ticket`, `name`, `phone_no`, `address`, `quantity`, `unit_selling_price`, `total`, `processed_by_id`, `status_id`, `receipt`, `product_id`, `tdate`, `sales_category_id`) VALUES
+(216, '2022-01-28 16:47:35.004928', '2022-01-28 16:47:35.004928', '2022000027', 'Anonymous', 'Anonymous', 'Anonymous', 5, '2300.00', '11500.00', 12, 2, 'AUT-00430', 917, '2022-01-28', 1),
+(217, '2022-01-28 16:47:35.151543', '2022-01-28 16:47:35.151543', '2022000027', 'Anonymous', 'Anonymous', 'Anonymous', 5, '1200.00', '6000.00', 12, 2, 'AUT-00430', 918, '2022-01-28', 1),
+(218, '2022-01-28 16:47:35.324442', '2022-01-28 16:47:35.325442', '2022000027', 'Anonymous', 'Anonymous', 'Anonymous', 7, '2650.00', '18550.00', 12, 2, 'AUT-00430', 919, '2022-01-28', 1),
+(219, '2022-01-28 16:47:58.394678', '2022-01-28 16:47:58.394678', '2022000028', 'Anonymous', 'Anonymous', 'Anonymous', 2, '950.00', '1900.00', 12, 2, 'AUT-00431', 926, '2022-01-28', 1),
+(220, '2022-01-28 16:48:33.888213', '2022-01-28 16:48:33.888213', '2022000029', 'Benjamin', '08064004355', 'Abakaliki', 3, '950.00', '2850.00', 12, 2, 'AUT-00432', 925, '2022-01-28', 1),
+(221, '2022-01-28 16:48:33.987411', '2022-01-28 16:48:33.987411', '2022000029', 'Benjamin', '08064004355', 'Abakaliki', 2, '1200.00', '2400.00', 12, 2, 'AUT-00432', 921, '2022-01-28', 1),
+(222, '2022-01-28 16:48:53.834145', '2022-01-28 16:48:53.834145', '2022000030', 'Anonymous', 'Anonymous', 'Anonymous', 4, '2050.00', '8200.00', 12, 2, 'AUT-00433', 923, '2022-01-28', 1),
+(223, '2022-01-28 16:49:33.274790', '2022-01-28 16:49:33.274790', '2022000031', 'BEN IDAKA MAUREEN', '08064004355', 'Abakaliki', 4, '3500.00', '14000.00', 12, 2, 'AUT-00434', 922, '2022-01-28', 1),
+(224, '2022-01-28 16:49:33.598189', '2022-01-28 16:49:33.598189', '2022000031', 'BEN IDAKA MAUREEN', '08064004355', 'Abakaliki', 4, '350.00', '1400.00', 12, 2, 'AUT-00434', 946, '2022-01-28', 1),
+(225, '2022-01-28 16:51:11.730173', '2022-01-28 16:51:11.730173', '2022000032', 'OKOLI UCHENNA OBIA', '08064004356', 'FETHA II CTCS', 5, '950.00', '4750.00', 12, 2, 'AUT-00435', 924, '2022-01-28', 2),
+(226, '2022-01-28 16:51:12.323225', '2022-01-28 16:51:12.323225', '2022000032', 'OKOLI UCHENNA OBIA', '08064004356', 'FETHA II CTCS', 5, '150.00', '750.00', 12, 2, 'AUT-00435', 1024, '2022-01-28', 2),
+(227, '2022-01-28 19:32:17.745542', '2022-01-28 19:32:17.745542', '2022000033', 'IDAKA BEN MAUREEN', '08064004355', 'Abakaliki', 7, '950.00', '6650.00', 12, 1, 'AUT-00437', 925, '2022-01-28', 2);
 
 -- --------------------------------------------------------
 
@@ -1305,8 +1396,8 @@ CREATE TABLE `cooperative_daily_sales_cash_flow_summary` (
 --
 
 INSERT INTO `cooperative_daily_sales_cash_flow_summary` (`id`, `created_at`, `updated_at`, `description`, `amount`, `processed_by_id`, `sales_category_id`, `status_id`, `tdate`) VALUES
-(13, '2022-01-26 06:36:49.122791', '2022-01-26 06:36:49.122791', 'CASH SALES', '17700.00', 12, 1, 1, '2022-01-26'),
-(14, '2022-01-26 06:36:49.354959', '2022-01-26 06:36:49.354959', 'CREDIT SALES', '29100.00', 12, 2, 1, '2022-01-26');
+(25, '2022-01-28 16:51:54.134131', '2022-01-28 16:51:54.134131', 'CASH SALES', '66800.00', 12, 1, 1, '2022-01-28'),
+(26, '2022-01-28 16:51:54.255345', '2022-01-28 16:51:54.255345', 'CREDIT SALES', '5500.00', 12, 2, 1, '2022-01-28');
 
 -- --------------------------------------------------------
 
@@ -1321,7 +1412,6 @@ CREATE TABLE `cooperative_daily_sales_summary` (
   `receipt` varchar(255) NOT NULL,
   `amount` decimal(20,2) NOT NULL,
   `sale_id` int(11) DEFAULT NULL,
-  `sales_category_id` int(11) DEFAULT NULL,
   `status_id` int(11) DEFAULT NULL,
   `tdate` date NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -1330,17 +1420,14 @@ CREATE TABLE `cooperative_daily_sales_summary` (
 -- Dumping data for table `cooperative_daily_sales_summary`
 --
 
-INSERT INTO `cooperative_daily_sales_summary` (`id`, `created_at`, `updated_at`, `receipt`, `amount`, `sale_id`, `sales_category_id`, `status_id`, `tdate`) VALUES
-(49, '2022-01-26 04:30:16.555969', '2022-01-26 04:30:16.555969', 'AUT-00344', '1750.00', 98, 1, 2, '2022-01-26'),
-(50, '2022-01-26 04:32:05.898284', '2022-01-26 04:32:05.898284', 'AUT-00345', '3600.00', 101, 1, 2, '2022-01-26'),
-(51, '2022-01-26 04:34:54.963568', '2022-01-26 04:34:54.963568', 'AUT-00346', '350.00', 102, 1, 2, '2022-01-26'),
-(52, '2022-01-26 04:37:29.297157', '2022-01-26 04:37:29.297157', 'AUT-347', '2100.00', 104, 1, 1, '2022-01-26'),
-(53, '2022-01-26 04:53:11.887640', '2022-01-26 04:53:11.887640', 'AUT-348', '700.00', 106, 1, 2, '2022-01-26'),
-(54, '2022-01-26 04:54:20.866938', '2022-01-26 04:54:20.866938', 'AUT-349', '6900.00', 108, 1, 2, '2022-01-26'),
-(55, '2022-01-26 04:55:18.010484', '2022-01-26 04:55:18.010484', 'AUT-350', '1500.00', 108, 1, 2, '2022-01-26'),
-(56, '2022-01-26 04:58:54.483661', '2022-01-26 04:58:54.483661', 'AUT-351', '2900.00', 108, 1, 2, '2022-01-26'),
-(57, '2022-01-26 05:37:24.665157', '2022-01-26 05:37:24.665157', 'AUT-00353', '9500.00', 111, 2, 2, '2022-01-26'),
-(58, '2022-01-26 06:20:08.020429', '2022-01-26 06:20:08.020429', 'AUT-00354', '19600.00', 113, 2, 2, '2022-01-26');
+INSERT INTO `cooperative_daily_sales_summary` (`id`, `created_at`, `updated_at`, `receipt`, `amount`, `sale_id`, `status_id`, `tdate`) VALUES
+(120, '2022-01-28 16:47:35.382535', '2022-01-28 16:47:35.382535', 'AUT-00430', '36050.00', 216, 2, '2022-01-28'),
+(121, '2022-01-28 16:47:58.584497', '2022-01-28 16:47:58.584497', 'AUT-00431', '1900.00', 219, 2, '2022-01-28'),
+(122, '2022-01-28 16:48:34.141310', '2022-01-28 16:48:34.141310', 'AUT-00432', '5250.00', 220, 2, '2022-01-28'),
+(123, '2022-01-28 16:48:53.887440', '2022-01-28 16:48:53.887440', 'AUT-00433', '8200.00', 222, 2, '2022-01-28'),
+(124, '2022-01-28 16:49:33.704087', '2022-01-28 16:49:33.704087', 'AUT-00434', '15400.00', 223, 2, '2022-01-28'),
+(125, '2022-01-28 16:51:12.542969', '2022-01-28 16:51:12.542969', 'AUT-00435', '5500.00', 225, 2, '2022-01-28'),
+(126, '2022-01-28 19:32:17.957408', '2022-01-28 19:32:17.957408', 'AUT-00437', '6650.00', 227, 1, '2022-01-28');
 
 -- --------------------------------------------------------
 
@@ -1376,6 +1463,48 @@ INSERT INTO `cooperative_datejoineduploadstatus` (`id`, `title`, `created_at`, `
 (1, 'PENDING', '2021-12-07 19:08:57.497360', '2021-12-07 19:08:57.497360'),
 (2, 'UPLOADED', '2021-12-07 19:08:57.531401', '2021-12-07 19:08:57.531401'),
 (3, 'VERIFIED', '2021-12-07 19:08:57.688625', '2021-12-07 19:08:57.688625');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `cooperative_day_end_desk_office_transactions`
+--
+
+CREATE TABLE `cooperative_day_end_desk_office_transactions` (
+  `id` int(11) NOT NULL,
+  `created_at` datetime(6) NOT NULL,
+  `updated_at` datetime(6) NOT NULL,
+  `description` varchar(255) NOT NULL,
+  `amount` decimal(20,2) NOT NULL,
+  `tdate` date NOT NULL,
+  `processed_by_id` bigint(20) DEFAULT NULL,
+  `status_id` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `cooperative_day_end_desk_office_transactions`
+--
+
+INSERT INTO `cooperative_day_end_desk_office_transactions` (`id`, `created_at`, `updated_at`, `description`, `amount`, `tdate`, `processed_by_id`, `status_id`) VALUES
+(2, '2022-01-30 19:49:58.552966', '2022-01-30 19:49:58.552966', 'MEMBERSHIP FORM SALES', '15600.00', '2022-01-30', 9, 1);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `cooperative_day_end_sales_transactions`
+--
+
+CREATE TABLE `cooperative_day_end_sales_transactions` (
+  `id` int(11) NOT NULL,
+  `created_at` datetime(6) NOT NULL,
+  `updated_at` datetime(6) NOT NULL,
+  `description` varchar(255) NOT NULL,
+  `amount` decimal(20,2) NOT NULL,
+  `tdate` date NOT NULL,
+  `processed_by_id` bigint(20) DEFAULT NULL,
+  `sales_category_id` int(11) DEFAULT NULL,
+  `status_id` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -1604,6 +1733,26 @@ INSERT INTO `cooperative_gender` (`id`, `title`, `created_at`, `updated_at`) VAL
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `cooperative_generalticket`
+--
+
+CREATE TABLE `cooperative_generalticket` (
+  `id` int(11) NOT NULL,
+  `created_at` datetime(6) NOT NULL,
+  `updated_at` datetime(6) NOT NULL,
+  `ticket` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `cooperative_generalticket`
+--
+
+INSERT INTO `cooperative_generalticket` (`id`, `created_at`, `updated_at`, `ticket`) VALUES
+(1, '2022-01-27 16:13:07.000000', '2022-01-28 19:29:05.854479', 2022000034);
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `cooperative_general_cash_sales_selected`
 --
 
@@ -1699,15 +1848,16 @@ CREATE TABLE `cooperative_itemwriteoff` (
   `updated_at` datetime(6) NOT NULL,
   `processed_by_id` bigint(20) NOT NULL,
   `product_id` int(11) NOT NULL,
-  `status_id` int(11) NOT NULL
+  `status_id` int(11) NOT NULL,
+  `tdate` date NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `cooperative_itemwriteoff`
 --
 
-INSERT INTO `cooperative_itemwriteoff` (`id`, `created_at`, `updated_at`, `processed_by_id`, `product_id`, `status_id`) VALUES
-(5, '2022-01-22 07:33:51.117824', '2022-01-22 07:33:51.117824', 12, 1, 2);
+INSERT INTO `cooperative_itemwriteoff` (`id`, `created_at`, `updated_at`, `processed_by_id`, `product_id`, `status_id`, `tdate`) VALUES
+(5, '2022-01-22 07:33:51.117824', '2022-01-22 07:33:51.117824', 12, 1, 2, '2022-01-28');
 
 -- --------------------------------------------------------
 
@@ -1750,15 +1900,17 @@ CREATE TABLE `cooperative_itemwriteofftemp` (
   `processed_by_id` bigint(20) NOT NULL,
   `product_id` int(11) NOT NULL,
   `reason_id` int(11) NOT NULL,
-  `status_id` int(11) NOT NULL
+  `status_id` int(11) NOT NULL,
+  `tdate` date NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `cooperative_itemwriteofftemp`
 --
 
-INSERT INTO `cooperative_itemwriteofftemp` (`id`, `created_at`, `updated_at`, `quantity`, `cost_price`, `total_cost`, `approval_status_id`, `processed_by_id`, `product_id`, `reason_id`, `status_id`) VALUES
-(1, '2022-01-22 07:21:58.356695', '2022-01-22 07:33:51.278413', 5, '2000.00', '10000.00', 2, 12, 917, 1, 2);
+INSERT INTO `cooperative_itemwriteofftemp` (`id`, `created_at`, `updated_at`, `quantity`, `cost_price`, `total_cost`, `approval_status_id`, `processed_by_id`, `product_id`, `reason_id`, `status_id`, `tdate`) VALUES
+(1, '2022-01-22 07:21:58.356695', '2022-01-22 07:33:51.278413', 5, '2000.00', '10000.00', 2, 12, 917, 1, 2, '2022-01-28'),
+(2, '2022-01-28 12:43:58.361275', '2022-01-28 12:45:13.154372', 2, '2000.00', '4000.00', 1, 12, 917, 1, 1, '2022-01-28');
 
 -- --------------------------------------------------------
 
@@ -2581,7 +2733,8 @@ CREATE TABLE `cooperative_loanapplication` (
   `nok_id` int(11) DEFAULT NULL,
   `processed_by_id` bigint(20) DEFAULT NULL,
   `submission_status_id` int(11) NOT NULL,
-  `transaction_status_id` int(11) NOT NULL
+  `transaction_status_id` int(11) NOT NULL,
+  `tdate` date NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -2671,8 +2824,17 @@ CREATE TABLE `cooperative_loanformissuance` (
   `admin_charge` decimal(20,2) NOT NULL,
   `applicant_id` int(11) DEFAULT NULL,
   `processing_status_id` int(11) NOT NULL,
-  `status_id` int(11) NOT NULL
+  `status_id` int(11) NOT NULL,
+  `tdate` date NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `cooperative_loanformissuance`
+--
+
+INSERT INTO `cooperative_loanformissuance` (`id`, `created_at`, `updated_at`, `receipt`, `admin_charge`, `applicant_id`, `processing_status_id`, `status_id`, `tdate`) VALUES
+(1, '2022-01-30 21:26:19.792874', '2022-01-30 21:26:19.792874', 'C-00444', '1000.00', 2, 1, 1, '2022-01-30'),
+(2, '2022-01-31 02:20:51.666002', '2022-01-31 02:20:51.666002', '00004', '2000.00', 4, 1, 1, '2022-01-31');
 
 -- --------------------------------------------------------
 
@@ -2754,15 +2916,17 @@ CREATE TABLE `cooperative_loanrequest` (
   `member_id` int(11) DEFAULT NULL,
   `processed_by_id` bigint(20) DEFAULT NULL,
   `submission_status_id` int(11) NOT NULL,
-  `transaction_status_id` int(11) NOT NULL
+  `transaction_status_id` int(11) NOT NULL,
+  `tdate` date NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `cooperative_loanrequest`
 --
 
-INSERT INTO `cooperative_loanrequest` (`id`, `created_at`, `updated_at`, `loan_amount`, `approved_amount`, `comment`, `certification_comment`, `certification_date`, `approval_comment`, `approval_date`, `approval_officer_id`, `approval_status_id`, `certification_officer_id`, `certification_status_id`, `loan_id`, `member_id`, `processed_by_id`, `submission_status_id`, `transaction_status_id`) VALUES
-(1, '2021-12-16 10:58:44.176434', '2021-12-16 10:58:44.176434', '50000.00', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, 1, 8, 152, 9, 1, 1);
+INSERT INTO `cooperative_loanrequest` (`id`, `created_at`, `updated_at`, `loan_amount`, `approved_amount`, `comment`, `certification_comment`, `certification_date`, `approval_comment`, `approval_date`, `approval_officer_id`, `approval_status_id`, `certification_officer_id`, `certification_status_id`, `loan_id`, `member_id`, `processed_by_id`, `submission_status_id`, `transaction_status_id`, `tdate`) VALUES
+(2, '2022-01-30 20:22:20.166301', '2022-01-30 21:26:19.935810', '50000.00', '50000.00', 'FOR YOUR CONSIDERATION', 'ok', '2022-01-30', 'ok', '2022-01-30', 9, 2, 3, 2, 8, 151, 9, 2, 2, '2022-01-30'),
+(4, '2022-01-31 01:44:55.330227', '2022-01-31 02:20:51.799937', '200000.00', '200000.00', 'FOR YOUR CONSIDERATION', 'CERTIFIED', '2022-01-31', '', '2022-01-31', 13, 2, 4, 2, 9, 153, 9, 2, 2, '2022-01-31');
 
 -- --------------------------------------------------------
 
@@ -2786,7 +2950,8 @@ CREATE TABLE `cooperative_loanrequestattachments` (
 --
 
 INSERT INTO `cooperative_loanrequestattachments` (`id`, `created_at`, `updated_at`, `description`, `image`, `applicant_id`, `processed_by_id`, `status_id`) VALUES
-(1, '2021-12-16 12:57:59.578505', '2021-12-16 12:57:59.578505', 'Payslip nov 2021', '/media/icons_9oX5Oa9.png', 1, 9, 1);
+(2, '2022-01-30 20:24:42.686524', '2022-01-30 20:24:42.686524', 'payslip for december 2021', '/media/avatar04_C6ymq40.png', 2, 9, 1),
+(4, '2022-01-31 01:45:09.306286', '2022-01-31 01:45:09.306286', 'payslip for december 2021', '/media/avatar5_Amrv3DY.png', 4, 9, 1);
 
 -- --------------------------------------------------------
 
@@ -2804,6 +2969,63 @@ CREATE TABLE `cooperative_loanrequestsettings` (
   `applicant_id` int(11) DEFAULT NULL,
   `status_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `cooperative_loanrequestsettings`
+--
+
+INSERT INTO `cooperative_loanrequestsettings` (`id`, `created_at`, `updated_at`, `description`, `value`, `category`, `applicant_id`, `status_id`) VALUES
+(1, '2022-01-30 20:28:50.219172', '2022-01-30 20:28:50.219172', 'GROSS PAY', '250000.00', 'ANALYSIS', 2, 1),
+(2, '2022-01-30 20:28:50.284130', '2022-01-30 20:28:50.285128', 'SALARY BALANCE AFTER DEDUCTIONS', '215000.0', 'ANALYSIS', 2, 1),
+(3, '2022-01-30 20:28:50.339089', '2022-01-30 20:28:50.339089', 'SHORT TERM LOAN', '50000.00', 'ANALYSIS', 2, 1),
+(4, '2022-01-30 20:28:50.460817', '2022-01-30 20:28:50.460817', 'MONTHLY DEDUCTIONS', '35000.00', 'ANALYSIS', 2, 1),
+(5, '2022-01-30 20:28:50.590280', '2022-01-30 20:28:50.590280', 'MONTHLY LOAN REPAYMENTS', '0', 'ANALYSIS', 2, 1),
+(6, '2022-01-30 20:28:50.639285', '2022-01-30 20:28:50.639285', 'COOPERATIVE SHOP', '0', 'ANALYSIS', 2, 1),
+(7, '2022-01-30 20:28:50.695988', '2022-01-30 20:28:50.695988', 'EXTERNAL FASCILITIES', '0', 'ANALYSIS', 2, 1),
+(8, '2022-01-30 20:28:50.739625', '2022-01-30 20:28:50.739625', 'LOAN DURATION', '3 MONTHS', 'ANALYSIS', 2, 1),
+(9, '2022-01-30 20:28:50.771866', '2022-01-30 20:28:50.771866', 'SALARY LOAN RELATIONSHIP', '35%', 'ANALYSIS', 2, 1),
+(10, '2022-01-30 20:28:50.828480', '2022-01-30 20:28:50.828480', 'SALARY LOAN RELATIONSHIP COMPUTED', '75250.0', 'ANALYSIS', 2, 1),
+(11, '2022-01-30 20:28:50.884026', '2022-01-30 20:28:50.884026', 'LOAN AGE', '6 MONTHS', 'ANALYSIS', 2, 1),
+(12, '2022-01-30 20:28:50.939632', '2022-01-30 20:28:50.939632', 'DATE JOINED', '2020-01-01', 'ANALYSIS', 2, 1),
+(13, '2022-01-30 20:28:50.981356', '2022-01-30 20:28:50.981356', 'MEMBER AGE', '24MONTH(S)', 'ANALYSIS', 2, 1),
+(14, '2022-01-30 20:28:51.006975', '2022-01-30 20:28:51.006975', 'LOAN INTEREST RATE', '5%', 'ANALYSIS', 2, 1),
+(15, '2022-01-30 20:28:51.060984', '2022-01-30 20:28:51.060984', 'INTEREST DEDUCTION', 'SPREAD', 'ANALYSIS', 2, 1),
+(16, '2022-01-30 20:28:51.094925', '2022-01-30 20:28:51.094925', 'LOAN INTEREST', '2500.0', 'ANALYSIS', 2, 1),
+(17, '2022-01-30 20:28:51.127693', '2022-01-30 20:28:51.127693', 'AMOUNT SCHEDULED', '52500.0', 'ANALYSIS', 2, 1),
+(18, '2022-01-30 20:28:51.161635', '2022-01-30 20:28:51.161635', 'MONTHLY REPAYMENT', '17500.0', 'ANALYSIS', 2, 1),
+(19, '2022-01-30 20:28:51.205767', '2022-01-30 20:28:51.205767', 'LOAN BASED SAVINGS', 'PROJECT SAVINGS', 'ANALYSIS', 2, 1),
+(20, '2022-01-30 20:28:51.240986', '2022-01-30 20:28:51.240986', 'LOAN BASED SAVINGS RATE', '35%', 'ANALYSIS', 2, 1),
+(21, '2022-01-30 20:28:51.273131', '2022-01-30 20:28:51.273131', 'MEMBER STATUS', 'True', 'SUMMARY', 2, 1),
+(22, '2022-01-30 20:28:51.306208', '2022-01-30 20:28:51.306208', 'EXCLUSIVE STATUS', 'EXCLUSIVE', 'SUMMARY', 2, 1),
+(23, '2022-01-30 20:28:51.339913', '2022-01-30 20:28:51.339913', 'SAME LOAN TYPE', 'False', 'SUMMARY', 2, 1),
+(24, '2022-01-30 20:28:51.385005', '2022-01-30 20:28:51.385005', 'SALARY STATUS', 'True', 'SUMMARY', 2, 1),
+(25, '2022-01-30 20:28:51.428978', '2022-01-30 20:28:51.428978', 'LOAN SAVINGS BASED STATUS', 'True', 'SUMMARY', 2, 1),
+(52, '2022-01-31 01:46:58.130192', '2022-01-31 01:46:58.130192', 'GROSS PAY', '190000.00', 'ANALYSIS', 4, 1),
+(53, '2022-01-31 01:46:58.207265', '2022-01-31 01:46:58.207265', 'SALARY BALANCE AFTER DEDUCTIONS', '179000.0', 'ANALYSIS', 4, 1),
+(54, '2022-01-31 01:46:58.265320', '2022-01-31 01:46:58.265320', 'LONG TERM LOAN', '200000.00', 'ANALYSIS', 4, 1),
+(55, '2022-01-31 01:46:58.329089', '2022-01-31 01:46:58.329089', 'MONTHLY DEDUCTIONS', '11000.00', 'ANALYSIS', 4, 1),
+(56, '2022-01-31 01:46:58.396042', '2022-01-31 01:46:58.396042', 'MONTHLY LOAN REPAYMENTS', '0', 'ANALYSIS', 4, 1),
+(57, '2022-01-31 01:46:58.539865', '2022-01-31 01:46:58.539865', 'COOPERATIVE SHOP', '0', 'ANALYSIS', 4, 1),
+(58, '2022-01-31 01:46:58.595380', '2022-01-31 01:46:58.596266', 'EXTERNAL FASCILITIES', '0', 'ANALYSIS', 4, 1),
+(59, '2022-01-31 01:46:58.773658', '2022-01-31 01:46:58.774663', 'LOAN DURATION', '24 MONTHS', 'ANALYSIS', 4, 1),
+(60, '2022-01-31 01:46:59.184453', '2022-01-31 01:46:59.184453', 'SALARY LOAN RELATIONSHIP', '65%', 'ANALYSIS', 4, 1),
+(61, '2022-01-31 01:46:59.239536', '2022-01-31 01:46:59.239536', 'SALARY LOAN RELATIONSHIP COMPUTED', '116350.0', 'ANALYSIS', 4, 1),
+(62, '2022-01-31 01:46:59.309596', '2022-01-31 01:46:59.309596', 'LOAN AGE', '6 MONTHS', 'ANALYSIS', 4, 1),
+(63, '2022-01-31 01:46:59.376784', '2022-01-31 01:46:59.376784', 'DATE JOINED', '2020-01-01', 'ANALYSIS', 4, 1),
+(64, '2022-01-31 01:46:59.451079', '2022-01-31 01:46:59.451079', 'MEMBER AGE', '24MONTH(S)', 'ANALYSIS', 4, 1),
+(65, '2022-01-31 01:46:59.530078', '2022-01-31 01:46:59.530078', 'LOAN INTEREST RATE', '5%', 'ANALYSIS', 4, 1),
+(66, '2022-01-31 01:46:59.596960', '2022-01-31 01:46:59.596960', 'INTEREST DEDUCTION', 'SOURCE', 'ANALYSIS', 4, 1),
+(67, '2022-01-31 01:46:59.651030', '2022-01-31 01:46:59.651030', 'LOAN INTEREST', '10000.0', 'ANALYSIS', 4, 1),
+(68, '2022-01-31 01:46:59.729063', '2022-01-31 01:46:59.729063', 'AMOUNT SCHEDULED', '210000.0', 'ANALYSIS', 4, 1),
+(69, '2022-01-31 01:46:59.796003', '2022-01-31 01:46:59.796003', 'MONTHLY REPAYMENT', '8750.0', 'ANALYSIS', 4, 1),
+(70, '2022-01-31 01:46:59.850969', '2022-01-31 01:46:59.851969', 'LOAN BASED SAVINGS', 'PROJECT SAVINGS', 'ANALYSIS', 4, 1),
+(71, '2022-01-31 01:46:59.887314', '2022-01-31 01:46:59.887314', 'AMOUNT SAVED', '#250000.00', 'ANALYSIS', 4, 1),
+(72, '2022-01-31 01:46:59.952098', '2022-01-31 01:46:59.952098', 'LOAN BASED SAVINGS RATE', '35%', 'ANALYSIS', 4, 1),
+(73, '2022-01-31 01:47:00.002213', '2022-01-31 01:47:00.002213', 'MEMBER STATUS', 'True', 'SUMMARY', 4, 1),
+(74, '2022-01-31 01:47:00.054176', '2022-01-31 01:47:00.054176', 'EXCLUSIVE STATUS', 'EXCLUSIVE', 'SUMMARY', 4, 1),
+(75, '2022-01-31 01:47:00.121137', '2022-01-31 01:47:00.121137', 'SAME LOAN TYPE', 'False', 'SUMMARY', 4, 1),
+(76, '2022-01-31 01:47:00.165108', '2022-01-31 01:47:00.165108', 'SALARY STATUS', 'True', 'SUMMARY', 4, 1),
+(77, '2022-01-31 01:47:00.210084', '2022-01-31 01:47:00.210084', 'LOAN SAVINGS BASED STATUS', 'True', 'SUMMARY', 4, 1);
 
 -- --------------------------------------------------------
 
@@ -2838,7 +3060,8 @@ CREATE TABLE `cooperative_loanscleared` (
   `updated_at` datetime(6) NOT NULL,
   `loan_id` int(11) DEFAULT NULL,
   `processed_by_id` bigint(20) DEFAULT NULL,
-  `status_id` int(11) DEFAULT NULL
+  `status_id` int(11) DEFAULT NULL,
+  `tdate` date NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -2867,16 +3090,9 @@ CREATE TABLE `cooperative_loansdisbursed` (
   `processed_by_id` bigint(20) DEFAULT NULL,
   `schedule_status_id` int(11) NOT NULL,
   `status_id` int(11) DEFAULT NULL,
-  `transaction_id` int(11) DEFAULT NULL
+  `transaction_id` int(11) DEFAULT NULL,
+  `tdate` date NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
---
--- Dumping data for table `cooperative_loansdisbursed`
---
-
-INSERT INTO `cooperative_loansdisbursed` (`id`, `created_at`, `updated_at`, `loan_number`, `loan_amount`, `repayment`, `amount_paid`, `balance`, `duration`, `interest_rate`, `interest_deduction`, `start_date`, `stop_date`, `merge_account_number`, `loan_merge_status_id`, `member_id`, `processed_by_id`, `schedule_status_id`, `status_id`, `transaction_id`) VALUES
-(1, '2021-12-13 15:42:44.060854', '2021-12-13 15:42:44.060854', '2010000120211213164200001', '105000.00', '35000.00', '70798.00', '-34202.00', 3, 5, 'SPREAD', '2021-11-01', '2022-02-01', NULL, 1, 151, 9, 1, 1, 8),
-(2, '2021-12-13 16:22:58.467739', '2021-12-13 16:22:58.468746', '2020000120211213172200002', '500000.00', '50000.00', '50000.00', '-450000.00', 3, 5, 'SOURCE', '2021-11-01', '2022-02-01', NULL, 1, 151, 9, 1, 1, 9);
 
 -- --------------------------------------------------------
 
@@ -2902,14 +3118,6 @@ CREATE TABLE `cooperative_loansrepaymentbase` (
   `status_id` int(11) DEFAULT NULL,
   `transaction_id` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
---
--- Dumping data for table `cooperative_loansrepaymentbase`
---
-
-INSERT INTO `cooperative_loansrepaymentbase` (`id`, `created_at`, `updated_at`, `loan_number`, `loan_amount`, `repayment`, `amount_paid`, `balance`, `start_date`, `stop_date`, `merged_loans`, `loan_merge_status_id`, `member_id`, `processed_by_id`, `status_id`, `transaction_id`) VALUES
-(1, '2021-12-13 15:42:44.033867', '2021-12-15 02:57:24.620762', '2010000120211213164200001', '105000.00', '35000.00', '62899.00', '-42101.00', '2021-11-01', '2022-02-01', NULL, 1, 151, 9, 1, 8),
-(2, '2021-12-13 16:22:58.394457', '2021-12-13 16:22:58.394457', '2020000120211213172200002', '500000.00', '50000.00', '50000.00', '-450000.00', '2021-11-01', '2022-02-01', NULL, 1, 151, 9, 1, 9);
 
 -- --------------------------------------------------------
 
@@ -3059,7 +3267,7 @@ CREATE TABLE `cooperative_members` (
 INSERT INTO `cooperative_members` (`id`, `created_at`, `updated_at`, `member_id`, `middle_name`, `full_name`, `phone_number`, `profile_pic`, `residential_address`, `permanent_home_address`, `file_no`, `ippis_no`, `gross_pay`, `gross_pay_as_at`, `shares`, `date_joined`, `admin_id`, `applicant_id`, `date_joined_status_id`, `department_id`, `exclusive_status_id`, `gender_id`, `gross_pay_status_id`, `lga_id`, `loan_status_id`, `salary_institution_id`, `savings_status_id`, `shares_status_id`, `state_id`, `status_id`, `title_id`, `welfare_status_id`) VALUES
 (151, '2021-12-07 21:04:28.778306', '2021-12-31 07:47:55.222933', 'FETHAII/2010/00001', 'MAUREEN', 'BEN IDAKA MAUREEN', '08064004355', '', 'Abakaliki', 'Idembia', '00001', '00001', '250000.00', 'Salary as at 12/16/2021', 0, '2020-01-01', 167, 352, 1, 1, 1, 2, 2, NULL, 2, 1, 2, 3, NULL, 1, 2, 3),
 (152, '2021-12-07 21:04:30.179870', '2022-01-10 14:39:17.122877', 'FETHAII/2011/00002', 'OBIA', 'UCHENNA OKOLI OBIA', '08064004356', '', '', '', '00002', '00002', '158000.00', 'Salary as at 01/10/2022', 0, '2020-01-01', 168, 353, 1, 1, 1, NULL, 2, NULL, 1, 1, 2, 3, NULL, 1, NULL, 3),
-(153, '2021-12-07 21:04:30.878929', '2021-12-16 11:03:24.896170', 'FETHAII/2012/00003', 'E', 'NKONYELU OKONKWO E', '08064004357', '', '', '', '00003', '00003', '190000.00', 'Salary as at 12/16/2021', 0, '2020-01-01', 169, 354, 1, NULL, 1, NULL, 2, NULL, 1, 1, 1, 3, NULL, 1, NULL, 1),
+(153, '2021-12-07 21:04:30.878929', '2022-01-30 23:53:50.379993', 'FETHAII/2012/00003', 'E', 'NKONYELU OKONKWO E', '08064004357', '', '', '', '00003', '00003', '190000.00', 'Salary as at 12/16/2021', 0, '2020-01-01', 169, 354, 1, 5, 1, NULL, 2, NULL, 1, 1, 2, 3, NULL, 1, NULL, 1),
 (154, '2021-12-07 21:04:31.628875', '2022-01-10 14:53:34.820748', 'FETHAII/2013/00004', 'CHIB', 'OPHELIA AMADI CHIB', '08064004358', '', '', '', '00004', '00004', '158000.00', 'Salary as at 01/10/2022', 0, '2020-01-01', 170, 355, 1, NULL, 1, NULL, 2, NULL, 1, 1, 1, 1, NULL, 1, NULL, 1),
 (155, '2021-12-07 21:04:32.330190', '2022-01-10 18:45:14.948229', 'FETHAII/2014/00005', 'IJEM', 'IKWUO NNACHI IJEM', '08064004359', '', '', '', '00005', '00005', '200000.00', 'Salary as at 01/10/2022', 0, '2020-01-01', 171, 356, 1, NULL, 1, NULL, 2, NULL, 1, 1, 1, 1, NULL, 1, NULL, 1),
 (156, '2021-12-07 21:04:32.917815', '2022-01-10 14:45:05.297590', 'FETHAII/2015/00006', 'MARY', 'IFEOMA AGBOWO MARY', '08064004360', '', '', '', '00006', '00006', '190000.00', 'Salary as at 01/10/2022', 0, '2020-01-01', 172, 357, 1, NULL, 1, NULL, 2, NULL, 1, 1, 1, 1, NULL, 1, NULL, 1),
@@ -3107,7 +3315,14 @@ INSERT INTO `cooperative_members` (`id`, `created_at`, `updated_at`, `member_id`
 (198, '2021-12-07 21:05:05.539143', '2021-12-07 21:05:05.792605', 'FETHAII/2021/00048', 'ELIZA', 'NGOZI ADUAKA ELIZA', '08064004402', '', '', '', '00048', '00048', '0.00', NULL, 0, '2020-01-01', 214, 399, 1, NULL, 1, NULL, 1, NULL, 1, 1, 1, 1, NULL, 1, NULL, 1),
 (199, '2021-12-07 21:05:06.294739', '2021-12-07 21:05:06.398963', 'FETHAII/2010/00049', 'ONYI', 'VIVIAN ADUAKA ONYI', '08064004403', '', '', '', '00049', '00049', '0.00', NULL, 0, '2020-01-01', 215, 400, 1, NULL, 1, NULL, 1, NULL, 1, 1, 1, 1, NULL, 1, NULL, 1),
 (200, '2021-12-07 21:05:06.841428', '2021-12-07 21:05:06.969147', 'FETHAII/2011/00050', 'PATRI', 'ADAGBA ADUWA PATRI', '08064004404', '', '', '', '00050', '00050', '0.00', NULL, 0, '2020-01-01', 216, 401, 1, NULL, 1, NULL, 1, NULL, 1, 1, 1, 1, NULL, 1, NULL, 1),
-(209, '2021-12-16 10:06:52.749052', '2021-12-16 10:06:52.879813', 'FETHAII/2021/05005', 'EDET', 'FRED EKPE EDET', '08598574455', '', '', '', '67766767', '67766767', '0.00', NULL, 0, '2021-12-16', 227, 402, 1, 17, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 7, 1);
+(209, '2021-12-16 10:06:52.749052', '2021-12-16 10:06:52.879813', 'FETHAII/2021/05005', 'EDET', 'FRED EKPE EDET', '08598574455', '', '', '', '67766767', '67766767', '0.00', NULL, 0, '2021-12-16', 227, 402, 1, 17, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 7, 1),
+(210, '2022-01-30 15:39:26.312084', '2022-01-30 15:39:27.331946', 'FETHAII/2021/05006', 'SUNDAY', 'PHILIP ALOKE SUNDAY', '08075544444', '', '', '', '5454', '545454', '0.00', NULL, 0, '2022-01-30', 228, 403, 1, 6, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 8, 1),
+(213, '2022-01-30 16:00:12.859962', '2022-01-30 16:00:12.999588', 'FETHAII/2021/05008', 'SUNDAY', 'PHILIP ALOKE SUNDAY', '08075544443', '', '', '', '345456', '345456', '0.00', NULL, 0, '2022-01-30', 231, 403, 1, 6, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 8, 1),
+(214, '2022-01-30 17:06:07.886447', '2022-01-30 17:06:08.120152', 'FETHAII/2021/05009', 'SONIA', 'CHINYERE IGWE SONIA', '08145674655', '', 'Onueke', 'Onueke', '3434554', '3434554', '0.00', NULL, 0, '2022-01-30', 232, 405, 1, 26, 1, 2, 1, 217, 1, 1, 1, 1, 11, 1, 2, 1),
+(215, '2022-01-30 17:07:19.717842', '2022-01-30 17:07:19.889198', 'FETHAII/2021/05010', 'NJOKU', 'EMEKA NJOKU NJOKU', '08608686423', '/media/avatar04_IN1TkDC.png', '', '', '233443', '233443', '0.00', NULL, 0, '2022-01-30', 233, 404, 1, 1, 1, 1, 1, 3, 1, 1, 1, 1, 1, 1, 4, 1),
+(216, '2022-01-30 17:08:21.545256', '2022-01-30 17:08:21.786705', 'FETHAII/2021/05011', 'CHIKE', 'EMMANUEL ONWE CHIKE', '08039555648', '', 'ONWE', '', '34233232', '233232', '0.00', NULL, 0, '2022-01-30', 234, 406, 1, 37, 1, 1, 1, 217, 1, 1, 1, 1, 11, 1, 8, 1),
+(217, '2022-01-30 19:51:29.981227', '2022-01-30 19:51:30.159865', 'FETHAII/2021/05012', 'PROF', 'CHUKWUMA NWEKPA PROF', '0907777789', '/media/avatar5_s1uCHvB.png', '', '', '343455', '32233232', '0.00', NULL, 0, '2022-01-30', 235, 407, 1, 2, 1, 1, 1, 217, 1, 2, 1, 1, 11, 1, 1, 1),
+(218, '2022-01-30 19:52:14.240215', '2022-01-30 19:52:14.357266', 'FETHAII/2021/05013', '', 'NWEKE AGU ', '09505857445', '/media/avatar3_grqylVq.png', '', '', '7676767', '5454541', '0.00', NULL, 0, '2022-01-30', 236, 408, 1, 1, 1, 1, 1, 15, 1, 1, 1, 1, 1, 1, 7, 1);
 
 -- --------------------------------------------------------
 
@@ -3495,7 +3710,38 @@ INSERT INTO `cooperative_membersaccountsdomain` (`id`, `created_at`, `updated_at
 (715, '2022-01-10 18:56:22.285632', '2022-01-10 18:56:22.285632', '60000005', 155, 1, 14),
 (716, '2022-01-17 04:03:15.853524', '2022-01-17 04:03:15.853524', '60000002', 152, 1, 14),
 (717, '2022-01-26 05:21:50.356926', '2022-01-26 05:21:50.356926', '60000015', 165, 1, 14),
-(718, '2022-01-26 06:19:58.509510', '2022-01-26 06:19:58.509510', '60000006', 156, 1, 14);
+(718, '2022-01-26 06:19:58.509510', '2022-01-26 06:19:58.509510', '60000006', 156, 1, 14),
+(719, '2022-01-26 10:57:29.637666', '2022-01-26 10:57:29.637666', '60000003', 153, 1, 14),
+(722, '2022-01-30 16:00:13.309378', '2022-01-30 16:00:13.309378', '70005008', 213, 1, 15),
+(723, '2022-01-30 16:00:13.485800', '2022-01-30 16:00:13.485800', '80005008', 213, 1, 17),
+(724, '2022-01-30 17:06:08.241272', '2022-01-30 17:06:08.241272', '70005009', 214, 1, 15),
+(725, '2022-01-30 17:06:08.767298', '2022-01-30 17:06:08.767298', '80005009', 214, 1, 17),
+(726, '2022-01-30 17:07:20.017210', '2022-01-30 17:07:20.017210', '70005010', 215, 1, 15),
+(727, '2022-01-30 17:07:20.348682', '2022-01-30 17:07:20.348682', '80005010', 215, 1, 17),
+(728, '2022-01-30 17:08:21.872652', '2022-01-30 17:08:21.872652', '70005011', 216, 1, 15),
+(729, '2022-01-30 17:08:22.239669', '2022-01-30 17:08:22.239669', '80005011', 216, 1, 17),
+(730, '2022-01-30 19:51:30.311974', '2022-01-30 19:51:30.311974', '70005012', 217, 1, 15),
+(731, '2022-01-30 19:51:30.866552', '2022-01-30 19:51:30.866552', '80005012', 217, 1, 17),
+(732, '2022-01-30 19:52:14.602166', '2022-01-30 19:52:14.602166', '70005013', 218, 1, 15),
+(733, '2022-01-30 19:52:14.946282', '2022-01-30 19:52:14.946282', '80005013', 218, 1, 17),
+(734, '2022-01-30 19:57:05.294275', '2022-01-30 19:57:05.294275', '10105012', 217, 1, 2),
+(735, '2022-01-30 19:57:05.347464', '2022-01-30 19:57:05.347464', '10205012', 217, 1, 3),
+(736, '2022-01-30 19:57:05.414399', '2022-01-30 19:57:05.414399', '10305012', 217, 1, 4),
+(737, '2022-01-30 19:57:05.480494', '2022-01-30 19:57:05.481495', '10405012', 217, 1, 5),
+(738, '2022-01-30 19:57:05.568931', '2022-01-30 19:57:05.568931', '10505012', 217, 1, 6),
+(739, '2022-01-30 19:57:05.602724', '2022-01-30 19:57:05.602724', '60005012', 217, 1, 14),
+(740, '2022-01-30 19:57:20.446294', '2022-01-30 19:57:20.446294', '10105011', 216, 1, 2),
+(741, '2022-01-30 19:57:20.514961', '2022-01-30 19:57:20.514961', '10205011', 216, 1, 3),
+(742, '2022-01-30 19:57:20.561142', '2022-01-30 19:57:20.561142', '10305011', 216, 1, 4),
+(743, '2022-01-30 19:57:20.609191', '2022-01-30 19:57:20.609191', '10405011', 216, 1, 5),
+(744, '2022-01-30 19:57:20.661277', '2022-01-30 19:57:20.661277', '10505011', 216, 1, 6),
+(745, '2022-01-30 19:57:20.714924', '2022-01-30 19:57:20.714924', '60005011', 216, 1, 14),
+(746, '2022-01-30 19:57:31.015563', '2022-01-30 19:57:31.015563', '10105013', 218, 1, 2),
+(747, '2022-01-30 19:57:31.081525', '2022-01-30 19:57:31.081525', '10205013', 218, 1, 3),
+(748, '2022-01-30 19:57:31.136977', '2022-01-30 19:57:31.136977', '10305013', 218, 1, 4),
+(749, '2022-01-30 19:57:31.195802', '2022-01-30 19:57:31.195802', '10405013', 218, 1, 5),
+(750, '2022-01-30 19:57:31.238899', '2022-01-30 19:57:31.238899', '10505013', 218, 1, 6),
+(751, '2022-01-30 19:57:31.270943', '2022-01-30 19:57:31.270943', '60005013', 218, 1, 14);
 
 -- --------------------------------------------------------
 
@@ -3537,18 +3783,19 @@ CREATE TABLE `cooperative_memberscashdeposits` (
   `status_id` int(11) NOT NULL,
   `receipt` varchar(255) DEFAULT NULL,
   `account_number` varchar(255) DEFAULT NULL,
-  `transaction_id` int(11) DEFAULT NULL
+  `transaction_id` int(11) DEFAULT NULL,
+  `tdate` date NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `cooperative_memberscashdeposits`
 --
 
-INSERT INTO `cooperative_memberscashdeposits` (`id`, `created_at`, `updated_at`, `amount`, `payment_reference`, `purpose`, `payment_evidience`, `payment_date`, `bank_accounts_id`, `member_id`, `processed_by_id`, `status_id`, `receipt`, `account_number`, `transaction_id`) VALUES
-(16, '2021-12-15 03:37:04.354161', '2021-12-15 03:37:04.355161', '3600.00', 'tttrrrr', 'rttrtrtr', '/media/avatar2_tBNcWrS.png', '2021-12-15', 1, 151, 9, 1, '00001', '80000001', 17),
-(17, '2021-12-15 04:29:50.031630', '2021-12-15 04:29:50.031630', '190000.00', '666656544', 'ok', '/media/photo1_GZU0MnQ.png', '2021-12-15', 1, 151, 9, 1, '00006', '70000001', 17),
-(18, '2021-12-15 04:52:04.715359', '2021-12-15 04:52:04.715359', '50000.00', 'fgfg', 'yttyty', '/media/avatar5_ljXmDcM.png', '2021-12-15', 1, 151, 9, 1, 'C-00269', '70000001', 15),
-(21, '2021-12-16 10:56:30.739991', '2021-12-16 10:56:30.739991', '50000.00', '5656565656', '5 share(s) at a unit cost 10000.00', '/media/photo2_9odETzV.png', '2021-12-16', 1, 152, 9, 1, 'C-00281', '70000002', 15);
+INSERT INTO `cooperative_memberscashdeposits` (`id`, `created_at`, `updated_at`, `amount`, `payment_reference`, `purpose`, `payment_evidience`, `payment_date`, `bank_accounts_id`, `member_id`, `processed_by_id`, `status_id`, `receipt`, `account_number`, `transaction_id`, `tdate`) VALUES
+(16, '2021-12-15 03:37:04.354161', '2021-12-15 03:37:04.355161', '3600.00', 'tttrrrr', 'rttrtrtr', '/media/avatar2_tBNcWrS.png', '2021-12-15', 1, 151, 9, 1, '00001', '80000001', 17, '2022-01-29'),
+(17, '2021-12-15 04:29:50.031630', '2021-12-15 04:29:50.031630', '190000.00', '666656544', 'ok', '/media/photo1_GZU0MnQ.png', '2021-12-15', 1, 151, 9, 1, '00006', '70000001', 17, '2022-01-29'),
+(18, '2021-12-15 04:52:04.715359', '2021-12-15 04:52:04.715359', '50000.00', 'fgfg', 'yttyty', '/media/avatar5_ljXmDcM.png', '2021-12-15', 1, 151, 9, 1, 'C-00269', '70000001', 15, '2022-01-29'),
+(21, '2021-12-16 10:56:30.739991', '2021-12-16 10:56:30.739991', '50000.00', '5656565656', '5 share(s) at a unit cost 10000.00', '/media/photo2_9odETzV.png', '2021-12-16', 1, 152, 9, 1, 'C-00281', '70000002', 15, '2022-01-29');
 
 -- --------------------------------------------------------
 
@@ -3571,7 +3818,8 @@ CREATE TABLE `cooperative_memberscashwithdrawals` (
   `approval_status_id` int(11) NOT NULL,
   `member_id` int(11) DEFAULT NULL,
   `processed_by_id` bigint(20) DEFAULT NULL,
-  `status_id` int(11) NOT NULL
+  `status_id` int(11) NOT NULL,
+  `tdate` date NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -3599,15 +3847,16 @@ CREATE TABLE `cooperative_memberscashwithdrawalsapplication` (
   `certification_officer_id` int(11) DEFAULT NULL,
   `certification_status_id` int(11) NOT NULL,
   `certification_comment` longtext DEFAULT NULL,
-  `certification_date` date DEFAULT NULL
+  `certification_date` date DEFAULT NULL,
+  `tdate` date NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `cooperative_memberscashwithdrawalsapplication`
 --
 
-INSERT INTO `cooperative_memberscashwithdrawalsapplication` (`id`, `created_at`, `updated_at`, `amount`, `ledger_balance`, `narration`, `approved_amount`, `approval_comment`, `approval_date`, `maturity_date`, `approval_officer_id`, `approval_status_id`, `member_id`, `processed_by_id`, `status_id`, `certification_officer_id`, `certification_status_id`, `certification_comment`, `certification_date`) VALUES
-(2, '2021-12-15 04:54:35.113214', '2021-12-15 21:15:16.314518', '200000.00', '500000.00', 'for your consideration', '200000.00', 'Please Process', NULL, '2022-01-15', 4, 2, 355, 9, 2, 1, 2, NULL, '2021-12-15');
+INSERT INTO `cooperative_memberscashwithdrawalsapplication` (`id`, `created_at`, `updated_at`, `amount`, `ledger_balance`, `narration`, `approved_amount`, `approval_comment`, `approval_date`, `maturity_date`, `approval_officer_id`, `approval_status_id`, `member_id`, `processed_by_id`, `status_id`, `certification_officer_id`, `certification_status_id`, `certification_comment`, `certification_date`, `tdate`) VALUES
+(2, '2021-12-15 04:54:35.113214', '2021-12-15 21:15:16.314518', '200000.00', '500000.00', 'for your consideration', '200000.00', 'Please Process', NULL, '2022-01-15', 4, 2, 355, 9, 2, 1, 2, NULL, '2021-12-15', '2022-01-29');
 
 -- --------------------------------------------------------
 
@@ -3629,15 +3878,16 @@ CREATE TABLE `cooperative_memberscashwithdrawalsmain` (
   `member_id` int(11) DEFAULT NULL,
   `member_account_id` int(11) DEFAULT NULL,
   `processed_by_id` bigint(20) DEFAULT NULL,
-  `status_id` int(11) NOT NULL
+  `status_id` int(11) NOT NULL,
+  `tdate` date NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `cooperative_memberscashwithdrawalsmain`
 --
 
-INSERT INTO `cooperative_memberscashwithdrawalsmain` (`id`, `created_at`, `updated_at`, `payment_date`, `cheque_number`, `disbursement_date`, `channel_id`, `coop_account_id`, `disbursement_officer_id`, `disbursement_status_id`, `member_id`, `member_account_id`, `processed_by_id`, `status_id`) VALUES
-(4, '2021-12-15 21:15:16.247911', '2021-12-15 21:15:16.247911', '2021-12-15', '5654545454545454', NULL, 2, 1, 1, 1, 2, NULL, 7, 1);
+INSERT INTO `cooperative_memberscashwithdrawalsmain` (`id`, `created_at`, `updated_at`, `payment_date`, `cheque_number`, `disbursement_date`, `channel_id`, `coop_account_id`, `disbursement_officer_id`, `disbursement_status_id`, `member_id`, `member_account_id`, `processed_by_id`, `status_id`, `tdate`) VALUES
+(4, '2021-12-15 21:15:16.247911', '2021-12-15 21:15:16.247911', '2021-12-15', '5654545454545454', NULL, 2, 1, 1, 1, 2, NULL, 7, 1, '2022-01-29');
 
 -- --------------------------------------------------------
 
@@ -3655,7 +3905,8 @@ CREATE TABLE `cooperative_membersexclusiveness` (
   `approval_status_id` int(11) NOT NULL,
   `member_id` int(11) DEFAULT NULL,
   `status_id` int(11) NOT NULL,
-  `transaction_id` int(11) DEFAULT NULL
+  `transaction_id` int(11) DEFAULT NULL,
+  `tdate` date NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -3678,69 +3929,75 @@ CREATE TABLE `cooperative_membershipformsalesrecord` (
   `applicant_id` int(11) DEFAULT NULL,
   `bank_ccount_id` int(11) DEFAULT NULL,
   `processed_by_id` bigint(20) DEFAULT NULL,
-  `status_id` int(11) NOT NULL
+  `status_id` int(11) NOT NULL,
+  `tdate` date NOT NULL,
+  `total_amount` decimal(20,2) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `cooperative_membershipformsalesrecord`
 --
 
-INSERT INTO `cooperative_membershipformsalesrecord` (`id`, `created_at`, `updated_at`, `payment_reference`, `receipt`, `admin_charge`, `shares`, `share_amount`, `welfare_amount`, `image`, `applicant_id`, `bank_ccount_id`, `processed_by_id`, `status_id`) VALUES
-(352, '2021-12-07 21:04:18.681299', '2021-12-07 21:04:29.113579', NULL, 'C-00201', NULL, 0, NULL, NULL, '', 351, NULL, 9, 2),
-(353, '2021-12-07 21:04:18.880683', '2021-12-07 21:04:30.314438', NULL, 'C-00202', NULL, 0, NULL, NULL, '', 352, NULL, 9, 2),
-(354, '2021-12-07 21:04:19.729405', '2021-12-07 21:04:31.145350', NULL, 'C-00203', NULL, 0, NULL, NULL, '', 353, NULL, 9, 2),
-(355, '2021-12-07 21:04:20.050574', '2021-12-07 21:04:31.826153', NULL, 'C-00204', NULL, 0, NULL, NULL, '', 354, NULL, 9, 2),
-(356, '2021-12-07 21:04:20.183123', '2021-12-07 21:04:32.447166', NULL, 'C-00205', NULL, 0, NULL, NULL, '', 355, NULL, 9, 2),
-(357, '2021-12-07 21:04:20.306518', '2021-12-07 21:04:33.081980', NULL, 'C-00206', NULL, 0, NULL, NULL, '', 356, NULL, 9, 2),
-(358, '2021-12-07 21:04:20.521571', '2021-12-07 21:04:33.701984', NULL, 'C-00207', NULL, 0, NULL, NULL, '', 357, NULL, 9, 2),
-(359, '2021-12-07 21:04:20.714125', '2021-12-07 21:04:34.624125', NULL, 'C-00208', NULL, 0, NULL, NULL, '', 358, NULL, 9, 2),
-(360, '2021-12-07 21:04:20.848571', '2021-12-07 21:04:35.637246', NULL, 'C-00209', NULL, 0, NULL, NULL, '', 359, NULL, 9, 2),
-(361, '2021-12-07 21:04:20.982058', '2021-12-07 21:04:36.358126', NULL, 'C-00210', NULL, 0, NULL, NULL, '', 360, NULL, 9, 2),
-(362, '2021-12-07 21:04:21.161165', '2021-12-07 21:04:37.149241', NULL, 'C-00211', NULL, 0, NULL, NULL, '', 361, NULL, 9, 2),
-(363, '2021-12-07 21:04:21.304462', '2021-12-07 21:04:37.757097', NULL, 'C-00212', NULL, 0, NULL, NULL, '', 362, NULL, 9, 2),
-(364, '2021-12-07 21:04:21.417071', '2021-12-07 21:04:38.858041', NULL, 'C-00213', NULL, 0, NULL, NULL, '', 363, NULL, 9, 2),
-(365, '2021-12-07 21:04:21.516998', '2021-12-07 21:04:39.548057', NULL, 'C-00214', NULL, 0, NULL, NULL, '', 364, NULL, 9, 2),
-(366, '2021-12-07 21:04:21.605067', '2021-12-07 21:04:40.504331', NULL, 'C-00215', NULL, 0, NULL, NULL, '', 365, NULL, 9, 2),
-(367, '2021-12-07 21:04:21.682726', '2021-12-07 21:04:41.027371', NULL, 'C-00216', NULL, 0, NULL, NULL, '', 366, NULL, 9, 2),
-(368, '2021-12-07 21:04:22.784854', '2021-12-07 21:04:41.604609', NULL, 'C-00217', NULL, 0, NULL, NULL, '', 367, NULL, 9, 2),
-(369, '2021-12-07 21:04:23.002788', '2021-12-07 21:04:42.259777', NULL, 'C-00218', NULL, 0, NULL, NULL, '', 368, NULL, 9, 2),
-(370, '2021-12-07 21:04:23.162791', '2021-12-07 21:04:42.946586', NULL, 'C-00219', NULL, 0, NULL, NULL, '', 369, NULL, 9, 2),
-(371, '2021-12-07 21:04:23.327813', '2021-12-07 21:04:43.739150', NULL, 'C-00220', NULL, 0, NULL, NULL, '', 370, NULL, 9, 2),
-(372, '2021-12-07 21:04:23.606581', '2021-12-07 21:04:44.449216', NULL, 'C-00221', NULL, 0, NULL, NULL, '', 371, NULL, 9, 2),
-(373, '2021-12-07 21:04:23.759740', '2021-12-07 21:04:45.515722', NULL, 'C-00222', NULL, 0, NULL, NULL, '', 372, NULL, 9, 2),
-(374, '2021-12-07 21:04:23.849926', '2021-12-07 21:04:46.363664', NULL, 'C-00223', NULL, 0, NULL, NULL, '', 373, NULL, 9, 2),
-(375, '2021-12-07 21:04:24.016418', '2021-12-07 21:04:47.228020', NULL, 'C-00224', NULL, 0, NULL, NULL, '', 374, NULL, 9, 2),
-(376, '2021-12-07 21:04:24.158590', '2021-12-07 21:04:48.416451', NULL, 'C-00225', NULL, 0, NULL, NULL, '', 375, NULL, 9, 2),
-(377, '2021-12-07 21:04:24.329451', '2021-12-07 21:04:49.792254', NULL, 'C-00226', NULL, 0, NULL, NULL, '', 376, NULL, 9, 2),
-(378, '2021-12-07 21:04:24.568262', '2021-12-07 21:04:50.470453', NULL, 'C-00227', NULL, 0, NULL, NULL, '', 377, NULL, 9, 2),
-(379, '2021-12-07 21:04:24.772529', '2021-12-07 21:04:51.102369', NULL, 'C-00228', NULL, 0, NULL, NULL, '', 378, NULL, 9, 2),
-(380, '2021-12-07 21:04:24.903388', '2021-12-07 21:04:51.815421', NULL, 'C-00229', NULL, 0, NULL, NULL, '', 379, NULL, 9, 2),
-(381, '2021-12-07 21:04:25.005788', '2021-12-07 21:04:52.725121', NULL, 'C-00230', NULL, 0, NULL, NULL, '', 380, NULL, 9, 2),
-(382, '2021-12-07 21:04:25.136008', '2021-12-07 21:04:53.704255', NULL, 'C-00231', NULL, 0, NULL, NULL, '', 381, NULL, 9, 2),
-(383, '2021-12-07 21:04:25.282970', '2021-12-07 21:04:54.929382', NULL, 'C-00232', NULL, 0, NULL, NULL, '', 382, NULL, 9, 2),
-(384, '2021-12-07 21:04:25.358924', '2021-12-07 21:04:55.569347', NULL, 'C-00233', NULL, 0, NULL, NULL, '', 383, NULL, 9, 2),
-(385, '2021-12-07 21:04:25.481299', '2021-12-07 21:04:56.172955', NULL, 'C-00234', NULL, 0, NULL, NULL, '', 384, NULL, 9, 2),
-(386, '2021-12-07 21:04:25.618510', '2021-12-07 21:04:56.803717', NULL, 'C-00235', NULL, 0, NULL, NULL, '', 385, NULL, 9, 2),
-(387, '2021-12-07 21:04:25.806992', '2021-12-07 21:04:57.414915', NULL, 'C-00236', NULL, 0, NULL, NULL, '', 386, NULL, 9, 2),
-(388, '2021-12-07 21:04:25.937302', '2021-12-07 21:04:58.251036', NULL, 'C-00237', NULL, 0, NULL, NULL, '', 387, NULL, 9, 2),
-(389, '2021-12-07 21:04:26.005551', '2021-12-07 21:04:58.881736', NULL, 'C-00238', NULL, 0, NULL, NULL, '', 388, NULL, 9, 2),
-(390, '2021-12-07 21:04:26.106123', '2021-12-07 21:04:59.829274', NULL, 'C-00239', NULL, 0, NULL, NULL, '', 389, NULL, 9, 2),
-(391, '2021-12-07 21:04:26.192464', '2021-12-07 21:05:00.570960', NULL, 'C-00240', NULL, 0, NULL, NULL, '', 390, NULL, 9, 2),
-(392, '2021-12-07 21:04:26.258709', '2021-12-07 21:05:01.503170', NULL, 'C-00241', NULL, 0, NULL, NULL, '', 391, NULL, 9, 2),
-(393, '2021-12-07 21:04:26.326625', '2021-12-07 21:05:02.036763', NULL, 'C-00242', NULL, 0, NULL, NULL, '', 392, NULL, 9, 2),
-(394, '2021-12-07 21:04:26.425645', '2021-12-07 21:05:02.604156', NULL, 'C-00243', NULL, 0, NULL, NULL, '', 393, NULL, 9, 2),
-(395, '2021-12-07 21:04:26.536576', '2021-12-07 21:05:03.152238', NULL, 'C-00244', NULL, 0, NULL, NULL, '', 394, NULL, 9, 2),
-(396, '2021-12-07 21:04:26.991630', '2021-12-07 21:05:03.727371', NULL, 'C-00245', NULL, 0, NULL, NULL, '', 395, NULL, 9, 2),
-(397, '2021-12-07 21:04:27.151701', '2021-12-07 21:05:04.331143', NULL, 'C-00246', NULL, 0, NULL, NULL, '', 396, NULL, 9, 2),
-(398, '2021-12-07 21:04:27.293176', '2021-12-07 21:05:05.074302', NULL, 'C-00247', NULL, 0, NULL, NULL, '', 397, NULL, 9, 2),
-(399, '2021-12-07 21:04:27.437132', '2021-12-07 21:05:05.826225', NULL, 'C-00248', NULL, 0, NULL, NULL, '', 398, NULL, 9, 2),
-(400, '2021-12-07 21:04:27.502724', '2021-12-07 21:05:06.414669', NULL, 'C-00249', NULL, 0, NULL, NULL, '', 399, NULL, 9, 2),
-(401, '2021-12-07 21:04:27.591954', '2021-12-07 21:05:07.020286', NULL, 'C-00250', NULL, 0, NULL, NULL, '', 400, NULL, 9, 2),
-(402, '2021-12-16 07:57:07.339636', '2021-12-16 10:06:53.899807', NULL, 'C-00270', '2000.00', 1, '10000.00', '3600.00', '/media/avatar3_nNQfcxr.png', 401, 1, 9, 2),
-(403, '2021-12-16 09:09:56.459706', '2021-12-16 09:10:42.112349', NULL, 'C-00271', '2000.00', 1, '10000.00', '3600.00', '', 402, 1, 9, 1),
-(404, '2021-12-16 09:29:46.384079', '2021-12-16 09:29:46.384079', NULL, 'C-00272', '2000.00', 2, '20000.00', '3600.00', '/media/avatar_ugWZWXq.png', 403, 1, 9, 1),
-(405, '2021-12-16 09:39:48.264501', '2021-12-16 09:41:06.175172', NULL, 'C-00273', '2000.00', 2, '20000.00', '3600.00', '', 404, 1, 9, 1),
-(406, '2021-12-16 09:49:49.089608', '2021-12-16 09:49:49.089608', NULL, 'C-00274', '2000.00', 2, '20000.00', '3600.00', '/media/boxed-bg.jpg', 405, 1, 9, 1);
+INSERT INTO `cooperative_membershipformsalesrecord` (`id`, `created_at`, `updated_at`, `payment_reference`, `receipt`, `admin_charge`, `shares`, `share_amount`, `welfare_amount`, `image`, `applicant_id`, `bank_ccount_id`, `processed_by_id`, `status_id`, `tdate`, `total_amount`) VALUES
+(352, '2021-12-07 21:04:18.681299', '2021-12-07 21:04:29.113579', NULL, 'C-00201', NULL, 0, NULL, NULL, '', 351, NULL, 9, 2, '2022-01-29', NULL),
+(353, '2021-12-07 21:04:18.880683', '2021-12-07 21:04:30.314438', NULL, 'C-00202', NULL, 0, NULL, NULL, '', 352, NULL, 9, 2, '2022-01-29', NULL),
+(354, '2021-12-07 21:04:19.729405', '2021-12-07 21:04:31.145350', NULL, 'C-00203', NULL, 0, NULL, NULL, '', 353, NULL, 9, 2, '2022-01-29', NULL),
+(355, '2021-12-07 21:04:20.050574', '2021-12-07 21:04:31.826153', NULL, 'C-00204', NULL, 0, NULL, NULL, '', 354, NULL, 9, 2, '2022-01-29', NULL),
+(356, '2021-12-07 21:04:20.183123', '2021-12-07 21:04:32.447166', NULL, 'C-00205', NULL, 0, NULL, NULL, '', 355, NULL, 9, 2, '2022-01-29', NULL),
+(357, '2021-12-07 21:04:20.306518', '2021-12-07 21:04:33.081980', NULL, 'C-00206', NULL, 0, NULL, NULL, '', 356, NULL, 9, 2, '2022-01-29', NULL),
+(358, '2021-12-07 21:04:20.521571', '2021-12-07 21:04:33.701984', NULL, 'C-00207', NULL, 0, NULL, NULL, '', 357, NULL, 9, 2, '2022-01-29', NULL),
+(359, '2021-12-07 21:04:20.714125', '2021-12-07 21:04:34.624125', NULL, 'C-00208', NULL, 0, NULL, NULL, '', 358, NULL, 9, 2, '2022-01-29', NULL),
+(360, '2021-12-07 21:04:20.848571', '2021-12-07 21:04:35.637246', NULL, 'C-00209', NULL, 0, NULL, NULL, '', 359, NULL, 9, 2, '2022-01-29', NULL),
+(361, '2021-12-07 21:04:20.982058', '2021-12-07 21:04:36.358126', NULL, 'C-00210', NULL, 0, NULL, NULL, '', 360, NULL, 9, 2, '2022-01-29', NULL),
+(362, '2021-12-07 21:04:21.161165', '2021-12-07 21:04:37.149241', NULL, 'C-00211', NULL, 0, NULL, NULL, '', 361, NULL, 9, 2, '2022-01-29', NULL),
+(363, '2021-12-07 21:04:21.304462', '2021-12-07 21:04:37.757097', NULL, 'C-00212', NULL, 0, NULL, NULL, '', 362, NULL, 9, 2, '2022-01-29', NULL),
+(364, '2021-12-07 21:04:21.417071', '2021-12-07 21:04:38.858041', NULL, 'C-00213', NULL, 0, NULL, NULL, '', 363, NULL, 9, 2, '2022-01-29', NULL),
+(365, '2021-12-07 21:04:21.516998', '2021-12-07 21:04:39.548057', NULL, 'C-00214', NULL, 0, NULL, NULL, '', 364, NULL, 9, 2, '2022-01-29', NULL),
+(366, '2021-12-07 21:04:21.605067', '2021-12-07 21:04:40.504331', NULL, 'C-00215', NULL, 0, NULL, NULL, '', 365, NULL, 9, 2, '2022-01-29', NULL),
+(367, '2021-12-07 21:04:21.682726', '2021-12-07 21:04:41.027371', NULL, 'C-00216', NULL, 0, NULL, NULL, '', 366, NULL, 9, 2, '2022-01-27', NULL),
+(368, '2021-12-07 21:04:22.784854', '2021-12-07 21:04:41.604609', NULL, 'C-00217', NULL, 0, NULL, NULL, '', 367, NULL, 9, 2, '2022-01-29', NULL),
+(369, '2021-12-07 21:04:23.002788', '2021-12-07 21:04:42.259777', NULL, 'C-00218', NULL, 0, NULL, NULL, '', 368, NULL, 9, 2, '2022-01-29', NULL),
+(370, '2021-12-07 21:04:23.162791', '2021-12-07 21:04:42.946586', NULL, 'C-00219', NULL, 0, NULL, NULL, '', 369, NULL, 9, 2, '2022-01-29', NULL),
+(371, '2021-12-07 21:04:23.327813', '2021-12-07 21:04:43.739150', NULL, 'C-00220', NULL, 0, NULL, NULL, '', 370, NULL, 9, 2, '2022-01-29', NULL),
+(372, '2021-12-07 21:04:23.606581', '2021-12-07 21:04:44.449216', NULL, 'C-00221', NULL, 0, NULL, NULL, '', 371, NULL, 9, 2, '2022-01-29', NULL),
+(373, '2021-12-07 21:04:23.759740', '2021-12-07 21:04:45.515722', NULL, 'C-00222', NULL, 0, NULL, NULL, '', 372, NULL, 9, 2, '2022-01-27', NULL),
+(374, '2021-12-07 21:04:23.849926', '2021-12-07 21:04:46.363664', NULL, 'C-00223', NULL, 0, NULL, NULL, '', 373, NULL, 9, 2, '2022-01-29', NULL),
+(375, '2021-12-07 21:04:24.016418', '2021-12-07 21:04:47.228020', NULL, 'C-00224', NULL, 0, NULL, NULL, '', 374, NULL, 9, 2, '2022-01-29', NULL),
+(376, '2021-12-07 21:04:24.158590', '2021-12-07 21:04:48.416451', NULL, 'C-00225', NULL, 0, NULL, NULL, '', 375, NULL, 9, 2, '2022-01-29', NULL),
+(377, '2021-12-07 21:04:24.329451', '2021-12-07 21:04:49.792254', NULL, 'C-00226', NULL, 0, NULL, NULL, '', 376, NULL, 9, 2, '2022-01-29', NULL),
+(378, '2021-12-07 21:04:24.568262', '2021-12-07 21:04:50.470453', NULL, 'C-00227', NULL, 0, NULL, NULL, '', 377, NULL, 9, 2, '2022-01-29', NULL),
+(379, '2021-12-07 21:04:24.772529', '2021-12-07 21:04:51.102369', NULL, 'C-00228', NULL, 0, NULL, NULL, '', 378, NULL, 9, 2, '2022-01-29', NULL),
+(380, '2021-12-07 21:04:24.903388', '2021-12-07 21:04:51.815421', NULL, 'C-00229', NULL, 0, NULL, NULL, '', 379, NULL, 9, 2, '2022-01-29', NULL),
+(381, '2021-12-07 21:04:25.005788', '2021-12-07 21:04:52.725121', NULL, 'C-00230', NULL, 0, NULL, NULL, '', 380, NULL, 9, 2, '2022-01-29', NULL),
+(382, '2021-12-07 21:04:25.136008', '2021-12-07 21:04:53.704255', NULL, 'C-00231', NULL, 0, NULL, NULL, '', 381, NULL, 9, 2, '2022-01-29', NULL),
+(383, '2021-12-07 21:04:25.282970', '2021-12-07 21:04:54.929382', NULL, 'C-00232', NULL, 0, NULL, NULL, '', 382, NULL, 9, 2, '2022-01-29', NULL),
+(384, '2021-12-07 21:04:25.358924', '2021-12-07 21:04:55.569347', NULL, 'C-00233', NULL, 0, NULL, NULL, '', 383, NULL, 9, 2, '2022-01-29', NULL),
+(385, '2021-12-07 21:04:25.481299', '2021-12-07 21:04:56.172955', NULL, 'C-00234', NULL, 0, NULL, NULL, '', 384, NULL, 9, 2, '2022-01-29', NULL),
+(386, '2021-12-07 21:04:25.618510', '2021-12-07 21:04:56.803717', NULL, 'C-00235', NULL, 0, NULL, NULL, '', 385, NULL, 9, 2, '2022-01-29', NULL),
+(387, '2021-12-07 21:04:25.806992', '2021-12-07 21:04:57.414915', NULL, 'C-00236', NULL, 0, NULL, NULL, '', 386, NULL, 9, 2, '2022-01-29', NULL),
+(388, '2021-12-07 21:04:25.937302', '2021-12-07 21:04:58.251036', NULL, 'C-00237', NULL, 0, NULL, NULL, '', 387, NULL, 9, 2, '2022-01-29', NULL),
+(389, '2021-12-07 21:04:26.005551', '2021-12-07 21:04:58.881736', NULL, 'C-00238', NULL, 0, NULL, NULL, '', 388, NULL, 9, 2, '2022-01-29', NULL),
+(390, '2021-12-07 21:04:26.106123', '2021-12-07 21:04:59.829274', NULL, 'C-00239', NULL, 0, NULL, NULL, '', 389, NULL, 9, 2, '2022-01-29', NULL),
+(391, '2021-12-07 21:04:26.192464', '2021-12-07 21:05:00.570960', NULL, 'C-00240', NULL, 0, NULL, NULL, '', 390, NULL, 9, 2, '2022-01-29', NULL),
+(392, '2021-12-07 21:04:26.258709', '2021-12-07 21:05:01.503170', NULL, 'C-00241', NULL, 0, NULL, NULL, '', 391, NULL, 9, 2, '2022-01-29', NULL),
+(393, '2021-12-07 21:04:26.326625', '2021-12-07 21:05:02.036763', NULL, 'C-00242', NULL, 0, NULL, NULL, '', 392, NULL, 9, 2, '2022-01-29', NULL),
+(394, '2021-12-07 21:04:26.425645', '2021-12-07 21:05:02.604156', NULL, 'C-00243', NULL, 0, NULL, NULL, '', 393, NULL, 9, 2, '2022-01-29', NULL),
+(395, '2021-12-07 21:04:26.536576', '2021-12-07 21:05:03.152238', NULL, 'C-00244', NULL, 0, NULL, NULL, '', 394, NULL, 9, 2, '2022-01-29', NULL),
+(396, '2021-12-07 21:04:26.991630', '2021-12-07 21:05:03.727371', NULL, 'C-00245', NULL, 0, NULL, NULL, '', 395, NULL, 9, 2, '2022-01-29', NULL),
+(397, '2021-12-07 21:04:27.151701', '2021-12-07 21:05:04.331143', NULL, 'C-00246', NULL, 0, NULL, NULL, '', 396, NULL, 9, 2, '2022-01-29', NULL),
+(398, '2021-12-07 21:04:27.293176', '2021-12-07 21:05:05.074302', NULL, 'C-00247', NULL, 0, NULL, NULL, '', 397, NULL, 9, 2, '2022-01-29', NULL),
+(399, '2021-12-07 21:04:27.437132', '2021-12-07 21:05:05.826225', NULL, 'C-00248', NULL, 0, NULL, NULL, '', 398, NULL, 9, 2, '2022-01-29', NULL),
+(400, '2021-12-07 21:04:27.502724', '2021-12-07 21:05:06.414669', NULL, 'C-00249', NULL, 0, NULL, NULL, '', 399, NULL, 9, 2, '2022-01-29', NULL),
+(401, '2021-12-07 21:04:27.591954', '2021-12-07 21:05:07.020286', NULL, 'C-00250', NULL, 0, NULL, NULL, '', 400, NULL, 9, 2, '2022-01-29', NULL),
+(402, '2021-12-16 07:57:07.339636', '2021-12-16 10:06:53.899807', NULL, 'C-00270', '2000.00', 1, '10000.00', '3600.00', '/media/avatar3_nNQfcxr.png', 401, 1, 9, 2, '2022-01-29', NULL),
+(403, '2021-12-16 09:09:56.459706', '2022-01-30 16:00:13.597739', NULL, 'C-00271', '2000.00', 1, '10000.00', '3600.00', '', 402, 1, 9, 2, '2022-01-29', NULL),
+(404, '2021-12-16 09:29:46.384079', '2022-01-30 17:07:20.824867', NULL, 'C-00272', '2000.00', 2, '20000.00', '3600.00', '/media/avatar_ugWZWXq.png', 403, 1, 9, 2, '2022-01-29', NULL),
+(405, '2021-12-16 09:39:48.264501', '2022-01-30 17:06:08.918860', NULL, 'C-00273', '2000.00', 2, '20000.00', '3600.00', '', 404, 1, 9, 2, '2022-01-29', NULL),
+(406, '2021-12-16 09:49:49.089608', '2022-01-30 17:08:22.350550', NULL, 'C-00274', '2000.00', 2, '20000.00', '3600.00', '/media/boxed-bg.jpg', 405, 1, 9, 2, '2022-01-29', NULL),
+(407, '2022-01-29 23:51:51.183077', '2022-01-30 19:51:31.087750', NULL, 'C-00440', '2000.00', 1, '10000.00', '3600.00', '/media/AdminLTELogo_PU2ysIX.png', 409, 1, 9, 2, '2022-01-29', NULL),
+(408, '2022-01-29 23:52:18.465620', '2022-01-30 19:52:15.157708', NULL, 'C-00441', '2000.00', 2, '20000.00', '3600.00', '/media/avatar2_XkZhCUD.png', 406, 1, 9, 2, '2022-01-29', NULL),
+(409, '2022-01-30 00:57:44.178380', '2022-01-30 00:57:44.178380', NULL, 'C-00442', '2000.00', 1, '10000.00', '3600.00', '/media/icons_gv694xY.png', 410, 1, 9, 2, '2022-01-30', NULL),
+(410, '2022-01-30 18:19:02.082605', '2022-01-30 18:19:02.082605', '4545454', 'C-00443', '2000.00', 1, '10000.00', '3600.00', '', 411, 1, 9, 2, '2022-01-30', '15600.00');
 
 -- --------------------------------------------------------
 
@@ -3773,421 +4030,425 @@ CREATE TABLE `cooperative_membershiprequest` (
   `salary_institution_id` int(11) DEFAULT NULL,
   `submission_status_id` int(11) NOT NULL,
   `title_id` int(11) DEFAULT NULL,
-  `transaction_status_id` int(11) NOT NULL
+  `transaction_status_id` int(11) NOT NULL,
+  `tdate` date NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `cooperative_membershiprequest`
 --
 
-INSERT INTO `cooperative_membershiprequest` (`id`, `created_at`, `updated_at`, `first_name`, `last_name`, `middle_name`, `phone_number`, `certified_date`, `approval_comment`, `approved_date`, `file_no`, `ippis_no`, `year`, `member_id`, `approval_officer_id`, `approval_status_id`, `certification_officer_id`, `certification_status_id`, `department_id`, `gender_id`, `processed_by_id`, `salary_institution_id`, `submission_status_id`, `title_id`, `transaction_status_id`) VALUES
-(1, '2021-12-07 19:57:33.846414', '2021-12-07 20:27:03.659500', 'BEN', 'IDAKA', 'MAUREEN', '08064004355', NULL, NULL, NULL, '00001', '00001', '2010', 'FETHAII/2010/00001', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(2, '2021-12-07 19:57:34.137983', '2021-12-07 20:27:03.885639', 'UCHENNA', 'OKOLI', 'OBIA', '08064004356', NULL, NULL, NULL, '00002', '00002', '2011', 'FETHAII/2011/00002', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(3, '2021-12-07 19:57:34.379531', '2021-12-07 20:27:04.067026', 'NKONYELU', 'OKONKWO', 'E', '08064004357', NULL, NULL, NULL, '00003', '00003', '2012', 'FETHAII/2012/00003', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(4, '2021-12-07 19:57:34.446613', '2021-12-07 20:27:04.203510', 'OPHELIA', 'AMADI', 'CHIB', '08064004358', NULL, NULL, NULL, '00004', '00004', '2013', 'FETHAII/2013/00004', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(5, '2021-12-07 19:57:34.538384', '2021-12-07 20:27:04.322692', 'IKWUO', 'NNACHI', 'IJEM', '08064004359', NULL, NULL, NULL, '00005', '00005', '2014', 'FETHAII/2014/00005', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(6, '2021-12-07 19:57:34.630163', '2021-12-07 20:27:04.435723', 'IFEOMA', 'AGBOWO', 'MARY', '08064004360', NULL, NULL, NULL, '00006', '00006', '2015', 'FETHAII/2015/00006', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(7, '2021-12-07 19:57:34.694113', '2021-12-07 20:27:04.533953', 'DR', 'NWANKWO', 'OKUTA J', '08064004361', NULL, NULL, NULL, '00007', '00007', '2016', 'FETHAII/2016/00007', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(8, '2021-12-07 19:57:34.759076', '2021-12-07 20:27:04.801688', 'EMMANUEL', 'ABAA', '', '08064004362', NULL, NULL, NULL, '00008', '00008', '2017', 'FETHAII/2017/00008', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(9, '2021-12-07 19:57:34.904000', '2021-12-07 20:27:04.956990', 'UGO', 'ABAGHA', 'AGNES', '08064004363', NULL, NULL, NULL, '00009', '00009', '2018', 'FETHAII/2018/00009', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(10, '2021-12-07 19:57:34.996893', '2021-12-07 20:27:05.125096', 'CHIGOZI', 'ABAGHAUGWU', '', '08064004364', NULL, NULL, NULL, '00010', '00010', '2019', 'FETHAII/2019/00010', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(11, '2021-12-07 19:57:35.060923', '2021-12-07 20:27:05.292208', 'NWACHINAME', 'ABANIFI', '', '08064004365', NULL, NULL, NULL, '00011', '00011', '2020', 'FETHAII/2020/00011', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(12, '2021-12-07 19:57:35.193841', '2021-12-07 20:27:05.401753', 'NNENWAOGO', 'ABARA', 'P', '08064004366', NULL, NULL, NULL, '00012', '00012', '2021', 'FETHAII/2021/00012', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(13, '2021-12-07 19:57:35.315766', '2021-12-07 20:27:05.468998', 'LAWRENCE', 'ABARA', 'CHI', '08064004367', NULL, NULL, NULL, '00013', '00013', '2010', 'FETHAII/2010/00013', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(14, '2021-12-07 19:57:35.382478', '2021-12-07 20:27:05.603905', 'NWAKAEGO', 'ABARA', 'EUC', '08064004368', NULL, NULL, NULL, '00014', '00014', '2011', 'FETHAII/2011/00014', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(15, '2021-12-07 19:57:35.449137', '2021-12-07 20:27:05.725791', 'OBASI', 'ABBA', 'DORCAS', '08064004369', NULL, NULL, NULL, '00015', '00015', '2012', 'FETHAII/2012/00015', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(16, '2021-12-07 19:57:35.529676', '2021-12-07 20:27:06.113967', 'EFFIONG', 'ABIA', 'ANIET', '08064004370', NULL, NULL, NULL, '00016', '00016', '2013', 'FETHAII/2013/00016', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(17, '2021-12-07 19:57:35.608744', '2021-12-07 20:27:06.358179', 'NKIRUKA', 'ABIA', 'NDON', '08064004371', NULL, NULL, NULL, '00017', '00017', '2014', 'FETHAII/2014/00017', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(18, '2021-12-07 19:57:35.677422', '2021-12-07 20:27:06.447175', 'DR', 'ABIA', 'EFFIONG NDO', '08064004372', NULL, NULL, NULL, '00018', '00018', '2015', 'FETHAII/2015/00018', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(19, '2021-12-07 19:57:35.772449', '2021-12-07 20:27:06.615048', 'UGOCHI', 'ABII', 'GLORIA', '08064004373', NULL, NULL, NULL, '00019', '00019', '2016', 'FETHAII/2016/00019', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(20, '2021-12-07 19:57:35.843152', '2021-12-07 20:27:06.702353', 'ABEKE', 'ABIOLA', 'ZULAY', '08064004374', NULL, NULL, NULL, '00020', '00020', '2017', 'FETHAII/2017/00020', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(21, '2021-12-07 19:57:36.103844', '2021-12-07 20:27:06.833835', 'CHIOMA', 'ABIRI', 'CLARA', '08064004375', NULL, NULL, NULL, '00021', '00021', '2018', 'FETHAII/2018/00021', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(22, '2021-12-07 19:57:36.207117', '2021-12-07 20:27:06.901040', 'OLADELE', 'ABOKEDE', 'AD', '08064004376', NULL, NULL, NULL, '00022', '00022', '2019', 'FETHAII/2019/00022', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(23, '2021-12-07 19:57:36.279072', '2021-12-07 20:27:07.024960', 'OMOLARA', 'ABOKEDE', 'AD', '08064004377', NULL, NULL, NULL, '00023', '00023', '2020', 'FETHAII/2020/00023', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(24, '2021-12-07 19:57:36.361022', '2021-12-07 20:27:07.202667', 'LEONARD', 'ABOR', '', '08064004378', NULL, NULL, NULL, '00024', '00024', '2021', 'FETHAII/2021/00024', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(25, '2021-12-07 19:57:36.437675', '2021-12-07 20:27:07.403816', 'MOMOH', 'ABU', 'AUGUSTIN', '08064004379', NULL, NULL, NULL, '00025', '00025', '2010', 'FETHAII/2010/00025', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(26, '2021-12-07 19:57:36.515679', '2021-12-07 20:27:07.559715', 'MMADUABUCHI', 'ABUWA', '', '08064004380', NULL, NULL, NULL, '00026', '00026', '2011', 'FETHAII/2011/00026', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(27, '2021-12-07 19:57:36.607604', '2021-12-07 20:27:07.682301', 'MAXWELL', 'ACHI', 'NGWU', '08064004381', NULL, NULL, NULL, '00027', '00027', '2012', 'FETHAII/2012/00027', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(28, '2021-12-07 19:57:36.673848', '2021-12-07 20:27:07.767368', 'EZEKIEL', 'ACHONWA', 'UC', '08064004382', NULL, NULL, NULL, '00028', '00028', '2013', 'FETHAII/2013/00028', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(29, '2021-12-07 19:57:36.738381', '2021-12-07 20:27:07.858135', 'UDOCHRIS', 'ACHUGONYE', '', '08064004383', NULL, NULL, NULL, '00029', '00029', '2014', 'FETHAII/2014/00029', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(30, '2021-12-07 19:57:36.804928', '2021-12-07 20:27:07.935553', 'MATTHEW', 'ADAMA', 'SIMO', '08064004384', NULL, NULL, NULL, '00030', '00030', '2015', 'FETHAII/2015/00030', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(31, '2021-12-07 19:57:36.871569', '2021-12-07 20:27:08.001450', 'BEATRI', 'ADAMSOKORIE', '', '08064004385', NULL, NULL, NULL, '00031', '00031', '2016', 'FETHAII/2016/00031', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(32, '2021-12-07 19:57:36.974430', '2021-12-07 20:27:08.079870', 'IFEOMA', 'ADANI', 'MODES', '08064004386', NULL, NULL, NULL, '00032', '00032', '2017', 'FETHAII/2017/00032', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(33, '2021-12-07 19:57:37.083701', '2021-12-07 20:27:08.178806', 'IBUKUN', 'ADEOLU', 'NGOZ', '08064004387', NULL, NULL, NULL, '00033', '00033', '2018', 'FETHAII/2018/00033', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(34, '2021-12-07 19:57:37.248598', '2021-12-07 20:27:08.894797', 'KUSS', 'ADEOYE', 'JULIAN', '08064004388', NULL, NULL, NULL, '00034', '00034', '2019', 'FETHAII/2019/00034', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(35, '2021-12-07 19:57:37.315166', '2021-12-07 20:27:09.002052', 'SAMSON', 'ADEYEMI', 'OLU', '08064004389', NULL, NULL, NULL, '00035', '00035', '2020', 'FETHAII/2020/00035', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(36, '2021-12-07 19:57:37.387916', '2021-12-07 20:27:09.105325', 'EMMANUEL', 'ADIDU', 'AME', '08064004390', NULL, NULL, NULL, '00036', '00036', '2021', 'FETHAII/2021/00036', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(37, '2021-12-07 19:57:37.471860', '2021-12-07 20:27:09.245587', 'NWANYIEZE', 'ADIELE', 'N', '08064004391', NULL, NULL, NULL, '00037', '00037', '2010', 'FETHAII/2010/00037', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(38, '2021-12-07 19:57:37.538819', '2021-12-07 20:27:09.378192', 'EMMANUEL', 'ADIGWE', 'IF', '08064004392', NULL, NULL, NULL, '00038', '00038', '2011', 'FETHAII/2011/00038', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(39, '2021-12-07 19:57:37.605068', '2021-12-07 20:27:09.523605', 'JULIANA', 'ADIKWU', 'NGO', '08064004393', NULL, NULL, NULL, '00039', '00039', '2012', 'FETHAII/2012/00039', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(40, '2021-12-07 19:57:37.673787', '2021-12-07 20:27:09.622866', 'CAROLINE', 'ADIMORAH', '', '08064004394', NULL, NULL, NULL, '00040', '00040', '2013', 'FETHAII/2013/00040', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(41, '2021-12-07 19:57:37.740712', '2021-12-07 20:27:09.928073', 'ORAEKI', 'ADIMORAH', 'HA', '08064004395', NULL, NULL, NULL, '00041', '00041', '2014', 'FETHAII/2014/00041', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(42, '2021-12-07 19:57:37.828798', '2021-12-07 20:27:10.083366', 'IFEYINWA', 'ADOGU', '', '08064004396', NULL, NULL, NULL, '00042', '00042', '2015', 'FETHAII/2015/00042', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(43, '2021-12-07 19:57:37.895048', '2021-12-07 20:27:10.226920', 'OGHENEOCHUKO', 'ADOKA', '', '08064004397', NULL, NULL, NULL, '00043', '00043', '2016', 'FETHAII/2016/00043', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(44, '2021-12-07 19:57:37.973106', '2021-12-07 20:27:10.346806', 'NWOVA', 'ADOKE', 'JOHN', '08064004398', NULL, NULL, NULL, '00044', '00044', '2017', 'FETHAII/2017/00044', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(45, '2021-12-07 19:57:38.064159', '2021-12-07 20:27:10.434399', 'EDACHE', 'ADOKWU', 'ELDA', '08064004399', NULL, NULL, NULL, '00045', '00045', '2018', 'FETHAII/2018/00045', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(46, '2021-12-07 19:57:38.131406', '2021-12-07 20:27:10.501914', 'OBINNA', 'ADONU', 'BENJA', '08064004400', NULL, NULL, NULL, '00046', '00046', '2019', 'FETHAII/2019/00046', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(47, '2021-12-07 19:57:38.283257', '2021-12-07 20:27:10.615844', 'LINDA', 'ADUAKA', 'UKAMA', '08064004401', NULL, NULL, NULL, '00047', '00047', '2020', 'FETHAII/2020/00047', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(48, '2021-12-07 19:57:38.360206', '2021-12-07 20:27:10.678804', 'NGOZI', 'ADUAKA', 'ELIZA', '08064004402', NULL, NULL, NULL, '00048', '00048', '2021', 'FETHAII/2021/00048', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(49, '2021-12-07 19:57:38.427167', '2021-12-07 20:27:10.768622', 'VIVIAN', 'ADUAKA', 'ONYI', '08064004403', NULL, NULL, NULL, '00049', '00049', '2010', 'FETHAII/2010/00049', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(50, '2021-12-07 19:57:38.493562', '2021-12-07 20:27:11.357011', 'ADAGBA', 'ADUWA', 'PATRI', '08064004404', NULL, NULL, NULL, '00050', '00050', '2011', 'FETHAII/2011/00050', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(51, '2021-12-07 20:26:57.088927', '2021-12-07 20:27:11.669320', 'BEN', 'IDAKA', 'MAUREEN', '08064004355', NULL, NULL, NULL, '00001', '00001', '2010', 'FETHAII/2010/00001', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(52, '2021-12-07 20:26:57.373438', '2021-12-07 20:27:11.796891', 'UCHENNA', 'OKOLI', 'OBIA', '08064004356', NULL, NULL, NULL, '00002', '00002', '2011', 'FETHAII/2011/00002', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(53, '2021-12-07 20:26:57.762024', '2021-12-07 20:27:11.912773', 'NKONYELU', 'OKONKWO', 'E', '08064004357', NULL, NULL, NULL, '00003', '00003', '2012', 'FETHAII/2012/00003', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(54, '2021-12-07 20:26:57.840087', '2021-12-07 20:27:12.023401', 'OPHELIA', 'AMADI', 'CHIB', '08064004358', NULL, NULL, NULL, '00004', '00004', '2013', 'FETHAII/2013/00004', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(55, '2021-12-07 20:26:57.929956', '2021-12-07 20:27:12.113689', 'IKWUO', 'NNACHI', 'IJEM', '08064004359', NULL, NULL, NULL, '00005', '00005', '2014', 'FETHAII/2014/00005', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(56, '2021-12-07 20:26:58.005213', '2021-12-07 20:27:12.179896', 'IFEOMA', 'AGBOWO', 'MARY', '08064004360', NULL, NULL, NULL, '00006', '00006', '2015', 'FETHAII/2015/00006', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(57, '2021-12-07 20:26:58.079669', '2021-12-07 20:27:12.347869', 'DR', 'NWANKWO', 'OKUTA J', '08064004361', NULL, NULL, NULL, '00007', '00007', '2016', 'FETHAII/2016/00007', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(58, '2021-12-07 20:26:58.348231', '2021-12-07 20:27:12.584224', 'EMMANUEL', 'ABAA', '', '08064004362', NULL, NULL, NULL, '00008', '00008', '2017', 'FETHAII/2017/00008', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(59, '2021-12-07 20:26:58.597575', '2021-12-07 20:27:12.691084', 'UGO', 'ABAGHA', 'AGNES', '08064004363', NULL, NULL, NULL, '00009', '00009', '2018', 'FETHAII/2018/00009', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(60, '2021-12-07 20:26:58.825077', '2021-12-07 20:27:12.779136', 'CHIGOZI', 'ABAGHAUGWU', '', '08064004364', NULL, NULL, NULL, '00010', '00010', '2019', 'FETHAII/2019/00010', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(61, '2021-12-07 20:26:58.917969', '2021-12-07 20:27:13.071694', 'NWACHINAME', 'ABANIFI', '', '08064004365', NULL, NULL, NULL, '00011', '00011', '2020', 'FETHAII/2020/00011', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(62, '2021-12-07 20:26:58.995068', '2021-12-07 20:27:13.195422', 'NNENWAOGO', 'ABARA', 'P', '08064004366', NULL, NULL, NULL, '00012', '00012', '2021', 'FETHAII/2021/00012', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(63, '2021-12-07 20:26:59.073241', '2021-12-07 20:27:13.346202', 'LAWRENCE', 'ABARA', 'CHI', '08064004367', NULL, NULL, NULL, '00013', '00013', '2010', 'FETHAII/2010/00013', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(64, '2021-12-07 20:26:59.159161', '2021-12-07 20:27:13.434256', 'NWAKAEGO', 'ABARA', 'EUC', '08064004368', NULL, NULL, NULL, '00014', '00014', '2011', 'FETHAII/2011/00014', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(65, '2021-12-07 20:26:59.237255', '2021-12-07 20:27:13.617695', 'OBASI', 'ABBA', 'DORCAS', '08064004369', NULL, NULL, NULL, '00015', '00015', '2012', 'FETHAII/2012/00015', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(66, '2021-12-07 20:26:59.308194', '2021-12-07 20:27:14.183096', 'EFFIONG', 'ABIA', 'ANIET', '08064004370', NULL, NULL, NULL, '00016', '00016', '2013', 'FETHAII/2013/00016', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(67, '2021-12-07 20:26:59.381157', '2021-12-07 20:27:14.368354', 'NKIRUKA', 'ABIA', 'NDON', '08064004371', NULL, NULL, NULL, '00017', '00017', '2014', 'FETHAII/2014/00017', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(68, '2021-12-07 20:26:59.462767', '2021-12-07 20:27:14.445618', 'DR', 'ABIA', 'EFFIONG NDO', '08064004372', NULL, NULL, NULL, '00018', '00018', '2015', 'FETHAII/2015/00018', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(69, '2021-12-07 20:26:59.516214', '2021-12-07 20:27:14.513893', 'UGOCHI', 'ABII', 'GLORIA', '08064004373', NULL, NULL, NULL, '00019', '00019', '2016', 'FETHAII/2016/00019', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(70, '2021-12-07 20:26:59.570898', '2021-12-07 20:27:14.579006', 'ABEKE', 'ABIOLA', 'ZULAY', '08064004374', NULL, NULL, NULL, '00020', '00020', '2017', 'FETHAII/2017/00020', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(71, '2021-12-07 20:27:00.331045', '2021-12-07 20:27:14.646251', 'CHIOMA', 'ABIRI', 'CLARA', '08064004375', NULL, NULL, NULL, '00021', '00021', '2018', 'FETHAII/2018/00021', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(72, '2021-12-07 20:27:00.507072', '2021-12-07 20:27:14.712351', 'OLADELE', 'ABOKEDE', 'AD', '08064004376', NULL, NULL, NULL, '00022', '00022', '2019', 'FETHAII/2019/00022', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(73, '2021-12-07 20:27:00.550674', '2021-12-07 20:27:15.183378', 'OMOLARA', 'ABOKEDE', 'AD', '08064004377', NULL, NULL, NULL, '00023', '00023', '2020', 'FETHAII/2020/00023', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(74, '2021-12-07 20:27:00.717092', '2021-12-07 20:27:15.338857', 'LEONARD', 'ABOR', '', '08064004378', NULL, NULL, NULL, '00024', '00024', '2021', 'FETHAII/2021/00024', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(75, '2021-12-07 20:27:00.805656', '2021-12-07 20:27:15.456538', 'MOMOH', 'ABU', 'AUGUSTIN', '08064004379', NULL, NULL, NULL, '00025', '00025', '2010', 'FETHAII/2010/00025', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(76, '2021-12-07 20:27:00.872880', '2021-12-07 20:27:15.568279', 'MMADUABUCHI', 'ABUWA', '', '08064004380', NULL, NULL, NULL, '00026', '00026', '2011', 'FETHAII/2011/00026', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(77, '2021-12-07 20:27:00.948580', '2021-12-07 20:27:15.656628', 'MAXWELL', 'ACHI', 'NGWU', '08064004381', NULL, NULL, NULL, '00027', '00027', '2012', 'FETHAII/2012/00027', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(78, '2021-12-07 20:27:00.991548', '2021-12-07 20:27:15.723854', 'EZEKIEL', 'ACHONWA', 'UC', '08064004382', NULL, NULL, NULL, '00028', '00028', '2013', 'FETHAII/2013/00028', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(79, '2021-12-07 20:27:01.058509', '2021-12-07 20:27:15.813548', 'UDOCHRIS', 'ACHUGONYE', '', '08064004383', NULL, NULL, NULL, '00029', '00029', '2014', 'FETHAII/2014/00029', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(80, '2021-12-07 20:27:01.192822', '2021-12-07 20:27:15.923328', 'MATTHEW', 'ADAMA', 'SIMO', '08064004384', NULL, NULL, NULL, '00030', '00030', '2015', 'FETHAII/2015/00030', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(81, '2021-12-07 20:27:01.281698', '2021-12-07 20:27:16.073217', 'BEATRI', 'ADAMSOKORIE', '', '08064004385', NULL, NULL, NULL, '00031', '00031', '2016', 'FETHAII/2016/00031', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(82, '2021-12-07 20:27:01.427673', '2021-12-07 20:27:17.135204', 'IFEOMA', 'ADANI', 'MODES', '08064004386', NULL, NULL, NULL, '00032', '00032', '2017', 'FETHAII/2017/00032', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(83, '2021-12-07 20:27:01.526546', '2021-12-07 20:27:17.547491', 'IBUKUN', 'ADEOLU', 'NGOZ', '08064004387', NULL, NULL, NULL, '00033', '00033', '2018', 'FETHAII/2018/00033', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(84, '2021-12-07 20:27:01.581971', '2021-12-07 20:27:17.797744', 'KUSS', 'ADEOYE', 'JULIAN', '08064004388', NULL, NULL, NULL, '00034', '00034', '2019', 'FETHAII/2019/00034', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(85, '2021-12-07 20:27:01.762887', '2021-12-07 20:27:18.073558', 'SAMSON', 'ADEYEMI', 'OLU', '08064004389', NULL, NULL, NULL, '00035', '00035', '2020', 'FETHAII/2020/00035', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(86, '2021-12-07 20:27:01.850934', '2021-12-07 20:27:18.255555', 'EMMANUEL', 'ADIDU', 'AME', '08064004390', NULL, NULL, NULL, '00036', '00036', '2021', 'FETHAII/2021/00036', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(87, '2021-12-07 20:27:01.938004', '2021-12-07 20:27:18.606583', 'NWANYIEZE', 'ADIELE', 'N', '08064004391', NULL, NULL, NULL, '00037', '00037', '2010', 'FETHAII/2010/00037', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(88, '2021-12-07 20:27:01.994587', '2021-12-07 20:27:18.792506', 'EMMANUEL', 'ADIGWE', 'IF', '08064004392', NULL, NULL, NULL, '00038', '00038', '2011', 'FETHAII/2011/00038', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(89, '2021-12-07 20:27:02.071477', '2021-12-07 20:27:18.925110', 'JULIANA', 'ADIKWU', 'NGO', '08064004393', NULL, NULL, NULL, '00039', '00039', '2012', 'FETHAII/2012/00039', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(90, '2021-12-07 20:27:02.125707', '2021-12-07 20:27:19.194926', 'CAROLINE', 'ADIMORAH', '', '08064004394', NULL, NULL, NULL, '00040', '00040', '2013', 'FETHAII/2013/00040', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(91, '2021-12-07 20:27:02.202663', '2021-12-07 20:27:19.317203', 'ORAEKI', 'ADIMORAH', 'HA', '08064004395', NULL, NULL, NULL, '00041', '00041', '2014', 'FETHAII/2014/00041', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(92, '2021-12-07 20:27:02.248632', '2021-12-07 20:27:19.380547', 'IFEYINWA', 'ADOGU', '', '08064004396', NULL, NULL, NULL, '00042', '00042', '2015', 'FETHAII/2015/00042', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(93, '2021-12-07 20:27:02.302603', '2021-12-07 20:27:19.691339', 'OGHENEOCHUKO', 'ADOKA', '', '08064004397', NULL, NULL, NULL, '00043', '00043', '2016', 'FETHAII/2016/00043', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(94, '2021-12-07 20:27:02.531645', '2021-12-07 20:27:19.757743', 'NWOVA', 'ADOKE', 'JOHN', '08064004398', NULL, NULL, NULL, '00044', '00044', '2017', 'FETHAII/2017/00044', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(95, '2021-12-07 20:27:02.604130', '2021-12-07 20:27:19.835795', 'EDACHE', 'ADOKWU', 'ELDA', '08064004399', NULL, NULL, NULL, '00045', '00045', '2018', 'FETHAII/2018/00045', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(96, '2021-12-07 20:27:02.681918', '2021-12-07 20:27:19.901438', 'OBINNA', 'ADONU', 'BENJA', '08064004400', NULL, NULL, NULL, '00046', '00046', '2019', 'FETHAII/2019/00046', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(97, '2021-12-07 20:27:02.873416', '2021-12-07 20:27:19.968760', 'LINDA', 'ADUAKA', 'UKAMA', '08064004401', NULL, NULL, NULL, '00047', '00047', '2020', 'FETHAII/2020/00047', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(98, '2021-12-07 20:27:02.961471', '2021-12-07 20:27:20.235260', 'NGOZI', 'ADUAKA', 'ELIZA', '08064004402', NULL, NULL, NULL, '00048', '00048', '2021', 'FETHAII/2021/00048', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(99, '2021-12-07 20:27:03.041545', '2021-12-07 20:27:20.314405', 'VIVIAN', 'ADUAKA', 'ONYI', '08064004403', NULL, NULL, NULL, '00049', '00049', '2010', 'FETHAII/2010/00049', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(100, '2021-12-07 20:27:03.141160', '2021-12-07 20:27:20.412705', 'ADAGBA', 'ADUWA', 'PATRI', '08064004404', NULL, NULL, NULL, '00050', '00050', '2011', 'FETHAII/2011/00050', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(101, '2021-12-07 20:35:58.255734', '2021-12-07 20:36:04.691508', 'BEN', 'IDAKA', 'MAUREEN', '08064004355', NULL, NULL, NULL, '00001', '00001', '2010', 'FETHAII/2010/00001', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(102, '2021-12-07 20:35:58.510585', '2021-12-07 20:36:04.874431', 'UCHENNA', 'OKOLI', 'OBIA', '08064004356', NULL, NULL, NULL, '00002', '00002', '2011', 'FETHAII/2011/00002', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(103, '2021-12-07 20:35:58.614523', '2021-12-07 20:36:05.014049', 'NKONYELU', 'OKONKWO', 'E', '08064004357', NULL, NULL, NULL, '00003', '00003', '2012', 'FETHAII/2012/00003', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(104, '2021-12-07 20:35:58.697471', '2021-12-07 20:36:05.244233', 'OPHELIA', 'AMADI', 'CHIB', '08064004358', NULL, NULL, NULL, '00004', '00004', '2013', 'FETHAII/2013/00004', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(105, '2021-12-07 20:35:58.781438', '2021-12-07 20:36:05.509186', 'IKWUO', 'NNACHI', 'IJEM', '08064004359', NULL, NULL, NULL, '00005', '00005', '2014', 'FETHAII/2014/00005', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(106, '2021-12-07 20:35:58.876056', '2021-12-07 20:36:05.741128', 'IFEOMA', 'AGBOWO', 'MARY', '08064004360', NULL, NULL, NULL, '00006', '00006', '2015', 'FETHAII/2015/00006', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(107, '2021-12-07 20:35:58.996684', '2021-12-07 20:36:05.852004', 'DR', 'NWANKWO', 'OKUTA J', '08064004361', NULL, NULL, NULL, '00007', '00007', '2016', 'FETHAII/2016/00007', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(108, '2021-12-07 20:35:59.065566', '2021-12-07 20:36:05.975009', 'EMMANUEL', 'ABAA', '', '08064004362', NULL, NULL, NULL, '00008', '00008', '2017', 'FETHAII/2017/00008', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(109, '2021-12-07 20:35:59.210102', '2021-12-07 20:36:06.096526', 'UGO', 'ABAGHA', 'AGNES', '08064004363', NULL, NULL, NULL, '00009', '00009', '2018', 'FETHAII/2018/00009', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(110, '2021-12-07 20:35:59.310964', '2021-12-07 20:36:06.197248', 'CHIGOZI', 'ABAGHAUGWU', '', '08064004364', NULL, NULL, NULL, '00010', '00010', '2019', 'FETHAII/2019/00010', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(111, '2021-12-07 20:35:59.416360', '2021-12-07 20:36:06.297693', 'NWACHINAME', 'ABANIFI', '', '08064004365', NULL, NULL, NULL, '00011', '00011', '2020', 'FETHAII/2020/00011', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(112, '2021-12-07 20:35:59.499068', '2021-12-07 20:36:06.475485', 'NNENWAOGO', 'ABARA', 'P', '08064004366', NULL, NULL, NULL, '00012', '00012', '2021', 'FETHAII/2021/00012', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(113, '2021-12-07 20:35:59.566129', '2021-12-07 20:36:06.608979', 'LAWRENCE', 'ABARA', 'CHI', '08064004367', NULL, NULL, NULL, '00013', '00013', '2010', 'FETHAII/2010/00013', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(114, '2021-12-07 20:35:59.654881', '2021-12-07 20:36:07.042017', 'NWAKAEGO', 'ABARA', 'EUC', '08064004368', NULL, NULL, NULL, '00014', '00014', '2011', 'FETHAII/2011/00014', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(115, '2021-12-07 20:35:59.765536', '2021-12-07 20:36:07.154041', 'OBASI', 'ABBA', 'DORCAS', '08064004369', NULL, NULL, NULL, '00015', '00015', '2012', 'FETHAII/2012/00015', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(116, '2021-12-07 20:35:59.859478', '2021-12-07 20:36:07.320043', 'EFFIONG', 'ABIA', 'ANIET', '08064004370', NULL, NULL, NULL, '00016', '00016', '2013', 'FETHAII/2013/00016', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(117, '2021-12-07 20:35:59.965595', '2021-12-07 20:36:07.632451', 'NKIRUKA', 'ABIA', 'NDON', '08064004371', NULL, NULL, NULL, '00017', '00017', '2014', 'FETHAII/2014/00017', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(118, '2021-12-07 20:36:00.072465', '2021-12-07 20:36:07.841997', 'DR', 'ABIA', 'EFFIONG NDO', '08064004372', NULL, NULL, NULL, '00018', '00018', '2015', 'FETHAII/2015/00018', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(119, '2021-12-07 20:36:00.236887', '2021-12-07 20:36:07.963726', 'UGOCHI', 'ABII', 'GLORIA', '08064004373', NULL, NULL, NULL, '00019', '00019', '2016', 'FETHAII/2016/00019', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(120, '2021-12-07 20:36:00.337090', '2021-12-07 20:36:08.086714', 'ABEKE', 'ABIOLA', 'ZULAY', '08064004374', NULL, NULL, NULL, '00020', '00020', '2017', 'FETHAII/2017/00020', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(121, '2021-12-07 20:36:00.512550', '2021-12-07 20:36:08.185647', 'CHIOMA', 'ABIRI', 'CLARA', '08064004375', NULL, NULL, NULL, '00021', '00021', '2018', 'FETHAII/2018/00021', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(122, '2021-12-07 20:36:00.608762', '2021-12-07 20:36:08.297603', 'OLADELE', 'ABOKEDE', 'AD', '08064004376', NULL, NULL, NULL, '00022', '00022', '2019', 'FETHAII/2019/00022', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(123, '2021-12-07 20:36:00.734131', '2021-12-07 20:36:08.397200', 'OMOLARA', 'ABOKEDE', 'AD', '08064004377', NULL, NULL, NULL, '00023', '00023', '2020', 'FETHAII/2020/00023', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(124, '2021-12-07 20:36:00.799289', '2021-12-07 20:36:08.503627', 'LEONARD', 'ABOR', '', '08064004378', NULL, NULL, NULL, '00024', '00024', '2021', 'FETHAII/2021/00024', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(125, '2021-12-07 20:36:00.866023', '2021-12-07 20:36:09.131642', 'MOMOH', 'ABU', 'AUGUSTIN', '08064004379', NULL, NULL, NULL, '00025', '00025', '2010', 'FETHAII/2010/00025', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(126, '2021-12-07 20:36:00.953461', '2021-12-07 20:36:09.296752', 'MMADUABUCHI', 'ABUWA', '', '08064004380', NULL, NULL, NULL, '00026', '00026', '2011', 'FETHAII/2011/00026', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(127, '2021-12-07 20:36:01.043403', '2021-12-07 20:36:09.419676', 'MAXWELL', 'ACHI', 'NGWU', '08064004381', NULL, NULL, NULL, '00027', '00027', '2012', 'FETHAII/2012/00027', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(128, '2021-12-07 20:36:01.108750', '2021-12-07 20:36:09.520464', 'EZEKIEL', 'ACHONWA', 'UC', '08064004382', NULL, NULL, NULL, '00028', '00028', '2013', 'FETHAII/2013/00028', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(129, '2021-12-07 20:36:01.181002', '2021-12-07 20:36:09.648778', 'UDOCHRIS', 'ACHUGONYE', '', '08064004383', NULL, NULL, NULL, '00029', '00029', '2014', 'FETHAII/2014/00029', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(130, '2021-12-07 20:36:01.357003', '2021-12-07 20:36:09.827106', 'MATTHEW', 'ADAMA', 'SIMO', '08064004384', NULL, NULL, NULL, '00030', '00030', '2015', 'FETHAII/2015/00030', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(131, '2021-12-07 20:36:01.489956', '2021-12-07 20:36:10.252978', 'BEATRI', 'ADAMSOKORIE', '', '08064004385', NULL, NULL, NULL, '00031', '00031', '2016', 'FETHAII/2016/00031', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(132, '2021-12-07 20:36:01.568653', '2021-12-07 20:36:10.397483', 'IFEOMA', 'ADANI', 'MODES', '08064004386', NULL, NULL, NULL, '00032', '00032', '2017', 'FETHAII/2017/00032', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(133, '2021-12-07 20:36:01.662712', '2021-12-07 20:36:10.518653', 'IBUKUN', 'ADEOLU', 'NGOZ', '08064004387', NULL, NULL, NULL, '00033', '00033', '2018', 'FETHAII/2018/00033', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(134, '2021-12-07 20:36:01.754533', '2021-12-07 20:36:10.619592', 'KUSS', 'ADEOYE', 'JULIAN', '08064004388', NULL, NULL, NULL, '00034', '00034', '2019', 'FETHAII/2019/00034', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(135, '2021-12-07 20:36:01.821254', '2021-12-07 20:36:10.730297', 'SAMSON', 'ADEYEMI', 'OLU', '08064004389', NULL, NULL, NULL, '00035', '00035', '2020', 'FETHAII/2020/00035', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(136, '2021-12-07 20:36:01.892077', '2021-12-07 20:36:10.842369', 'EMMANUEL', 'ADIDU', 'AME', '08064004390', NULL, NULL, NULL, '00036', '00036', '2021', 'FETHAII/2021/00036', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(137, '2021-12-07 20:36:01.955252', '2021-12-07 20:36:11.054205', 'NWANYIEZE', 'ADIELE', 'N', '08064004391', NULL, NULL, NULL, '00037', '00037', '2010', 'FETHAII/2010/00037', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(138, '2021-12-07 20:36:02.046766', '2021-12-07 20:36:11.285959', 'EMMANUEL', 'ADIGWE', 'IF', '08064004392', NULL, NULL, NULL, '00038', '00038', '2011', 'FETHAII/2011/00038', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(139, '2021-12-07 20:36:02.132799', '2021-12-07 20:36:11.398132', 'JULIANA', 'ADIKWU', 'NGO', '08064004393', NULL, NULL, NULL, '00039', '00039', '2012', 'FETHAII/2012/00039', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(140, '2021-12-07 20:36:02.226741', '2021-12-07 20:36:11.552743', 'CAROLINE', 'ADIMORAH', '', '08064004394', NULL, NULL, NULL, '00040', '00040', '2013', 'FETHAII/2013/00040', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(141, '2021-12-07 20:36:02.811612', '2021-12-07 20:36:11.675466', 'ORAEKI', 'ADIMORAH', 'HA', '08064004395', NULL, NULL, NULL, '00041', '00041', '2014', 'FETHAII/2014/00041', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(142, '2021-12-07 20:36:03.208935', '2021-12-07 20:36:11.786393', 'IFEYINWA', 'ADOGU', '', '08064004396', NULL, NULL, NULL, '00042', '00042', '2015', 'FETHAII/2015/00042', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(143, '2021-12-07 20:36:03.471260', '2021-12-07 20:36:11.886654', 'OGHENEOCHUKO', 'ADOKA', '', '08064004397', NULL, NULL, NULL, '00043', '00043', '2016', 'FETHAII/2016/00043', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(144, '2021-12-07 20:36:03.600789', '2021-12-07 20:36:12.008383', 'NWOVA', 'ADOKE', 'JOHN', '08064004398', NULL, NULL, NULL, '00044', '00044', '2017', 'FETHAII/2017/00044', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(145, '2021-12-07 20:36:03.706609', '2021-12-07 20:36:12.436300', 'EDACHE', 'ADOKWU', 'ELDA', '08064004399', NULL, NULL, NULL, '00045', '00045', '2018', 'FETHAII/2018/00045', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(146, '2021-12-07 20:36:03.800524', '2021-12-07 20:36:12.651215', 'OBINNA', 'ADONU', 'BENJA', '08064004400', NULL, NULL, NULL, '00046', '00046', '2019', 'FETHAII/2019/00046', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(147, '2021-12-07 20:36:03.914095', '2021-12-07 20:36:12.942873', 'LINDA', 'ADUAKA', 'UKAMA', '08064004401', NULL, NULL, NULL, '00047', '00047', '2020', 'FETHAII/2020/00047', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(148, '2021-12-07 20:36:03.991461', '2021-12-07 20:36:13.106089', 'NGOZI', 'ADUAKA', 'ELIZA', '08064004402', NULL, NULL, NULL, '00048', '00048', '2021', 'FETHAII/2021/00048', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(149, '2021-12-07 20:36:04.209989', '2021-12-07 20:36:13.333171', 'VIVIAN', 'ADUAKA', 'ONYI', '08064004403', NULL, NULL, NULL, '00049', '00049', '2010', 'FETHAII/2010/00049', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(150, '2021-12-07 20:36:04.276276', '2021-12-07 20:36:14.060168', 'ADAGBA', 'ADUWA', 'PATRI', '08064004404', NULL, NULL, NULL, '00050', '00050', '2011', 'FETHAII/2011/00050', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(151, '2021-12-07 20:41:48.166900', '2021-12-07 20:45:14.557595', 'BEN', 'IDAKA', 'MAUREEN', '08064004355', NULL, NULL, NULL, '00001', '00001', '2010', 'FETHAII/2010/00001', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(152, '2021-12-07 20:41:48.379785', '2021-12-07 20:45:14.746042', 'UCHENNA', 'OKOLI', 'OBIA', '08064004356', NULL, NULL, NULL, '00002', '00002', '2011', 'FETHAII/2011/00002', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(153, '2021-12-07 20:41:48.476448', '2021-12-07 20:45:15.353005', 'NKONYELU', 'OKONKWO', 'E', '08064004357', NULL, NULL, NULL, '00003', '00003', '2012', 'FETHAII/2012/00003', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(154, '2021-12-07 20:41:48.549343', '2021-12-07 20:45:15.568816', 'OPHELIA', 'AMADI', 'CHIB', '08064004358', NULL, NULL, NULL, '00004', '00004', '2013', 'FETHAII/2013/00004', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(155, '2021-12-07 20:41:48.638401', '2021-12-07 20:45:15.739802', 'IKWUO', 'NNACHI', 'IJEM', '08064004359', NULL, NULL, NULL, '00005', '00005', '2014', 'FETHAII/2014/00005', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(156, '2021-12-07 20:41:48.894479', '2021-12-07 20:45:15.859936', 'IFEOMA', 'AGBOWO', 'MARY', '08064004360', NULL, NULL, NULL, '00006', '00006', '2015', 'FETHAII/2015/00006', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(157, '2021-12-07 20:41:49.083071', '2021-12-07 20:45:15.972641', 'DR', 'NWANKWO', 'OKUTA J', '08064004361', NULL, NULL, NULL, '00007', '00007', '2016', 'FETHAII/2016/00007', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(158, '2021-12-07 20:41:49.234119', '2021-12-07 20:45:16.161168', 'EMMANUEL', 'ABAA', '', '08064004362', NULL, NULL, NULL, '00008', '00008', '2017', 'FETHAII/2017/00008', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(159, '2021-12-07 20:41:49.339907', '2021-12-07 20:45:16.417331', 'UGO', 'ABAGHA', 'AGNES', '08064004363', NULL, NULL, NULL, '00009', '00009', '2018', 'FETHAII/2018/00009', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(160, '2021-12-07 20:41:49.482656', '2021-12-07 20:45:16.658612', 'CHIGOZI', 'ABAGHAUGWU', '', '08064004364', NULL, NULL, NULL, '00010', '00010', '2019', 'FETHAII/2019/00010', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(161, '2021-12-07 20:41:49.593823', '2021-12-07 20:45:16.816376', 'NWACHINAME', 'ABANIFI', '', '08064004365', NULL, NULL, NULL, '00011', '00011', '2020', 'FETHAII/2020/00011', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(162, '2021-12-07 20:41:49.697504', '2021-12-07 20:45:16.950291', 'NNENWAOGO', 'ABARA', 'P', '08064004366', NULL, NULL, NULL, '00012', '00012', '2021', 'FETHAII/2021/00012', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(163, '2021-12-07 20:41:49.821108', '2021-12-07 20:45:17.061406', 'LAWRENCE', 'ABARA', 'CHI', '08064004367', NULL, NULL, NULL, '00013', '00013', '2010', 'FETHAII/2010/00013', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(164, '2021-12-07 20:41:49.974802', '2021-12-07 20:45:17.284362', 'NWAKAEGO', 'ABARA', 'EUC', '08064004368', NULL, NULL, NULL, '00014', '00014', '2011', 'FETHAII/2011/00014', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(165, '2021-12-07 20:41:50.137750', '2021-12-07 20:45:17.597105', 'OBASI', 'ABBA', 'DORCAS', '08064004369', NULL, NULL, NULL, '00015', '00015', '2012', 'FETHAII/2012/00015', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(166, '2021-12-07 20:41:50.205711', '2021-12-07 20:45:17.717491', 'EFFIONG', 'ABIA', 'ANIET', '08064004370', NULL, NULL, NULL, '00016', '00016', '2013', 'FETHAII/2013/00016', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(167, '2021-12-07 20:41:50.269671', '2021-12-07 20:45:17.894364', 'NKIRUKA', 'ABIA', 'NDON', '08064004371', NULL, NULL, NULL, '00017', '00017', '2014', 'FETHAII/2014/00017', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(168, '2021-12-07 20:41:50.335732', '2021-12-07 20:45:18.015915', 'DR', 'ABIA', 'EFFIONG NDO', '08064004372', NULL, NULL, NULL, '00018', '00018', '2015', 'FETHAII/2015/00018', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(169, '2021-12-07 20:41:50.380424', '2021-12-07 20:45:18.161687', 'UGOCHI', 'ABII', 'GLORIA', '08064004373', NULL, NULL, NULL, '00019', '00019', '2016', 'FETHAII/2016/00019', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(170, '2021-12-07 20:41:50.425864', '2021-12-07 20:45:18.279363', 'ABEKE', 'ABIOLA', 'ZULAY', '08064004374', NULL, NULL, NULL, '00020', '00020', '2017', 'FETHAII/2017/00020', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(171, '2021-12-07 20:41:50.469789', '2021-12-07 20:45:18.406093', 'CHIOMA', 'ABIRI', 'CLARA', '08064004375', NULL, NULL, NULL, '00021', '00021', '2018', 'FETHAII/2018/00021', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(172, '2021-12-07 20:41:50.514761', '2021-12-07 20:45:18.523751', 'OLADELE', 'ABOKEDE', 'AD', '08064004376', NULL, NULL, NULL, '00022', '00022', '2019', 'FETHAII/2019/00022', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(173, '2021-12-07 20:41:50.605705', '2021-12-07 20:45:18.634906', 'OMOLARA', 'ABOKEDE', 'AD', '08064004377', NULL, NULL, NULL, '00023', '00023', '2020', 'FETHAII/2020/00023', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(174, '2021-12-07 20:41:50.646668', '2021-12-07 20:45:18.835345', 'LEONARD', 'ABOR', '', '08064004378', NULL, NULL, NULL, '00024', '00024', '2021', 'FETHAII/2021/00024', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(175, '2021-12-07 20:41:50.716487', '2021-12-07 20:45:18.979966', 'MOMOH', 'ABU', 'AUGUSTIN', '08064004379', NULL, NULL, NULL, '00025', '00025', '2010', 'FETHAII/2010/00025', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(176, '2021-12-07 20:41:50.816838', '2021-12-07 20:45:19.127336', 'MMADUABUCHI', 'ABUWA', '', '08064004380', NULL, NULL, NULL, '00026', '00026', '2011', 'FETHAII/2011/00026', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(177, '2021-12-07 20:41:50.891077', '2021-12-07 20:45:19.262317', 'MAXWELL', 'ACHI', 'NGWU', '08064004381', NULL, NULL, NULL, '00027', '00027', '2012', 'FETHAII/2012/00027', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(178, '2021-12-07 20:41:51.446259', '2021-12-07 20:45:19.361151', 'EZEKIEL', 'ACHONWA', 'UC', '08064004382', NULL, NULL, NULL, '00028', '00028', '2013', 'FETHAII/2013/00028', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(179, '2021-12-07 20:41:51.837257', '2021-12-07 20:45:20.291071', 'UDOCHRIS', 'ACHUGONYE', '', '08064004383', NULL, NULL, NULL, '00029', '00029', '2014', 'FETHAII/2014/00029', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(180, '2021-12-07 20:41:51.986118', '2021-12-07 20:45:20.649806', 'MATTHEW', 'ADAMA', 'SIMO', '08064004384', NULL, NULL, NULL, '00030', '00030', '2015', 'FETHAII/2015/00030', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(181, '2021-12-07 20:41:52.348874', '2021-12-07 20:45:20.771453', 'BEATRI', 'ADAMSOKORIE', '', '08064004385', NULL, NULL, NULL, '00031', '00031', '2016', 'FETHAII/2016/00031', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(182, '2021-12-07 20:41:52.437774', '2021-12-07 20:45:20.916706', 'IFEOMA', 'ADANI', 'MODES', '08064004386', NULL, NULL, NULL, '00032', '00032', '2017', 'FETHAII/2017/00032', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(183, '2021-12-07 20:41:52.549903', '2021-12-07 20:45:21.427919', 'IBUKUN', 'ADEOLU', 'NGOZ', '08064004387', NULL, NULL, NULL, '00033', '00033', '2018', 'FETHAII/2018/00033', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(184, '2021-12-07 20:41:52.772908', '2021-12-07 20:45:21.549466', 'KUSS', 'ADEOYE', 'JULIAN', '08064004388', NULL, NULL, NULL, '00034', '00034', '2019', 'FETHAII/2019/00034', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(185, '2021-12-07 20:41:52.826524', '2021-12-07 20:45:21.673165', 'SAMSON', 'ADEYEMI', 'OLU', '08064004389', NULL, NULL, NULL, '00035', '00035', '2020', 'FETHAII/2020/00035', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(186, '2021-12-07 20:41:52.926460', '2021-12-07 20:45:21.828502', 'EMMANUEL', 'ADIDU', 'AME', '08064004390', NULL, NULL, NULL, '00036', '00036', '2021', 'FETHAII/2021/00036', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(187, '2021-12-07 20:41:53.053700', '2021-12-07 20:45:21.949503', 'NWANYIEZE', 'ADIELE', 'N', '08064004391', NULL, NULL, NULL, '00037', '00037', '2010', 'FETHAII/2010/00037', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(188, '2021-12-07 20:41:53.119956', '2021-12-07 20:45:22.295214', 'EMMANUEL', 'ADIGWE', 'IF', '08064004392', NULL, NULL, NULL, '00038', '00038', '2011', 'FETHAII/2011/00038', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(189, '2021-12-07 20:41:53.161583', '2021-12-07 20:45:22.524107', 'JULIANA', 'ADIKWU', 'NGO', '08064004393', NULL, NULL, NULL, '00039', '00039', '2012', 'FETHAII/2012/00039', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(190, '2021-12-07 20:41:53.306511', '2021-12-07 20:45:22.617049', 'CAROLINE', 'ADIMORAH', '', '08064004394', NULL, NULL, NULL, '00040', '00040', '2013', 'FETHAII/2013/00040', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(191, '2021-12-07 20:41:53.348361', '2021-12-07 20:45:22.738272', 'ORAEKI', 'ADIMORAH', 'HA', '08064004395', NULL, NULL, NULL, '00041', '00041', '2014', 'FETHAII/2014/00041', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(192, '2021-12-07 20:41:53.426185', '2021-12-07 20:45:22.839080', 'IFEYINWA', 'ADOGU', '', '08064004396', NULL, NULL, NULL, '00042', '00042', '2015', 'FETHAII/2015/00042', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(193, '2021-12-07 20:41:53.470981', '2021-12-07 20:45:22.960731', 'OGHENEOCHUKO', 'ADOKA', '', '08064004397', NULL, NULL, NULL, '00043', '00043', '2016', 'FETHAII/2016/00043', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(194, '2021-12-07 20:41:53.541222', '2021-12-07 20:45:23.127410', 'NWOVA', 'ADOKE', 'JOHN', '08064004398', NULL, NULL, NULL, '00044', '00044', '2017', 'FETHAII/2017/00044', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(195, '2021-12-07 20:41:53.584800', '2021-12-07 20:45:23.516986', 'EDACHE', 'ADOKWU', 'ELDA', '08064004399', NULL, NULL, NULL, '00045', '00045', '2018', 'FETHAII/2018/00045', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(196, '2021-12-07 20:41:53.714533', '2021-12-07 20:45:23.627544', 'OBINNA', 'ADONU', 'BENJA', '08064004400', NULL, NULL, NULL, '00046', '00046', '2019', 'FETHAII/2019/00046', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(197, '2021-12-07 20:41:53.827441', '2021-12-07 20:45:23.750174', 'LINDA', 'ADUAKA', 'UKAMA', '08064004401', NULL, NULL, NULL, '00047', '00047', '2020', 'FETHAII/2020/00047', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(198, '2021-12-07 20:41:53.927856', '2021-12-07 20:45:23.872042', 'NGOZI', 'ADUAKA', 'ELIZA', '08064004402', NULL, NULL, NULL, '00048', '00048', '2021', 'FETHAII/2021/00048', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(199, '2021-12-07 20:41:54.059261', '2021-12-07 20:45:23.983735', 'VIVIAN', 'ADUAKA', 'ONYI', '08064004403', NULL, NULL, NULL, '00049', '00049', '2010', 'FETHAII/2010/00049', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(200, '2021-12-07 20:41:54.126218', '2021-12-07 20:45:24.129620', 'ADAGBA', 'ADUWA', 'PATRI', '08064004404', NULL, NULL, NULL, '00050', '00050', '2011', 'FETHAII/2011/00050', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(201, '2021-12-07 20:45:07.915459', '2021-12-07 20:45:24.251297', 'BEN', 'IDAKA', 'MAUREEN', '08064004355', NULL, NULL, NULL, '00001', '00001', '2010', 'FETHAII/2010/00001', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(202, '2021-12-07 20:45:08.404939', '2021-12-07 20:45:24.695451', 'UCHENNA', 'OKOLI', 'OBIA', '08064004356', NULL, NULL, NULL, '00002', '00002', '2011', 'FETHAII/2011/00002', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(203, '2021-12-07 20:45:08.525786', '2021-12-07 20:45:24.905463', 'NKONYELU', 'OKONKWO', 'E', '08064004357', NULL, NULL, NULL, '00003', '00003', '2012', 'FETHAII/2012/00003', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(204, '2021-12-07 20:45:08.617726', '2021-12-07 20:45:25.050372', 'OPHELIA', 'AMADI', 'CHIB', '08064004358', NULL, NULL, NULL, '00004', '00004', '2013', 'FETHAII/2013/00004', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(205, '2021-12-07 20:45:08.706151', '2021-12-07 20:45:25.183674', 'IKWUO', 'NNACHI', 'IJEM', '08064004359', NULL, NULL, NULL, '00005', '00005', '2014', 'FETHAII/2014/00005', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(206, '2021-12-07 20:45:08.795442', '2021-12-07 20:45:25.328167', 'IFEOMA', 'AGBOWO', 'MARY', '08064004360', NULL, NULL, NULL, '00006', '00006', '2015', 'FETHAII/2015/00006', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(207, '2021-12-07 20:45:08.862769', '2021-12-07 20:45:25.461142', 'DR', 'NWANKWO', 'OKUTA J', '08064004361', NULL, NULL, NULL, '00007', '00007', '2016', 'FETHAII/2016/00007', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(208, '2021-12-07 20:45:08.954214', '2021-12-07 20:45:26.069887', 'EMMANUEL', 'ABAA', '', '08064004362', NULL, NULL, NULL, '00008', '00008', '2017', 'FETHAII/2017/00008', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(209, '2021-12-07 20:45:09.074141', '2021-12-07 20:45:26.295026', 'UGO', 'ABAGHA', 'AGNES', '08064004363', NULL, NULL, NULL, '00009', '00009', '2018', 'FETHAII/2018/00009', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(210, '2021-12-07 20:45:09.166848', '2021-12-07 20:45:26.439915', 'CHIGOZI', 'ABAGHAUGWU', '', '08064004364', NULL, NULL, NULL, '00010', '00010', '2019', 'FETHAII/2019/00010', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(211, '2021-12-07 20:45:09.462014', '2021-12-07 20:45:26.594781', 'NWACHINAME', 'ABANIFI', '', '08064004365', NULL, NULL, NULL, '00011', '00011', '2020', 'FETHAII/2020/00011', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(212, '2021-12-07 20:45:09.632253', '2021-12-07 20:45:26.705284', 'NNENWAOGO', 'ABARA', 'P', '08064004366', NULL, NULL, NULL, '00012', '00012', '2021', 'FETHAII/2021/00012', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(213, '2021-12-07 20:45:09.698071', '2021-12-07 20:45:26.829369', 'LAWRENCE', 'ABARA', 'CHI', '08064004367', NULL, NULL, NULL, '00013', '00013', '2010', 'FETHAII/2010/00013', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(214, '2021-12-07 20:45:09.763032', '2021-12-07 20:45:27.043461', 'NWAKAEGO', 'ABARA', 'EUC', '08064004368', NULL, NULL, NULL, '00014', '00014', '2011', 'FETHAII/2011/00014', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(215, '2021-12-07 20:45:09.862582', '2021-12-07 20:45:27.283258', 'OBASI', 'ABBA', 'DORCAS', '08064004369', NULL, NULL, NULL, '00015', '00015', '2012', 'FETHAII/2012/00015', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(216, '2021-12-07 20:45:09.951523', '2021-12-07 20:45:27.414178', 'EFFIONG', 'ABIA', 'ANIET', '08064004370', NULL, NULL, NULL, '00016', '00016', '2013', 'FETHAII/2013/00016', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(217, '2021-12-07 20:45:10.021197', '2021-12-07 20:45:27.571883', 'NKIRUKA', 'ABIA', 'NDON', '08064004371', NULL, NULL, NULL, '00017', '00017', '2014', 'FETHAII/2014/00017', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(218, '2021-12-07 20:45:10.133984', '2021-12-07 20:45:27.717835', 'DR', 'ABIA', 'EFFIONG NDO', '08064004372', NULL, NULL, NULL, '00018', '00018', '2015', 'FETHAII/2015/00018', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(219, '2021-12-07 20:45:10.200984', '2021-12-07 20:45:27.850864', 'UGOCHI', 'ABII', 'GLORIA', '08064004373', NULL, NULL, NULL, '00019', '00019', '2016', 'FETHAII/2016/00019', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(220, '2021-12-07 20:45:10.263477', '2021-12-07 20:45:28.128663', 'ABEKE', 'ABIOLA', 'ZULAY', '08064004374', NULL, NULL, NULL, '00020', '00020', '2017', 'FETHAII/2017/00020', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2);
-INSERT INTO `cooperative_membershiprequest` (`id`, `created_at`, `updated_at`, `first_name`, `last_name`, `middle_name`, `phone_number`, `certified_date`, `approval_comment`, `approved_date`, `file_no`, `ippis_no`, `year`, `member_id`, `approval_officer_id`, `approval_status_id`, `certification_officer_id`, `certification_status_id`, `department_id`, `gender_id`, `processed_by_id`, `salary_institution_id`, `submission_status_id`, `title_id`, `transaction_status_id`) VALUES
-(221, '2021-12-07 20:45:10.361740', '2021-12-07 20:45:28.440271', 'CHIOMA', 'ABIRI', 'CLARA', '08064004375', NULL, NULL, NULL, '00021', '00021', '2018', 'FETHAII/2018/00021', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(222, '2021-12-07 20:45:10.433589', '2021-12-07 20:45:28.558999', 'OLADELE', 'ABOKEDE', 'AD', '08064004376', NULL, NULL, NULL, '00022', '00022', '2019', 'FETHAII/2019/00022', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(223, '2021-12-07 20:45:11.109478', '2021-12-07 20:45:28.638949', 'OMOLARA', 'ABOKEDE', 'AD', '08064004377', NULL, NULL, NULL, '00023', '00023', '2020', 'FETHAII/2020/00023', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(224, '2021-12-07 20:45:11.220994', '2021-12-07 20:45:28.763115', 'LEONARD', 'ABOR', '', '08064004378', NULL, NULL, NULL, '00024', '00024', '2021', 'FETHAII/2021/00024', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(225, '2021-12-07 20:45:11.314405', '2021-12-07 20:45:28.929276', 'MOMOH', 'ABU', 'AUGUSTIN', '08064004379', NULL, NULL, NULL, '00025', '00025', '2010', 'FETHAII/2010/00025', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(226, '2021-12-07 20:45:11.407627', '2021-12-07 20:45:29.073079', 'MMADUABUCHI', 'ABUWA', '', '08064004380', NULL, NULL, NULL, '00026', '00026', '2011', 'FETHAII/2011/00026', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(227, '2021-12-07 20:45:11.623353', '2021-12-07 20:45:29.172946', 'MAXWELL', 'ACHI', 'NGWU', '08064004381', NULL, NULL, NULL, '00027', '00027', '2012', 'FETHAII/2012/00027', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(228, '2021-12-07 20:45:11.727812', '2021-12-07 20:45:29.739651', 'EZEKIEL', 'ACHONWA', 'UC', '08064004382', NULL, NULL, NULL, '00028', '00028', '2013', 'FETHAII/2013/00028', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(229, '2021-12-07 20:45:11.817757', '2021-12-07 20:45:29.861196', 'UDOCHRIS', 'ACHUGONYE', '', '08064004383', NULL, NULL, NULL, '00029', '00029', '2014', 'FETHAII/2014/00029', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(230, '2021-12-07 20:45:11.895505', '2021-12-07 20:45:30.051069', 'MATTHEW', 'ADAMA', 'SIMO', '08064004384', NULL, NULL, NULL, '00030', '00030', '2015', 'FETHAII/2015/00030', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(231, '2021-12-07 20:45:11.984492', '2021-12-07 20:45:30.217230', 'BEATRI', 'ADAMSOKORIE', '', '08064004385', NULL, NULL, NULL, '00031', '00031', '2016', 'FETHAII/2016/00031', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(232, '2021-12-07 20:45:12.147782', '2021-12-07 20:45:30.372935', 'IFEOMA', 'ADANI', 'MODES', '08064004386', NULL, NULL, NULL, '00032', '00032', '2017', 'FETHAII/2017/00032', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(233, '2021-12-07 20:45:12.206719', '2021-12-07 20:45:30.484164', 'IBUKUN', 'ADEOLU', 'NGOZ', '08064004387', NULL, NULL, NULL, '00033', '00033', '2018', 'FETHAII/2018/00033', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(234, '2021-12-07 20:45:12.295619', '2021-12-07 20:45:30.661087', 'KUSS', 'ADEOYE', 'JULIAN', '08064004388', NULL, NULL, NULL, '00034', '00034', '2019', 'FETHAII/2019/00034', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(235, '2021-12-07 20:45:12.387674', '2021-12-07 20:45:30.906067', 'SAMSON', 'ADEYEMI', 'OLU', '08064004389', NULL, NULL, NULL, '00035', '00035', '2020', 'FETHAII/2020/00035', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(236, '2021-12-07 20:45:12.451279', '2021-12-07 20:45:31.038978', 'EMMANUEL', 'ADIDU', 'AME', '08064004390', NULL, NULL, NULL, '00036', '00036', '2021', 'FETHAII/2021/00036', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(237, '2021-12-07 20:45:12.544189', '2021-12-07 20:45:31.151222', 'NWANYIEZE', 'ADIELE', 'N', '08064004391', NULL, NULL, NULL, '00037', '00037', '2010', 'FETHAII/2010/00037', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(238, '2021-12-07 20:45:12.864463', '2021-12-07 20:45:31.283501', 'EMMANUEL', 'ADIGWE', 'IF', '08064004392', NULL, NULL, NULL, '00038', '00038', '2011', 'FETHAII/2011/00038', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(239, '2021-12-07 20:45:12.930917', '2021-12-07 20:45:31.395186', 'JULIANA', 'ADIKWU', 'NGO', '08064004393', NULL, NULL, NULL, '00039', '00039', '2012', 'FETHAII/2012/00039', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(240, '2021-12-07 20:45:13.028854', '2021-12-07 20:45:31.517685', 'CAROLINE', 'ADIMORAH', '', '08064004394', NULL, NULL, NULL, '00040', '00040', '2013', 'FETHAII/2013/00040', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(241, '2021-12-07 20:45:13.204003', '2021-12-07 20:45:32.484898', 'ORAEKI', 'ADIMORAH', 'HA', '08064004395', NULL, NULL, NULL, '00041', '00041', '2014', 'FETHAII/2014/00041', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(242, '2021-12-07 20:45:13.319930', '2021-12-07 20:45:32.884401', 'IFEYINWA', 'ADOGU', '', '08064004396', NULL, NULL, NULL, '00042', '00042', '2015', 'FETHAII/2015/00042', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(243, '2021-12-07 20:45:13.395972', '2021-12-07 20:45:33.128674', 'OGHENEOCHUKO', 'ADOKA', '', '08064004397', NULL, NULL, NULL, '00043', '00043', '2016', 'FETHAII/2016/00043', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(244, '2021-12-07 20:45:13.548269', '2021-12-07 20:45:33.418611', 'NWOVA', 'ADOKE', 'JOHN', '08064004398', NULL, NULL, NULL, '00044', '00044', '2017', 'FETHAII/2017/00044', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(245, '2021-12-07 20:45:13.643501', '2021-12-07 20:45:33.842325', 'EDACHE', 'ADOKWU', 'ELDA', '08064004399', NULL, NULL, NULL, '00045', '00045', '2018', 'FETHAII/2018/00045', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(246, '2021-12-07 20:45:13.751899', '2021-12-07 20:45:34.317131', 'OBINNA', 'ADONU', 'BENJA', '08064004400', NULL, NULL, NULL, '00046', '00046', '2019', 'FETHAII/2019/00046', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(247, '2021-12-07 20:45:13.920689', '2021-12-07 20:45:34.595291', 'LINDA', 'ADUAKA', 'UKAMA', '08064004401', NULL, NULL, NULL, '00047', '00047', '2020', 'FETHAII/2020/00047', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(248, '2021-12-07 20:45:13.987334', '2021-12-07 20:45:34.694861', 'NGOZI', 'ADUAKA', 'ELIZA', '08064004402', NULL, NULL, NULL, '00048', '00048', '2021', 'FETHAII/2021/00048', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(249, '2021-12-07 20:45:14.051616', '2021-12-07 20:45:34.907519', 'VIVIAN', 'ADUAKA', 'ONYI', '08064004403', NULL, NULL, NULL, '00049', '00049', '2010', 'FETHAII/2010/00049', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(250, '2021-12-07 20:45:14.118346', '2021-12-07 20:45:35.162685', 'ADAGBA', 'ADUWA', 'PATRI', '08064004404', NULL, NULL, NULL, '00050', '00050', '2011', 'FETHAII/2011/00050', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(251, '2021-12-07 20:52:22.857533', '2021-12-07 20:52:29.645322', 'BEN', 'IDAKA', 'MAUREEN', '08064004355', NULL, NULL, NULL, '00001', '00001', '2010', 'FETHAII/2010/00001', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(252, '2021-12-07 20:52:23.123571', '2021-12-07 20:52:29.922353', 'UCHENNA', 'OKOLI', 'OBIA', '08064004356', NULL, NULL, NULL, '00002', '00002', '2011', 'FETHAII/2011/00002', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(253, '2021-12-07 20:52:23.353509', '2021-12-07 20:52:30.249611', 'NKONYELU', 'OKONKWO', 'E', '08064004357', NULL, NULL, NULL, '00003', '00003', '2012', 'FETHAII/2012/00003', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(254, '2021-12-07 20:52:23.452003', '2021-12-07 20:52:30.371542', 'OPHELIA', 'AMADI', 'CHIB', '08064004358', NULL, NULL, NULL, '00004', '00004', '2013', 'FETHAII/2013/00004', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(255, '2021-12-07 20:52:23.561253', '2021-12-07 20:52:30.738960', 'IKWUO', 'NNACHI', 'IJEM', '08064004359', NULL, NULL, NULL, '00005', '00005', '2014', 'FETHAII/2014/00005', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(256, '2021-12-07 20:52:23.635298', '2021-12-07 20:52:30.894687', 'IFEOMA', 'AGBOWO', 'MARY', '08064004360', NULL, NULL, NULL, '00006', '00006', '2015', 'FETHAII/2015/00006', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(257, '2021-12-07 20:52:23.688687', '2021-12-07 20:52:31.026935', 'DR', 'NWANKWO', 'OKUTA J', '08064004361', NULL, NULL, NULL, '00007', '00007', '2016', 'FETHAII/2016/00007', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(258, '2021-12-07 20:52:23.904098', '2021-12-07 20:52:31.159913', 'EMMANUEL', 'ABAA', '', '08064004362', NULL, NULL, NULL, '00008', '00008', '2017', 'FETHAII/2017/00008', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(259, '2021-12-07 20:52:23.984051', '2021-12-07 20:52:31.259461', 'UGO', 'ABAGHA', 'AGNES', '08064004363', NULL, NULL, NULL, '00009', '00009', '2018', 'FETHAII/2018/00009', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(260, '2021-12-07 20:52:24.039015', '2021-12-07 20:52:31.404348', 'CHIGOZI', 'ABAGHAUGWU', '', '08064004364', NULL, NULL, NULL, '00010', '00010', '2019', 'FETHAII/2019/00010', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(261, '2021-12-07 20:52:24.110545', '2021-12-07 20:52:31.503828', 'NWACHINAME', 'ABANIFI', '', '08064004365', NULL, NULL, NULL, '00011', '00011', '2020', 'FETHAII/2020/00011', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(262, '2021-12-07 20:52:24.198060', '2021-12-07 20:52:31.727799', 'NNENWAOGO', 'ABARA', 'P', '08064004366', NULL, NULL, NULL, '00012', '00012', '2021', 'FETHAII/2021/00012', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(263, '2021-12-07 20:52:24.518308', '2021-12-07 20:52:31.915826', 'LAWRENCE', 'ABARA', 'CHI', '08064004367', NULL, NULL, NULL, '00013', '00013', '2010', 'FETHAII/2010/00013', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(264, '2021-12-07 20:52:24.599527', '2021-12-07 20:52:32.049390', 'NWAKAEGO', 'ABARA', 'EUC', '08064004368', NULL, NULL, NULL, '00014', '00014', '2011', 'FETHAII/2011/00014', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(265, '2021-12-07 20:52:24.662558', '2021-12-07 20:52:32.183350', 'OBASI', 'ABBA', 'DORCAS', '08064004369', NULL, NULL, NULL, '00015', '00015', '2012', 'FETHAII/2012/00015', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(266, '2021-12-07 20:52:24.756269', '2021-12-07 20:52:32.311349', 'EFFIONG', 'ABIA', 'ANIET', '08064004370', NULL, NULL, NULL, '00016', '00016', '2013', 'FETHAII/2013/00016', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(267, '2021-12-07 20:52:24.818462', '2021-12-07 20:52:32.404289', 'NKIRUKA', 'ABIA', 'NDON', '08064004371', NULL, NULL, NULL, '00017', '00017', '2014', 'FETHAII/2014/00017', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(268, '2021-12-07 20:52:24.885324', '2021-12-07 20:52:32.559983', 'DR', 'ABIA', 'EFFIONG NDO', '08064004372', NULL, NULL, NULL, '00018', '00018', '2015', 'FETHAII/2015/00018', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(269, '2021-12-07 20:52:24.985138', '2021-12-07 20:52:32.722790', 'UGOCHI', 'ABII', 'GLORIA', '08064004373', NULL, NULL, NULL, '00019', '00019', '2016', 'FETHAII/2016/00019', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(270, '2021-12-07 20:52:25.063241', '2021-12-07 20:52:33.711797', 'ABEKE', 'ABIOLA', 'ZULAY', '08064004374', NULL, NULL, NULL, '00020', '00020', '2017', 'FETHAII/2017/00020', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(271, '2021-12-07 20:52:25.151008', '2021-12-07 20:52:33.893472', 'CHIOMA', 'ABIRI', 'CLARA', '08064004375', NULL, NULL, NULL, '00021', '00021', '2018', 'FETHAII/2018/00021', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(272, '2021-12-07 20:52:25.239950', '2021-12-07 20:52:34.015131', 'OLADELE', 'ABOKEDE', 'AD', '08064004376', NULL, NULL, NULL, '00022', '00022', '2019', 'FETHAII/2019/00022', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(273, '2021-12-07 20:52:25.617136', '2021-12-07 20:52:34.168036', 'OMOLARA', 'ABOKEDE', 'AD', '08064004377', NULL, NULL, NULL, '00023', '00023', '2020', 'FETHAII/2020/00023', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(274, '2021-12-07 20:52:25.709076', '2021-12-07 20:52:34.549705', 'LEONARD', 'ABOR', '', '08064004378', NULL, NULL, NULL, '00024', '00024', '2021', 'FETHAII/2021/00024', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(275, '2021-12-07 20:52:25.784652', '2021-12-07 20:52:34.715514', 'MOMOH', 'ABU', 'AUGUSTIN', '08064004379', NULL, NULL, NULL, '00025', '00025', '2010', 'FETHAII/2010/00025', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(276, '2021-12-07 20:52:25.888800', '2021-12-07 20:52:34.848617', 'MMADUABUCHI', 'ABUWA', '', '08064004380', NULL, NULL, NULL, '00026', '00026', '2011', 'FETHAII/2011/00026', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(277, '2021-12-07 20:52:25.991846', '2021-12-07 20:52:34.982777', 'MAXWELL', 'ACHI', 'NGWU', '08064004381', NULL, NULL, NULL, '00027', '00027', '2012', 'FETHAII/2012/00027', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(278, '2021-12-07 20:52:26.099742', '2021-12-07 20:52:35.117394', 'EZEKIEL', 'ACHONWA', 'UC', '08064004382', NULL, NULL, NULL, '00028', '00028', '2013', 'FETHAII/2013/00028', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(279, '2021-12-07 20:52:26.203762', '2021-12-07 20:52:35.337980', 'UDOCHRIS', 'ACHUGONYE', '', '08064004383', NULL, NULL, NULL, '00029', '00029', '2014', 'FETHAII/2014/00029', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(280, '2021-12-07 20:52:26.262586', '2021-12-07 20:52:35.672933', 'MATTHEW', 'ADAMA', 'SIMO', '08064004384', NULL, NULL, NULL, '00030', '00030', '2015', 'FETHAII/2015/00030', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(281, '2021-12-07 20:52:26.373558', '2021-12-07 20:52:35.805521', 'BEATRI', 'ADAMSOKORIE', '', '08064004385', NULL, NULL, NULL, '00031', '00031', '2016', 'FETHAII/2016/00031', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(282, '2021-12-07 20:52:26.477540', '2021-12-07 20:52:35.937861', 'IFEOMA', 'ADANI', 'MODES', '08064004386', NULL, NULL, NULL, '00032', '00032', '2017', 'FETHAII/2017/00032', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(283, '2021-12-07 20:52:27.217058', '2021-12-07 20:52:36.082876', 'IBUKUN', 'ADEOLU', 'NGOZ', '08064004387', NULL, NULL, NULL, '00033', '00033', '2018', 'FETHAII/2018/00033', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(284, '2021-12-07 20:52:27.434600', '2021-12-07 20:52:36.327262', 'KUSS', 'ADEOYE', 'JULIAN', '08064004388', NULL, NULL, NULL, '00034', '00034', '2019', 'FETHAII/2019/00034', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(285, '2021-12-07 20:52:27.728220', '2021-12-07 20:52:36.749951', 'SAMSON', 'ADEYEMI', 'OLU', '08064004389', NULL, NULL, NULL, '00035', '00035', '2020', 'FETHAII/2020/00035', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(286, '2021-12-07 20:52:27.910309', '2021-12-07 20:52:37.159811', 'EMMANUEL', 'ADIDU', 'AME', '08064004390', NULL, NULL, NULL, '00036', '00036', '2021', 'FETHAII/2021/00036', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(287, '2021-12-07 20:52:28.095471', '2021-12-07 20:52:37.294363', 'NWANYIEZE', 'ADIELE', 'N', '08064004391', NULL, NULL, NULL, '00037', '00037', '2010', 'FETHAII/2010/00037', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(288, '2021-12-07 20:52:28.198116', '2021-12-07 20:52:37.427190', 'EMMANUEL', 'ADIGWE', 'IF', '08064004392', NULL, NULL, NULL, '00038', '00038', '2011', 'FETHAII/2011/00038', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(289, '2021-12-07 20:52:28.254133', '2021-12-07 20:52:37.749684', 'JULIANA', 'ADIKWU', 'NGO', '08064004393', NULL, NULL, NULL, '00039', '00039', '2012', 'FETHAII/2012/00039', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(290, '2021-12-07 20:52:28.445271', '2021-12-07 20:52:37.902230', 'CAROLINE', 'ADIMORAH', '', '08064004394', NULL, NULL, NULL, '00040', '00040', '2013', 'FETHAII/2013/00040', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(291, '2021-12-07 20:52:28.567732', '2021-12-07 20:52:38.038397', 'ORAEKI', 'ADIMORAH', 'HA', '08064004395', NULL, NULL, NULL, '00041', '00041', '2014', 'FETHAII/2014/00041', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(292, '2021-12-07 20:52:28.705782', '2021-12-07 20:52:38.149972', 'IFEYINWA', 'ADOGU', '', '08064004396', NULL, NULL, NULL, '00042', '00042', '2015', 'FETHAII/2015/00042', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(293, '2021-12-07 20:52:28.788732', '2021-12-07 20:52:38.261459', 'OGHENEOCHUKO', 'ADOKA', '', '08064004397', NULL, NULL, NULL, '00043', '00043', '2016', 'FETHAII/2016/00043', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(294, '2021-12-07 20:52:28.861547', '2021-12-07 20:52:38.382376', 'NWOVA', 'ADOKE', 'JOHN', '08064004398', NULL, NULL, NULL, '00044', '00044', '2017', 'FETHAII/2017/00044', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(295, '2021-12-07 20:52:28.917471', '2021-12-07 20:52:38.505253', 'EDACHE', 'ADOKWU', 'ELDA', '08064004399', NULL, NULL, NULL, '00045', '00045', '2018', 'FETHAII/2018/00045', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(296, '2021-12-07 20:52:29.003040', '2021-12-07 20:52:38.927703', 'OBINNA', 'ADONU', 'BENJA', '08064004400', NULL, NULL, NULL, '00046', '00046', '2019', 'FETHAII/2019/00046', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(297, '2021-12-07 20:52:29.051050', '2021-12-07 20:52:39.061323', 'LINDA', 'ADUAKA', 'UKAMA', '08064004401', NULL, NULL, NULL, '00047', '00047', '2020', 'FETHAII/2020/00047', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(298, '2021-12-07 20:52:29.107419', '2021-12-07 20:52:39.259821', 'NGOZI', 'ADUAKA', 'ELIZA', '08064004402', NULL, NULL, NULL, '00048', '00048', '2021', 'FETHAII/2021/00048', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(299, '2021-12-07 20:52:29.220576', '2021-12-07 20:52:39.405168', 'VIVIAN', 'ADUAKA', 'ONYI', '08064004403', NULL, NULL, NULL, '00049', '00049', '2010', 'FETHAII/2010/00049', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(300, '2021-12-07 20:52:29.309648', '2021-12-07 20:52:39.538471', 'ADAGBA', 'ADUWA', 'PATRI', '08064004404', NULL, NULL, NULL, '00050', '00050', '2011', 'FETHAII/2011/00050', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(301, '2021-12-07 20:52:12.262945', '2021-12-07 20:52:18.081556', 'BEN', 'IDAKA', 'MAUREEN', '08064004355', NULL, NULL, NULL, '00001', '00001', '2010', 'FETHAII/2010/00001', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(302, '2021-12-07 20:52:12.662417', '2021-12-07 20:52:18.248730', 'UCHENNA', 'OKOLI', 'OBIA', '08064004356', NULL, NULL, NULL, '00002', '00002', '2011', 'FETHAII/2011/00002', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(303, '2021-12-07 20:52:12.751738', '2021-12-07 20:52:19.172266', 'NKONYELU', 'OKONKWO', 'E', '08064004357', NULL, NULL, NULL, '00003', '00003', '2012', 'FETHAII/2012/00003', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(304, '2021-12-07 20:52:12.844370', '2021-12-07 20:52:19.326762', 'OPHELIA', 'AMADI', 'CHIB', '08064004358', NULL, NULL, NULL, '00004', '00004', '2013', 'FETHAII/2013/00004', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(305, '2021-12-07 20:52:12.931350', '2021-12-07 20:52:19.438683', 'IKWUO', 'NNACHI', 'IJEM', '08064004359', NULL, NULL, NULL, '00005', '00005', '2014', 'FETHAII/2014/00005', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(306, '2021-12-07 20:52:13.018121', '2021-12-07 20:52:19.595505', 'IFEOMA', 'AGBOWO', 'MARY', '08064004360', NULL, NULL, NULL, '00006', '00006', '2015', 'FETHAII/2015/00006', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(307, '2021-12-07 20:52:13.107413', '2021-12-07 20:52:19.728544', 'DR', 'NWANKWO', 'OKUTA J', '08064004361', NULL, NULL, NULL, '00007', '00007', '2016', 'FETHAII/2016/00007', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(308, '2021-12-07 20:52:13.317366', '2021-12-07 20:52:19.849365', 'EMMANUEL', 'ABAA', '', '08064004362', NULL, NULL, NULL, '00008', '00008', '2017', 'FETHAII/2017/00008', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(309, '2021-12-07 20:52:13.409013', '2021-12-07 20:52:20.050492', 'UGO', 'ABAGHA', 'AGNES', '08064004363', NULL, NULL, NULL, '00009', '00009', '2018', 'FETHAII/2018/00009', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(310, '2021-12-07 20:52:13.537993', '2021-12-07 20:52:20.171931', 'CHIGOZI', 'ABAGHAUGWU', '', '08064004364', NULL, NULL, NULL, '00010', '00010', '2019', 'FETHAII/2019/00010', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(311, '2021-12-07 20:52:13.662573', '2021-12-07 20:52:20.294762', 'NWACHINAME', 'ABANIFI', '', '08064004365', NULL, NULL, NULL, '00011', '00011', '2020', 'FETHAII/2020/00011', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(312, '2021-12-07 20:52:13.797004', '2021-12-07 20:52:20.493700', 'NNENWAOGO', 'ABARA', 'P', '08064004366', NULL, NULL, NULL, '00012', '00012', '2021', 'FETHAII/2021/00012', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(313, '2021-12-07 20:52:13.974674', '2021-12-07 20:52:20.672794', 'LAWRENCE', 'ABARA', 'CHI', '08064004367', NULL, NULL, NULL, '00013', '00013', '2010', 'FETHAII/2010/00013', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(314, '2021-12-07 20:52:14.129468', '2021-12-07 20:52:20.772431', 'NWAKAEGO', 'ABARA', 'EUC', '08064004368', NULL, NULL, NULL, '00014', '00014', '2011', 'FETHAII/2011/00014', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(315, '2021-12-07 20:52:14.232840', '2021-12-07 20:52:20.906224', 'OBASI', 'ABBA', 'DORCAS', '08064004369', NULL, NULL, NULL, '00015', '00015', '2012', 'FETHAII/2012/00015', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(316, '2021-12-07 20:52:14.332723', '2021-12-07 20:52:21.401134', 'EFFIONG', 'ABIA', 'ANIET', '08064004370', NULL, NULL, NULL, '00016', '00016', '2013', 'FETHAII/2013/00016', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(317, '2021-12-07 20:52:14.431570', '2021-12-07 20:52:21.771160', 'NKIRUKA', 'ABIA', 'NDON', '08064004371', NULL, NULL, NULL, '00017', '00017', '2014', 'FETHAII/2014/00017', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(318, '2021-12-07 20:52:14.495813', '2021-12-07 20:52:21.894199', 'DR', 'ABIA', 'EFFIONG NDO', '08064004372', NULL, NULL, NULL, '00018', '00018', '2015', 'FETHAII/2015/00018', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(319, '2021-12-07 20:52:14.565055', '2021-12-07 20:52:22.161794', 'UGOCHI', 'ABII', 'GLORIA', '08064004373', NULL, NULL, NULL, '00019', '00019', '2016', 'FETHAII/2016/00019', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(320, '2021-12-07 20:52:14.631653', '2021-12-07 20:52:22.404920', 'ABEKE', 'ABIOLA', 'ZULAY', '08064004374', NULL, NULL, NULL, '00020', '00020', '2017', 'FETHAII/2017/00020', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(321, '2021-12-07 20:52:14.694782', '2021-12-07 20:52:22.774069', 'CHIOMA', 'ABIRI', 'CLARA', '08064004375', NULL, NULL, NULL, '00021', '00021', '2018', 'FETHAII/2018/00021', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(322, '2021-12-07 20:52:14.770735', '2021-12-07 20:52:22.959276', 'OLADELE', 'ABOKEDE', 'AD', '08064004376', NULL, NULL, NULL, '00022', '00022', '2019', 'FETHAII/2019/00022', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(323, '2021-12-07 20:52:14.957974', '2021-12-07 20:52:23.299776', 'OMOLARA', 'ABOKEDE', 'AD', '08064004377', NULL, NULL, NULL, '00023', '00023', '2020', 'FETHAII/2020/00023', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(324, '2021-12-07 20:52:15.066393', '2021-12-07 20:52:23.438371', 'LEONARD', 'ABOR', '', '08064004378', NULL, NULL, NULL, '00024', '00024', '2021', 'FETHAII/2021/00024', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(325, '2021-12-07 20:52:15.207859', '2021-12-07 20:52:23.639000', 'MOMOH', 'ABU', 'AUGUSTIN', '08064004379', NULL, NULL, NULL, '00025', '00025', '2010', 'FETHAII/2010/00025', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(326, '2021-12-07 20:52:15.274533', '2021-12-07 20:52:23.884054', 'MMADUABUCHI', 'ABUWA', '', '08064004380', NULL, NULL, NULL, '00026', '00026', '2011', 'FETHAII/2011/00026', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(327, '2021-12-07 20:52:15.402371', '2021-12-07 20:52:24.006838', 'MAXWELL', 'ACHI', 'NGWU', '08064004381', NULL, NULL, NULL, '00027', '00027', '2012', 'FETHAII/2012/00027', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(328, '2021-12-07 20:52:15.468053', '2021-12-07 20:52:24.194008', 'EZEKIEL', 'ACHONWA', 'UC', '08064004382', NULL, NULL, NULL, '00028', '00028', '2013', 'FETHAII/2013/00028', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(329, '2021-12-07 20:52:15.534726', '2021-12-07 20:52:24.306390', 'UDOCHRIS', 'ACHUGONYE', '', '08064004383', NULL, NULL, NULL, '00029', '00029', '2014', 'FETHAII/2014/00029', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(330, '2021-12-07 20:52:15.664311', '2021-12-07 20:52:24.438156', 'MATTHEW', 'ADAMA', 'SIMO', '08064004384', NULL, NULL, NULL, '00030', '00030', '2015', 'FETHAII/2015/00030', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(331, '2021-12-07 20:52:15.755637', '2021-12-07 20:52:24.640589', 'BEATRI', 'ADAMSOKORIE', '', '08064004385', NULL, NULL, NULL, '00031', '00031', '2016', 'FETHAII/2016/00031', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(332, '2021-12-07 20:52:15.853264', '2021-12-07 20:52:24.805670', 'IFEOMA', 'ADANI', 'MODES', '08064004386', NULL, NULL, NULL, '00032', '00032', '2017', 'FETHAII/2017/00032', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(333, '2021-12-07 20:52:15.952203', '2021-12-07 20:52:24.929448', 'IBUKUN', 'ADEOLU', 'NGOZ', '08064004387', NULL, NULL, NULL, '00033', '00033', '2018', 'FETHAII/2018/00033', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(334, '2021-12-07 20:52:16.007620', '2021-12-07 20:52:25.039409', 'KUSS', 'ADEOYE', 'JULIAN', '08064004388', NULL, NULL, NULL, '00034', '00034', '2019', 'FETHAII/2019/00034', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(335, '2021-12-07 20:52:16.091628', '2021-12-07 20:52:25.206369', 'SAMSON', 'ADEYEMI', 'OLU', '08064004389', NULL, NULL, NULL, '00035', '00035', '2020', 'FETHAII/2020/00035', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(336, '2021-12-07 20:52:16.265981', '2021-12-07 20:52:25.305772', 'EMMANUEL', 'ADIDU', 'AME', '08064004390', NULL, NULL, NULL, '00036', '00036', '2021', 'FETHAII/2021/00036', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(337, '2021-12-07 20:52:16.564571', '2021-12-07 20:52:25.383723', 'NWANYIEZE', 'ADIELE', 'N', '08064004391', NULL, NULL, NULL, '00037', '00037', '2010', 'FETHAII/2010/00037', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(338, '2021-12-07 20:52:16.678235', '2021-12-07 20:52:25.472863', 'EMMANUEL', 'ADIGWE', 'IF', '08064004392', NULL, NULL, NULL, '00038', '00038', '2011', 'FETHAII/2011/00038', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(339, '2021-12-07 20:52:16.741951', '2021-12-07 20:52:25.736371', 'JULIANA', 'ADIKWU', 'NGO', '08064004393', NULL, NULL, NULL, '00039', '00039', '2012', 'FETHAII/2012/00039', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(340, '2021-12-07 20:52:16.808831', '2021-12-07 20:52:26.084784', 'CAROLINE', 'ADIMORAH', '', '08064004394', NULL, NULL, NULL, '00040', '00040', '2013', 'FETHAII/2013/00040', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(341, '2021-12-07 20:52:16.874500', '2021-12-07 20:52:26.404238', 'ORAEKI', 'ADIMORAH', 'HA', '08064004395', NULL, NULL, NULL, '00041', '00041', '2014', 'FETHAII/2014/00041', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(342, '2021-12-07 20:52:16.943959', '2021-12-07 20:52:26.593338', 'IFEYINWA', 'ADOGU', '', '08064004396', NULL, NULL, NULL, '00042', '00042', '2015', 'FETHAII/2015/00042', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(343, '2021-12-07 20:52:17.005916', '2021-12-07 20:52:26.739681', 'OGHENEOCHUKO', 'ADOKA', '', '08064004397', NULL, NULL, NULL, '00043', '00043', '2016', 'FETHAII/2016/00043', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(344, '2021-12-07 20:52:17.062884', '2021-12-07 20:52:26.984387', 'NWOVA', 'ADOKE', 'JOHN', '08064004398', NULL, NULL, NULL, '00044', '00044', '2017', 'FETHAII/2017/00044', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(345, '2021-12-07 20:52:17.140833', '2021-12-07 20:52:27.128227', 'EDACHE', 'ADOKWU', 'ELDA', '08064004399', NULL, NULL, NULL, '00045', '00045', '2018', 'FETHAII/2018/00045', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(346, '2021-12-07 20:52:17.285449', '2021-12-07 20:52:27.239559', 'OBINNA', 'ADONU', 'BENJA', '08064004400', NULL, NULL, NULL, '00046', '00046', '2019', 'FETHAII/2019/00046', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(347, '2021-12-07 20:52:17.522794', '2021-12-07 20:52:27.372733', 'LINDA', 'ADUAKA', 'UKAMA', '08064004401', NULL, NULL, NULL, '00047', '00047', '2020', 'FETHAII/2020/00047', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(348, '2021-12-07 20:52:17.657828', '2021-12-07 20:52:27.572773', 'NGOZI', 'ADUAKA', 'ELIZA', '08064004402', NULL, NULL, NULL, '00048', '00048', '2021', 'FETHAII/2021/00048', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(349, '2021-12-07 20:52:17.740945', '2021-12-07 20:52:27.673170', 'VIVIAN', 'ADUAKA', 'ONYI', '08064004403', NULL, NULL, NULL, '00049', '00049', '2010', 'FETHAII/2010/00049', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(350, '2021-12-07 20:52:17.806688', '2021-12-07 20:52:27.750122', 'ADAGBA', 'ADUWA', 'PATRI', '08064004404', NULL, NULL, NULL, '00050', '00050', '2011', 'FETHAII/2011/00050', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(351, '2021-12-07 21:04:13.677877', '2021-12-07 21:04:18.779028', 'BEN', 'IDAKA', 'MAUREEN', '08064004355', NULL, NULL, NULL, '00001', '00001', '2010', 'FETHAII/2010/00001', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(352, '2021-12-07 21:04:13.953006', '2021-12-07 21:04:18.933983', 'UCHENNA', 'OKOLI', 'OBIA', '08064004356', NULL, NULL, NULL, '00002', '00002', '2011', 'FETHAII/2011/00002', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(353, '2021-12-07 21:04:14.040120', '2021-12-07 21:04:19.858805', 'NKONYELU', 'OKONKWO', 'E', '08064004357', NULL, NULL, NULL, '00003', '00003', '2012', 'FETHAII/2012/00003', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(354, '2021-12-07 21:04:14.148151', '2021-12-07 21:04:20.112968', 'OPHELIA', 'AMADI', 'CHIB', '08064004358', NULL, NULL, NULL, '00004', '00004', '2013', 'FETHAII/2013/00004', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(355, '2021-12-07 21:04:14.224999', '2021-12-07 21:04:20.234744', 'IKWUO', 'NNACHI', 'IJEM', '08064004359', NULL, NULL, NULL, '00005', '00005', '2014', 'FETHAII/2014/00005', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(356, '2021-12-07 21:04:14.313490', '2021-12-07 21:04:20.357053', 'IFEOMA', 'AGBOWO', 'MARY', '08064004360', NULL, NULL, NULL, '00006', '00006', '2015', 'FETHAII/2015/00006', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(357, '2021-12-07 21:04:14.370138', '2021-12-07 21:04:20.578952', 'DR', 'NWANKWO', 'OKUTA J', '08064004361', NULL, NULL, NULL, '00007', '00007', '2016', 'FETHAII/2016/00007', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(358, '2021-12-07 21:04:14.461393', '2021-12-07 21:04:20.757516', 'EMMANUEL', 'ABAA', '', '08064004362', NULL, NULL, NULL, '00008', '00008', '2017', 'FETHAII/2017/00008', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(359, '2021-12-07 21:04:14.529633', '2021-12-07 21:04:20.889762', 'UGO', 'ABAGHA', 'AGNES', '08064004363', NULL, NULL, NULL, '00009', '00009', '2018', 'FETHAII/2018/00009', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(360, '2021-12-07 21:04:14.847265', '2021-12-07 21:04:21.078923', 'CHIGOZI', 'ABAGHAUGWU', '', '08064004364', NULL, NULL, NULL, '00010', '00010', '2019', 'FETHAII/2019/00010', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(361, '2021-12-07 21:04:14.939115', '2021-12-07 21:04:21.212416', 'NWACHINAME', 'ABANIFI', '', '08064004365', NULL, NULL, NULL, '00011', '00011', '2020', 'FETHAII/2020/00011', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(362, '2021-12-07 21:04:15.037157', '2021-12-07 21:04:21.331089', 'NNENWAOGO', 'ABARA', 'P', '08064004366', NULL, NULL, NULL, '00012', '00012', '2021', 'FETHAII/2021/00012', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(363, '2021-12-07 21:04:15.135073', '2021-12-07 21:04:21.468583', 'LAWRENCE', 'ABARA', 'CHI', '08064004367', NULL, NULL, NULL, '00013', '00013', '2010', 'FETHAII/2010/00013', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(364, '2021-12-07 21:04:15.180252', '2021-12-07 21:04:21.545814', 'NWAKAEGO', 'ABARA', 'EUC', '08064004368', NULL, NULL, NULL, '00014', '00014', '2011', 'FETHAII/2011/00014', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(365, '2021-12-07 21:04:15.226105', '2021-12-07 21:04:21.634691', 'OBASI', 'ABBA', 'DORCAS', '08064004369', NULL, NULL, NULL, '00015', '00015', '2012', 'FETHAII/2012/00015', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(366, '2021-12-07 21:04:15.296821', '2021-12-07 21:04:22.623460', 'EFFIONG', 'ABIA', 'ANIET', '08064004370', NULL, NULL, NULL, '00016', '00016', '2013', 'FETHAII/2013/00016', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(367, '2021-12-07 21:04:15.373200', '2021-12-07 21:04:22.901848', 'NKIRUKA', 'ABIA', 'NDON', '08064004371', NULL, NULL, NULL, '00017', '00017', '2014', 'FETHAII/2014/00017', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(368, '2021-12-07 21:04:15.473072', '2021-12-07 21:04:23.056719', 'DR', 'ABIA', 'EFFIONG NDO', '08064004372', NULL, NULL, NULL, '00018', '00018', '2015', 'FETHAII/2015/00018', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(369, '2021-12-07 21:04:15.561746', '2021-12-07 21:04:23.212923', 'UGOCHI', 'ABII', 'GLORIA', '08064004373', NULL, NULL, NULL, '00019', '00019', '2016', 'FETHAII/2016/00019', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(370, '2021-12-07 21:04:15.663969', '2021-12-07 21:04:23.380971', 'ABEKE', 'ABIOLA', 'ZULAY', '08064004374', NULL, NULL, NULL, '00020', '00020', '2017', 'FETHAII/2017/00020', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(371, '2021-12-07 21:04:15.793473', '2021-12-07 21:04:23.657014', 'CHIOMA', 'ABIRI', 'CLARA', '08064004375', NULL, NULL, NULL, '00021', '00021', '2018', 'FETHAII/2018/00021', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(372, '2021-12-07 21:04:15.990170', '2021-12-07 21:04:23.801303', 'OLADELE', 'ABOKEDE', 'AD', '08064004376', NULL, NULL, NULL, '00022', '00022', '2019', 'FETHAII/2019/00022', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(373, '2021-12-07 21:04:16.116313', '2021-12-07 21:04:23.913731', 'OMOLARA', 'ABOKEDE', 'AD', '08064004377', NULL, NULL, NULL, '00023', '00023', '2020', 'FETHAII/2020/00023', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(374, '2021-12-07 21:04:16.191283', '2021-12-07 21:04:24.057658', 'LEONARD', 'ABOR', '', '08064004378', NULL, NULL, NULL, '00024', '00024', '2021', 'FETHAII/2021/00024', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(375, '2021-12-07 21:04:16.269691', '2021-12-07 21:04:24.201562', 'MOMOH', 'ABU', 'AUGUSTIN', '08064004379', NULL, NULL, NULL, '00025', '00025', '2010', 'FETHAII/2010/00025', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(376, '2021-12-07 21:04:16.433291', '2021-12-07 21:04:24.412499', 'MMADUABUCHI', 'ABUWA', '', '08064004380', NULL, NULL, NULL, '00026', '00026', '2011', 'FETHAII/2011/00026', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(377, '2021-12-07 21:04:16.507036', '2021-12-07 21:04:24.677703', 'MAXWELL', 'ACHI', 'NGWU', '08064004381', NULL, NULL, NULL, '00027', '00027', '2012', 'FETHAII/2012/00027', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(378, '2021-12-07 21:04:16.572717', '2021-12-07 21:04:24.823810', 'EZEKIEL', 'ACHONWA', 'UC', '08064004382', NULL, NULL, NULL, '00028', '00028', '2013', 'FETHAII/2013/00028', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(379, '2021-12-07 21:04:16.647547', '2021-12-07 21:04:24.956919', 'UDOCHRIS', 'ACHUGONYE', '', '08064004383', NULL, NULL, NULL, '00029', '00029', '2014', 'FETHAII/2014/00029', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(380, '2021-12-07 21:04:16.692254', '2021-12-07 21:04:25.058323', 'MATTHEW', 'ADAMA', 'SIMO', '08064004384', NULL, NULL, NULL, '00030', '00030', '2015', 'FETHAII/2015/00030', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(381, '2021-12-07 21:04:16.770395', '2021-12-07 21:04:25.168042', 'BEATRI', 'ADAMSOKORIE', '', '08064004385', NULL, NULL, NULL, '00031', '00031', '2016', 'FETHAII/2016/00031', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(382, '2021-12-07 21:04:16.850390', '2021-12-07 21:04:25.312952', 'IFEOMA', 'ADANI', 'MODES', '08064004386', NULL, NULL, NULL, '00032', '00032', '2017', 'FETHAII/2017/00032', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(383, '2021-12-07 21:04:17.102611', '2021-12-07 21:04:25.378911', 'IBUKUN', 'ADEOLU', 'NGOZ', '08064004387', NULL, NULL, NULL, '00033', '00033', '2018', 'FETHAII/2018/00033', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(384, '2021-12-07 21:04:17.180561', '2021-12-07 21:04:25.501004', 'KUSS', 'ADEOYE', 'JULIAN', '08064004388', NULL, NULL, NULL, '00034', '00034', '2019', 'FETHAII/2019/00034', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(385, '2021-12-07 21:04:17.281640', '2021-12-07 21:04:25.669325', 'SAMSON', 'ADEYEMI', 'OLU', '08064004389', NULL, NULL, NULL, '00035', '00035', '2020', 'FETHAII/2020/00035', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(386, '2021-12-07 21:04:17.347881', '2021-12-07 21:04:25.834411', 'EMMANUEL', 'ADIDU', 'AME', '08064004390', NULL, NULL, NULL, '00036', '00036', '2021', 'FETHAII/2021/00036', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(387, '2021-12-07 21:04:17.436192', '2021-12-07 21:04:25.957396', 'NWANYIEZE', 'ADIELE', 'N', '08064004391', NULL, NULL, NULL, '00037', '00037', '2010', 'FETHAII/2010/00037', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(388, '2021-12-07 21:04:17.491749', '2021-12-07 21:04:26.057978', 'EMMANUEL', 'ADIGWE', 'IF', '08064004392', NULL, NULL, NULL, '00038', '00038', '2011', 'FETHAII/2011/00038', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(389, '2021-12-07 21:04:17.548360', '2021-12-07 21:04:26.147071', 'JULIANA', 'ADIKWU', 'NGO', '08064004393', NULL, NULL, NULL, '00039', '00039', '2012', 'FETHAII/2012/00039', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(390, '2021-12-07 21:04:17.625141', '2021-12-07 21:04:26.212234', 'CAROLINE', 'ADIMORAH', '', '08064004394', NULL, NULL, NULL, '00040', '00040', '2013', 'FETHAII/2013/00040', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(391, '2021-12-07 21:04:17.687326', '2021-12-07 21:04:26.279522', 'ORAEKI', 'ADIMORAH', 'HA', '08064004395', NULL, NULL, NULL, '00041', '00041', '2014', 'FETHAII/2014/00041', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(392, '2021-12-07 21:04:17.893198', '2021-12-07 21:04:26.345623', 'IFEYINWA', 'ADOGU', '', '08064004396', NULL, NULL, NULL, '00042', '00042', '2015', 'FETHAII/2015/00042', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(393, '2021-12-07 21:04:18.026469', '2021-12-07 21:04:26.468620', 'OGHENEOCHUKO', 'ADOKA', '', '08064004397', NULL, NULL, NULL, '00043', '00043', '2016', 'FETHAII/2016/00043', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(394, '2021-12-07 21:04:18.258570', '2021-12-07 21:04:26.660182', 'NWOVA', 'ADOKE', 'JOHN', '08064004398', NULL, NULL, NULL, '00044', '00044', '2017', 'FETHAII/2017/00044', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(395, '2021-12-07 21:04:18.324529', '2021-12-07 21:04:27.045828', 'EDACHE', 'ADOKWU', 'ELDA', '08064004399', NULL, NULL, NULL, '00045', '00045', '2018', 'FETHAII/2018/00045', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(396, '2021-12-07 21:04:18.369497', '2021-12-07 21:04:27.218936', 'OBINNA', 'ADONU', 'BENJA', '08064004400', NULL, NULL, NULL, '00046', '00046', '2019', 'FETHAII/2019/00046', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(397, '2021-12-07 21:04:18.413700', '2021-12-07 21:04:27.335347', 'LINDA', 'ADUAKA', 'UKAMA', '08064004401', NULL, NULL, NULL, '00047', '00047', '2020', 'FETHAII/2020/00047', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(398, '2021-12-07 21:04:18.458403', '2021-12-07 21:04:27.457026', 'NGOZI', 'ADUAKA', 'ELIZA', '08064004402', NULL, NULL, NULL, '00048', '00048', '2021', 'FETHAII/2021/00048', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(399, '2021-12-07 21:04:18.513746', '2021-12-07 21:04:27.523125', 'VIVIAN', 'ADUAKA', 'ONYI', '08064004403', NULL, NULL, NULL, '00049', '00049', '2010', 'FETHAII/2010/00049', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(400, '2021-12-07 21:04:18.569297', '2021-12-07 21:04:27.611942', 'ADAGBA', 'ADUWA', 'PATRI', '08064004404', NULL, NULL, NULL, '00050', '00050', '2011', 'FETHAII/2011/00050', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2),
-(401, '2021-12-16 07:42:00.391862', '2021-12-16 07:57:07.533430', 'FRED', 'EKPE', 'EDET', '08598574455', '2021-12-16', NULL, '2021-12-16', NULL, NULL, NULL, NULL, 7, 2, 2, 2, 17, 1, 9, NULL, 2, 7, 2),
-(402, '2021-12-16 09:08:13.936840', '2021-12-16 09:09:56.598706', 'PHILIP', 'ALOKE', 'SUNDAY', '08075544443', '2021-12-16', NULL, '2021-12-16', NULL, NULL, NULL, NULL, 7, 2, 2, 2, 6, 1, 9, NULL, 2, 8, 2),
-(403, '2021-12-16 09:27:41.712497', '2021-12-16 09:29:46.534985', 'EMEKA', 'NJOKU', 'NJOKU', '08608686445', '2021-12-16', NULL, '2021-12-16', NULL, NULL, NULL, NULL, 7, 2, 2, 2, 1, 1, 9, NULL, 2, 4, 2),
-(404, '2021-12-16 09:35:44.889608', '2021-12-16 09:39:48.391995', 'CHINYERE', 'IGWE', 'SONIA', '08145674655', '2021-12-16', NULL, '2021-12-16', NULL, NULL, NULL, NULL, 7, 2, 2, 2, 26, 2, 9, NULL, 2, 2, 2),
-(405, '2021-12-16 09:48:39.429963', '2021-12-16 09:49:49.200783', 'EMMANUEL', 'ONWE', 'CHIKE', '08039555648', '2021-12-16', NULL, '2021-12-16', NULL, NULL, NULL, NULL, 7, 2, 2, 2, 14, 1, 9, NULL, 2, 8, 2),
-(406, '2022-01-01 08:43:48.387405', '2022-01-01 08:45:34.512585', 'NWEKE', 'AGU', '', '09505857445', '2022-01-01', NULL, '2022-01-01', NULL, NULL, NULL, NULL, 7, 2, 2, 2, 1, 1, 9, NULL, 2, 7, 1);
+INSERT INTO `cooperative_membershiprequest` (`id`, `created_at`, `updated_at`, `first_name`, `last_name`, `middle_name`, `phone_number`, `certified_date`, `approval_comment`, `approved_date`, `file_no`, `ippis_no`, `year`, `member_id`, `approval_officer_id`, `approval_status_id`, `certification_officer_id`, `certification_status_id`, `department_id`, `gender_id`, `processed_by_id`, `salary_institution_id`, `submission_status_id`, `title_id`, `transaction_status_id`, `tdate`) VALUES
+(1, '2021-12-07 19:57:33.846414', '2021-12-07 20:27:03.659500', 'BEN', 'IDAKA', 'MAUREEN', '08064004355', NULL, NULL, NULL, '00001', '00001', '2010', 'FETHAII/2010/00001', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(2, '2021-12-07 19:57:34.137983', '2021-12-07 20:27:03.885639', 'UCHENNA', 'OKOLI', 'OBIA', '08064004356', NULL, NULL, NULL, '00002', '00002', '2011', 'FETHAII/2011/00002', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(3, '2021-12-07 19:57:34.379531', '2021-12-07 20:27:04.067026', 'NKONYELU', 'OKONKWO', 'E', '08064004357', NULL, NULL, NULL, '00003', '00003', '2012', 'FETHAII/2012/00003', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(4, '2021-12-07 19:57:34.446613', '2021-12-07 20:27:04.203510', 'OPHELIA', 'AMADI', 'CHIB', '08064004358', NULL, NULL, NULL, '00004', '00004', '2013', 'FETHAII/2013/00004', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(5, '2021-12-07 19:57:34.538384', '2021-12-07 20:27:04.322692', 'IKWUO', 'NNACHI', 'IJEM', '08064004359', NULL, NULL, NULL, '00005', '00005', '2014', 'FETHAII/2014/00005', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(6, '2021-12-07 19:57:34.630163', '2021-12-07 20:27:04.435723', 'IFEOMA', 'AGBOWO', 'MARY', '08064004360', NULL, NULL, NULL, '00006', '00006', '2015', 'FETHAII/2015/00006', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(7, '2021-12-07 19:57:34.694113', '2021-12-07 20:27:04.533953', 'DR', 'NWANKWO', 'OKUTA J', '08064004361', NULL, NULL, NULL, '00007', '00007', '2016', 'FETHAII/2016/00007', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(8, '2021-12-07 19:57:34.759076', '2021-12-07 20:27:04.801688', 'EMMANUEL', 'ABAA', '', '08064004362', NULL, NULL, NULL, '00008', '00008', '2017', 'FETHAII/2017/00008', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(9, '2021-12-07 19:57:34.904000', '2021-12-07 20:27:04.956990', 'UGO', 'ABAGHA', 'AGNES', '08064004363', NULL, NULL, NULL, '00009', '00009', '2018', 'FETHAII/2018/00009', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(10, '2021-12-07 19:57:34.996893', '2021-12-07 20:27:05.125096', 'CHIGOZI', 'ABAGHAUGWU', '', '08064004364', NULL, NULL, NULL, '00010', '00010', '2019', 'FETHAII/2019/00010', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(11, '2021-12-07 19:57:35.060923', '2021-12-07 20:27:05.292208', 'NWACHINAME', 'ABANIFI', '', '08064004365', NULL, NULL, NULL, '00011', '00011', '2020', 'FETHAII/2020/00011', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(12, '2021-12-07 19:57:35.193841', '2021-12-07 20:27:05.401753', 'NNENWAOGO', 'ABARA', 'P', '08064004366', NULL, NULL, NULL, '00012', '00012', '2021', 'FETHAII/2021/00012', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(13, '2021-12-07 19:57:35.315766', '2021-12-07 20:27:05.468998', 'LAWRENCE', 'ABARA', 'CHI', '08064004367', NULL, NULL, NULL, '00013', '00013', '2010', 'FETHAII/2010/00013', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(14, '2021-12-07 19:57:35.382478', '2021-12-07 20:27:05.603905', 'NWAKAEGO', 'ABARA', 'EUC', '08064004368', NULL, NULL, NULL, '00014', '00014', '2011', 'FETHAII/2011/00014', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(15, '2021-12-07 19:57:35.449137', '2021-12-07 20:27:05.725791', 'OBASI', 'ABBA', 'DORCAS', '08064004369', NULL, NULL, NULL, '00015', '00015', '2012', 'FETHAII/2012/00015', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(16, '2021-12-07 19:57:35.529676', '2021-12-07 20:27:06.113967', 'EFFIONG', 'ABIA', 'ANIET', '08064004370', NULL, NULL, NULL, '00016', '00016', '2013', 'FETHAII/2013/00016', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(17, '2021-12-07 19:57:35.608744', '2021-12-07 20:27:06.358179', 'NKIRUKA', 'ABIA', 'NDON', '08064004371', NULL, NULL, NULL, '00017', '00017', '2014', 'FETHAII/2014/00017', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(18, '2021-12-07 19:57:35.677422', '2021-12-07 20:27:06.447175', 'DR', 'ABIA', 'EFFIONG NDO', '08064004372', NULL, NULL, NULL, '00018', '00018', '2015', 'FETHAII/2015/00018', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(19, '2021-12-07 19:57:35.772449', '2021-12-07 20:27:06.615048', 'UGOCHI', 'ABII', 'GLORIA', '08064004373', NULL, NULL, NULL, '00019', '00019', '2016', 'FETHAII/2016/00019', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(20, '2021-12-07 19:57:35.843152', '2021-12-07 20:27:06.702353', 'ABEKE', 'ABIOLA', 'ZULAY', '08064004374', NULL, NULL, NULL, '00020', '00020', '2017', 'FETHAII/2017/00020', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(21, '2021-12-07 19:57:36.103844', '2021-12-07 20:27:06.833835', 'CHIOMA', 'ABIRI', 'CLARA', '08064004375', NULL, NULL, NULL, '00021', '00021', '2018', 'FETHAII/2018/00021', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(22, '2021-12-07 19:57:36.207117', '2021-12-07 20:27:06.901040', 'OLADELE', 'ABOKEDE', 'AD', '08064004376', NULL, NULL, NULL, '00022', '00022', '2019', 'FETHAII/2019/00022', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(23, '2021-12-07 19:57:36.279072', '2021-12-07 20:27:07.024960', 'OMOLARA', 'ABOKEDE', 'AD', '08064004377', NULL, NULL, NULL, '00023', '00023', '2020', 'FETHAII/2020/00023', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(24, '2021-12-07 19:57:36.361022', '2021-12-07 20:27:07.202667', 'LEONARD', 'ABOR', '', '08064004378', NULL, NULL, NULL, '00024', '00024', '2021', 'FETHAII/2021/00024', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(25, '2021-12-07 19:57:36.437675', '2021-12-07 20:27:07.403816', 'MOMOH', 'ABU', 'AUGUSTIN', '08064004379', NULL, NULL, NULL, '00025', '00025', '2010', 'FETHAII/2010/00025', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(26, '2021-12-07 19:57:36.515679', '2021-12-07 20:27:07.559715', 'MMADUABUCHI', 'ABUWA', '', '08064004380', NULL, NULL, NULL, '00026', '00026', '2011', 'FETHAII/2011/00026', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(27, '2021-12-07 19:57:36.607604', '2021-12-07 20:27:07.682301', 'MAXWELL', 'ACHI', 'NGWU', '08064004381', NULL, NULL, NULL, '00027', '00027', '2012', 'FETHAII/2012/00027', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(28, '2021-12-07 19:57:36.673848', '2021-12-07 20:27:07.767368', 'EZEKIEL', 'ACHONWA', 'UC', '08064004382', NULL, NULL, NULL, '00028', '00028', '2013', 'FETHAII/2013/00028', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(29, '2021-12-07 19:57:36.738381', '2021-12-07 20:27:07.858135', 'UDOCHRIS', 'ACHUGONYE', '', '08064004383', NULL, NULL, NULL, '00029', '00029', '2014', 'FETHAII/2014/00029', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(30, '2021-12-07 19:57:36.804928', '2021-12-07 20:27:07.935553', 'MATTHEW', 'ADAMA', 'SIMO', '08064004384', NULL, NULL, NULL, '00030', '00030', '2015', 'FETHAII/2015/00030', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(31, '2021-12-07 19:57:36.871569', '2021-12-07 20:27:08.001450', 'BEATRI', 'ADAMSOKORIE', '', '08064004385', NULL, NULL, NULL, '00031', '00031', '2016', 'FETHAII/2016/00031', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(32, '2021-12-07 19:57:36.974430', '2021-12-07 20:27:08.079870', 'IFEOMA', 'ADANI', 'MODES', '08064004386', NULL, NULL, NULL, '00032', '00032', '2017', 'FETHAII/2017/00032', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(33, '2021-12-07 19:57:37.083701', '2021-12-07 20:27:08.178806', 'IBUKUN', 'ADEOLU', 'NGOZ', '08064004387', NULL, NULL, NULL, '00033', '00033', '2018', 'FETHAII/2018/00033', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(34, '2021-12-07 19:57:37.248598', '2021-12-07 20:27:08.894797', 'KUSS', 'ADEOYE', 'JULIAN', '08064004388', NULL, NULL, NULL, '00034', '00034', '2019', 'FETHAII/2019/00034', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(35, '2021-12-07 19:57:37.315166', '2021-12-07 20:27:09.002052', 'SAMSON', 'ADEYEMI', 'OLU', '08064004389', NULL, NULL, NULL, '00035', '00035', '2020', 'FETHAII/2020/00035', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(36, '2021-12-07 19:57:37.387916', '2021-12-07 20:27:09.105325', 'EMMANUEL', 'ADIDU', 'AME', '08064004390', NULL, NULL, NULL, '00036', '00036', '2021', 'FETHAII/2021/00036', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(37, '2021-12-07 19:57:37.471860', '2021-12-07 20:27:09.245587', 'NWANYIEZE', 'ADIELE', 'N', '08064004391', NULL, NULL, NULL, '00037', '00037', '2010', 'FETHAII/2010/00037', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(38, '2021-12-07 19:57:37.538819', '2021-12-07 20:27:09.378192', 'EMMANUEL', 'ADIGWE', 'IF', '08064004392', NULL, NULL, NULL, '00038', '00038', '2011', 'FETHAII/2011/00038', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(39, '2021-12-07 19:57:37.605068', '2021-12-07 20:27:09.523605', 'JULIANA', 'ADIKWU', 'NGO', '08064004393', NULL, NULL, NULL, '00039', '00039', '2012', 'FETHAII/2012/00039', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(40, '2021-12-07 19:57:37.673787', '2021-12-07 20:27:09.622866', 'CAROLINE', 'ADIMORAH', '', '08064004394', NULL, NULL, NULL, '00040', '00040', '2013', 'FETHAII/2013/00040', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(41, '2021-12-07 19:57:37.740712', '2021-12-07 20:27:09.928073', 'ORAEKI', 'ADIMORAH', 'HA', '08064004395', NULL, NULL, NULL, '00041', '00041', '2014', 'FETHAII/2014/00041', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(42, '2021-12-07 19:57:37.828798', '2021-12-07 20:27:10.083366', 'IFEYINWA', 'ADOGU', '', '08064004396', NULL, NULL, NULL, '00042', '00042', '2015', 'FETHAII/2015/00042', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(43, '2021-12-07 19:57:37.895048', '2021-12-07 20:27:10.226920', 'OGHENEOCHUKO', 'ADOKA', '', '08064004397', NULL, NULL, NULL, '00043', '00043', '2016', 'FETHAII/2016/00043', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(44, '2021-12-07 19:57:37.973106', '2021-12-07 20:27:10.346806', 'NWOVA', 'ADOKE', 'JOHN', '08064004398', NULL, NULL, NULL, '00044', '00044', '2017', 'FETHAII/2017/00044', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(45, '2021-12-07 19:57:38.064159', '2021-12-07 20:27:10.434399', 'EDACHE', 'ADOKWU', 'ELDA', '08064004399', NULL, NULL, NULL, '00045', '00045', '2018', 'FETHAII/2018/00045', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(46, '2021-12-07 19:57:38.131406', '2021-12-07 20:27:10.501914', 'OBINNA', 'ADONU', 'BENJA', '08064004400', NULL, NULL, NULL, '00046', '00046', '2019', 'FETHAII/2019/00046', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(47, '2021-12-07 19:57:38.283257', '2021-12-07 20:27:10.615844', 'LINDA', 'ADUAKA', 'UKAMA', '08064004401', NULL, NULL, NULL, '00047', '00047', '2020', 'FETHAII/2020/00047', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(48, '2021-12-07 19:57:38.360206', '2021-12-07 20:27:10.678804', 'NGOZI', 'ADUAKA', 'ELIZA', '08064004402', NULL, NULL, NULL, '00048', '00048', '2021', 'FETHAII/2021/00048', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(49, '2021-12-07 19:57:38.427167', '2021-12-07 20:27:10.768622', 'VIVIAN', 'ADUAKA', 'ONYI', '08064004403', NULL, NULL, NULL, '00049', '00049', '2010', 'FETHAII/2010/00049', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(50, '2021-12-07 19:57:38.493562', '2021-12-07 20:27:11.357011', 'ADAGBA', 'ADUWA', 'PATRI', '08064004404', NULL, NULL, NULL, '00050', '00050', '2011', 'FETHAII/2011/00050', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(51, '2021-12-07 20:26:57.088927', '2021-12-07 20:27:11.669320', 'BEN', 'IDAKA', 'MAUREEN', '08064004355', NULL, NULL, NULL, '00001', '00001', '2010', 'FETHAII/2010/00001', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(52, '2021-12-07 20:26:57.373438', '2021-12-07 20:27:11.796891', 'UCHENNA', 'OKOLI', 'OBIA', '08064004356', NULL, NULL, NULL, '00002', '00002', '2011', 'FETHAII/2011/00002', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(53, '2021-12-07 20:26:57.762024', '2021-12-07 20:27:11.912773', 'NKONYELU', 'OKONKWO', 'E', '08064004357', NULL, NULL, NULL, '00003', '00003', '2012', 'FETHAII/2012/00003', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(54, '2021-12-07 20:26:57.840087', '2021-12-07 20:27:12.023401', 'OPHELIA', 'AMADI', 'CHIB', '08064004358', NULL, NULL, NULL, '00004', '00004', '2013', 'FETHAII/2013/00004', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(55, '2021-12-07 20:26:57.929956', '2021-12-07 20:27:12.113689', 'IKWUO', 'NNACHI', 'IJEM', '08064004359', NULL, NULL, NULL, '00005', '00005', '2014', 'FETHAII/2014/00005', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(56, '2021-12-07 20:26:58.005213', '2021-12-07 20:27:12.179896', 'IFEOMA', 'AGBOWO', 'MARY', '08064004360', NULL, NULL, NULL, '00006', '00006', '2015', 'FETHAII/2015/00006', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(57, '2021-12-07 20:26:58.079669', '2021-12-07 20:27:12.347869', 'DR', 'NWANKWO', 'OKUTA J', '08064004361', NULL, NULL, NULL, '00007', '00007', '2016', 'FETHAII/2016/00007', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(58, '2021-12-07 20:26:58.348231', '2021-12-07 20:27:12.584224', 'EMMANUEL', 'ABAA', '', '08064004362', NULL, NULL, NULL, '00008', '00008', '2017', 'FETHAII/2017/00008', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(59, '2021-12-07 20:26:58.597575', '2021-12-07 20:27:12.691084', 'UGO', 'ABAGHA', 'AGNES', '08064004363', NULL, NULL, NULL, '00009', '00009', '2018', 'FETHAII/2018/00009', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(60, '2021-12-07 20:26:58.825077', '2021-12-07 20:27:12.779136', 'CHIGOZI', 'ABAGHAUGWU', '', '08064004364', NULL, NULL, NULL, '00010', '00010', '2019', 'FETHAII/2019/00010', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(61, '2021-12-07 20:26:58.917969', '2021-12-07 20:27:13.071694', 'NWACHINAME', 'ABANIFI', '', '08064004365', NULL, NULL, NULL, '00011', '00011', '2020', 'FETHAII/2020/00011', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(62, '2021-12-07 20:26:58.995068', '2021-12-07 20:27:13.195422', 'NNENWAOGO', 'ABARA', 'P', '08064004366', NULL, NULL, NULL, '00012', '00012', '2021', 'FETHAII/2021/00012', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(63, '2021-12-07 20:26:59.073241', '2021-12-07 20:27:13.346202', 'LAWRENCE', 'ABARA', 'CHI', '08064004367', NULL, NULL, NULL, '00013', '00013', '2010', 'FETHAII/2010/00013', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(64, '2021-12-07 20:26:59.159161', '2021-12-07 20:27:13.434256', 'NWAKAEGO', 'ABARA', 'EUC', '08064004368', NULL, NULL, NULL, '00014', '00014', '2011', 'FETHAII/2011/00014', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(65, '2021-12-07 20:26:59.237255', '2021-12-07 20:27:13.617695', 'OBASI', 'ABBA', 'DORCAS', '08064004369', NULL, NULL, NULL, '00015', '00015', '2012', 'FETHAII/2012/00015', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(66, '2021-12-07 20:26:59.308194', '2021-12-07 20:27:14.183096', 'EFFIONG', 'ABIA', 'ANIET', '08064004370', NULL, NULL, NULL, '00016', '00016', '2013', 'FETHAII/2013/00016', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(67, '2021-12-07 20:26:59.381157', '2021-12-07 20:27:14.368354', 'NKIRUKA', 'ABIA', 'NDON', '08064004371', NULL, NULL, NULL, '00017', '00017', '2014', 'FETHAII/2014/00017', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(68, '2021-12-07 20:26:59.462767', '2021-12-07 20:27:14.445618', 'DR', 'ABIA', 'EFFIONG NDO', '08064004372', NULL, NULL, NULL, '00018', '00018', '2015', 'FETHAII/2015/00018', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(69, '2021-12-07 20:26:59.516214', '2021-12-07 20:27:14.513893', 'UGOCHI', 'ABII', 'GLORIA', '08064004373', NULL, NULL, NULL, '00019', '00019', '2016', 'FETHAII/2016/00019', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(70, '2021-12-07 20:26:59.570898', '2021-12-07 20:27:14.579006', 'ABEKE', 'ABIOLA', 'ZULAY', '08064004374', NULL, NULL, NULL, '00020', '00020', '2017', 'FETHAII/2017/00020', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(71, '2021-12-07 20:27:00.331045', '2021-12-07 20:27:14.646251', 'CHIOMA', 'ABIRI', 'CLARA', '08064004375', NULL, NULL, NULL, '00021', '00021', '2018', 'FETHAII/2018/00021', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(72, '2021-12-07 20:27:00.507072', '2021-12-07 20:27:14.712351', 'OLADELE', 'ABOKEDE', 'AD', '08064004376', NULL, NULL, NULL, '00022', '00022', '2019', 'FETHAII/2019/00022', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(73, '2021-12-07 20:27:00.550674', '2021-12-07 20:27:15.183378', 'OMOLARA', 'ABOKEDE', 'AD', '08064004377', NULL, NULL, NULL, '00023', '00023', '2020', 'FETHAII/2020/00023', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(74, '2021-12-07 20:27:00.717092', '2021-12-07 20:27:15.338857', 'LEONARD', 'ABOR', '', '08064004378', NULL, NULL, NULL, '00024', '00024', '2021', 'FETHAII/2021/00024', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(75, '2021-12-07 20:27:00.805656', '2021-12-07 20:27:15.456538', 'MOMOH', 'ABU', 'AUGUSTIN', '08064004379', NULL, NULL, NULL, '00025', '00025', '2010', 'FETHAII/2010/00025', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(76, '2021-12-07 20:27:00.872880', '2021-12-07 20:27:15.568279', 'MMADUABUCHI', 'ABUWA', '', '08064004380', NULL, NULL, NULL, '00026', '00026', '2011', 'FETHAII/2011/00026', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(77, '2021-12-07 20:27:00.948580', '2021-12-07 20:27:15.656628', 'MAXWELL', 'ACHI', 'NGWU', '08064004381', NULL, NULL, NULL, '00027', '00027', '2012', 'FETHAII/2012/00027', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(78, '2021-12-07 20:27:00.991548', '2021-12-07 20:27:15.723854', 'EZEKIEL', 'ACHONWA', 'UC', '08064004382', NULL, NULL, NULL, '00028', '00028', '2013', 'FETHAII/2013/00028', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(79, '2021-12-07 20:27:01.058509', '2021-12-07 20:27:15.813548', 'UDOCHRIS', 'ACHUGONYE', '', '08064004383', NULL, NULL, NULL, '00029', '00029', '2014', 'FETHAII/2014/00029', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(80, '2021-12-07 20:27:01.192822', '2021-12-07 20:27:15.923328', 'MATTHEW', 'ADAMA', 'SIMO', '08064004384', NULL, NULL, NULL, '00030', '00030', '2015', 'FETHAII/2015/00030', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(81, '2021-12-07 20:27:01.281698', '2021-12-07 20:27:16.073217', 'BEATRI', 'ADAMSOKORIE', '', '08064004385', NULL, NULL, NULL, '00031', '00031', '2016', 'FETHAII/2016/00031', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(82, '2021-12-07 20:27:01.427673', '2021-12-07 20:27:17.135204', 'IFEOMA', 'ADANI', 'MODES', '08064004386', NULL, NULL, NULL, '00032', '00032', '2017', 'FETHAII/2017/00032', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(83, '2021-12-07 20:27:01.526546', '2021-12-07 20:27:17.547491', 'IBUKUN', 'ADEOLU', 'NGOZ', '08064004387', NULL, NULL, NULL, '00033', '00033', '2018', 'FETHAII/2018/00033', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(84, '2021-12-07 20:27:01.581971', '2021-12-07 20:27:17.797744', 'KUSS', 'ADEOYE', 'JULIAN', '08064004388', NULL, NULL, NULL, '00034', '00034', '2019', 'FETHAII/2019/00034', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(85, '2021-12-07 20:27:01.762887', '2021-12-07 20:27:18.073558', 'SAMSON', 'ADEYEMI', 'OLU', '08064004389', NULL, NULL, NULL, '00035', '00035', '2020', 'FETHAII/2020/00035', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(86, '2021-12-07 20:27:01.850934', '2021-12-07 20:27:18.255555', 'EMMANUEL', 'ADIDU', 'AME', '08064004390', NULL, NULL, NULL, '00036', '00036', '2021', 'FETHAII/2021/00036', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(87, '2021-12-07 20:27:01.938004', '2021-12-07 20:27:18.606583', 'NWANYIEZE', 'ADIELE', 'N', '08064004391', NULL, NULL, NULL, '00037', '00037', '2010', 'FETHAII/2010/00037', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(88, '2021-12-07 20:27:01.994587', '2021-12-07 20:27:18.792506', 'EMMANUEL', 'ADIGWE', 'IF', '08064004392', NULL, NULL, NULL, '00038', '00038', '2011', 'FETHAII/2011/00038', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(89, '2021-12-07 20:27:02.071477', '2021-12-07 20:27:18.925110', 'JULIANA', 'ADIKWU', 'NGO', '08064004393', NULL, NULL, NULL, '00039', '00039', '2012', 'FETHAII/2012/00039', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(90, '2021-12-07 20:27:02.125707', '2021-12-07 20:27:19.194926', 'CAROLINE', 'ADIMORAH', '', '08064004394', NULL, NULL, NULL, '00040', '00040', '2013', 'FETHAII/2013/00040', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(91, '2021-12-07 20:27:02.202663', '2021-12-07 20:27:19.317203', 'ORAEKI', 'ADIMORAH', 'HA', '08064004395', NULL, NULL, NULL, '00041', '00041', '2014', 'FETHAII/2014/00041', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(92, '2021-12-07 20:27:02.248632', '2021-12-07 20:27:19.380547', 'IFEYINWA', 'ADOGU', '', '08064004396', NULL, NULL, NULL, '00042', '00042', '2015', 'FETHAII/2015/00042', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(93, '2021-12-07 20:27:02.302603', '2021-12-07 20:27:19.691339', 'OGHENEOCHUKO', 'ADOKA', '', '08064004397', NULL, NULL, NULL, '00043', '00043', '2016', 'FETHAII/2016/00043', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(94, '2021-12-07 20:27:02.531645', '2021-12-07 20:27:19.757743', 'NWOVA', 'ADOKE', 'JOHN', '08064004398', NULL, NULL, NULL, '00044', '00044', '2017', 'FETHAII/2017/00044', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(95, '2021-12-07 20:27:02.604130', '2021-12-07 20:27:19.835795', 'EDACHE', 'ADOKWU', 'ELDA', '08064004399', NULL, NULL, NULL, '00045', '00045', '2018', 'FETHAII/2018/00045', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(96, '2021-12-07 20:27:02.681918', '2021-12-07 20:27:19.901438', 'OBINNA', 'ADONU', 'BENJA', '08064004400', NULL, NULL, NULL, '00046', '00046', '2019', 'FETHAII/2019/00046', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(97, '2021-12-07 20:27:02.873416', '2021-12-07 20:27:19.968760', 'LINDA', 'ADUAKA', 'UKAMA', '08064004401', NULL, NULL, NULL, '00047', '00047', '2020', 'FETHAII/2020/00047', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(98, '2021-12-07 20:27:02.961471', '2021-12-07 20:27:20.235260', 'NGOZI', 'ADUAKA', 'ELIZA', '08064004402', NULL, NULL, NULL, '00048', '00048', '2021', 'FETHAII/2021/00048', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(99, '2021-12-07 20:27:03.041545', '2021-12-07 20:27:20.314405', 'VIVIAN', 'ADUAKA', 'ONYI', '08064004403', NULL, NULL, NULL, '00049', '00049', '2010', 'FETHAII/2010/00049', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(100, '2021-12-07 20:27:03.141160', '2021-12-07 20:27:20.412705', 'ADAGBA', 'ADUWA', 'PATRI', '08064004404', NULL, NULL, NULL, '00050', '00050', '2011', 'FETHAII/2011/00050', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(101, '2021-12-07 20:35:58.255734', '2021-12-07 20:36:04.691508', 'BEN', 'IDAKA', 'MAUREEN', '08064004355', NULL, NULL, NULL, '00001', '00001', '2010', 'FETHAII/2010/00001', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(102, '2021-12-07 20:35:58.510585', '2021-12-07 20:36:04.874431', 'UCHENNA', 'OKOLI', 'OBIA', '08064004356', NULL, NULL, NULL, '00002', '00002', '2011', 'FETHAII/2011/00002', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(103, '2021-12-07 20:35:58.614523', '2021-12-07 20:36:05.014049', 'NKONYELU', 'OKONKWO', 'E', '08064004357', NULL, NULL, NULL, '00003', '00003', '2012', 'FETHAII/2012/00003', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(104, '2021-12-07 20:35:58.697471', '2021-12-07 20:36:05.244233', 'OPHELIA', 'AMADI', 'CHIB', '08064004358', NULL, NULL, NULL, '00004', '00004', '2013', 'FETHAII/2013/00004', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(105, '2021-12-07 20:35:58.781438', '2021-12-07 20:36:05.509186', 'IKWUO', 'NNACHI', 'IJEM', '08064004359', NULL, NULL, NULL, '00005', '00005', '2014', 'FETHAII/2014/00005', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(106, '2021-12-07 20:35:58.876056', '2021-12-07 20:36:05.741128', 'IFEOMA', 'AGBOWO', 'MARY', '08064004360', NULL, NULL, NULL, '00006', '00006', '2015', 'FETHAII/2015/00006', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(107, '2021-12-07 20:35:58.996684', '2021-12-07 20:36:05.852004', 'DR', 'NWANKWO', 'OKUTA J', '08064004361', NULL, NULL, NULL, '00007', '00007', '2016', 'FETHAII/2016/00007', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(108, '2021-12-07 20:35:59.065566', '2021-12-07 20:36:05.975009', 'EMMANUEL', 'ABAA', '', '08064004362', NULL, NULL, NULL, '00008', '00008', '2017', 'FETHAII/2017/00008', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(109, '2021-12-07 20:35:59.210102', '2021-12-07 20:36:06.096526', 'UGO', 'ABAGHA', 'AGNES', '08064004363', NULL, NULL, NULL, '00009', '00009', '2018', 'FETHAII/2018/00009', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(110, '2021-12-07 20:35:59.310964', '2021-12-07 20:36:06.197248', 'CHIGOZI', 'ABAGHAUGWU', '', '08064004364', NULL, NULL, NULL, '00010', '00010', '2019', 'FETHAII/2019/00010', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(111, '2021-12-07 20:35:59.416360', '2021-12-07 20:36:06.297693', 'NWACHINAME', 'ABANIFI', '', '08064004365', NULL, NULL, NULL, '00011', '00011', '2020', 'FETHAII/2020/00011', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(112, '2021-12-07 20:35:59.499068', '2021-12-07 20:36:06.475485', 'NNENWAOGO', 'ABARA', 'P', '08064004366', NULL, NULL, NULL, '00012', '00012', '2021', 'FETHAII/2021/00012', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(113, '2021-12-07 20:35:59.566129', '2021-12-07 20:36:06.608979', 'LAWRENCE', 'ABARA', 'CHI', '08064004367', NULL, NULL, NULL, '00013', '00013', '2010', 'FETHAII/2010/00013', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(114, '2021-12-07 20:35:59.654881', '2021-12-07 20:36:07.042017', 'NWAKAEGO', 'ABARA', 'EUC', '08064004368', NULL, NULL, NULL, '00014', '00014', '2011', 'FETHAII/2011/00014', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(115, '2021-12-07 20:35:59.765536', '2021-12-07 20:36:07.154041', 'OBASI', 'ABBA', 'DORCAS', '08064004369', NULL, NULL, NULL, '00015', '00015', '2012', 'FETHAII/2012/00015', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(116, '2021-12-07 20:35:59.859478', '2021-12-07 20:36:07.320043', 'EFFIONG', 'ABIA', 'ANIET', '08064004370', NULL, NULL, NULL, '00016', '00016', '2013', 'FETHAII/2013/00016', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(117, '2021-12-07 20:35:59.965595', '2021-12-07 20:36:07.632451', 'NKIRUKA', 'ABIA', 'NDON', '08064004371', NULL, NULL, NULL, '00017', '00017', '2014', 'FETHAII/2014/00017', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(118, '2021-12-07 20:36:00.072465', '2021-12-07 20:36:07.841997', 'DR', 'ABIA', 'EFFIONG NDO', '08064004372', NULL, NULL, NULL, '00018', '00018', '2015', 'FETHAII/2015/00018', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(119, '2021-12-07 20:36:00.236887', '2021-12-07 20:36:07.963726', 'UGOCHI', 'ABII', 'GLORIA', '08064004373', NULL, NULL, NULL, '00019', '00019', '2016', 'FETHAII/2016/00019', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(120, '2021-12-07 20:36:00.337090', '2021-12-07 20:36:08.086714', 'ABEKE', 'ABIOLA', 'ZULAY', '08064004374', NULL, NULL, NULL, '00020', '00020', '2017', 'FETHAII/2017/00020', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(121, '2021-12-07 20:36:00.512550', '2021-12-07 20:36:08.185647', 'CHIOMA', 'ABIRI', 'CLARA', '08064004375', NULL, NULL, NULL, '00021', '00021', '2018', 'FETHAII/2018/00021', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(122, '2021-12-07 20:36:00.608762', '2021-12-07 20:36:08.297603', 'OLADELE', 'ABOKEDE', 'AD', '08064004376', NULL, NULL, NULL, '00022', '00022', '2019', 'FETHAII/2019/00022', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(123, '2021-12-07 20:36:00.734131', '2021-12-07 20:36:08.397200', 'OMOLARA', 'ABOKEDE', 'AD', '08064004377', NULL, NULL, NULL, '00023', '00023', '2020', 'FETHAII/2020/00023', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(124, '2021-12-07 20:36:00.799289', '2021-12-07 20:36:08.503627', 'LEONARD', 'ABOR', '', '08064004378', NULL, NULL, NULL, '00024', '00024', '2021', 'FETHAII/2021/00024', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(125, '2021-12-07 20:36:00.866023', '2021-12-07 20:36:09.131642', 'MOMOH', 'ABU', 'AUGUSTIN', '08064004379', NULL, NULL, NULL, '00025', '00025', '2010', 'FETHAII/2010/00025', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(126, '2021-12-07 20:36:00.953461', '2021-12-07 20:36:09.296752', 'MMADUABUCHI', 'ABUWA', '', '08064004380', NULL, NULL, NULL, '00026', '00026', '2011', 'FETHAII/2011/00026', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(127, '2021-12-07 20:36:01.043403', '2021-12-07 20:36:09.419676', 'MAXWELL', 'ACHI', 'NGWU', '08064004381', NULL, NULL, NULL, '00027', '00027', '2012', 'FETHAII/2012/00027', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(128, '2021-12-07 20:36:01.108750', '2021-12-07 20:36:09.520464', 'EZEKIEL', 'ACHONWA', 'UC', '08064004382', NULL, NULL, NULL, '00028', '00028', '2013', 'FETHAII/2013/00028', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(129, '2021-12-07 20:36:01.181002', '2021-12-07 20:36:09.648778', 'UDOCHRIS', 'ACHUGONYE', '', '08064004383', NULL, NULL, NULL, '00029', '00029', '2014', 'FETHAII/2014/00029', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(130, '2021-12-07 20:36:01.357003', '2021-12-07 20:36:09.827106', 'MATTHEW', 'ADAMA', 'SIMO', '08064004384', NULL, NULL, NULL, '00030', '00030', '2015', 'FETHAII/2015/00030', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(131, '2021-12-07 20:36:01.489956', '2021-12-07 20:36:10.252978', 'BEATRI', 'ADAMSOKORIE', '', '08064004385', NULL, NULL, NULL, '00031', '00031', '2016', 'FETHAII/2016/00031', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(132, '2021-12-07 20:36:01.568653', '2021-12-07 20:36:10.397483', 'IFEOMA', 'ADANI', 'MODES', '08064004386', NULL, NULL, NULL, '00032', '00032', '2017', 'FETHAII/2017/00032', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(133, '2021-12-07 20:36:01.662712', '2021-12-07 20:36:10.518653', 'IBUKUN', 'ADEOLU', 'NGOZ', '08064004387', NULL, NULL, NULL, '00033', '00033', '2018', 'FETHAII/2018/00033', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(134, '2021-12-07 20:36:01.754533', '2021-12-07 20:36:10.619592', 'KUSS', 'ADEOYE', 'JULIAN', '08064004388', NULL, NULL, NULL, '00034', '00034', '2019', 'FETHAII/2019/00034', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(135, '2021-12-07 20:36:01.821254', '2021-12-07 20:36:10.730297', 'SAMSON', 'ADEYEMI', 'OLU', '08064004389', NULL, NULL, NULL, '00035', '00035', '2020', 'FETHAII/2020/00035', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(136, '2021-12-07 20:36:01.892077', '2021-12-07 20:36:10.842369', 'EMMANUEL', 'ADIDU', 'AME', '08064004390', NULL, NULL, NULL, '00036', '00036', '2021', 'FETHAII/2021/00036', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(137, '2021-12-07 20:36:01.955252', '2021-12-07 20:36:11.054205', 'NWANYIEZE', 'ADIELE', 'N', '08064004391', NULL, NULL, NULL, '00037', '00037', '2010', 'FETHAII/2010/00037', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(138, '2021-12-07 20:36:02.046766', '2021-12-07 20:36:11.285959', 'EMMANUEL', 'ADIGWE', 'IF', '08064004392', NULL, NULL, NULL, '00038', '00038', '2011', 'FETHAII/2011/00038', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(139, '2021-12-07 20:36:02.132799', '2021-12-07 20:36:11.398132', 'JULIANA', 'ADIKWU', 'NGO', '08064004393', NULL, NULL, NULL, '00039', '00039', '2012', 'FETHAII/2012/00039', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(140, '2021-12-07 20:36:02.226741', '2021-12-07 20:36:11.552743', 'CAROLINE', 'ADIMORAH', '', '08064004394', NULL, NULL, NULL, '00040', '00040', '2013', 'FETHAII/2013/00040', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(141, '2021-12-07 20:36:02.811612', '2021-12-07 20:36:11.675466', 'ORAEKI', 'ADIMORAH', 'HA', '08064004395', NULL, NULL, NULL, '00041', '00041', '2014', 'FETHAII/2014/00041', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(142, '2021-12-07 20:36:03.208935', '2021-12-07 20:36:11.786393', 'IFEYINWA', 'ADOGU', '', '08064004396', NULL, NULL, NULL, '00042', '00042', '2015', 'FETHAII/2015/00042', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(143, '2021-12-07 20:36:03.471260', '2021-12-07 20:36:11.886654', 'OGHENEOCHUKO', 'ADOKA', '', '08064004397', NULL, NULL, NULL, '00043', '00043', '2016', 'FETHAII/2016/00043', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(144, '2021-12-07 20:36:03.600789', '2021-12-07 20:36:12.008383', 'NWOVA', 'ADOKE', 'JOHN', '08064004398', NULL, NULL, NULL, '00044', '00044', '2017', 'FETHAII/2017/00044', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(145, '2021-12-07 20:36:03.706609', '2021-12-07 20:36:12.436300', 'EDACHE', 'ADOKWU', 'ELDA', '08064004399', NULL, NULL, NULL, '00045', '00045', '2018', 'FETHAII/2018/00045', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(146, '2021-12-07 20:36:03.800524', '2021-12-07 20:36:12.651215', 'OBINNA', 'ADONU', 'BENJA', '08064004400', NULL, NULL, NULL, '00046', '00046', '2019', 'FETHAII/2019/00046', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(147, '2021-12-07 20:36:03.914095', '2021-12-07 20:36:12.942873', 'LINDA', 'ADUAKA', 'UKAMA', '08064004401', NULL, NULL, NULL, '00047', '00047', '2020', 'FETHAII/2020/00047', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(148, '2021-12-07 20:36:03.991461', '2021-12-07 20:36:13.106089', 'NGOZI', 'ADUAKA', 'ELIZA', '08064004402', NULL, NULL, NULL, '00048', '00048', '2021', 'FETHAII/2021/00048', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(149, '2021-12-07 20:36:04.209989', '2021-12-07 20:36:13.333171', 'VIVIAN', 'ADUAKA', 'ONYI', '08064004403', NULL, NULL, NULL, '00049', '00049', '2010', 'FETHAII/2010/00049', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(150, '2021-12-07 20:36:04.276276', '2021-12-07 20:36:14.060168', 'ADAGBA', 'ADUWA', 'PATRI', '08064004404', NULL, NULL, NULL, '00050', '00050', '2011', 'FETHAII/2011/00050', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(151, '2021-12-07 20:41:48.166900', '2021-12-07 20:45:14.557595', 'BEN', 'IDAKA', 'MAUREEN', '08064004355', NULL, NULL, NULL, '00001', '00001', '2010', 'FETHAII/2010/00001', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(152, '2021-12-07 20:41:48.379785', '2021-12-07 20:45:14.746042', 'UCHENNA', 'OKOLI', 'OBIA', '08064004356', NULL, NULL, NULL, '00002', '00002', '2011', 'FETHAII/2011/00002', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(153, '2021-12-07 20:41:48.476448', '2021-12-07 20:45:15.353005', 'NKONYELU', 'OKONKWO', 'E', '08064004357', NULL, NULL, NULL, '00003', '00003', '2012', 'FETHAII/2012/00003', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(154, '2021-12-07 20:41:48.549343', '2021-12-07 20:45:15.568816', 'OPHELIA', 'AMADI', 'CHIB', '08064004358', NULL, NULL, NULL, '00004', '00004', '2013', 'FETHAII/2013/00004', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(155, '2021-12-07 20:41:48.638401', '2021-12-07 20:45:15.739802', 'IKWUO', 'NNACHI', 'IJEM', '08064004359', NULL, NULL, NULL, '00005', '00005', '2014', 'FETHAII/2014/00005', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(156, '2021-12-07 20:41:48.894479', '2021-12-07 20:45:15.859936', 'IFEOMA', 'AGBOWO', 'MARY', '08064004360', NULL, NULL, NULL, '00006', '00006', '2015', 'FETHAII/2015/00006', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(157, '2021-12-07 20:41:49.083071', '2021-12-07 20:45:15.972641', 'DR', 'NWANKWO', 'OKUTA J', '08064004361', NULL, NULL, NULL, '00007', '00007', '2016', 'FETHAII/2016/00007', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(158, '2021-12-07 20:41:49.234119', '2021-12-07 20:45:16.161168', 'EMMANUEL', 'ABAA', '', '08064004362', NULL, NULL, NULL, '00008', '00008', '2017', 'FETHAII/2017/00008', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(159, '2021-12-07 20:41:49.339907', '2021-12-07 20:45:16.417331', 'UGO', 'ABAGHA', 'AGNES', '08064004363', NULL, NULL, NULL, '00009', '00009', '2018', 'FETHAII/2018/00009', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(160, '2021-12-07 20:41:49.482656', '2021-12-07 20:45:16.658612', 'CHIGOZI', 'ABAGHAUGWU', '', '08064004364', NULL, NULL, NULL, '00010', '00010', '2019', 'FETHAII/2019/00010', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(161, '2021-12-07 20:41:49.593823', '2021-12-07 20:45:16.816376', 'NWACHINAME', 'ABANIFI', '', '08064004365', NULL, NULL, NULL, '00011', '00011', '2020', 'FETHAII/2020/00011', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(162, '2021-12-07 20:41:49.697504', '2021-12-07 20:45:16.950291', 'NNENWAOGO', 'ABARA', 'P', '08064004366', NULL, NULL, NULL, '00012', '00012', '2021', 'FETHAII/2021/00012', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(163, '2021-12-07 20:41:49.821108', '2021-12-07 20:45:17.061406', 'LAWRENCE', 'ABARA', 'CHI', '08064004367', NULL, NULL, NULL, '00013', '00013', '2010', 'FETHAII/2010/00013', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(164, '2021-12-07 20:41:49.974802', '2021-12-07 20:45:17.284362', 'NWAKAEGO', 'ABARA', 'EUC', '08064004368', NULL, NULL, NULL, '00014', '00014', '2011', 'FETHAII/2011/00014', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(165, '2021-12-07 20:41:50.137750', '2021-12-07 20:45:17.597105', 'OBASI', 'ABBA', 'DORCAS', '08064004369', NULL, NULL, NULL, '00015', '00015', '2012', 'FETHAII/2012/00015', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(166, '2021-12-07 20:41:50.205711', '2021-12-07 20:45:17.717491', 'EFFIONG', 'ABIA', 'ANIET', '08064004370', NULL, NULL, NULL, '00016', '00016', '2013', 'FETHAII/2013/00016', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(167, '2021-12-07 20:41:50.269671', '2021-12-07 20:45:17.894364', 'NKIRUKA', 'ABIA', 'NDON', '08064004371', NULL, NULL, NULL, '00017', '00017', '2014', 'FETHAII/2014/00017', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(168, '2021-12-07 20:41:50.335732', '2021-12-07 20:45:18.015915', 'DR', 'ABIA', 'EFFIONG NDO', '08064004372', NULL, NULL, NULL, '00018', '00018', '2015', 'FETHAII/2015/00018', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(169, '2021-12-07 20:41:50.380424', '2021-12-07 20:45:18.161687', 'UGOCHI', 'ABII', 'GLORIA', '08064004373', NULL, NULL, NULL, '00019', '00019', '2016', 'FETHAII/2016/00019', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(170, '2021-12-07 20:41:50.425864', '2021-12-07 20:45:18.279363', 'ABEKE', 'ABIOLA', 'ZULAY', '08064004374', NULL, NULL, NULL, '00020', '00020', '2017', 'FETHAII/2017/00020', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(171, '2021-12-07 20:41:50.469789', '2021-12-07 20:45:18.406093', 'CHIOMA', 'ABIRI', 'CLARA', '08064004375', NULL, NULL, NULL, '00021', '00021', '2018', 'FETHAII/2018/00021', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(172, '2021-12-07 20:41:50.514761', '2021-12-07 20:45:18.523751', 'OLADELE', 'ABOKEDE', 'AD', '08064004376', NULL, NULL, NULL, '00022', '00022', '2019', 'FETHAII/2019/00022', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(173, '2021-12-07 20:41:50.605705', '2021-12-07 20:45:18.634906', 'OMOLARA', 'ABOKEDE', 'AD', '08064004377', NULL, NULL, NULL, '00023', '00023', '2020', 'FETHAII/2020/00023', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(174, '2021-12-07 20:41:50.646668', '2021-12-07 20:45:18.835345', 'LEONARD', 'ABOR', '', '08064004378', NULL, NULL, NULL, '00024', '00024', '2021', 'FETHAII/2021/00024', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(175, '2021-12-07 20:41:50.716487', '2021-12-07 20:45:18.979966', 'MOMOH', 'ABU', 'AUGUSTIN', '08064004379', NULL, NULL, NULL, '00025', '00025', '2010', 'FETHAII/2010/00025', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(176, '2021-12-07 20:41:50.816838', '2021-12-07 20:45:19.127336', 'MMADUABUCHI', 'ABUWA', '', '08064004380', NULL, NULL, NULL, '00026', '00026', '2011', 'FETHAII/2011/00026', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(177, '2021-12-07 20:41:50.891077', '2021-12-07 20:45:19.262317', 'MAXWELL', 'ACHI', 'NGWU', '08064004381', NULL, NULL, NULL, '00027', '00027', '2012', 'FETHAII/2012/00027', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(178, '2021-12-07 20:41:51.446259', '2021-12-07 20:45:19.361151', 'EZEKIEL', 'ACHONWA', 'UC', '08064004382', NULL, NULL, NULL, '00028', '00028', '2013', 'FETHAII/2013/00028', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(179, '2021-12-07 20:41:51.837257', '2021-12-07 20:45:20.291071', 'UDOCHRIS', 'ACHUGONYE', '', '08064004383', NULL, NULL, NULL, '00029', '00029', '2014', 'FETHAII/2014/00029', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(180, '2021-12-07 20:41:51.986118', '2021-12-07 20:45:20.649806', 'MATTHEW', 'ADAMA', 'SIMO', '08064004384', NULL, NULL, NULL, '00030', '00030', '2015', 'FETHAII/2015/00030', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(181, '2021-12-07 20:41:52.348874', '2021-12-07 20:45:20.771453', 'BEATRI', 'ADAMSOKORIE', '', '08064004385', NULL, NULL, NULL, '00031', '00031', '2016', 'FETHAII/2016/00031', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(182, '2021-12-07 20:41:52.437774', '2021-12-07 20:45:20.916706', 'IFEOMA', 'ADANI', 'MODES', '08064004386', NULL, NULL, NULL, '00032', '00032', '2017', 'FETHAII/2017/00032', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(183, '2021-12-07 20:41:52.549903', '2021-12-07 20:45:21.427919', 'IBUKUN', 'ADEOLU', 'NGOZ', '08064004387', NULL, NULL, NULL, '00033', '00033', '2018', 'FETHAII/2018/00033', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(184, '2021-12-07 20:41:52.772908', '2021-12-07 20:45:21.549466', 'KUSS', 'ADEOYE', 'JULIAN', '08064004388', NULL, NULL, NULL, '00034', '00034', '2019', 'FETHAII/2019/00034', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(185, '2021-12-07 20:41:52.826524', '2021-12-07 20:45:21.673165', 'SAMSON', 'ADEYEMI', 'OLU', '08064004389', NULL, NULL, NULL, '00035', '00035', '2020', 'FETHAII/2020/00035', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(186, '2021-12-07 20:41:52.926460', '2021-12-07 20:45:21.828502', 'EMMANUEL', 'ADIDU', 'AME', '08064004390', NULL, NULL, NULL, '00036', '00036', '2021', 'FETHAII/2021/00036', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(187, '2021-12-07 20:41:53.053700', '2021-12-07 20:45:21.949503', 'NWANYIEZE', 'ADIELE', 'N', '08064004391', NULL, NULL, NULL, '00037', '00037', '2010', 'FETHAII/2010/00037', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(188, '2021-12-07 20:41:53.119956', '2021-12-07 20:45:22.295214', 'EMMANUEL', 'ADIGWE', 'IF', '08064004392', NULL, NULL, NULL, '00038', '00038', '2011', 'FETHAII/2011/00038', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(189, '2021-12-07 20:41:53.161583', '2021-12-07 20:45:22.524107', 'JULIANA', 'ADIKWU', 'NGO', '08064004393', NULL, NULL, NULL, '00039', '00039', '2012', 'FETHAII/2012/00039', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(190, '2021-12-07 20:41:53.306511', '2021-12-07 20:45:22.617049', 'CAROLINE', 'ADIMORAH', '', '08064004394', NULL, NULL, NULL, '00040', '00040', '2013', 'FETHAII/2013/00040', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(191, '2021-12-07 20:41:53.348361', '2021-12-07 20:45:22.738272', 'ORAEKI', 'ADIMORAH', 'HA', '08064004395', NULL, NULL, NULL, '00041', '00041', '2014', 'FETHAII/2014/00041', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(192, '2021-12-07 20:41:53.426185', '2021-12-07 20:45:22.839080', 'IFEYINWA', 'ADOGU', '', '08064004396', NULL, NULL, NULL, '00042', '00042', '2015', 'FETHAII/2015/00042', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(193, '2021-12-07 20:41:53.470981', '2021-12-07 20:45:22.960731', 'OGHENEOCHUKO', 'ADOKA', '', '08064004397', NULL, NULL, NULL, '00043', '00043', '2016', 'FETHAII/2016/00043', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(194, '2021-12-07 20:41:53.541222', '2021-12-07 20:45:23.127410', 'NWOVA', 'ADOKE', 'JOHN', '08064004398', NULL, NULL, NULL, '00044', '00044', '2017', 'FETHAII/2017/00044', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(195, '2021-12-07 20:41:53.584800', '2021-12-07 20:45:23.516986', 'EDACHE', 'ADOKWU', 'ELDA', '08064004399', NULL, NULL, NULL, '00045', '00045', '2018', 'FETHAII/2018/00045', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(196, '2021-12-07 20:41:53.714533', '2021-12-07 20:45:23.627544', 'OBINNA', 'ADONU', 'BENJA', '08064004400', NULL, NULL, NULL, '00046', '00046', '2019', 'FETHAII/2019/00046', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(197, '2021-12-07 20:41:53.827441', '2021-12-07 20:45:23.750174', 'LINDA', 'ADUAKA', 'UKAMA', '08064004401', NULL, NULL, NULL, '00047', '00047', '2020', 'FETHAII/2020/00047', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(198, '2021-12-07 20:41:53.927856', '2021-12-07 20:45:23.872042', 'NGOZI', 'ADUAKA', 'ELIZA', '08064004402', NULL, NULL, NULL, '00048', '00048', '2021', 'FETHAII/2021/00048', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(199, '2021-12-07 20:41:54.059261', '2021-12-07 20:45:23.983735', 'VIVIAN', 'ADUAKA', 'ONYI', '08064004403', NULL, NULL, NULL, '00049', '00049', '2010', 'FETHAII/2010/00049', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(200, '2021-12-07 20:41:54.126218', '2021-12-07 20:45:24.129620', 'ADAGBA', 'ADUWA', 'PATRI', '08064004404', NULL, NULL, NULL, '00050', '00050', '2011', 'FETHAII/2011/00050', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(201, '2021-12-07 20:45:07.915459', '2021-12-07 20:45:24.251297', 'BEN', 'IDAKA', 'MAUREEN', '08064004355', NULL, NULL, NULL, '00001', '00001', '2010', 'FETHAII/2010/00001', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(202, '2021-12-07 20:45:08.404939', '2021-12-07 20:45:24.695451', 'UCHENNA', 'OKOLI', 'OBIA', '08064004356', NULL, NULL, NULL, '00002', '00002', '2011', 'FETHAII/2011/00002', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(203, '2021-12-07 20:45:08.525786', '2021-12-07 20:45:24.905463', 'NKONYELU', 'OKONKWO', 'E', '08064004357', NULL, NULL, NULL, '00003', '00003', '2012', 'FETHAII/2012/00003', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(204, '2021-12-07 20:45:08.617726', '2021-12-07 20:45:25.050372', 'OPHELIA', 'AMADI', 'CHIB', '08064004358', NULL, NULL, NULL, '00004', '00004', '2013', 'FETHAII/2013/00004', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(205, '2021-12-07 20:45:08.706151', '2021-12-07 20:45:25.183674', 'IKWUO', 'NNACHI', 'IJEM', '08064004359', NULL, NULL, NULL, '00005', '00005', '2014', 'FETHAII/2014/00005', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(206, '2021-12-07 20:45:08.795442', '2021-12-07 20:45:25.328167', 'IFEOMA', 'AGBOWO', 'MARY', '08064004360', NULL, NULL, NULL, '00006', '00006', '2015', 'FETHAII/2015/00006', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(207, '2021-12-07 20:45:08.862769', '2021-12-07 20:45:25.461142', 'DR', 'NWANKWO', 'OKUTA J', '08064004361', NULL, NULL, NULL, '00007', '00007', '2016', 'FETHAII/2016/00007', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29');
+INSERT INTO `cooperative_membershiprequest` (`id`, `created_at`, `updated_at`, `first_name`, `last_name`, `middle_name`, `phone_number`, `certified_date`, `approval_comment`, `approved_date`, `file_no`, `ippis_no`, `year`, `member_id`, `approval_officer_id`, `approval_status_id`, `certification_officer_id`, `certification_status_id`, `department_id`, `gender_id`, `processed_by_id`, `salary_institution_id`, `submission_status_id`, `title_id`, `transaction_status_id`, `tdate`) VALUES
+(208, '2021-12-07 20:45:08.954214', '2021-12-07 20:45:26.069887', 'EMMANUEL', 'ABAA', '', '08064004362', NULL, NULL, NULL, '00008', '00008', '2017', 'FETHAII/2017/00008', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(209, '2021-12-07 20:45:09.074141', '2021-12-07 20:45:26.295026', 'UGO', 'ABAGHA', 'AGNES', '08064004363', NULL, NULL, NULL, '00009', '00009', '2018', 'FETHAII/2018/00009', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(210, '2021-12-07 20:45:09.166848', '2021-12-07 20:45:26.439915', 'CHIGOZI', 'ABAGHAUGWU', '', '08064004364', NULL, NULL, NULL, '00010', '00010', '2019', 'FETHAII/2019/00010', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(211, '2021-12-07 20:45:09.462014', '2021-12-07 20:45:26.594781', 'NWACHINAME', 'ABANIFI', '', '08064004365', NULL, NULL, NULL, '00011', '00011', '2020', 'FETHAII/2020/00011', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(212, '2021-12-07 20:45:09.632253', '2021-12-07 20:45:26.705284', 'NNENWAOGO', 'ABARA', 'P', '08064004366', NULL, NULL, NULL, '00012', '00012', '2021', 'FETHAII/2021/00012', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(213, '2021-12-07 20:45:09.698071', '2021-12-07 20:45:26.829369', 'LAWRENCE', 'ABARA', 'CHI', '08064004367', NULL, NULL, NULL, '00013', '00013', '2010', 'FETHAII/2010/00013', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(214, '2021-12-07 20:45:09.763032', '2021-12-07 20:45:27.043461', 'NWAKAEGO', 'ABARA', 'EUC', '08064004368', NULL, NULL, NULL, '00014', '00014', '2011', 'FETHAII/2011/00014', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(215, '2021-12-07 20:45:09.862582', '2021-12-07 20:45:27.283258', 'OBASI', 'ABBA', 'DORCAS', '08064004369', NULL, NULL, NULL, '00015', '00015', '2012', 'FETHAII/2012/00015', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(216, '2021-12-07 20:45:09.951523', '2021-12-07 20:45:27.414178', 'EFFIONG', 'ABIA', 'ANIET', '08064004370', NULL, NULL, NULL, '00016', '00016', '2013', 'FETHAII/2013/00016', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(217, '2021-12-07 20:45:10.021197', '2021-12-07 20:45:27.571883', 'NKIRUKA', 'ABIA', 'NDON', '08064004371', NULL, NULL, NULL, '00017', '00017', '2014', 'FETHAII/2014/00017', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(218, '2021-12-07 20:45:10.133984', '2021-12-07 20:45:27.717835', 'DR', 'ABIA', 'EFFIONG NDO', '08064004372', NULL, NULL, NULL, '00018', '00018', '2015', 'FETHAII/2015/00018', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(219, '2021-12-07 20:45:10.200984', '2021-12-07 20:45:27.850864', 'UGOCHI', 'ABII', 'GLORIA', '08064004373', NULL, NULL, NULL, '00019', '00019', '2016', 'FETHAII/2016/00019', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(220, '2021-12-07 20:45:10.263477', '2021-12-07 20:45:28.128663', 'ABEKE', 'ABIOLA', 'ZULAY', '08064004374', NULL, NULL, NULL, '00020', '00020', '2017', 'FETHAII/2017/00020', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(221, '2021-12-07 20:45:10.361740', '2021-12-07 20:45:28.440271', 'CHIOMA', 'ABIRI', 'CLARA', '08064004375', NULL, NULL, NULL, '00021', '00021', '2018', 'FETHAII/2018/00021', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(222, '2021-12-07 20:45:10.433589', '2021-12-07 20:45:28.558999', 'OLADELE', 'ABOKEDE', 'AD', '08064004376', NULL, NULL, NULL, '00022', '00022', '2019', 'FETHAII/2019/00022', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(223, '2021-12-07 20:45:11.109478', '2021-12-07 20:45:28.638949', 'OMOLARA', 'ABOKEDE', 'AD', '08064004377', NULL, NULL, NULL, '00023', '00023', '2020', 'FETHAII/2020/00023', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(224, '2021-12-07 20:45:11.220994', '2021-12-07 20:45:28.763115', 'LEONARD', 'ABOR', '', '08064004378', NULL, NULL, NULL, '00024', '00024', '2021', 'FETHAII/2021/00024', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(225, '2021-12-07 20:45:11.314405', '2021-12-07 20:45:28.929276', 'MOMOH', 'ABU', 'AUGUSTIN', '08064004379', NULL, NULL, NULL, '00025', '00025', '2010', 'FETHAII/2010/00025', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(226, '2021-12-07 20:45:11.407627', '2021-12-07 20:45:29.073079', 'MMADUABUCHI', 'ABUWA', '', '08064004380', NULL, NULL, NULL, '00026', '00026', '2011', 'FETHAII/2011/00026', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(227, '2021-12-07 20:45:11.623353', '2021-12-07 20:45:29.172946', 'MAXWELL', 'ACHI', 'NGWU', '08064004381', NULL, NULL, NULL, '00027', '00027', '2012', 'FETHAII/2012/00027', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(228, '2021-12-07 20:45:11.727812', '2021-12-07 20:45:29.739651', 'EZEKIEL', 'ACHONWA', 'UC', '08064004382', NULL, NULL, NULL, '00028', '00028', '2013', 'FETHAII/2013/00028', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(229, '2021-12-07 20:45:11.817757', '2021-12-07 20:45:29.861196', 'UDOCHRIS', 'ACHUGONYE', '', '08064004383', NULL, NULL, NULL, '00029', '00029', '2014', 'FETHAII/2014/00029', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(230, '2021-12-07 20:45:11.895505', '2021-12-07 20:45:30.051069', 'MATTHEW', 'ADAMA', 'SIMO', '08064004384', NULL, NULL, NULL, '00030', '00030', '2015', 'FETHAII/2015/00030', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(231, '2021-12-07 20:45:11.984492', '2021-12-07 20:45:30.217230', 'BEATRI', 'ADAMSOKORIE', '', '08064004385', NULL, NULL, NULL, '00031', '00031', '2016', 'FETHAII/2016/00031', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(232, '2021-12-07 20:45:12.147782', '2021-12-07 20:45:30.372935', 'IFEOMA', 'ADANI', 'MODES', '08064004386', NULL, NULL, NULL, '00032', '00032', '2017', 'FETHAII/2017/00032', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(233, '2021-12-07 20:45:12.206719', '2021-12-07 20:45:30.484164', 'IBUKUN', 'ADEOLU', 'NGOZ', '08064004387', NULL, NULL, NULL, '00033', '00033', '2018', 'FETHAII/2018/00033', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(234, '2021-12-07 20:45:12.295619', '2021-12-07 20:45:30.661087', 'KUSS', 'ADEOYE', 'JULIAN', '08064004388', NULL, NULL, NULL, '00034', '00034', '2019', 'FETHAII/2019/00034', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(235, '2021-12-07 20:45:12.387674', '2021-12-07 20:45:30.906067', 'SAMSON', 'ADEYEMI', 'OLU', '08064004389', NULL, NULL, NULL, '00035', '00035', '2020', 'FETHAII/2020/00035', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(236, '2021-12-07 20:45:12.451279', '2021-12-07 20:45:31.038978', 'EMMANUEL', 'ADIDU', 'AME', '08064004390', NULL, NULL, NULL, '00036', '00036', '2021', 'FETHAII/2021/00036', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(237, '2021-12-07 20:45:12.544189', '2021-12-07 20:45:31.151222', 'NWANYIEZE', 'ADIELE', 'N', '08064004391', NULL, NULL, NULL, '00037', '00037', '2010', 'FETHAII/2010/00037', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(238, '2021-12-07 20:45:12.864463', '2021-12-07 20:45:31.283501', 'EMMANUEL', 'ADIGWE', 'IF', '08064004392', NULL, NULL, NULL, '00038', '00038', '2011', 'FETHAII/2011/00038', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(239, '2021-12-07 20:45:12.930917', '2021-12-07 20:45:31.395186', 'JULIANA', 'ADIKWU', 'NGO', '08064004393', NULL, NULL, NULL, '00039', '00039', '2012', 'FETHAII/2012/00039', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(240, '2021-12-07 20:45:13.028854', '2021-12-07 20:45:31.517685', 'CAROLINE', 'ADIMORAH', '', '08064004394', NULL, NULL, NULL, '00040', '00040', '2013', 'FETHAII/2013/00040', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(241, '2021-12-07 20:45:13.204003', '2021-12-07 20:45:32.484898', 'ORAEKI', 'ADIMORAH', 'HA', '08064004395', NULL, NULL, NULL, '00041', '00041', '2014', 'FETHAII/2014/00041', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(242, '2021-12-07 20:45:13.319930', '2021-12-07 20:45:32.884401', 'IFEYINWA', 'ADOGU', '', '08064004396', NULL, NULL, NULL, '00042', '00042', '2015', 'FETHAII/2015/00042', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(243, '2021-12-07 20:45:13.395972', '2021-12-07 20:45:33.128674', 'OGHENEOCHUKO', 'ADOKA', '', '08064004397', NULL, NULL, NULL, '00043', '00043', '2016', 'FETHAII/2016/00043', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(244, '2021-12-07 20:45:13.548269', '2021-12-07 20:45:33.418611', 'NWOVA', 'ADOKE', 'JOHN', '08064004398', NULL, NULL, NULL, '00044', '00044', '2017', 'FETHAII/2017/00044', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(245, '2021-12-07 20:45:13.643501', '2021-12-07 20:45:33.842325', 'EDACHE', 'ADOKWU', 'ELDA', '08064004399', NULL, NULL, NULL, '00045', '00045', '2018', 'FETHAII/2018/00045', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(246, '2021-12-07 20:45:13.751899', '2021-12-07 20:45:34.317131', 'OBINNA', 'ADONU', 'BENJA', '08064004400', NULL, NULL, NULL, '00046', '00046', '2019', 'FETHAII/2019/00046', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(247, '2021-12-07 20:45:13.920689', '2021-12-07 20:45:34.595291', 'LINDA', 'ADUAKA', 'UKAMA', '08064004401', NULL, NULL, NULL, '00047', '00047', '2020', 'FETHAII/2020/00047', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(248, '2021-12-07 20:45:13.987334', '2021-12-07 20:45:34.694861', 'NGOZI', 'ADUAKA', 'ELIZA', '08064004402', NULL, NULL, NULL, '00048', '00048', '2021', 'FETHAII/2021/00048', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(249, '2021-12-07 20:45:14.051616', '2021-12-07 20:45:34.907519', 'VIVIAN', 'ADUAKA', 'ONYI', '08064004403', NULL, NULL, NULL, '00049', '00049', '2010', 'FETHAII/2010/00049', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(250, '2021-12-07 20:45:14.118346', '2021-12-07 20:45:35.162685', 'ADAGBA', 'ADUWA', 'PATRI', '08064004404', NULL, NULL, NULL, '00050', '00050', '2011', 'FETHAII/2011/00050', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(251, '2021-12-07 20:52:22.857533', '2021-12-07 20:52:29.645322', 'BEN', 'IDAKA', 'MAUREEN', '08064004355', NULL, NULL, NULL, '00001', '00001', '2010', 'FETHAII/2010/00001', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(252, '2021-12-07 20:52:23.123571', '2021-12-07 20:52:29.922353', 'UCHENNA', 'OKOLI', 'OBIA', '08064004356', NULL, NULL, NULL, '00002', '00002', '2011', 'FETHAII/2011/00002', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(253, '2021-12-07 20:52:23.353509', '2021-12-07 20:52:30.249611', 'NKONYELU', 'OKONKWO', 'E', '08064004357', NULL, NULL, NULL, '00003', '00003', '2012', 'FETHAII/2012/00003', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(254, '2021-12-07 20:52:23.452003', '2021-12-07 20:52:30.371542', 'OPHELIA', 'AMADI', 'CHIB', '08064004358', NULL, NULL, NULL, '00004', '00004', '2013', 'FETHAII/2013/00004', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(255, '2021-12-07 20:52:23.561253', '2021-12-07 20:52:30.738960', 'IKWUO', 'NNACHI', 'IJEM', '08064004359', NULL, NULL, NULL, '00005', '00005', '2014', 'FETHAII/2014/00005', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(256, '2021-12-07 20:52:23.635298', '2021-12-07 20:52:30.894687', 'IFEOMA', 'AGBOWO', 'MARY', '08064004360', NULL, NULL, NULL, '00006', '00006', '2015', 'FETHAII/2015/00006', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(257, '2021-12-07 20:52:23.688687', '2021-12-07 20:52:31.026935', 'DR', 'NWANKWO', 'OKUTA J', '08064004361', NULL, NULL, NULL, '00007', '00007', '2016', 'FETHAII/2016/00007', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(258, '2021-12-07 20:52:23.904098', '2021-12-07 20:52:31.159913', 'EMMANUEL', 'ABAA', '', '08064004362', NULL, NULL, NULL, '00008', '00008', '2017', 'FETHAII/2017/00008', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(259, '2021-12-07 20:52:23.984051', '2021-12-07 20:52:31.259461', 'UGO', 'ABAGHA', 'AGNES', '08064004363', NULL, NULL, NULL, '00009', '00009', '2018', 'FETHAII/2018/00009', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(260, '2021-12-07 20:52:24.039015', '2021-12-07 20:52:31.404348', 'CHIGOZI', 'ABAGHAUGWU', '', '08064004364', NULL, NULL, NULL, '00010', '00010', '2019', 'FETHAII/2019/00010', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(261, '2021-12-07 20:52:24.110545', '2021-12-07 20:52:31.503828', 'NWACHINAME', 'ABANIFI', '', '08064004365', NULL, NULL, NULL, '00011', '00011', '2020', 'FETHAII/2020/00011', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(262, '2021-12-07 20:52:24.198060', '2021-12-07 20:52:31.727799', 'NNENWAOGO', 'ABARA', 'P', '08064004366', NULL, NULL, NULL, '00012', '00012', '2021', 'FETHAII/2021/00012', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(263, '2021-12-07 20:52:24.518308', '2021-12-07 20:52:31.915826', 'LAWRENCE', 'ABARA', 'CHI', '08064004367', NULL, NULL, NULL, '00013', '00013', '2010', 'FETHAII/2010/00013', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(264, '2021-12-07 20:52:24.599527', '2021-12-07 20:52:32.049390', 'NWAKAEGO', 'ABARA', 'EUC', '08064004368', NULL, NULL, NULL, '00014', '00014', '2011', 'FETHAII/2011/00014', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(265, '2021-12-07 20:52:24.662558', '2021-12-07 20:52:32.183350', 'OBASI', 'ABBA', 'DORCAS', '08064004369', NULL, NULL, NULL, '00015', '00015', '2012', 'FETHAII/2012/00015', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(266, '2021-12-07 20:52:24.756269', '2021-12-07 20:52:32.311349', 'EFFIONG', 'ABIA', 'ANIET', '08064004370', NULL, NULL, NULL, '00016', '00016', '2013', 'FETHAII/2013/00016', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(267, '2021-12-07 20:52:24.818462', '2021-12-07 20:52:32.404289', 'NKIRUKA', 'ABIA', 'NDON', '08064004371', NULL, NULL, NULL, '00017', '00017', '2014', 'FETHAII/2014/00017', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(268, '2021-12-07 20:52:24.885324', '2021-12-07 20:52:32.559983', 'DR', 'ABIA', 'EFFIONG NDO', '08064004372', NULL, NULL, NULL, '00018', '00018', '2015', 'FETHAII/2015/00018', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(269, '2021-12-07 20:52:24.985138', '2021-12-07 20:52:32.722790', 'UGOCHI', 'ABII', 'GLORIA', '08064004373', NULL, NULL, NULL, '00019', '00019', '2016', 'FETHAII/2016/00019', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(270, '2021-12-07 20:52:25.063241', '2021-12-07 20:52:33.711797', 'ABEKE', 'ABIOLA', 'ZULAY', '08064004374', NULL, NULL, NULL, '00020', '00020', '2017', 'FETHAII/2017/00020', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(271, '2021-12-07 20:52:25.151008', '2021-12-07 20:52:33.893472', 'CHIOMA', 'ABIRI', 'CLARA', '08064004375', NULL, NULL, NULL, '00021', '00021', '2018', 'FETHAII/2018/00021', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(272, '2021-12-07 20:52:25.239950', '2021-12-07 20:52:34.015131', 'OLADELE', 'ABOKEDE', 'AD', '08064004376', NULL, NULL, NULL, '00022', '00022', '2019', 'FETHAII/2019/00022', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(273, '2021-12-07 20:52:25.617136', '2021-12-07 20:52:34.168036', 'OMOLARA', 'ABOKEDE', 'AD', '08064004377', NULL, NULL, NULL, '00023', '00023', '2020', 'FETHAII/2020/00023', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(274, '2021-12-07 20:52:25.709076', '2021-12-07 20:52:34.549705', 'LEONARD', 'ABOR', '', '08064004378', NULL, NULL, NULL, '00024', '00024', '2021', 'FETHAII/2021/00024', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(275, '2021-12-07 20:52:25.784652', '2021-12-07 20:52:34.715514', 'MOMOH', 'ABU', 'AUGUSTIN', '08064004379', NULL, NULL, NULL, '00025', '00025', '2010', 'FETHAII/2010/00025', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(276, '2021-12-07 20:52:25.888800', '2021-12-07 20:52:34.848617', 'MMADUABUCHI', 'ABUWA', '', '08064004380', NULL, NULL, NULL, '00026', '00026', '2011', 'FETHAII/2011/00026', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(277, '2021-12-07 20:52:25.991846', '2021-12-07 20:52:34.982777', 'MAXWELL', 'ACHI', 'NGWU', '08064004381', NULL, NULL, NULL, '00027', '00027', '2012', 'FETHAII/2012/00027', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(278, '2021-12-07 20:52:26.099742', '2021-12-07 20:52:35.117394', 'EZEKIEL', 'ACHONWA', 'UC', '08064004382', NULL, NULL, NULL, '00028', '00028', '2013', 'FETHAII/2013/00028', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(279, '2021-12-07 20:52:26.203762', '2021-12-07 20:52:35.337980', 'UDOCHRIS', 'ACHUGONYE', '', '08064004383', NULL, NULL, NULL, '00029', '00029', '2014', 'FETHAII/2014/00029', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(280, '2021-12-07 20:52:26.262586', '2021-12-07 20:52:35.672933', 'MATTHEW', 'ADAMA', 'SIMO', '08064004384', NULL, NULL, NULL, '00030', '00030', '2015', 'FETHAII/2015/00030', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(281, '2021-12-07 20:52:26.373558', '2021-12-07 20:52:35.805521', 'BEATRI', 'ADAMSOKORIE', '', '08064004385', NULL, NULL, NULL, '00031', '00031', '2016', 'FETHAII/2016/00031', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(282, '2021-12-07 20:52:26.477540', '2021-12-07 20:52:35.937861', 'IFEOMA', 'ADANI', 'MODES', '08064004386', NULL, NULL, NULL, '00032', '00032', '2017', 'FETHAII/2017/00032', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(283, '2021-12-07 20:52:27.217058', '2021-12-07 20:52:36.082876', 'IBUKUN', 'ADEOLU', 'NGOZ', '08064004387', NULL, NULL, NULL, '00033', '00033', '2018', 'FETHAII/2018/00033', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(284, '2021-12-07 20:52:27.434600', '2021-12-07 20:52:36.327262', 'KUSS', 'ADEOYE', 'JULIAN', '08064004388', NULL, NULL, NULL, '00034', '00034', '2019', 'FETHAII/2019/00034', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(285, '2021-12-07 20:52:27.728220', '2021-12-07 20:52:36.749951', 'SAMSON', 'ADEYEMI', 'OLU', '08064004389', NULL, NULL, NULL, '00035', '00035', '2020', 'FETHAII/2020/00035', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(286, '2021-12-07 20:52:27.910309', '2021-12-07 20:52:37.159811', 'EMMANUEL', 'ADIDU', 'AME', '08064004390', NULL, NULL, NULL, '00036', '00036', '2021', 'FETHAII/2021/00036', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(287, '2021-12-07 20:52:28.095471', '2021-12-07 20:52:37.294363', 'NWANYIEZE', 'ADIELE', 'N', '08064004391', NULL, NULL, NULL, '00037', '00037', '2010', 'FETHAII/2010/00037', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(288, '2021-12-07 20:52:28.198116', '2021-12-07 20:52:37.427190', 'EMMANUEL', 'ADIGWE', 'IF', '08064004392', NULL, NULL, NULL, '00038', '00038', '2011', 'FETHAII/2011/00038', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(289, '2021-12-07 20:52:28.254133', '2021-12-07 20:52:37.749684', 'JULIANA', 'ADIKWU', 'NGO', '08064004393', NULL, NULL, NULL, '00039', '00039', '2012', 'FETHAII/2012/00039', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(290, '2021-12-07 20:52:28.445271', '2021-12-07 20:52:37.902230', 'CAROLINE', 'ADIMORAH', '', '08064004394', NULL, NULL, NULL, '00040', '00040', '2013', 'FETHAII/2013/00040', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(291, '2021-12-07 20:52:28.567732', '2021-12-07 20:52:38.038397', 'ORAEKI', 'ADIMORAH', 'HA', '08064004395', NULL, NULL, NULL, '00041', '00041', '2014', 'FETHAII/2014/00041', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(292, '2021-12-07 20:52:28.705782', '2021-12-07 20:52:38.149972', 'IFEYINWA', 'ADOGU', '', '08064004396', NULL, NULL, NULL, '00042', '00042', '2015', 'FETHAII/2015/00042', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(293, '2021-12-07 20:52:28.788732', '2021-12-07 20:52:38.261459', 'OGHENEOCHUKO', 'ADOKA', '', '08064004397', NULL, NULL, NULL, '00043', '00043', '2016', 'FETHAII/2016/00043', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(294, '2021-12-07 20:52:28.861547', '2021-12-07 20:52:38.382376', 'NWOVA', 'ADOKE', 'JOHN', '08064004398', NULL, NULL, NULL, '00044', '00044', '2017', 'FETHAII/2017/00044', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(295, '2021-12-07 20:52:28.917471', '2021-12-07 20:52:38.505253', 'EDACHE', 'ADOKWU', 'ELDA', '08064004399', NULL, NULL, NULL, '00045', '00045', '2018', 'FETHAII/2018/00045', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(296, '2021-12-07 20:52:29.003040', '2021-12-07 20:52:38.927703', 'OBINNA', 'ADONU', 'BENJA', '08064004400', NULL, NULL, NULL, '00046', '00046', '2019', 'FETHAII/2019/00046', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(297, '2021-12-07 20:52:29.051050', '2021-12-07 20:52:39.061323', 'LINDA', 'ADUAKA', 'UKAMA', '08064004401', NULL, NULL, NULL, '00047', '00047', '2020', 'FETHAII/2020/00047', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(298, '2021-12-07 20:52:29.107419', '2021-12-07 20:52:39.259821', 'NGOZI', 'ADUAKA', 'ELIZA', '08064004402', NULL, NULL, NULL, '00048', '00048', '2021', 'FETHAII/2021/00048', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(299, '2021-12-07 20:52:29.220576', '2021-12-07 20:52:39.405168', 'VIVIAN', 'ADUAKA', 'ONYI', '08064004403', NULL, NULL, NULL, '00049', '00049', '2010', 'FETHAII/2010/00049', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(300, '2021-12-07 20:52:29.309648', '2021-12-07 20:52:39.538471', 'ADAGBA', 'ADUWA', 'PATRI', '08064004404', NULL, NULL, NULL, '00050', '00050', '2011', 'FETHAII/2011/00050', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(301, '2021-12-07 20:52:12.262945', '2021-12-07 20:52:18.081556', 'BEN', 'IDAKA', 'MAUREEN', '08064004355', NULL, NULL, NULL, '00001', '00001', '2010', 'FETHAII/2010/00001', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(302, '2021-12-07 20:52:12.662417', '2021-12-07 20:52:18.248730', 'UCHENNA', 'OKOLI', 'OBIA', '08064004356', NULL, NULL, NULL, '00002', '00002', '2011', 'FETHAII/2011/00002', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(303, '2021-12-07 20:52:12.751738', '2021-12-07 20:52:19.172266', 'NKONYELU', 'OKONKWO', 'E', '08064004357', NULL, NULL, NULL, '00003', '00003', '2012', 'FETHAII/2012/00003', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(304, '2021-12-07 20:52:12.844370', '2021-12-07 20:52:19.326762', 'OPHELIA', 'AMADI', 'CHIB', '08064004358', NULL, NULL, NULL, '00004', '00004', '2013', 'FETHAII/2013/00004', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(305, '2021-12-07 20:52:12.931350', '2021-12-07 20:52:19.438683', 'IKWUO', 'NNACHI', 'IJEM', '08064004359', NULL, NULL, NULL, '00005', '00005', '2014', 'FETHAII/2014/00005', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(306, '2021-12-07 20:52:13.018121', '2021-12-07 20:52:19.595505', 'IFEOMA', 'AGBOWO', 'MARY', '08064004360', NULL, NULL, NULL, '00006', '00006', '2015', 'FETHAII/2015/00006', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(307, '2021-12-07 20:52:13.107413', '2021-12-07 20:52:19.728544', 'DR', 'NWANKWO', 'OKUTA J', '08064004361', NULL, NULL, NULL, '00007', '00007', '2016', 'FETHAII/2016/00007', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(308, '2021-12-07 20:52:13.317366', '2021-12-07 20:52:19.849365', 'EMMANUEL', 'ABAA', '', '08064004362', NULL, NULL, NULL, '00008', '00008', '2017', 'FETHAII/2017/00008', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(309, '2021-12-07 20:52:13.409013', '2021-12-07 20:52:20.050492', 'UGO', 'ABAGHA', 'AGNES', '08064004363', NULL, NULL, NULL, '00009', '00009', '2018', 'FETHAII/2018/00009', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(310, '2021-12-07 20:52:13.537993', '2021-12-07 20:52:20.171931', 'CHIGOZI', 'ABAGHAUGWU', '', '08064004364', NULL, NULL, NULL, '00010', '00010', '2019', 'FETHAII/2019/00010', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(311, '2021-12-07 20:52:13.662573', '2021-12-07 20:52:20.294762', 'NWACHINAME', 'ABANIFI', '', '08064004365', NULL, NULL, NULL, '00011', '00011', '2020', 'FETHAII/2020/00011', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(312, '2021-12-07 20:52:13.797004', '2021-12-07 20:52:20.493700', 'NNENWAOGO', 'ABARA', 'P', '08064004366', NULL, NULL, NULL, '00012', '00012', '2021', 'FETHAII/2021/00012', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(313, '2021-12-07 20:52:13.974674', '2021-12-07 20:52:20.672794', 'LAWRENCE', 'ABARA', 'CHI', '08064004367', NULL, NULL, NULL, '00013', '00013', '2010', 'FETHAII/2010/00013', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(314, '2021-12-07 20:52:14.129468', '2021-12-07 20:52:20.772431', 'NWAKAEGO', 'ABARA', 'EUC', '08064004368', NULL, NULL, NULL, '00014', '00014', '2011', 'FETHAII/2011/00014', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(315, '2021-12-07 20:52:14.232840', '2021-12-07 20:52:20.906224', 'OBASI', 'ABBA', 'DORCAS', '08064004369', NULL, NULL, NULL, '00015', '00015', '2012', 'FETHAII/2012/00015', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(316, '2021-12-07 20:52:14.332723', '2021-12-07 20:52:21.401134', 'EFFIONG', 'ABIA', 'ANIET', '08064004370', NULL, NULL, NULL, '00016', '00016', '2013', 'FETHAII/2013/00016', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(317, '2021-12-07 20:52:14.431570', '2021-12-07 20:52:21.771160', 'NKIRUKA', 'ABIA', 'NDON', '08064004371', NULL, NULL, NULL, '00017', '00017', '2014', 'FETHAII/2014/00017', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(318, '2021-12-07 20:52:14.495813', '2021-12-07 20:52:21.894199', 'DR', 'ABIA', 'EFFIONG NDO', '08064004372', NULL, NULL, NULL, '00018', '00018', '2015', 'FETHAII/2015/00018', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(319, '2021-12-07 20:52:14.565055', '2021-12-07 20:52:22.161794', 'UGOCHI', 'ABII', 'GLORIA', '08064004373', NULL, NULL, NULL, '00019', '00019', '2016', 'FETHAII/2016/00019', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(320, '2021-12-07 20:52:14.631653', '2021-12-07 20:52:22.404920', 'ABEKE', 'ABIOLA', 'ZULAY', '08064004374', NULL, NULL, NULL, '00020', '00020', '2017', 'FETHAII/2017/00020', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(321, '2021-12-07 20:52:14.694782', '2021-12-07 20:52:22.774069', 'CHIOMA', 'ABIRI', 'CLARA', '08064004375', NULL, NULL, NULL, '00021', '00021', '2018', 'FETHAII/2018/00021', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(322, '2021-12-07 20:52:14.770735', '2021-12-07 20:52:22.959276', 'OLADELE', 'ABOKEDE', 'AD', '08064004376', NULL, NULL, NULL, '00022', '00022', '2019', 'FETHAII/2019/00022', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(323, '2021-12-07 20:52:14.957974', '2021-12-07 20:52:23.299776', 'OMOLARA', 'ABOKEDE', 'AD', '08064004377', NULL, NULL, NULL, '00023', '00023', '2020', 'FETHAII/2020/00023', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(324, '2021-12-07 20:52:15.066393', '2021-12-07 20:52:23.438371', 'LEONARD', 'ABOR', '', '08064004378', NULL, NULL, NULL, '00024', '00024', '2021', 'FETHAII/2021/00024', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(325, '2021-12-07 20:52:15.207859', '2021-12-07 20:52:23.639000', 'MOMOH', 'ABU', 'AUGUSTIN', '08064004379', NULL, NULL, NULL, '00025', '00025', '2010', 'FETHAII/2010/00025', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(326, '2021-12-07 20:52:15.274533', '2021-12-07 20:52:23.884054', 'MMADUABUCHI', 'ABUWA', '', '08064004380', NULL, NULL, NULL, '00026', '00026', '2011', 'FETHAII/2011/00026', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(327, '2021-12-07 20:52:15.402371', '2021-12-07 20:52:24.006838', 'MAXWELL', 'ACHI', 'NGWU', '08064004381', NULL, NULL, NULL, '00027', '00027', '2012', 'FETHAII/2012/00027', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(328, '2021-12-07 20:52:15.468053', '2021-12-07 20:52:24.194008', 'EZEKIEL', 'ACHONWA', 'UC', '08064004382', NULL, NULL, NULL, '00028', '00028', '2013', 'FETHAII/2013/00028', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(329, '2021-12-07 20:52:15.534726', '2021-12-07 20:52:24.306390', 'UDOCHRIS', 'ACHUGONYE', '', '08064004383', NULL, NULL, NULL, '00029', '00029', '2014', 'FETHAII/2014/00029', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(330, '2021-12-07 20:52:15.664311', '2021-12-07 20:52:24.438156', 'MATTHEW', 'ADAMA', 'SIMO', '08064004384', NULL, NULL, NULL, '00030', '00030', '2015', 'FETHAII/2015/00030', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(331, '2021-12-07 20:52:15.755637', '2021-12-07 20:52:24.640589', 'BEATRI', 'ADAMSOKORIE', '', '08064004385', NULL, NULL, NULL, '00031', '00031', '2016', 'FETHAII/2016/00031', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(332, '2021-12-07 20:52:15.853264', '2021-12-07 20:52:24.805670', 'IFEOMA', 'ADANI', 'MODES', '08064004386', NULL, NULL, NULL, '00032', '00032', '2017', 'FETHAII/2017/00032', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(333, '2021-12-07 20:52:15.952203', '2021-12-07 20:52:24.929448', 'IBUKUN', 'ADEOLU', 'NGOZ', '08064004387', NULL, NULL, NULL, '00033', '00033', '2018', 'FETHAII/2018/00033', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(334, '2021-12-07 20:52:16.007620', '2021-12-07 20:52:25.039409', 'KUSS', 'ADEOYE', 'JULIAN', '08064004388', NULL, NULL, NULL, '00034', '00034', '2019', 'FETHAII/2019/00034', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(335, '2021-12-07 20:52:16.091628', '2021-12-07 20:52:25.206369', 'SAMSON', 'ADEYEMI', 'OLU', '08064004389', NULL, NULL, NULL, '00035', '00035', '2020', 'FETHAII/2020/00035', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(336, '2021-12-07 20:52:16.265981', '2021-12-07 20:52:25.305772', 'EMMANUEL', 'ADIDU', 'AME', '08064004390', NULL, NULL, NULL, '00036', '00036', '2021', 'FETHAII/2021/00036', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(337, '2021-12-07 20:52:16.564571', '2021-12-07 20:52:25.383723', 'NWANYIEZE', 'ADIELE', 'N', '08064004391', NULL, NULL, NULL, '00037', '00037', '2010', 'FETHAII/2010/00037', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(338, '2021-12-07 20:52:16.678235', '2021-12-07 20:52:25.472863', 'EMMANUEL', 'ADIGWE', 'IF', '08064004392', NULL, NULL, NULL, '00038', '00038', '2011', 'FETHAII/2011/00038', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(339, '2021-12-07 20:52:16.741951', '2021-12-07 20:52:25.736371', 'JULIANA', 'ADIKWU', 'NGO', '08064004393', NULL, NULL, NULL, '00039', '00039', '2012', 'FETHAII/2012/00039', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(340, '2021-12-07 20:52:16.808831', '2021-12-07 20:52:26.084784', 'CAROLINE', 'ADIMORAH', '', '08064004394', NULL, NULL, NULL, '00040', '00040', '2013', 'FETHAII/2013/00040', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(341, '2021-12-07 20:52:16.874500', '2021-12-07 20:52:26.404238', 'ORAEKI', 'ADIMORAH', 'HA', '08064004395', NULL, NULL, NULL, '00041', '00041', '2014', 'FETHAII/2014/00041', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(342, '2021-12-07 20:52:16.943959', '2021-12-07 20:52:26.593338', 'IFEYINWA', 'ADOGU', '', '08064004396', NULL, NULL, NULL, '00042', '00042', '2015', 'FETHAII/2015/00042', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(343, '2021-12-07 20:52:17.005916', '2021-12-07 20:52:26.739681', 'OGHENEOCHUKO', 'ADOKA', '', '08064004397', NULL, NULL, NULL, '00043', '00043', '2016', 'FETHAII/2016/00043', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(344, '2021-12-07 20:52:17.062884', '2021-12-07 20:52:26.984387', 'NWOVA', 'ADOKE', 'JOHN', '08064004398', NULL, NULL, NULL, '00044', '00044', '2017', 'FETHAII/2017/00044', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(345, '2021-12-07 20:52:17.140833', '2021-12-07 20:52:27.128227', 'EDACHE', 'ADOKWU', 'ELDA', '08064004399', NULL, NULL, NULL, '00045', '00045', '2018', 'FETHAII/2018/00045', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(346, '2021-12-07 20:52:17.285449', '2021-12-07 20:52:27.239559', 'OBINNA', 'ADONU', 'BENJA', '08064004400', NULL, NULL, NULL, '00046', '00046', '2019', 'FETHAII/2019/00046', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(347, '2021-12-07 20:52:17.522794', '2021-12-07 20:52:27.372733', 'LINDA', 'ADUAKA', 'UKAMA', '08064004401', NULL, NULL, NULL, '00047', '00047', '2020', 'FETHAII/2020/00047', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(348, '2021-12-07 20:52:17.657828', '2021-12-07 20:52:27.572773', 'NGOZI', 'ADUAKA', 'ELIZA', '08064004402', NULL, NULL, NULL, '00048', '00048', '2021', 'FETHAII/2021/00048', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(349, '2021-12-07 20:52:17.740945', '2021-12-07 20:52:27.673170', 'VIVIAN', 'ADUAKA', 'ONYI', '08064004403', NULL, NULL, NULL, '00049', '00049', '2010', 'FETHAII/2010/00049', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(350, '2021-12-07 20:52:17.806688', '2021-12-07 20:52:27.750122', 'ADAGBA', 'ADUWA', 'PATRI', '08064004404', NULL, NULL, NULL, '00050', '00050', '2011', 'FETHAII/2011/00050', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(351, '2021-12-07 21:04:13.677877', '2021-12-07 21:04:18.779028', 'BEN', 'IDAKA', 'MAUREEN', '08064004355', NULL, NULL, NULL, '00001', '00001', '2010', 'FETHAII/2010/00001', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(352, '2021-12-07 21:04:13.953006', '2021-12-07 21:04:18.933983', 'UCHENNA', 'OKOLI', 'OBIA', '08064004356', NULL, NULL, NULL, '00002', '00002', '2011', 'FETHAII/2011/00002', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(353, '2021-12-07 21:04:14.040120', '2021-12-07 21:04:19.858805', 'NKONYELU', 'OKONKWO', 'E', '08064004357', NULL, NULL, NULL, '00003', '00003', '2012', 'FETHAII/2012/00003', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(354, '2021-12-07 21:04:14.148151', '2021-12-07 21:04:20.112968', 'OPHELIA', 'AMADI', 'CHIB', '08064004358', NULL, NULL, NULL, '00004', '00004', '2013', 'FETHAII/2013/00004', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(355, '2021-12-07 21:04:14.224999', '2021-12-07 21:04:20.234744', 'IKWUO', 'NNACHI', 'IJEM', '08064004359', NULL, NULL, NULL, '00005', '00005', '2014', 'FETHAII/2014/00005', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(356, '2021-12-07 21:04:14.313490', '2021-12-07 21:04:20.357053', 'IFEOMA', 'AGBOWO', 'MARY', '08064004360', NULL, NULL, NULL, '00006', '00006', '2015', 'FETHAII/2015/00006', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(357, '2021-12-07 21:04:14.370138', '2021-12-07 21:04:20.578952', 'DR', 'NWANKWO', 'OKUTA J', '08064004361', NULL, NULL, NULL, '00007', '00007', '2016', 'FETHAII/2016/00007', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(358, '2021-12-07 21:04:14.461393', '2021-12-07 21:04:20.757516', 'EMMANUEL', 'ABAA', '', '08064004362', NULL, NULL, NULL, '00008', '00008', '2017', 'FETHAII/2017/00008', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(359, '2021-12-07 21:04:14.529633', '2021-12-07 21:04:20.889762', 'UGO', 'ABAGHA', 'AGNES', '08064004363', NULL, NULL, NULL, '00009', '00009', '2018', 'FETHAII/2018/00009', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(360, '2021-12-07 21:04:14.847265', '2021-12-07 21:04:21.078923', 'CHIGOZI', 'ABAGHAUGWU', '', '08064004364', NULL, NULL, NULL, '00010', '00010', '2019', 'FETHAII/2019/00010', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(361, '2021-12-07 21:04:14.939115', '2021-12-07 21:04:21.212416', 'NWACHINAME', 'ABANIFI', '', '08064004365', NULL, NULL, NULL, '00011', '00011', '2020', 'FETHAII/2020/00011', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(362, '2021-12-07 21:04:15.037157', '2021-12-07 21:04:21.331089', 'NNENWAOGO', 'ABARA', 'P', '08064004366', NULL, NULL, NULL, '00012', '00012', '2021', 'FETHAII/2021/00012', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(363, '2021-12-07 21:04:15.135073', '2021-12-07 21:04:21.468583', 'LAWRENCE', 'ABARA', 'CHI', '08064004367', NULL, NULL, NULL, '00013', '00013', '2010', 'FETHAII/2010/00013', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(364, '2021-12-07 21:04:15.180252', '2021-12-07 21:04:21.545814', 'NWAKAEGO', 'ABARA', 'EUC', '08064004368', NULL, NULL, NULL, '00014', '00014', '2011', 'FETHAII/2011/00014', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(365, '2021-12-07 21:04:15.226105', '2021-12-07 21:04:21.634691', 'OBASI', 'ABBA', 'DORCAS', '08064004369', NULL, NULL, NULL, '00015', '00015', '2012', 'FETHAII/2012/00015', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(366, '2021-12-07 21:04:15.296821', '2021-12-07 21:04:22.623460', 'EFFIONG', 'ABIA', 'ANIET', '08064004370', NULL, NULL, NULL, '00016', '00016', '2013', 'FETHAII/2013/00016', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(367, '2021-12-07 21:04:15.373200', '2021-12-07 21:04:22.901848', 'NKIRUKA', 'ABIA', 'NDON', '08064004371', NULL, NULL, NULL, '00017', '00017', '2014', 'FETHAII/2014/00017', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(368, '2021-12-07 21:04:15.473072', '2021-12-07 21:04:23.056719', 'DR', 'ABIA', 'EFFIONG NDO', '08064004372', NULL, NULL, NULL, '00018', '00018', '2015', 'FETHAII/2015/00018', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(369, '2021-12-07 21:04:15.561746', '2021-12-07 21:04:23.212923', 'UGOCHI', 'ABII', 'GLORIA', '08064004373', NULL, NULL, NULL, '00019', '00019', '2016', 'FETHAII/2016/00019', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(370, '2021-12-07 21:04:15.663969', '2021-12-07 21:04:23.380971', 'ABEKE', 'ABIOLA', 'ZULAY', '08064004374', NULL, NULL, NULL, '00020', '00020', '2017', 'FETHAII/2017/00020', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(371, '2021-12-07 21:04:15.793473', '2021-12-07 21:04:23.657014', 'CHIOMA', 'ABIRI', 'CLARA', '08064004375', NULL, NULL, NULL, '00021', '00021', '2018', 'FETHAII/2018/00021', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(372, '2021-12-07 21:04:15.990170', '2021-12-07 21:04:23.801303', 'OLADELE', 'ABOKEDE', 'AD', '08064004376', NULL, NULL, NULL, '00022', '00022', '2019', 'FETHAII/2019/00022', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(373, '2021-12-07 21:04:16.116313', '2021-12-07 21:04:23.913731', 'OMOLARA', 'ABOKEDE', 'AD', '08064004377', NULL, NULL, NULL, '00023', '00023', '2020', 'FETHAII/2020/00023', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(374, '2021-12-07 21:04:16.191283', '2021-12-07 21:04:24.057658', 'LEONARD', 'ABOR', '', '08064004378', NULL, NULL, NULL, '00024', '00024', '2021', 'FETHAII/2021/00024', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(375, '2021-12-07 21:04:16.269691', '2021-12-07 21:04:24.201562', 'MOMOH', 'ABU', 'AUGUSTIN', '08064004379', NULL, NULL, NULL, '00025', '00025', '2010', 'FETHAII/2010/00025', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(376, '2021-12-07 21:04:16.433291', '2021-12-07 21:04:24.412499', 'MMADUABUCHI', 'ABUWA', '', '08064004380', NULL, NULL, NULL, '00026', '00026', '2011', 'FETHAII/2011/00026', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(377, '2021-12-07 21:04:16.507036', '2021-12-07 21:04:24.677703', 'MAXWELL', 'ACHI', 'NGWU', '08064004381', NULL, NULL, NULL, '00027', '00027', '2012', 'FETHAII/2012/00027', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(378, '2021-12-07 21:04:16.572717', '2021-12-07 21:04:24.823810', 'EZEKIEL', 'ACHONWA', 'UC', '08064004382', NULL, NULL, NULL, '00028', '00028', '2013', 'FETHAII/2013/00028', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(379, '2021-12-07 21:04:16.647547', '2021-12-07 21:04:24.956919', 'UDOCHRIS', 'ACHUGONYE', '', '08064004383', NULL, NULL, NULL, '00029', '00029', '2014', 'FETHAII/2014/00029', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(380, '2021-12-07 21:04:16.692254', '2021-12-07 21:04:25.058323', 'MATTHEW', 'ADAMA', 'SIMO', '08064004384', NULL, NULL, NULL, '00030', '00030', '2015', 'FETHAII/2015/00030', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(381, '2021-12-07 21:04:16.770395', '2021-12-07 21:04:25.168042', 'BEATRI', 'ADAMSOKORIE', '', '08064004385', NULL, NULL, NULL, '00031', '00031', '2016', 'FETHAII/2016/00031', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(382, '2021-12-07 21:04:16.850390', '2021-12-07 21:04:25.312952', 'IFEOMA', 'ADANI', 'MODES', '08064004386', NULL, NULL, NULL, '00032', '00032', '2017', 'FETHAII/2017/00032', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(383, '2021-12-07 21:04:17.102611', '2021-12-07 21:04:25.378911', 'IBUKUN', 'ADEOLU', 'NGOZ', '08064004387', NULL, NULL, NULL, '00033', '00033', '2018', 'FETHAII/2018/00033', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(384, '2021-12-07 21:04:17.180561', '2021-12-07 21:04:25.501004', 'KUSS', 'ADEOYE', 'JULIAN', '08064004388', NULL, NULL, NULL, '00034', '00034', '2019', 'FETHAII/2019/00034', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(385, '2021-12-07 21:04:17.281640', '2021-12-07 21:04:25.669325', 'SAMSON', 'ADEYEMI', 'OLU', '08064004389', NULL, NULL, NULL, '00035', '00035', '2020', 'FETHAII/2020/00035', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(386, '2021-12-07 21:04:17.347881', '2021-12-07 21:04:25.834411', 'EMMANUEL', 'ADIDU', 'AME', '08064004390', NULL, NULL, NULL, '00036', '00036', '2021', 'FETHAII/2021/00036', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(387, '2021-12-07 21:04:17.436192', '2021-12-07 21:04:25.957396', 'NWANYIEZE', 'ADIELE', 'N', '08064004391', NULL, NULL, NULL, '00037', '00037', '2010', 'FETHAII/2010/00037', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(388, '2021-12-07 21:04:17.491749', '2021-12-07 21:04:26.057978', 'EMMANUEL', 'ADIGWE', 'IF', '08064004392', NULL, NULL, NULL, '00038', '00038', '2011', 'FETHAII/2011/00038', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(389, '2021-12-07 21:04:17.548360', '2021-12-07 21:04:26.147071', 'JULIANA', 'ADIKWU', 'NGO', '08064004393', NULL, NULL, NULL, '00039', '00039', '2012', 'FETHAII/2012/00039', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(390, '2021-12-07 21:04:17.625141', '2021-12-07 21:04:26.212234', 'CAROLINE', 'ADIMORAH', '', '08064004394', NULL, NULL, NULL, '00040', '00040', '2013', 'FETHAII/2013/00040', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(391, '2021-12-07 21:04:17.687326', '2021-12-07 21:04:26.279522', 'ORAEKI', 'ADIMORAH', 'HA', '08064004395', NULL, NULL, NULL, '00041', '00041', '2014', 'FETHAII/2014/00041', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(392, '2021-12-07 21:04:17.893198', '2021-12-07 21:04:26.345623', 'IFEYINWA', 'ADOGU', '', '08064004396', NULL, NULL, NULL, '00042', '00042', '2015', 'FETHAII/2015/00042', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(393, '2021-12-07 21:04:18.026469', '2021-12-07 21:04:26.468620', 'OGHENEOCHUKO', 'ADOKA', '', '08064004397', NULL, NULL, NULL, '00043', '00043', '2016', 'FETHAII/2016/00043', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(394, '2021-12-07 21:04:18.258570', '2021-12-07 21:04:26.660182', 'NWOVA', 'ADOKE', 'JOHN', '08064004398', NULL, NULL, NULL, '00044', '00044', '2017', 'FETHAII/2017/00044', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(395, '2021-12-07 21:04:18.324529', '2021-12-07 21:04:27.045828', 'EDACHE', 'ADOKWU', 'ELDA', '08064004399', NULL, NULL, NULL, '00045', '00045', '2018', 'FETHAII/2018/00045', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(396, '2021-12-07 21:04:18.369497', '2021-12-07 21:04:27.218936', 'OBINNA', 'ADONU', 'BENJA', '08064004400', NULL, NULL, NULL, '00046', '00046', '2019', 'FETHAII/2019/00046', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(397, '2021-12-07 21:04:18.413700', '2021-12-07 21:04:27.335347', 'LINDA', 'ADUAKA', 'UKAMA', '08064004401', NULL, NULL, NULL, '00047', '00047', '2020', 'FETHAII/2020/00047', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(398, '2021-12-07 21:04:18.458403', '2021-12-07 21:04:27.457026', 'NGOZI', 'ADUAKA', 'ELIZA', '08064004402', NULL, NULL, NULL, '00048', '00048', '2021', 'FETHAII/2021/00048', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(399, '2021-12-07 21:04:18.513746', '2021-12-07 21:04:27.523125', 'VIVIAN', 'ADUAKA', 'ONYI', '08064004403', NULL, NULL, NULL, '00049', '00049', '2010', 'FETHAII/2010/00049', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(400, '2021-12-07 21:04:18.569297', '2021-12-07 21:04:27.611942', 'ADAGBA', 'ADUWA', 'PATRI', '08064004404', NULL, NULL, NULL, '00050', '00050', '2011', 'FETHAII/2011/00050', NULL, 2, NULL, 2, NULL, NULL, NULL, 1, 2, NULL, 2, '2022-01-29'),
+(401, '2021-12-16 07:42:00.391862', '2021-12-16 07:57:07.533430', 'FRED', 'EKPE', 'EDET', '08598574455', '2021-12-16', NULL, '2021-12-16', NULL, NULL, NULL, NULL, 7, 2, 2, 2, 17, 1, 9, NULL, 2, 7, 2, '2022-01-29'),
+(402, '2021-12-16 09:08:13.936840', '2021-12-16 09:09:56.598706', 'PHILIP', 'ALOKE', 'SUNDAY', '08075544443', '2021-12-16', NULL, '2021-12-16', NULL, NULL, NULL, NULL, 7, 2, 2, 2, 6, 1, 9, NULL, 2, 8, 2, '2022-01-29'),
+(403, '2021-12-16 09:27:41.712497', '2021-12-16 09:29:46.534985', 'EMEKA', 'NJOKU', 'NJOKU', '08608686445', '2021-12-16', NULL, '2021-12-16', NULL, NULL, NULL, NULL, 7, 2, 2, 2, 1, 1, 9, NULL, 2, 4, 2, '2022-01-29'),
+(404, '2021-12-16 09:35:44.889608', '2021-12-16 09:39:48.391995', 'CHINYERE', 'IGWE', 'SONIA', '08145674655', '2021-12-16', NULL, '2021-12-16', NULL, NULL, NULL, NULL, 7, 2, 2, 2, 26, 2, 9, NULL, 2, 2, 2, '2022-01-29'),
+(405, '2021-12-16 09:48:39.429963', '2021-12-16 09:49:49.200783', 'EMMANUEL', 'ONWE', 'CHIKE', '08039555648', '2021-12-16', NULL, '2021-12-16', NULL, NULL, NULL, NULL, 7, 2, 2, 2, 14, 1, 9, NULL, 2, 8, 2, '2022-01-29'),
+(406, '2022-01-01 08:43:48.387405', '2022-01-29 23:52:18.717465', 'NWEKE', 'AGU', '', '09505857445', '2022-01-01', NULL, '2022-01-01', NULL, NULL, NULL, NULL, 7, 2, 2, 2, 1, 1, 9, NULL, 2, 7, 2, '2022-01-29'),
+(409, '2022-01-30 00:02:21.502077', '2022-01-29 23:51:51.348453', 'CHUKWUMA', 'NWEKPA', 'PROF', '0907777789', '2022-01-29', NULL, '2022-01-29', NULL, NULL, NULL, NULL, 7, 2, 2, 2, 2, 1, 9, NULL, 2, 1, 2, '2022-01-29'),
+(410, '2022-01-30 00:44:02.877035', '2022-01-30 00:57:44.336042', 'NNNENA', 'IGWE', 'VERA', '08048447755', '2022-01-30', NULL, '2022-01-30', NULL, NULL, NULL, NULL, 7, 2, 2, 2, 25, 2, 9, NULL, 2, 3, 2, '2022-01-29'),
+(411, '2022-01-30 17:10:23.783911', '2022-01-30 18:19:02.315679', 'EZINNE', 'AGBO', 'STENORA', '34555434343', '2022-01-30', NULL, '2022-01-30', NULL, NULL, NULL, NULL, 7, 2, 2, 2, 1, 2, 9, NULL, 2, 4, 2, '2022-01-30');
 
 -- --------------------------------------------------------
 
@@ -4213,7 +4474,10 @@ INSERT INTO `cooperative_membershiprequestadditionalattachment` (`id`, `created_
 (1, '2021-12-16 07:42:25.014907', '2021-12-16 07:42:25.014907', 'September 2021 Payslip', '/media/avatar2_AII1SA4.png', 401, 9),
 (2, '2021-12-16 07:44:39.224938', '2021-12-16 07:44:39.224938', 'Evidience', '/media/avatar5_DSdpXHG.png', 401, 4),
 (3, '2021-12-16 09:08:28.314167', '2021-12-16 09:08:28.314167', 'September 2021 Payslip', '/media/photo1_jmUzRuB.png', 402, 9),
-(4, '2021-12-16 09:27:56.126722', '2021-12-16 09:27:56.127723', 'September 2021 Payslip', '/media/default-150x150_cjBhnT6.png', 403, 9);
+(4, '2021-12-16 09:27:56.126722', '2021-12-16 09:27:56.127723', 'September 2021 Payslip', '/media/default-150x150_cjBhnT6.png', 403, 9),
+(7, '2022-01-30 00:02:34.397797', '2022-01-30 00:02:34.397797', 'payslip', '/media/2.jpg', 409, 9),
+(8, '2022-01-30 00:44:22.230282', '2022-01-30 00:44:22.230282', 'payslip', '/media/avatar_EHf4udE.png', 410, 9),
+(9, '2022-01-30 17:10:36.223564', '2022-01-30 17:10:36.223564', 'payslip', '/media/avatar3_SOQZhXg.png', 411, 9);
 
 -- --------------------------------------------------------
 
@@ -4245,7 +4509,15 @@ INSERT INTO `cooperative_membershiprequestadditionalinfo` (`id`, `created_at`, `
 (8, '2021-12-16 09:28:22.292629', '2021-12-16 09:28:22.292629', 'ok', 403, 4),
 (9, '2021-12-16 09:28:43.538805', '2021-12-16 09:28:43.538805', 'ok', 403, 2),
 (10, '2021-12-16 09:36:11.977286', '2021-12-16 09:36:11.977286', 'ok', 404, 4),
-(11, '2021-12-16 09:39:28.730765', '2021-12-16 09:39:28.730765', 'ok', 404, 2);
+(11, '2021-12-16 09:39:28.730765', '2021-12-16 09:39:28.730765', 'ok', 404, 2),
+(14, '2022-01-30 00:02:26.953578', '2022-01-30 00:02:26.953578', 'ok', 409, 9),
+(15, '2022-01-29 23:41:02.492767', '2022-01-29 23:41:02.492767', 'approved', 409, 2),
+(16, '2022-01-30 00:44:10.544163', '2022-01-30 00:44:10.544163', 'ok', 410, 9),
+(17, '2022-01-30 00:55:05.695971', '2022-01-30 00:55:05.695971', 'ok', 410, 4),
+(18, '2022-01-30 00:20:23.907373', '2022-01-30 00:20:23.907373', 'ok', 410, 2),
+(19, '2022-01-30 17:10:28.066536', '2022-01-30 17:10:28.066536', 'ok', 411, 9),
+(20, '2022-01-30 17:11:10.382911', '2022-01-30 17:11:10.383904', 'ok', 411, 4),
+(21, '2022-01-30 17:11:40.615409', '2022-01-30 17:11:40.615409', 'ok', 411, 2);
 
 -- --------------------------------------------------------
 
@@ -4288,7 +4560,7 @@ CREATE TABLE `cooperative_membersidmanager` (
 --
 
 INSERT INTO `cooperative_membersidmanager` (`id`, `created_at`, `updated_at`, `prefix_title`, `prefix_year`, `member_id`) VALUES
-(1, '2021-12-07 19:57:26.406767', '2021-12-16 10:06:52.943943', 'FETHAII', '2021', 5006);
+(1, '2021-12-07 19:57:26.406767', '2022-01-30 19:52:14.434326', 'FETHAII', '2021', 5014);
 
 -- --------------------------------------------------------
 
@@ -4327,15 +4599,9 @@ CREATE TABLE `cooperative_memberssalaryupdaterequest` (
   `approved_officer_id` int(11) DEFAULT NULL,
   `member_id` int(11) DEFAULT NULL,
   `processing_status_id` int(11) NOT NULL,
-  `status_id` int(11) NOT NULL
+  `status_id` int(11) NOT NULL,
+  `tdate` date NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
---
--- Dumping data for table `cooperative_memberssalaryupdaterequest`
---
-
-INSERT INTO `cooperative_memberssalaryupdaterequest` (`id`, `created_at`, `updated_at`, `amount`, `description`, `approved_at`, `approval_comment`, `image`, `approved_officer_id`, `member_id`, `processing_status_id`, `status_id`) VALUES
-(1, '2021-12-31 07:47:26.307480', '2021-12-31 07:47:55.142144', '250000.00', 'payslip for ecember 2021', '2021-12-31', 'ok', '', 12, 151, 2, 2);
 
 -- --------------------------------------------------------
 
@@ -4362,11 +4628,12 @@ CREATE TABLE `cooperative_membersshareaccounts` (
 --
 
 INSERT INTO `cooperative_membersshareaccounts` (`id`, `created_at`, `updated_at`, `shares`, `unit_cost`, `total_cost`, `effective_date`, `year`, `member_id`, `processed_by_id`, `status_id`) VALUES
-(1, '2021-12-13 17:22:30.243244', '2021-12-15 04:52:04.660531', 25, '10000.00', '250000.00', '2021-12-01', 2021, 356, 9, 1),
-(2, '2021-12-13 17:23:17.842386', '2021-12-16 10:56:30.870051', 8, '10000.00', '130000.00', '2020-12-31', 2020, 363, 9, 1),
-(3, '2021-12-13 17:28:45.826026', '2021-12-13 17:28:45.826026', 1, '10000.00', '10000.00', '2021-12-13', 2021, 370, 9, 1),
-(6, '2021-12-14 19:24:28.614554', '2021-12-14 19:24:28.614554', 5, '10000.00', '50000.00', '2021-12-14', 2021, 370, 9, 1),
-(11, '2021-12-16 10:06:53.311553', '2021-12-16 10:06:53.311553', 1, '10000.00', '10000.00', '2021-12-16', 2021, 710, 9, 1);
+(16, '2022-01-30 16:00:13.353651', '2022-01-30 16:00:13.353651', 1, '10000.00', '10000.00', '2022-01-30', 2022, 722, 9, 1),
+(17, '2022-01-30 17:06:08.500330', '2022-01-30 17:06:08.500330', 2, '10000.00', '20000.00', '2022-01-30', 2022, 724, 9, 1),
+(18, '2022-01-30 17:07:20.069175', '2022-01-30 17:07:20.069175', 2, '10000.00', '20000.00', '2022-01-30', 2022, 726, 9, 1),
+(19, '2022-01-30 17:08:21.985609', '2022-01-30 17:08:21.985609', 2, '10000.00', '20000.00', '2022-01-30', 2022, 728, 9, 1),
+(20, '2022-01-30 19:51:30.504458', '2022-01-30 19:51:30.504458', 1, '10000.00', '10000.00', '2022-01-30', 2022, 730, 9, 1),
+(21, '2022-01-30 19:52:14.767733', '2022-01-30 19:52:14.767733', 2, '10000.00', '20000.00', '2022-01-30', 2022, 732, 9, 1);
 
 -- --------------------------------------------------------
 
@@ -4427,15 +4694,9 @@ CREATE TABLE `cooperative_membersshareinitialupdaterequest` (
   `member_id` int(11) DEFAULT NULL,
   `processed_by_id` bigint(20) DEFAULT NULL,
   `status_id` int(11) NOT NULL,
-  `transaction_id` int(11) DEFAULT NULL
+  `transaction_id` int(11) DEFAULT NULL,
+  `tdate` date NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
---
--- Dumping data for table `cooperative_membersshareinitialupdaterequest`
---
-
-INSERT INTO `cooperative_membersshareinitialupdaterequest` (`id`, `created_at`, `updated_at`, `amount`, `approval_comment`, `approved_at`, `approval_officer_id`, `approval_status_id`, `member_id`, `processed_by_id`, `status_id`, `transaction_id`) VALUES
-(2, '2021-12-13 17:58:36.221298', '2021-12-13 18:58:51.177716', '10000.00', 'ok', '2021-12-13', 1, 2, 3, 9, 2, 3);
 
 -- --------------------------------------------------------
 
@@ -4453,17 +4714,9 @@ CREATE TABLE `cooperative_memberssharepurchaserequest` (
   `approval_officer_id` int(11) DEFAULT NULL,
   `approval_status_id` int(11) NOT NULL,
   `member_id` int(11) DEFAULT NULL,
-  `status_id` int(11) NOT NULL
+  `status_id` int(11) NOT NULL,
+  `tdate` date NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
---
--- Dumping data for table `cooperative_memberssharepurchaserequest`
---
-
-INSERT INTO `cooperative_memberssharepurchaserequest` (`id`, `created_at`, `updated_at`, `units`, `approval_comment`, `approval_date`, `approval_officer_id`, `approval_status_id`, `member_id`, `status_id`) VALUES
-(3, '2021-12-14 01:03:16.622353', '2021-12-14 02:23:10.695272', 4, 'ok', '2021-12-14', 2, 2, 363, 2),
-(4, '2021-12-14 04:28:12.652390', '2021-12-14 19:24:29.280989', 5, 'ok', '2021-12-14', 2, 2, 370, 2),
-(5, '2021-12-16 10:26:08.355636', '2021-12-16 10:56:31.015849', 5, 'ok', '2021-12-16', 2, 2, 363, 2);
 
 -- --------------------------------------------------------
 
@@ -4507,10 +4760,12 @@ CREATE TABLE `cooperative_memberswelfareaccounts` (
 --
 
 INSERT INTO `cooperative_memberswelfareaccounts` (`id`, `created_at`, `updated_at`, `amount`, `year`, `member_id`, `processed_by_id`, `status_id`) VALUES
-(3, '2021-12-13 17:06:46.057815', '2021-12-13 17:06:46.057815', '60000.00', 0, 357, 9, 1),
-(4, '2021-12-13 17:08:20.026238', '2021-12-13 17:08:20.026238', '80000.00', 0, 364, 9, 1),
-(6, '2021-12-15 03:37:04.470058', '2021-12-15 03:37:04.470058', '3600.00', 2022, 357, 9, 1),
-(10, '2021-12-16 10:06:53.691368', '2021-12-16 10:06:53.691368', '3600.00', 2021, 711, NULL, 1);
+(11, '2022-01-30 16:00:13.519780', '2022-01-30 16:00:13.519780', '3600.00', 2022, 723, NULL, 1),
+(12, '2022-01-30 17:06:08.818812', '2022-01-30 17:06:08.818812', '3600.00', 2022, 725, NULL, 1),
+(13, '2022-01-30 17:07:20.747683', '2022-01-30 17:07:20.747683', '3600.00', 2022, 727, NULL, 1),
+(14, '2022-01-30 17:08:22.283653', '2022-01-30 17:08:22.283653', '3600.00', 2022, 729, NULL, 1),
+(15, '2022-01-30 19:51:31.032329', '2022-01-30 19:51:31.032329', '3600.00', 2022, 731, NULL, 1),
+(16, '2022-01-30 19:52:15.002462', '2022-01-30 19:52:15.002462', '3600.00', 2022, 733, NULL, 1);
 
 -- --------------------------------------------------------
 
@@ -4556,34 +4811,17 @@ CREATE TABLE `cooperative_members_credit_purchase_analysis` (
 --
 
 INSERT INTO `cooperative_members_credit_purchase_analysis` (`id`, `created_at`, `updated_at`, `particulars`, `debit`, `credit`, `status_id`, `trans_code_id`, `tdate`) VALUES
-(34, '2022-01-06 07:25:02.859395', '2022-01-06 07:25:02.859395', 'Salary as at 12/16/2021', '0.00', '250000.00', 1, 4, '2022-01-26'),
-(35, '2022-01-06 07:25:02.926413', '2022-01-06 07:25:02.926413', 'ORDINARY SAVINGS', '15000.00', '0.00', 1, 4, '2022-01-26'),
-(36, '2022-01-06 07:25:03.092353', '2022-01-06 07:25:03.092353', 'PROJECT SAVINGS', '15000.00', '0.00', 1, 4, '2022-01-26'),
-(37, '2022-01-06 07:25:03.146386', '2022-01-06 07:25:03.146386', 'XMAS SAVINGS', '5000.00', '0.00', 1, 4, '2022-01-26'),
-(38, '2022-01-06 07:25:03.200446', '2022-01-06 07:25:03.200446', 'SHORT TERM LOAN', '35000.00', '0.00', 1, 4, '2022-01-26'),
-(39, '2022-01-06 07:25:03.266436', '2022-01-06 07:25:03.266436', 'LONG TERM LOAN', '50000.00', '0.00', 1, 4, '2022-01-26'),
-(40, '2022-01-10 17:20:10.275029', '2022-01-10 17:20:10.275029', 'Salary as at 01/10/2022', '0.00', '158000.00', 1, 7, '2022-01-26'),
-(41, '2022-01-10 17:20:10.389607', '2022-01-10 17:20:10.389607', 'ORDINARY SAVINGS', '10000.00', '0.00', 1, 7, '2022-01-26'),
-(42, '2022-01-10 18:45:59.017090', '2022-01-10 18:45:59.017090', 'Salary as at 01/10/2022', '0.00', '200000.00', 1, 9, '2022-01-26'),
-(43, '2022-01-10 18:45:59.109496', '2022-01-10 18:45:59.109496', 'ORDINARY SAVINGS', '8000.00', '0.00', 1, 9, '2022-01-26'),
-(44, '2022-01-17 04:01:21.504791', '2022-01-17 04:01:21.504791', 'Salary as at 01/10/2022', '0.00', '158000.00', 1, 12, '2022-01-26'),
-(45, '2022-01-17 04:01:21.577780', '2022-01-17 04:01:21.577780', 'ORDINARY SAVINGS', '20000.00', '0.00', 1, 12, '2022-01-26'),
-(46, '2022-01-17 04:01:21.642660', '2022-01-17 04:01:21.642660', 'PROJECT SAVINGS', '10000.00', '0.00', 1, 12, '2022-01-26'),
-(47, '2022-01-17 04:01:21.815050', '2022-01-17 04:01:21.815050', 'XMAS SAVINGS', '30000.00', '0.00', 1, 12, '2022-01-26'),
-(48, '2022-01-17 04:01:21.861991', '2022-01-17 04:01:21.861991', 'LAND SAVINGS', '3000.00', '0.00', 1, 12, '2022-01-26'),
-(49, '2022-01-18 10:25:54.546828', '2022-01-18 10:25:54.546828', 'Salary as at 01/10/2022', '0.00', '158000.00', 1, 16, '2022-01-26'),
-(50, '2022-01-18 10:25:54.639454', '2022-01-18 10:25:54.639454', 'ORDINARY SAVINGS', '20000.00', '0.00', 1, 16, '2022-01-26'),
-(51, '2022-01-18 10:25:54.699460', '2022-01-18 10:25:54.699460', 'PROJECT SAVINGS', '10000.00', '0.00', 1, 16, '2022-01-26'),
-(52, '2022-01-18 10:25:54.803415', '2022-01-18 10:25:54.803415', 'XMAS SAVINGS', '30000.00', '0.00', 1, 16, '2022-01-26'),
-(53, '2022-01-18 10:25:54.850421', '2022-01-18 10:25:54.850421', 'LAND SAVINGS', '3000.00', '0.00', 1, 16, '2022-01-26'),
-(54, '2022-01-26 05:28:28.673837', '2022-01-26 05:28:28.673837', 'Salary as at 01/26/2022', '0.00', '140000.00', 1, 21, '2022-01-26'),
-(55, '2022-01-26 05:28:28.745938', '2022-01-26 05:28:28.745938', 'ORDINARY SAVINGS', '5000.00', '0.00', 1, 21, '2022-01-26'),
-(56, '2022-01-26 05:28:28.806922', '2022-01-26 05:28:28.806922', 'PROJECT SAVINGS', '5000.00', '0.00', 1, 21, '2022-01-26'),
-(57, '2022-01-26 05:28:28.859889', '2022-01-26 05:28:28.859889', 'XMAS SAVINGS', '3000.00', '0.00', 1, 21, '2022-01-26'),
-(62, '2022-01-26 06:03:49.489704', '2022-01-26 06:03:49.489704', 'Salary as at 01/10/2022', '0.00', '190000.00', 1, 25, '2022-01-26'),
-(63, '2022-01-26 06:03:49.661633', '2022-01-26 06:03:49.661633', 'ORDINARY SAVINGS', '2000.00', '0.00', 1, 25, '2022-01-26'),
-(64, '2022-01-26 06:03:49.726663', '2022-01-26 06:03:49.726663', 'PROJECT SAVINGS', '3000.00', '0.00', 1, 25, '2022-01-26'),
-(65, '2022-01-26 06:03:49.760690', '2022-01-26 06:03:49.760690', 'XMAS SAVINGS', '2000.00', '0.00', 1, 25, '2022-01-26');
+(87, '2022-01-28 16:50:21.161408', '2022-01-28 16:50:21.161408', 'Salary as at 01/10/2022', '0.00', '158000.00', 1, 36, '2022-01-28'),
+(88, '2022-01-28 16:50:21.212416', '2022-01-28 16:50:21.212416', 'ORDINARY SAVINGS', '20000.00', '0.00', 1, 36, '2022-01-28'),
+(89, '2022-01-28 16:50:21.376049', '2022-01-28 16:50:21.377047', 'PROJECT SAVINGS', '10000.00', '0.00', 1, 36, '2022-01-28'),
+(90, '2022-01-28 16:50:21.443957', '2022-01-28 16:50:21.443957', 'XMAS SAVINGS', '30000.00', '0.00', 1, 36, '2022-01-28'),
+(91, '2022-01-28 16:50:21.473434', '2022-01-28 16:50:21.473434', 'LAND SAVINGS', '3000.00', '0.00', 1, 36, '2022-01-28'),
+(92, '2022-01-28 19:29:12.816167', '2022-01-28 19:29:12.817178', 'Salary as at 12/16/2021', '0.00', '250000.00', 1, 38, '2022-01-28'),
+(93, '2022-01-28 19:29:12.884710', '2022-01-28 19:29:12.884710', 'ORDINARY SAVINGS', '15000.00', '0.00', 1, 38, '2022-01-28'),
+(94, '2022-01-28 19:29:13.043784', '2022-01-28 19:29:13.043784', 'PROJECT SAVINGS', '15000.00', '0.00', 1, 38, '2022-01-28'),
+(95, '2022-01-28 19:29:13.216317', '2022-01-28 19:29:13.216317', 'XMAS SAVINGS', '5000.00', '0.00', 1, 38, '2022-01-28'),
+(96, '2022-01-28 19:29:13.321405', '2022-01-28 19:29:13.321405', 'SHORT TERM LOAN', '35000.00', '0.00', 1, 38, '2022-01-28'),
+(97, '2022-01-28 19:29:13.485365', '2022-01-28 19:29:13.485365', 'LONG TERM LOAN', '50000.00', '0.00', 1, 38, '2022-01-28');
 
 -- --------------------------------------------------------
 
@@ -4612,13 +4850,8 @@ CREATE TABLE `cooperative_members_credit_purchase_summary` (
 --
 
 INSERT INTO `cooperative_members_credit_purchase_summary` (`id`, `created_at`, `updated_at`, `debit`, `credit`, `balance`, `approval_comment`, `approval_date`, `approval_officer_id`, `approval_status_id`, `status_id`, `trans_code_id`, `tdate`) VALUES
-(5, '2022-01-06 07:25:02.822394', '2022-01-06 07:34:18.872668', '142700.00', '250000.00', '107300.00', 'ok', NULL, 11, 2, 2, 4, '2022-01-26'),
-(6, '2022-01-10 17:20:10.170283', '2022-01-10 17:22:10.269896', '26000.00', '158000.00', '132000.00', 'ok', NULL, 11, 2, 2, 7, '2022-01-26'),
-(7, '2022-01-10 18:45:58.965667', '2022-01-10 18:56:28.576353', '21800.00', '200000.00', '178200.00', 'ok', NULL, 11, 2, 2, 9, '2022-01-26'),
-(8, '2022-01-17 04:01:21.441779', '2022-01-17 04:03:23.536792', '104250.00', '158000.00', '53750.00', 'ok', NULL, 11, 2, 2, 12, '2022-01-26'),
-(9, '2022-01-18 10:25:54.474875', '2022-01-18 10:29:18.010396', '107000.00', '158000.00', '51000.00', 'ok', NULL, 11, 2, 2, 16, '2022-01-26'),
-(10, '2022-01-26 05:28:28.581311', '2022-01-26 05:37:24.847062', '22500.00', '140000.00', '117500.00', 'ok', NULL, 11, 2, 2, 21, '2022-01-26'),
-(12, '2022-01-26 06:03:49.428750', '2022-01-26 06:20:08.136413', '26600.00', '190000.00', '163400.00', 'ok', NULL, 11, 2, 2, 25, '2022-01-26');
+(18, '2022-01-28 16:50:21.109441', '2022-01-28 16:51:12.669942', '68500.00', '158000.00', '89500.00', 'APPROVED', NULL, 11, 2, 2, 36, '2022-01-28'),
+(19, '2022-01-28 19:29:12.766979', '2022-01-28 19:32:18.058346', '126650.00', '250000.00', '123350.00', 'APPROVED', NULL, 11, 2, 2, 38, '2022-01-28');
 
 -- --------------------------------------------------------
 
@@ -4662,10 +4895,9 @@ CREATE TABLE `cooperative_members_credit_sales_selected` (
 --
 
 INSERT INTO `cooperative_members_credit_sales_selected` (`id`, `created_at`, `updated_at`, `ticket`, `quantity`, `unit_selling_price`, `total`, `member_id`, `processed_by_id`, `product_id`, `status_id`, `tdate`) VALUES
-(21, '2022-01-26 05:14:38.650361', '2022-01-26 05:14:38.650361', '202212641431', 5, '1200.00', '6000.00', 165, 12, 918, 2, '2022-01-26'),
-(22, '2022-01-26 05:15:02.398468', '2022-01-26 05:15:02.398468', '202212641431', 5, '700.00', '3500.00', 165, 12, 971, 2, '2022-01-26'),
-(25, '2022-01-26 06:03:32.720621', '2022-01-26 06:03:32.720621', '20221265219', 7, '2300.00', '16100.00', 156, 12, 917, 2, '2022-01-26'),
-(26, '2022-01-26 06:03:39.685757', '2022-01-26 06:03:39.685757', '20221265219', 1, '3500.00', '3500.00', 156, 12, 922, 2, '2022-01-26');
+(36, '2022-01-28 16:49:59.260594', '2022-01-28 16:49:59.260594', '2022000032', 5, '950.00', '4750.00', 152, 12, 924, 2, '2022-01-28'),
+(37, '2022-01-28 16:50:13.452399', '2022-01-28 16:50:13.452399', '2022000032', 5, '150.00', '750.00', 152, 12, 1024, 2, '2022-01-28'),
+(38, '2022-01-28 19:29:05.929899', '2022-01-28 19:29:05.929899', '2022000033', 7, '950.00', '6650.00', 151, 12, 925, 2, '2022-01-28');
 
 -- --------------------------------------------------------
 
@@ -4683,17 +4915,9 @@ CREATE TABLE `cooperative_monthlydeductionlist` (
   `member_id` int(11) DEFAULT NULL,
   `transaction_id` int(11) DEFAULT NULL,
   `transaction_period_id` int(11) NOT NULL,
-  `transaction_status_id` int(11) NOT NULL
+  `transaction_status_id` int(11) NOT NULL,
+  `tdate` date NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
---
--- Dumping data for table `cooperative_monthlydeductionlist`
---
-
-INSERT INTO `cooperative_monthlydeductionlist` (`id`, `created_at`, `updated_at`, `account_number`, `amount`, `amount_deducted`, `member_id`, `transaction_id`, `transaction_period_id`, `transaction_status_id`) VALUES
-(6, '2022-01-10 21:05:04.850462', '2022-01-10 21:05:04.850462', '60000001', '22700.00', '0.00', 151, 14, 2, 2),
-(7, '2022-01-10 21:05:05.051806', '2022-01-10 21:05:05.051806', '60000004', '16000.00', '0.00', 154, 14, 2, 2),
-(8, '2022-01-10 21:05:05.123823', '2022-01-10 21:05:05.123823', '60000005', '13800.00', '0.00', 155, 14, 2, 2);
 
 -- --------------------------------------------------------
 
@@ -4711,17 +4935,9 @@ CREATE TABLE `cooperative_monthlydeductionlistgenerated` (
   `member_id` int(11) DEFAULT NULL,
   `salary_institution_id` int(11) NOT NULL,
   `transaction_period_id` int(11) NOT NULL,
-  `transaction_status_id` int(11) NOT NULL
+  `transaction_status_id` int(11) NOT NULL,
+  `tdate` date NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
---
--- Dumping data for table `cooperative_monthlydeductionlistgenerated`
---
-
-INSERT INTO `cooperative_monthlydeductionlistgenerated` (`id`, `created_at`, `updated_at`, `amount`, `amount_deducted`, `balance`, `member_id`, `salary_institution_id`, `transaction_period_id`, `transaction_status_id`) VALUES
-(1, '2022-01-11 14:06:49.981794', '2022-01-11 14:06:49.981794', '22700.00', '0.00', '0.00', 151, 1, 2, 1),
-(2, '2022-01-11 14:06:50.100916', '2022-01-11 14:06:50.100916', '16000.00', '0.00', '0.00', 154, 1, 2, 1),
-(3, '2022-01-11 14:06:50.221841', '2022-01-11 14:06:50.221841', '13800.00', '0.00', '0.00', 155, 1, 2, 1);
 
 -- --------------------------------------------------------
 
@@ -4736,16 +4952,9 @@ CREATE TABLE `cooperative_monthlygeneratedtransactions` (
   `processed_by_id` bigint(20) DEFAULT NULL,
   `transaction_id` int(11) NOT NULL,
   `transaction_period_id` int(11) NOT NULL,
-  `transaction_status_id` int(11) NOT NULL
+  `transaction_status_id` int(11) NOT NULL,
+  `tdate` date NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
---
--- Dumping data for table `cooperative_monthlygeneratedtransactions`
---
-
-INSERT INTO `cooperative_monthlygeneratedtransactions` (`id`, `created_at`, `updated_at`, `processed_by_id`, `transaction_id`, `transaction_period_id`, `transaction_status_id`) VALUES
-(1, '2021-12-31 12:04:03.859657', '2021-12-31 12:04:03.859657', 12, 14, 2, 2),
-(2, '2022-01-10 21:05:05.193677', '2022-01-10 21:05:05.193677', 12, 14, 2, 2);
 
 -- --------------------------------------------------------
 
@@ -4840,7 +5049,8 @@ CREATE TABLE `cooperative_nonmemberaccountdeductions` (
   `amount` decimal(20,2) NOT NULL,
   `salary_institution_id` int(11) NOT NULL,
   `transaction_period_id` int(11) NOT NULL,
-  `transaction_status_id` int(11) NOT NULL
+  `transaction_status_id` int(11) NOT NULL,
+  `tdate` date NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -5010,47 +5220,57 @@ CREATE TABLE `cooperative_personalledger` (
   `transaction_period` date NOT NULL,
   `member_id` int(11) DEFAULT NULL,
   `status_id` int(11) NOT NULL,
-  `transaction_id` int(11) DEFAULT NULL
+  `transaction_id` int(11) DEFAULT NULL,
+  `tdate` date NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `cooperative_personalledger`
 --
 
-INSERT INTO `cooperative_personalledger` (`id`, `created_at`, `updated_at`, `account_number`, `particulars`, `debit`, `credit`, `balance`, `transaction_period`, `member_id`, `status_id`, `transaction_id`) VALUES
-(7, '2021-12-13 14:50:47.634825', '2021-12-13 14:50:47.634825', '10100001', 'Balance Brought Forward as at 12/08/2021', '0.00', '120000.00', '120000.00', '2021-12-08', 151, 1, 2),
-(8, '2021-12-13 14:50:48.036141', '2021-12-13 14:50:48.037138', '10300001', 'Balance Brought Forward as at 12/08/2021', '0.00', '150000.00', '150000.00', '2021-12-08', 151, 1, 4),
-(11, '2021-12-13 15:15:43.580636', '2021-12-13 15:15:43.580636', '10200001', 'Balance Brought Forward as at 12/08/2021', '0.00', '250000.00', '250000.00', '2021-12-08', 151, 1, 3),
-(12, '2021-12-13 15:42:43.855978', '2021-12-13 15:42:43.856979', '2010000120211213164200001', 'Balance Brought Forward as at 12/08/2021', '70000.00', '0.00', '-70000.00', '2021-12-08', 151, 1, 8),
-(13, '2021-12-13 16:22:58.350642', '2021-12-13 16:22:58.351643', '2020000120211213172200002', 'Balance Brought Forward as at 12/08/2021', '450000.00', '0.00', '-450000.00', '2021-12-08', 151, 1, 9),
-(14, '2021-12-13 17:22:30.289661', '2021-12-13 17:22:30.289661', '70000001', 'Balance Broght Forward as at 2021-12-08 with shares of 2', '0.00', '20000.00', '20000.00', '2021-12-08', 151, 1, 15),
-(15, '2021-12-13 17:23:17.908165', '2021-12-13 17:23:17.908165', '70000002', 'Balance Broght Forward as at 2021-12-08 with shares of 3', '0.00', '30000.00', '30000.00', '2021-12-08', 152, 1, 15),
-(16, '2021-12-13 17:28:45.870879', '2021-12-13 17:28:45.870879', '70000003', 'Balance Broght Forward as at 2021-12-08 with shares of 1', '0.00', '10000.00', '10000.00', '2021-12-08', 153, 1, 15),
-(19, '2021-12-13 18:58:51.110316', '2021-12-13 18:58:51.110316', '70000003', 'Initial Share Balance update as at 2021-12-08 with shares: 1 Deducted from PROJECT SAVINGS', '0.00', '10000.00', '20000.00', '2021-12-08', 153, 1, 15),
-(22, '2021-12-14 02:23:10.648071', '2021-12-14 02:23:10.648071', '70000002', '4 Unit(s) Share Purchase, at unit cost of 10000.00 as at 2021-12-14 03:22:51.861132', '0.00', '40000.00', '70000.00', '2021-12-14', 152, 1, 15),
-(23, '2021-12-14 02:33:15.304125', '2021-12-14 02:33:15.304125', '10100001', 'update', '0.00', '50000.00', '170000.00', '2021-12-14', 151, 1, 2),
-(24, '2021-12-14 02:34:40.302039', '2021-12-14 02:34:40.302039', '2010000120211213164200001', 'bep up', '0.00', '20000.00', '-50000.00', '2021-12-14', 151, 1, 8),
-(25, '2021-12-14 19:24:29.167046', '2021-12-14 19:24:29.167046', '70000003', '5 Unit(s) Share Purchase, at unit cost of 10000.00 as at 2021-12-14 20:24:15.346587', '0.00', '50000.00', '70000.00', '2021-12-14', 153, 1, 15),
-(26, '2021-12-14 20:55:44.697553', '2021-12-14 20:55:44.697553', '10100001', '5445454', '0.00', '45000.00', '215000.00', '2021-12-14', 151, 1, 2),
-(27, '2021-12-14 20:59:28.230559', '2021-12-14 20:59:28.230559', '10200001', '5665656', '0.00', '34000.00', '284000.00', '2021-12-14', 151, 1, 3),
-(28, '2021-12-14 21:00:33.813099', '2021-12-14 21:00:33.813099', '10200001', '56545656', '0.00', '60000.00', '344000.00', '2021-12-14', 151, 1, 3),
-(29, '2021-12-14 21:01:28.577048', '2021-12-14 21:01:28.577048', '10200001', '565456567777', '0.00', '60000.00', '404000.00', '2021-12-14', 151, 1, 3),
-(30, '2021-12-14 21:02:21.980417', '2021-12-14 21:02:21.980417', '10200001', '5654565677773', '0.00', '54000.00', '458000.00', '2021-12-14', 151, 1, 3),
-(31, '2021-12-15 02:57:24.967587', '2021-12-15 02:57:24.967587', '2010000120211213164200001', 'uyyuyuyu', '0.00', '7899.00', '-42101.00', '2021-12-15', 151, 1, 8),
-(32, '2021-12-15 03:03:31.534011', '2021-12-15 03:03:31.534011', '10100001', 'hgghgh', '0.00', '6000.00', '221000.00', '2021-12-15', 151, 1, 2),
-(33, '2021-12-15 04:46:44.140199', '2021-12-15 04:46:44.140199', '70000001', '3 Unit(s) Share Payment, at unit cost of 10000.00 as at 2021-12-15 05:44:53.827489', '0.00', '30000.00', '50000.00', '2021-12-15', 151, 1, 17),
-(34, '2021-12-15 04:52:04.828024', '2021-12-15 04:52:04.828024', '70000001', '5 Unit(s) Share Payment, at unit cost of 10000.00 as at 2021-12-15 05:51:38.409672', '0.00', '50000.00', '100000.00', '2021-12-15', 151, 1, 15),
-(35, '2021-12-15 05:02:26.580163', '2021-12-15 05:02:26.580163', '10500001', 'Balance Brought Forward as at 12/08/2021', '0.00', '500000.00', '500000.00', '2021-12-08', 151, 1, 6),
-(38, '2021-12-16 00:07:47.143112', '2021-12-16 00:07:47.143112', '10100036', 'Balance Brought Forward as at 12/08/2021', '0.00', '200000.00', '200000.00', '2021-12-08', 186, 1, 2),
-(43, '2021-12-16 10:06:53.379876', '2021-12-16 10:06:53.379876', '70005005', 'SHARES INITIAL PURCHASE OF 1 BY 10000.0 PER A UNIT', '0.00', '10000.00', '10000.00', '2021-12-16', 209, 1, 15),
-(44, '2021-12-16 10:56:30.953431', '2021-12-16 10:56:30.953431', '70000002', '5 Unit(s) Share Purchase, at unit cost of 10000.00 as at 2021-12-16 11:56:16.386004', '0.00', '50000.00', '120000.00', '2021-12-16', 152, 1, 15),
-(45, '2021-12-16 12:53:24.627655', '2021-12-16 12:53:24.627655', '10100002', 'Balance Brought Forward as at 12/08/2021', '0.00', '200000.00', '200000.00', '2021-12-08', 152, 1, 2),
-(46, '2021-12-16 12:53:24.969363', '2021-12-16 12:53:24.969363', '10200002', 'Balance Brought Forward as at 12/08/2021', '0.00', '150000.00', '150000.00', '2021-12-08', 152, 1, 3),
-(47, '2021-12-16 12:53:25.190123', '2021-12-16 12:53:25.190123', '10300002', 'Balance Brought Forward as at 12/08/2021', '0.00', '200000.00', '200000.00', '2021-12-08', 152, 1, 4),
-(48, '2021-12-16 12:53:25.363312', '2021-12-16 12:53:25.363312', '10400002', 'Balance Brought Forward as at 12/08/2021', '0.00', '120000.00', '120000.00', '2021-12-08', 152, 1, 5),
-(49, '2022-01-26 05:20:44.065828', '2022-01-26 05:20:44.065828', '10100015', 'Balance Brought Forward as at 12/31/2021', '0.00', '20000.00', '20000.00', '2021-12-31', 165, 1, 2),
-(50, '2022-01-26 05:20:44.247886', '2022-01-26 05:20:44.247886', '10200015', 'Balance Brought Forward as at 12/31/2021', '0.00', '250000.00', '250000.00', '2021-12-31', 165, 1, 3),
-(51, '2022-01-26 05:20:44.702810', '2022-01-26 05:20:44.702810', '10300015', 'Balance Brought Forward as at 12/31/2021', '0.00', '60000.00', '60000.00', '2021-12-31', 165, 1, 4);
+INSERT INTO `cooperative_personalledger` (`id`, `created_at`, `updated_at`, `account_number`, `particulars`, `debit`, `credit`, `balance`, `transaction_period`, `member_id`, `status_id`, `transaction_id`, `tdate`) VALUES
+(7, '2021-12-13 14:50:47.634825', '2021-12-13 14:50:47.634825', '10100001', 'Balance Brought Forward as at 12/08/2021', '0.00', '120000.00', '120000.00', '2021-12-08', 151, 1, 2, '2022-01-29'),
+(8, '2021-12-13 14:50:48.036141', '2021-12-13 14:50:48.037138', '10300001', 'Balance Brought Forward as at 12/08/2021', '0.00', '150000.00', '150000.00', '2021-12-08', 151, 1, 4, '2022-01-29'),
+(11, '2021-12-13 15:15:43.580636', '2021-12-13 15:15:43.580636', '10200001', 'Balance Brought Forward as at 12/08/2021', '0.00', '250000.00', '250000.00', '2021-12-08', 151, 1, 3, '2022-01-29'),
+(12, '2021-12-13 15:42:43.855978', '2021-12-13 15:42:43.856979', '2010000120211213164200001', 'Balance Brought Forward as at 12/08/2021', '70000.00', '0.00', '-70000.00', '2021-12-08', 151, 1, 8, '2022-01-29'),
+(13, '2021-12-13 16:22:58.350642', '2021-12-13 16:22:58.351643', '2020000120211213172200002', 'Balance Brought Forward as at 12/08/2021', '450000.00', '0.00', '-450000.00', '2021-12-08', 151, 1, 9, '2022-01-29'),
+(14, '2021-12-13 17:22:30.289661', '2021-12-13 17:22:30.289661', '70000001', 'Balance Broght Forward as at 2021-12-08 with shares of 2', '0.00', '20000.00', '20000.00', '2021-12-08', 151, 1, 15, '2022-01-29'),
+(15, '2021-12-13 17:23:17.908165', '2021-12-13 17:23:17.908165', '70000002', 'Balance Broght Forward as at 2021-12-08 with shares of 3', '0.00', '30000.00', '30000.00', '2021-12-08', 152, 1, 15, '2022-01-29'),
+(16, '2021-12-13 17:28:45.870879', '2021-12-13 17:28:45.870879', '70000003', 'Balance Broght Forward as at 2021-12-08 with shares of 1', '0.00', '10000.00', '10000.00', '2021-12-08', 153, 1, 15, '2022-01-29'),
+(19, '2021-12-13 18:58:51.110316', '2021-12-13 18:58:51.110316', '70000003', 'Initial Share Balance update as at 2021-12-08 with shares: 1 Deducted from PROJECT SAVINGS', '0.00', '10000.00', '20000.00', '2021-12-08', 153, 1, 15, '2022-01-29'),
+(22, '2021-12-14 02:23:10.648071', '2021-12-14 02:23:10.648071', '70000002', '4 Unit(s) Share Purchase, at unit cost of 10000.00 as at 2021-12-14 03:22:51.861132', '0.00', '40000.00', '70000.00', '2021-12-14', 152, 1, 15, '2022-01-29'),
+(23, '2021-12-14 02:33:15.304125', '2021-12-14 02:33:15.304125', '10100001', 'update', '0.00', '50000.00', '170000.00', '2021-12-14', 151, 1, 2, '2022-01-29'),
+(24, '2021-12-14 02:34:40.302039', '2021-12-14 02:34:40.302039', '2010000120211213164200001', 'bep up', '0.00', '20000.00', '-50000.00', '2021-12-14', 151, 1, 8, '2022-01-29'),
+(25, '2021-12-14 19:24:29.167046', '2021-12-14 19:24:29.167046', '70000003', '5 Unit(s) Share Purchase, at unit cost of 10000.00 as at 2021-12-14 20:24:15.346587', '0.00', '50000.00', '70000.00', '2021-12-14', 153, 1, 15, '2022-01-29'),
+(26, '2021-12-14 20:55:44.697553', '2021-12-14 20:55:44.697553', '10100001', '5445454', '0.00', '45000.00', '215000.00', '2021-12-14', 151, 1, 2, '2022-01-29'),
+(27, '2021-12-14 20:59:28.230559', '2021-12-14 20:59:28.230559', '10200001', '5665656', '0.00', '34000.00', '284000.00', '2021-12-14', 151, 1, 3, '2022-01-29'),
+(28, '2021-12-14 21:00:33.813099', '2021-12-14 21:00:33.813099', '10200001', '56545656', '0.00', '60000.00', '344000.00', '2021-12-14', 151, 1, 3, '2022-01-29'),
+(29, '2021-12-14 21:01:28.577048', '2021-12-14 21:01:28.577048', '10200001', '565456567777', '0.00', '60000.00', '404000.00', '2021-12-14', 151, 1, 3, '2022-01-29'),
+(30, '2021-12-14 21:02:21.980417', '2021-12-14 21:02:21.980417', '10200001', '5654565677773', '0.00', '54000.00', '458000.00', '2021-12-14', 151, 1, 3, '2022-01-29'),
+(31, '2021-12-15 02:57:24.967587', '2021-12-15 02:57:24.967587', '2010000120211213164200001', 'uyyuyuyu', '0.00', '7899.00', '-42101.00', '2021-12-15', 151, 1, 8, '2022-01-29'),
+(32, '2021-12-15 03:03:31.534011', '2021-12-15 03:03:31.534011', '10100001', 'hgghgh', '0.00', '6000.00', '221000.00', '2021-12-15', 151, 1, 2, '2022-01-29'),
+(33, '2021-12-15 04:46:44.140199', '2021-12-15 04:46:44.140199', '70000001', '3 Unit(s) Share Payment, at unit cost of 10000.00 as at 2021-12-15 05:44:53.827489', '0.00', '30000.00', '50000.00', '2021-12-15', 151, 1, 17, '2022-01-29'),
+(34, '2021-12-15 04:52:04.828024', '2021-12-15 04:52:04.828024', '70000001', '5 Unit(s) Share Payment, at unit cost of 10000.00 as at 2021-12-15 05:51:38.409672', '0.00', '50000.00', '100000.00', '2021-12-15', 151, 1, 15, '2022-01-29'),
+(35, '2021-12-15 05:02:26.580163', '2021-12-15 05:02:26.580163', '10500001', 'Balance Brought Forward as at 12/08/2021', '0.00', '500000.00', '500000.00', '2021-12-08', 151, 1, 6, '2022-01-29'),
+(38, '2021-12-16 00:07:47.143112', '2021-12-16 00:07:47.143112', '10100036', 'Balance Brought Forward as at 12/08/2021', '0.00', '200000.00', '200000.00', '2021-12-08', 186, 1, 2, '2022-01-29'),
+(43, '2021-12-16 10:06:53.379876', '2021-12-16 10:06:53.379876', '70005005', 'SHARES INITIAL PURCHASE OF 1 BY 10000.0 PER A UNIT', '0.00', '10000.00', '10000.00', '2021-12-16', 209, 1, 15, '2022-01-29'),
+(44, '2021-12-16 10:56:30.953431', '2021-12-16 10:56:30.953431', '70000002', '5 Unit(s) Share Purchase, at unit cost of 10000.00 as at 2021-12-16 11:56:16.386004', '0.00', '50000.00', '120000.00', '2021-12-16', 152, 1, 15, '2022-01-29'),
+(45, '2021-12-16 12:53:24.627655', '2021-12-16 12:53:24.627655', '10100002', 'Balance Brought Forward as at 12/08/2021', '0.00', '200000.00', '200000.00', '2021-12-08', 152, 1, 2, '2022-01-29'),
+(46, '2021-12-16 12:53:24.969363', '2021-12-16 12:53:24.969363', '10200002', 'Balance Brought Forward as at 12/08/2021', '0.00', '150000.00', '150000.00', '2021-12-08', 152, 1, 3, '2022-01-29'),
+(47, '2021-12-16 12:53:25.190123', '2021-12-16 12:53:25.190123', '10300002', 'Balance Brought Forward as at 12/08/2021', '0.00', '200000.00', '200000.00', '2021-12-08', 152, 1, 4, '2022-01-29'),
+(48, '2021-12-16 12:53:25.363312', '2021-12-16 12:53:25.363312', '10400002', 'Balance Brought Forward as at 12/08/2021', '0.00', '120000.00', '120000.00', '2021-12-08', 152, 1, 5, '2022-01-29'),
+(49, '2022-01-26 05:20:44.065828', '2022-01-26 05:20:44.065828', '10100015', 'Balance Brought Forward as at 12/31/2021', '0.00', '20000.00', '20000.00', '2021-12-31', 165, 1, 2, '2022-01-29'),
+(50, '2022-01-26 05:20:44.247886', '2022-01-26 05:20:44.247886', '10200015', 'Balance Brought Forward as at 12/31/2021', '0.00', '250000.00', '250000.00', '2021-12-31', 165, 1, 3, '2022-01-29'),
+(51, '2022-01-26 05:20:44.702810', '2022-01-26 05:20:44.702810', '10300015', 'Balance Brought Forward as at 12/31/2021', '0.00', '60000.00', '60000.00', '2021-12-31', 165, 1, 4, '2022-01-29'),
+(52, '2022-01-26 10:54:36.280235', '2022-01-26 10:54:36.280235', '10100003', 'Balance Brought Forward as at 12/31/2021', '0.00', '350000.00', '350000.00', '2021-12-31', 153, 1, 2, '2022-01-29'),
+(53, '2022-01-26 10:54:36.618118', '2022-01-26 10:54:36.618118', '10200003', 'Balance Brought Forward as at 12/31/2021', '0.00', '250000.00', '250000.00', '2021-12-31', 153, 1, 3, '2022-01-29'),
+(54, '2022-01-26 10:54:36.851955', '2022-01-26 10:54:36.851955', '10300003', 'Balance Brought Forward as at 12/31/2021', '0.00', '80000.00', '80000.00', '2021-12-31', 153, 1, 4, '2022-01-29'),
+(55, '2022-01-30 16:00:13.421841', '2022-01-30 16:00:13.421841', '70005008', 'SHARES INITIAL PURCHASE OF 1 BY 10000.0 PER A UNIT', '0.00', '10000.00', '10000.00', '2022-01-30', 213, 1, 15, '2022-01-30'),
+(56, '2022-01-30 17:06:08.675312', '2022-01-30 17:06:08.676304', '70005009', 'SHARES INITIAL PURCHASE OF 2 BY 10000.0 PER A UNIT', '0.00', '20000.00', '20000.00', '2022-01-30', 214, 1, 15, '2022-01-30'),
+(57, '2022-01-30 17:07:20.141131', '2022-01-30 17:07:20.141131', '70005010', 'SHARES INITIAL PURCHASE OF 2 BY 10000.0 PER A UNIT', '0.00', '20000.00', '20000.00', '2022-01-30', 215, 1, 15, '2022-01-30'),
+(58, '2022-01-30 17:08:22.206850', '2022-01-30 17:08:22.206850', '70005011', 'SHARES INITIAL PURCHASE OF 2 BY 10000.0 PER A UNIT', '0.00', '20000.00', '20000.00', '2022-01-30', 216, 1, 15, '2022-01-30'),
+(59, '2022-01-30 19:51:30.775551', '2022-01-30 19:51:30.775551', '70005012', 'SHARES INITIAL PURCHASE OF 1 BY 10000.0 PER A UNIT', '0.00', '10000.00', '10000.00', '2022-01-30', 217, 1, 15, '2022-01-30'),
+(60, '2022-01-30 19:52:14.891420', '2022-01-30 19:52:14.891420', '70005013', 'SHARES INITIAL PURCHASE OF 2 BY 10000.0 PER A UNIT', '0.00', '20000.00', '20000.00', '2022-01-30', 218, 1, 15, '2022-01-30');
 
 -- --------------------------------------------------------
 
@@ -5135,27 +5355,33 @@ CREATE TABLE `cooperative_purchases` (
   `selling_price` decimal(20,2) NOT NULL,
   `product_id` int(11) NOT NULL,
   `status_id` int(11) NOT NULL,
-  `purchase_id` int(11) NOT NULL
+  `purchase_id` int(11) NOT NULL,
+  `tdate` date DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `cooperative_purchases`
 --
 
-INSERT INTO `cooperative_purchases` (`id`, `created_at`, `updated_at`, `quantity`, `cost_price`, `total_cost`, `selling_price`, `product_id`, `status_id`, `purchase_id`) VALUES
-(19, '2022-01-14 11:11:52.807432', '2022-01-14 11:11:52.807432', 20, '2200.00', '44000.00', '2300.00', 917, 1, 2),
-(20, '2022-01-14 11:11:52.914293', '2022-01-14 11:11:52.914293', 25, '1000.00', '25000.00', '1200.00', 918, 1, 2),
-(21, '2022-01-14 11:11:53.282161', '2022-01-14 11:11:53.282161', 10, '1000.00', '10000.00', '1500.00', 1167, 1, 2),
-(22, '2022-01-14 11:11:53.384627', '2022-01-14 11:11:53.384627', 5, '3000.00', '15000.00', '3500.00', 922, 1, 2),
-(23, '2022-01-14 11:11:53.451580', '2022-01-14 11:11:53.452580', 10, '150.00', '1500.00', '200.00', 1170, 1, 2),
-(24, '2022-01-14 11:11:53.537528', '2022-01-14 11:11:53.537528', 5, '7000.00', '35000.00', '8000.00', 1171, 1, 2),
-(25, '2022-01-16 15:01:29.648643', '2022-01-16 15:01:29.648643', 34, '2000.00', '68000.00', '2700.00', 935, 1, 3),
-(26, '2022-01-16 15:01:29.984493', '2022-01-16 15:01:29.985493', 50, '250.00', '12500.00', '350.00', 946, 1, 3),
-(27, '2022-01-16 15:01:30.337781', '2022-01-16 15:01:30.337781', 20, '900.00', '18000.00', '1050.00', 966, 1, 3),
-(28, '2022-01-16 15:43:29.537351', '2022-01-16 15:43:29.537351', 50, '3000.00', '150000.00', '3500.00', 922, 1, 5),
-(29, '2022-01-16 15:43:29.764967', '2022-01-16 15:43:29.764967', 20, '800.00', '16000.00', '950.00', 924, 1, 5),
-(30, '2022-01-16 15:43:30.190569', '2022-01-16 15:43:30.190569', 50, '1350.00', '67500.00', '1450.00', 936, 1, 5),
-(31, '2022-01-16 15:43:30.258527', '2022-01-16 15:43:30.258527', 30, '2500.00', '75000.00', '2700.00', 955, 1, 5);
+INSERT INTO `cooperative_purchases` (`id`, `created_at`, `updated_at`, `quantity`, `cost_price`, `total_cost`, `selling_price`, `product_id`, `status_id`, `purchase_id`, `tdate`) VALUES
+(19, '2022-01-14 11:11:52.807432', '2022-01-14 11:11:52.807432', 20, '2200.00', '44000.00', '2300.00', 917, 1, 2, NULL),
+(20, '2022-01-14 11:11:52.914293', '2022-01-14 11:11:52.914293', 25, '1000.00', '25000.00', '1200.00', 918, 1, 2, NULL),
+(21, '2022-01-14 11:11:53.282161', '2022-01-14 11:11:53.282161', 10, '1000.00', '10000.00', '1500.00', 1167, 1, 2, NULL),
+(22, '2022-01-14 11:11:53.384627', '2022-01-14 11:11:53.384627', 5, '3000.00', '15000.00', '3500.00', 922, 1, 2, NULL),
+(23, '2022-01-14 11:11:53.451580', '2022-01-14 11:11:53.452580', 10, '150.00', '1500.00', '200.00', 1170, 1, 2, NULL),
+(24, '2022-01-14 11:11:53.537528', '2022-01-14 11:11:53.537528', 5, '7000.00', '35000.00', '8000.00', 1171, 1, 2, NULL),
+(25, '2022-01-16 15:01:29.648643', '2022-01-16 15:01:29.648643', 34, '2000.00', '68000.00', '2700.00', 935, 1, 3, NULL),
+(26, '2022-01-16 15:01:29.984493', '2022-01-16 15:01:29.985493', 50, '250.00', '12500.00', '350.00', 946, 1, 3, NULL),
+(27, '2022-01-16 15:01:30.337781', '2022-01-16 15:01:30.337781', 20, '900.00', '18000.00', '1050.00', 966, 1, 3, NULL),
+(28, '2022-01-16 15:43:29.537351', '2022-01-16 15:43:29.537351', 50, '3000.00', '150000.00', '3500.00', 922, 1, 5, NULL),
+(29, '2022-01-16 15:43:29.764967', '2022-01-16 15:43:29.764967', 20, '800.00', '16000.00', '950.00', 924, 1, 5, NULL),
+(30, '2022-01-16 15:43:30.190569', '2022-01-16 15:43:30.190569', 50, '1350.00', '67500.00', '1450.00', 936, 1, 5, NULL),
+(31, '2022-01-16 15:43:30.258527', '2022-01-16 15:43:30.258527', 30, '2500.00', '75000.00', '2700.00', 955, 1, 5, NULL),
+(32, '2022-01-29 00:11:38.978035', '2022-01-29 00:11:38.979034', 50, '2000.00', '100000.00', '2300.00', 917, 1, 6, NULL),
+(33, '2022-01-29 00:11:39.285527', '2022-01-29 00:11:39.285527', 100, '1000.00', '100000.00', '1200.00', 921, 1, 6, NULL),
+(34, '2022-01-29 00:11:39.397299', '2022-01-29 00:11:39.397299', 200, '850.00', '170000.00', '950.00', 926, 1, 6, NULL),
+(35, '2022-01-29 00:11:48.312234', '2022-01-29 00:11:48.312234', 300, '1350.00', '405000.00', '1450.00', 936, 1, 7, NULL),
+(36, '2022-01-29 00:11:48.415195', '2022-01-29 00:11:48.415195', 300, '950.00', '285000.00', '1050.00', 966, 1, 7, NULL);
 
 -- --------------------------------------------------------
 
@@ -5202,7 +5428,10 @@ CREATE TABLE `cooperative_purchase_header` (
 INSERT INTO `cooperative_purchase_header` (`id`, `created_at`, `updated_at`, `total_amount`, `invoice`, `invoice_date`, `branch_id`, `personnel_id`, `processed_by_id`, `status_id`, `certification_status_id`) VALUES
 (2, '2022-01-12 16:07:34.110241', '2022-01-14 11:11:53.732406', '79000.00', 'MST-00001', '2022-01-12', 3, 5, 13, 2, 2),
 (3, '2022-01-16 14:59:15.970696', '2022-01-16 15:01:30.522428', '98500.00', 'HTBC-777777', '2022-01-16', 5, 6, 12, 2, 2),
-(5, '2022-01-16 15:31:22.792594', '2022-01-16 15:43:30.408463', '308500.00', 'HTBC-45678', '2022-01-16', 5, 6, 12, 2, 2);
+(5, '2022-01-16 15:31:22.792594', '2022-01-16 15:43:30.408463', '308500.00', 'HTBC-45678', '2022-01-16', 5, 6, 12, 2, 2),
+(6, '2022-01-28 20:41:01.580676', '2022-01-29 00:11:39.699167', '370000.00', 'MST-67556', '2022-01-28', 3, 3, 12, 2, 2),
+(7, '2022-01-28 21:37:45.145696', '2022-01-29 00:11:48.587048', '690000.00', 'MST-4534', '2022-01-28', 3, 4, 12, 2, 2),
+(8, '2022-01-28 22:42:08.077204', '2022-01-28 22:42:08.077204', '0.00', 'MST-9898', '2022-01-28', 3, NULL, 12, 1, 1);
 
 -- --------------------------------------------------------
 
@@ -5226,7 +5455,7 @@ INSERT INTO `cooperative_receipts` (`created_at`, `updated_at`, `id`, `receipt`,
 ('2021-12-07 19:58:05.182278', '2021-12-15 03:37:04.217892', 1, '00001', 2),
 ('2021-12-07 19:58:05.294732', '2021-12-15 04:12:49.206360', 2, '00002', 2),
 ('2021-12-07 19:58:05.346519', '2021-12-15 04:25:22.511701', 3, '00003', 2),
-('2021-12-07 19:58:05.504739', '2021-12-14 01:53:02.825822', 4, '00004', 1),
+('2021-12-07 19:58:05.504739', '2022-01-31 02:20:51.930877', 4, '00004', 2),
 ('2021-12-07 19:58:05.570802', '2021-12-15 04:28:39.129371', 5, '00005', 2),
 ('2021-12-07 19:58:05.604749', '2021-12-15 04:29:49.851801', 6, '00006', 2),
 ('2021-12-07 19:58:05.649242', '2021-12-15 04:38:43.249492', 7, '00007', 2),
@@ -6271,7 +6500,7 @@ INSERT INTO `cooperative_receipts_shop` (`created_at`, `updated_at`, `id`, `rece
 ('2021-12-31 08:51:44.501850', '2021-12-31 08:51:44.501850', 4, '00004', 2),
 ('2021-12-31 08:51:44.544842', '2022-01-11 02:56:21.827128', 5, '00005', 2),
 ('2021-12-31 08:51:44.608752', '2022-01-11 03:00:10.043543', 6, '00006', 2),
-('2021-12-31 08:51:44.634736', '2021-12-31 08:51:44.635285', 7, '00007', 1),
+('2021-12-31 08:51:44.634736', '2021-12-31 08:51:44.635285', 7, '00007', 2),
 ('2021-12-31 08:51:44.678400', '2021-12-31 08:51:44.678400', 8, '00008', 1),
 ('2021-12-31 08:51:44.833250', '2021-12-31 08:51:44.833250', 9, '00009', 1),
 ('2021-12-31 08:51:44.900962', '2021-12-31 08:51:44.900962', 10, '00010', 1),
@@ -6843,7 +7072,8 @@ CREATE TABLE `cooperative_salescategory` (
 
 INSERT INTO `cooperative_salescategory` (`id`, `title`, `created_at`, `updated_at`) VALUES
 (1, 'CASH', '2021-12-07 19:04:57.836401', '2021-12-07 19:04:57.836401'),
-(2, 'CREDIT', '2021-12-07 19:04:57.892189', '2021-12-07 19:04:57.893188');
+(2, 'CREDIT', '2021-12-07 19:04:57.892189', '2021-12-07 19:04:57.893188'),
+(4, 'BANK DEPOSIT', '2022-01-28 15:38:23.000000', '2022-01-28 15:38:23.000000');
 
 -- --------------------------------------------------------
 
@@ -6880,7 +7110,10 @@ INSERT INTO `cooperative_savingsuploaded` (`id`, `created_at`, `updated_at`, `pa
 (10, '2021-12-16 12:53:18.314030', '2021-12-16 12:53:25.399333', 'Balance Brought Forward as at 12/08/2021', '120000.00', '3000.00', 9, 2, 361, 1),
 (11, '2022-01-26 05:20:07.023359', '2022-01-26 05:20:44.111801', 'Balance Brought Forward as at 12/31/2021', '20000.00', '5000.00', 9, 2, 449, 2),
 (12, '2022-01-26 05:20:27.007248', '2022-01-26 05:20:44.366595', 'Balance Brought Forward as at 12/31/2021', '250000.00', '5000.00', 9, 2, 450, 2),
-(13, '2022-01-26 05:20:39.038847', '2022-01-26 05:20:44.733053', 'Balance Brought Forward as at 12/31/2021', '60000.00', '3000.00', 9, 2, 451, 2);
+(13, '2022-01-26 05:20:39.038847', '2022-01-26 05:20:44.733053', 'Balance Brought Forward as at 12/31/2021', '60000.00', '3000.00', 9, 2, 451, 2),
+(14, '2022-01-26 10:39:07.212344', '2022-01-26 10:54:36.399230', 'Balance Brought Forward as at 12/31/2021', '350000.00', '5000.00', 9, 2, 365, 2),
+(15, '2022-01-26 10:39:18.271735', '2022-01-26 10:54:36.668988', 'Balance Brought Forward as at 12/31/2021', '250000.00', '3000.00', 9, 2, 366, 2),
+(17, '2022-01-26 10:49:56.761102', '2022-01-26 10:54:37.182958', 'Balance Brought Forward as at 12/31/2021', '80000.00', '3000.00', 9, 2, 367, 2);
 
 -- --------------------------------------------------------
 
@@ -6943,15 +7176,16 @@ CREATE TABLE `cooperative_sharessalesrecord` (
   `member_id` int(11) DEFAULT NULL,
   `bank_account_id` int(11) DEFAULT NULL,
   `processed_by_id` bigint(20) DEFAULT NULL,
-  `status_id` int(11) NOT NULL
+  `status_id` int(11) NOT NULL,
+  `tdate` date NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `cooperative_sharessalesrecord`
 --
 
-INSERT INTO `cooperative_sharessalesrecord` (`id`, `created_at`, `updated_at`, `payment_reference`, `receipt`, `shares`, `unit_cost`, `share_amount`, `image`, `member_id`, `bank_account_id`, `processed_by_id`, `status_id`) VALUES
-(13, '2021-12-14 02:23:10.238936', '2021-12-14 02:23:10.238936', '78878787', '00022', 4, '10000.00', '40000.00', '/media/avatar3_q88tTQ9.png', 363, 1, 9, 1);
+INSERT INTO `cooperative_sharessalesrecord` (`id`, `created_at`, `updated_at`, `payment_reference`, `receipt`, `shares`, `unit_cost`, `share_amount`, `image`, `member_id`, `bank_account_id`, `processed_by_id`, `status_id`, `tdate`) VALUES
+(13, '2021-12-14 02:23:10.238936', '2021-12-14 02:23:10.238936', '78878787', '00022', 4, '10000.00', '40000.00', '/media/avatar3_q88tTQ9.png', 363, 1, 9, 1, '2022-01-29');
 
 -- --------------------------------------------------------
 
@@ -7093,7 +7327,13 @@ INSERT INTO `cooperative_standingorderaccounts` (`id`, `created_at`, `updated_at
 (28, '2022-01-10 18:45:48.499842', '2022-01-10 18:45:48.499842', '8000.00', 2, 1, 379),
 (29, '2022-01-26 05:20:43.962894', '2022-01-26 05:20:43.962894', '5000.00', 2, 1, 449),
 (30, '2022-01-26 05:20:44.169783', '2022-01-26 05:20:44.169783', '5000.00', 2, 1, 450),
-(31, '2022-01-26 05:20:44.519130', '2022-01-26 05:20:44.519130', '3000.00', 2, 1, 451);
+(31, '2022-01-26 05:20:44.519130', '2022-01-26 05:20:44.519130', '3000.00', 2, 1, 451),
+(32, '2022-01-26 10:54:36.112313', '2022-01-26 10:54:36.112313', '5000.00', 2, 1, 365),
+(33, '2022-01-26 10:54:36.586115', '2022-01-26 10:54:36.586115', '3000.00', 2, 1, 366),
+(34, '2022-01-26 10:54:36.717048', '2022-01-26 10:54:36.717048', '3000.00', 2, 1, 367),
+(35, '2022-01-30 19:57:53.228967', '2022-01-30 19:57:53.229967', '5000.00', 2, 1, 740),
+(36, '2022-01-30 19:58:03.359844', '2022-01-30 19:58:03.359844', '2000.00', 2, 1, 741),
+(37, '2022-01-30 19:58:12.459804', '2022-01-30 19:58:12.459804', '5000.00', 2, 1, 742);
 
 -- --------------------------------------------------------
 
@@ -7178,16 +7418,16 @@ CREATE TABLE `cooperative_stock` (
 --
 
 INSERT INTO `cooperative_stock` (`id`, `created_at`, `updated_at`, `code`, `item_name`, `quantity`, `unit_selling_price`, `re_order_level`, `no_in_pack`, `category_id`, `details`, `lock_status_id`, `unit_cost_price`) VALUES
-(917, '2021-12-23 02:18:43.603848', '2022-01-26 06:20:07.699583', '00001', 'BOURNVITA 900G', 360, '2300.00', 2, 6, 57, 'TIN', 1, '2000.00'),
-(918, '2021-12-23 02:18:43.664589', '2022-01-26 05:37:24.467283', '00002', 'BOURNVITA 500G', 365, '1200.00', 6, 12, 57, 'SACHET', 2, '0.00'),
-(919, '2021-12-23 02:18:43.808194', '2021-12-23 02:18:43.808194', '00003', 'OVALTINE 900G', 0, '2650.00', 2, 6, 70, 'TIN', 2, '0.00'),
-(920, '2021-12-23 02:18:43.847290', '2021-12-23 02:18:43.847290', '00004', 'OVALTINE 400G', 0, '1500.00', 4, 12, 70, 'TIN', 2, '0.00'),
-(921, '2021-12-23 02:18:43.897825', '2021-12-23 02:18:43.897825', '00005', 'OVALTINE 400G', 0, '1200.00', 4, 12, 70, 'SACHET', 2, '0.00'),
-(922, '2021-12-23 02:18:43.957847', '2022-01-26 06:20:07.931295', '00006', 'COMPLAIN MILK', 44, '3500.00', 4, 12, 58, 'SACHET', 2, '0.00'),
-(923, '2021-12-23 02:18:44.009113', '2021-12-23 02:18:44.009113', '00007', 'COWBELL MILK 900G', 0, '2050.00', 2, 6, 58, 'SACHET', 2, '0.00'),
-(924, '2021-12-23 02:18:44.065610', '2022-01-18 09:14:35.654255', '00008', 'COWBELL MILK 380G', 2, '950.00', 4, 12, 58, 'SACHET', 2, '0.00'),
-(925, '2021-12-23 02:18:44.132338', '2021-12-23 02:18:44.132338', '00009', 'MILKSI MILK 380G', 0, '950.00', 4, 12, 68, 'SACHET', 2, '0.00'),
-(926, '2021-12-23 02:18:44.168883', '2021-12-23 02:18:44.168883', '00010', 'COWBELL CHOCOLATE', 0, '950.00', 4, 12, 58, 'SACHET', 2, '0.00'),
+(917, '2021-12-23 02:18:43.603848', '2022-01-29 00:11:39.145549', '00001', 'BOURNVITA 900G', 280, '2300.00', 2, 6, 57, 'TIN', 2, '2000.00'),
+(918, '2021-12-23 02:18:43.664589', '2022-01-28 16:47:35.105767', '00002', 'BOURNVITA 500G', 280, '1200.00', 6, 12, 57, 'SACHET', 2, '0.00'),
+(919, '2021-12-23 02:18:43.808194', '2022-01-28 16:47:35.270963', '00003', 'OVALTINE 900G', 60, '2650.00', 2, 6, 70, 'TIN', 2, '0.00'),
+(920, '2021-12-23 02:18:43.847290', '2022-01-28 09:50:28.672685', '00004', 'OVALTINE 400G', 35, '1500.00', 4, 12, 70, 'TIN', 2, '0.00'),
+(921, '2021-12-23 02:18:43.897825', '2022-01-29 00:11:39.349272', '00005', 'OVALTINE 400G', 138, '1200.00', 4, 12, 70, 'SACHET', 2, '0.00'),
+(922, '2021-12-23 02:18:43.957847', '2022-01-28 16:49:33.534859', '00006', 'COMPLAIN MILK', 36, '3500.00', 4, 12, 58, 'SACHET', 2, '0.00'),
+(923, '2021-12-23 02:18:44.009113', '2022-01-28 16:48:53.752247', '00007', 'COWBELL MILK 900G', 126, '2050.00', 2, 6, 58, 'SACHET', 2, '0.00'),
+(924, '2021-12-23 02:18:44.065610', '2022-01-28 16:51:12.232025', '00008', 'COWBELL MILK 380G', 95, '950.00', 4, 12, 58, 'SACHET', 2, '0.00'),
+(925, '2021-12-23 02:18:44.132338', '2022-01-28 19:32:17.903439', '00009', 'MILKSI MILK 380G', 160, '950.00', 4, 12, 68, 'SACHET', 2, '0.00'),
+(926, '2021-12-23 02:18:44.168883', '2022-01-29 00:11:39.600205', '00010', 'COWBELL CHOCOLATE', 398, '950.00', 4, 12, 58, 'SACHET', 2, '0.00'),
 (927, '2021-12-23 02:18:44.224848', '2021-12-23 02:18:44.224848', '00011', '3CROWN MILK', 0, '900.00', 4, 12, 58, 'SACHET', 2, '0.00'),
 (928, '2021-12-23 02:18:44.469694', '2021-12-23 02:18:44.469694', '00012', 'MILO 1KG', 0, '2650.00', 2, 6, 68, 'TIN', 2, '0.00'),
 (929, '2021-12-23 02:18:44.536665', '2021-12-23 02:18:44.536665', '00013', 'MILO 500G', 0, '1850.00', 4, 12, 68, 'TIN', 2, '0.00'),
@@ -7196,8 +7436,8 @@ INSERT INTO `cooperative_stock` (`id`, `created_at`, `updated_at`, `code`, `item
 (932, '2021-12-23 02:18:44.847383', '2021-12-23 02:18:44.847383', '00016', 'NAN 1 400G', 0, '2700.00', 4, 12, 69, 'TIN', 2, '0.00'),
 (933, '2021-12-23 02:18:44.904026', '2021-12-23 02:18:44.904026', '00017', 'NAN 2 400G', 0, '2700.00', 4, 12, 69, 'TIN', 2, '0.00'),
 (934, '2021-12-23 02:18:44.970989', '2021-12-23 02:18:44.970989', '00018', 'LACTOGEN 1 400G', 0, '1800.00', 4, 12, 67, 'TIN', 2, '0.00'),
-(935, '2021-12-23 02:18:45.035717', '2022-01-26 04:37:29.062303', '00019', 'CERELAC 1KG', 26, '2700.00', 2, 6, 58, 'TIN', 2, '0.00'),
-(936, '2021-12-23 02:18:45.102990', '2022-01-26 04:58:54.433633', '00020', 'GOLDEN MORN 1KG', 28, '1450.00', 4, 6, 62, 'SACHET', 2, '0.00'),
+(935, '2021-12-23 02:18:45.035717', '2022-01-28 10:13:58.136559', '00019', 'CERELAC 1KG', 5, '2700.00', 2, 6, 58, 'TIN', 2, '0.00'),
+(936, '2021-12-23 02:18:45.102990', '2022-01-29 00:11:48.373202', '00020', 'GOLDEN MORN 1KG', 326, '1450.00', 4, 6, 62, 'SACHET', 2, '0.00'),
 (937, '2021-12-23 02:18:45.158039', '2021-12-23 02:18:45.158039', '00021', 'GOLDEN MORN 500G', 0, '850.00', 4, 12, 62, 'SACHET', 2, '0.00'),
 (938, '2021-12-23 02:18:45.214117', '2021-12-23 02:18:45.214117', '00022', 'PEAK MILK 400G', 0, '1900.00', 4, 12, 71, 'TIN', 2, '0.00'),
 (939, '2021-12-23 02:18:45.269060', '2021-12-23 02:18:45.269060', '00023', 'PEAK MILK 400G', 0, '1400.00', 4, 12, 71, 'SACHET', 2, '0.00'),
@@ -7207,7 +7447,7 @@ INSERT INTO `cooperative_stock` (`id`, `created_at`, `updated_at`, `code`, `item
 (943, '2021-12-23 02:18:45.504518', '2021-12-23 02:18:45.504518', '00027', 'NASCO CORNFLASK 350G', 0, '1000.00', 2, 10, 69, 'NASCO CORNFLASK 350G', 2, '0.00'),
 (944, '2021-12-23 02:18:45.562714', '2021-12-23 02:18:45.562714', '00028', 'PEAK 123 400G', 0, '1400.00', 4, 12, 71, 'SACHET', 2, '0.00'),
 (945, '2021-12-23 02:18:45.625692', '2021-12-23 02:18:45.626694', '00029', 'DANO COOL COW 360G', 0, '2150.00', 4, 12, 59, 'SACHET', 2, '0.00'),
-(946, '2021-12-23 02:18:45.683731', '2022-01-26 04:53:11.799949', '00030', 'YALE CABIN', 27, '350.00', 4, 12, 80, 'YALE CABIN', 2, '0.00'),
+(946, '2021-12-23 02:18:45.683731', '2022-01-28 16:49:33.658115', '00030', 'YALE CABIN', 23, '350.00', 4, 12, 80, 'YALE CABIN', 2, '0.00'),
 (947, '2021-12-23 02:18:45.835826', '2021-12-23 02:18:45.835826', '00031', 'DANO COOL COW 800G', 0, '950.00', 4, 12, 59, 'SACHET', 2, '0.00'),
 (948, '2021-12-23 02:18:45.964859', '2021-12-23 02:18:45.964859', '00032', 'OXFORD CABIN', 0, '350.00', 4, 12, 70, 'OXFORD CABIN', 2, '0.00'),
 (949, '2021-12-23 02:18:46.044015', '2021-12-23 02:18:46.044015', '00033', 'DANO SLIM 400G', 0, '1500.00', 4, 12, 59, 'SACHET', 2, '0.00'),
@@ -7227,7 +7467,7 @@ INSERT INTO `cooperative_stock` (`id`, `created_at`, `updated_at`, `code`, `item
 (963, '2021-12-23 02:18:46.848976', '2021-12-23 02:18:46.848976', '00047', 'TOP TEA', 0, '320.00', 4, 10, 75, 'TOP TEA', 2, '0.00'),
 (964, '2021-12-23 02:18:47.158484', '2021-12-23 02:18:47.159483', '00048', 'SOYA PLUS', 0, '1050.00', 2, 6, 74, 'TIN', 2, '0.00'),
 (965, '2021-12-23 02:18:47.209456', '2021-12-23 02:18:47.209456', '00049', 'SOYA PLUS', 0, '500.00', 2, 6, 74, 'SACHET', 2, '0.00'),
-(966, '2021-12-23 02:18:47.247245', '2022-01-25 18:45:00.239805', '00050', 'PURE COCOA', 18, '1050.00', 2, 6, 71, 'TIN', 2, '0.00'),
+(966, '2021-12-23 02:18:47.247245', '2022-01-29 00:11:48.459187', '00050', 'PURE COCOA', 318, '1050.00', 2, 6, 71, 'TIN', 2, '0.00'),
 (967, '2021-12-23 02:18:47.292542', '2021-12-23 02:18:47.292542', '00051', 'PURE COCOA', 0, '850.00', 5, 12, 71, 'SACHET', 2, '0.00'),
 (968, '2021-12-23 02:18:47.359844', '2021-12-23 02:18:47.359844', '00052', 'MY BOY MILK', 0, '2000.00', 4, 12, 68, 'TIN', 2, '0.00'),
 (969, '2021-12-23 02:18:47.451257', '2021-12-23 02:18:47.451257', '00053', 'DORGAN SUGAR', 0, '400.00', 10, 50, 59, 'DORGAN SUGAR', 2, '0.00'),
@@ -7247,7 +7487,7 @@ INSERT INTO `cooperative_stock` (`id`, `created_at`, `updated_at`, `code`, `item
 (983, '2021-12-23 02:18:48.425281', '2021-12-23 02:18:48.425281', '00067', 'SMART TISSUE', 0, '200.00', 6, 12, 74, 'JUMBO', 2, '0.00'),
 (984, '2021-12-23 02:18:48.481336', '2021-12-23 02:18:48.481336', '00068', 'ROSE CARLA TISSUE', 0, '1200.00', 12, 8, 73, 'SMALL', 2, '0.00'),
 (985, '2021-12-23 02:18:48.532055', '2021-12-23 02:18:48.532055', '00069', 'FAMILIA TISSUE', 0, '500.00', 10, 8, 61, 'FAMILIA TISSUE', 2, '0.00'),
-(986, '2021-12-23 02:18:48.581344', '2022-01-25 17:49:59.138489', '00070', 'ARDEN CARROT SOAP', 115, '2100.00', 6, 12, 56, 'ARDEN CARROT SOAP', 2, '0.00'),
+(986, '2021-12-23 02:18:48.581344', '2022-01-27 16:22:38.478358', '00070', 'ARDEN CARROT SOAP', 110, '2100.00', 6, 12, 56, 'ARDEN CARROT SOAP', 2, '0.00'),
 (987, '2021-12-23 02:18:48.638016', '2021-12-23 02:18:48.638016', '00071', 'ROSE PLUS TISSUE', 0, '80.00', 12, 48, 73, 'SMALL', 2, '0.00'),
 (988, '2021-12-23 02:18:48.692263', '2021-12-23 02:18:48.692263', '00072', 'SOFTWAVE TISSUE', 0, '60.00', 12, 48, 74, 'SMALL', 2, '0.00'),
 (989, '2021-12-23 02:18:48.758637', '2021-12-23 02:18:48.758637', '00073', 'MAMA CARE PAD', 0, '500.00', 6, 12, 68, 'MAMA CARE PAD', 2, '0.00'),
@@ -7285,7 +7525,7 @@ INSERT INTO `cooperative_stock` (`id`, `created_at`, `updated_at`, `code`, `item
 (1021, '2021-12-23 02:18:51.369888', '2021-12-23 02:18:51.370891', '00105', 'NITTOL DETERGENT', 0, '150.00', 10, 24, 69, '180G', 2, '0.00'),
 (1022, '2021-12-23 02:18:51.437176', '2021-12-23 02:18:51.437176', '00106', 'SO FINE HAIR CREAM', 0, '370.00', 5, 24, 74, 'SMALL', 2, '0.00'),
 (1023, '2021-12-23 02:18:51.503285', '2021-12-23 02:18:51.503285', '00107', 'SOULMATE HAIR CREAM', 0, '350.00', 5, 24, 74, 'SMALL', 2, '0.00'),
-(1024, '2021-12-23 02:18:51.562407', '2022-01-26 04:55:17.953517', '00108', 'APPLE JELLY', 230, '150.00', 5, 12, 56, 'SMALL', 2, '0.00'),
+(1024, '2021-12-23 02:18:51.562407', '2022-01-28 16:51:12.510245', '00108', 'APPLE JELLY', 225, '150.00', 5, 12, 56, 'SMALL', 2, '0.00'),
 (1025, '2021-12-23 02:18:51.652411', '2021-12-23 02:18:51.652411', '00109', 'APPLE JELLY BIG', 0, '250.00', 2, 6, 56, 'MED', 2, '0.00'),
 (1026, '2021-12-23 02:18:51.742360', '2021-12-23 02:18:51.742360', '00110', 'BLUESEAL VASELINE(BIG)', 0, '900.00', 2, 6, 57, 'BLUESEAL VASELINE(BIG)', 2, '0.00'),
 (1027, '2021-12-23 02:18:51.816413', '2021-12-23 02:18:51.816413', '00111', 'BLUESEAL VASELINE(SMALL)', 0, '350.00', 5, 12, 57, 'BLUESEAL VASELINE(SMALL)', 2, '0.00'),
@@ -7332,7 +7572,7 @@ INSERT INTO `cooperative_stock` (`id`, `created_at`, `updated_at`, `code`, `item
 (1068, '2021-12-23 02:18:54.882739', '2021-12-23 02:18:54.882739', '00152', 'HYPO SACHET', 0, '40.00', 10, 80, 63, 'HYPO SACHET', 2, '0.00'),
 (1069, '2021-12-23 02:18:54.937722', '2021-12-23 02:18:54.937722', '00153', 'HYPO SMALL', 0, '450.00', 10, 24, 63, 'HYPO SMALL', 2, '0.00'),
 (1070, '2021-12-23 02:18:54.994952', '2021-12-23 02:18:54.994952', '00154', 'HYPO BIG', 0, '800.00', 5, 12, 63, 'HYPO BIG', 2, '0.00'),
-(1071, '2021-12-23 02:18:55.184733', '2022-01-25 17:49:58.927300', '00155', 'JIK SMALL ', 198, '450.00', 12, 24, 65, 'JIK SMALL ', 2, '0.00'),
+(1071, '2021-12-23 02:18:55.184733', '2022-01-28 10:30:37.577001', '00155', 'JIK SMALL ', 170, '450.00', 12, 24, 65, 'JIK SMALL ', 2, '0.00'),
 (1072, '2021-12-23 02:18:55.703330', '2021-12-23 02:18:55.703330', '00156', 'JIK BIG', 0, '900.00', 5, 12, 65, 'JIK BIG', 2, '0.00'),
 (1073, '2021-12-23 02:18:55.759456', '2021-12-23 02:18:55.759456', '00157', 'SEDORS CAR WASH', 0, '700.00', 5, 12, 74, 'SEDORS CAR WASH', 2, '0.00'),
 (1074, '2021-12-23 02:18:55.820088', '2021-12-23 02:18:55.820088', '00158', 'LADY CARE PAD', 0, '450.00', 5, 12, 67, 'LADY CARE PAD', 2, '0.00'),
@@ -7428,13 +7668,13 @@ INSERT INTO `cooperative_stock` (`id`, `created_at`, `updated_at`, `code`, `item
 (1164, '2021-12-23 02:19:02.781403', '2021-12-23 02:19:02.781403', '00248', 'KINGS OIL', 0, '1500.00', 4, 12, 66, '1LTR', 2, '0.00'),
 (1165, '2021-12-23 02:19:02.827378', '2021-12-23 02:19:02.827378', '00249', 'KINGS SACHET OIL', 0, '1300.00', 4, 12, 66, 'KINGS SACHET OIL', 2, '0.00'),
 (1166, '2021-12-23 02:19:02.927314', '2021-12-23 02:19:02.927314', '00250', 'KINGS OIL', 0, '3000.00', 3, 6, 66, '2LTR', 2, '0.00'),
-(1167, '2022-01-14 00:57:34.445717', '2022-01-14 11:11:53.333615', '00251', 'Mouse', 20, '1500.00', 3, 12, 68, NULL, 1, '0.00'),
-(1168, '2022-01-14 03:48:38.642070', '2022-01-14 03:48:38.642070', '00252', 'Keyboard', 0, '2000.00', 3, 12, 66, NULL, 1, '0.00'),
-(1169, '2022-01-14 04:16:44.022441', '2022-01-14 04:16:44.022441', '00253', 'Torch Light', 0, '1200.00', 5, 12, 75, NULL, 1, '0.00'),
-(1170, '2022-01-14 04:18:58.750379', '2022-01-16 20:49:55.177280', '00254', 'BIG APPLE', 20, '200.00', 48, 150, 56, NULL, 1, '100.00'),
-(1171, '2022-01-14 10:11:58.383441', '2022-01-18 06:37:45.476192', '00255', 'SONIA TOMATOES', 6, '8000.00', 5, 24, 74, '210G BY 24 TINS', 1, '0.00'),
-(1172, '2022-01-16 20:42:29.717110', '2022-01-16 20:50:20.665320', '00256', 'A TESTER', 0, '300.00', 4, 12, 56, NULL, 1, '200.00'),
-(1174, '2022-01-21 01:27:10.731544', '2022-01-21 01:27:56.557921', '257', 'HEAD PHONE', 0, '10000.00', 2, 12, 63, 'ELASTIC HEAD PHONE', 1, '9500.00');
+(1167, '2022-01-14 00:57:34.445717', '2022-01-14 11:11:53.333615', '00251', 'Mouse', 20, '1500.00', 3, 12, 68, NULL, 2, '0.00'),
+(1168, '2022-01-14 03:48:38.642070', '2022-01-14 03:48:38.642070', '00252', 'Keyboard', 0, '2000.00', 3, 12, 66, NULL, 2, '0.00'),
+(1169, '2022-01-14 04:16:44.022441', '2022-01-14 04:16:44.022441', '00253', 'Torch Light', 0, '1200.00', 5, 12, 75, NULL, 2, '0.00'),
+(1170, '2022-01-14 04:18:58.750379', '2022-01-16 20:49:55.177280', '00254', 'BIG APPLE', 20, '200.00', 48, 150, 56, NULL, 2, '100.00'),
+(1171, '2022-01-14 10:11:58.383441', '2022-01-18 06:37:45.476192', '00255', 'SONIA TOMATOES', 6, '8000.00', 5, 24, 74, '210G BY 24 TINS', 2, '0.00'),
+(1172, '2022-01-16 20:42:29.717110', '2022-01-16 20:50:20.665320', '00256', 'A TESTER', 0, '300.00', 4, 12, 56, NULL, 2, '200.00'),
+(1174, '2022-01-21 01:27:10.731544', '2022-01-21 01:27:56.557921', '257', 'HEAD PHONE', 0, '10000.00', 2, 12, 63, 'ELASTIC HEAD PHONE', 2, '9500.00');
 
 -- --------------------------------------------------------
 
@@ -7468,16 +7708,17 @@ CREATE TABLE `cooperative_suppliers` (
   `created_at` datetime(6) NOT NULL,
   `updated_at` datetime(6) NOT NULL,
   `name` varchar(255) NOT NULL,
-  `prefix` varchar(255) DEFAULT NULL
+  `prefix` varchar(255) DEFAULT NULL,
+  `tdate` date NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `cooperative_suppliers`
 --
 
-INSERT INTO `cooperative_suppliers` (`id`, `created_at`, `updated_at`, `name`, `prefix`) VALUES
-(15, '2022-01-12 04:57:20.857953', '2022-01-12 15:35:30.614982', 'Mastersoft Technology Ltd.', 'MST'),
-(16, '2022-01-16 14:56:48.096934', '2022-01-16 14:56:48.096934', 'Heatbeat Consult', 'HTBC');
+INSERT INTO `cooperative_suppliers` (`id`, `created_at`, `updated_at`, `name`, `prefix`, `tdate`) VALUES
+(15, '2022-01-12 04:57:20.857953', '2022-01-12 15:35:30.614982', 'Mastersoft Technology Ltd.', 'MST', '2022-01-29'),
+(16, '2022-01-16 14:56:48.096934', '2022-01-16 14:56:48.096934', 'Heatbeat Consult', 'HTBC', '2022-01-29');
 
 -- --------------------------------------------------------
 
@@ -7622,21 +7863,22 @@ CREATE TABLE `cooperative_transactionajustmentrequest` (
   `approval_officer_id` int(11) DEFAULT NULL,
   `approval_status_id` int(11) NOT NULL,
   `member_id` int(11) NOT NULL,
-  `status_id` int(11) NOT NULL
+  `status_id` int(11) NOT NULL,
+  `tdate` date NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `cooperative_transactionajustmentrequest`
 --
 
-INSERT INTO `cooperative_transactionajustmentrequest` (`id`, `created_at`, `updated_at`, `amount`, `approved_at`, `effective_date`, `approval_officer_id`, `approval_status_id`, `member_id`, `status_id`) VALUES
-(1, '2021-12-15 22:35:12.550354', '2021-12-16 00:32:33.559693', '5000.00', '2021-12-16', '2021-12-15', 6, 2, 353, 2),
-(2, '2021-12-15 22:36:46.652703', '2021-12-16 00:32:36.661320', '15000.00', '2021-12-16', '2021-12-15', 6, 2, 352, 2),
-(4, '2021-12-16 00:05:46.483362', '2021-12-16 00:32:38.624364', '12000.00', '2021-12-16', '2021-12-16', 6, 2, 354, 2),
-(5, '2021-12-16 00:08:21.927766', '2021-12-16 00:32:40.238722', '10000.00', '2021-12-16', '2021-12-16', 6, 2, 596, 2),
-(6, '2021-12-16 00:49:50.396249', '2021-12-16 00:50:04.674542', '10000.00', '2021-12-16', '2021-12-16', 6, 2, 355, 2),
-(7, '2021-12-31 07:22:17.062402', '2021-12-31 07:36:50.120519', '0.00', '2021-12-31', '2021-12-31', 6, 2, 355, 2),
-(8, '2021-12-31 07:44:31.030935', '2021-12-31 07:44:45.120292', '0.00', '2021-12-31', '2021-12-31', 6, 2, 354, 2);
+INSERT INTO `cooperative_transactionajustmentrequest` (`id`, `created_at`, `updated_at`, `amount`, `approved_at`, `effective_date`, `approval_officer_id`, `approval_status_id`, `member_id`, `status_id`, `tdate`) VALUES
+(1, '2021-12-15 22:35:12.550354', '2021-12-16 00:32:33.559693', '5000.00', '2021-12-16', '2021-12-15', 6, 2, 353, 2, '2022-01-29'),
+(2, '2021-12-15 22:36:46.652703', '2021-12-16 00:32:36.661320', '15000.00', '2021-12-16', '2021-12-15', 6, 2, 352, 2, '2022-01-29'),
+(4, '2021-12-16 00:05:46.483362', '2021-12-16 00:32:38.624364', '12000.00', '2021-12-16', '2021-12-16', 6, 2, 354, 2, '2022-01-29'),
+(5, '2021-12-16 00:08:21.927766', '2021-12-16 00:32:40.238722', '10000.00', '2021-12-16', '2021-12-16', 6, 2, 596, 2, '2022-01-29'),
+(6, '2021-12-16 00:49:50.396249', '2021-12-16 00:50:04.674542', '10000.00', '2021-12-16', '2021-12-16', 6, 2, 355, 2, '2022-01-29'),
+(7, '2021-12-31 07:22:17.062402', '2021-12-31 07:36:50.120519', '0.00', '2021-12-31', '2021-12-31', 6, 2, 355, 2, '2022-01-29'),
+(8, '2021-12-31 07:44:31.030935', '2021-12-31 07:44:45.120292', '0.00', '2021-12-31', '2021-12-31', 6, 2, 354, 2, '2022-01-29');
 
 -- --------------------------------------------------------
 
@@ -7654,16 +7896,17 @@ CREATE TABLE `cooperative_transactionloanajustmentrequest` (
   `approval_officer_id` int(11) DEFAULT NULL,
   `approval_status_id` int(11) NOT NULL,
   `member_id` int(11) NOT NULL,
-  `status_id` int(11) NOT NULL
+  `status_id` int(11) NOT NULL,
+  `tdate` date NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `cooperative_transactionloanajustmentrequest`
 --
 
-INSERT INTO `cooperative_transactionloanajustmentrequest` (`id`, `created_at`, `updated_at`, `amount`, `approved_at`, `effective_date`, `approval_officer_id`, `approval_status_id`, `member_id`, `status_id`) VALUES
-(3, '2021-12-16 03:44:14.214369', '2021-12-16 04:30:44.922371', '40000.00', '2021-12-16', '2021-12-16', 6, 2, 1, 1),
-(5, '2021-12-16 04:22:15.207442', '2021-12-16 04:30:46.782876', '60000.00', '2021-12-16', '2021-12-16', 6, 2, 2, 1);
+INSERT INTO `cooperative_transactionloanajustmentrequest` (`id`, `created_at`, `updated_at`, `amount`, `approved_at`, `effective_date`, `approval_officer_id`, `approval_status_id`, `member_id`, `status_id`, `tdate`) VALUES
+(3, '2021-12-16 03:44:14.214369', '2021-12-16 04:30:44.922371', '40000.00', '2021-12-16', '2021-12-16', 6, 2, 1, 1, '2022-01-29'),
+(5, '2021-12-16 04:22:15.207442', '2021-12-16 04:30:46.782876', '60000.00', '2021-12-16', '2021-12-16', 6, 2, 2, 1, '2022-01-29');
 
 -- --------------------------------------------------------
 
@@ -7764,33 +8007,34 @@ CREATE TABLE `cooperative_transactiontypes` (
   `multiple_loan_status_id` int(11) NOT NULL,
   `receipt_type_id` int(11) NOT NULL,
   `source_id` int(11) DEFAULT NULL,
-  `status_id` int(11) NOT NULL
+  `status_id` int(11) NOT NULL,
+  `form_print_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `cooperative_transactiontypes`
 --
 
-INSERT INTO `cooperative_transactiontypes` (`id`, `created_at`, `updated_at`, `code`, `name`, `maximum_amount`, `minimum_amount`, `duration`, `interest_rate`, `rank`, `admin_charges`, `admin_charges_minimum`, `default_admin_charges`, `salary_loan_relationship`, `savings_rate`, `guarantors`, `loan_age`, `share_unit_min`, `share_unit_max`, `admin_charges_rating_id`, `category_id`, `interest_deduction_id`, `multiple_loan_status_id`, `receipt_type_id`, `source_id`, `status_id`) VALUES
-(1, '2021-12-07 19:27:59.367810', '2021-12-16 07:55:45.530872', '100', 'MEMBERSHIP', '0.00', '0.00', 0, 0, 0, '2000.00', NULL, '0.00', 0, 0, 0, 0, 1, 2, NULL, NULL, NULL, 1, 4, 3, 1),
-(2, '2021-12-07 19:28:42.246244', '2021-12-14 20:47:06.681048', '101', 'ORDINARY SAVINGS', '0.00', '2000.00', 0, 0, 0, NULL, NULL, '0.00', 0, 0, 0, 0, 0, 0, NULL, NULL, NULL, 1, 4, 1, 1),
-(3, '2021-12-07 19:29:13.419218', '2021-12-07 19:29:13.419218', '102', 'PROJECT SAVINGS', '0.00', '1000.00', 0, 0, 0, NULL, NULL, '0.00', 0, 0, 0, 0, 0, 0, NULL, NULL, NULL, 1, 3, 1, 1),
-(4, '2021-12-07 19:29:45.410484', '2021-12-07 19:29:45.410484', '103', 'XMAS SAVINGS', '0.00', '1000.00', 0, 0, 0, NULL, NULL, '0.00', 0, 0, 0, 0, 0, 0, NULL, NULL, NULL, 1, 3, 1, 1),
-(5, '2021-12-07 19:30:11.741450', '2021-12-07 19:30:11.741450', '104', 'LAND SAVINGS', '0.00', '10000.00', 0, 0, 0, NULL, NULL, '0.00', 0, 0, 0, 0, 0, 0, NULL, NULL, NULL, 1, 3, 1, 1),
-(6, '2021-12-07 19:30:36.076200', '2021-12-07 19:30:36.076200', '105', 'OTHER SAVINGS', '0.00', '10000.00', 0, 0, 0, NULL, NULL, '0.00', 0, 0, 0, 0, 0, 0, NULL, NULL, NULL, 1, 3, 1, 1),
-(7, '2021-12-07 19:31:07.631782', '2021-12-07 19:31:07.631782', '200', 'SALARY UPDATE', '0.00', '0.00', 0, 0, 0, NULL, NULL, '0.00', 0, 0, 0, 0, 0, 0, NULL, NULL, NULL, 1, 3, 3, 1),
-(8, '2021-12-07 19:31:33.677197', '2021-12-16 13:28:01.971588', '201', 'SHORT TERM LOAN', '100000.00', '0.00', 3, 5, 0, '2.00', '10000.00', '1000.00', 35, 35, 2, 6, 0, 0, 1, 1, 2, 1, 5, 2, 1),
-(9, '2021-12-07 19:32:05.776788', '2021-12-07 19:32:05.776788', '202', 'LONG TERM LOAN', '3000000.00', '0.00', 0, 0, 0, NULL, NULL, '0.00', 0, 0, 0, 0, 0, 0, NULL, NULL, NULL, 1, 5, 2, 1),
-(10, '2021-12-07 19:32:37.587963', '2021-12-07 19:32:37.587963', '203', 'SOFT LOAN', '50000.00', '0.00', 0, 0, 0, NULL, NULL, '0.00', 0, 0, 0, 0, 0, 0, NULL, NULL, NULL, 1, 5, 2, 1),
-(11, '2021-12-07 19:32:57.749761', '2021-12-07 19:32:57.749761', '300', 'EXCLUSIVENESS', '0.00', '0.00', 0, 0, 0, NULL, NULL, '0.00', 0, 0, 0, 0, 0, 0, NULL, NULL, NULL, 1, 3, 3, 1),
-(12, '2021-12-07 19:33:19.849377', '2021-12-07 19:33:19.849377', '400', 'MEMBERS CREDIT PURCHASE', '0.00', '0.00', 0, 0, 0, NULL, NULL, '0.00', 0, 0, 0, 0, 0, 0, NULL, NULL, NULL, 1, 3, 3, 1),
-(13, '2021-12-07 19:33:40.107874', '2021-12-07 19:33:40.107874', '500', 'EXTERNAL FASCILITIES', '0.00', '0.00', 0, 0, 0, NULL, NULL, '0.00', 0, 0, 0, 0, 0, 0, NULL, NULL, NULL, 1, 3, 3, 1),
-(14, '2021-12-07 19:33:59.041202', '2021-12-07 19:33:59.041202', '600', 'SHOP', '0.00', '0.00', 0, 0, 0, NULL, NULL, '0.00', 0, 0, 0, 0, 0, 0, NULL, NULL, NULL, 1, 5, 5, 1),
-(15, '2021-12-07 19:34:26.725002', '2021-12-15 04:49:34.522269', '700', 'SHARES', '0.00', '0.00', 0, 0, 0, NULL, NULL, '0.00', 0, 0, 0, 0, 2, 25, NULL, NULL, NULL, 1, 4, 4, 1),
-(16, '2021-12-07 19:34:52.867563', '2021-12-07 19:34:52.867563', '701', 'SHARES INITIAL UPDATE', '0.00', '0.00', 0, 0, 0, NULL, NULL, '0.00', 0, 0, 0, 0, 0, 0, NULL, NULL, NULL, 1, 3, 3, 1),
-(17, '2021-12-07 19:35:12.173582', '2021-12-14 04:00:11.508694', '800', 'WELFARE', '0.00', '0.00', 0, 0, 0, NULL, NULL, '0.00', 0, 0, 0, 0, 0, 0, NULL, NULL, NULL, 1, 5, 4, 1),
-(18, '2021-12-07 19:35:35.019458', '2021-12-07 19:35:35.019458', '900', 'CASH WITHDRAWAL', '0.00', '0.00', 0, 0, 0, NULL, NULL, '0.00', 0, 0, 0, 0, 0, 0, NULL, NULL, NULL, 1, 3, 3, 1),
-(19, '2021-12-07 19:36:06.323242', '2021-12-07 19:38:10.472494', '901', 'TRANSACTION ADJUSTMENT', '3600.00', '3600.00', 0, 0, 0, NULL, NULL, '0.00', 0, 0, 0, 0, 0, 0, NULL, NULL, NULL, 1, 3, 3, 1);
+INSERT INTO `cooperative_transactiontypes` (`id`, `created_at`, `updated_at`, `code`, `name`, `maximum_amount`, `minimum_amount`, `duration`, `interest_rate`, `rank`, `admin_charges`, `admin_charges_minimum`, `default_admin_charges`, `salary_loan_relationship`, `savings_rate`, `guarantors`, `loan_age`, `share_unit_min`, `share_unit_max`, `admin_charges_rating_id`, `category_id`, `interest_deduction_id`, `multiple_loan_status_id`, `receipt_type_id`, `source_id`, `status_id`, `form_print_id`) VALUES
+(1, '2021-12-07 19:27:59.367810', '2022-01-29 23:48:18.408751', '100', 'MEMBERSHIP', '0.00', '0.00', 0, 0, 0, '2000.00', NULL, '0.00', 0, 0, 0, 0, 1, 2, NULL, NULL, NULL, 1, 4, 3, 1, 1),
+(2, '2021-12-07 19:28:42.246244', '2021-12-14 20:47:06.681048', '101', 'ORDINARY SAVINGS', '0.00', '2000.00', 0, 0, 0, NULL, NULL, '0.00', 0, 0, 0, 0, 0, 0, NULL, NULL, NULL, 1, 4, 1, 1, 1),
+(3, '2021-12-07 19:29:13.419218', '2021-12-07 19:29:13.419218', '102', 'PROJECT SAVINGS', '0.00', '1000.00', 0, 0, 0, NULL, NULL, '0.00', 0, 0, 0, 0, 0, 0, NULL, NULL, NULL, 1, 3, 1, 1, 1),
+(4, '2021-12-07 19:29:45.410484', '2021-12-07 19:29:45.410484', '103', 'XMAS SAVINGS', '0.00', '1000.00', 0, 0, 0, NULL, NULL, '0.00', 0, 0, 0, 0, 0, 0, NULL, NULL, NULL, 1, 3, 1, 1, 1),
+(5, '2021-12-07 19:30:11.741450', '2021-12-07 19:30:11.741450', '104', 'LAND SAVINGS', '0.00', '10000.00', 0, 0, 0, NULL, NULL, '0.00', 0, 0, 0, 0, 0, 0, NULL, NULL, NULL, 1, 3, 1, 1, 1),
+(6, '2021-12-07 19:30:36.076200', '2021-12-07 19:30:36.076200', '105', 'OTHER SAVINGS', '0.00', '10000.00', 0, 0, 0, NULL, NULL, '0.00', 0, 0, 0, 0, 0, 0, NULL, NULL, NULL, 1, 3, 1, 1, 1),
+(7, '2021-12-07 19:31:07.631782', '2021-12-07 19:31:07.631782', '200', 'SALARY UPDATE', '0.00', '0.00', 0, 0, 0, NULL, NULL, '0.00', 0, 0, 0, 0, 0, 0, NULL, NULL, NULL, 1, 3, 3, 1, 1),
+(8, '2021-12-07 19:31:33.677197', '2022-01-30 21:23:58.050650', '201', 'SHORT TERM LOAN', '100000.00', '0.00', 3, 5, 0, '2.00', '10000.00', '1000.00', 35, 35, 2, 6, 0, 0, 1, 1, 2, 1, 4, 2, 1, 1),
+(9, '2021-12-07 19:32:05.776788', '2022-01-31 01:02:04.125524', '202', 'LONG TERM LOAN', '3000000.00', '0.00', 24, 5, 3, '1.00', '10000.00', '1000.00', 65, 35, 2, 6, 0, 0, 1, 1, 1, 1, 5, 2, 1, 1),
+(10, '2021-12-07 19:32:37.587963', '2021-12-07 19:32:37.587963', '203', 'SOFT LOAN', '50000.00', '0.00', 0, 0, 0, NULL, NULL, '0.00', 0, 0, 0, 0, 0, 0, NULL, NULL, NULL, 1, 5, 2, 1, 1),
+(11, '2021-12-07 19:32:57.749761', '2021-12-07 19:32:57.749761', '300', 'EXCLUSIVENESS', '0.00', '0.00', 0, 0, 0, NULL, NULL, '0.00', 0, 0, 0, 0, 0, 0, NULL, NULL, NULL, 1, 3, 3, 1, 1),
+(12, '2021-12-07 19:33:19.849377', '2021-12-07 19:33:19.849377', '400', 'MEMBERS CREDIT PURCHASE', '0.00', '0.00', 0, 0, 0, NULL, NULL, '0.00', 0, 0, 0, 0, 0, 0, NULL, NULL, NULL, 1, 3, 3, 1, 1),
+(13, '2021-12-07 19:33:40.107874', '2021-12-07 19:33:40.107874', '500', 'EXTERNAL FASCILITIES', '0.00', '0.00', 0, 0, 0, NULL, NULL, '0.00', 0, 0, 0, 0, 0, 0, NULL, NULL, NULL, 1, 3, 3, 1, 1),
+(14, '2021-12-07 19:33:59.041202', '2021-12-07 19:33:59.041202', '600', 'SHOP', '0.00', '0.00', 0, 0, 0, NULL, NULL, '0.00', 0, 0, 0, 0, 0, 0, NULL, NULL, NULL, 1, 5, 5, 1, 1),
+(15, '2021-12-07 19:34:26.725002', '2021-12-15 04:49:34.522269', '700', 'SHARES', '0.00', '0.00', 0, 0, 0, NULL, NULL, '0.00', 0, 0, 0, 0, 2, 25, NULL, NULL, NULL, 1, 4, 4, 1, 1),
+(16, '2021-12-07 19:34:52.867563', '2021-12-07 19:34:52.867563', '701', 'SHARES INITIAL UPDATE', '0.00', '0.00', 0, 0, 0, NULL, NULL, '0.00', 0, 0, 0, 0, 0, 0, NULL, NULL, NULL, 1, 3, 3, 1, 1),
+(17, '2021-12-07 19:35:12.173582', '2021-12-14 04:00:11.508694', '800', 'WELFARE', '0.00', '0.00', 0, 0, 0, NULL, NULL, '0.00', 0, 0, 0, 0, 0, 0, NULL, NULL, NULL, 1, 5, 4, 1, 1),
+(18, '2021-12-07 19:35:35.019458', '2021-12-07 19:35:35.019458', '900', 'CASH WITHDRAWAL', '0.00', '0.00', 0, 0, 0, NULL, NULL, '0.00', 0, 0, 0, 0, 0, 0, NULL, NULL, NULL, 1, 3, 3, 1, 1),
+(19, '2021-12-07 19:36:06.323242', '2021-12-07 19:38:10.472494', '901', 'TRANSACTION ADJUSTMENT', '3600.00', '3600.00', 0, 0, 0, NULL, NULL, '0.00', 0, 0, 0, 0, 0, 0, NULL, NULL, NULL, 1, 3, 3, 1, 1);
 
 -- --------------------------------------------------------
 
@@ -7983,14 +8227,18 @@ INSERT INTO `django_content_type` (`id`, `app_label`, `model`) VALUES
 (135, 'cooperative', 'compulsorysavings'),
 (17, 'cooperative', 'cooperativebankaccounts'),
 (127, 'cooperative', 'cooperativeshopledger'),
+(153, 'cooperative', 'cooperative_shop_cash_deposit'),
 (18, 'cooperative', 'customerid'),
 (19, 'cooperative', 'customers'),
 (6, 'cooperative', 'customuser'),
+(154, 'cooperative', 'daily_cash_deposit_summary'),
 (20, 'cooperative', 'daily_sales'),
 (136, 'cooperative', 'daily_sales_cash_flow_summary'),
 (126, 'cooperative', 'daily_sales_summary'),
 (125, 'cooperative', 'datacapturemanager'),
 (21, 'cooperative', 'datejoineduploadstatus'),
+(155, 'cooperative', 'day_end_desk_office_transactions'),
+(152, 'cooperative', 'day_end_sales_transactions'),
 (22, 'cooperative', 'defaultpassword'),
 (23, 'cooperative', 'departments'),
 (124, 'cooperative', 'disbursementofficers'),
@@ -8000,6 +8248,7 @@ INSERT INTO `django_content_type` (`id`, `app_label`, `model`) VALUES
 (148, 'cooperative', 'formautoprint'),
 (150, 'cooperative', 'formautoprints'),
 (25, 'cooperative', 'gender'),
+(151, 'cooperative', 'generalticket'),
 (121, 'cooperative', 'general_cash_sales_selected'),
 (120, 'cooperative', 'general_cash_sales_selectedtemp'),
 (26, 'cooperative', 'interestdeductionsource'),
@@ -8224,7 +8473,22 @@ INSERT INTO `django_migrations` (`id`, `app`, `name`, `applied`) VALUES
 (91, 'cooperative', '0070_auto_20220125_1732', '2022-01-25 17:32:52.371579'),
 (92, 'cooperative', '0071_auto_20220125_2249', '2022-01-25 22:49:31.363207'),
 (93, 'cooperative', '0072_auto_20220126_0447', '2022-01-26 04:47:44.847138'),
-(94, 'cooperative', '0073_auto_20220126_0506', '2022-01-26 05:06:37.732824');
+(94, 'cooperative', '0073_auto_20220126_0506', '2022-01-26 05:06:37.732824'),
+(95, 'cooperative', '0074_generalticket', '2022-01-27 16:11:57.494825'),
+(96, 'cooperative', '0075_auto_20220128_0921', '2022-01-28 09:21:47.294362'),
+(97, 'cooperative', '0076_day_end_sales_transactions', '2022-01-28 11:51:52.408781'),
+(98, 'cooperative', '0077_cooperative_shop_cash_deposit', '2022-01-28 13:57:06.588188'),
+(99, 'cooperative', '0078_alter_cooperative_shop_cash_deposit_member', '2022-01-28 14:07:34.763766'),
+(100, 'cooperative', '0079_auto_20220128_1508', '2022-01-28 15:13:48.240038'),
+(101, 'cooperative', '0080_cooperative_shop_cash_deposit_processing_status', '2022-01-28 16:20:59.695057'),
+(102, 'cooperative', '0081_daily_cash_deposit_summary', '2022-01-28 18:43:11.280768'),
+(103, 'cooperative', '0082_cooperativeshopledger_tdate', '2022-01-28 19:14:56.406587'),
+(104, 'cooperative', '0083_auto_20220128_2059', '2022-01-28 20:59:23.893626'),
+(105, 'cooperative', '0084_auto_20220128_2136', '2022-01-28 21:36:19.751198'),
+(106, 'cooperative', '0085_auto_20220129_0449', '2022-01-29 04:49:53.116833'),
+(107, 'cooperative', '0086_transactiontypes_form_print', '2022-01-29 23:56:01.554025'),
+(108, 'cooperative', '0087_membershipformsalesrecord_total_amount', '2022-01-30 18:02:27.050972'),
+(109, 'cooperative', '0088_day_end_desk_office_transactions', '2022-01-30 18:43:28.516900');
 
 -- --------------------------------------------------------
 
@@ -8245,14 +8509,14 @@ CREATE TABLE `django_session` (
 INSERT INTO `django_session` (`session_key`, `session_data`, `expire_date`) VALUES
 ('1ipiv63lrp9txistsoi6r0k8kz2nf5z8', '.eJxVjEEOwiAQRe_C2hBAOoBL956BDMwgVUOT0q6Md7dNutDtf--_t4i4LjWunec4krgIbcTpd0yYn9x2Qg9s90nmqS3zmOSuyIN2eZuIX9fD_QtU7HV7s3Yq-aAQCLDAQM6hzWiSQxNSCLClzqCLYszovXWgFITCxRIXGrT4fAEZeTjM:1n5Mqo:NiNS3TRxdfKCEYhVva5G-QLyBhHrBBmZg9QxasAvilM', '2022-01-20 07:06:18.813528'),
 ('3oab3pgcaggqd8d2p1fjugxm3bt0zo1n', '.eJxVjDsOwjAQBe_iGllZf2IvJT1nsNafxQHkSHFSIe4OkVJA-2bmvUSgba1h62UJUxZnYcTpd4uUHqXtIN-p3WaZ5rYuU5S7Ig_a5XXO5Xk53L-DSr1-awJGPxBnZwyrmJUzGi1ZxkLeOwAsyVpiUKiN42g1I4IaRmP1CKDE-wPhYTb2:1n3Zzv:c6rtzB6BF0Y5-Uq7s4MXVAiJs2U1u4V4IOMWaBZadJk', '2022-01-15 08:44:19.886311'),
-('7qhorn6xpvqvlxb4215nonp4y3v59mfg', '.eJxVjEEOwiAQRe_C2hAKQwGX7j0DgZlBqqYkpV0Z765NutDtf-_9l4hpW2vcOi9xInEWQZx-t5zwwfMO6J7mW5PY5nWZstwVedAur434eTncv4Oaev3WUIwij6wMaE1QEiI7zyVYBuswZO01hQCDT04NY7EjAhk22iMUrQbx_gDv6Te1:1nCaia:1XYDi0cUxw5Gh9AHJaXPAsCKX7td-2N2DS8h9nnsTOo', '2022-02-09 06:19:40.052407'),
 ('875xfiobrcsjiu0ulbkq5xf48t2vjbp8', '.eJxVjEEOwiAQRe_C2hAKQwGX7j0DgZlBqqYkpV0Z765NutDtf-_9l4hpW2vcOi9xInEWQZx-t5zwwfMO6J7mW5PY5nWZstwVedAur434eTncv4Oaev3WUIwij6wMaE1QEiI7zyVYBuswZO01hQCDT04NY7EjAhk22iMUrQbx_gDv6Te1:1n9JEM:l6y816OQMSODQIzcWXcVVOmN1u7b1CsW1ThCeZ3kj_s', '2022-01-31 04:02:54.422647'),
-('99nlsla6irwomah1eu3hdu3n4cqedg8p', '.eJxVjEsOwjAMBe-SNYqa1HYqluw5Q-QkNimgVupnVXF3FKkL2L6ZeYeJvG817qsscSzmalxvLr9j4vySqZHy5Okx2zxP2zIm2xR70tXe5yLv2-n-HVRea6szZqc0KHtWPwj3oRCzYieqDqAPiJAAAnqfXGIcSBAyKRB14sB8vifBODE:1nCHEb:FJjuWyb65EfDMQ6IjV4z5GIERWAP9exwG7H5e_f_Z8c', '2022-02-08 09:31:25.915944'),
-('abfqhllc4wkg11qfx524vnukq3y7b8bs', '.eJxVjEEOwiAQRe_C2hBkpgO4dN8zkGGgUjVtUtqV8e7apAvd_vfef6nI21rj1soSx6wu6qxOv1tieZRpB_nO023WMk_rMia9K_qgTfdzLs_r4f4dVG71WyN67JixUMnWOgGSIYQuDQQWjQMgxgQoJllPJju0DC4Ie0oEJYh6fwDL1DdH:1nBVGg:2QC5KnZPGyTShCMLL1OEZTY50q8udd4Tu-j9hElAsHc', '2022-02-06 05:18:22.793378'),
+('abfqhllc4wkg11qfx524vnukq3y7b8bs', '.eJxVjEEOwiAQRe_C2hBkpgO4dN8zkGGgUjVtUtqV8e7apAvd_vfef6nI21rj1soSx6wu6qxOv1tieZRpB_nO023WMk_rMia9K_qgTfdzLs_r4f4dVG71WyN67JixUMnWOgGSIYQuDQQWjQMgxgQoJllPJju0DC4Ie0oEJYh6fwDL1DdH:1nDwUC:urA_RfL6hgMd_CCC8LLikIjhdKkUDe6TVBdaKbQ9I3Q', '2022-02-12 23:46:24.156727'),
 ('b5bqdvtswzmta2ihe8vagnll9b0iwg93', '.eJxVjEEOwiAQRe_C2hBkpgO4dN8zkGGgUjVtUtqV8e7apAvd_vfef6nI21rj1soSx6wu6qxOv1tieZRpB_nO023WMk_rMia9K_qgTfdzLs_r4f4dVG71WyN67JixUMnWOgGSIYQuDQQWjQMgxgQoJllPJju0DC4Ie0oEJYh6fwDL1DdH:1n2Y3E:mR2RvAud8Re50ToUkmOvrzbNVHkftMVP4ukxnpOe6wI', '2022-01-12 12:27:28.168534'),
+('c198fytdjpczcc7uqnjrs5o3t367ngrs', '.eJxVjDsOgzAQRO_iOrLwf0mZnjNYy3odk0RGwlBFuXtAokjKmfdm3iLitpa4NV7ilMRVaHH57UakJ9cDpAfW-yxprusyjfJQ5EmbHObEr9vp_h0UbGVfc_JgOuOyJtsprXJ2bBG1y3mPziA4yorAKSBtbQDDpILvew7BA5P4fAHSCzdO:1nDdY7:aed86NoXIFRbZ_xFxm9ZNcYv5kB2k5KUSnSI8FX7FrA', '2022-02-12 03:33:11.134058'),
 ('gdz9k66v1ursiugb6ho1st6zw1ynlsja', '.eJxVjEEOwiAQRe_C2hBkpgO4dN8zkGGgUjVtUtqV8e7apAvd_vfef6nI21rj1soSx6wu6qxOv1tieZRpB_nO023WMk_rMia9K_qgTfdzLs_r4f4dVG71WyN67JixUMnWOgGSIYQuDQQWjQMgxgQoJllPJju0DC4Ie0oEJYh6fwDL1DdH:1n7hbv:PSUZPXOL9oNdNZeCOw1ctmP6pDbkn_lIHF44gTZq12k', '2022-01-26 17:40:35.902605'),
+('mibfv39m3ivylki9u5a94p5cpqwgpc0o', '.eJxVjDsOwjAQBe_iGllZf2IvJT1nsNafxQHkSHFSIe4OkVJA-2bmvUSgba1h62UJUxZnYcTpd4uUHqXtIN-p3WaZ5rYuU5S7Ig_a5XXO5Xk53L-DSr1-awJGPxBnZwyrmJUzGi1ZxkLeOwAsyVpiUKiN42g1I4IaRmP1CKDE-wPhYTb2:1nDwNn:Ch5qSBK7q4nk2X5cywRlrPmzrTg8GmmhYUi17kyXhkU', '2022-02-12 23:39:47.543776'),
 ('n8gda5op5w28js67ysq6ri73am5w8c4y', '.eJxVjEEOwiAQRe_C2hBkpgO4dN8zkGGgUjVtUtqV8e7apAvd_vfef6nI21rj1soSx6wu6qxOv1tieZRpB_nO023WMk_rMia9K_qgTfdzLs_r4f4dVG71WyN67JixUMnWOgGSIYQuDQQWjQMgxgQoJllPJju0DC4Ie0oEJYh6fwDL1DdH:1n0BHE:zAvo2jMVCj2nwn5hlYskIoo3ptXgZYAzvbKmi72-Gs4', '2022-01-05 23:44:08.689984'),
-('usa8yxr7fsstg9pyf4e36resqyz0n63q', '.eJxVjEEOwiAQRe_C2hBAOoBL956BDMwgVUOT0q6Md7dNutDtf--_t4i4LjWunec4krgIbcTpd0yYn9x2Qg9s90nmqS3zmOSuyIN2eZuIX9fD_QtU7HV7s3Yq-aAQCLDAQM6hzWiSQxNSCLClzqCLYszovXWgFITCxRIXGrT4fAEZeTjM:1nCGkz:w5htrq2VYPDvbcErg01JvcbZoeQVU7KOQtxp1_IFHP8', '2022-02-08 09:00:49.100972'),
+('qocuvgk250dr8zifcwds81vkep1qdic2', '.eJxVjEEOwiAQRe_C2hAKQwGX7j0DgZlBqqYkpV0Z765NutDtf-_9l4hpW2vcOi9xInEWQZx-t5zwwfMO6J7mW5PY5nWZstwVedAur434eTncv4Oaev3WUIwij6wMaE1QEiI7zyVYBuswZO01hQCDT04NY7EjAhk22iMUrQbx_gDv6Te1:1nEIiN:WvH3EpGEE_jz0O18oQONYfVgzPV6TiM3_5C0tp34mi4', '2022-02-13 23:30:31.564434'),
 ('wep7kdrpybce8tssiuln7pt4bcfo8cvn', '.eJxVjEEOwiAQRe_C2hBkpgO4dN8zkGGgUjVtUtqV8e7apAvd_vfef6nI21rj1soSx6wu6qxOv1tieZRpB_nO023WMk_rMia9K_qgTfdzLs_r4f4dVG71WyN67JixUMnWOgGSIYQuDQQWjQMgxgQoJllPJju0DC4Ie0oEJYh6fwDL1DdH:1n3Bia:9mynIoTLJbMupMOUtA_SZ-qN_7am48YWOaBX51InEUo', '2022-01-14 06:48:48.216062');
 
 --
@@ -8415,6 +8679,18 @@ ALTER TABLE `cooperative_cooperativeshopledger`
   ADD KEY `cooperative_cooperat_member_id_bb6d14dd_fk_cooperati` (`member_id`);
 
 --
+-- Indexes for table `cooperative_cooperative_shop_cash_deposit`
+--
+ALTER TABLE `cooperative_cooperative_shop_cash_deposit`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `cooperative_cooperat_processed_by_id_42465ab5_fk_cooperati` (`processed_by_id`),
+  ADD KEY `cooperative_cooperat_status_id_628fadb7_fk_cooperati` (`status_id`),
+  ADD KEY `cooperative_cooperat_member_id_63f1b0db_fk_cooperati` (`member_id`),
+  ADD KEY `cooperative_cooperat_bank_id_c06cc4bc_fk_cooperati` (`bank_id`),
+  ADD KEY `cooperative_cooperat_coop_account_id_e5ac39f4_fk_cooperati` (`coop_account_id`),
+  ADD KEY `cooperative_cooperat_processing_status_id_91471695_fk_cooperati` (`processing_status_id`);
+
+--
 -- Indexes for table `cooperative_customerid`
 --
 ALTER TABLE `cooperative_customerid`
@@ -8457,13 +8733,22 @@ ALTER TABLE `cooperative_customuser_user_permissions`
   ADD KEY `cooperative_customus_permission_id_92930466_fk_auth_perm` (`permission_id`);
 
 --
+-- Indexes for table `cooperative_daily_cash_deposit_summary`
+--
+ALTER TABLE `cooperative_daily_cash_deposit_summary`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `cooperative_daily_ca_processed_by_id_44cfd996_fk_cooperati` (`processed_by_id`),
+  ADD KEY `cooperative_daily_ca_status_id_f08e1906_fk_cooperati` (`status_id`);
+
+--
 -- Indexes for table `cooperative_daily_sales`
 --
 ALTER TABLE `cooperative_daily_sales`
   ADD PRIMARY KEY (`id`),
   ADD KEY `cooperative_daily_sa_status_id_4352b06e_fk_cooperati` (`status_id`),
   ADD KEY `cooperative_daily_sa_processed_by_id_2e0e8d92_fk_cooperati` (`processed_by_id`),
-  ADD KEY `Daily_Sales_product_id_9911296e_fk_Stock_id` (`product_id`);
+  ADD KEY `Daily_Sales_product_id_9911296e_fk_Stock_id` (`product_id`),
+  ADD KEY `cooperative_daily_sa_sales_category_id_9c3f896f_fk_cooperati` (`sales_category_id`);
 
 --
 -- Indexes for table `cooperative_daily_sales_cash_flow_summary`
@@ -8480,7 +8765,6 @@ ALTER TABLE `cooperative_daily_sales_cash_flow_summary`
 ALTER TABLE `cooperative_daily_sales_summary`
   ADD PRIMARY KEY (`id`),
   ADD KEY `cooperative_daily_sa_sale_id_57835ba4_fk_cooperati` (`sale_id`),
-  ADD KEY `cooperative_daily_sa_sales_category_id_1c4a4afb_fk_cooperati` (`sales_category_id`),
   ADD KEY `cooperative_daily_sa_status_id_d1d5f49a_fk_cooperati` (`status_id`);
 
 --
@@ -8496,6 +8780,23 @@ ALTER TABLE `cooperative_datacapturemanager`
 ALTER TABLE `cooperative_datejoineduploadstatus`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `title` (`title`);
+
+--
+-- Indexes for table `cooperative_day_end_desk_office_transactions`
+--
+ALTER TABLE `cooperative_day_end_desk_office_transactions`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `cooperative_day_end__processed_by_id_6c61de61_fk_cooperati` (`processed_by_id`),
+  ADD KEY `cooperative_day_end__status_id_7ddcfc22_fk_cooperati` (`status_id`);
+
+--
+-- Indexes for table `cooperative_day_end_sales_transactions`
+--
+ALTER TABLE `cooperative_day_end_sales_transactions`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `cooperative_day_end__processed_by_id_3454c628_fk_cooperati` (`processed_by_id`),
+  ADD KEY `cooperative_day_end__sales_category_id_b8ce07bc_fk_cooperati` (`sales_category_id`),
+  ADD KEY `cooperative_day_end__status_id_ddb63c4b_fk_cooperati` (`status_id`);
 
 --
 -- Indexes for table `cooperative_defaultpassword`
@@ -8566,6 +8867,12 @@ ALTER TABLE `cooperative_formautoprints`
 ALTER TABLE `cooperative_gender`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `title` (`title`);
+
+--
+-- Indexes for table `cooperative_generalticket`
+--
+ALTER TABLE `cooperative_generalticket`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `cooperative_general_cash_sales_selected`
@@ -9490,7 +9797,8 @@ ALTER TABLE `cooperative_transactiontypes`
   ADD KEY `cooperative_transact_multiple_loan_status_0ef50b91_fk_cooperati` (`multiple_loan_status_id`),
   ADD KEY `cooperative_transact_receipt_type_id_57f2237f_fk_cooperati` (`receipt_type_id`),
   ADD KEY `cooperative_transact_source_id_35239a8d_fk_cooperati` (`source_id`),
-  ADD KEY `cooperative_transact_status_id_e7d2f0c2_fk_cooperati` (`status_id`);
+  ADD KEY `cooperative_transact_status_id_e7d2f0c2_fk_cooperati` (`status_id`),
+  ADD KEY `cooperative_transact_form_print_id_63253602_fk_cooperati` (`form_print_id`);
 
 --
 -- Indexes for table `cooperative_userslevel`
@@ -9584,7 +9892,7 @@ ALTER TABLE `auth_group_permissions`
 -- AUTO_INCREMENT for table `auth_permission`
 --
 ALTER TABLE `auth_permission`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=605;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=625;
 
 --
 -- AUTO_INCREMENT for table `cooperative_accountdeductions`
@@ -9614,13 +9922,13 @@ ALTER TABLE `cooperative_adminmaster`
 -- AUTO_INCREMENT for table `cooperative_approvabletransactions`
 --
 ALTER TABLE `cooperative_approvabletransactions`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `cooperative_approvalofficers`
 --
 ALTER TABLE `cooperative_approvalofficers`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- AUTO_INCREMENT for table `cooperative_approvalstatus`
@@ -9656,7 +9964,7 @@ ALTER TABLE `cooperative_certifiabletransactions`
 -- AUTO_INCREMENT for table `cooperative_certificationofficers`
 --
 ALTER TABLE `cooperative_certificationofficers`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `cooperative_certificationstatus`
@@ -9686,7 +9994,13 @@ ALTER TABLE `cooperative_cooperativebankaccounts`
 -- AUTO_INCREMENT for table `cooperative_cooperativeshopledger`
 --
 ALTER TABLE `cooperative_cooperativeshopledger`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
+
+--
+-- AUTO_INCREMENT for table `cooperative_cooperative_shop_cash_deposit`
+--
+ALTER TABLE `cooperative_cooperative_shop_cash_deposit`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `cooperative_customerid`
@@ -9698,13 +10012,13 @@ ALTER TABLE `cooperative_customerid`
 -- AUTO_INCREMENT for table `cooperative_customers`
 --
 ALTER TABLE `cooperative_customers`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=49;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=106;
 
 --
 -- AUTO_INCREMENT for table `cooperative_customuser`
 --
 ALTER TABLE `cooperative_customuser`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=228;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=237;
 
 --
 -- AUTO_INCREMENT for table `cooperative_customuser_groups`
@@ -9719,22 +10033,28 @@ ALTER TABLE `cooperative_customuser_user_permissions`
   MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT for table `cooperative_daily_cash_deposit_summary`
+--
+ALTER TABLE `cooperative_daily_cash_deposit_summary`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
 -- AUTO_INCREMENT for table `cooperative_daily_sales`
 --
 ALTER TABLE `cooperative_daily_sales`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=115;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=228;
 
 --
 -- AUTO_INCREMENT for table `cooperative_daily_sales_cash_flow_summary`
 --
 ALTER TABLE `cooperative_daily_sales_cash_flow_summary`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
 
 --
 -- AUTO_INCREMENT for table `cooperative_daily_sales_summary`
 --
 ALTER TABLE `cooperative_daily_sales_summary`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=59;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=127;
 
 --
 -- AUTO_INCREMENT for table `cooperative_datacapturemanager`
@@ -9747,6 +10067,18 @@ ALTER TABLE `cooperative_datacapturemanager`
 --
 ALTER TABLE `cooperative_datejoineduploadstatus`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
+-- AUTO_INCREMENT for table `cooperative_day_end_desk_office_transactions`
+--
+ALTER TABLE `cooperative_day_end_desk_office_transactions`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT for table `cooperative_day_end_sales_transactions`
+--
+ALTER TABLE `cooperative_day_end_sales_transactions`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `cooperative_defaultpassword`
@@ -9803,10 +10135,16 @@ ALTER TABLE `cooperative_gender`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
+-- AUTO_INCREMENT for table `cooperative_generalticket`
+--
+ALTER TABLE `cooperative_generalticket`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
 -- AUTO_INCREMENT for table `cooperative_general_cash_sales_selected`
 --
 ALTER TABLE `cooperative_general_cash_sales_selected`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=65;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=155;
 
 --
 -- AUTO_INCREMENT for table `cooperative_general_cash_sales_selectedtemp`
@@ -9842,7 +10180,7 @@ ALTER TABLE `cooperative_itemwriteoffreasons`
 -- AUTO_INCREMENT for table `cooperative_itemwriteofftemp`
 --
 ALTER TABLE `cooperative_itemwriteofftemp`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `cooperative_lga`
@@ -9884,7 +10222,7 @@ ALTER TABLE `cooperative_loancategory`
 -- AUTO_INCREMENT for table `cooperative_loanformissuance`
 --
 ALTER TABLE `cooperative_loanformissuance`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `cooperative_loanguarantors`
@@ -9908,19 +10246,19 @@ ALTER TABLE `cooperative_loannumber`
 -- AUTO_INCREMENT for table `cooperative_loanrequest`
 --
 ALTER TABLE `cooperative_loanrequest`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `cooperative_loanrequestattachments`
 --
 ALTER TABLE `cooperative_loanrequestattachments`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `cooperative_loanrequestsettings`
 --
 ALTER TABLE `cooperative_loanrequestsettings`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=78;
 
 --
 -- AUTO_INCREMENT for table `cooperative_loanschedulestatus`
@@ -9974,13 +10312,13 @@ ALTER TABLE `cooperative_lockedstatus`
 -- AUTO_INCREMENT for table `cooperative_members`
 --
 ALTER TABLE `cooperative_members`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=210;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=219;
 
 --
 -- AUTO_INCREMENT for table `cooperative_membersaccountsdomain`
 --
 ALTER TABLE `cooperative_membersaccountsdomain`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=719;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=752;
 
 --
 -- AUTO_INCREMENT for table `cooperative_membersbankaccounts`
@@ -10022,25 +10360,25 @@ ALTER TABLE `cooperative_membersexclusiveness`
 -- AUTO_INCREMENT for table `cooperative_membershipformsalesrecord`
 --
 ALTER TABLE `cooperative_membershipformsalesrecord`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=407;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=411;
 
 --
 -- AUTO_INCREMENT for table `cooperative_membershiprequest`
 --
 ALTER TABLE `cooperative_membershiprequest`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=407;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=412;
 
 --
 -- AUTO_INCREMENT for table `cooperative_membershiprequestadditionalattachment`
 --
 ALTER TABLE `cooperative_membershiprequestadditionalattachment`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `cooperative_membershiprequestadditionalinfo`
 --
 ALTER TABLE `cooperative_membershiprequestadditionalinfo`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
 
 --
 -- AUTO_INCREMENT for table `cooperative_membershipstatus`
@@ -10070,7 +10408,7 @@ ALTER TABLE `cooperative_memberssalaryupdaterequest`
 -- AUTO_INCREMENT for table `cooperative_membersshareaccounts`
 --
 ALTER TABLE `cooperative_membersshareaccounts`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
 
 --
 -- AUTO_INCREMENT for table `cooperative_membersshareaccountsmain`
@@ -10106,25 +10444,25 @@ ALTER TABLE `cooperative_memberswelfare`
 -- AUTO_INCREMENT for table `cooperative_memberswelfareaccounts`
 --
 ALTER TABLE `cooperative_memberswelfareaccounts`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- AUTO_INCREMENT for table `cooperative_members_cash_sales_selected`
 --
 ALTER TABLE `cooperative_members_cash_sales_selected`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=38;
 
 --
 -- AUTO_INCREMENT for table `cooperative_members_credit_purchase_analysis`
 --
 ALTER TABLE `cooperative_members_credit_purchase_analysis`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=66;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=98;
 
 --
 -- AUTO_INCREMENT for table `cooperative_members_credit_purchase_summary`
 --
 ALTER TABLE `cooperative_members_credit_purchase_summary`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
 
 --
 -- AUTO_INCREMENT for table `cooperative_members_credit_sales_external_fascilities`
@@ -10136,7 +10474,7 @@ ALTER TABLE `cooperative_members_credit_sales_external_fascilities`
 -- AUTO_INCREMENT for table `cooperative_members_credit_sales_selected`
 --
 ALTER TABLE `cooperative_members_credit_sales_selected`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=39;
 
 --
 -- AUTO_INCREMENT for table `cooperative_monthlydeductionlist`
@@ -10178,7 +10516,7 @@ ALTER TABLE `cooperative_nextofkinsmaximun`
 -- AUTO_INCREMENT for table `cooperative_nokrelationships`
 --
 ALTER TABLE `cooperative_nokrelationships`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `cooperative_nonmemberaccountdeductions`
@@ -10202,7 +10540,7 @@ ALTER TABLE `cooperative_paymentchannels`
 -- AUTO_INCREMENT for table `cooperative_personalledger`
 --
 ALTER TABLE `cooperative_personalledger`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=52;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=61;
 
 --
 -- AUTO_INCREMENT for table `cooperative_processingstatus`
@@ -10220,19 +10558,19 @@ ALTER TABLE `cooperative_productcategory`
 -- AUTO_INCREMENT for table `cooperative_purchases`
 --
 ALTER TABLE `cooperative_purchases`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=37;
 
 --
 -- AUTO_INCREMENT for table `cooperative_purchases_temp`
 --
 ALTER TABLE `cooperative_purchases_temp`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
 
 --
 -- AUTO_INCREMENT for table `cooperative_purchase_header`
 --
 ALTER TABLE `cooperative_purchase_header`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `cooperative_receipts`
@@ -10274,13 +10612,13 @@ ALTER TABLE `cooperative_salaryinstitution`
 -- AUTO_INCREMENT for table `cooperative_salescategory`
 --
 ALTER TABLE `cooperative_salescategory`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `cooperative_savingsuploaded`
 --
 ALTER TABLE `cooperative_savingsuploaded`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
 -- AUTO_INCREMENT for table `cooperative_savingsuploadstatus`
@@ -10322,7 +10660,7 @@ ALTER TABLE `cooperative_staff`
 -- AUTO_INCREMENT for table `cooperative_standingorderaccounts`
 --
 ALTER TABLE `cooperative_standingorderaccounts`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=38;
 
 --
 -- AUTO_INCREMENT for table `cooperative_states`
@@ -10466,13 +10804,13 @@ ALTER TABLE `django_admin_log`
 -- AUTO_INCREMENT for table `django_content_type`
 --
 ALTER TABLE `django_content_type`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=151;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=156;
 
 --
 -- AUTO_INCREMENT for table `django_migrations`
 --
 ALTER TABLE `django_migrations`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=95;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=110;
 
 --
 -- Constraints for dumped tables
@@ -10573,6 +10911,17 @@ ALTER TABLE `cooperative_cooperativeshopledger`
   ADD CONSTRAINT `cooperative_cooperat_status_id_7062d84a_fk_cooperati` FOREIGN KEY (`status_id`) REFERENCES `cooperative_transactionstatus` (`id`);
 
 --
+-- Constraints for table `cooperative_cooperative_shop_cash_deposit`
+--
+ALTER TABLE `cooperative_cooperative_shop_cash_deposit`
+  ADD CONSTRAINT `cooperative_cooperat_bank_id_c06cc4bc_fk_cooperati` FOREIGN KEY (`bank_id`) REFERENCES `cooperative_banks` (`id`),
+  ADD CONSTRAINT `cooperative_cooperat_coop_account_id_e5ac39f4_fk_cooperati` FOREIGN KEY (`coop_account_id`) REFERENCES `cooperative_cooperativebankaccounts` (`id`),
+  ADD CONSTRAINT `cooperative_cooperat_member_id_63f1b0db_fk_cooperati` FOREIGN KEY (`member_id`) REFERENCES `cooperative_members` (`id`),
+  ADD CONSTRAINT `cooperative_cooperat_processed_by_id_42465ab5_fk_cooperati` FOREIGN KEY (`processed_by_id`) REFERENCES `cooperative_customuser` (`id`),
+  ADD CONSTRAINT `cooperative_cooperat_processing_status_id_91471695_fk_cooperati` FOREIGN KEY (`processing_status_id`) REFERENCES `cooperative_processingstatus` (`id`),
+  ADD CONSTRAINT `cooperative_cooperat_status_id_628fadb7_fk_cooperati` FOREIGN KEY (`status_id`) REFERENCES `cooperative_transactionstatus` (`id`);
+
+--
 -- Constraints for table `cooperative_customers`
 --
 ALTER TABLE `cooperative_customers`
@@ -10597,11 +10946,19 @@ ALTER TABLE `cooperative_customuser_user_permissions`
   ADD CONSTRAINT `cooperative_customus_permission_id_92930466_fk_auth_perm` FOREIGN KEY (`permission_id`) REFERENCES `auth_permission` (`id`);
 
 --
+-- Constraints for table `cooperative_daily_cash_deposit_summary`
+--
+ALTER TABLE `cooperative_daily_cash_deposit_summary`
+  ADD CONSTRAINT `cooperative_daily_ca_processed_by_id_44cfd996_fk_cooperati` FOREIGN KEY (`processed_by_id`) REFERENCES `cooperative_customuser` (`id`),
+  ADD CONSTRAINT `cooperative_daily_ca_status_id_f08e1906_fk_cooperati` FOREIGN KEY (`status_id`) REFERENCES `cooperative_transactionstatus` (`id`);
+
+--
 -- Constraints for table `cooperative_daily_sales`
 --
 ALTER TABLE `cooperative_daily_sales`
   ADD CONSTRAINT `Daily_Sales_product_id_9911296e_fk_Stock_id` FOREIGN KEY (`product_id`) REFERENCES `cooperative_stock` (`id`),
   ADD CONSTRAINT `cooperative_daily_sa_processed_by_id_2e0e8d92_fk_cooperati` FOREIGN KEY (`processed_by_id`) REFERENCES `cooperative_customuser` (`id`),
+  ADD CONSTRAINT `cooperative_daily_sa_sales_category_id_9c3f896f_fk_cooperati` FOREIGN KEY (`sales_category_id`) REFERENCES `cooperative_salescategory` (`id`),
   ADD CONSTRAINT `cooperative_daily_sa_status_id_4352b06e_fk_cooperati` FOREIGN KEY (`status_id`) REFERENCES `cooperative_transactionstatus` (`id`);
 
 --
@@ -10617,7 +10974,6 @@ ALTER TABLE `cooperative_daily_sales_cash_flow_summary`
 --
 ALTER TABLE `cooperative_daily_sales_summary`
   ADD CONSTRAINT `cooperative_daily_sa_sale_id_57835ba4_fk_cooperati` FOREIGN KEY (`sale_id`) REFERENCES `cooperative_daily_sales` (`id`),
-  ADD CONSTRAINT `cooperative_daily_sa_sales_category_id_1c4a4afb_fk_cooperati` FOREIGN KEY (`sales_category_id`) REFERENCES `cooperative_salescategory` (`id`),
   ADD CONSTRAINT `cooperative_daily_sa_status_id_d1d5f49a_fk_cooperati` FOREIGN KEY (`status_id`) REFERENCES `cooperative_transactionstatus` (`id`);
 
 --
@@ -10625,6 +10981,21 @@ ALTER TABLE `cooperative_daily_sales_summary`
 --
 ALTER TABLE `cooperative_datacapturemanager`
   ADD CONSTRAINT `cooperative_datacapt_status_id_b021528a_fk_cooperati` FOREIGN KEY (`status_id`) REFERENCES `cooperative_membershipstatus` (`id`);
+
+--
+-- Constraints for table `cooperative_day_end_desk_office_transactions`
+--
+ALTER TABLE `cooperative_day_end_desk_office_transactions`
+  ADD CONSTRAINT `cooperative_day_end__processed_by_id_6c61de61_fk_cooperati` FOREIGN KEY (`processed_by_id`) REFERENCES `cooperative_customuser` (`id`),
+  ADD CONSTRAINT `cooperative_day_end__status_id_7ddcfc22_fk_cooperati` FOREIGN KEY (`status_id`) REFERENCES `cooperative_transactionstatus` (`id`);
+
+--
+-- Constraints for table `cooperative_day_end_sales_transactions`
+--
+ALTER TABLE `cooperative_day_end_sales_transactions`
+  ADD CONSTRAINT `cooperative_day_end__processed_by_id_3454c628_fk_cooperati` FOREIGN KEY (`processed_by_id`) REFERENCES `cooperative_customuser` (`id`),
+  ADD CONSTRAINT `cooperative_day_end__sales_category_id_b8ce07bc_fk_cooperati` FOREIGN KEY (`sales_category_id`) REFERENCES `cooperative_salescategory` (`id`),
+  ADD CONSTRAINT `cooperative_day_end__status_id_ddb63c4b_fk_cooperati` FOREIGN KEY (`status_id`) REFERENCES `cooperative_transactionstatus` (`id`);
 
 --
 -- Constraints for table `cooperative_disbursementofficers`
@@ -11256,6 +11627,7 @@ ALTER TABLE `cooperative_transactionperiods`
 ALTER TABLE `cooperative_transactiontypes`
   ADD CONSTRAINT `cooperative_transact_admin_charges_rating_a27914ec_fk_cooperati` FOREIGN KEY (`admin_charges_rating_id`) REFERENCES `cooperative_admincharges` (`id`),
   ADD CONSTRAINT `cooperative_transact_category_id_3ff2d119_fk_cooperati` FOREIGN KEY (`category_id`) REFERENCES `cooperative_loancategory` (`id`),
+  ADD CONSTRAINT `cooperative_transact_form_print_id_63253602_fk_cooperati` FOREIGN KEY (`form_print_id`) REFERENCES `cooperative_yesno` (`id`),
   ADD CONSTRAINT `cooperative_transact_interest_deduction_i_c2414dd1_fk_cooperati` FOREIGN KEY (`interest_deduction_id`) REFERENCES `cooperative_interestdeductionsource` (`id`),
   ADD CONSTRAINT `cooperative_transact_multiple_loan_status_0ef50b91_fk_cooperati` FOREIGN KEY (`multiple_loan_status_id`) REFERENCES `cooperative_multipleloanstatus` (`id`),
   ADD CONSTRAINT `cooperative_transact_receipt_type_id_57f2237f_fk_cooperati` FOREIGN KEY (`receipt_type_id`) REFERENCES `cooperative_receipttypes` (`id`),
