@@ -5,20 +5,25 @@
 {% block content %}
             <div class="page-content fade-in-up">
                 <div class="row">
-                    <div class="col-md-6">
+                    <div class="col-md-7">
                         <div class="ibox">
                             <div class="ibox-head">
-                                <div class="ibox-title">{{title}}</div>
+                                <div class="ibox-title">{{title}} |  <input type="button" class="btn btn-primary" value="Back" onclick="history.back()"/></div>
                                 
                             </div>
                        
                             <div class="ibox-body">
-                {% url url as action_path %}
-                {% include "master_templates/form_template.html" with messages=messages form=form action_path=action_path button_text=button_text %}
+                            {% url url as action_path %}
+                            {% include "master_templates/form_template.html" with messages=messages form=form action_path=action_path button_text=button_text %}
                             </div>
+                            <hr>
+                            <div class="ibox-body">
+                             <h4>{{instructions|safe}}</h4>
+                            </div>
+                       
                         </div>
-                    </div>
 
+                    </div>
                    
                 </div>
             </div>

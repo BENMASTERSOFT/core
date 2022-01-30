@@ -1,0 +1,82 @@
+{% extends 'shop_templates/base_template.html' %}
+{% load static %}
+
+{% block content %}
+            <div class="page-content fade-in-up">
+                 <form class="form-horizontal" method="POST" action="">
+                                    {% csrf_token %}
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="ibox">
+                            <div class="ibox-head">
+                                <div class="ibox-title">Daily Sales Report</div>
+                                
+                            </div>
+                            <div class="ibox-body">
+                              
+                                    <div class="row">
+                                        <div class="col-sm-6 form-group">
+                                            <label>Start Date</label>
+                                            {{form.start_date}}
+                                        </div>
+                                        <div class="col-sm-6 form-group">
+                                            <label>Stop Date</label>
+                                            {{form.stop_date}}
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <button class="btn btn-default" name="btn_fetch" type="submit">Fetch</button>
+                                    </div>
+                               
+                            </div>
+                        </div>
+                    </div>
+              
+                </div>
+                 <div class="row">
+                    <div class="col-xl-6">
+                        <div class="ibox">
+                            <div class="ibox-head">
+                                <div class="ibox-title">Summary Records | <button class="btn btn-default" name="btn_view" type="submit">View All</button> </div>
+                            </div>
+                            <div class="ibox-body">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Description</th>
+                                            <th>Amount</th>
+                                            <th>Sales Category</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for record in records %}
+                                        <tr>
+                                            <td>{{forloop.counter}}</td>
+                                            <td>{{record.description}}</td>
+                                            <td>{{record.amount}}</td>
+                                            <td>{{record.sales_category.title}}</td>
+                                            <td><a href="{% url 'Daily_Sales_Report_Details' record.pk %}" class="btn btn-primary">Details</a></td>
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+               
+                </div>
+             </form>
+            </div>
+
+
+        
+
+
+    <div class="sidenav-backdrop backdrop"></div>
+    <div class="preloader-backdrop">
+        <div class="page-preloader">Loading</div>
+    </div>
+{% endblock %}

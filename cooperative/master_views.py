@@ -2066,6 +2066,27 @@ def Manage_NOKRelationships_Remove(request,pk):
     return HttpResponseRedirect(reverse('Manage_NOKRelationships'))
 
 
+def Manage_NOKRelationships_Max_No(request):
+    record=[]
+    if NextOfKinsMaximun.objects.all().exists:
+        record = NextOfKinsMaximun.objects.first()
+    
+    if request.method ==  'POST':
+        max_no = request.POST.get('max_no')
+        if record:
+            record.maximun=max_no
+            record.save()
+        else:
+            item=NextOfKinsMaximun(maximun=max_no)
+            item.save()
+        return HttpResponseRedirect(reverse('admin_home'))
+    
+    context={
+    'record':record,
+    }
+    return render(request,'master_templates/Manage_NOKRelationships_Max_No.html',context)
+
+
 def addTransactionStatus(request):
 	title="Add Transaction Status"
 	items= TransactionStatus.objects.all()
@@ -2566,7 +2587,10 @@ def loan_settings_details_load(request,pk):
 def loan_guarantors_update(request,pk):
     item= TransactionTypes.objects.get(id=pk)
     title="Update Loan Guarnators for " +  item.name
-    
+    instructions='''
+    This page enable you to set the total number of Gaurantors 
+    needed to access this loan. 
+    '''
     form = loan_guarantors_update_form(request.POST or None)
 
     if request.method ==  "POST":
@@ -2582,6 +2606,7 @@ def loan_guarantors_update(request,pk):
     form.fields['guarantors'].initial=item.guarantors
     context={
     'form':form,
+    'instructions':instructions,
     'url':'loan_guarantors_update',
     'button_text':"Update Record",
     'title':title,
@@ -2592,6 +2617,10 @@ def loan_guarantors_update(request,pk):
 def default_admin_charges_update(request,pk):
     item= TransactionTypes.objects.get(id=pk)
     title="Update Default Admin Charges for " +  item.name
+    instructions='''
+    This page enable you to set the default admin Charge, this will apply if the the laon amount
+    is not greater to Minimum Loan Admin Charge for this loan. 
+    '''
     form = default_admin_charges_update_form(request.POST or None)
 
     if request.method ==  "POST":
@@ -2607,7 +2636,7 @@ def default_admin_charges_update(request,pk):
     form.fields['default_admin_charges'].initial=item.default_admin_charges
     context={
     'form':form,
-    # 'items':items,
+    'instructions':instructions,
     'url':'default_admin_charges_update',
     'button_text':"Update Record",
     'title':title,
@@ -2618,6 +2647,10 @@ def default_admin_charges_update(request,pk):
 def MultipleLoanStatus_update(request,pk):
     item= TransactionTypes.objects.get(id=pk)
     title="Update Default Admin Charges for " +  item.name
+    instructions='''
+    This page enable you to set if members are allowed to access multiple 
+    fascilities for for this loan. 
+    '''
     form = MultipleLoanStatus_update_form(request.POST or None)
 
     if request.method ==  "POST":
@@ -2634,7 +2667,7 @@ def MultipleLoanStatus_update(request,pk):
     form.fields['multiple_loan_status'].initial=item.multiple_loan_status
     context={
     'form':form,
-    # 'items':items,
+    'instructions':instructions,
     'url':'MultipleLoanStatus_update',
     'button_text':"Update Record",
     'title':title,
@@ -2645,6 +2678,10 @@ def MultipleLoanStatus_update(request,pk):
 def loan_savings_based_update(request,pk):
     item= TransactionTypes.objects.get(id=pk)
     title="Update Loan Savings Based for " +  item.name
+    instructions='''
+    This page enable you to set the percentage amout to be saved in 
+    order to access a given loan.
+    '''
     form = loan_savings_based_update_form(request.POST or None)
 
     if request.method ==  "POST":
@@ -2660,7 +2697,7 @@ def loan_savings_based_update(request,pk):
     form.fields['loan_savings_based'].initial=item.savings_rate
     context={
     'form':form,
-    # 'items':items,
+    'instructions':instructions,
     'url':'loan_savings_based_update',
     'button_text':"Update Record",
     'title':title,
@@ -2672,6 +2709,9 @@ def loan_savings_based_update(request,pk):
 def loan_category_update(request,pk):
     item= TransactionTypes.objects.get(id=pk)
     title="Update Loan Category for " +  item.name
+    instructions='''
+    This page enable you to set whether a loan is monetary or Not.
+    '''
     form = loan_category_update_form(request.POST or None)
 
     if request.method ==  "POST":
@@ -2688,7 +2728,7 @@ def loan_category_update(request,pk):
     form.fields['category'].initial=item.category
     context={
     'form':form,
-    # 'items':items,
+    'instructions':instructions,
     'url':'loan_category_update',
     'button_text':"Update Record",
     'title':title,
@@ -2699,6 +2739,9 @@ def loan_category_update(request,pk):
 def loan_duration_update(request,pk):
     item= TransactionTypes.objects.get(id=pk)
     title="Update Loan Duration for " +  item.name
+    instructions='''
+    This page enable you to set the duration of Loans.
+    '''
     form = loan_duration_update_form(request.POST or None)
 
     if request.method ==  "POST":
@@ -2714,7 +2757,7 @@ def loan_duration_update(request,pk):
     form.fields['duration'].initial=item.duration
     context={
     'form':form,
-    # 'items':items,
+    'instructions':instructions,
     'url':'loan_duration_update',
     'button_text':"Update Record",
     'title':title,
@@ -2723,268 +2766,308 @@ def loan_duration_update(request,pk):
 
 
 def loan_name_update(request,pk):
-	item= TransactionTypes.objects.get(id=pk)
-	title="Update Loan Description for " +  item.name
-	form = loan_name_update_form(request.POST or None)
+    item= TransactionTypes.objects.get(id=pk)
+    title="Update Loan Description for " +  item.name
+    instructions='''
+    This page enable you to modify the Title of Loans.
+    '''
+    form = loan_name_update_form(request.POST or None)
 
-	if request.method ==  "POST":
-		form = loan_name_update_form(request.POST)
-		if form.is_valid():
-			name=form.cleaned_data["name"]
-			record = TransactionTypes.objects.get(id=pk)
-			record.name=name
-			record.save()
-			messages.success(request,"Record Updated Successfully")
-			return	HttpResponseRedirect(reverse('loan_settings_details_load',args=(pk,)))
+    if request.method ==  "POST":
+        form = loan_name_update_form(request.POST)
+        if form.is_valid():
+            name=form.cleaned_data["name"]
+            record = TransactionTypes.objects.get(id=pk)
+            record.name=name
+            record.save()
+            messages.success(request,"Record Updated Successfully")
+            return	HttpResponseRedirect(reverse('loan_settings_details_load',args=(pk,)))
 
-	form.fields['name'].initial=item.name
-	context={
-	'form':form,
-	# 'items':items,
-	'url':'loan_name_update',
-	'button_text':"Update Record",
-	'title':title,
-	}
-	return render(request,'master_templates/loan_criteria_update.html', context)
+    form.fields['name'].initial=item.name
+    context={
+    'form':form,
+    'instructions':instructions,
+    'url':'loan_name_update',
+    'button_text':"Update Record",
+    'title':title,
+    }
+    return render(request,'master_templates/loan_criteria_update.html', context)
 
 
 def loan_interest_rate_update(request,pk):
-	item= TransactionTypes.objects.get(id=pk)
-	title="Update Loan Interest Rate  for " +  item.name
-	form = loan_interest_rate_update_form(request.POST or None)
+    item= TransactionTypes.objects.get(id=pk)
+    title="Update Loan Interest Rate  for " +  item.name
+    instructions='''
+    This page enable you to set the interest rate of Loans.
+    '''
 
-	if request.method ==  "POST":
-		form = loan_interest_rate_update_form(request.POST)
-		if form.is_valid():
-			interest_rate=form.cleaned_data["interest_rate"]
-			record = TransactionTypes.objects.get(id=pk)
-			record.interest_rate=interest_rate
-			record.save()
-			messages.success(request,"Record Updated Successfully")
-			return	HttpResponseRedirect(reverse('loan_settings_details_load',args=(pk,)))
-	form.fields['interest_rate'].initial=item.interest_rate
-	context={
-	'form':form,
-	# 'items':items,
-	'url':'loan_interest_rate_update',
-	'button_text':"Update Record",
-	'title':title,
-	}
-	return render(request,'master_templates/loan_criteria_update.html', context)
+    form = loan_interest_rate_update_form(request.POST or None)
+
+    if request.method ==  "POST":
+        form = loan_interest_rate_update_form(request.POST)
+        if form.is_valid():
+            interest_rate=form.cleaned_data["interest_rate"]
+            record = TransactionTypes.objects.get(id=pk)
+            record.interest_rate=interest_rate
+            record.save()
+            messages.success(request,"Record Updated Successfully")
+            return	HttpResponseRedirect(reverse('loan_settings_details_load',args=(pk,)))
+    form.fields['interest_rate'].initial=item.interest_rate
+    context={
+    'form':form,
+    'instructions':instructions,
+    'url':'loan_interest_rate_update',
+    'button_text':"Update Record",
+    'title':title,
+    }
+    return render(request,'master_templates/loan_criteria_update.html', context)
 
 
 def loan_interest_deduction_soucrces_update(request,pk):
-	item= TransactionTypes.objects.get(id=pk)
-	title="Update Loan Interest Deduction Sources  for " +  item.name
-	form = loan_interest_deduction_soucrces_Form(request.POST or None)
+    item= TransactionTypes.objects.get(id=pk)
+    title="Update Loan Interest Deduction Sources  for " +  item.name
+    instructions='''
+    This page enable you to set whether the interest will be deducted at source or 
+    be spread out with the monthly deduction of the Loans.
+    '''
+    form = loan_interest_deduction_soucrces_Form(request.POST or None)
 
-	if request.method ==  "POST":
-		form = loan_interest_deduction_soucrces_Form(request.POST)
-		if form.is_valid():
-			source=form.cleaned_data["source"]
-			interest_deduction=InterestDeductionSource.objects.get(id=source)
-			
-			record = TransactionTypes.objects.get(id=pk)
-			record.interest_deduction=interest_deduction
-			record.save()
-			messages.success(request,"Record Updated Successfully")
-			return	HttpResponseRedirect(reverse('loan_settings_details_load',args=(pk,)))
+    if request.method ==  "POST":
+        form = loan_interest_deduction_soucrces_Form(request.POST)
+        if form.is_valid():
+            source=form.cleaned_data["source"]
+            interest_deduction=InterestDeductionSource.objects.get(id=source)
 
-	form.fields['source'].initial=item.interest_deduction
-	context={
-	'form':form,
-	# 'items':items,
-	'url':'loan_interest_deduction_soucrces_update',
-	'button_text':"Update Record",
-	'title':title,
-	}
-	return render(request,'master_templates/loan_criteria_update.html', context)
+            record = TransactionTypes.objects.get(id=pk)
+            record.interest_deduction=interest_deduction
+            record.save()
+            messages.success(request,"Record Updated Successfully")
+            return	HttpResponseRedirect(reverse('loan_settings_details_load',args=(pk,)))
+
+    form.fields['source'].initial=item.interest_deduction
+    context={
+    'form':form,
+    'instructions':instructions,
+    'url':'loan_interest_deduction_soucrces_update',
+    'button_text':"Update Record",
+    'title':title,
+    }
+    return render(request,'master_templates/loan_criteria_update.html', context)
 
 
 def loan_maximum_amount_update(request,pk):
-	item= TransactionTypes.objects.get(id=pk)
-	title="Update Loan Maximum Amount  for " +  item.name
-	form = loan_maximum_amount_update_form(request.POST or None)
+    item= TransactionTypes.objects.get(id=pk)
+    title="Update Loan Maximum Amount  for " +  item.name
+    instructions='''
+    This page enable you to set maximum amount of Loans.
+    '''
+    form = loan_maximum_amount_update_form(request.POST or None)
 
-	if request.method ==  "POST":
-		form = loan_maximum_amount_update_form(request.POST)
-		if form.is_valid():
-			maximum_amount=form.cleaned_data["maximum_amount"]
-			record = TransactionTypes.objects.get(id=pk)
-			record.maximum_amount=maximum_amount
-			record.save()
-			messages.success(request,"Record Updated Successfully")
-			return	HttpResponseRedirect(reverse('loan_settings_details_load',args=(pk,)))
+    if request.method ==  "POST":
+        form = loan_maximum_amount_update_form(request.POST)
+        if form.is_valid():
+            maximum_amount=form.cleaned_data["maximum_amount"]
+            record = TransactionTypes.objects.get(id=pk)
+            record.maximum_amount=maximum_amount
+            record.save()
+            messages.success(request,"Record Updated Successfully")
+            return	HttpResponseRedirect(reverse('loan_settings_details_load',args=(pk,)))
 
-	form.fields['maximum_amount'].initial=item.maximum_amount
-	context={
-	'form':form,
-	# 'items':items,
-	'url':'loan_maximum_amount_update',
-	'button_text':"Update Record",
-	'title':title,
-	}
-	return render(request,'master_templates/loan_criteria_update.html', context)
+    form.fields['maximum_amount'].initial=item.maximum_amount
+    context={
+    'form':form,
+    'instructions':instructions,
+    'url':'loan_maximum_amount_update',
+    'button_text':"Update Record",
+    'title':title,
+    }
+    return render(request,'master_templates/loan_criteria_update.html', context)
 
 
 def loan_rank_update_update(request,pk):
-	item= TransactionTypes.objects.get(id=pk)
-	title="Update Loan Rank  for " +  item.name
-	form = loan_rank_update_form(request.POST or None)
+    item= TransactionTypes.objects.get(id=pk)
+    title="Update Loan Rank  for " +  item.name
+    instructions='''
+    This page enable you to set the order in which 
+    monthly deduction shall flow fro the bulk deduction.
+    '''
 
-	if request.method ==  "POST":
-		form = loan_rank_update_form(request.POST)
-		if form.is_valid():
-			rank=form.cleaned_data["rank"]
-			record = TransactionTypes.objects.get(id=pk)
-			record.rank=rank
-			record.save()
-			messages.success(request,"Record Updated Successfully")
-			return	HttpResponseRedirect(reverse('loan_settings_details_load',args=(pk,)))
+    form = loan_rank_update_form(request.POST or None)
 
-	form.fields['rank'].initial=item.rank
-	context={
-	'form':form,
-	# 'items':items,
-	'url':'loan_rank_update_update',
-	'button_text':"Update Record",
-	'title':title,
-	}
-	return render(request,'master_templates/loan_criteria_update.html', context)
+    if request.method ==  "POST":
+        form = loan_rank_update_form(request.POST)
+        if form.is_valid():
+            rank=form.cleaned_data["rank"]
+            record = TransactionTypes.objects.get(id=pk)
+            record.rank=rank
+            record.save()
+            messages.success(request,"Record Updated Successfully")
+            return	HttpResponseRedirect(reverse('loan_settings_details_load',args=(pk,)))
+
+    form.fields['rank'].initial=item.rank
+    context={
+    'form':form,
+    'instructions':instructions,
+    'url':'loan_rank_update_update',
+    'button_text':"Update Record",
+    'title':title,
+    }
+    return render(request,'master_templates/loan_criteria_update.html', context)
 
 
 def loan_admin_charges_rate_update(request,pk):
-	item= TransactionTypes.objects.get(id=pk)
-	title="Update Loan Rank  for " +  item.name
-	form = loan_admin_charges_rate_update_form(request.POST or None)
+    item= TransactionTypes.objects.get(id=pk)
+    title="Update Loan Rank  for " +  item.name
+    instructions='''
+    This page enable you to set whether admin charge is Cash or a 
+    percentage of amount requested for loan.
+    '''
+    form = loan_admin_charges_rate_update_form(request.POST or None)
 
-	if request.method ==  "POST":
-		form = loan_admin_charges_rate_update_form(request.POST)
-		if form.is_valid():
-			admin_charge_id=form.cleaned_data["admin_charges_rating"]
-			admin_charges_rating=AdminCharges.objects.get(id=admin_charge_id)
-			record = TransactionTypes.objects.get(id=pk)
-			record.admin_charges_rating=admin_charges_rating
-			record.save()
-			messages.success(request,"Record Updated Successfully")
-			return	HttpResponseRedirect(reverse('loan_settings_details_load',args=(pk,)))
+    if request.method ==  "POST":
+        form = loan_admin_charges_rate_update_form(request.POST)
+        if form.is_valid():
+            admin_charge_id=form.cleaned_data["admin_charges_rating"]
+            admin_charges_rating=AdminCharges.objects.get(id=admin_charge_id)
+            record = TransactionTypes.objects.get(id=pk)
+            record.admin_charges_rating=admin_charges_rating
+            record.save()
+            messages.success(request,"Record Updated Successfully")
+            return	HttpResponseRedirect(reverse('loan_settings_details_load',args=(pk,)))
 
-	form.fields['admin_charges_rating'].initial=item.admin_charges_rating
-	context={
-	'form':form,
-	# 'items':items,
-	'url':'loan_admin_charges_rate_update',
-	'button_text':"Update Record",
-	'title':title,
-	}
-	return render(request,'master_templates/loan_criteria_update.html', context)
+    form.fields['admin_charges_rating'].initial=item.admin_charges_rating
+    context={
+    'form':form,
+    'instructions':instructions,
+    'url':'loan_admin_charges_rate_update',
+    'button_text':"Update Record",
+    'title':title,
+    }
+    return render(request,'master_templates/loan_criteria_update.html', context)
 
 
 
 
 def loan_admin_charges_update(request,pk):
-	item= TransactionTypes.objects.get(id=pk)
-	title="Update Loan Admin Charges  for " +  item.name
-	form = loan_admin_charges_update_form(request.POST or None)
+    item= TransactionTypes.objects.get(id=pk)
+    title="Update Loan Admin Charges  for " +  item.name
+    instructions='''
+    This page enable you to set the percentage rating of 
+    the Admin charge if it percentage based.
+    '''
+    form = loan_admin_charges_update_form(request.POST or None)
 
-	if request.method ==  "POST":
-		form = loan_admin_charges_update_form(request.POST)
-		if form.is_valid():
-			admin_charges=form.cleaned_data["admin_charges"]
-			record = TransactionTypes.objects.get(id=pk)
-			record.admin_charges=admin_charges
-			record.save()
-			messages.success(request,"Record Updated Successfully")
-			return	HttpResponseRedirect(reverse('loan_settings_details_load',args=(pk,)))
+    if request.method ==  "POST":
+        form = loan_admin_charges_update_form(request.POST)
+        if form.is_valid():
+            admin_charges=form.cleaned_data["admin_charges"]
+            record = TransactionTypes.objects.get(id=pk)
+            record.admin_charges=admin_charges
+            record.save()
+            messages.success(request,"Record Updated Successfully")
+            return	HttpResponseRedirect(reverse('loan_settings_details_load',args=(pk,)))
 
-	form.fields['admin_charges'].initial=item.admin_charges
-	context={
-	'form':form,
-	# 'items':items,
-	'url':'loan_admin_charges_update',
-	'button_text':"Update Record",
-	'title':title,
-	}
-	return render(request,'master_templates/loan_criteria_update.html', context)
+    form.fields['admin_charges'].initial=item.admin_charges
+    context={
+    'form':form,
+    'instructions':instructions,
+    'url':'loan_admin_charges_update',
+    'button_text':"Update Record",
+    'title':title,
+    }
+    return render(request,'master_templates/loan_criteria_update.html', context)
 
 	
 
 def loan_admin_charges_minimum_update(request,pk):
-	item= TransactionTypes.objects.get(id=pk)
-	title="Update Loan Admin Charges Minimum  for " +  item.name
-	form = loan_admin_charges_minimum_update_form(request.POST or None)
+    item= TransactionTypes.objects.get(id=pk)
+    title="Update Loan Admin Charges Minimum  for " +  item.name
+    instructions='''
+    This page enable you to set the minimum loan amount 
+    upon which there would be flat rate in cash of Admin Charges. 
+    '''
+    form = loan_admin_charges_minimum_update_form(request.POST or None)
 
-	if request.method ==  "POST":
-		form = loan_admin_charges_minimum_update_form(request.POST)
-		if form.is_valid():
-			admin_charges_minimum=form.cleaned_data["admin_charges_minimum"]
-			record = TransactionTypes.objects.get(id=pk)
-			record.admin_charges_minimum=admin_charges_minimum
-			record.save()
-			messages.success(request,"Record Updated Successfully")
-			return	HttpResponseRedirect(reverse('loan_settings_details_load',args=(pk,)))
+    if request.method ==  "POST":
+        form = loan_admin_charges_minimum_update_form(request.POST)
+        if form.is_valid():
+            admin_charges_minimum=form.cleaned_data["admin_charges_minimum"]
+            record = TransactionTypes.objects.get(id=pk)
+            record.admin_charges_minimum=admin_charges_minimum
+            record.save()
+            messages.success(request,"Record Updated Successfully")
+            return	HttpResponseRedirect(reverse('loan_settings_details_load',args=(pk,)))
 
-	form.fields['admin_charges_minimum'].initial=item.admin_charges_minimum
-	context={
-	'form':form,
-	# 'items':items,
-	'url':'loan_admin_charges_minimum_update',
-	'button_text':"Update Record",
-	'title':title,
-	}
-	return render(request,'master_templates/loan_criteria_update.html', context)
+    form.fields['admin_charges_minimum'].initial=item.admin_charges_minimum
+    context={
+    'form':form,
+    'instructions':instructions,
+    'url':'loan_admin_charges_minimum_update',
+    'button_text':"Update Record",
+    'title':title,
+    }
+    return render(request,'master_templates/loan_criteria_update.html', context)
 
 	
 def loan_salary_relationship_update(request,pk):
-	item= TransactionTypes.objects.get(id=pk)
-	title="Update Loan Salary Loan Relationship  for " +  item.name
-	form = loan_salary_relationship_update_form(request.POST or None)
+    item= TransactionTypes.objects.get(id=pk)
+    title="Update Loan Salary Loan Relationship  for " +  item.name
 
-	if request.method ==  "POST":
-		form = loan_salary_relationship_update_form(request.POST)
-		if form.is_valid():
-			salary_loan_relationship=form.cleaned_data["salary_loan_relationship"]
-			record = TransactionTypes.objects.get(id=pk)
-			record.salary_loan_relationship=salary_loan_relationship
-			record.save()
-			messages.success(request,"Record Updated Successfully")
-			return	HttpResponseRedirect(reverse('loan_settings_details_load',args=(pk,)))
+    instructions='''
+    This page enable you to set the percentage which loans is allowed to be 
+    given from the members Net Salary. 
+    '''
+    form = loan_salary_relationship_update_form(request.POST or None)
 
-	form.fields['salary_loan_relationship'].initial=item.salary_loan_relationship
-	context={
-	'form':form,
-	# 'items':items,
-	'url':'loan_salary_relationship_update',
-	'button_text':"Update Record",
-	'title':title,
-	}
-	return render(request,'master_templates/loan_criteria_update.html', context)
-	
+    if request.method ==  "POST":
+        form = loan_salary_relationship_update_form(request.POST)
+        if form.is_valid():
+            salary_loan_relationship=form.cleaned_data["salary_loan_relationship"]
+            record = TransactionTypes.objects.get(id=pk)
+            record.salary_loan_relationship=salary_loan_relationship
+            record.save()
+            messages.success(request,"Record Updated Successfully")
+            return	HttpResponseRedirect(reverse('loan_settings_details_load',args=(pk,)))
+
+    form.fields['salary_loan_relationship'].initial=item.salary_loan_relationship
+    context={
+    'form':form,
+    'instructions':instructions,
+    'url':'loan_salary_relationship_update',
+    'button_text':"Update Record",
+    'title':title,
+    }
+    return render(request,'master_templates/loan_criteria_update.html', context)
+
 
 def loan_loan_age_update(request,pk):
-	item= TransactionTypes.objects.get(id=pk)
-	title="Update Loan Age  for " +  item.name
-	form = loan_loan_age_update_form(request.POST or None)
+    item= TransactionTypes.objects.get(id=pk)
+    title="Update Loan Age  for " +  item.name
+    instructions='''
+    This page enable you to set the number of months one has to a member before 
+    Such person can access this loan. 
+    '''
+    form = loan_loan_age_update_form(request.POST or None)
 
-	if request.method ==  "POST":
-		form = loan_loan_age_update_form(request.POST)
-		if form.is_valid():
-			loan_age=form.cleaned_data["loan_age"]
-			record = TransactionTypes.objects.get(id=pk)
-			record.loan_age=loan_age
-			record.save()
-			messages.success(request,"Record Updated Successfully")
-			return	HttpResponseRedirect(reverse('loan_settings_details_load',args=(pk,)))
+    if request.method ==  "POST":
+        form = loan_loan_age_update_form(request.POST)
+        if form.is_valid():
+            loan_age=form.cleaned_data["loan_age"]
+            record = TransactionTypes.objects.get(id=pk)
+            record.loan_age=loan_age
+            record.save()
+            messages.success(request,"Record Updated Successfully")
+            return	HttpResponseRedirect(reverse('loan_settings_details_load',args=(pk,)))
 
-	form.fields['loan_age'].initial=item.loan_age
-	context={
-	'form':form,
-	# 'items':items,
-	'url':'loan_loan_age_update',
-	'button_text':"Update Record",
-	'title':title,
-	}
-	return render(request,'master_templates/loan_criteria_update.html', context)
+    form.fields['loan_age'].initial=item.loan_age
+    context={
+    'form':form,
+    'instructions':instructions,
+    'url':'loan_loan_age_update',
+    'button_text':"Update Record",
+    'title':title,
+    }
+    return render(request,'master_templates/loan_criteria_update.html', context)
 
 
 

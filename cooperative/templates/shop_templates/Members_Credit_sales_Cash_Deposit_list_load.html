@@ -24,6 +24,7 @@
                                     <th>Middle Name</th>
                                     <th>Phone Number</th>
                                     <th>Department</th>
+                                    <th>Amount</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
@@ -35,6 +36,7 @@
                                     <th>Middle Name</th>
                                     <th>Phone Number</th>
                                     <th>Department</th>
+                                    <th>Amount</th>
                                     <th>Action</th>
                                 </tr>
                             </tfoot>
@@ -42,11 +44,12 @@
                                 {% for member in members %}
                                 <tr>
                                     <td>{{forloop.counter}}</td>
-                                    <td>{{member.admin.first_name}}</td>
-                                    <td>{{member.admin.last_name}}</td>
-                                    <td>{{member.middle_name}}</td>
-                                    <td>{{member.phone_number}}</td>
-                                    <td>{{member.department.title}}</td>
+                                    <td>{{member.member.member.admin.first_name}}</td>
+                                    <td>{{member.member.member.admin.last_name}}</td>
+                                    <td>{{member.member.member.middle_name}}</td>
+                                    <td>{{member.member.member.phone_number}}</td>
+                                    <td>{{member.member.member.department.title}}</td>
+                                    <td>{{member.balance}}</td>
                                     <td>
                                         <a href="{% url 'Members_Credit_sales_Cash_Deposit_Details' member.id %}" class="btn btn-success"> Request</a> 
 

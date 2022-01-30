@@ -17,7 +17,7 @@
                 <div class="ibox">
                     <div class="ibox-head">
                         <div class="ibox-title">
-                            CASH SALES | {{customer.customer_id}} | {{customer.name}} | GENERAL CASH SALES  
+                            CASH SALES | {{customer.customer_id}} | {{customer.name}} | GENERAL CASH SALES  | {{ticket}}
 
                             {% if button_show %} 
                               |  <a href="{% url 'general_cash_issue_item_preview' ticket %}" class="btn btn-success">Preview</a>
@@ -88,7 +88,7 @@
                     <div class="col-xl-10">
                         <div class="ibox">
                             <div class="ibox-head">
-                                <div class="ibox-title">Selected Items</div>
+                                <div class="ibox-title">Selected Items | {{ticket}}</div>
                             </div>
                             <div class="ibox-body">
                                 <table class="table table-bordered">

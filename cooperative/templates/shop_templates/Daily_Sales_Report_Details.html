@@ -1,0 +1,48 @@
+{% extends 'shop_templates/base_template.html' %}
+{% load static %}
+
+{% block content %}
+            <div class="page-content fade-in-up">
+               
+                <div class="row">
+                    <div class="col-xl-6">
+                        <div class="ibox">
+                            <div class="ibox-head">
+                                <div class="ibox-title">Sales Summary Details |{{tdate.month}} <a href="{% url 'Daily_Sales_Report_All_Details' tdate.year tdate.month tdate.day sales_category  %}" class="btn btn-secondary">View All</a></div>
+                            </div>
+                            <div class="ibox-body">
+                                <table class="table">
+                                    <thead class="thead-default">
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Name</th>
+                                            <th>Receipt No</th>
+                                            <th>Amount</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for item in items %}
+                                        <tr>
+                                            <td>{{forloop.counter}}</td>
+                                            <td>{{item.sale.name}}</td>
+                                            <td>{{item.receipt}}</td>
+                                            <td>{{item.amount}}</td>
+                                            <td><a href="{% url 'Daily_Sales_Report_Receipt_Details' item.receipt %}" class="btn btn-primary">Detail</a></td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                   
+                </div>
+          
+           
+            </div>
+  <div class="sidenav-backdrop backdrop"></div>
+    <div class="preloader-backdrop">
+        <div class="page-preloader">Loading</div>
+    </div>
+{% endblock %}

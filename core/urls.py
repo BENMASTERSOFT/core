@@ -89,6 +89,7 @@ urlpatterns = [
     path('addNOKRelationships/', master_views.addNOKRelationships,name='addNOKRelationships'),
     path('Manage_NOKRelationships/', master_views.Manage_NOKRelationships,name='Manage_NOKRelationships'),
     path('Manage_NOKRelationships_Remove/<str:pk>/', master_views.Manage_NOKRelationships_Remove,name='Manage_NOKRelationships_Remove'),
+    path('Manage_NOKRelationships_Max_No/', master_views.Manage_NOKRelationships_Max_No,name='Manage_NOKRelationships_Max_No'),
     
 
     path('addDefaultPassword/', master_views.addDefaultPassword,name='addDefaultPassword'),
@@ -203,6 +204,7 @@ urlpatterns = [
     path('Useraccount_manager/', deskofficer_views.Useraccount_manager,name='Useraccount_manager'),
     
     path('desk_basic_form/', deskofficer_views.desk_basic_form,name='desk_basic_form'),
+    path('desk_advanced_form/', deskofficer_views.desk_advanced_form,name='desk_advanced_form'),
     path('desk_basic_table/', deskofficer_views.desk_basic_table,name='desk_basic_table'),
     path('desk_datatable_table/', deskofficer_views.desk_datatable_table,name='desk_datatable_table'),
     
@@ -216,7 +218,14 @@ urlpatterns = [
     path('membership_request_additional_info_delete/<str:pk>/<str:return_pk>/', deskofficer_views.membership_request_additional_info_delete,name='membership_request_additional_info_delete'),
 
     path('MemberShipRequestAdditionalAttachment_save/<str:pk>/', deskofficer_views.MemberShipRequestAdditionalAttachment_save,name='MemberShipRequestAdditionalAttachment_save'),
+    path('MemberShipRequest_Delete_confirmation/<str:pk>/', deskofficer_views.MemberShipRequest_Delete_confirmation,name='MemberShipRequest_Delete_confirmation'),
+    path('MemberShipRequest_Delete/<str:pk>/', deskofficer_views.MemberShipRequest_Delete,name='MemberShipRequest_Delete'),
     path('MemberShipRequest_submit/<str:pk>/', deskofficer_views.MemberShipRequest_submit,name='MemberShipRequest_submit'),
+
+    path('membership_request_manage_search/', deskofficer_views.membership_request_manage_search,name='membership_request_manage_search'),
+    path('membership_request_manage_list_load/', deskofficer_views.membership_request_manage_list_load,name='membership_request_manage_list_load'),
+    path('membership_request_manage_list_update/<str:pk>/', deskofficer_views.membership_request_manage_list_update,name='membership_request_manage_list_update'),
+
 
     path('membership_form_sales_list_load/', deskofficer_views.membership_form_sales_list_load,name='membership_form_sales_list_load'),
     path('membership_form_sales_preview/<str:pk>/', deskofficer_views.membership_form_sales_preview,name='membership_form_sales_preview'),
@@ -508,6 +517,13 @@ urlpatterns = [
   
 
     ################################################################################
+    #################################### DAY END TRANSACTIONS ####################################
+    ################################################################################
+    path('MemberShipFormSalesSummary/', deskofficer_views.MemberShipFormSalesSummary,name='MemberShipFormSalesSummary'),
+    path('MemberShip_Form_Sales_Summary_Details/<str:pk>/', deskofficer_views.MemberShip_Form_Sales_Summary_Details,name='MemberShip_Form_Sales_Summary_Details'),
+    
+
+    ################################################################################
     #################################### REPORTS ####################################
     ################################################################################
 
@@ -517,6 +533,7 @@ urlpatterns = [
     path('Norminal_Roll_List_Load/', deskofficer_views.Norminal_Roll_List_Load,name='Norminal_Roll_List_Load'),
     path('Norminal_Roll_Personel_Detail/<str:pk>/', deskofficer_views.Norminal_Roll_Personel_Detail,name='Norminal_Roll_Personel_Detail'),
     
+    path('MemberShipFormSalesReport/', deskofficer_views.MemberShipFormSalesReport,name='MemberShipFormSalesReport'),
 
 
 
@@ -710,6 +727,7 @@ urlpatterns = [
     path('Members_Credit_sales_Cash_Deposit_search/', shop_views.Members_Credit_sales_Cash_Deposit_search,name='Members_Credit_sales_Cash_Deposit_search'),
     path('Members_Credit_sales_Cash_Deposit_list_load/', shop_views.Members_Credit_sales_Cash_Deposit_list_load,name='Members_Credit_sales_Cash_Deposit_list_load'),
     path('Members_Credit_sales_Cash_Deposit_Details/<str:pk>/', shop_views.Members_Credit_sales_Cash_Deposit_Details,name='Members_Credit_sales_Cash_Deposit_Details'),
+    path('Cash_Deposit_Summary/', shop_views.Cash_Deposit_Summary,name='Cash_Deposit_Summary'),
    
     path('Members_Credit_sales_ledger_search/', shop_views.Members_Credit_sales_ledger_search,name='Members_Credit_sales_ledger_search'),
     path('Members_Credit_sales_ledger_list_load/', shop_views.Members_Credit_sales_ledger_list_load,name='Members_Credit_sales_ledger_list_load'),
@@ -719,7 +737,7 @@ urlpatterns = [
     path('Daily_Sales_Summarization/<str:pk>/', shop_views.Daily_Sales_Summarization,name='Daily_Sales_Summarization'),
     path('Daily_Sales_Summary_Detail/<str:pk>/', shop_views.Daily_Sales_Summary_Detail,name='Daily_Sales_Summary_Detail'),
 
-    path('Daily_Sales_Summary_Report/', shop_views.Daily_Sales_Summary_Report,name='Daily_Sales_Summary_Report'),
+    path('Day_End_Transaction_Summary/', shop_views.Day_End_Transaction_Summary,name='Day_End_Transaction_Summary'),
     # path('Load_Credit_Sales/', shop_views.Load_Credit_Sales,name='Load_Credit_Sales'),
 
 
@@ -754,6 +772,12 @@ urlpatterns = [
     path('Product_Purchase_Add_Supplier/', shop_views.Product_Purchase_Add_Supplier,name='Product_Purchase_Add_Supplier'),
     path('Product_Purchase_Add_Supplier_Personnel/<str:pk>/<str:return_pk>/', shop_views.Product_Purchase_Add_Supplier_Personnel,name='Product_Purchase_Add_Supplier_Personnel'),
 
+    path('Purchase_Tracking_Manage/', shop_views.Purchase_Tracking_Manage,name='Purchase_Tracking_Manage'),
+    path('Purchase_Tracking_Details/<str:pk>/', shop_views.Purchase_Tracking_Details,name='Purchase_Tracking_Details'),
+    path('Purchase_Tracking_Details_Update/<str:pk>/', shop_views.Purchase_Tracking_Details_Update,name='Purchase_Tracking_Details_Update'),
+    path('Purchase_Tracking_Invoice_Date_Update/<str:pk>/', shop_views.Purchase_Tracking_Invoice_Date_Update,name='Purchase_Tracking_Invoice_Date_Update'),
+    
+
     path('Purchase_Certification_List_load/', shop_views.Purchase_Certification_List_load,name='Purchase_Certification_List_load'),
     path('Purchase_Certification_item_Preview/<str:pk>/', shop_views.Purchase_Certification_item_Preview,name='Purchase_Certification_item_Preview'),
     path('Purchase_Certification_item_Edit/<str:pk>/', shop_views.Purchase_Certification_item_Edit,name='Purchase_Certification_item_Edit'),
@@ -781,6 +805,12 @@ urlpatterns = [
     path('Purchase_Summary/', shop_views.Purchase_Summary,name='Purchase_Summary'),
     path('Purchase_Summary_Details/<str:pk>/', shop_views.Purchase_Summary_Details,name='Purchase_Summary_Details'),
     
+    path('Daily_Sales_Report_Summary/', shop_views.Daily_Sales_Report_Summary,name='Daily_Sales_Report_Summary'),
+    path('Daily_Sales_Report_Details/<str:pk>/', shop_views.Daily_Sales_Report_Details,name='Daily_Sales_Report_Details'),
+    path('Daily_Sales_Report_Receipt_Details/<str:pk>/', shop_views.Daily_Sales_Report_Receipt_Details,name='Daily_Sales_Report_Receipt_Details'),
+    path('Daily_Sales_Report_All_Details/<str:year>/<str:month>/<str:day>/<str:sales_category>/', shop_views.Daily_Sales_Report_All_Details,name='Daily_Sales_Report_All_Details'),
+   
+    path('Daily_Sales_All_Category_Report_Details/<str:d1>/<str:m1>/<str:y1>/<str:d2>/<str:m2>/<str:y2>/', shop_views.Daily_Sales_All_Category_Report_Details,name='Daily_Sales_All_Category_Report_Details'),
 
     path('load_branches/', shop_views.load_branches,name='ajax_load_branches'),
     

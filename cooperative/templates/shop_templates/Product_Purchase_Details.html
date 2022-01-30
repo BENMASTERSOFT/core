@@ -13,7 +13,25 @@
                         <div class="ibox-title">List of Products|{{invoice.branch.supplier.name}} | {{invoice.invoice}}|{{invoice.invoice_date}}
  <a class="btn btn-xs btn-success m-l-5" href="{% url 'Product_Purchase_Addnew_Item' invoice.pk %}">Add New Product</a>
                         </div>
+
                     </div>
+                    <div class="form-group">
+                                  {% if messages %}
+                                    
+                                      {% for message in messages %}
+                                      {% if message.tags == "info" %}
+                                      <div class="alert alert-info" style="margin-top:10px">{{message}}</div>
+                                      
+                                      {% endif %}
+
+                                      {% if message.tags == "success" %}
+                                      <div class="alert alert-success" style="margin-top:10px">{{message}}</div>
+                                      
+                                      {% endif %}
+                                      {% endfor %}
+                                  
+                                  {% endif %}
+                              </div>
                     <div class="ibox-body">
                         <table class="table table-striped table-bordered table-hover" id="example-table" cellspacing="0" width="100%">
                             <thead>
@@ -129,6 +147,7 @@
                                             </select>
                                         </div>
                                     </div>
+                                    
                                     <div class="form-group row">
                                         <div class="col-sm-9 ml-sm-auto">
                                             <button class="btn btn-info" type="submit">Process</button>

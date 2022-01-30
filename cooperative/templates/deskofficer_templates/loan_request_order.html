@@ -10,7 +10,7 @@
                     <div class="col-md-6">
                         <div class="ibox">
                             <div class="ibox-head">
-                                <div class="ibox-title">List of Loans | {{member.get_full_name}}</div>
+                                <div class="ibox-title">List of Loans | {{member.get_full_name}} | <input type="button" class="btn btn-primary" value="Back" onclick="history.back()"/></div>
                                
                             </div>
                             <div class="form-group">
@@ -89,7 +89,7 @@
                                             <td>{{loan.created_at}}</td>
                                             <td>
                                                 <a href="{% url 'loan_request_order_delete' loan.pk pk %}" class="btn btn-danger">Remove</a>
-                                                <a href="{% url 'loan_request_criteria_Load'  loan.pk %}" class="btn btn-success">Criterias {{loan.pk}}</a>
+                                                <a href="{% url 'loan_request_criteria_Load'  loan.pk %}" class="btn btn-success">Criterias </a>
                                             </td>
                                         </tr>
                                         {% endfor %}

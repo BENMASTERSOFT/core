@@ -1,0 +1,99 @@
+{% extends 'deskofficer_templates/base_template.html' %}
+{% load static %}
+
+{% block content %}
+            <div class="page-content fade-in-up">
+               
+                <div class="row">
+                  
+                    <div class="col-xl-7">
+                        <div class="ibox">
+                            <div class="ibox-head">
+                                <div class="ibox-title">Form Sales Details | <input type="button" class="btn btn-primary" value="Back" onclick="history.back()"/></div>
+                            </div>
+                            <div class="ibox-body">
+                                <table class="table table-bordered">
+                                    <thead class="thead-default">
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Description</th>
+                                            <th>Value</th>
+                                            
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>1</td>
+                                            <td>Name</td>
+                                            <td>{{record.applicant.last_name}} {{record.applicant.first_name}} {{record.applicant.middle_name}}</td>
+                                            
+                                        </tr>
+                                        <tr>
+                                            <td>2</td>
+                                            <td>Payment Reference</td>
+                                            <td>{{record.payment_reference}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>3</td>
+                                            <td>Receipt No</td>
+                                            <td>{{record.receipt}}</td>
+                                        </tr> 
+                                        <tr>
+                                            <td>4</td>
+                                            <td>Admin Charge</td>
+                                            <td>{{record.admin_charge}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>5</td>
+                                            <td>Total Shares</td>
+                                            <td>{{record.shares}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>6</td>
+                                            <td>Share Amount</td>
+                                            <td>{{record.share_amount}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>7</td>
+                                            <td>Welfare Amount</td>
+                                            <td>{{record.welfare_amount}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>8</td>
+                                            <td>Total Amount</td>
+                                            <td>{{record.total_amount}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>9</td>
+                                            <td>Bank Account</td>
+                                            <td>{{record.bank_ccount.account_name}}-{{record.bank_ccount.account_number}} -{{record.bank_ccount.bank.title}}</td>
+                                        </tr>
+                                        
+                                        <tr>
+                                            <td>10</td>
+                                            <td>Payment Slip</td>
+                                            <td>
+                                                {% if record.image %}
+                                                <img src="{{record.image}}" style="width:100px">
+                                                {% endif %}
+                                            </td>
+                                        </tr>
+                                    <tr>
+                                            <td>11</td>
+                                            <td>Date</td>
+                                            <td>{{record.tdate}}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+             
+           
+            </div>
+  <div class="sidenav-backdrop backdrop"></div>
+    <div class="preloader-backdrop">
+        <div class="page-preloader">Loading</div>
+    </div>
+{% endblock %}

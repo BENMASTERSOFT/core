@@ -6,35 +6,83 @@
                 <div class="row">
              
 
-                    <div class="col-md-6">
+                    <div class="col-md-8">
                         <div class="ibox">
                             <div class="ibox-head">
-                                <div class="ibox-title">Horizontal Form</div>
+                                <div class="ibox-title">CASH DEPOSIT DETAILS | {{member.member.member.get_full_name}}</div>
                                
                             </div>
+                              <div class="form-group">
+                                  {% if messages %}
+                                    
+                                      {% for message in messages %}
+                                      {% if message.tags == "error" %}
+                                      <div class="alert alert-danger" style="margin-top:10px">{{message}}</div>
+                                      
+                                      {% endif %}
+
+                                      {% if message.tags == "success" %}
+                                      <div class="alert alert-success" style="margin-top:10px">{{message}}</div>
+                                      
+                                      {% endif %}
+                                      {% endfor %}
+                                  
+                                  {% endif %}
+                              </div>
                             <div class="ibox-body">
-                                <form class="form-horizontal">
+                               <form class="form-horizontal" method="POST" action="">
+                                    {% csrf_token %}
                                     <div class="form-group row">
-                                        <label class="col-sm-2 col-form-label">Email</label>
-                                        <div class="col-sm-10">
-                                            <input class="form-control" type="text" placeholder="Email address">
+                                        <label class="col-sm-4 col-form-label">Bank</label>
+                                        <div class="col-sm-8">
+                                            {{form.bank}}
                                         </div>
                                     </div>
                                     <div class="form-group row">
-                                        <label class="col-sm-2 col-form-label">Password</label>
-                                        <div class="col-sm-10">
-                                            <input class="form-control" type="password" placeholder="Password">
+                                        <label class="col-sm-4 col-form-label">Payment Reference</label>
+                                        <div class="col-sm-8">
+                                            {{form.payment_reference}}
                                         </div>
                                     </div>
                                     <div class="form-group row">
-                                        <label class="col-sm-2 col-form-label">Gender</label>
-                                        <div class="col-sm-10">
-                                            <input class="form-control" type="password" placeholder="Password">
+                                        <label class="col-sm-4 col-form-label">Account Paid To</label>
+                                        <div class="col-sm-8">
+                                            {{form.account}}
+                                        </div>
+                                    </div>
+                                 <div class="form-group row">
+                                        <label class="col-sm-4 col-form-label">Account Due</label>
+                                        <div class="col-sm-8">
+                                            {{form.amount_due}}
+                                        </div>
+                                    </div>
+                                 <div class="form-group row">
+                                        <label class="col-sm-4 col-form-label">Account Paid</label>
+                                        <div class="col-sm-8">
+                                            {{form.amount_paid}}
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-sm-4 col-form-label">Receipt Type</label>
+                                        <div class="col-sm-8">
+                                            {{form.receipt_types}}
+                                        </div>
+                                    </div>   
+                                     <div class="form-group row">
+                                        <label class="col-sm-4 col-form-label">Receipt No</label>
+                                        <div class="col-sm-8">
+                                            {{form.receipt}}
+                                        </div>
+                                    </div> 
+                                    <div class="form-group row">
+                                        <label class="col-sm-4 col-form-label">Payment Date</label>
+                                        <div class="col-sm-8">
+                                            {{form.payment_date}}
                                         </div>
                                     </div>
                                  
                                     <div class="form-group row">
-                                        <div class="col-sm-10 ml-sm-auto">
+                                        <div class="col-sm-8 ml-sm-auto">
                                             <button class="btn btn-info" type="submit">Submit</button>
                                         </div>
                                     </div>

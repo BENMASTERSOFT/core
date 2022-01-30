@@ -1,0 +1,64 @@
+{% extends 'shop_templates/base_template.html' %}
+{% load static %}
+
+{% block content %}
+            <div class="page-content fade-in-up">
+                <div class="row">
+                   
+                    <div class="col-xl-12">
+                        <div class="ibox">
+                            <div class="ibox-head">
+                                <div class="ibox-title">Sales Full List | {{request.user.username}}</div>
+                            </div>
+                            <div class="ibox-body">
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                             <th>#</th>
+                                            <th>Name</th>
+                                            <th>Code</th>
+                                            <th>Item Name</th>
+                                            <th>Quantity</th>
+                                            <th>Unit Price</th>
+                                            <th>Total</th>
+                                            <th>Receipt No</th>
+                                            <th>Category</th>
+                                     
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for record in records %}
+                                        <tr>
+                                            <td>{{forloop.counter}}</td>
+                                            <td>{{record.name}}</td>
+                                            <td>{{record.product.code}}</td>
+                                            <td>{{record.product.item_name}}</td>
+                                            <td>{{record.quantity}}</td>
+                                            <td>{{record.unit_selling_price}}</td>
+                                            <td>{{record.total}}</td>
+                                            <td>{{record.receipt}}</td>
+                                            <td>{{record.sales_category.title}}</td>
+                                            
+                                            
+                                        </tr>
+                                    {% endfor %}
+                                    <tr>
+                                        <td colspan="5"></td>
+                                        <td>Total</td>
+                                        <td>{{total_amount}}</td>
+                                        <td colspan="2"></td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            
+           
+            </div>
+  <div class="sidenav-backdrop backdrop"></div>
+    <div class="preloader-backdrop">
+        <div class="page-preloader">Loading</div>
+    </div>
+{% endblock %}

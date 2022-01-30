@@ -40,6 +40,9 @@ def deskofficer_home(request):
 def desk_basic_form(request):
 	return render(request, 'deskofficer_templates/basics/basic_form1.html')
 
+def desk_advanced_form(request):
+	return render(request, 'deskofficer_templates/basics/advanced_form.html')
+
 
 def desk_basic_table(request):
 	return render(request, 'deskofficer_templates/basics/basic_tables.html')
@@ -106,6 +109,12 @@ def membership_request(request):
 	DataCapture=DataCaptureManager.objects.first()
 	form=MembershipRequest_form(request.POST or None)
 	if request.method=="POST":
+		tday=now.day
+		tmonth=now.month
+		tyear=now.year
+
+		tdate=date(tyear,tmonth,tday)
+		
 		form=MembershipRequest_form(request.POST)
 		processed_by = CustomUser.objects.get(id=request.user.id)
 		
@@ -122,7 +131,7 @@ def membership_request(request):
 
 		department_id=request.POST.get("department")
 		department=Departments.objects.get(id=department_id)
-		record=MemberShipRequest(title=title,first_name=first_name,last_name=last_name,middle_name=middle_name,phone_number=phone_no,gender=gender,department=department,processed_by=processed_by)
+		record=MemberShipRequest(tdate=tdate,title=title,first_name=first_name,last_name=last_name,middle_name=middle_name,phone_number=phone_no,gender=gender,department=department,processed_by=processed_by)
 		record.save()
 
 		
@@ -254,6 +263,22 @@ def MemberShipRequestAdditionalAttachment_save(request,pk):
 	return HttpResponseRedirect(reverse('membership_request_additional_info',args=(pk,)))
 
 
+def MemberShipRequest_Delete_confirmation(request,pk):
+	title="Delete Applicant"
+	applicant=MemberShipRequest.objects.get(id=pk)
+	context={
+	'title':title,
+	'applicant':applicant,
+	}
+	return render(request,'deskofficer_templates/MemberShipRequest_Delete_confirmation.html',context)
+
+
+def MemberShipRequest_Delete(request,pk):
+	applicant=MemberShipRequest.objects.get(id=pk)
+	applicant.delete()
+	return HttpResponseRedirect(reverse('membership_request_complete_search'))
+
+
 def MemberShipRequest_submit(request,pk):
 	DataCapture=DataCaptureManager.objects.first()
 	form=MemberShipRequest_submit_form(request.POST or None)
@@ -275,6 +300,88 @@ def MemberShipRequest_submit(request,pk):
 	'DataCapture':DataCapture,
 	}
 	return render(request,'deskofficer_templates/MemberShipRequest_submit.html', context)
+
+
+def membership_request_manage_search(request):
+	DataCapture=DataCaptureManager.objects.first()
+	title="Search Membership Request for Update"
+	form = searchForm(request.POST or None)
+	return render(request,'deskofficer_templates/membership_request_manage_search.html',{'form':form,'title':title,})
+
+def membership_request_manage_list_load(request):
+	DataCapture=DataCaptureManager.objects.first()
+	title="Update Membership Request"
+	form = searchForm(request.POST)
+	if request.method == "POST":
+		if request.POST.get("title")=="":
+			return HttpResponseRedirect(reverse('membership_request_manage_search'))
+
+		submission_status=SubmissionStatus.objects.get(title="SUBMITTED")
+		certification_status=CertificationStatus.objects.get(title="PENDING")
+		
+		form = searchForm(request.POST)
+		members=MemberShipRequest.objects.filter(Q(phone_number__icontains=form['title'].value()) | Q(first_name__icontains=form['title'].value()) | Q(last_name__icontains=form['title'].value()) | Q(middle_name__icontains=form['title'].value())).filter(submission_status=submission_status,certification_status=certification_status)
+		context={
+		'members':members,
+		'title':title,
+		'DataCapture':DataCapture,
+		}
+		return render(request,'deskofficer_templates/membership_request_manage_list_load.html',context)
+
+
+def membership_request_manage_list_update(request,pk):
+	form_request=MembershipRequest_form(request.POST or None) 
+	form_submit=MemberShipRequest_submit_form(request.POST or None)
+	applicant=MemberShipRequest.objects.get(id=pk)
+
+	form_request.fields['titles'].initial=applicant.title.id
+	form_request.fields['last_name'].initial=applicant.last_name
+	form_request.fields['first_name'].initial=applicant.first_name
+	form_request.fields['middle_name'].initial=applicant.middle_name
+	form_request.fields['phone_no'].initial=applicant.phone_number
+	form_request.fields['gender'].initial=applicant.gender.id
+	form_request.fields['department'].initial=applicant.department.id
+	form_submit.fields['certification_officers'].initial=applicant.certification_officer.id
+	
+	if request.method == 'POST':	
+		
+		processed_by = CustomUser.objects.get(id=request.user.id)
+		
+		title_id=request.POST.get("titles")
+		title=Titles.objects.get(id=title_id)
+
+		first_name=request.POST.get("first_name").upper()
+		last_name=request.POST.get("last_name").upper()
+		middle_name=request.POST.get("middle_name").upper()
+		phone_no=request.POST.get("phone_no")
+
+		gender_id=request.POST.get("gender")
+		gender=Gender.objects.get(id=gender_id)
+
+		department_id=request.POST.get("department")
+		department=Departments.objects.get(id=department_id)		
+
+		certification_officer_id=request.POST.get("certification_officers")
+		certification_officer=CertificationOfficers.objects.get(id=certification_officer_id)
+		
+		applicant.title=title
+		applicant.first_name=first_name
+		applicant.last_name=last_name
+		applicant.middle_name=middle_name
+		applicant.phone_number=phone_no
+		applicant.gender=gender
+		applicant.department=department
+		applicant.certification_officer=certification_officer
+		applicant.processed_by=processed_by
+		applicant.save()
+
+		return HttpResponseRedirect(reverse('membership_request_manage_search'))
+
+	context={
+	'form_request':form_request,
+	'form_submit':form_submit,
+	}
+	return render(request,'deskofficer_templates/membership_request_manage_list_update.html',context)
 
 
 def membership_form_sales_list_load(request):
@@ -328,15 +435,26 @@ def membership_form_sales_issue(request,pk):
 
 
 	if request.method=="POST":
+		tyear = now.year
+		tmonth = now.month
+		tday = now.day
+		tdate = date(tyear, tmonth, tday)
+
+		
 		transaction_status1=TransactionStatus.objects.get(title='UNTREATED')
 		transaction_status=TransactionStatus.objects.get(title='TREATED')
 		processed_by=CustomUser.objects.get(id=request.user.id)
 		status=ReceiptStatus.objects.get(title='USED')
 
+		form_print_id = request.POST.get('form_print')
+		form_print = YesNo.objects.get(id=form_print_id)
+
 		bank_ccount_id=request.POST.get('account')
 		bank_ccount=CooperativeBankAccounts.objects.get(id=bank_ccount_id)
 	
 		payment_reference=request.POST.get('payment_reference')
+	
+
 		if payment_reference=="":
 			messages.error(request,'Payment Reference is required')
 			return HttpResponseRedirect(reverse('membership_form_sales_issue',args=(pk,)))
@@ -375,7 +493,7 @@ def membership_form_sales_issue(request,pk):
 
 
 	
-		record=MemberShipFormSalesRecord(payment_reference=payment_reference,image=image_url,bank_ccount=bank_ccount,welfare_amount=welfare,receipt=receipt,applicant=applicant,shares=share_unit,share_amount=total_shares,admin_charge=registration_fees,processed_by=processed_by,status=transaction_status1)
+		record=MemberShipFormSalesRecord(total_amount=amount_due,tdate=tdate,payment_reference=payment_reference,image=image_url,bank_ccount=bank_ccount,welfare_amount=welfare,receipt=receipt,applicant=applicant,shares=share_unit,share_amount=total_shares,admin_charge=registration_fees,processed_by=processed_by,status=transaction_status1)
 		record.save()
 
 		if receipt_types_status==True:
@@ -387,14 +505,21 @@ def membership_form_sales_issue(request,pk):
 
 		applicant.transaction_status=transaction_status
 		applicant.save()
+		
+		if form_print.title == 'NO':
+			messages.success(request,"Record Added Successfully")
+			return HttpResponseRedirect(reverse('membership_form_sales_list_load'))
+		elif form_print.title == "YES":
+			print("Form printing")
+			messages.success(request,"Record Added Successfully")
+			return HttpResponseRedirect(reverse('membership_form_sales_list_load'))
 
-		messages.success(request,"Record Added Successfully")
-		return HttpResponseRedirect(reverse('membership_form_sales_list_load'))
-	
+
 	form.fields['share_unit_cost'].initial=shares_uint_cost
 	form.fields['welfare'].initial=welfare
 	form.fields['registration_fees'].initial=registration_fees
 	form.fields['receipt'].initial=0
+	form.fields['form_print'].initial=0
 
 	context={
 	'form':form,
@@ -423,7 +548,7 @@ def membership_registration_list_load(request):
 def membership_registration_register(request,pk):
 	DataCapture=DataCaptureManager.objects.first()
 	applicant=MemberShipFormSalesRecord.objects.get(id=pk)
-	# now = datetime.datetime.now()
+	states=States.objects.all()
 	processed_by = CustomUser.objects.get(id=request.user.id)
 
 	shares=applicant.shares
@@ -443,9 +568,17 @@ def membership_registration_register(request,pk):
 	form.fields['date_joined'].initial=now
 	
 	if request.method=="POST":
-		
+
+		tday=now.day
+		tmonth=now.month
+		tyear=now.year
+
+		tdate=date(int(tyear),int(tmonth),int(tday))
+
 		form=membership_registration_register_form(request.POST)
 		status=TransactionStatus.objects.get(title='TREATED')
+
+		form_print = request.POST.get('form_print')
 
 		member_id_obj = MembersIdManager.objects.first()
 		default_password = DefaultPassword.objects.first()
@@ -485,11 +618,11 @@ def membership_registration_register(request,pk):
 		department_id = request.POST.get("department")
 		department = Departments.objects.get(id=department_id)
 
-		state_id = request.POST.get("state")
-		state = States.objects.get(id=state_id)
+		lga_id=request.POST.get('lga')
+		lga=Lga.objects.get(id=lga_id)
 		
-		lga_id = request.POST.get("lga")
-		lga = Lga.objects.get(id=lga_id)
+		state = lga.state
+			
 
 		salary_institution_id = request.POST.get("salary_institution")
 		salary_institution = SalaryInstitution.objects.get(id=salary_institution_id)
@@ -526,73 +659,76 @@ def membership_registration_register(request,pk):
 			messages.error(request,"Missing Username")
 			return HttpResponseRedirect(reverse('membership_registration_register',args=(pk,)))
 			
-		# try:
-		user = CustomUser.objects.create_user(username=username,password=password,email=email,last_name=last_name,first_name=first_name,user_type=int(user_type))
-		user.members.applicant=applicant
-		user.members.member_id=member_id
-		user.members.title=title
-		user.members.middle_name=middle_name
-		user.members.full_name=str(first_name) + ' ' + str(last_name) + ' ' + str(middle_name)
-		user.members.phone_number=phone_number
-		user.members.gender=gender
-		user.members.residential_address=residential_address
-		user.members.permanent_home_address=permanent_home_address
-		user.members.department=department
-		user.members.state=state
-		user.members.lga=lga
-		user.members.salary_institution=salary_institution
-		user.members.file_no=file_no
-		user.members.ippis_no=ippis_no
-		user.members.date_joined=date_joined
-	
-	
-		if profile_pic_url!=None:
-			user.members.profile_pic=profile_pic_url
-
-		user.save()
-		
-		member_id_obj.member_id=int(member_id_obj.member_id) + 1
-		member_id_obj.save()
-		
-		share_account=MembersAccountsDomain(member=user.members,transaction=share_transaction,account_number=share_account)
-		share_account.save()
-		
-		share_record=MembersShareAccounts(member=share_account,shares=shares,unit_cost=unit_cost,total_cost=total_cost,effective_date=now,year=now.year,processed_by=processed_by)
-		share_record.save()
+		try:
+			user = CustomUser.objects.create_user(username=username,password=password,email=email,last_name=last_name,first_name=first_name,user_type=int(user_type))
+			user.members.applicant=applicant
+			user.members.member_id=member_id
+			user.members.title=title
+			user.members.middle_name=middle_name
+			user.members.full_name=str(first_name) + ' ' + str(last_name) + ' ' + str(middle_name)
+			user.members.phone_number=phone_number
+			user.members.gender=gender
+			user.members.residential_address=residential_address
+			user.members.permanent_home_address=permanent_home_address
+			user.members.department=department
+			user.members.state=state
+			user.members.lga=lga
+			user.members.salary_institution=salary_institution
+			user.members.file_no=file_no
+			user.members.ippis_no=ippis_no
+			user.members.date_joined=date_joined
 		
 		
+			if profile_pic_url!=None:
+				user.members.profile_pic=profile_pic_url
 
-		particulars=share_transaction.name + " INITIAL PURCHASE OF " + str(shares) + ' BY ' + str(unit_cost) + " PER A UNIT"
-		debit=0
-		credit=float(total_cost)
-		balance=credit
+			user.save()
+			
+			member_id_obj.member_id=int(member_id_obj.member_id) + 1
+			member_id_obj.save()
+			
+			share_account=MembersAccountsDomain(member=user.members,transaction=share_transaction,account_number=share_account)
+			share_account.save()
+			
+			share_record=MembersShareAccounts(member=share_account,shares=shares,unit_cost=unit_cost,total_cost=total_cost,effective_date=now,year=now.year,processed_by=processed_by)
+			share_record.save()
+			
+			
 
-		ledger_status=MembershipStatus.objects.get(title='ACTIVE')
-		record=PersonalLedger(member=user.members,transaction=share_transaction,account_number=share_account.account_number,particulars=particulars,debit=debit,credit=credit,balance=abs(balance),transaction_period=now,status=ledger_status)
-		record.save()
+			particulars=share_transaction.name + " INITIAL PURCHASE OF " + str(shares) + ' BY ' + str(unit_cost) + " PER A UNIT"
+			debit=0
+			credit=float(total_cost)
+			balance=credit
 
-		welfare_account=MembersAccountsDomain(member=user.members,transaction=welfare_transaction,account_number=welfare_account)
-		welfare_account.save()
+			ledger_status=MembershipStatus.objects.get(title='ACTIVE')
+			record=PersonalLedger(tdate=tdate,member=user.members,transaction=share_transaction,account_number=share_account.account_number,particulars=particulars,debit=debit,credit=credit,balance=abs(balance),transaction_period=now,status=ledger_status)
+			record.save()
 
-		welfare_record=MembersWelfareAccounts(member=welfare_account,amount=welfare_amount,year=now.year)
-		welfare_record.save()
+			welfare_account=MembersAccountsDomain(member=user.members,transaction=welfare_transaction,account_number=welfare_account)
+			welfare_account.save()
 
-
-
-
-		applicant.status=status
-		applicant.save()
+			welfare_record=MembersWelfareAccounts(member=welfare_account,amount=welfare_amount,year=now.year)
+			welfare_record.save()
 
 
-		return HttpResponseRedirect(reverse("membership_registration_list_load"))
-		# except:
-		# 	messages.error(request,"Failed to add Member")
-		# 	return HttpResponseRedirect(reverse('membership_registration_register',args=(pk,)))
+
+
+			applicant.status=status
+			applicant.save()
+
+			if form_print=="YES":
+				return HttpResponse("PRINTING FORM")
+			elif form_print == "NO":		
+				return HttpResponseRedirect(reverse("membership_registration_list_load"))
+		except:
+			messages.error(request,"Failed to add Member")
+			return HttpResponseRedirect(reverse('membership_registration_register',args=(pk,)))
 	
 	context={
 	'form':form,
 	'applicant':applicant,
 	'DataCapture':DataCapture,
+	'states':states,
 	}
 	return render(request,'deskofficer_templates/membership_registration_register.html',context)
 
@@ -613,12 +749,14 @@ def Members_Account_Creation_list_load(request):
 	title="Loan Request order"
 	form = searchForm(request.POST)
 	if request.method == "POST":
-		if request.POST.get("title")=="":
-			return HttpResponseRedirect(reverse('Members_Account_Creation_Search'))
-
 		status=MembershipStatus.objects.get(title="ACTIVE")
 		form = searchForm(request.POST)
+		if not form['title'].value():
+			return HttpResponseRedirect(reverse('Members_Account_Creation_Search'))
+
 		members=Members.objects.filter(Q(file_no__icontains=form['title'].value()) | Q(ippis_no__icontains=form['title'].value()) | Q(member_id__icontains=form['title'].value()) |Q(phone_number__icontains=form['title'].value()) | Q(admin__first_name__icontains=form['title'].value()) | Q(admin__last_name__icontains=form['title'].value()) | Q(middle_name__icontains=form['title'].value())).filter(status=status)
+		if not members:
+			return HttpResponseRedirect(reverse('Members_Account_Creation_Search'))
 		context={
 		'members':members,
 		'title':title,
@@ -813,36 +951,37 @@ def standing_order_form(request,pk):
 
 		if MembersAccountsDomain.objects.filter(member=applicant,transaction=saving).exists():
 			account_number=MembersAccountsDomain.objects.get(member=applicant,transaction=saving)
+		if account_number:
+			amount=request.POST.get("amount")
 
-		amount=request.POST.get("amount")
+			minimum_amount = saving.minimum_amount
+			
+			if float(amount)<=0:
+				messages.error(request,"Amount  cannot be zero(0)")
+				return HttpResponseRedirect(reverse('standing_order_form', args=(pk,)))
 
-		minimum_amount = saving.minimum_amount
-		
-		if float(amount)<=0:
-			messages.error(request,"Amount  cannot be zero(0)")
+
+			if float(amount)<float(minimum_amount):
+				messages.error(request,"Amount Specified is Less than " + str(minimum_amount) + " Minimum Amount allowed for this Transaction")
+				return HttpResponseRedirect(reverse('standing_order_form', args=(pk,)))
+
+			if StandingOrderAccounts.objects.filter(transaction=account_number).exists():
+				member=StandingOrderAccounts.objects.get(transaction=account_number)
+				if member.lock_status.title == 'OPEN':
+					member.amount=amount
+					member.save()
+				else:
+					messages.error(request,"This Transaction is Locked, Update not Allowed from this point")
+				return HttpResponseRedirect(reverse('standing_order_form', args=(pk,)))
+
+
+			member=StandingOrderAccounts(transaction=account_number,amount=amount)
+			member.save()
 			return HttpResponseRedirect(reverse('standing_order_form', args=(pk,)))
 
-
-		if float(amount)<float(minimum_amount):
-			messages.error(request,"Amount Specified is Less than " + str(minimum_amount) + " Minimum Amount allowed for this Transaction")
+		else:
+			messages.error(request,"Account Number not Found")
 			return HttpResponseRedirect(reverse('standing_order_form', args=(pk,)))
-
-		if StandingOrderAccounts.objects.filter(transaction=account_number).exists():
-			member=StandingOrderAccounts.objects.get(transaction=account_number)
-			if member.lock_status.title == 'OPEN':
-				member.amount=amount
-				member.save()
-			else:
-				messages.error(request,"This Transaction is Locked, Update not Allowed from this point")
-			return HttpResponseRedirect(reverse('standing_order_form', args=(pk,)))
-
-
-		member=StandingOrderAccounts(transaction=account_number,amount=amount)
-		member.save()
-		return HttpResponseRedirect(reverse('standing_order_form', args=(pk,)))
-
-
-	
 	context={
 	'applicant':applicant,
 	'form':form,
@@ -1158,6 +1297,11 @@ def loan_request_order(request,pk):
 	exist_loans = LoanRequest.objects.filter(member_id=member,submission_status=submission_status,transaction_status=transaction_status)
 
 	if request.method=="POST":
+		tday=now.day
+		tmonth=now.month
+		tyear=now.year
+		tdate = date(int(tyear),int(tmonth),int(tday))
+
 		form=loan_request_order_form(request.POST)
 		if form.is_valid():
 			category=LoanCategory.objects.get(title='MONETARY')
@@ -1194,7 +1338,7 @@ def loan_request_order(request,pk):
 				messages.error(request,"You still have Open Transaction")
 				return HttpResponseRedirect(reverse('loan_request_order', args=(pk,)))
 
-			record=LoanRequest(member=member,loan_amount=amount,loan=loan,submission_status=submission_status,transaction_status=transaction_status,processed_by=processed_by)
+			record=LoanRequest(tdate=tdate,member=member,loan_amount=amount,loan=loan,submission_status=submission_status,transaction_status=transaction_status,processed_by=processed_by)
 			record.save()
 			return HttpResponseRedirect(reverse('loan_request_order', args=(pk,)))
 	context={
@@ -1348,7 +1492,7 @@ def loan_request_preview(request,pk):
 	
 		savings_ledger=PersonalLedger.objects.filter(account_number=account_id.transaction.account_number).last()
 		savings_saved=savings_ledger.balance
-		
+
 	loan_based_saving_rating=applicant.loan.savings_rate
 
 
@@ -1419,7 +1563,7 @@ def loan_request_preview(request,pk):
 	else:
 		amount_scheduled = float(loan_amount)+ float(interest)
 	if int(duration) == 0:
-		messages.info(request,'Please set the Loan Dusration')
+		messages.info(request,'Please set the Loan Duration')
 		return HttpResponseRedirect(reverse('loan_request_criteria_Load', args=(pk,)))
 	
 	part1= float(amount_scheduled)//float(duration)
@@ -1444,11 +1588,17 @@ def loan_request_preview(request,pk):
 	certification_officers=CertificationOfficers.objects.filter(transaction__transaction_id=applicant.loan_id)
 
 	if request.method=="POST":
+		
 		submission_status=SubmissionStatus.objects.get(title="SUBMITTED")
 		comment=request.POST.get("comment")
 		officer_id=request.POST.get("officer")
+		if not officer_id:
+			messages.error(request,'Please the Certification Officer is missing')
+			return HttpResponseRedirect(reverse('loan_request_preview',args=(pk,)))
+		
 		officer=CertificationOfficers.objects.get(id=officer_id)
 		applicant.certification_officer=officer
+		
 		applicant.comment=comment
 		applicant.submission_status=submission_status
 		applicant.save()
@@ -1554,13 +1704,16 @@ def loan_request_preview(request,pk):
 		value=loan_based_saving.savings.name
 		loan_setting=LoanRequestSettings(applicant=applicant,description=description,value=value,category='ANALYSIS')
 		loan_setting.save()
+		
+		description="AMOUNT SAVED"
+		value='#' + str(savings_saved)
+		loan_setting=LoanRequestSettings(applicant=applicant,description=description,value=value,category='ANALYSIS')
+		loan_setting.save()
 
 		description="LOAN BASED SAVINGS RATE"
 		value=str(loan_based_saving_rating) + "%"
 		loan_setting=LoanRequestSettings(applicant=applicant,description=description,value=value,category='ANALYSIS')
-		loan_setting.save()
-
-
+		loan_setting.save()	
 
 		description="MEMBER STATUS"
 		value=Member_Status
@@ -1634,6 +1787,7 @@ def loan_request_preview(request,pk):
 	'loan_savings_status':loan_savings_status,
 	'button_enabled':button_enabled,
 	'DataCapture':DataCapture,
+	'savings_saved':savings_saved,
 	}
 
 	return render(request,'deskofficer_templates/loan_request_preview.html',context)
@@ -1658,6 +1812,12 @@ def loan_request_approved_list_form_sales(request,pk):
 	loan=LoanRequest.objects.get(id=pk)
 	loan_amount=loan.approved_amount
 	admin_charges_minimum = loan.loan.admin_charges_minimum
+	receipt_type = loan.loan.receipt_type
+
+	tday=now.day
+	tmonth=now.month
+	tyear=now.year
+	tdate=date(int(tyear),int(tmonth),int(tday))
 
 	if float(loan_amount)> float(admin_charges_minimum):
 		if loan.loan.admin_charges_rating.title == 'PERCENTAGE':
@@ -1671,18 +1831,30 @@ def loan_request_approved_list_form_sales(request,pk):
 
 	form = loan_request_approved_list_form_sales_form(request.POST or None)
 	form.fields['amount'].initial=admin_charge
+	form.fields['loan_amount'].initial=loan_amount
 
 	if request.method == "POST":
 		transaction_status=TransactionStatus.objects.get(title='TREATED')
-		receipt_no_id = request.POST.get('receipt')
-		if Receipts.objects.filter(receipt=receipt_no_id).exists():
-			receipt_obj = Receipts.objects.get(receipt=receipt_no_id)
-			receipt=receipt_obj.receipt
+		form_print=request.POST.get('status')
+
+		if receipt_type.title == "MANUAL":
+			receipt_no_id = request.POST.get('receipt')
+			if Receipts.objects.filter(receipt=receipt_no_id).exists():
+				receipt_obj = Receipts.objects.get(receipt=receipt_no_id)
+				receipt=receipt_obj.receipt
+			else:
+				messages.error(request,'Receipt do not exist')
+				return HttpResponseRedirect(reverse('loan_request_approved_list_form_sales',args=(pk,)))
+		elif receipt_type.title == "AUTO":
+			receipt_obj=AutoReceipt.objects.first()
+			receipt='C-' + str(receipt_obj.receipt).zfill(5)
+			receipt_obj.receipt=int(receipt_obj.receipt)+1
+			receipt_obj.save()
 		else:
-			messages.error(request,'Receipt do not exist')
+			messages.error(request,'Receipt Format No Set')
 			return HttpResponseRedirect(reverse('loan_request_approved_list_form_sales',args=(pk,)))
 
-		record = LoanFormIssuance(applicant=loan,receipt=receipt,admin_charge=admin_charge)
+		record = LoanFormIssuance(tdate=tdate,applicant=loan,receipt=receipt,admin_charge=admin_charge)
 		record.save()
 
 		loan.transaction_status=transaction_status
@@ -1691,11 +1863,16 @@ def loan_request_approved_list_form_sales(request,pk):
 		receipt_status=ReceiptStatus.objects.get(title='USED')
 		receipt_obj.status=receipt_status
 		receipt_obj.save()
-		return HttpResponseRedirect(reverse('loan_request_approved_list_load'))
+		
+		if form_print == '2':
+			print("Printing Form")
+			return HttpResponseRedirect(reverse('loan_request_approved_list_load'))
+		elif form_print == '1':
+			return HttpResponseRedirect(reverse('loan_request_approved_list_load'))
 	context={
 	'form':form,
 	'loan':loan,
-
+	'receipt_type':receipt_type,
 	'DataCapture':DataCapture,
 	}
 	return render(request,'deskofficer_templates/loan_request_approved_list_form_sales.html',context)
@@ -4366,12 +4543,9 @@ def Uploading_Existing_Savings_Preview(request,pk):
 
 		if SavingsUploaded.objects.filter(transaction=member).exists():
 			record=SavingsUploaded.objects.get(transaction=member)
-			record.particulars=particulars
-			record.balance=balance
-			record.schedule_amount=schedule_amount,
-			record.processed_by=processed_by
-			record.status=transaction_status
-			record.transaction_period=transaction_period
+			record.delete()
+
+			record=SavingsUploaded(transaction=member,particulars=particulars,balance=balance,schedule_amount=schedule_amount,processed_by=processed_by,status=transaction_status,transaction_period=transaction_period)
 			record.save()
 			messages.success(request,"Record Updated Successfully")
 		else:
@@ -7024,5 +7198,92 @@ def PersonalLedger_Transaction_Account_Load(request,pk,trans_id):
 	return render(request,'deskofficer_templates/PersonalLedger_Transaction_Account_Load.html',context)
 
 
+def MemberShipFormSalesReport(request):
+	form=Purchase_Summary_form(request.POST or None)
+
+	form.fields['stop_date'].initial=now
+	form.fields['start_date'].initial=now
+
+	records=[]
+	if request.method == 'POST':
+		start_date = request.POST.get('start_date')
+		stop_date = request.POST.get('stop_date')
+	
+		date_format = '%Y-%m-%d'
+		tdate1 = datetime.datetime.strptime(start_date, date_format)
+	
+		tdate2 = datetime.datetime.strptime(stop_date, date_format)
+		records=MemberShipFormSalesRecord.objects.filter(tdate__range=[tdate1,tdate2])
+		
 
 
+
+	context={
+	'form':form,
+	'records':records,
+	}
+	return render(request,'deskofficer_templates/MemberShipFormSalesReport.html',context)
+
+##############################################################
+################### DAT END TRANSACTIONS ####################
+#############################################################
+
+def MemberShipFormSalesSummary(request):
+	form=Purchase_Summary_form(request.POST or None)
+	processed_by=CustomUser.objects.get(id=request.user.id)
+	status=TransactionStatus.objects.get(title="UNTREATED")
+	status1=TransactionStatus.objects.get(title="TREATED")
+
+	form.fields['start_date'].initial=now
+
+	records=[]
+	button_show=False
+	if request.method == 'POST' and 'btn_fetch' in request.POST:
+		
+		start_date = request.POST.get('start_date')
+		
+	
+		date_format = '%Y-%m-%d'
+		tdate1 = datetime.datetime.strptime(start_date, date_format)
+
+		button_show=False
+		records=MemberShipFormSalesRecord.objects.filter(tdate=tdate1,processed_by=processed_by,status=status)
+		if records:
+			button_show=True
+
+	if request.method == 'POST' and 'btn_submit' in request.POST:
+		start_date = request.POST.get('start_date')
+		
+	
+		date_format = '%Y-%m-%d'
+		tdate1 = datetime.datetime.strptime(start_date, date_format)
+
+		records=MemberShipFormSalesRecord.objects.filter(tdate=tdate1,processed_by=processed_by,status=status)
+		queryset=MemberShipFormSalesRecord.objects.filter(tdate=tdate1,processed_by=processed_by,status=status).aggregate(total=Sum('total_amount'))
+		
+		total_amount=queryset['total']
+		record= Day_End_Desk_Office_Transactions(description="MEMBERSHIP FORM SALES",
+												amount=total_amount,
+												processed_by=processed_by,
+												status=status,
+												tdate=tdate1,
+											)
+		record.save()
+
+		MemberShipFormSalesRecord.objects.filter(tdate=tdate1,processed_by=processed_by,status=status).update(status=status1)
+		return HttpResponseRedirect(reverse('deskofficer_home'))
+
+
+	context={
+	'form':form,
+	'records':records,
+	'button_show':button_show,
+	}
+	return render(request,'deskofficer_templates/MemberShipFormSalesSummary.html',context)
+
+def MemberShip_Form_Sales_Summary_Details(request,pk):
+	record=MemberShipFormSalesRecord.objects.get(id=pk)
+	context={
+	'record':record,
+	}
+	return render(request,'deskofficer_templates/MemberShip_Form_Sales_Summary_Details.html',context)

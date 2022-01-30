@@ -28,6 +28,9 @@
                             <li>
                                 <a href="{% url 'membership_request_complete_search' %}">Complete Request</a>
                             </li>
+                              <li>
+                                <a href="{% url 'membership_request_manage_search' %}">Manage Request</a>
+                            </li>
                             <li>
                                 <a href="{% url 'membership_form_sales_list_load' %}">Membership Form Sales</a>
                             </li>
@@ -365,10 +368,30 @@
                             
                         </ul>
                     </li>
-                <li>
+                      <li>
+                        <a href="javascript:;"><i class="sidebar-item-icon fa fa-sitemap"></i>
+                            <span class="nav-label">Day End Transactions</span><i class="fa fa-angle-left arrow"></i></a>
+                        <ul class="nav-2-level collapse">
+                             <li>
+                                <a href="{% url 'MemberShipFormSalesSummary' %}">Membership Form Sales</a>
+                            </li>
+
+                             <li>
+                                <a href="{% url 'Cash_Deposit_Report_Date_Load' %}">Loan Form Sales</a>
+                            </li>
+ <li>
+                                <a href="{% url 'Cash_Deposit_Report_Date_Load' %}">Cash Deposit</a>
+                            </li>
+
+                        </ul>
+                    </li>
+                    <li>
                         <a href="javascript:;"><i class="sidebar-item-icon fa fa-sitemap"></i>
                             <span class="nav-label">General Reports</span><i class="fa fa-angle-left arrow"></i></a>
                         <ul class="nav-2-level collapse">
+                             <li>
+                                <a href="{% url 'MemberShipFormSalesReport' %}">Membership Form Sales</a>
+                            </li>
 
                              <li>
                                 <a href="{% url 'Cash_Deposit_Report_Date_Load' %}">Cash Deposit</a>
@@ -393,6 +416,9 @@
                                 <a href="javascript:;">
                                     <span class="nav-label">Loan</span><i class="fa fa-angle-left arrow"></i></a>
                                 <ul class="nav-3-level collapse">
+                                    <li>
+                                        <a href="{% url 'Load_Active_loans' %}">Loans Applcations</a>
+                                    </li>
                                     <li>
                                         <a href="{% url 'Load_Active_loans' %}">Active Loans</a>
                                     </li>
@@ -532,7 +558,7 @@
                             <span class="nav-label">Menu Levels</span><i class="fa fa-angle-left arrow"></i></a>
                         <ul class="nav-2-level collapse">
                             <li>
-                                <a href="javascript:;">Level 2</a>
+                                <a href="{% url 'desk_advanced_form' %}">Level 2</a>
                             </li>
                             <li>
                                 <a href="javascript:;">

@@ -3,6 +3,8 @@
 
 {% block content %}
             <div class="page-content fade-in-up">
+             <form class="form-horizontal" method="POST" action="">
+                                    {% csrf_token %}
                 <div class="row">
                   
 
@@ -13,8 +15,7 @@
                                 
                             </div>
                             <div class="ibox-body">
-                                 <form class="form-horizontal" method="POST" action="">
-                                    {% csrf_token %}
+                                
                                     <div class="form-group row">
                                         <label class="col-sm-4 col-form-label">Start Date</label>
                                         <div class="col-sm-8">
@@ -31,21 +32,24 @@
                                    
                                     <div class="form-group row">
                                         <div class="col-sm-8 ml-sm-auto">
-                                            <button class="btn btn-info" type="submit">Submit</button>
+                                            <button class="btn btn-info" name="btn_submit" type="submit">Submit</button>
                                         </div>
                                     </div>
-                                </form>
+                                
                             </div>
                         </div>
                     </div>
                 </div>
 
-                 <div class="row">
+                <div class="row">
                 
-                    <div class="col-xl-8">
+                    <div class="col-xl-10">
                         <div class="ibox">
                             <div class="ibox-head">
                                 <div class="ibox-title">LEDGER DETAILS</div>
+                                <div>
+                                            <button class="btn btn-secondary" name="btn_print" type="submit">Print</button>
+                                        </div>
                             </div>
                             <div class="ibox-body">
                                 <table class="table table-bordered">
@@ -78,6 +82,7 @@
                         </div>
                     </div>
                 </div>
+            </form>
             </div>
 
 

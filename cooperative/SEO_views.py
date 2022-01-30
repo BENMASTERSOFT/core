@@ -107,10 +107,11 @@ def members_credit_purchase_approval_preview(request,ticket):
 		record.approval_status=approval_status
 		record.save()
 		return HttpResponseRedirect(reverse('members_credit_purchase_approval'))
-
+	form.fields['comment'].initial='APPROVED'
 	context = {
 	'records':records,
 	'form':form,
+	'full_name':selected_items[0].member.get_full_name,
 	'selected_items':selected_items,
 	'total_amount':total_amount,
 	'total_item_count':total_item_count,

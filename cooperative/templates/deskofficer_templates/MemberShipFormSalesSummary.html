@@ -1,0 +1,118 @@
+{% extends 'deskofficer_templates/base_template.html' %}
+{% load static %}
+{% block custom_css %}
+    <!-- PLUGINS STYLES-->
+    <link href="{% static '/cooperative/assets/vendors/DataTables/datatables.min.css' %}" rel="stylesheet" />
+   {% endblock custom_css %}
+{% block content %}
+
+      
+            <div class="page-content fade-in-up">
+                <div class="ibox">
+                  
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="ibox">
+                            <div class="ibox-head">
+                                <div class="ibox-title">Membership Form Sales</div>
+                                
+                            </div>
+                            <div class="ibox-body">
+                              <form class="form-horizontal" method="POST" action="">
+                                    {% csrf_token %}
+                                    <div class="row">
+                                        <div class="col-sm-6 form-group">
+                                            <label>Start Date</label>
+                                            {{form.start_date}}
+                                        </div>
+                                        
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <button class="btn btn-primary" name="btn_fetch" type="submit">Fetch</button>
+                                        {% if button_show  %}
+                                        <button class="btn btn-success" name="btn_submit" type="submit">Submit</button>
+                                        {% endif %}
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                    <div class="ibox-body">
+                        <table class="table table-striped table-bordered table-hover" id="example-table" cellspacing="0" width="100%">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Name</th>
+                                    <th>Admin Charge</th>
+                                    <th>Shares</th>
+                                    <th>Welfare</th>
+                                    <th>Total</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tfoot>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Name</th>
+                                    <th>Admin Charge</th>
+                                    <th>Shares</th>
+                                    <th>Welfare</th>
+                                    <th>Total</th>
+                                    <th></th>
+                                </tr>
+                            </tfoot>
+                            <tbody>
+                            {% for record in records %}
+                                <tr>
+                                    <td>{{forloop.counter}}</td>
+                                    <td>{{record.applicant.last_name}} {{record.applicant.first_name}} {{record.applicant.midle_name}}</td>
+                                    <td>{{record.admin_charge|default_if_none:"&nbsp;"}}</td>
+                                    <td>{{record.share_amount|default_if_none:"&nbsp;"}}</td>
+                                    <td>{{record.welfare_amount|default_if_none:"&nbsp;"}}</td>
+                                    <td>{{record.admin_charge|add:record.share_amount|add:record.welfare_amount}}</td>
+                                    <td><a href="{% url 'MemberShip_Form_Sales_Summary_Details' record.pk %}" class="btn btn-primary">Details</a></td>
+                                </tr>
+                            {% endfor %}
+                               
+                                
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+               
+            </div>
+  
+    
+    <!-- BEGIN PAGA BACKDROPS-->
+    <div class="sidenav-backdrop backdrop"></div>
+    <div class="preloader-backdrop">
+        <div class="page-preloader">Loading</div>
+    </div>
+    <!-- END PAGA BACKDROPS-->
+{% endblock content %}
+
+{% block custom_js %}
+    <!-- PAGE LEVEL PLUGINS-->
+    <script src="{% static '/cooperative//assets/vendors/DataTables/datatables.min.js' %}" type="text/javascript"></script>
+   
+    <!-- PAGE LEVEL SCRIPTS-->
+    <script type="text/javascript">
+        $(function() {
+            $('#example-table').DataTable({
+                pageLength: 10,
+                //"ajax": './assets/demo/data/table_data.json',
+                /*"columns": [
+                    { "data": "name" },
+                    { "data": "office" },
+                    { "data": "extn" },
+                    { "data": "start_date" },
+                    { "data": "salary" }
+                ]*/
+            });
+        })
+    </script>
+{% endblock custom_js %}

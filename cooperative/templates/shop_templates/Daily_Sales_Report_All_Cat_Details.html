@@ -1,0 +1,51 @@
+{% extends 'shop_templates/base_template.html' %}
+{% load static %}
+
+{% block content %}
+            <div class="page-content fade-in-up">
+               
+                <div class="row">
+                    <div class="col-xl-10">
+                        <div class="ibox">
+                            <div class="ibox-head">
+                                <div class="ibox-title">All Category Sales Summary | <a href="{% url 'Daily_Sales_All_Category_Report_Details' tdate.day1 tdate.month1 tdate.year1 tdate.day2 tdate.month2 tdate.year2 %}" class="btn btn-success">Full Details</a>  </div>
+                            </div>
+                           
+                            <div class="ibox-body">
+                                <table class="table">
+                                    <thead class="thead-default">
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Name</th>
+                                            <th>Receipt No</th>
+                                            <th>Amount</th>
+                                            <th>Category</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for item in records %}
+                                        <tr>
+                                            <td>{{forloop.counter}}</td>
+                                            <td>{{item.sale.name}}</td>
+                                            <td>{{item.receipt}}</td>
+                                            <td>{{item.amount}}</td>
+                                            <td>{{item.sale.sales_category.title}}</td>
+                                            <td><a href="{% url 'Daily_Sales_Report_Receipt_Details' item.receipt %}" class="btn btn-primary">Detail</a></td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                   
+                </div>
+          
+           
+            </div>
+  <div class="sidenav-backdrop backdrop"></div>
+    <div class="preloader-backdrop">
+        <div class="page-preloader">Loading</div>
+    </div>
+{% endblock %}

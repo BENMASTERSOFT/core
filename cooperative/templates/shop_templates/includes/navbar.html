@@ -14,8 +14,11 @@
                             <span class="nav-label">Dashboard</span>
                         </a>
                     </li>
+                    
                     <li class="heading">FEATURES</li>
-                        <li><a href="{% url 'editable_invoice' %}">Editable Invoice</a></li>
+                    {% comment %}
+                    <li><a href="{% url 'editable_invoice' %}">Editable Invoice</a>
+                    </li>
                     <li>
                         <a href="javascript:;"><i class="sidebar-item-icon fa fa-edit"></i>
                             <span class="nav-label">PDF FILES  </span><i class="fa fa-angle-left arrow"></i></a>
@@ -35,8 +38,8 @@
 
                         </ul>
                     </li>
-
-
+                {% endcomment %}
+                 {% if user_level == '2'  %}
                     <li>
                         <a href="javascript:;"><i class="sidebar-item-icon fa fa-sitemap"></i>
                             <span class="nav-label">Sales Desk</span><i class="fa fa-angle-left arrow"></i></a>
@@ -102,53 +105,29 @@
                         
                         </ul>
                     </li>  
-                    
-
-                    {% comment %}
+                    {% endif %}    
+                 {% if user_level == '1' %}
+                 
                     <li>
                         <a href="javascript:;"><i class="sidebar-item-icon fa fa-sitemap"></i>
-                            <span class="nav-label">Teller Desk</span><i class="fa fa-angle-left arrow"></i></a>
+                            <span class="nav-label">Day End Transactions</span><i class="fa fa-angle-left arrow"></i></a>
                         <ul class="nav-2-level collapse">
-                           
+                           <li>
+                            <a href="{% url 'Day_End_Transaction_Summary' %}"><i class="sidebar-item-icon fa fa-calendar"></i>
+                            <span class="nav-label">Day End Transaction</span>
+                                    </a>
+                                </li> 
+                        <li>
+                            <a href="{% url 'general_cash_sales_dashboard' %}">Purchases </a>
+                        </li>
                             
-                            <li>
-                                <a href="javascript:;">
-                                    <span class="nav-label">Cash Sales</span><i class="fa fa-angle-left arrow"></i></a>
-                                <ul class="nav-3-level collapse">
-                                    <li>
-                                        <a href="{% url 'general_cash_sales_dashboard' %}">General Cash Sales </a>
-                                    </li>
-                                    <li>
-                                        <a href="{% url 'members_cash_sales_search' %}">Members Cash Sales </a>
-                                    </li> 
-                                   
-                                   
-
-
-                                </ul>
-                            </li>
-                            <li>
-                                <a href="javascript:;">
-                                    <span class="nav-label">Members Credit Sales</span><i class="fa fa-angle-left arrow"></i></a>
-                                <ul class="nav-3-level collapse">
-                                    <li>
-                                        <a href="{% url 'Members_Credit_sales_list_search' %}">Credit Sales Request </a>
-                                    </li>
-                                    <li>
-                                        <a href="{% url 'members_credit_purchase_manage' %}">Manage Credit Sales </a>
-                                    </li> 
-                                    <li>
-                                        <a href="{% url 'members_credit_purchases_approved_list' %}">Approved Credit Sales </a>
-                                    </li>
-
-
-                                </ul>
-                            </li>
+                            
+                            
                         </ul>
-                    </li> {% endcomment %}
+                    </li> 
 
 
-                {% if user_level == '1' %}
+               
                     <li>
                         <a href="javascript:;"><i class="sidebar-item-icon fa fa-edit"></i>
                             <span class="nav-label">Monthly Deductions  </span><i class="fa fa-angle-left arrow"></i></a>
@@ -163,19 +142,23 @@
                         </ul>
                     </li>   
                 {% endif %}
-                     
+
+                 {% if user_level == '2'  %} 
                      <li>
                         <a href="javascript:;"><i class="sidebar-item-icon fa fa-edit"></i>
-                            <span class="nav-label">Cash Deposit  </span><i class="fa fa-angle-left arrow"></i></a>
+                            <span class="nav-label">Debt Recovering</span><i class="fa fa-angle-left arrow"></i></a>
                         <ul class="nav-2-level collapse">
                            
                             <li>
-                                <a href="{% url 'Members_Credit_sales_Cash_Deposit_search' %}">Credit Sales</a>
+                                <a href="{% url 'Members_Credit_sales_Cash_Deposit_search' %}">Bank Deposit</a>
+                            </li> 
+                            <li>
+                                <a href="{% url 'Cash_Deposit_Summary' %}">Bank Deposit Summary</a>
                             </li>
 
                         </ul>
                     </li>
-
+                {% endif %}
                     <li>
                         <a href="javascript:;"><i class="sidebar-item-icon fa fa-sitemap"></i>
                             <span class="nav-label">Products</span><i class="fa fa-angle-left arrow"></i></a>
@@ -188,6 +171,9 @@
                                 {% if user_level == '2'  %}
                                     <li>
                                         <a href="{% url 'Product_Purchase' %}">Purchase Tracking</a>
+                                    </li>
+                                    <li>
+                                        <a href="{% url 'Purchase_Tracking_Manage' %}">Manage Purchases</a>
                                     </li>
                                 {% endif %}
                                 
@@ -235,21 +221,7 @@
 
 
 
-                    <li>
-                        <a href="javascript:;"><i class="sidebar-item-icon fa fa-edit"></i>
-                            <span class="nav-label">Add Item </span><i class="fa fa-angle-left arrow"></i></a>
-                        <ul class="nav-2-level collapse">
-                           
-                            <li>
-                                <a href="">Purchase</a>
-                            </li>
-                        {% if user_level == '1'  %}
-                            <li>
-                                <a href="">Purchase Confirmation</a>
-                            </li>
-                        {% endif %}
-                        </ul>
-                    </li>
+                 
                     
                          
                     <li>
@@ -352,16 +324,29 @@
                                     <span class="nav-label">Sales</span><i class="fa fa-angle-left arrow"></i></a>
                                 <ul class="nav-3-level collapse">
                                     <li>
-                                        <a href="{% url 'Daily_Sales_Summary_Report' %}">Daily Sales Summary</a>
+                                        <a href="{% url 'Daily_Sales_Report_Summary' %}">Daily Sales</a>
                                     </li>
                                     <li>
                                         <a href="javascript:;">Level 3</a>
                                     </li>
                                 </ul>
                             </li>
+
+                            <li>
+                                <a href="javascript:;">
+                                    <span class="nav-label">Debt Recovery</span><i class="fa fa-angle-left arrow"></i></a>
+                                <ul class="nav-3-level collapse">
+                                    <li>
+                                        <a href="">Bank Deposit</a>
+                                    </li>
+                                    <li>
+                                        <a href="javascript:;">Cash Payment</a>
+                                    </li>
+                                </ul>
+                            </li>
                         </ul>
                     </li>   
-
+                {% comment %}
                     <li class="heading">IMPORT/EXPORT</li>
                     
 
@@ -386,6 +371,7 @@
                             </li>
                         </ul>
                     </li>
+                {% endcomment %}
                 </ul>
             </div>
         </nav>

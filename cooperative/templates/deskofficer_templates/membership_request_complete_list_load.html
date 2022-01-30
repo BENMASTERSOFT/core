@@ -42,10 +42,13 @@
                                     <td>{{forloop.counter}}</td>
                                     <td>{{member.last_name}}</td>
                                     <td>{{member.first_name}}</td>
-                                    <td>{{member.get_middle_name}}</td>
+                                    <td>{{member.middle_name}}</td>
                                     <td>{{member.phone_number}}</td>
                                     <td>{{member.department.title}}</td>
                                     <td>
+                                        <a href="{% url 'MemberShipRequest_Delete_confirmation' member.id %}" class="btn btn-default btn-xs m-r-5">
+                                        <i class="fa fa-trash-o font-14" aria-hidden="true"></i>
+                                    </a> 
                                         <a href="{% url 'membership_request_additional_info' member.id %}" class="btn btn-default btn-xs m-r-5"><i class="fa fa-pencil font-14"></i></a> 
 
                                        

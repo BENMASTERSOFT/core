@@ -10,7 +10,7 @@
                     <div class="col-md-6">
                         <div class="ibox">
                             <div class="ibox-head">
-                                <div class="ibox-title">Loan Form Issuance | {{loan.member.admin.first_name}} {{loan.member.admin.last_name}}{{loan.member.get_middle_name}}</div>
+                                <div class="ibox-title">Loan Form Issuance | {{loan.member.admin.first_name}} {{loan.member.admin.last_name}}{{loan.member.get_middle_name}}| <input type="button" class="btn btn-primary" value="Back" onclick="history.back()"/></div>
                                 
                             </div>
                             <div class="form-group">
@@ -34,15 +34,29 @@
                                 <form class="form-horizontal" method="POST">
                                             {% csrf_token %}
                                     <div class="form-group row">
+                                        <label class="col-sm-3 col-form-label">Loan Amount</label>
+                                        <div class="col-sm-9">
+                                            {{form.loan_amount}}
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
                                         <label class="col-sm-3 col-form-label">Admin Charge</label>
                                         <div class="col-sm-9">
                                             {{form.amount}}
                                         </div>
                                     </div>
+                                {% if receipt_type.title == 'MANUAL' %}
                                     <div class="form-group row">
                                         <label class="col-sm-3 col-form-label">Receipt No</label>
                                         <div class="col-sm-9">
                                             {{form.receipt}}
+                                        </div>
+                                    </div>
+                                {% endif %}
+                                    <div class="form-group row">
+                                        <label class="col-sm-3 col-form-label">Print Form</label>
+                                        <div class="col-sm-9">
+                                            {{form.status}}
                                         </div>
                                     </div>
                              
