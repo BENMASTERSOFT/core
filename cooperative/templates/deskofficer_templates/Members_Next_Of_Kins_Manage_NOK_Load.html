@@ -8,7 +8,7 @@
                     <div class="col-xl-8">
                         <div class="ibox">
                             <div class="ibox-head">
-                                <div class="ibox-title">List of Next of Kins | {{member.admin.first_name}} {{member.admin.last_name}} {{member.get_middle_name}}</div>
+                                <div class="ibox-title">List of Next of Kins | {{member.admin.first_name}} {{member.admin.last_name}} {{member.get_middle_name}} |  <input type="button" class="btn btn-secondary" value="Back" onclick="history.back()"/></div>
                             </div>
                             <div class="ibox-body">
                                 <table class="table table-bordered">
@@ -30,7 +30,12 @@
                                             <td>{{nok.address}}</td>
                                             <td>{{nok.phone_number}}</td>
                                             <td>{{nok.relationships}}</td>
-                                            <td><a href="{% url 'Members_Next_Of_Kins_Manage_NOK_Update' nok.pk member_id %}" class="btn btn-success">Update</a></td>
+                                            <td>
+                                            {% if nok.lock_status.title == 'OPEN' %}
+                                                <a href="{% url 'Members_Next_Of_Kins_Manage_NOK_Update' nok.pk member_id %}" class="btn btn-success">Update</a>
+                                            {% endif %}
+                                    
+                                            </td>
                                          
                                         </tr>
                                     {% endfor %}
@@ -47,4 +52,5 @@
     <div class="preloader-backdrop">
         <div class="page-preloader">Loading</div>
     </div>
+    {% include 'cooperative/includes/emptyspace.html' %}
 {% endblock %}

@@ -11,7 +11,7 @@
                 <div class="ibox">
                     <div class="ibox-head">
                         <div class="ibox-title">
-                            {{transaction.name}} | {{transaction_period.transaction_period}}
+                           <input type="button" class="btn btn-primary" value="Back" onclick="history.back()"/> |  {{transaction.name}} | {{transaction_period.transaction_period}}
                             {% if record_exist == False %}
                           
                             <a href="{% url 'Monthly_Savings_Contribution_Generate' pk  salary_inst_key %}" class="btn btn-success">Process</a>
@@ -92,6 +92,7 @@
         <div class="page-preloader">Loading</div>
     </div>
     <!-- END PAGA BACKDROPS-->
+    {% include 'cooperative/includes/emptyspace.html' %}
 {% endblock content %}
 
 {% block custom_js %}

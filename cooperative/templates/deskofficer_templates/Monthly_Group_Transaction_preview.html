@@ -8,9 +8,13 @@
                     <div class="col-xl-8">
                         <div class="ibox">
                             <div class="ibox-head">
-                                <div class="ibox-title">DEDUCTION BREAKDOWN FOR | {{transaction_period.transaction_period}} 
+                                <div class="ibox-title">DEDUCTION BREAKDOWN FOR | {{transaction_period.transaction_period}} |  <input type="button" class="btn btn-primary" value="Back" onclick="history.back()"/>
 
                                    
+                                </div>
+                            </div>
+                            <div class="ibox-head">
+                                <div class="ibox-title">{{member.get_full_name}}                                   
                                 </div>
                             </div>
                             <div class="ibox-body">
@@ -54,4 +58,5 @@
     <div class="preloader-backdrop">
         <div class="page-preloader">Loading</div>
     </div>
+    {% include 'cooperative/includes/emptyspace.html' %}
 {% endblock %}

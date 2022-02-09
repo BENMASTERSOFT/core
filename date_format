@@ -6,6 +6,57 @@
 
 
 
+timestamp = 1528797322
+date_time = datetime.fromtimestamp(timestamp)
+
+print("Date time object:", date_time)
+
+d = date_time.strftime("%m/%d/%Y, %H:%M:%S")
+print("Output 2:", d)   
+
+d = date_time.strftime("%d %b, %Y")
+print("Output 3:", d)
+
+d = date_time.strftime("%d %B, %Y")
+print("Output 4:", d)
+
+d = date_time.strftime("%I%p")
+print("Output 5:", d)
+
+Date time object: 2018-06-12 09:55:22
+Output 2: 06/12/2018, 09:55:22
+Output 3: 12 Jun, 2018
+Output 4: 12 June, 2018
+Output 5: 09AM
+
+
+
+
+
+from datetime import datetime
+
+# Get current Date
+x_date = datetime.now()
+print('Current Date:', x_date)
+
+# Represent Dates in full textual format
+print("dd-MonthName-yyyy:", x_date.strftime("%d-%B-%Y"))
+print("DayName-dd-MonthName-yyyy:", x_date.strftime("%A,%d %B, %Y"))
+
+# Represent dates in short textual format
+print("dd-MonthName-yyyy:", x_date.strftime("%d-%b-%Y"))
+print("DDD-dd-MMM-yyyy:", x_date.strftime("%a,%d %b, %Y"))
+
+
+
+Current Date: 2021-07-07 12:19:47.864519
+
+dd-MonthName-yyyy: 07-July-2021
+DayName-dd-MonthName-yyyy: Wednesday,07 July, 2021
+
+dd-MonthName-yyyy: 07-Jul-2021
+DDD-dd-MMM-yyyy: Wed,07 Jul, 2021
+
 
 
 

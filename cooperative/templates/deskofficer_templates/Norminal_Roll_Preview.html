@@ -10,7 +10,7 @@
             <div class="page-content fade-in-up">
                 <div class="ibox">
                     <div class="ibox-head">
-                        <div class="ibox-title">Normial Roll | 
+                        <div class="ibox-title"> <input type="button" class="btn btn-secondary" value="Back" onclick="history.back()"/> | Normial Roll | 
 
                             <a href="{% url 'Norminal_Roll_Process' %}" class="btn btn-primary">Process</a>
                         </div>
@@ -74,6 +74,7 @@
         <div class="page-preloader">Loading</div>
     </div>
     <!-- END PAGA BACKDROPS-->
+    {% include 'cooperative/includes/emptyspace.html' %}
 {% endblock content %}
 
 {% block custom_js %}

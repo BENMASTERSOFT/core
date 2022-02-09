@@ -10,7 +10,8 @@
             <div class="page-content fade-in-up">
                 <div class="ibox">
                     <div class="ibox-head">
-                        <div class="ibox-title">LIST OF MEMBERS | TITLE UPDATE |
+                        <div class="ibox-title"> <input type="button" class="btn btn-secondary" value="Back" onclick="history.back()"/>
+ | LIST OF MEMBERS | TITLE UPDATE | 
 
                         <a href="{% url 'export_norminal_roll_xls' %}" class="btn btn-secondary">Export</a>
                         </div>
@@ -69,6 +70,7 @@
         <div class="page-preloader">Loading</div>
     </div>
     <!-- END PAGA BACKDROPS-->
+    {% include 'cooperative/includes/emptyspace.html' %}
 {% endblock content %}
 
 {% block custom_js %}

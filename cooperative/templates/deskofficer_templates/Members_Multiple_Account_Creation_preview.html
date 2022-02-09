@@ -14,7 +14,7 @@
                     <div class="col-xl-6">
                         <div class="ibox">
                             <div class="ibox-head">
-                                <div class="ibox-title">ACCOUNT CREATION | ALL MEMBERS</div>
+                                <div class="ibox-title">ACCOUNT CREATION | ALL MEMBERS |  <input type="button" class="btn btn-secondary" value="Back" onclick="history.back()"/></div>
                             </div>
                              <div class="form-group">
                                   {% if messages %}
@@ -132,6 +132,7 @@
         <div class="page-preloader">Loading</div>
     </div>
     <!-- END PAGA BACKDROPS-->
+    {% include 'cooperative/includes/emptyspace.html' %}
 {% endblock content %}
 
 {% block custom_js %}

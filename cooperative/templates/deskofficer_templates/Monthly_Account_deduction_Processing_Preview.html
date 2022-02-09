@@ -10,7 +10,7 @@
             <div class="page-content fade-in-up">
                 <div class="ibox">
                     <div class="ibox-head">
-                        <div class="ibox-title">Account Deduction | {{transaction_period.transaction_period}}
+                        <div class="ibox-title"> <input type="button" class="btn btn-primary" value="Back" onclick="history.back()"/> | Account Deduction | {{transaction_period.transaction_period}}
 
                             <a href="{% url 'Monthly_Account_deduction_Process' pk transaction_period.id %}" class="btn btn-success">Process</a>
                         </div>
@@ -60,6 +60,7 @@
         <div class="page-preloader">Loading</div>
     </div>
     <!-- END PAGA BACKDROPS-->
+    {% include 'cooperative/includes/emptyspace.html' %}
 {% endblock content %}
 
 {% block custom_js %}

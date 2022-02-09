@@ -12,7 +12,7 @@
                             <div class="col-xl-12">
                                 <div class="ibox">
                                     <div class="ibox-head">
-                                        <div class="ibox-title">Loan Analysis | {{applicant.applicant.applicant.member.admin.last_name}} {{applicant.applicant.applicant.member.admin.first_name}} {{applicant.applicant.applicant.member.middle_name}}</div>
+                                        <div class="ibox-title">Loan Analysis | {{applicant.applicant.applicant.member.admin.last_name}} {{applicant.applicant.applicant.member.admin.first_name}} {{applicant.applicant.applicant.member.middle_name}} |  <input type="button" class="btn btn-primary" value="Back" onclick="history.back()"/></div>
                                     </div>
                                     <div class="ibox-body">
                                         <table class="table table-bordered">
@@ -68,30 +68,8 @@
                                                     <td>{{monthly_repayment}}</td>
                                                 </tr> 
                                                
-                                                    <form class="form-horizontal" method="POST" action="" enctype="multipart/form-data" novalidate>
-                                                                {% csrf_token %}
-                                                <tr>
-                                                    <td colspan="2">
-                                                        
-                                                           <div class="form-group row">
-                                                                <label class="col-sm-5 col-form-label">Effective Date</label>
-                                                                <div class="col-sm-7">
-                                                                    {{form.effective_date}}
-                                                                </div>
-                                                            </div>     
-                                                                
-
-                                                    </td>
-                                                   
-                                                    <td>                                                    
-                                                        <div class="form-group row">
-                                                            <div class="col-sm-10 ml-sm-auto">
-                                                                <button class="btn btn-info" type="submit">Process</button>
-                                                            </div>
-                                                        </div>                                                      
-                                                    </td>
-                                                </tr>
-                                                 </form>
+                                                    
+                                           
                                             </tbody>
                                         </table>
                                     </div>
@@ -101,7 +79,42 @@
                        
                         </div>
                     </div>
+
+                    <div class="col-md-6">
+                        <div class="ibox">
+                            <div class="ibox-head">
+                                <div class="ibox-title">FINAL LOAN PROCESSING</div>
+                                
+                            </div>
+                            <div class="ibox-body">
+                                <form class="form-horizontal" method="POST" action="" enctype="multipart/form-data" novalidate>
+                                    {% csrf_token %}
+                                    <div class="form-group row">
+                                        <label class="col-sm-3 col-form-label">Effective Date</label>
+                                        <div class="col-sm-9">
+                                            {{form.effective_date}}
+                                        </div>
+                                    </div>  
+                                    <div class="form-group row">
+                                        <label class="col-sm-3 col-form-label">Print Form</label>
+                                        <div class="col-sm-9">
+                                            {{form.status}}
+                                        </div>
+                                    </div>  
+                                    
+                               
+                                 
+                                    <div class="form-group row">
+                                        <div class="col-sm-9 ml-sm-auto">
+                                            <button class="btn btn-info" type="submit">Process</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
                 </div>
+               
             </div>
             
 
@@ -110,4 +123,5 @@
     <div class="preloader-backdrop">
         <div class="page-preloader">Loading</div>
     </div>
+    {% include 'cooperative/includes/emptyspace.html' %}
 {% endblock %}

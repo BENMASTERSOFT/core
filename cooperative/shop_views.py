@@ -2330,35 +2330,56 @@ def Day_End_Transaction_Summary(request):
 
 
 def monthly_deductions_salary_institution_select(request):
+	status=MembershipStatus.objects.get(title='ACTIVE')
 	records=SalaryInstitution.objects.all()
-	
+	transaction_period=TransactionPeriods.objects.get(status=status)
 	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
 	
+
 	context={
 	'user_level':user_level.userlevel.title,
 	'records':records,
+	'transaction_period':transaction_period,
 	}
 	return render(request,'shop_templates/monthly_deductions_salary_institution_select.html',context)
 
 
 def monthly_deductions_generate(request,pk):
+	status1=MembershipStatus.objects.get(title='ACTIVE')
+	transaction_period=TransactionPeriods.objects.get(status=status1)
+
+	status=TransactionStatus.objects.get(title="UNTREATED")
 	salary_institution=SalaryInstitution.objects.get(id=pk)
-	members=CooperativeShopLedger.objects.filter(Q(balance__lt=0) & Q(member__member__salary_institution=salary_institution))
+	members=CooperativeShopLedger.objects.filter(Q(balance__lt=0) & Q(member__member__salary_institution=salary_institution)).filter(status=status)
+
+
 	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
 	
+	shop_generated=False
+	if MonthlyDeductionGenerationHeading.objects.filter(transaction_period=transaction_period,heading='SHOP').exists():
+		shop_generated=True
+
 	context={
 	'user_level':user_level.userlevel.title,
 	'members':members,
 	'salary_institution':salary_institution,
+	'shop_generated':shop_generated,
 	}
 	return render(request,'shop_templates/monthly_deductions_generate.html',context)
 
 
 def monthly_deductions_generate_process(request,pk):
+	tday=now.day
+	tmonth=now.month
+	tyear=now.year
+
+	tdate=date(int(tyear),int(tmonth),int(tday))
+	status=TransactionStatus.objects.get(title="UNTREATED")
 	salary_institution=SalaryInstitution.objects.get(id=pk)
-	members=CooperativeShopLedger.objects.filter(Q(balance__lt=0) & Q(member__member__salary_institution=salary_institution))
+	members=CooperativeShopLedger.objects.filter(Q(balance__lt=0) & Q(member__member__salary_institution=salary_institution,status=status))
 	transaction=TransactionTypes.objects.get(code=600)
 	transaction_period=TransactionPeriods.objects.get(status__title='ACTIVE')
+
 
 	if MonthlyDeductionList.objects.filter(transaction_period=transaction_period,transaction=transaction,member__salary_institution=salary_institution).exists():
 		messages.error(request,"Transaction already generated")
@@ -2366,18 +2387,118 @@ def monthly_deductions_generate_process(request,pk):
 
 	
 	for member in members:
-		record=MonthlyDeductionList(transaction_period=transaction_period,member=member.member.member,account_number=member.member.account_number,amount=abs(member.balance),transaction=transaction)
+		record=MonthlyDeductionList(tdate=tdate,transaction_period=transaction_period,member=member.member.member,account_number=member.member.account_number,amount=abs(member.balance),transaction=transaction)
 		record.save()
 
 	if MonthlyDeductionList.objects.filter(transaction_period=transaction_period,transaction=transaction).exists():
 		processed_by=CustomUser.objects.get(id=request.user.id)
-		record=MonthlyGeneratedTransactions(transaction=transaction,transaction_period=transaction_period,processed_by=processed_by)
+		record=MonthlyGeneratedTransactions(tdate=tdate,transaction=transaction,transaction_period=transaction_period,processed_by=processed_by)
 		record.save()
 
+		record = MonthlyDeductionGenerationHeading(heading='SHOP',salary_institution=salary_institution,transaction_period=transaction_period)
+		record.save()
 	return HttpResponseRedirect(reverse('monthly_deductions_salary_institution_select'))
 
 
+def monthly_deductions_generate_process_Completed(request,pk):
+	tday=now.day
+	tmonth=now.month
+	tyear=now.year
 
+	tdate=date(int(tyear),int(tmonth),int(tday))
+
+	salary_institution=SalaryInstitution.objects.get(id=pk)
+	transaction_period=TransactionPeriods.objects.get(status__title='ACTIVE')
+	if MonthlyDeductionGenerationHeading.objects.filter(salary_institution=salary_institution,transaction_period=transaction_period,heading="SHOP").exists():
+		pass
+	else:
+		record=MonthlyDeductionGenerationHeading(salary_institution=salary_institution,transaction_period=transaction_period,heading="SHOP")
+		record.save()
+	return HttpResponseRedirect(reverse('monthly_deductions_generate', args=(pk,)))
+
+
+def monthly_deductions_ledger_posting(request):
+	tday=now.day
+	tmonth=now.month
+	tyear=now.year
+
+	tdate=date(int(tyear),int(tmonth),int(tday))
+	# transaction=TransactionTypes.objects.get(id=trans_id)
+	transaction_periods=TransactionPeriods.objects.all()
+	salary_institutions=SalaryInstitution.objects.all()
+
+	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
+	context={
+	'user_level':user_level.userlevel.title,
+	'transaction_periods':transaction_periods,
+	'salary_institutions':salary_institutions,
+	}
+	return render(request,'shop_templates/monthly_deductions_ledger_posting.html',context)
+
+
+def monthly_deductions_ledger_posting_preview(request):
+	records=[]
+	if request.method == 'POST' and 'btn_filter' in request.POST:
+		transaction_status=TransactionStatus.objects.get(title='UNTREATED')
+		period_id = request.POST.get('period')
+		transaction_period=TransactionPeriods.objects.get(id=period_id)
+		
+		institution_id = request.POST.get('intstitution')
+		
+		
+		salary_institution=SalaryInstitution.objects.get(id=institution_id)
+		records=MonthlyShopDeductionCertified.objects.filter(transaction_period=transaction_period,salary_institution=salary_institution,transaction_status=transaction_status)
+		
+		if not records:
+			messages.info(request,'No recordd found')
+			return HttpResponseRedirect(reverse('monthly_deductions_ledger_posting'))
+
+	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
+	context={
+	'user_level':user_level.userlevel.title,
+	'records':records,
+	'institution':institution_id,
+	'transaction_period':transaction_period.id,
+	}
+	return render(request,'shop_templates/monthly_deductions_ledger_posting_preview.html',context)
+
+
+def monthly_deductions_ledger_posting_process(request,institution,period):
+	status=TransactionStatus.objects.get(title='UNTREATED')
+	status1=TransactionStatus.objects.get(title='TREATED')
+	tday=now.day
+	tmonth=now.month
+	tyear=now.year
+
+	tdate = date(int(tyear),int(tmonth), int(tday))
+
+	transaction_period=TransactionPeriods.objects.get(id=period)
+	balance=0
+	salary_institution = SalaryInstitution.objects.get(id=institution)
+	records=MonthlyShopDeductionCertified.objects.filter(transaction_period=transaction_period,salary_institution=salary_institution,transaction_status=status)
+	processed_by=CustomUser.objects.get(id=request.user.id)
+
+	for item in records:
+		if CooperativeShopLedger.objects.filter(member__member=item.member).exists():
+			record = CooperativeShopLedger.objects.filter(member__member=item.member).last()
+			balance=record.balance
+			debit=0
+			credit=item.amount_deducted
+			new_balance=float(balance) + float(credit)
+			particulars= "MONTHLY DEDCUTION AS AT: " + str(transaction_period.transaction_period)
+			
+			member=MembersAccountsDomain.objects.get(transaction__name='SHOP',member=item.member)
+			
+			queryset = CooperativeShopLedger(tdate=tdate,member=member,particulars=particulars,debit=0,credit=credit,balance=new_balance,receipt=0,processed_by=processed_by,status=status)
+			queryset.save()
+
+			record.status=status1
+			record.save()
+
+			item.transaction_status=status1
+			item.save()
+
+	return HttpResponseRedirect(reverse('monthly_deductions_ledger_posting'))
 
 
 def Members_Credit_sales_Cash_Deposit_search(request):
@@ -2415,10 +2536,11 @@ def Members_Credit_sales_Cash_Deposit_list_load(request):
 
 def Members_Credit_sales_Cash_Deposit_Details(request,pk):
 	form = Members_Credit_sales_Cash_Deposit_Details_form(request.POST or None)
-	member=CooperativeShopLedger.objects.get(id=pk)
-	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
 	status = TransactionStatus.objects.get(title='UNTREATED')
 	status1 = TransactionStatus.objects.get(title='TREATED')
+	
+	member=CooperativeShopLedger.objects.get(id=pk)
+	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
 	if request.method == "POST":
 		current_date=request.POST.get('payment_date')
 		date_format = '%Y-%m-%d'
@@ -2451,10 +2573,6 @@ def Members_Credit_sales_Cash_Deposit_Details(request,pk):
 		
 		receipt_types_id=request.POST.get('receipt_types')
 		receipt_types=ReceiptTypes.objects.get(id=receipt_types_id)
-
-		
-
-
 
 		if receipt_types.title == 'AUTO':
 			receipt_id=AutoReceipt.objects.first()
@@ -3537,3 +3655,4 @@ def load_branches(request):
     branches = Suppliers_Branches.objects.filter(supplier=supplier_id).order_by('address')
     return render(request, 'shop_templates/branches_dropdown_list_options.html',{'branches':branches})
  
+

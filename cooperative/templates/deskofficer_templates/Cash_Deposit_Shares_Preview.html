@@ -10,7 +10,7 @@
                     <div class="col-md-7">
                         <div class="ibox">
                             <div class="ibox-head">
-                                <div class="ibox-title">Cash Deposit For Shares | {{member.member.get_full_name}}</div>
+                                <div class="ibox-title">Cash Deposit For Shares | {{member.member.get_full_name}} |  <input type="button" class="btn btn-secondary" value="Back" onclick="history.back()"/></div>
                                 
                             </div>
                             <div class="form-group">
@@ -114,4 +114,5 @@
     <div class="preloader-backdrop">
         <div class="page-preloader">Loading</div>
     </div>
+    {% include 'cooperative/includes/emptyspace.html' %}
 {% endblock %}

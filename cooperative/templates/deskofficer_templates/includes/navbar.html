@@ -15,40 +15,62 @@
                         </a>
                     </li>
                     <li class="heading">FEATURES</li>
-                        
-
+                {% if request.user.user_type == '6' or request.user.user_type == '7' %}
                     <li>
-                        <a href="javascript:;"><i class="sidebar-item-icon fa fa-edit"></i>
-                            <span class="nav-label">Membership  </span><i class="fa fa-angle-left arrow"></i></a>
+                        <a href="javascript:;"><i class="sidebar-item-icon fa fa-sitemap"></i>
+                            <span class="nav-label">Membership</span><i class="fa fa-angle-left arrow"></i></a>
                         <ul class="nav-2-level collapse">
                            
                             <li>
-                                <a href="{% url 'membership_request' %}">Add Request</a>
-                            </li>
-                            <li>
-                                <a href="{% url 'membership_request_complete_search' %}">Complete Request</a>
-                            </li>
-                              <li>
-                                <a href="{% url 'membership_request_manage_search' %}">Manage Request</a>
-                            </li>
-                            <li>
-                                <a href="{% url 'membership_form_sales_list_load' %}">Membership Form Sales</a>
-                            </li>
-                            <li>
-                                <a href="{% url 'membership_registration_list_load' %}">Membership Registration</a>
-                            </li>  
+                                <a href="javascript:;">
+                                    <span class="nav-label"> New Members</span><i class="fa fa-angle-left arrow"></i></a>
+                                <ul class="nav-3-level collapse">
+                                    <li>
+                                        <a href="{% url 'membership_request' %}">New Member Request</a>
+                                    </li>
+                                    <li>
+                                        <a href="{% url 'membership_request_complete_search' %}">Complete Request</a>
+                                    </li>
+                                      <li>
+                                        <a href="{% url 'membership_request_manage_search' %}">Manage Request</a>
+                                    </li>
+                                    <li>
+                                        <a href="{% url 'membership_form_sales_list_load' %}">Membership Form Sales</a>
+                                    </li>
+                                    <li>
+                                        <a href="{% url 'membership_registration_list_load' %}">Membership Registration</a>
+                                    </li>  
+                                   
+                                    <li>
+                                        <a href="{% url 'Members_Account_Creation_Search' %}">Single Account Creations</a>
+                                    </li> 
+                                    <li>
+                                        <a href="{% url 'Members_Multiple_Account_Creation_preview' %}">Multiple Account Creations</a>
+                                    </li>
                            
-                            <li>
-                                <a href="{% url 'Members_Account_Creation_Search' %}">Single Account Creations</a>
-                            </li> 
-                            <li>
-                                <a href="{% url 'Members_Multiple_Account_Creation_preview' %}">Multiple Account Creations</a>
+                                </ul>
                             </li>
-                           
-                            
 
+                            <li>
+                                <a href="javascript:;">
+                                    <span class="nav-label">Members Termination</span><i class="fa fa-angle-left arrow"></i></a>
+                                <ul class="nav-3-level collapse">
+                                    <li>
+                                        <a href="{% url 'membership_termination_search' %}">Termination Request</a>
+                                    </li>
+                                    <li>
+                                        <a href="">Termination Processing</a>
+                                    </li>
+                                      
+                                    
+                           
+                                </ul>
+                            </li>
                         </ul>
                     </li>
+
+         
+            
                     <li>
                         <a href="javascript:;"><i class="sidebar-item-icon fa fa-edit"></i>
                             <span class="nav-label">Standing Order</span><i class="fa fa-angle-left arrow"></i></a>
@@ -63,7 +85,9 @@
 
                         </ul>
                     </li>
+                    {% endif %}
 
+                {% if request.user.user_type == '6'  %}
                      <li>
                         <a href="javascript:;"><i class="sidebar-item-icon fa fa-sitemap"></i>
                             <span class="nav-label">Transaction Adjustment</span><i class="fa fa-angle-left arrow"></i></a>
@@ -96,7 +120,8 @@
                     </li>
 
 
-                    
+                {% endif %} 
+                {% if request.user.user_type == '6' or request.user.user_type == '7' %}
                     <li>
                         <a href="javascript:;"><i class="sidebar-item-icon fa fa-edit"></i>
                             <span class="nav-label">Cash Deposit</span><i class="fa fa-angle-left arrow"></i></a>
@@ -133,9 +158,6 @@
 
                         </ul>
                     </li>
-
-
-
 
                     <li>
                         <a href="javascript:;"><i class="sidebar-item-icon fa fa-sitemap"></i>
@@ -191,11 +213,12 @@
                             </li> 
                         </ul>
                     </li>
-                     <li>
+                {% endif %}   
+                    <li>
                         <a href="javascript:;"><i class="sidebar-item-icon fa fa-sitemap"></i>
                             <span class="nav-label">Shares Manager</span><i class="fa fa-angle-left arrow"></i></a>
                             <ul class="nav-2-level collapse">
-                            
+                             {% if request.user.user_type == '6' %}
                                 <li>
                                     <a href="javascript:;">
                                         <span class="nav-label">Initial Shares Record</span><i class="fa fa-angle-left arrow"></i></a>
@@ -210,7 +233,9 @@
                                      </ul>
                                 </li>
 
+                            {% endif %}
 
+                             {% if request.user.user_type == '6' or request.user.user_type == '7' %}
                                 <li>
                                     <a href="javascript:;">
                                         <span class="nav-label">Shares Requesition</span><i class="fa fa-angle-left arrow"></i></a>
@@ -226,10 +251,11 @@
                                         </li>
                                      </ul>
                                 </li>
+                            {% endif %}
                         </ul>
                     </li>
 
-                 
+                  {% if request.user.user_type == '6' or request.user.user_type == '7' %}
                     <li>
                         <a href="javascript:;"><i class="sidebar-item-icon fa fa-edit"></i>
                             <span class="nav-label">Next of Kin</span><i class="fa fa-angle-left arrow"></i></a>
@@ -244,7 +270,8 @@
 
                         </ul>
                     </li>
-
+                    {% endif %}
+                {% if request.user.user_type == '6' %}
                     <li>
                         <a href="javascript:;"><i class="sidebar-item-icon fa fa-edit"></i>
                             <span class="nav-label">Salary Update</span><i class="fa fa-angle-left arrow"></i></a>
@@ -272,30 +299,52 @@
                                     <a href="{% url 'members_exclusiveness_approved_list_load' %}">Approved Exclusiveness</a>
                                 </li>                                        
                             </ul>
-                        </li>
-                   
+                    </li>
+                   {% endif %}
+                {% if request.user.user_type == '6' or request.user.user_type == '7' %}
+                    
+
                     <li>
-                        <a href="javascript:;"><i class="sidebar-item-icon fa fa-edit"></i>
+                        <a href="javascript:;"><i class="sidebar-item-icon fa fa-sitemap"></i>
                             <span class="nav-label">Loan Manager</span><i class="fa fa-angle-left arrow"></i></a>
                         <ul class="nav-2-level collapse">
-                           
-                           <li>
-                                <a href="{% url 'loan_request_search' %}">Loan Request</a>
-                            </li>
+                          
                             <li>
-                                <a href="{% url 'loan_request_approved_list_load' %}">Loan Form Sales</a>
+                                <a href="javascript:;">
+                                    <span class="nav-label">Cash Loans</span><i class="fa fa-angle-left arrow"></i></a>
+                                <ul class="nav-3-level collapse">
+                                    <li>
+                                        <a href="{% url 'loan_request_search' %}">Loan Request</a>
+                                    </li>
+                                    <li>
+                                        <a href="{% url 'loan_request_approved_list_load' %}">Loan Form Sales</a>
+                                    </li>
+                                    <li>
+                                        <a href="{% url 'loan_application_list_load' %}">Loan Application</a>
+                                    </li> 
+                                    <li>
+                                        <a href="{% url 'loan_application_approved_list_load' %}">Loan Processing</a>
+                                    </li>
+                                </ul>
                             </li>
-                            <li>
-                                <a href="{% url 'loan_application_list_load' %}">Loan Application</a>
-                            </li> 
-                            <li>
-                                <a href="{% url 'loan_application_approved_list_load' %}">Loan Processing</a>
-                            </li>
-                            
 
+                        <li>
+                                <a href="javascript:;">
+                                    <span class="nav-label">Commodity Loans</span><i class="fa fa-angle-left arrow"></i></a>
+                                <ul class="nav-3-level collapse">
+                                    <li>
+                                        <a href="{% url 'membership_commodity_loan_search' %}">Commodity Request</a>
+                                    </li>
+                                    <li>
+                                        <a href="javascript:;">Process Request</a>
+                                    </li>
+                                </ul>
+                            </li>
                         </ul>
                     </li>
 
+                {% endif %}
+            {% if request.user.user_type == '6'  %}
                     <li>
                         <a href="javascript:;"><i class="sidebar-item-icon fa fa-edit"></i>
                             <span class="nav-label">External Fascilities</span><i class="fa fa-angle-left arrow"></i></a>
@@ -317,7 +366,8 @@
                         </ul>
                     </li>
 
-
+                {% endif %}
+                {% if request.user.user_type == '6' or request.user.user_type == '7' %}
                     <li>
                         <a href="javascript:;"><i class="sidebar-item-icon fa fa-table"></i>
                             <span class="nav-label">Monthly Deductions</span><i class="fa fa-angle-left arrow"></i></a>
@@ -338,12 +388,18 @@
                         <li>
                             <a href="{% url 'Monthly_Account_deduction_Excel_import_Institution_Load' %}">Import Account Deductions</a>
                         </li>
+                        
+
                         <li>
                             <a href="{% url 'Monthly_Account_deduction_Processing_Institution_Load' %}">Process Account Deductions</a>
                         </li>
+                          <li>
+                            <a href="{% url 'Monthly_Account_deductions_Separations' %}">Monthly Deductions Separations</a>
+                        </li>
                         <li>
                             <a href="{% url 'monthly_wrongful_deduction_transaction_period_load' %}">Monthly Wringful Deductions</a>
-                        </li>
+                        </li> 
+                      
                         <li>
                             <a href="{% url 'Monthly_Unbalanced_transactions' %}">Non Balanced Deductions</a>
                         </li>
@@ -379,60 +435,195 @@
                              <li>
                                 <a href="{% url 'Cash_Deposit_Report_Date_Load' %}">Loan Form Sales</a>
                             </li>
- <li>
+                    <li>
                                 <a href="{% url 'Cash_Deposit_Report_Date_Load' %}">Cash Deposit</a>
                             </li>
 
                         </ul>
                     </li>
+                   
+
+                    
+                   
+                {% endif %}
+
+                 {% if request.user.user_type == '7' %}
+                  <li class="heading">SEO</li>
                     <li>
                         <a href="javascript:;"><i class="sidebar-item-icon fa fa-sitemap"></i>
-                            <span class="nav-label">General Reports</span><i class="fa fa-angle-left arrow"></i></a>
+                            <span class="nav-label">SEO Desk</span><i class="fa fa-angle-left arrow"></i></a>
                         <ul class="nav-2-level collapse">
-                             <li>
-                                <a href="{% url 'MemberShipFormSalesReport' %}">Membership Form Sales</a>
-                            </li>
-
-                             <li>
-                                <a href="{% url 'Cash_Deposit_Report_Date_Load' %}">Cash Deposit</a>
-                            </li>
-                            <li>
-                                <a href="{% url 'Norminal_Roll_List_Load' %}">Norminal Roll</a>
-                            </li>
+                            
                             <li>
                                 <a href="javascript:;">
-                                    <span class="nav-label">Ledger</span><i class="fa fa-angle-left arrow"></i></a>
+                                    <span class="nav-label">Shop Credit Sales</span><i class="fa fa-angle-left arrow"></i></a>
                                 <ul class="nav-3-level collapse">
                                     <li>
-                                        <a href="{% url 'PersonalLedger_Selected_Search' %}">Personal Ledger</a>
+                                        <a href="{% url 'members_credit_purchase_approval' %}">Sales Request </a>
                                     </li>
                                     <li>
-                                        <a href="javascript:;">Level 3</a>
+                                        <a href="{% url 'Shop_Cheque_Sales_List_Load' %}">Cheque Sales Approval</a>
                                     </li>
                                 </ul>
                             </li>
 
+
                             <li>
                                 <a href="javascript:;">
-                                    <span class="nav-label">Loan</span><i class="fa fa-angle-left arrow"></i></a>
+                                    <span class="nav-label">Salary Update</span><i class="fa fa-angle-left arrow"></i></a>
                                 <ul class="nav-3-level collapse">
                                     <li>
-                                        <a href="{% url 'Load_Active_loans' %}">Loans Applcations</a>
+                                        <a href="{% url 'members_salary_update_request_approval_load_list' %}">Salary Update</a>
                                     </li>
                                     <li>
-                                        <a href="{% url 'Load_Active_loans' %}">Active Loans</a>
+                                        <a href="">Manage Salary Update</a>
+                                    </li>
+                                </ul>
+                            </li> 
+                            <li>
+                                <a href="javascript:;">
+                                    <span class="nav-label">External Fascilities </span><i class="fa fa-angle-left arrow"></i></a>
+                                <ul class="nav-3-level collapse">
+                                    <li>
+                                        <a href="{% url 'external_fascilities_update_request_approval_load_list' %}">Approve Registering</a>
+                                    </li>
+                                   
+                                </ul>
+                            </li>  
+                            <li>
+                                <a href="javascript:;">
+                                    <span class="nav-label">Members Exclusiveness </span><i class="fa fa-angle-left arrow"></i></a>
+                                <ul class="nav-3-level collapse">
+                                    <li>
+                                        <a href="{% url 'members_exclusiveness_request_approval_list_load' %}">Approve Exclusiveness</a>
                                     </li>
                                     <li>
-                                        <a href="javascript:;">Currently Cleared Loans</a>
+                                        <a href="">Approve Non Exclusiveness</a>
                                     </li>
                                 </ul>
                             </li>
-
+                            <li>
+                               <a href="{% url 'Initial_Shares_Update_List_Load' %}">Initial Share Update</a>
+                             </li> 
+                             <li>
+                               <a href="{% url 'Transaction_Adjustment_Approval_list_Load' %}">Adjustment Approval</a>
+                             </li>
+                    
                         </ul>
                     </li>
 
+                    <li>
+                        <a href="javascript:;"><i class="sidebar-item-icon fa fa-edit"></i>
+                            <span class="nav-label">Transaction Adjustment  </span><i class="fa fa-angle-left arrow"></i></a>
+                        <ul class="nav-2-level collapse">
+                           
+                            <li>
+                                <a href="{% url 'external_fascilities_update_request_approval_load_list' %}">Savings</a>
+                            </li>
+                            <li>
+                                <a href="{% url 'Transaction_Loan_Adjustment_Approval_list_Load' %}">Loans</a>
+                            </li>
+                            
+                           
+                            
 
-                   {% comment %} {% if values.status.title == 'ACTIVE' %}{% endcomment %}
+                        </ul>
+                    </li>                 
+                
+                {% endif %}
+                
+
+                <li class="heading">REPORTS</li>
+                    <li>
+                            <a href="javascript:;"><i class="sidebar-item-icon fa fa-sitemap"></i>
+                                <span class="nav-label">General Reports</span><i class="fa fa-angle-left arrow"></i></a>
+                            <ul class="nav-2-level collapse">
+                                 <li>
+                                    <a href="{% url 'MemberShipFormSalesReport' %}">Membership Form Sales</a>
+                                </li>
+
+                                 <li>
+                                    <a href="{% url 'Cash_Deposit_Report_Date_Load' %}">Cash Deposit</a>
+                                </li>
+                                <li>
+                                    <a href="{% url 'Norminal_Roll_List_Load' %}">Norminal Roll</a>
+                                </li>
+                                <li>
+                                    <a href="javascript:;">
+                                        <span class="nav-label">Ledger</span><i class="fa fa-angle-left arrow"></i></a>
+                                    <ul class="nav-3-level collapse">
+                                        <li>
+                                            <a href="{% url 'PersonalLedger_Selected_Search' %}">Personal Ledger</a>
+                                        </li>
+                                        <li>
+                                            <a href="javascript:;">Level 3</a>
+                                        </li>
+                                    </ul>
+                                </li>
+
+                                <li>
+                                    <a href="javascript:;">
+                                        <span class="nav-label">Loan</span><i class="fa fa-angle-left arrow"></i></a>
+                                    <ul class="nav-3-level collapse">
+                                        <li>
+                                            <a href="{% url 'Load_Active_loans' %}">Loans Applcations</a>
+                                        </li>
+                                        <li>
+                                            <a href="{% url 'Load_Active_loans' %}">Active Loans</a>
+                                        </li>
+                                        <li>
+                                            <a href="javascript:;">Currently Cleared Loans</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                                 <li class="heading">MONTHLY DEDUCTIONS</li>
+                                <li>
+                                    <a href="javascript:;">
+                                        <span class="nav-label">Cooperative Generated</span><i class="fa fa-angle-left arrow"></i></a>
+                                    <ul class="nav-3-level collapse">
+                                        <li>
+                                            <a href="javascript">Group Records</a>
+                                        </li>
+                                        <li>
+                                            <a href="javascript">Selected Records</a>
+                                        </li>
+                                        
+                                    </ul>
+                                </li>
+
+                                <li>
+                                    <a href="javascript:;">
+                                        <span class="nav-label">Account Generated</span><i class="fa fa-angle-left arrow"></i></a>
+                                    <ul class="nav-3-level collapse">
+                                        <li>
+                                            <a href="javascript">Group Records</a>
+                                        </li>
+                                        <li>
+                                            <a href="javascript">Selected Records</a>
+                                        </li>
+                                        
+                                    </ul>
+                                </li>
+                                <li>
+                                    <a href="javascript:;">
+                                        <span class="nav-label">Wrongful Deductions</span><i class="fa fa-angle-left arrow"></i></a>
+                                    <ul class="nav-3-level collapse">
+                                        <li>
+                                            <a href="{% url 'Over_Deductions_report' %}">Over Deductions</a>
+                                        </li>
+                                        <li>
+                                            <a href="javascript">Under Deductions</a>
+                                        </li>
+                                        <li>
+                                           <a href="javascript:;">Non Member Deductions</a>
+                                        </li>
+                                        
+                                    </ul>
+                                </li>                           
+
+                            </ul>
+                    </li>
+                <li class="heading">INITIAL DATA</li>
                     <li>
                         <a href="javascript:;"><i class="sidebar-item-icon fa fa-sitemap"></i>
                             <span class="nav-label">Data Capture</span><i class="fa fa-angle-left arrow"></i></a>
@@ -468,11 +659,7 @@
                                     <li>
                                         <a href="{% url 'Uploading_Existing_Savings_Additional_search' %}">Additional Savings</a>
                                     </li>
-                                {% comment %}
-                                   <li>
-                                        <a href="{% url 'Uploading_Existing_Savings_Verification_load' %}">Savings Varification</a>
-                                     </li>
-                                {% endcomment %}
+                        
                                 </ul>
                             </li>
 
@@ -545,14 +732,7 @@
                         </ul>
                     </li>
 
-                    {% comment %} {% endif %} {% endcomment %}
-                    
-                    <li>
-                        <a href="javascript:;"><i class="sidebar-item-icon fa fa-calendar"></i>
-                            <span class="nav-label">Calendar</span>
-                        </a>
-                    </li>
-                   
+                {% comment %}
                     <li>
                         <a href="javascript:;"><i class="sidebar-item-icon fa fa-sitemap"></i>
                             <span class="nav-label">Menu Levels</span><i class="fa fa-angle-left arrow"></i></a>
@@ -574,6 +754,7 @@
                             </li>
                         </ul>
                     </li>
+                {% endcomment %}
                 </ul>
             </div>
         </nav>

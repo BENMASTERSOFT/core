@@ -1,0 +1,67 @@
+{% extends 'deskofficer_templates/base_template.html' %}
+{% load static %}
+
+{% block content %}
+            <div class="page-content fade-in-up">
+                <div class="row">
+                    <div class="col-xl-6">
+                        <div class="ibox">
+                            <div class="ibox-head">
+                                <div class="ibox-title">REFUND OF OVER DEDUCTIONS |  <input type="button" class="btn btn-primary" value="Back" onclick="history.back()"/></div>
+                            </div>
+                            <div class="ibox-head">
+                                <div class="ibox-title">{{record.member.get_full_name}} |{{record.transaction_period.transaction_period}} </div>
+                            </div>
+                            <div class="ibox-body">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>CHANNELS</th>
+                                            <th>TASK</th>
+                                            
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>1</td>
+                                            <td>SAVINGS</td>
+                                            <td><a href="{% url 'Monthly_Unbalanced_transactions_Processing_Savings' record.pk %}" class="btn btn-primary">Process</a></td>
+                                           
+                                        </tr>
+                                        <tr>
+                                            <td>2</td>
+                                            <td>LOANS</td>
+                                            <td><a href="" class="btn btn-primary">Process</a></td>
+                                        </tr>
+                                        <tr>
+                                            <td>3</td>
+                                            <td>CASH COLLECTION</td>
+                                            <td><a href="" class="btn btn-primary">Process</a></td>
+                                        </tr>
+                                        <tr>
+                                            <td>4</td>
+                                            <td>TRANSFER TO OWNER ACCOUNT</td>
+                                            <td><a href="" class="btn btn-primary">Process</a></td>
+                                        </tr>
+                                        <tr>
+                                            <td>5</td>
+                                            <td>REFUND BY CHEQUE</td>
+                                            <td><a href="" class="btn btn-primary">Process</a></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                   
+                </div>
+              
+           
+            </div>
+  <div class="sidenav-backdrop backdrop"></div>
+    <div class="preloader-backdrop">
+        <div class="page-preloader">Loading</div>
+    </div>
+    {% include 'cooperative/includes/emptyspace.html' %}
+{% endblock %}

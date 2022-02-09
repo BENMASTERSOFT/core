@@ -10,7 +10,7 @@
             <div class="page-content fade-in-up">
                 <div class="ibox">
                     <div class="ibox-head">
-                        <div class="ibox-title">GENERATED SUMMARIZED TRANSACTIONS | {{transaction_period.transaction_period}} | 
+                        <div class="ibox-title"> <input type="button" class="btn btn-primary" value="Back" onclick="history.back()"/> | GENERATED SUMMARIZED TRANSACTIONS | {{transaction_period.transaction_period}} | 
                         {% if button_enabled %}
                         <a href="{% url 'export_users_xls' pk %}" class="btn btn-secondary">Export</a>
                         {% endif %}
@@ -48,7 +48,7 @@
                                     <td>{{record.member.ippis_no}}</td>
                                     <td>{{record.member.admin.first_name}} {{record.member.admin.last_name}} {{record.member.middle_name}}</td>
                                     <td>{{record.amount}}</td>
-                                    <td><a href="{% url 'Monthly_Group_Transaction_preview' record.member.pk %} " class="btn btn-success">View</a></td>
+                                    <td><a href="{% url 'Monthly_Group_Transaction_preview' record.member.ippis_no %} " class="btn btn-success">View</a></td>
                                   
                                 </tr>
                             {% endfor %}
@@ -68,6 +68,7 @@
         <div class="page-preloader">Loading</div>
     </div>
     <!-- END PAGA BACKDROPS-->
+    {% include 'cooperative/includes/emptyspace.html' %}
 {% endblock content %}
 
 {% block custom_js %}

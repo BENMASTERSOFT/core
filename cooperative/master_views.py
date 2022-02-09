@@ -20,10 +20,17 @@ from cooperative.resources import StockListResource
 
 
 def admin_home(request):
+    active_users = Staff.objects.filter(status=MembershipStatus.objects.get(title="ACTIVE")).count()
+    transactions = TransactionTypes.objects.all().count()
+    members = Members.objects.filter(status=MembershipStatus.objects.get(title="ACTIVE")).count()
+  
     record=DataCaptureManager.objects.first()
     title="System Admin"
   
     context={
+    "members":members,
+    "active_users":active_users,
+    "transactions":transactions,
     'title':title,
     'record':record,
     }
@@ -204,6 +211,67 @@ def datatable_table(request):
 ####################################################################
 ###################### IMPORTS SECTION##############################
 ####################################################################
+@permission_required('admin.can_add_log_entry')
+def Termination_Sources_upload(request):
+    template = "master_templates/file_upload.html"
+    
+    
+    prompt = {
+        'order': "Upload Termination Types, Order of the CSV should be Code, Title"
+    }
+    
+    if request.method == "GET":
+        return render(request, template, prompt)
+    
+    csv_file = request.FILES['file']
+    
+    if not csv_file.name.endswith('.csv'):
+        messages.error(request, "This id not a csv file")
+        
+    data_set = csv_file.read().decode('UTF-8')
+    io_string = io.StringIO(data_set)
+    next(io_string)
+    
+    for column in csv.reader(io_string, delimiter=',',  quotechar='|', quoting =csv.QUOTE_NONE):
+        _, created = Termination_Types.objects.update_or_create(
+            title=column[1],    
+        )
+        
+    context = {}
+    return render(request, template, context)
+
+
+
+@permission_required('admin.can_add_log_entry')
+def MonthlyDeductionGenerationHeaders_upload(request):
+    template = "master_templates/file_upload.html"
+    
+    
+    prompt = {
+        'order': "Upload Monthly Deduction Generation Headers Status, Order of the CSV should be Code, Title"
+    }
+    
+    if request.method == "GET":
+        return render(request, template, prompt)
+    
+    csv_file = request.FILES['file']
+    
+    if not csv_file.name.endswith('.csv'):
+        messages.error(request, "This id not a csv file")
+        
+    data_set = csv_file.read().decode('UTF-8')
+    io_string = io.StringIO(data_set)
+    next(io_string)
+    
+    for column in csv.reader(io_string, delimiter=',',  quotechar='|', quoting =csv.QUOTE_NONE):
+        _, created = MonthlyDeductionGenerationHeaders.objects.update_or_create(
+            title=column[1],    
+        )
+        
+    context = {}
+    return render(request, template, context)
+
+
 @permission_required('admin.can_add_log_entry')
 def YesNo_upload(request):
     template = "master_templates/file_upload.html"
@@ -1595,11 +1663,204 @@ def loan_criteria_base_upload(request):
     return render(request, template, context)
 
 
+####################################################################
+###################### COMMODITY MANAGER ######################
+####################################################################
+def Commodity_Products_Categories(request):
+    records =Commodity_Categories.objects.all()
+    context={
+    'records':records,
+    }
+    return render(request,'master_templates/Commodity_Products_Categories.html',context)
+
+
+def Commodity_Products_add(request,pk):
+    form = Commodity_Products_add_Form(request.POST or None)
+    record =Commodity_Categories.objects.get(id=pk)
+    status=MembershipStatus.objects.get(title='ACTIVE')
+    if request.method=="POST":
+        product_name = request.POST.get('product_name')
+        product_model = request.POST.get('product_model')
+        details = request.POST.get('details')
+        queryset=Commodity_Product_List(category=record,product_name=product_name,product_model=product_model,details=details,status=status)
+        queryset.save()
+        messages.success(request,'Record Submitted Successfully')
+        return HttpResponseRedirect(reverse('Commodity_Products_add',args=(pk,)))
+    context={
+    'form':form,
+    'record':record,
+    }
+    return render(request,'master_templates/Commodity_Products_add.html',context)
+
+def Commodity_Products_Manage_Load(request):
+    # status=MembershipStatus.objects.get(title='ACTIVE')
+    records=Commodity_Product_List.objects.all()
+    context={
+    'records':records,
+    }
+    return render(request,'master_templates/Commodity_Products_Manage_Load.html',context)
+
+def Commodity_Products_Manage_Update(request,pk):
+    form = Commodity_Products_add_Form(request.POST or None)
+    record=Commodity_Product_List.objects.get(id=pk)
+    
+    form.fields['product_name'].initial = record.product_name
+    form.fields['product_model'].initial = record.product_model
+    form.fields['details'].initial = record.details
+    form.fields['status'].initial = record.status.id
+
+    if request.method == 'POST':
+        product_name=request.POST.get('product_name')
+        product_model=request.POST.get('product_model')
+        details=request.POST.get('details')
+        status_id = request.POST.get('status')
+        status=MembershipStatus.objects.get(id=status_id)
+        
+        record.product_name=product_name
+        record.product_model=product_model
+        record.details=details
+        record.status=status
+        record.save()
+        messages.success(request,'Record Updated Successfully')
+        return HttpResponseRedirect(reverse('Commodity_Products_Manage_Load'))
+    context={
+    'form':form,
+    'record':record,
+    }
+    return render(request,'master_templates/Commodity_Products_Manage_Update.html',context)
+
+
+
+def addCompanies(request):
+    items= Companies.objects.all()
+    title="Add Companies"
+    form = addCompaniesForm(request.POST or None)
+    if request.method ==  "POST":
+        form = addCompaniesForm(request.POST)
+        if form.is_valid():
+            title=form.cleaned_data["title"]
+            record = Companies(title=title)
+            record.save()
+            messages.success(request,"Record Added Successfully")
+            return  HttpResponseRedirect(reverse('addCompanies'))
+    context={
+    'form':form,
+    'items':items,
+    'url':'addCompanies',
+    'button_text':"Add Companies",
+    'title':title,
+    }
+    return render(request,'master_templates/add_single_item.html', context)
+
+def Manage_Companies(request):
+    companies=Companies.objects.all()
+    context={
+    'companies':companies,
+    }
+    return render(request,'master_templates/manage_companies.html', context)
+
+def Delete_Companies(request,pk):
+    record=Companies.objects.get(id=pk)
+    record.delete()
+    return HttpResponseRedirect(reverse('Manage_Companies'))
+
+def Product_Linking_Load(request):
+    companies=Companies.objects.all()
+    context={
+    'companies':companies,
+    }
+    return render(request,'master_templates/Product_Linking_Load.html',context)
+
+def Product_Linking_Details(request,pk):
+    company=Companies.objects.get(id=pk)
+    records=Commodity_Product_List.objects.all()
+    linked_records = Company_Products.objects.filter(company=company)
+    context={
+    'company':company,
+    'records':records,
+    'linked_records':linked_records,
+    }
+    return render(request,'master_templates/Product_Linking_Details.html',context)
+
+
+def Product_Linking_Details_Process(request,comp_pk,pk):
+    company=Companies.objects.get(id=comp_pk)
+    product=Commodity_Product_List.objects.get(id=pk)
+    status=MembershipStatus.objects.get(title='ACTIVE')
+    if Company_Products.objects.filter(company=company,product=product).exists():
+        pass
+    else:
+        record=Company_Products(company=company,product=product,status=status)
+        record.save()
+        messages.success(request,"Record Linked Successfully")
+        return  HttpResponseRedirect(reverse('Product_Linking_Details',args=(comp_pk,)))
+    context={
+    'company':company,
+    'records':records,
+    }
+    return render(request,'master_templates/Product_Linking_Details.html',context)
+
+def Product_UnLinking_Process(request,comp_pk,pk):
+    product=Company_Products.objects.get(id=pk)
+    product.delete()
+
+    messages.success(request,"Record Deleted Successfully")
+    return  HttpResponseRedirect(reverse('Product_Linking_Details',args=(comp_pk,)))
+    context={
+    'company':company,
+    'records':records,
+    }
+    return render(request,'master_templates/Product_Linking_Details.html',context)
+
+def Product_Price_Settings_Load(request):
+    companies=Companies.objects.all()
+    context={
+    'companies':companies,
+    }
+    return render(request,'master_templates/Product_Price_Settings_Load.html',context)
+
+
+def Product_Price_Settings_details(request,pk):
+    company=Companies.objects.get(id=pk)
+    records=Company_Products.objects.filter(company=company)
+    context={
+    'records':records,
+    'company':company,
+    }
+    return render(request,'master_templates/Product_Price_Settings_details.html',context)
+
+
+def Product_Price_Settings_Update(request,comp_pk,pk):
+    form=Commodity_Products_add_Form(request.POST or None)
+    company=Companies.objects.get(id=comp_pk)
+    record=Company_Products.objects.get(id=pk)
+
+
+    form.fields['product_name'].initial=record.product.product_name
+    form.fields['product_model'].initial=record.product.product_model
+    form.fields['details'].initial=record.product.details
+    form.fields['unit_cost_price'].initial=record.amount
+
+
+    if request.method == 'POST':
+        unit_cost_price=request.POST.get('unit_cost_price')
+        record.amount=unit_cost_price
+        record.save()
+        return HttpResponseRedirect(reverse('Product_Price_Settings_details',args=(comp_pk,)))
+     
+    context={
+    'record':record,
+    'company':company,
+    'form':form,
+    }
+    return render(request,'master_templates/Product_Price_Settings_Update.html',context)
 
 
 ####################################################################
 ###################### USER ACCOUNT MANAGERS ######################
 ####################################################################
+
+
 def Invoice_Title(request):
     form=Invoice_Title_form(request.POST or None)
    
@@ -2052,6 +2313,7 @@ def addNOKRelationships(request):
     return render(request,'master_templates/add_single_item.html', context)
 
 
+
 def Manage_NOKRelationships(request):
     Relationships=NOKRelationships.objects.all()
     context={
@@ -2195,6 +2457,56 @@ def addTransactionSources(request):
 	'title':title,
 	}
 	return render(request,'master_templates/add_single_item.html', context)
+
+def addCommodityCategory(request):
+    title="Add Commodity Category"
+    items= Commodity_Categories.objects.all()
+    form = addCommodityCategoryForm(request.POST or None)
+    receipt_type=ReceiptTypes.objects.get(title='NONE')
+    status=MembershipStatus.objects.get(title='ACTIVE')
+    multiple_loan_status=MultipleLoanStatus.objects.get(title='NOT ALLOWED')
+    form_print=YesNo.objects.get(title='NO')
+    if request.method ==  "POST":
+        
+        title=request.POST.get("title")
+        transaction_id=request.POST.get('transactions')
+        transaction=TransactionTypes.objects.get(id=transaction_id)
+        record = Commodity_Categories(transaction=transaction,title=title,receipt_type=receipt_type,status=status,multiple_loan_status=multiple_loan_status,form_print=form_print)
+        record.save()
+        messages.success(request,"Record Added Successfully")
+        return  HttpResponseRedirect(reverse('addCommodityCategory'))
+    context={
+    'form':form,
+    'items':items,
+    'url':'addCommodityCategory',
+    'button_text':"Add Record",
+    'title':title,
+    }
+    return render(request,'master_templates/addCommodityCategory.html', context)
+
+
+def Manage_Commodity_Categories(request):
+    records=Commodity_Categories.objects.all()
+    
+    context={
+    'records':records,
+    }
+    return render(request,'master_templates/Manage_Commodity_Categories.html', context)
+
+def Manage_Commodity_Categories_Update(request,pk):
+    form = addCommodityCategoryForm(request.POST or None)
+    record=Commodity_Categories.objects.get(id=pk)
+    if request.method == 'POST':
+        title = request.POST.get('title')
+        record.title=title
+        record.save()
+        return HttpResponseRedirect(reverse('Manage_Commodity_Categories'))
+    form.fields['title'].initial=record.title
+    context={
+    'form':form,
+    'record':record,
+    }
+    return render(request,'master_templates/Manage_Commodity_Categories_Update.html', context)
 
 
 def addGender(request):
@@ -2566,11 +2878,11 @@ def loan_based_savings_update(request):
 
 
 def loan_settings_load(request):
-	records = TransactionTypes.objects.filter(source__title="LOAN")
-	context={
-	'records':records,
-	}
-	return render(request, 'master_templates/loan_settings_load.html',context)
+    records = TransactionTypes.objects.filter(source__title="LOAN",category__title='MONETARY')
+    context={
+    'records':records,
+    }
+    return render(request, 'master_templates/loan_settings_load.html',context)
 
 
 def loan_settings_details_load(request,pk):
@@ -2582,6 +2894,8 @@ def loan_settings_details_load(request,pk):
 	'pk':pk,
 	}
 	return render(request, 'master_templates/loan_settings_details_load.html',context)
+
+
 
 
 def loan_guarantors_update(request,pk):
@@ -3070,6 +3384,397 @@ def loan_loan_age_update(request,pk):
     return render(request,'master_templates/loan_criteria_update.html', context)
 
 
+
+
+####################################################################
+###################### NON-MONETARY LOAN SETTINGS ###################
+####################################################################
+def loan_settings_non_monetary_load(request):
+    records = Commodity_Categories.objects.filter(transaction__source__title="LOAN",transaction__category__title='NON-MONETARY')
+    context={
+    'records':records,
+    }
+    return render(request, 'master_templates/loan_settings_non_monetary_load.html',context)
+
+
+def loan_settings_non_monetary_settings(request,pk):
+    record = Commodity_Categories.objects.get(id=pk)
+    
+    context={
+  
+    'record':record,
+    }
+    return render(request,'master_templates/loan_settings_non_monetary_settings.html',context)
+
+
+
+
+def non_monetary_oan_guarantors_update(request,pk):
+    item=  Commodity_Categories.objects.get(id=pk)
+    title="Update Loan Guarnators for " +  item.title
+    instructions='''
+    This page enable you to set the total number of Gaurantors 
+    needed to access this loan. 
+    '''
+    form = loan_guarantors_update_form(request.POST or None)
+
+    if request.method ==  "POST":
+        form = loan_guarantors_update_form(request.POST)
+        if form.is_valid():
+            guarantors=form.cleaned_data["guarantors"]
+            record = Commodity_Categories.objects.get(id=pk)
+            record.guarantors=guarantors
+            record.save()
+            messages.success(request,"Record Updated Successfully")
+            return  HttpResponseRedirect(reverse('loan_settings_non_monetary_settings',args=(pk,)))
+
+    form.fields['guarantors'].initial=item.guarantors
+    context={
+    'form':form,
+    'instructions':instructions,
+    'url':'non_monetary_oan_guarantors_update',
+    'button_text':"Update Record",
+    'title':title,
+    }
+    return render(request,'master_templates/loan_criteria_update.html', context)
+
+
+# def default_admin_charges_update(request,pk):
+#     item= TransactionTypes.objects.get(id=pk)
+#     title="Update Default Admin Charges for " +  item.name
+#     instructions='''
+#     This page enable you to set the default admin Charge, this will apply if the the laon amount
+#     is not greater to Minimum Loan Admin Charge for this loan. 
+#     '''
+#     form = default_admin_charges_update_form(request.POST or None)
+
+#     if request.method ==  "POST":
+#         form = default_admin_charges_update_form(request.POST)
+#         if form.is_valid():
+#             admin_charges=form.cleaned_data["default_admin_charges"]
+#             record = TransactionTypes.objects.get(id=pk)
+#             record.default_admin_charges=admin_charges
+#             record.save()
+#             messages.success(request,"Record Updated Successfully")
+#             return  HttpResponseRedirect(reverse('loan_settings_details_load',args=(pk,)))
+
+#     form.fields['default_admin_charges'].initial=item.default_admin_charges
+#     context={
+#     'form':form,
+#     'instructions':instructions,
+#     'url':'default_admin_charges_update',
+#     'button_text':"Update Record",
+#     'title':title,
+#     }
+#     return render(request,'master_templates/loan_criteria_update.html', context)
+
+    
+def Non_Monetary_MultipleLoanStatus_update(request,pk):
+    item= Commodity_Categories.objects.get(id=pk)
+    title="Update Default Admin Charges for " +  item.title
+    instructions='''
+    This page enable you to set if members are allowed to access multiple 
+    fascilities for for this loan. 
+    '''
+    form = MultipleLoanStatus_update_form(request.POST or None)
+
+    if request.method ==  "POST":
+        form = MultipleLoanStatus_update_form(request.POST)
+        if form.is_valid():
+            multiple_loan_status_id=form.cleaned_data["multiple_loan_status"]
+            multiple_loan_status=MultipleLoanStatus.objects.get(id=multiple_loan_status_id)
+            record = Commodity_Categories.objects.get(id=pk)
+            record.multiple_loan_status=multiple_loan_status
+            record.save()
+            messages.success(request,"Record Updated Successfully")
+            return  HttpResponseRedirect(reverse('loan_settings_non_monetary_settings',args=(pk,)))
+
+    form.fields['multiple_loan_status'].initial=item.multiple_loan_status
+    context={
+    'form':form,
+    'instructions':instructions,
+    'url':'Non_Monetary_MultipleLoanStatus_update',
+    'button_text':"Update Record",
+    'title':title,
+    }
+    return render(request,'master_templates/loan_criteria_update.html', context)
+
+
+# def loan_savings_based_update(request,pk):
+#     item= TransactionTypes.objects.get(id=pk)
+#     title="Update Loan Savings Based for " +  item.name
+#     instructions='''
+#     This page enable you to set the percentage amout to be saved in 
+#     order to access a given loan.
+#     '''
+#     form = loan_savings_based_update_form(request.POST or None)
+
+#     if request.method ==  "POST":
+#         form = loan_savings_based_update_form(request.POST)
+#         if form.is_valid():
+#             savings_rate=form.cleaned_data["loan_savings_based"]
+#             record = TransactionTypes.objects.get(id=pk)
+#             record.savings_rate=savings_rate
+#             record.save()
+#             messages.success(request,"Record Updated Successfully")
+#             return  HttpResponseRedirect(reverse('loan_settings_details_load',args=(pk,)))
+
+#     form.fields['loan_savings_based'].initial=item.savings_rate
+#     context={
+#     'form':form,
+#     'instructions':instructions,
+#     'url':'loan_savings_based_update',
+#     'button_text':"Update Record",
+#     'title':title,
+#     }
+#     return render(request,'master_templates/loan_criteria_update.html', context)
+
+
+
+
+def non_monetary_loan_duration_update(request,pk):
+    item= Commodity_Categories.objects.get(id=pk)
+    title="Update Loan Duration for " +  item.title
+    instructions='''
+    This page enable you to set the duration of Loans.
+    '''
+    form = loan_duration_update_form(request.POST or None)
+
+    if request.method ==  "POST":
+        form = loan_duration_update_form(request.POST)
+        if form.is_valid():
+            duration=form.cleaned_data["duration"]
+            record = Commodity_Categories.objects.get(id=pk)
+            record.duration=duration
+            record.save()
+            messages.success(request,"Record Updated Successfully")
+            return  HttpResponseRedirect(reverse('loan_settings_non_monetary_settings',args=(pk,)))
+
+    form.fields['duration'].initial=item.duration
+    context={
+    'form':form,
+    'instructions':instructions,
+    'url':'non_monetary_loan_duration_update',
+    'button_text':"Update Record",
+    'title':title,
+    }
+    return render(request,'master_templates/loan_criteria_update.html', context)
+
+
+def non_monetary_loan_name_update(request,pk):
+    item= Commodity_Categories.objects.get(id=pk)
+    title="Update Loan Description for " +  item.title
+    instructions='''
+    This page enable you to modify the Title of Loans.
+    '''
+    form = loan_name_update_form(request.POST or None)
+
+    if request.method ==  "POST":
+        form = loan_name_update_form(request.POST)
+        if form.is_valid():
+            name=form.cleaned_data["name"]
+            record = Commodity_Categories.objects.get(id=pk)
+            record.title=name
+            record.save()
+            messages.success(request,"Record Updated Successfully")
+            return  HttpResponseRedirect(reverse('loan_settings_non_monetary_settings',args=(pk,)))
+
+    form.fields['name'].initial=item.title
+    context={
+    'form':form,
+    'instructions':instructions,
+    'url':'non_monetary_loan_name_update',
+    'button_text':"Update Record",
+    'title':title,
+    }
+    return render(request,'master_templates/loan_criteria_update.html', context)
+
+
+def non_monetary_loan_interest_rate_update(request,pk):
+    item= Commodity_Categories.objects.get(id=pk)
+    title="Update Loan Interest Rate  for " +  item.title
+    instructions='''
+    This page enable you to set the interest rate of Loans.
+    '''
+
+    form = loan_interest_rate_update_form(request.POST or None)
+
+    if request.method ==  "POST":
+        form = loan_interest_rate_update_form(request.POST)
+        if form.is_valid():
+            interest_rate=form.cleaned_data["interest_rate"]
+            record = Commodity_Categories.objects.get(id=pk)
+            record.interest_rate=interest_rate
+            record.save()
+            messages.success(request,"Record Updated Successfully")
+            return  HttpResponseRedirect(reverse('loan_settings_non_monetary_settings',args=(pk,)))
+    form.fields['interest_rate'].initial=item.interest_rate
+    context={
+    'form':form,
+    'instructions':instructions,
+    'url':'non_monetary_loan_interest_rate_update',
+    'button_text':"Update Record",
+    'title':title,
+    }
+    return render(request,'master_templates/loan_criteria_update.html', context)
+
+
+
+
+def non_monetary_loan_admin_charges_rate_update(request,pk):
+    item= Commodity_Categories.objects.get(id=pk)
+    title="Update Loan AdminCharge Rate for " +  item.title
+    instructions='''
+    This page enable you to set whether admin charge is Cash or a 
+    percentage of amount requested for loan.
+    '''
+    form = loan_admin_charges_rate_update_form(request.POST or None)
+
+    if request.method ==  "POST":
+        form = loan_admin_charges_rate_update_form(request.POST)
+        if form.is_valid():
+            admin_charge_id=form.cleaned_data["admin_charges_rating"]
+            admin_charges_rating=AdminCharges.objects.get(id=admin_charge_id)
+            record = Commodity_Categories.objects.get(id=pk)
+            record.admin_charges_rating=admin_charges_rating
+            record.save()
+            messages.success(request,"Record Updated Successfully")
+            return  HttpResponseRedirect(reverse('loan_settings_non_monetary_settings',args=(pk,)))
+
+    form.fields['admin_charges_rating'].initial=item.admin_charges_rating.id
+    context={
+    'form':form,
+    'instructions':instructions,
+    'url':'non_monetary_loan_admin_charges_rate_update',
+    'button_text':"Update Record",
+    'title':title,
+    }
+    return render(request,'master_templates/loan_criteria_update.html', context)
+
+
+
+
+def non_monetary_loan_admin_charges_update(request,pk):
+    item= Commodity_Categories.objects.get(id=pk)
+    title="Update Loan Admin Charges  for " +  item.title
+    instructions='''
+    This page enable you to set the percentage rating of 
+    the Admin charge if it percentage based.
+    '''
+    form = loan_admin_charges_update_form(request.POST or None)
+
+    if request.method ==  "POST":
+        form = loan_admin_charges_update_form(request.POST)
+        if form.is_valid():
+            admin_charges=form.cleaned_data["admin_charges"]
+            record = Commodity_Categories.objects.get(id=pk)
+            record.admin_charges=admin_charges
+            record.save()
+            messages.success(request,"Record Updated Successfully")
+            return  HttpResponseRedirect(reverse('loan_settings_non_monetary_settings',args=(pk,)))
+
+    form.fields['admin_charges'].initial=item.admin_charges
+    context={
+    'form':form,
+    'instructions':instructions,
+    'url':'non_monetary_loan_admin_charges_update',
+    'button_text':"Update Record",
+    'title':title,
+    }
+    return render(request,'master_templates/loan_criteria_update.html', context)
+
+    
+
+def non_monetary_loan_form_print_update(request,pk):
+    item= Commodity_Categories.objects.get(id=pk)
+    title="Update Loan Form Print  for " +  item.title
+    instructions='''
+    This page enable you to set the minimum loan amount 
+    upon which there would be flat rate in cash of Admin Charges. 
+    '''
+    form = loan_form_print_form(request.POST or None)
+
+    if request.method ==  "POST":
+        form = loan_form_print_form(request.POST)
+        if form.is_valid():
+            form_print_id=form.cleaned_data["form_print"]
+            form_print=YesNo.objects.get(id=form_print_id)
+            record = Commodity_Categories.objects.get(id=pk)
+            record.form_print=form_print
+            record.save()
+            messages.success(request,"Record Updated Successfully")
+            return  HttpResponseRedirect(reverse('loan_settings_non_monetary_settings',args=(pk,)))
+
+    form.fields['form_print'].initial=item.form_print.id
+    context={
+    'form':form,
+    'instructions':instructions,
+    'url':'non_monetary_loan_form_print_update',
+    'button_text':"Update Record",
+    'title':title,
+    }
+    return render(request,'master_templates/loan_criteria_update.html', context)
+
+    
+def non_monetary_loan_receipt_type_update(request,pk):
+    item= Commodity_Categories.objects.get(id=pk)
+    title="Update Loan Salary Loan Relationship  for " +  item.title
+
+    instructions='''
+    This page enable you to set the Receipt Type for Issuance. 
+    '''
+    form = loan_Receipt_type_update_form(request.POST or None)
+
+    if request.method ==  "POST":
+        form = loan_Receipt_type_update_form(request.POST)
+        if form.is_valid():
+            receipt_type_id=form.cleaned_data["receipt_type"]
+            receipt_type=ReceiptTypes.objects.get(id=receipt_type_id)
+            record = Commodity_Categories.objects.get(id=pk)
+            record.receipt_type=receipt_type
+            record.save()
+            messages.success(request,"Record Updated Successfully")
+            return  HttpResponseRedirect(reverse('loan_settings_non_monetary_settings',args=(pk,)))
+
+    form.fields['receipt_type'].initial=item.receipt_type.id
+    context={
+    'form':form,
+    'instructions':instructions,
+    'url':'non_monetary_loan_receipt_type_update',
+    'button_text':"Update Record",
+    'title':title,
+    }
+    return render(request,'master_templates/loan_criteria_update.html', context)
+
+
+def non_monetary_loan_loan_age_update(request,pk):
+    item= Commodity_Categories.objects.get(id=pk)
+    title="Update Loan Age  for " +  item.title
+    instructions='''
+    This page enable you to set the number of months one has to a member before 
+    Such person can access this loan. 
+    '''
+    form = loan_loan_age_update_form(request.POST or None)
+
+    if request.method ==  "POST":
+        form = loan_loan_age_update_form(request.POST)
+        if form.is_valid():
+            loan_age=form.cleaned_data["loan_age"]
+            record = Commodity_Categories.objects.get(id=pk)
+            record.loan_age=loan_age
+            record.save()
+            messages.success(request,"Record Updated Successfully")
+            return  HttpResponseRedirect(reverse('loan_settings_non_monetary_settings',args=(pk,)))
+
+    form.fields['loan_age'].initial=item.loan_age
+    context={
+    'form':form,
+    'instructions':instructions,
+    'url':'non_monetary_loan_loan_age_update',
+    'button_text':"Update Record",
+    'title':title,
+    }
+    return render(request,'master_templates/loan_criteria_update.html', context)
 
 
 ####################################################################
@@ -3630,6 +4335,894 @@ def CustomerID_Manager(request):
 
 
 #######################################################################
+################## PRESIDENT VIEWS  ##################################
+#######################################################################
+def membership_request_approvals_list_load(request):
+    submission_status=SubmissionStatus.objects.get(title='SUBMITTED')
+    certification_status=CertificationStatus.objects.get(title='PENDING')
+    approval_status=ApprovalStatus.objects.get(title='PENDING')
+
+    transaction=ApprovableTransactions.objects.get(transaction__code='100')  
+    approval_officer = ApprovalOfficers.objects.get(transaction=transaction,officer_id=request.user.id)  
+    applicants=MemberShipRequest.objects.filter(approval_officer=approval_officer,submission_status=submission_status,approval_status=approval_status).exclude(certification_status=certification_status)
+    context={
+    'applicants':applicants,
+    }
+    return render(request,'master_templates/PRESIDENT/membership_request_approvals_list_load.html',context)
+
+
+def membership_request_approval_info(request,pk):
+    form_comment=MemberShipRequest_approval_comment_form(request.POST or None)
+    form_attachment=MemberShipRequest_approval_attachment_form(request.POST or None)
+    applicant=MemberShipRequest.objects.get(id=pk)
+    officer=CustomUser.objects.get(id=request.user.id)
+
+    existing_infos = MemberShipRequestAdditionalInfo.objects.filter(applicant_id=pk).exclude(officer=officer)
+    existing_attachments = MemberShipRequestAdditionalAttachment.objects.filter(applicant_id=pk).exclude(officer=officer)
+    approval_comments = MemberShipRequestAdditionalInfo.objects.filter(applicant_id=pk,officer=officer)
+    approval_attachments = MemberShipRequestAdditionalAttachment.objects.filter(applicant_id=pk,officer=officer)
+
+    
+    context={
+    'form_comment':form_comment,
+    'form_attachment':form_attachment,
+    'pk':pk,
+    'existing_infos':existing_infos,
+    'existing_attachments':existing_attachments,
+    'approval_comments':approval_comments,
+    'approval_attachments':approval_attachments,
+    }
+    return render(request,'master_templates/PRESIDENT/membership_request_approval_info.html',context)
+
+
+def membership_request_approval_info_delete(request,pk):
+    record= MemberShipRequestAdditionalInfo.objects.get(id=pk)
+    return_pk=record.applicant_id
+    record.delete()
+    return HttpResponseRedirect(reverse('membership_request_approval_info',args=(return_pk,)))
+
+
+def membership_request_approval_comment_save(request,pk):
+    applicant=MemberShipRequest.objects.get(id=pk)
+    officer=CustomUser.objects.get(id=request.user.id)
+    if request.method=="POST" and 'btn_info' in request.POST:
+        comment=request.POST.get('comment')
+    
+        record=MemberShipRequestAdditionalInfo(applicant=applicant,comment=comment,officer=officer)
+        record.save()
+        return HttpResponseRedirect(reverse('membership_request_approval_info',args=(pk,)))
+
+
+
+def membership_request_approval_attachment_save(request,pk):
+    applicant=MemberShipRequest.objects.get(id=pk)
+    officer=CustomUser.objects.get(id=request.user.id)
+
+    if request.method=="POST" and 'btn_attachment' in request.POST:
+        attachment_form=MemberShipRequest_approval_attachment_form(request.POST)
+        caption=request.POST.get('caption')
+        
+        
+        if request.FILES.get('image', False):
+            image = request.FILES['image']
+            fs=FileSystemStorage()
+            filename=fs.save(image.name,image)
+            image_url=fs.url(filename)
+    
+        else:
+            image_url=None
+
+        record=MemberShipRequestAdditionalAttachment(image=image_url,applicant=applicant,caption=caption,officer=officer)
+        record.save()
+        return HttpResponseRedirect(reverse('membership_request_approval_info',args=(pk,)))
+
+
+def membership_request_approval_attachment_delete(request,pk):
+    record= MemberShipRequestAdditionalAttachment.objects.get(id=pk)
+    return_pk=record.applicant_id
+    record.delete()
+    return HttpResponseRedirect(reverse('membership_request_approval_info',args=(return_pk,)))
+
+
+
+def MemberShipRequest_approval_submit(request,pk):
+    form=MemberShipRequest_approval_submit_form(request.POST or None)
+    
+    if request.method=="POST":
+        approval_status_id=request.POST.get('approval_status')
+        approval_status=ApprovalStatus.objects.get(id=approval_status_id)
+
+        record = MemberShipRequest.objects.get(id=pk)
+        
+        record.approval_status=approval_status
+        record.approved_date=datetime.date.today()
+        record.save()
+        return HttpResponseRedirect(reverse('membership_request_approvals_list_load'))
+    context={
+    'form':form,
+    }
+    return render(request,'master_templates/PRESIDENT/MemberShipRequest_approval_submit.html',context)
+
+
+def loan_request_approval_list_load(request):
+    certification_status=CertificationStatus.objects.get(title='CERTIFIED')
+    approval_status=ApprovalStatus.objects.get(title='PENDING')
+    current_user=CustomUser.objects.get(id=request.user.id)
+    applicants=LoanRequest.objects.filter(approval_status=approval_status,certification_status=certification_status,approval_officer__officer_id=current_user)
+
+    context={
+    'applicants':applicants,
+    }
+    return render(request,'master_templates/PRESIDENT/loan_request_approval_list_load.html',context)
+
+
+def Loan_request_approval_details(request,pk):
+    loan_comment=LoanRequest.objects.get(id=pk)
+    loan_analysis=LoanRequestSettings.objects.filter(applicant_id=pk,category='ANALYSIS')
+    loan_summary=LoanRequestSettings.objects.filter(applicant_id=pk,category='SUMMARY')
+    
+
+    approval_status=ApprovalStatus.objects.all()
+    
+
+
+    if request.method=='POST':
+
+        comment=request.POST.get('comment')
+        approved_amount=request.POST.get('amount')
+
+        if float(approved_amount)<=0:
+            messages.info(request,"Amount approved cannot be less than or equal to Zero(0)")
+            return HttpResponseRedirect(reverse('Loan_request_approval_details', args=(pk,)))
+        
+        if float(loan_comment.loan_amount) < float(approved_amount):
+            messages.info(request,"Amount approved cannot be more than applied Amount")
+            return HttpResponseRedirect(reverse('Loan_request_approval_details', args=(pk,)))
+
+        status_id=request.POST.get('status')
+        status=ApprovalStatus.objects.get(id=status_id)
+
+        approved_date= datetime.datetime.now()
+
+
+        loan_comment.approval_status=status
+        loan_comment.approval_comment=comment
+        loan_comment.approval_date=approved_date
+        loan_comment.approved_amount=approved_amount
+        loan_comment.save()
+    
+        return HttpResponseRedirect(reverse('loan_request_approval_list_load'))
+
+    context={
+    'loan_analysis':loan_analysis,
+    'loan_summary':loan_summary,
+    'pk':pk,
+    'loan_comment':loan_comment,
+    'approval_status':approval_status,
+    }
+    return render(request,'master_templates/PRESIDENT/Loan_request_approval_details.html',context)
+
+
+def loan_application_approval_list_load(request):
+    certification_status=CertificationStatus.objects.get(title='CERTIFIED')
+    approval_status=ApprovalStatus.objects.get(title='PENDING')
+    current_user=CustomUser.objects.get(id=request.user.id)
+    applicants=LoanApplication.objects.filter(approval_status=approval_status,certification_status=certification_status,approval_officer__officer_id=current_user)
+
+    context={
+    'applicants':applicants,
+    }
+    return render(request,'master_templates/PRESIDENT/loan_application_approval_list_load.html',context)
+
+def Loan_application_approval_details(request,pk):
+    loan_comment=LoanApplication.objects.get(id=pk)
+    loan_analysis=LoanApplicationSettings.objects.filter(applicant_id=pk,category='ANALYSIS')
+    loan_summary=LoanApplicationSettings.objects.filter(applicant_id=pk,category='SUMMARY')
+    approval_status=ApprovalStatus.objects.all()
+    
+
+
+    if request.method=='POST':
+
+        comment=request.POST.get('comment')
+        approved_amount=request.POST.get('amount')
+        if float(loan_comment.loan_amount) < float(approved_amount):
+            messages.success(request,"Amount approved cannot be more than applied Amount")
+            return HttpResponseRedirect(reverse('Loan_request_approval_details', args=(pk,)))
+
+        status_id=request.POST.get('status')
+        status=ApprovalStatus.objects.get(id=status_id)
+
+        approved_date= datetime.datetime.now()
+
+
+        loan_comment.approval_status=status
+        loan_comment.approval_comment=comment
+        loan_comment.approval_date=approved_date
+        loan_comment.approved_amount=approved_amount
+        loan_comment.save()
+    
+        return HttpResponseRedirect(reverse('loan_application_approval_list_load'))
+
+    context={
+    'loan_analysis':loan_analysis,
+    'loan_summary':loan_summary,
+    'pk':pk,
+    'loan_comment':loan_comment,
+    'approval_status':approval_status,
+    }
+    return render(request,'master_templates/PRESIDENT/Loan_application_approval_details.html',context)
+
+
+def savings_cash_withdrawal_list_load(request):
+    status=TransactionStatus.objects.get(title='UNTREATED')
+    approval_status=ApprovalStatus.objects.get(title='PENDING')
+    current_user=CustomUser.objects.get(id=request.user.id)
+    applicants=MembersCashWithdrawalsApplication.objects.filter(approval_status=approval_status,status=status,approval_officer__officer_id=current_user)
+
+    context={
+    'applicants':applicants,
+    }
+    return render(request,'master_templates/PRESIDENT/savings_cash_withdrawal_list_load.html',context)
+
+
+def savings_cash_withdrawal_preview(request,pk):
+    form=savings_cash_withdrawal_preview_form(request.POST or None)
+    applicant=MembersCashWithdrawalsApplication.objects.get(id=pk)
+    applied_date =applicant.created_at
+    
+    maturity_date=applicant.maturity_date
+    exclusive_status=ExclusiveStatus.objects.get(title="EXCLUSIVE")
+    
+    if applicant.member.member.exclusive_status==exclusive_status:
+        submission_status=True
+    else:
+        submission_status=False
+        if maturity_date <= current_date:
+            submission_status=True
+    approval_status=ApprovalStatus.objects.get(title='APPROVED')
+    form.fields['ledger_balance'].initial= applicant.ledger_balance
+    form.fields['amount_applied'].initial= applicant.amount
+    form.fields['amount_approved'].initial= applicant.amount
+    form.fields['status'].initial= applicant.status.id
+    form.fields['comment'].initial= "Please Process"
+    form.fields['status'].initial= approval_status.id
+
+    if request.method=="POST":
+        status_id=request.POST.get('status')
+        status=ApprovalStatus.objects.get(id=status_id)
+        amount_approved=request.POST.get('amount_approved')
+        amount_applied=request.POST.get('amount_applied')
+        comment=request.POST.get('comment')
+        certification_officer_id=request.POST.get('certification_officers')
+    
+        certification_officer=CertificationOfficers.objects.get(id=certification_officer_id)
+        
+        if status.title == 'APPROVED':          
+            if float(amount_approved) > float(amount_applied):
+                messages.error(request,'Amount Approved Cannot be More than Applied Amount')
+                return HttpResponseRedirect(reverse('savings_cash_withdrawal_preview',args=(pk,)))
+            applicant.approval_status=status
+            applicant.approved_amount=amount_approved
+            applicant.approval_comment=comment
+            applicant.approval_status=status
+            applicant.certification_officer=certification_officer
+            applicant.save()
+            return HttpResponseRedirect(reverse('savings_cash_withdrawal_list_load'))
+        else:
+            pass
+    context={
+    'applicant':applicant,
+    'form':form,
+    'submission_status':submission_status,
+    }
+    return render(request,'master_templates/PRESIDENT/savings_cash_withdrawal_preview.html',context)
+
+
+
+def members_exclusiveness_list_load(request):
+    status=TransactionStatus.objects.get(title='UNTREATED')
+    approval_status=ApprovalStatus.objects.get(title='PENDING')
+    current_user=CustomUser.objects.get(id=request.user.id)
+    applicants=MembersExclusiveness.objects.filter(approval_status=approval_status,status=status,approval_officer__officer_id=current_user)
+    
+    context={
+    'applicants':applicants,
+    }
+    return render(request,'master_templates/PRESIDENT/members_exclusiveness_list_load.html',context)
+
+def members_exclusiveness_process(request,pk):
+    form=members_exclusiveness_request_approval_process_form(request.POST or None)
+    applicant=MembersExclusiveness.objects.get(id=pk)
+    if request.method=="POST":
+        comment=request.POST.get('comment')
+        status_id=request.POST.get('approval_status')
+        status=ApprovalStatus.objects.get(id=status_id)
+        applicant.approval_status=status
+        applicant.approval_comment=comment
+        applicant.approved_at=now
+        applicant.save()
+        return HttpResponseRedirect(reverse('members_exclusiveness_list_load'))
+
+    context={
+    'form':form,
+    'applicant':applicant,
+    }
+    return render(request,'master_templates/PRESIDENT/members_exclusiveness_process.html',context)
+
+
+def Shares_Purchase_Request_Approval_List_Load(request):
+    status=TransactionStatus.objects.get(title='UNTREATED')
+    approval_status=ApprovalStatus.objects.get(title='PENDING')
+    records=MembersSharePurchaseRequest.objects.filter(approval_status=approval_status,status=status)
+    
+    context={
+    'records':records,
+    }
+    return render(request,'master_templates/PRESIDENT/Shares_Purchase_Request_Approval_List_Load.html',context)
+
+
+def Shares_Purchase_Request_Approval_Processed(request,pk):
+    form=Shares_Purchase_Request_Approval_Processed_form(request.POST or None)
+    record=MembersSharePurchaseRequest.objects.get(id=pk)
+
+    if request.method=="POST":
+        units = request.POST.get("units")
+        comment=request.POST.get('comment')
+
+        approval_status_id=request.POST.get('approval_status')
+        approval_status=ApprovalStatus.objects.get(id=approval_status_id)
+
+        record.units=units
+        record.approval_status=approval_status
+        record.approval_date=now
+        record.approval_comment=comment
+        record.save()
+        return HttpResponseRedirect(reverse('Shares_Purchase_Request_Approval_List_Load'))
+    form.fields['units'].initial=record.units
+    context={
+    'form':form,
+    'record':record,
+    }
+    return render(request,'master_templates/PRESIDENT/Shares_Purchase_Request_Approval_Processed.html', context)
+
+
+
+#######################################################################
+################## SECRETARY SECTION #####################################
+#######################################################################
+def membership_request_certification_list_load(request):
+    submission_status=SubmissionStatus.objects.get(title='SUBMITTED')
+    certification_status=CertificationStatus.objects.get(title='PENDING')
+
+    transaction=CertifiableTransactions.objects.get(transaction__code='100')  
+    certification_officer = CertificationOfficers.objects.get(transaction=transaction,officer_id=request.user.id)  
+    
+    applicants=MemberShipRequest.objects.filter(submission_status=submission_status,certification_officer=certification_officer,certification_status=certification_status)
+    context={
+    'applicants':applicants,
+    }
+    return render(request,'master_templates/SECRETARY/membership_request_certification_list_load.html',context)
+
+
+def membership_request_certification_info(request,pk):
+    applicant=MemberShipRequest.objects.get(id=pk)
+    officer=CustomUser.objects.get(id=request.user.id)
+
+    comment_form =MemberShipRequestAdditionalInfo_form(request.POST or None)
+    attachment_form =MemberShipRequestAdditionalAttachment_form(request.POST or None)
+
+    records= MemberShipRequestAdditionalInfo.objects.filter(applicant_id=pk,officer_id=officer)
+    attachments=MemberShipRequestAdditionalAttachment.objects.filter(officer=officer,applicant=applicant)
+
+    existing_infos = MemberShipRequestAdditionalInfo.objects.filter(applicant_id=pk).exclude(officer=officer)
+    existing_attachments = MemberShipRequestAdditionalAttachment.objects.filter(applicant_id=pk).exclude(officer=officer)
+
+
+    if MemberShipRequestAdditionalInfo.objects.filter(officer=officer,applicant=applicant).exists():    
+        comment_form.fields['comment'].initial=records[0].comment
+
+    context={
+    'comment_form':comment_form,
+    'attachment_form':attachment_form,
+    'pk':pk,
+    'existing_infos':existing_infos,
+    'existing_attachments':existing_attachments,
+    'records':records,
+    'attachments':attachments,
+    }
+    return render(request,'master_templates/SECRETARY/membership_request_certification_info.html',context)
+
+
+def membership_request_certification_additional_info_save(request,pk):
+    applicant=MemberShipRequest.objects.get(id=pk)
+    officer=CustomUser.objects.get(id=request.user.id)
+
+    comment = request.POST.get('comment')
+    if MemberShipRequestAdditionalInfo.objects.filter(officer=officer,applicant=applicant).exists():
+        record=MemberShipRequestAdditionalInfo.objects.filter(officer=officer,applicant=applicant).first()
+        record.comment=comment
+        record.save()
+        messages.success(request,"Record Updated Successfully")
+        return HttpResponseRedirect(reverse('membership_request_certification_info',args=(pk,)))
+
+    record=MemberShipRequestAdditionalInfo(comment=comment,officer=officer,applicant=applicant)
+    record.save()
+    messages.success(request,"Record Added Successfully")
+    return HttpResponseRedirect(reverse('membership_request_certification_info',args=(pk,)))
+
+
+def membership_request_certification_additional_info_delete(request,pk,return_pk):
+    record=MemberShipRequestAdditionalInfo.objects.get(id=pk)
+    record.delete()
+    return HttpResponseRedirect(reverse('membership_request_certification_info',args=(return_pk,)))
+
+
+
+def MemberShipRequestAdditionalAttachment_certification_save(request,pk):
+    applicant=MemberShipRequest.objects.get(id=pk)
+    officer=CustomUser.objects.get(id=request.user.id)
+
+    if request.FILES.get('image', False):
+        image = request.FILES['image']
+        fs=FileSystemStorage()
+        filename=fs.save(image.name,image)
+        image_url=fs.url(filename)
+    
+    else:
+        image_url=None
+    
+    caption=request.POST.get('caption')
+
+    if MemberShipRequestAdditionalAttachment.objects.filter(officer=officer,applicant=applicant,caption=caption).exists():
+        member= MemberShipRequestAdditionalAttachment.objects.get(officer=officer,applicant=applicant,caption=caption) 
+        member.image=image_url
+        member.save()
+        messages.success(request,"Successfully Updated Record")
+        return HttpResponseRedirect(reverse('membership_request_certification_info',args=(pk,)))
+
+    member=MemberShipRequestAdditionalAttachment(image=image_url,officer=officer,applicant=applicant,caption=caption)      
+    member.save()
+    messages.success(request,"Successfully Added Record")
+    return HttpResponseRedirect(reverse('membership_request_certification_info',args=(pk,)))
+
+
+def MemberShipRequestAdditionalAttachment_certification_delete(request,pk,return_pk):
+    record=MemberShipRequestAdditionalAttachment.objects.get(id=pk)
+    record.delete()
+    return HttpResponseRedirect(reverse('membership_request_certification_info',args=(return_pk,)))
+
+
+def MemberShipRequest_certification_submit(request,pk):
+    form=MemberShipRequest_certification_submit_form(request.POST or None)
+    
+    if request.method=="POST":
+        certification_status_id=request.POST.get('certication_status')
+        certification_status=CertificationStatus.objects.get(id=certification_status_id)
+
+        record = MemberShipRequest.objects.get(id=pk)
+        approval_officer_id = request.POST.get('approval_officers')
+        approval_officer=ApprovalOfficers.objects.get(id=approval_officer_id)
+
+        record.approval_officer=approval_officer
+        record.certification_status=certification_status
+        record.certified_date=datetime.date.today()
+        record.save()
+        return HttpResponseRedirect(reverse('membership_request_certification_list_load'))
+    context={
+    'form':form,
+    }
+    return render(request,'master_templates/SECRETARY/MemberShipRequest_certification_submit.html',context)
+
+
+def Loan_request_certification_list_load(request):
+    current_user=CustomUser.objects.get(id=request.user.id)
+    submission_status=SubmissionStatus.objects.get(title="SUBMITTED")
+    certification_status=CertificationStatus.objects.get(title="PENDING")
+    applicants=LoanRequest.objects.filter(certification_officer__officer_id=current_user,submission_status=submission_status,certification_status=certification_status)
+    
+    context={
+    'applicants':applicants
+
+    }
+    return render(request,'master_templates/SECRETARY/Loan_request_certification_list_load.html',context)
+
+
+def Loan_request_certification_details(request,pk):
+    loan_comment=LoanRequest.objects.get(id=pk)
+    loan_analysis=LoanRequestSettings.objects.filter(applicant_id=pk,category='ANALYSIS')
+    loan_summary=LoanRequestSettings.objects.filter(applicant_id=pk,category='SUMMARY')
+    
+
+    certification_status=CertificationStatus.objects.all()
+    approval_officers=ApprovalOfficers.objects.filter(transaction__transaction_id=loan_comment.loan.id)
+
+
+    if request.method=='POST':
+
+        comment=request.POST.get('comment')
+        officer_id=request.POST.get('officer')
+        officer=ApprovalOfficers.objects.get(id=officer_id)
+
+        status_id=request.POST.get('status')
+        status=CertificationStatus.objects.get(id=status_id)
+
+        certified_date= datetime.datetime.now()
+
+
+        loan_comment.certification_status=status
+        loan_comment.certification_comment=comment
+        loan_comment.certification_date=certified_date
+        loan_comment.approval_officer=officer
+        loan_comment.save()
+    
+        return HttpResponseRedirect(reverse('Loan_request_certification_list_load'))
+
+    context={
+    'loan_analysis':loan_analysis,
+    'loan_summary':loan_summary,
+    'pk':pk,
+    'loan_comment':loan_comment,
+    'approval_officers':approval_officers,
+    'certification_status':certification_status,
+    }
+    return render(request,'master_templates/SECRETARY/Loan_request_certification_details.html',context)
+
+
+
+def Loan_application_certification_list_load(request):
+    current_user=CustomUser.objects.get(id=request.user.id)
+    submission_status=SubmissionStatus.objects.get(title="SUBMITTED")
+    certification_status=CertificationStatus.objects.get(title="PENDING")
+    applicants=LoanApplication.objects.filter(certification_officer__officer_id=current_user,submission_status=submission_status,certification_status=certification_status)
+    
+    context={
+    'applicants':applicants
+
+    }
+    return render(request,'master_templates/SECRETARY/Loan_application_certification_list_load.html',context)
+
+
+def Loan_application_certification_details(request,pk):
+    loan_comment=LoanApplication.objects.get(id=pk)
+    loan_analysis=LoanApplicationSettings.objects.filter(applicant_id=pk,category='ANALYSIS')
+    loan_summary=LoanApplicationSettings.objects.filter(applicant_id=pk,category='SUMMARY')
+    
+
+    certification_status=CertificationStatus.objects.all()
+    approval_officers=ApprovalOfficers.objects.filter(transaction__transaction_id=loan_comment.applicant.applicant.loan.id)
+
+
+    if request.method=='POST':
+
+        comment=request.POST.get('comment')
+        officer_id=request.POST.get('officer')
+        officer=ApprovalOfficers.objects.get(id=officer_id)
+
+        status_id=request.POST.get('status')
+        status=CertificationStatus.objects.get(id=status_id)
+
+        certified_date= datetime.datetime.now()
+
+
+        loan_comment.certification_status=status
+        loan_comment.certification_comment=comment
+        loan_comment.certification_date=certified_date
+        loan_comment.approval_officer=officer
+        loan_comment.save()
+    
+        return HttpResponseRedirect(reverse('Loan_application_certification_list_load'))
+
+    context={
+    'loan_analysis':loan_analysis,
+    'loan_summary':loan_summary,
+    'pk':pk,
+    'loan_comment':loan_comment,
+    'approval_officers':approval_officers,
+    'certification_status':certification_status,
+    }
+    return render(request,'master_templates/SECRETARY/Loan_application_certification_details.html',context)
+
+
+#######################################################################
+################## TREASURER     ################################
+#######################################################################
+
+def withdrawal_confirmation_list_load(request):
+    status=TransactionStatus.objects.get(title='UNTREATED')
+    disbursement_status=ApprovalStatus.objects.get(title='PENDING')
+    records=MembersCashWithdrawalsMain.objects.filter(status=status,disbursement_status=disbursement_status)
+    
+    context={
+    'records':records,
+    }
+    return render(request,'master_templates/TREASURER/withdrawal_confirmation_list_load.html',context)
+
+
+def withdrawal_confirmation_details(request,pk):
+    status1=MembershipStatus.objects.get(title='ACTIVE')
+
+    
+    disbursement_officer=DisbursementOfficers.objects.get(officer_id=request.user.id)
+    disbursement_status=ApprovalStatus.objects.get(title='APPROVED')
+
+    record=MembersCashWithdrawalsMain.objects.get(id=pk)
+    
+    account_number=record.member.member.account_number
+    ledger=PersonalLedger.objects.filter(account_number=account_number).last()
+    
+    debit=record.member.approved_amount
+    credit=0
+    balance= float(ledger.balance) - float(debit)
+
+
+    transaction_period=now
+
+    if record.channel.title == 'CHEQUE':
+        particulars="Withdrawal through CHEQUE, with No "  + str(record.cheque_number) + ', ' + str(record.coop_account.account_name) + '(' + record.coop_account.bank.title + ')'      
+    elif record.channel.title == 'CASH':
+        particulars="Withdrawal through CASH" 
+    elif record.channel.title == 'TRANSFER':
+        particulars="Withdrawal through TRANSFER from " + str(record.coop_account.account_name) + '(' + record.coop_account.bank.title + ') into ' + record.member_account.account_name + '(' + str(record.member_account.account_number)  + ')'
+        # particulars="Withdrawal through TRANSFER from " + str(record.coop_account.account_name) + '(' + record.coop_account.bank.title + ') into ' + str(record.member_account.account_number) 
+
+    transaction=record.member.member.transaction
+    member=record.member.member.member
+
+    ledger_record=PersonalLedger(member=member,transaction=transaction,account_number=account_number,particulars=particulars,debit=debit,credit=credit,balance=balance,transaction_period=transaction_period,status=status1)
+    ledger_record.save()
+
+
+    
+    record.disbursement_status=disbursement_status
+    record.disbursement_officer=disbursement_officer
+    record.disbursement_date=now
+    record.save()
+
+    return HttpResponseRedirect(reverse('withdrawal_confirmation_list_load'))
+
+####################################################################
+###################### RECEIPT AND ID MANAGER ######################
+####################################################################
+
+def tre_AutoReceipt_Setup(request):
+    record=[]
+    if AutoReceipt.objects.all().exists():
+        record=AutoReceipt.objects.first()
+
+    if request.method=="POST":
+        receipt=request.POST.get("receipt")
+        if AutoReceipt.objects.all().exists():
+            record=AutoReceipt.objects.first()
+            record.receipt=receipt
+            record.save()
+        else:
+            record=AutoReceipt(receipt=receipt)
+            record.save()
+        return HttpResponseRedirect(reverse('tre_AutoReceipt_Setup'))
+    context={
+    'record':record,
+    }
+    return render(request,'master_templates/TREASURER/AutoReceipt_Setup.html',context)
+
+
+
+def tre_receipt_manager(request):
+    form = receipt_manager_form(request.POST or None)
+    receipts=Receipts.objects.all()
+    if request.method=="POST":
+        start_point = request.POST.get('start_point')
+        stop_point = request.POST.get('stop_point')
+        
+        for i in  range(int(start_point),int(stop_point)+1): 
+            record=Receipts(receipt=str(i).zfill(5))
+            record.save()
+        return HttpResponseRedirect(reverse('tre_receipt_manager'))
+    context={
+    'form':form,
+    'receipts':receipts,
+    }
+    return render(request,'master_templates/TREASURER/receipt_manager.html',context)
+
+
+#######################################################################
+################## COOPERATIVE ACCOUNTS ################################
+#######################################################################
+
+def tre_CooperativeBankAccounts_add(request):
+
+    form=CooperativeBankAccounts_form(request.POST or None)
+    banks=CooperativeBankAccounts.objects.all()
+    if request.method == 'POST':
+        bank_id=request.POST.get('bank')
+        bank=Banks.objects.get(id=bank_id)
+
+        account_type_id=request.POST.get('account_type')
+        account_type=AccountTypes.objects.get(id=account_type_id)
+
+        account_name=request.POST.get('account_name')
+        account_number=request.POST.get('account_number')
+
+        if CooperativeBankAccounts.objects.filter(bank=bank,account_number=account_number).exists():
+            messages.error(request,'This account Number is already in Use')
+            return HttpResponseRedirect(reverse('tre_CooperativeBankAccounts_add'))
+
+        record=CooperativeBankAccounts(bank=bank,account_type=account_type,account_name=account_name,account_number=account_number)
+        record.save()
+
+        messages.success(request,"Record Added Successfully")
+        return HttpResponseRedirect(reverse('tre_CooperativeBankAccounts_add'))
+
+    context={
+    'form':form,
+    'banks':banks,
+    }
+    return render(request,'master_templates/TREASURER/CooperativeBankAccounts_add.html',context)
+
+
+def tre_CooperativeBankAccounts_Remove(request,pk):
+    record=CooperativeBankAccounts.objects.get(id=pk)
+    record.delete()
+    return HttpResponseRedirect(reverse('tre_CooperativeBankAccounts_add'))
+
+
+def tre_CooperativeBankAccounts_Update(request,pk):
+    form=CooperativeBankAccounts_form(request.POST or None)
+    record=CooperativeBankAccounts.objects.get(id=pk)
+
+    form.fields['account_name'].initial=record.account_name
+    form.fields['account_number'].initial=record.account_number
+    form.fields['bank'].initial=record.bank.id
+    form.fields['account_type'].initial=record.account_type.id
+    if request.method=="POST":
+        bank_id=request.POST.get('bank')
+        bank=Banks.objects.get(id=bank_id)
+
+        account_type_id = request.POST.get('account_type')
+        account_type=AccountTypes.objects.get(id=account_type_id)
+
+        account_name=request.POST.get('account_name')
+        account_number=request.POST.get('account_number')
+
+        record.bank=bank
+        record.account_type=account_type
+        record.account_name=account_name
+        record.account_number=account_number
+        record.save()
+        return HttpResponseRedirect(reverse('tre_CooperativeBankAccounts_add'))
+        
+    context={
+    'form':form,
+    }
+    return render(request,'master_templates/TREASURER/CooperativeBankAccounts_Update.html',context)
+
+####################################################################
+###################### FIN. SECRETARY ######################
+####################################################################
+
+def Cash_Withdrawal_Approved_list_load(request):
+    status=TransactionStatus.objects.get(title="UNTREATED")
+    approval_status=ApprovalStatus.objects.get(title='APPROVED')
+    applicants=MembersCashWithdrawalsApplication.objects.filter(status=status,approval_status=approval_status)
+    
+    context={
+    'applicants':applicants,
+    }
+    return render(request,'master_templates/FINSEC/Cash_Withdrawal_Approved_list_load.html',context)
+
+
+def Cash_Withdrawal_Approved_Details(request,pk):
+    form=Cash_Withdrawal_Approved_Details_form(request.POST or None)
+    applicant=MembersCashWithdrawalsApplication.objects.get(id=pk)
+    member_accounts=MembersBankAccounts.objects.filter(member_id=applicant.member.member)
+
+    form.fields['amount'].initial=applicant.approved_amount
+    form.fields['payment_date'].initial=now
+
+    cheque=False
+    cash=False
+    transfer=False
+    if request.method=="POST" and 'btn_fetch' in request.POST:
+        
+        channel_id=request.POST.get('channels')
+        channel = PaymentChannels.objects.get(id=channel_id)
+
+        cheque=False
+        if channel.title=="CHEQUE":
+            cheque=True
+        elif channel.title=="CASH":
+            cash=True
+        elif channel.title=="TRANSFER":
+            transfer=True
+        
+    if request.method=="POST" and 'btn_submit' in request.POST:
+        status=TransactionStatus.objects.get(title="UNTREATED")
+        processed_by=CustomUser.objects.get(id=request.user.id)
+
+        channel_id=request.POST.get('channels')
+        channel = PaymentChannels.objects.get(id=channel_id)
+        
+        amount =request.POST.get('amount')
+        payment_date =request.POST.get('payment_date')
+        
+        officer_id =request.POST.get('officers')
+        disbursement_officer=DisbursementOfficers.objects.get(id=officer_id)
+        
+        channels_id =request.POST.get('channels')
+        channels=PaymentChannels.objects.get(id=channels_id)
+
+        if channel.title=="CHEQUE":
+            coop_account_id =request.POST.get('account')
+            coop_account=CooperativeBankAccounts.objects.get(id=coop_account_id)
+            cheque_number=request.POST.get('cheque_number')
+            
+            if cheque_number=="":
+                messages.error(request,'Cheque Number Missing')
+                return HttpResponseRedirect(reverse('Cash_Withdrawal_Approved_Details',args=(pk,)))
+            
+            record=MembersCashWithdrawalsMain(member=applicant,
+                channel=channel,
+                payment_date=payment_date,
+                coop_account=coop_account,
+                cheque_number=cheque_number,
+                processed_by=processed_by,
+                disbursement_officer=disbursement_officer,
+                status=status,
+                )
+            record.save()
+        elif channel.title=="CASH":
+            
+            record=MembersCashWithdrawalsMain(member=applicant,
+                channel=channel,
+                payment_date=payment_date,
+                processed_by=processed_by,
+                disbursement_officer=disbursement_officer,
+                status=status,
+                )
+            record.save()
+        elif channel.title=="TRANSFER":
+            coop_account_id =request.POST.get('account')
+            coop_account=CooperativeBankAccounts.objects.get(id=coop_account_id)
+
+            member_account_id=request.POST.get('member_account')
+            member_account=MembersBankAccounts.objects.get(id=member_account_id)
+            record=MembersCashWithdrawalsMain(member=applicant,
+                channel=channel,
+                payment_date=payment_date,
+                coop_account=coop_account,
+                member_account=member_account,
+                processed_by=processed_by,
+                disbursement_officer=disbursement_officer,
+                status=status,
+                )
+            record.save()
+            
+        certification_date=now      
+        status=TransactionStatus.objects.get(title="TREATED")
+        certification_status=CertificationStatus.objects.get(title='CERTIFIED')
+        
+        applicant.status=status
+        applicant.certification_status=certification_status
+        applicant.certification_date=certification_date
+        applicant.save()
+        return HttpResponseRedirect(reverse('Cash_Withdrawal_Approved_list_load'))
+            
+    context={
+    'member_accounts':member_accounts,
+    'applicant':applicant,
+    'form':form,
+    'cheque':cheque,
+    'cash':cash,
+    'transfer':transfer,
+    }
+    return render(request,'master_templates/FINSEC/Cash_Withdrawal_Approved_Details.html',context)
+
+
+
+
+
+
+#######################################################################
 ################## GENERAL REPORT #####################################
 #######################################################################
 
@@ -3646,7 +5239,7 @@ def List_of_Users(request):
     users=Staff.objects.all()
     records=UserType.objects.all().order_by('code')
     # users=Staff.objects.annotate(full_name=Concat("admin__first_name", Value(" "), "admin__last_name")).all().values_lst("full_name")
-    print(users)
+
     context={
     'users':users,
     'records':records,

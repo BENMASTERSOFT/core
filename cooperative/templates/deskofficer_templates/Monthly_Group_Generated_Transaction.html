@@ -10,11 +10,14 @@
             <div class="page-content fade-in-up">
                 <div class="ibox">
                     <div class="ibox-head">
-                        <div class="ibox-title">SUMMARIZED MONTHLY DEDUCTION | {{transaction_period.transaction_period}}
+                        <div class="ibox-title"> <input type="button" class="btn btn-primary" value="Back" onclick="history.back()"/> | SUMMARIZED MONTHLY DEDUCTION | {{transaction_period.transaction_period}}
                             | 
                             {% if record_exist %}
+                            {% if transaction_ready %}
                             <a href="{% url 'Monthly_Group_Transaction_generate' salary_institution.pk  %}" class="btn btn-primary">Process
                             {% endif %}
+                            {% endif %}
+
                             </a>
                         </div>
                     </div>
@@ -42,15 +45,15 @@
                                 </tr>
                             </tfoot>
                             <tbody>
-                            {% for member in members %}
+                             {% for member in memebers_array %}
                                 <tr>
                                     <td>{{forloop.counter}}</td>
-                                    <td>{{member.member_id}}</td>
-                                    <td>{{member.file_no}}</td>
-                                    <td>{{member.admin.first_name}} {{member.admin.last_name}} {{member.middle_name}}</td>
-                                    <td>{{member.ippis_no}}</td>
-                                  
-                                    <td><a href="{% url 'Monthly_Group_Transaction_preview' member.pk %}" class="btn btn-primary">View</a></td>
+                                    <td>{{member.0}}</td>
+                                    <td>{{member.1}}</td>
+                                    <td>{{member.2}} {{member.3}} {{member.4}}</td>
+                                    <td>{{member.5}}</td>
+
+                                    <td><a href="{% url 'Monthly_Group_Transaction_preview' member.5 %}" class="btn btn-primary">View</a></td>
                                 </tr>
                                
                             {% endfor %}
@@ -59,8 +62,50 @@
                            
                         </table>
                     </div>
+                  >
                 </div>
-               
+              
+                <div class="row">
+                    <div class="col-xl-6">
+                        <div class="ibox">
+                            <div class="ibox-head">
+                                <div class="ibox-title">Transaction Status</div>
+                            </div>
+                            <div class="ibox-body">
+                                <table class="table table-bordered">
+                                    <thead class="thead-default">
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Description</th>
+                                            <th>Value</th>
+                                            
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>1</td>
+                                            <td>SAVINGS</td>
+                                            <td>{{savings_generated}}</td>
+                                           
+                                        </tr>
+                                        <tr>
+                                            <td>2</td>
+                                            <td>LOANS</td>
+                                            <td>{{loans_generated}}</td>
+                                            
+                                        </tr>
+                                        <tr>
+                                            <td>3</td>
+                                            <td>SHOP</td>
+                                            <td>{{shop_generated}}</td>
+                                            
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
   
     
@@ -70,6 +115,7 @@
         <div class="page-preloader">Loading</div>
     </div>
     <!-- END PAGA BACKDROPS-->
+    {% include 'cooperative/includes/emptyspace.html' %}
 {% endblock content %}
 
 {% block custom_js %}

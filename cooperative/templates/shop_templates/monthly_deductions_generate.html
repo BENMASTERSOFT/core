@@ -10,7 +10,15 @@
             <div class="page-content fade-in-up">
                 <div class="ibox">
                     <div class="ibox-head">
-                        <div class="ibox-title">Cooperative Shop Monthly Deductions | {{salary_institution.title}} | <a href="{% url 'monthly_deductions_generate_process' salary_institution.pk %}" class="btn btn-primary">Process</a></div>
+                        <div class="ibox-title">Cooperative Shop Monthly Deductions | {{salary_institution.title}} 
+                        {% if not shop_generated %}
+                            | <a href="{% url 'monthly_deductions_generate_process' salary_institution.pk %}" class="btn btn-primary">Process</a>
+                        {% else %}
+                            | <a href="{% url 'monthly_deductions_generate_process_Completed' salary_institution.pk %}" class="btn btn-danger">SHOP COMPLETED</a>
+                        {% endif %}
+
+
+                        </div>
                     </div>
                      <div class="form-group">
                                   {% if messages %}

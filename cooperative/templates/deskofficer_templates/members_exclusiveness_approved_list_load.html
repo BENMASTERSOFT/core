@@ -10,7 +10,7 @@
             <div class="page-content fade-in-up">
                 <div class="ibox">
                     <div class="ibox-head">
-                        <div class="ibox-title">Members Exclusiveness</div>
+                        <div class="ibox-title">Members Exclusiveness |  <input type="button" class="btn btn-secondary" value="Back" onclick="history.back()"/></div>
                     </div>
                     <div class="ibox-body">
                         <table class="table table-striped table-bordered table-hover" id="example-table" cellspacing="0" width="100%">
@@ -63,6 +63,7 @@
         <div class="page-preloader">Loading</div>
     </div>
     <!-- END PAGA BACKDROPS-->
+    {% include 'cooperative/includes/emptyspace.html' %}
 {% endblock content %}
 
 {% block custom_js %}

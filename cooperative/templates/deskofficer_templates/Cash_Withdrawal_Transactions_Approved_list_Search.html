@@ -8,7 +8,7 @@
                     <div class="col-md-6">
                         <div class="ibox">
                             <div class="ibox-head">
-                                <div class="ibox-title">{{title}}</div>
+                                <div class="ibox-title">{{title}}| <a href="{% url 'deskofficer_home' %}" class="btn btn-secondary">Back</a></div>
                                 
                             </div>
                             <div class="ibox-body">
@@ -47,4 +47,5 @@
     <div class="preloader-backdrop">
         <div class="page-preloader">Loading</div>
     </div>
+    {% include 'cooperative/includes/emptyspace.html' %}
 {% endblock %}

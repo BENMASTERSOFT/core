@@ -58,6 +58,24 @@ class UserType(titleBase):
 ############# Status ######################################
 ###########################################################
 
+class Termination_Types(titleBase):
+
+    class Meta(titleBase.Meta):
+        # db_table="termination_types"
+        ordering = ['id']
+
+    def __str__(self):
+        return self.title
+
+class MonthlyDeductionGenerationHeaders(titleBase):
+
+    class Meta(titleBase.Meta):
+        # db_table="monthly_deduction_generation_headers"
+        ordering = ['title']
+
+    def __str__(self):
+        return self.title
+
 
 class ItemWriteOffReasons(titleBase):
 
@@ -602,7 +620,9 @@ class Staff(DateObjectsModels):
     phone_number=models.CharField(max_length=50)
     gender =models.ForeignKey(Gender,on_delete=models.DO_NOTHING,blank=True,null=True)
     userlevel =models.ForeignKey(UsersLevel,on_delete=models.DO_NOTHING,default=1)
-    
+    status= models.ForeignKey(MembershipStatus,on_delete=models.DO_NOTHING,default=1)
+
+
     @property
     def get_full_name(self):
         if self.middle_name:
@@ -854,6 +874,23 @@ class Members(DateObjectsModels):
             
 
 
+class MemberShipTerminationRequest(DateObjectsModels):
+    member= models.ForeignKey(Members,on_delete=models.CASCADE,blank=True,null=True)
+    termination=models.ForeignKey(Termination_Types,on_delete=models.CASCADE,blank=True,null=True)
+    loan_amount=models.DecimalField(max_digits=20,decimal_places = 2)
+    comment=models.TextField(blank=True,null=True)
+    applied_date=models.DateField()
+    approval_officer=models.ForeignKey(ApprovalOfficers,on_delete=models.CASCADE,blank=True,null=True)
+    approval_comment=models.TextField(blank=True,null=True)
+    approval_status= models.ForeignKey(ApprovalStatus,on_delete=models.CASCADE,default=1)
+    approved_at=models.DateField(blank=True,null=True)
+    status= models.ForeignKey(TransactionStatus,on_delete=models.CASCADE,default=1)
+    processed_by=models.ForeignKey(CustomUser,on_delete=models.DO_NOTHING,blank=True,null=True)
+    tdate=models.DateField()
+
+    # class Meta(DateObjectsModels.Meta):
+    #     db_table="member_ship_termination_request"
+
 
 class MembersExclusiveness(DateObjectsModels):
     member= models.ForeignKey(Members,on_delete=models.CASCADE,blank=True,null=True)
@@ -868,6 +905,8 @@ class MembersExclusiveness(DateObjectsModels):
 
     # class Meta(DateObjectsModels.Meta):
     #     db_table="Members_Exclusiveness"
+
+
 
 class NextOfKinsMaximun(DateObjectsModels):
     maximun=models.CharField(max_length=255)   
@@ -1136,7 +1175,8 @@ class LoansRepaymentBase(DateObjectsModels):
     status=models.ForeignKey(MembershipStatus,on_delete=models.CASCADE,blank=True,null=True)
     loan_merge_status=models.ForeignKey(LoanMergeStatus,on_delete=models.CASCADE,default=1)
     merged_loans=models.CharField(max_length=255,blank=True,null=True)
-   
+    tdate=models.DateField()
+
     # class Meta(DateObjectsModels.Meta):
     #     db_table="Loans_Repayment_Base"
 
@@ -1193,6 +1233,37 @@ class MonthlyDeductionListGenerated(DateObjectsModels):
     # class Meta(DateObjectsModels.Meta):
     #     db_table="Monthly_Deduction_List_Generated"
 
+class MonthlyDeductionListGeneratedCertified(DateObjectsModels):
+    transaction_period=models.ForeignKey(TransactionPeriods,on_delete=models.CASCADE,default=1)
+    member=models.ForeignKey(Members,on_delete=models.CASCADE,blank=True,null=True)
+    amount=models.DecimalField(max_digits=20,decimal_places = 2,default=0)
+    amount_deducted=models.DecimalField(max_digits=20,decimal_places = 2,default=0)
+    balance=models.DecimalField(max_digits=20,decimal_places = 2,default=0)
+    salary_institution=models.ForeignKey(SalaryInstitution,on_delete=models.CASCADE,default=1)
+    transaction_status= models.ForeignKey(TransactionStatus,on_delete=models.DO_NOTHING,default=1)
+    refund_status= models.ForeignKey(ProcessingStatus,on_delete=models.DO_NOTHING,default=1)
+    
+    tdate=models.DateField()
+
+
+    # class Meta(DateObjectsModels.Meta):
+    #     db_table="Monthly_Deduction_List_Generated_Certified"
+
+
+class MonthlyShopDeductionCertified(DateObjectsModels):
+    transaction_period=models.ForeignKey(TransactionPeriods,on_delete=models.CASCADE,default=1)
+    member=models.ForeignKey(Members,on_delete=models.CASCADE,blank=True,null=True)
+    amount=models.DecimalField(max_digits=20,decimal_places = 2,default=0)
+    amount_deducted=models.DecimalField(max_digits=20,decimal_places = 2,default=0)
+    balance=models.DecimalField(max_digits=20,decimal_places = 2,default=0)
+    salary_institution=models.ForeignKey(SalaryInstitution,on_delete=models.CASCADE,default=1)
+    transaction_status= models.ForeignKey(TransactionStatus,on_delete=models.DO_NOTHING,default=1)
+    tdate=models.DateField()
+
+
+    # class Meta(DateObjectsModels.Meta):
+    #     db_table="Monthly_Deduction_List_Generated_Certified"
+
 
 class MonthlyGroupGeneratedTransactions(DateObjectsModels):
     salary_institution=models.ForeignKey(SalaryInstitution,on_delete=models.CASCADE,default=1)
@@ -1202,6 +1273,15 @@ class MonthlyGroupGeneratedTransactions(DateObjectsModels):
    
     # class Meta(DateObjectsModels.Meta):
     #     db_table="Monthly_Group_Generated_Transactions"
+
+class MonthlyDeductionGenerationHeading(DateObjectsModels):
+     salary_institution=models.ForeignKey(SalaryInstitution,on_delete=models.CASCADE,default=1)
+     transaction_period=models.ForeignKey(TransactionPeriods,on_delete=models.CASCADE,default=1)
+     heading=models.CharField(max_length=255)
+     status= models.ForeignKey(TransactionStatus,on_delete=models.DO_NOTHING,default=1)
+
+    # class Meta(DateObjectsModels.Meta):
+    #     db_table="Monthly_Deduction_Generation_Heading
 
 
 class AccountDeductions(DateObjectsModels):
@@ -1229,6 +1309,17 @@ class NonMemberAccountDeductions(DateObjectsModels):
 
     # class Meta(DateObjectsModels.Meta):
     #     db_table="Non_Member_Account_Deductions"
+
+class MonthlyOverdeductionsRefund(DateObjectsModels):
+    member=models.ForeignKey(Members,on_delete=models.CASCADE,default=1)
+    over_deduction=models.ForeignKey(MonthlyDeductionListGeneratedCertified,on_delete=models.CASCADE)
+    channel=models.CharField(max_length=255)
+    ref_number=models.CharField(max_length=255,blank=True,null=True)
+    processed_by=models.ForeignKey(CustomUser,on_delete=models.CASCADE)
+    tdate=models.DateField()
+
+    # class Meta(DateObjectsModels.Meta):
+        #     db_table="Monthly_Over_deductions_Refund"
 
 
 class TransactionAjustmentRequest(DateObjectsModels):
@@ -1503,6 +1594,63 @@ class MembersCashWithdrawalsMain(DateObjectsModels):
 
     # class Meta(DateObjectsModels.Meta):
     #     db_table="Members_Cash_Withdrawals_Main"
+
+
+class Companies(titleBase):
+    
+    class Meta(titleBase.Meta):
+        # db_table="companies"
+        ordering = ['title']
+
+
+    def __str__(self):
+        return self.title
+
+
+
+class Commodity_Categories(DateObjectsModels):
+    transaction=models.ForeignKey(TransactionTypes,on_delete=models.CASCADE)
+    title=models.CharField(max_length=100,unique=True)
+    duration= models.PositiveSmallIntegerField(validators=[MinValueValidator(0)],default=0)
+    interest_deduction=  models.ForeignKey(InterestDeductionSource,on_delete=models.DO_NOTHING,blank=True,null=True)
+    interest_rate= models.PositiveSmallIntegerField(validators=[MinValueValidator(0)],default=0)
+    admin_charges_rating= models.ForeignKey(AdminCharges,on_delete=models.DO_NOTHING,blank=True,null=True)
+    admin_charges = models.DecimalField(max_digits=20,decimal_places = 2,blank=True,null=True)
+    admin_charges_minimum= models.DecimalField(max_digits=20,decimal_places = 2,blank=True,null=True)
+    default_admin_charges= models.DecimalField(max_digits=20,decimal_places = 2,default=0)
+    guarantors= models.IntegerField(default=0)
+    loan_age= models.IntegerField(default=0)
+    receipt_type= models.ForeignKey(ReceiptTypes,on_delete=models.DO_NOTHING)
+    status= models.ForeignKey(MembershipStatus,on_delete=models.DO_NOTHING)
+    multiple_loan_status= models.ForeignKey(MultipleLoanStatus,on_delete=models.CASCADE)
+    form_print=models.ForeignKey(YesNo,on_delete=models.CASCADE,default=1)
+    
+    
+    def __str__(self):
+        return self.title
+
+
+class Commodity_Product_List(DateObjectsModels):
+    category=models.ForeignKey(Commodity_Categories,on_delete=models.CASCADE)
+    product_name=models.CharField(max_length=255)
+    product_model=models.CharField(max_length=100)
+    details=models.TextField()
+    status= models.ForeignKey(MembershipStatus,on_delete=models.DO_NOTHING)
+    
+    
+    def __str__(self):
+        return self.product_name
+
+
+class Company_Products(DateObjectsModels):
+     product=models.ForeignKey(Commodity_Product_List,on_delete=models.CASCADE)
+     company=models.ForeignKey(Companies,on_delete=models.CASCADE)
+     amount=models.DecimalField(max_digits=20,decimal_places = 2,default=0)
+     status= models.ForeignKey(MembershipStatus,on_delete=models.DO_NOTHING)
+
+     
+    # class Meta(DateObjectsModels.Meta):
+    #     db_table="company_products"
 
 
 ####################################################################

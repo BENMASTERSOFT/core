@@ -6,10 +6,10 @@
                 
                 <div class="row">
                    
-                    <div class="col-xl-6">
+                    <div class="col-xl-7">
                         <div class="ibox">
                             <div class="ibox-head">
-                                <div class="ibox-title">Loan Application Analysis Preview</div>
+                                <div class="ibox-title">Loan Application Analysis Preview |  <input type="button" class="btn btn-primary" value="Back" onclick="history.back()"/></div>
                             </div>
                             <div class="ibox-body">
                                 <table class="table table-hover">
@@ -140,28 +140,34 @@
                                             <td>Loan Based Savings </td>
                                             <td>{{loan_based_saving.savings.name}}</td>
                                            
-                                        </tr>  
+                                        </tr>        
                                         <tr>
                                             <td>20</td>
+                                            <td>Saved Amount ({{loan_based_saving.savings.name}}) </td>
+                                            <td>{{savings_saved}}</td>
+                                           
+                                        </tr>  
+                                        <tr>
+                                            <td>21</td>
                                             <td>Loan Based Savings Rate</td>
                                             <td>{{loan_based_saving_rating}}%</td>
                                            
                                         </tr>
                                        
                                         <tr>
-                                            <td>21</td>
+                                            <td>22</td>
                                             <td>Guarantors</td>
                                             <td>{{guarantor_list}}</td>
                                            
                                         </tr>
                                        <tr>
-                                            <td>22</td>
+                                            <td>23</td>
                                             <td>Next of Kin</td>
                                             <td>{{applicant.nok.name}} - {{applicant.nok.relationships}}</td>
                                            
                                         </tr>
                                         <tr>
-                                            <td>23</td>
+                                            <td>24</td>
                                             <td>Bank Details</td>
                                             <td>{{applicant.bank_account.account_name}} - {{applicant.bank_account.account_number}} - {{applicant.bank_account.bank.title}}</td>
                                            
@@ -175,7 +181,7 @@
                         </div>
                     </div>
 
-                    <div class="col-xl-6"> 
+                    <div class="col-xl-5"> 
                         <div class="row"> 
                             <div class="col-xl-12">
 
@@ -259,7 +265,7 @@
                         <div class="col-md-12">
                         <div class="ibox">
                             <div class="ibox-head">
-                                <div class="ibox-title">Loan Request Submission</div>
+                                <div class="ibox-title">Loan Request Submission |  <input type="button" class="btn btn-primary" value="Back" onclick="history.back()"/></div>
                                 
                             </div>
                             <div class="ibox-body">
@@ -278,7 +284,7 @@
                                     <div class="form-group row">
                                         <label class="col-sm-3 col-form-label">Comments (If any)</label>
                                         <div class="col-sm-9">
-                                            <input class="form-control" type="text"  name="comment" placeholder="Enter Comment">
+                                            <input class="form-control" type="text" value="FOR YOUR CONSIDERATION"  name="comment" placeholder="Enter Comment">
                                         </div>
                                     </div>
                                     
@@ -307,4 +313,5 @@
     <div class="preloader-backdrop">
         <div class="page-preloader">Loading</div>
     </div>
+    {% include 'cooperative/includes/emptyspace.html' %}
 {% endblock %}

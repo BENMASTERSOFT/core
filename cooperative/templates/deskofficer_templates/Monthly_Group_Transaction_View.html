@@ -10,7 +10,7 @@
             <div class="page-content fade-in-up">
                 <div class="ibox">
                     <div class="ibox-head">
-                        <div class="ibox-title">GENERATED SUMMARIZED TRANSACTIONS | {{transaction_period.transaction_period}}</div>
+                        <div class="ibox-title">GENERATED SUMMARIZED TRANSACTIONS | {{transaction_period.transaction_period}} |  <input type="button" class="btn btn-primary" value="Back" onclick="history.back()"/></div>
                     </div>
                     <div class="ibox-body">
                         <table class="table table-striped table-bordered table-hover" id="example-table" cellspacing="0" width="100%">
@@ -44,7 +44,7 @@
                                     <td>{{record.member.ippis_no}}</td>
                                     <td>{{record.member.admin.first_name}} {{record.member.admin.last_name}} {{record.member.get_middle_name}}</td>
                                     <td>{{record.amount}}</td>
-                                    <td><a href="{% url 'Monthly_Group_Transaction_preview' record.member.pk %} " class="btn btn-success">View</a></td>
+                                    <td><a href="{% url 'Monthly_Group_Transaction_preview' record.member.ippis_no %} " class="btn btn-success">View</a></td>
                                   
                                 </tr>
                             {% endfor %}
@@ -64,6 +64,7 @@
         <div class="page-preloader">Loading</div>
     </div>
     <!-- END PAGA BACKDROPS-->
+    {% include 'cooperative/includes/emptyspace.html' %}
 {% endblock content %}
 
 {% block custom_js %}

@@ -4,7 +4,7 @@ from django.urls import path, include
 from core import settings
 from django.conf.urls.static import static
 from cooperative import views
-from cooperative import finsec_views,master_views,treasurer_views,shop_views, deskofficer_views,secretary_views,president_views, SEO_views
+from cooperative import master_views,shop_views, deskofficer_views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -63,6 +63,8 @@ urlpatterns = [
     path('LoanMergeStatus_upload/',master_views.LoanMergeStatus_upload, name='LoanMergeStatus_upload'),
     path('Product_Write_off_Reasons_upload/',master_views.Product_Write_off_Reasons_upload, name='Product_Write_off_Reasons_upload'),
     path('YesNo_upload/',master_views.YesNo_upload, name='YesNo_upload'),
+    path('MonthlyDeductionGenerationHeaders_upload/',master_views.MonthlyDeductionGenerationHeaders_upload, name='MonthlyDeductionGenerationHeaders_upload'),
+    path('Termination_Sources_upload/',master_views.Termination_Sources_upload, name='Termination_Sources_upload'),
    
 
 
@@ -148,6 +150,22 @@ urlpatterns = [
     path('loan_salary_relationship_update/<str:pk>/', master_views.loan_salary_relationship_update,name='loan_salary_relationship_update'),
     path('loan_loan_age_update/<str:pk>/', master_views.loan_loan_age_update,name='loan_loan_age_update'),
    
+    path('loan_settings_non_monetary_load/', master_views.loan_settings_non_monetary_load,name='loan_settings_non_monetary_load'),
+    path('loan_settings_non_monetary_settings/<str:pk>/', master_views.loan_settings_non_monetary_settings,name='loan_settings_non_monetary_settings'),
+    path('non_monetary_oan_guarantors_update/<str:pk>/', master_views.non_monetary_oan_guarantors_update,name='non_monetary_oan_guarantors_update'),
+    path('Non_Monetary_MultipleLoanStatus_update/<str:pk>/', master_views.Non_Monetary_MultipleLoanStatus_update,name='Non_Monetary_MultipleLoanStatus_update'),
+    path('non_monetary_loan_duration_update/<str:pk>/', master_views.non_monetary_loan_duration_update,name='non_monetary_loan_duration_update'),
+    path('non_monetary_loan_name_update/<str:pk>/', master_views.non_monetary_loan_name_update,name='non_monetary_loan_name_update'),
+    path('non_monetary_loan_interest_rate_update/<str:pk>/', master_views.non_monetary_loan_interest_rate_update,name='non_monetary_loan_interest_rate_update'),
+    path('non_monetary_loan_admin_charges_rate_update/<str:pk>/', master_views.non_monetary_loan_admin_charges_rate_update,name='non_monetary_loan_admin_charges_rate_update'),
+    path('non_monetary_loan_admin_charges_update/<str:pk>/', master_views.non_monetary_loan_admin_charges_update,name='non_monetary_loan_admin_charges_update'),
+    path('non_monetary_loan_loan_age_update/<str:pk>/', master_views.non_monetary_loan_loan_age_update,name='non_monetary_loan_loan_age_update'),
+    path('non_monetary_loan_receipt_type_update/<str:pk>/', master_views.non_monetary_loan_receipt_type_update,name='non_monetary_loan_receipt_type_update'),
+    path('non_monetary_loan_form_print_update/<str:pk>/', master_views.non_monetary_loan_form_print_update,name='non_monetary_loan_form_print_update'),
+
+    path('Commodity_Products_Categories/', master_views.Commodity_Products_Categories,name='Commodity_Products_Categories'),
+    path('Commodity_Products_add/<str:pk>/', master_views.Commodity_Products_add,name='Commodity_Products_add'),
+    
 
     path('AddApprovableTransactions/', master_views.AddApprovableTransactions,name='AddApprovableTransactions'),
     path('AddApprovableTransactionsUpdate/<str:pk>/', master_views.AddApprovableTransactionsUpdate,name='AddApprovableTransactionsUpdate'),
@@ -164,6 +182,9 @@ urlpatterns = [
     path('AddDisbursementOfficers/', master_views.AddDisbursementOfficers,name='AddDisbursementOfficers'),
     path('DisbursementOfficersUpdate/<str:pk>/', master_views.DisbursementOfficersUpdate,name='DisbursementOfficersUpdate'),
 
+    path('addCommodityCategory/', master_views.addCommodityCategory,name='addCommodityCategory'),
+    path('Manage_Commodity_Categories/', master_views.Manage_Commodity_Categories,name='Manage_Commodity_Categories'),
+    
     path('membership_price_settings_load/', master_views.membership_price_settings_load,name='membership_price_settings_load'),
     path('AutoReceipt_Setup/', master_views.AutoReceipt_Setup,name='AutoReceipt_Setup'),
     path('receipt_manager/', master_views.receipt_manager,name='receipt_manager'),
@@ -185,11 +206,97 @@ urlpatterns = [
    
     path('CustomerID_Manager/', master_views.CustomerID_Manager,name='CustomerID_Manager'),
     path('upload_stock_roll/', master_views.upload_stock_roll,name='upload_stock_roll'),
+    
+    path('Manage_Commodity_Categories_Update/<str:pk>/', master_views.Manage_Commodity_Categories_Update,name='Manage_Commodity_Categories_Update'),
+    
+    path('Commodity_Products_Manage_Load/', master_views.Commodity_Products_Manage_Load,name='Commodity_Products_Manage_Load'),
+    path('Commodity_Products_Manage_Update/<str:pk>/', master_views.Commodity_Products_Manage_Update,name='Commodity_Products_Manage_Update'),
+   
+    path('addCompanies/', master_views.addCompanies,name='addCompanies'),
+    path('Manage_Companies/', master_views.Manage_Companies,name='Manage_Companies'),
+    path('Delete_Companies/<str:pk>/', master_views.Delete_Companies,name='Delete_Companies'),
+
+    path('Product_Linking_Load/', master_views.Product_Linking_Load,name='Product_Linking_Load'),
+    path('Product_Linking_Details/<str:pk>/', master_views.Product_Linking_Details,name='Product_Linking_Details'),
+    path('Product_Linking_Details_Process/<str:comp_pk>/<str:pk>//', master_views.Product_Linking_Details_Process,name='Product_Linking_Details_Process'),
+    path('Product_UnLinking_Process/<str:comp_pk>/<str:pk>//', master_views.Product_UnLinking_Process,name='Product_UnLinking_Process'),
+    
+    path('Product_Price_Settings_Load/', master_views.Product_Price_Settings_Load,name='Product_Price_Settings_Load'),
+    path('Product_Price_Settings_details/<str:pk>/', master_views.Product_Price_Settings_details,name='Product_Price_Settings_details'),
+    path('Product_Price_Settings_Update/<str:comp_pk>/<str:pk>//', master_views.Product_Price_Settings_Update,name='Product_Price_Settings_Update'),
+
+    ###########################################
+    ################## PRESIDENT################
+    ############################################ 
+
+    # path('president_home/', master_views.president_home,name='president_home'),
+    path('membership_request_approvals_list_load/', master_views.membership_request_approvals_list_load,name='membership_request_approvals_list_load'),
+    path('membership_request_approval_info/<str:pk>/', master_views.membership_request_approval_info,name='membership_request_approval_info'),
+    
+    path('membership_request_approval_comment_save/<str:pk>/', master_views.membership_request_approval_comment_save,name='membership_request_approval_comment_save'),
+    path('membership_request_approval_info_delete/<str:pk>/', master_views.membership_request_approval_info_delete,name='membership_request_approval_info_delete'),
+    
+    path('membership_request_approval_attachment_save/<str:pk>/', master_views.membership_request_approval_attachment_save,name='membership_request_approval_attachment_save'),
+    path('membership_request_approval_attachment_delete/<str:pk>/', master_views.membership_request_approval_attachment_delete,name='membership_request_approval_attachment_delete'),
+    
+    path('MemberShipRequest_approval_submit/<str:pk>/', master_views.MemberShipRequest_approval_submit,name='MemberShipRequest_approval_submit'),
+
+    path('loan_request_approval_list_load/', master_views.loan_request_approval_list_load,name='loan_request_approval_list_load'),
+    path('Loan_request_approval_details/<str:pk>/', master_views.Loan_request_approval_details,name='Loan_request_approval_details'),
+    
+    path('loan_application_approval_list_load/', master_views.loan_application_approval_list_load,name='loan_application_approval_list_load'),
+    path('Loan_application_approval_details/<str:pk>/', master_views.Loan_application_approval_details,name='Loan_application_approval_details'),
+
+    path('savings_cash_withdrawal_list_load/', master_views.savings_cash_withdrawal_list_load,name='savings_cash_withdrawal_list_load'),
+    path('savings_cash_withdrawal_preview/<str:pk>/', master_views.savings_cash_withdrawal_preview,name='savings_cash_withdrawal_preview'),
+
+    path('members_exclusiveness_list_load/', master_views.members_exclusiveness_list_load,name='members_exclusiveness_list_load'),
+    path('members_exclusiveness_process/<str:pk>/', master_views.members_exclusiveness_process,name='members_exclusiveness_process'),
+
+    path('Shares_Purchase_Request_Approval_List_Load/', master_views.Shares_Purchase_Request_Approval_List_Load,name='Shares_Purchase_Request_Approval_List_Load'),
+    path('Shares_Purchase_Request_Approval_Processed/<str:pk>/', master_views.Shares_Purchase_Request_Approval_Processed,name='Shares_Purchase_Request_Approval_Processed'),
+    
+
+    ###############################################
+    ############################ SECRETARY##########
+    ################################################
+
+    # path('secretary_home/', master_views.secretary_home,name='secretary_home'),
+    path('membership_request_certification_list_load/', master_views.membership_request_certification_list_load,name='membership_request_certification_list_load'),
+    path('membership_request_certification_info/<str:pk>/', master_views.membership_request_certification_info,name='membership_request_certification_info'),
+    path('membership_request_certification_additional_info_save/<str:pk>/', master_views.membership_request_certification_additional_info_save,name='membership_request_certification_additional_info_save'),
+    path('membership_request_certification_additional_info_delete/<str:pk>/<str:return_pk>/', master_views.membership_request_certification_additional_info_delete,name='membership_request_certification_additional_info_delete'),
+    
+    path('MemberShipRequestAdditionalAttachment_certification_save/<str:pk>/', master_views.MemberShipRequestAdditionalAttachment_certification_save,name='MemberShipRequestAdditionalAttachment_certification_save'),
+    path('MemberShipRequestAdditionalAttachment_certification_delete/<str:pk>/<str:return_pk>/', master_views.MemberShipRequestAdditionalAttachment_certification_delete,name='MemberShipRequestAdditionalAttachment_certification_delete'),
+
+    path('MemberShipRequest_certification_submit/<str:pk>/', master_views.MemberShipRequest_certification_submit,name='MemberShipRequest_certification_submit'),
+
+    path('Loan_request_certification_list_load/', master_views.Loan_request_certification_list_load,name='Loan_request_certification_list_load'),
+    path('Loan_request_certification_details/<str:pk>/', master_views.Loan_request_certification_details,name='Loan_request_certification_details'),
+    
+    path('Loan_application_certification_list_load/', master_views.Loan_application_certification_list_load,name='Loan_application_certification_list_load'),
+    path('Loan_application_certification_details/<str:pk>/', master_views.Loan_application_certification_details,name='Loan_application_certification_details'),
+   
+
+  ###########################################################################
+    ############################ TREASURER   ######################################
+    ###########################################################################
+    # path('treasurer_home/', master_views.treasurer_home,name='treasurer_home'),
+    path('withdrawal_confirmation_list_load/', master_views.withdrawal_confirmation_list_load,name='withdrawal_confirmation_list_load'),
+    path('withdrawal_confirmation_details/<str:pk>/', master_views.withdrawal_confirmation_details,name='withdrawal_confirmation_details'),
+
    
 
 
 
-
+    ###########################################################################
+    ########################### #FIN SEC ######################################
+    ###########################################################################
+    # path('FINSEC_home/', finsec_views.FINSEC_home,name='FINSEC_home'),
+    
+    path('Cash_Withdrawal_Approved_list_load/', master_views.Cash_Withdrawal_Approved_list_load,name='Cash_Withdrawal_Approved_list_load'),
+    path('Cash_Withdrawal_Approved_Details/<str:pk>/', master_views.Cash_Withdrawal_Approved_Details,name='Cash_Withdrawal_Approved_Details'),
 
 
     ################# MASTER ADMIN REPORT ##################################
@@ -302,7 +409,7 @@ urlpatterns = [
     
     path('loan_application_list_load/', deskofficer_views.loan_application_list_load,name='loan_application_list_load'),
     path('loan_application_processing/<str:pk>/', deskofficer_views.loan_application_processing,name='loan_application_processing'),
-    path('loan_application_preview/<str:pk>/', deskofficer_views.loan_application_preview,name='loan_application_preview'),
+    path('loan_application_preview/<str:pk>/<str:return_pk>/', deskofficer_views.loan_application_preview,name='loan_application_preview'),
 
     path('loan_application_approved_list_load/', deskofficer_views.loan_application_approved_list_load,name='loan_application_approved_list_load'),
     path('loan_application_approved_process_preview/<str:pk>/', deskofficer_views.loan_application_approved_process_preview,name='loan_application_approved_process_preview'),
@@ -356,6 +463,9 @@ urlpatterns = [
     path('Monthly_loan_repayement_preview/<str:pk>/<str:salary_inst_key>/', deskofficer_views.Monthly_loan_repayement_preview,name='Monthly_loan_repayement_preview'),
     path('Monthly_loan_repayement_Generate/<str:pk>/<str:salary_inst_key>/', deskofficer_views.Monthly_loan_repayement_Generate,name='Monthly_loan_repayement_Generate'),
 
+    path('MonthlyDeductionGenerationHeader/<str:caption>/<str:salary_inst_key>/', deskofficer_views.MonthlyDeductionGenerationHeader,name='MonthlyDeductionGenerationHeader'),
+    
+
     path('Monthly_Group_transaction_Institution_Load/', deskofficer_views.Monthly_Group_transaction_Institution_Load,name='Monthly_Group_transaction_Institution_Load'),
     path('Monthly_Group_Generated_Transaction/<str:pk>/', deskofficer_views.Monthly_Group_Generated_Transaction,name='Monthly_Group_Generated_Transaction'),
     path('Monthly_Group_Transaction_preview/<str:pk>/', deskofficer_views.Monthly_Group_Transaction_preview,name='Monthly_Group_Transaction_preview'),
@@ -375,9 +485,15 @@ urlpatterns = [
     path('Monthly_Account_deduction_Processing_Institution_Load/', deskofficer_views.Monthly_Account_deduction_Processing_Institution_Load,name='Monthly_Account_deduction_Processing_Institution_Load'),
     path('Monthly_Account_deduction_Processing_Preview/', deskofficer_views.Monthly_Account_deduction_Processing_Preview,name='Monthly_Account_deduction_Processing_Preview'),
     path('Monthly_Account_deduction_Process/<str:pk>/<str:trans_id>/', deskofficer_views.Monthly_Account_deduction_Process,name='Monthly_Account_deduction_Process'),
+    
+    path('Monthly_Account_deductions_Separations/', deskofficer_views.Monthly_Account_deductions_Separations,name='Monthly_Account_deductions_Separations'),
+
+    
 
     path('monthly_wrongful_deduction_transaction_period_load/', deskofficer_views.monthly_wrongful_deduction_transaction_period_load,name='monthly_wrongful_deduction_transaction_period_load'),
     path('Monthly_Unbalanced_transactions/', deskofficer_views.Monthly_Unbalanced_transactions,name='Monthly_Unbalanced_transactions'),
+    path('Monthly_Unbalanced_transactions_Processing/<str:pk>/', deskofficer_views.Monthly_Unbalanced_transactions_Processing,name='Monthly_Unbalanced_transactions_Processing'),
+    path('Monthly_Unbalanced_transactions_Processing_Savings/<str:pk>/', deskofficer_views.Monthly_Unbalanced_transactions_Processing_Savings,name='Monthly_Unbalanced_transactions_Processing_Savings'),
 
     path('Monthly_deduction_ledger_posting_preview/', deskofficer_views.Monthly_deduction_ledger_posting_preview,name='Monthly_deduction_ledger_posting_preview'),
     
@@ -491,7 +607,7 @@ urlpatterns = [
     path('PersonalLedger_Selected_list_load/', deskofficer_views.PersonalLedger_Selected_list_load,name='PersonalLedger_Selected_list_load'),
     path('PersonalLedger_Transaction_Load/<str:pk>/', deskofficer_views.PersonalLedger_Transaction_Load,name='PersonalLedger_Transaction_Load'),
     path('PersonalLedger_Transaction_Account_Load/<str:pk>/<str:trans_id>/', deskofficer_views.PersonalLedger_Transaction_Account_Load,name='PersonalLedger_Transaction_Account_Load'),
-    # path('PersonalLedger_Selected_View/<str:pk>/<str:trans_id>/', deskofficer_views.PersonalLedger_Selected_View,name='PersonalLedger_Selected_View'),
+    path('PersonalLedger_Display/<str:account_number>/<str:start_date>/<str:stop_date>/', deskofficer_views.PersonalLedger_Display,name='PersonalLedger_Display'),
     
     
     path('Cash_Deposit_Savings_Search/', deskofficer_views.Cash_Deposit_Savings_Search,name='Cash_Deposit_Savings_Search'),
@@ -516,6 +632,43 @@ urlpatterns = [
     path('Cash_Withdrawal_Transactions_Approved_list_Load/', deskofficer_views.Cash_Withdrawal_Transactions_Approved_list_Load,name='Cash_Withdrawal_Transactions_Approved_list_Load'),
   
 
+
+
+
+    path('members_credit_purchase_approval/', deskofficer_views.members_credit_purchase_approval,name='members_credit_purchase_approval'),
+    path('members_credit_purchase_approval_preview/<str:ticket>/', deskofficer_views.members_credit_purchase_approval_preview,name='members_credit_purchase_approval_preview'),
+
+    path('members_salary_update_request_approval_load_list/', deskofficer_views.members_salary_update_request_approval_load_list,name='members_salary_update_request_approval_load_list'),
+    path('members_salary_update_request_approval/<str:pk>/', deskofficer_views.members_salary_update_request_approval,name='members_salary_update_request_approval'),
+
+    path('external_fascilities_update_request_approval_load_list/', deskofficer_views.external_fascilities_update_request_approval_load_list,name='external_fascilities_update_request_approval_load_list'),
+    path('external_fascilities_update_request_approval/<str:pk>/', deskofficer_views.external_fascilities_update_request_approval,name='external_fascilities_update_request_approval'),
+
+    path('members_exclusiveness_request_approval_list_load/', deskofficer_views.members_exclusiveness_request_approval_list_load,name='members_exclusiveness_request_approval_list_load'),
+    path('members_exclusiveness_request_approval_process/<str:pk>/', deskofficer_views.members_exclusiveness_request_approval_process,name='members_exclusiveness_request_approval_process'),
+
+    path('Shop_Cheque_Sales_List_Load/', deskofficer_views.Shop_Cheque_Sales_List_Load,name='Shop_Cheque_Sales_List_Load'),
+    path('Shop_Cheque_Sales_process/<str:pk>/', deskofficer_views.Shop_Cheque_Sales_process,name='Shop_Cheque_Sales_process'),
+
+    path('Initial_Shares_Update_List_Load/', deskofficer_views.Initial_Shares_Update_List_Load,name='Initial_Shares_Update_List_Load'),
+    path('Initial_Shares_Update_preview/<str:pk>/', deskofficer_views.Initial_Shares_Update_preview,name='Initial_Shares_Update_preview'),
+   
+    path('Transaction_Adjustment_Approval_list_Load/', deskofficer_views.Transaction_Adjustment_Approval_list_Load,name='Transaction_Adjustment_Approval_list_Load'),
+    path('Transaction_Adjustment_Approval_Process/<str:pk>/', deskofficer_views.Transaction_Adjustment_Approval_Process,name='Transaction_Adjustment_Approval_Process'),
+
+    path('Transaction_Loan_Adjustment_Approval_list_Load/', deskofficer_views.Transaction_Loan_Adjustment_Approval_list_Load,name='Transaction_Loan_Adjustment_Approval_list_Load'),
+    path('Transaction_Loan_Adjustment_Approval_list_Process/<str:pk>/', deskofficer_views.Transaction_Loan_Adjustment_Approval_list_Process,name='Transaction_Loan_Adjustment_Approval_list_Process'),
+    
+    path('membership_termination_search/', deskofficer_views.membership_termination_search,name='membership_termination_search'),
+    path('membership_termination_transactions_load/<str:pk>/', deskofficer_views.membership_termination_transactions_load,name='membership_termination_transactions_load'),
+    path('membership_termination_list_load/', deskofficer_views.membership_termination_list_load,name='membership_termination_list_load'),
+
+    path('membership_commodity_loan_search/', deskofficer_views.membership_commodity_loan_search,name='membership_commodity_loan_search'),
+    path('membership_commodity_loan_list_load/', deskofficer_views.membership_commodity_loan_list_load,name='membership_commodity_loan_list_load'),
+    path('membership_commodity_loan_Company_load/<str:pk>/', deskofficer_views.membership_commodity_loan_Company_load,name='membership_commodity_loan_Company_load'),
+    path('membership_commodity_loan_Company_products/<str:pk>/', deskofficer_views.membership_commodity_loan_Company_products,name='membership_commodity_loan_Company_products'),
+    path('membership_commodity_loan_Company_products_details/<str:comp_pk>/<str:pk>/', deskofficer_views.membership_commodity_loan_Company_products_details,name='membership_commodity_loan_Company_products_details'),
+
     ################################################################################
     #################################### DAY END TRANSACTIONS ####################################
     ################################################################################
@@ -535,111 +688,12 @@ urlpatterns = [
     
     path('MemberShipFormSalesReport/', deskofficer_views.MemberShipFormSalesReport,name='MemberShipFormSalesReport'),
 
+    path('Over_Deductions_report/', deskofficer_views.Over_Deductions_report,name='Over_Deductions_report'),
 
 
-
-
-
-
-    path('temporallyloan/', deskofficer_views.temporallyloan,name='temporallyloan'),
-    path('temporally_loan_form/<str:pk>/', deskofficer_views.temporally_loan_form,name='temporally_loan_form'),
-
-   
     path('check_receipt_no_already_used/', deskofficer_views.check_receipt_no_already_used,name='check_receipt_no_already_used'),
     path('check_membership_phone_no_exist/', deskofficer_views.check_membership_phone_no_exist,name='check_membership_phone_no_exist'),
    
-
-
-
-    ###########################################################################
-    ############################ SECRETARY######################################
-    ########################################################################### 
-
-    path('secretary_home/', secretary_views.secretary_home,name='secretary_home'),
-    path('membership_request_certification_list_load/', secretary_views.membership_request_certification_list_load,name='membership_request_certification_list_load'),
-    path('membership_request_certification_info/<str:pk>/', secretary_views.membership_request_certification_info,name='membership_request_certification_info'),
-    path('membership_request_certification_additional_info_save/<str:pk>/', secretary_views.membership_request_certification_additional_info_save,name='membership_request_certification_additional_info_save'),
-    path('membership_request_certification_additional_info_delete/<str:pk>/<str:return_pk>/', secretary_views.membership_request_certification_additional_info_delete,name='membership_request_certification_additional_info_delete'),
-    
-    path('MemberShipRequestAdditionalAttachment_certification_save/<str:pk>/', secretary_views.MemberShipRequestAdditionalAttachment_certification_save,name='MemberShipRequestAdditionalAttachment_certification_save'),
-    path('MemberShipRequestAdditionalAttachment_certification_delete/<str:pk>/<str:return_pk>/', secretary_views.MemberShipRequestAdditionalAttachment_certification_delete,name='MemberShipRequestAdditionalAttachment_certification_delete'),
-
-    path('MemberShipRequest_certification_submit/<str:pk>/', secretary_views.MemberShipRequest_certification_submit,name='MemberShipRequest_certification_submit'),
-
-    path('Loan_request_certification_list_load/', secretary_views.Loan_request_certification_list_load,name='Loan_request_certification_list_load'),
-    path('Loan_request_certification_details/<str:pk>/', secretary_views.Loan_request_certification_details,name='Loan_request_certification_details'),
-    
-    path('Loan_application_certification_list_load/', secretary_views.Loan_application_certification_list_load,name='Loan_application_certification_list_load'),
-    path('Loan_application_certification_details/<str:pk>/', secretary_views.Loan_application_certification_details,name='Loan_application_certification_details'),
-   
-
-
-    ###########################################################################
-    ############################ PRESIDENT######################################
-    ########################################################################### 
-
-    path('president_home/', president_views.president_home,name='president_home'),
-    path('membership_request_approvals_list_load/', president_views.membership_request_approvals_list_load,name='membership_request_approvals_list_load'),
-    path('membership_request_approval_info/<str:pk>/', president_views.membership_request_approval_info,name='membership_request_approval_info'),
-    
-    path('membership_request_approval_comment_save/<str:pk>/', president_views.membership_request_approval_comment_save,name='membership_request_approval_comment_save'),
-    path('membership_request_approval_info_delete/<str:pk>/', president_views.membership_request_approval_info_delete,name='membership_request_approval_info_delete'),
-    
-    path('membership_request_approval_attachment_save/<str:pk>/', president_views.membership_request_approval_attachment_save,name='membership_request_approval_attachment_save'),
-    path('membership_request_approval_attachment_delete/<str:pk>/', president_views.membership_request_approval_attachment_delete,name='membership_request_approval_attachment_delete'),
-    
-    path('MemberShipRequest_approval_submit/<str:pk>/', president_views.MemberShipRequest_approval_submit,name='MemberShipRequest_approval_submit'),
-
-    path('loan_request_approval_list_load/', president_views.loan_request_approval_list_load,name='loan_request_approval_list_load'),
-    path('Loan_request_approval_details/<str:pk>/', president_views.Loan_request_approval_details,name='Loan_request_approval_details'),
-    
-    path('loan_application_approval_list_load/', president_views.loan_application_approval_list_load,name='loan_application_approval_list_load'),
-    path('Loan_application_approval_details/<str:pk>/', president_views.Loan_application_approval_details,name='Loan_application_approval_details'),
-
-    path('savings_cash_withdrawal_list_load/', president_views.savings_cash_withdrawal_list_load,name='savings_cash_withdrawal_list_load'),
-    path('savings_cash_withdrawal_preview/<str:pk>/', president_views.savings_cash_withdrawal_preview,name='savings_cash_withdrawal_preview'),
-
-    path('members_exclusiveness_list_load/', president_views.members_exclusiveness_list_load,name='members_exclusiveness_list_load'),
-    path('members_exclusiveness_process/<str:pk>/', president_views.members_exclusiveness_process,name='members_exclusiveness_process'),
-
-    path('Shares_Purchase_Request_Approval_List_Load/', president_views.Shares_Purchase_Request_Approval_List_Load,name='Shares_Purchase_Request_Approval_List_Load'),
-    path('Shares_Purchase_Request_Approval_Processed/<str:pk>/', president_views.Shares_Purchase_Request_Approval_Processed,name='Shares_Purchase_Request_Approval_Processed'),
-    
-
-
-
-    ###########################################################################
-    ########################### #FIN SEC ######################################
-    ###########################################################################
-    path('FINSEC_home/', finsec_views.FINSEC_home,name='FINSEC_home'),
-    
-    path('Cash_Withdrawal_Approved_list_load/', finsec_views.Cash_Withdrawal_Approved_list_load,name='Cash_Withdrawal_Approved_list_load'),
-    path('Cash_Withdrawal_Approved_Details/<str:pk>/', finsec_views.Cash_Withdrawal_Approved_Details,name='Cash_Withdrawal_Approved_Details'),
-
-    path('finsec_AutoReceipt_Setup/', finsec_views.finsec_AutoReceipt_Setup,name='finsec_AutoReceipt_Setup'),
-    path('finsec_receipt_manager/', finsec_views.finsec_receipt_manager,name='finsec_receipt_manager'),
-    path('finsec_CooperativeBankAccounts_add/', finsec_views.finsec_CooperativeBankAccounts_add,name='finsec_CooperativeBankAccounts_add'),
-    path('finsec_CooperativeBankAccounts_Remove/<str:pk>/', finsec_views.finsec_CooperativeBankAccounts_Remove,name='finsec_CooperativeBankAccounts_Remove'),
-    path('finsec_CooperativeBankAccounts_Update/<str:pk>/', finsec_views.finsec_CooperativeBankAccounts_Update,name='finsec_CooperativeBankAccounts_Update'),
-
-
-
-
-
-    ###########################################################################
-    ############################ TREASURER   ######################################
-    ###########################################################################
-    path('treasurer_home/', treasurer_views.treasurer_home,name='treasurer_home'),
-    path('withdrawal_confirmation_list_load/', treasurer_views.withdrawal_confirmation_list_load,name='withdrawal_confirmation_list_load'),
-    path('withdrawal_confirmation_details/<str:pk>/', treasurer_views.withdrawal_confirmation_details,name='withdrawal_confirmation_details'),
-
-    path('tre_AutoReceipt_Setup/', treasurer_views.tre_AutoReceipt_Setup,name='tre_AutoReceipt_Setup'),
-    path('tre_receipt_manager/', treasurer_views.tre_receipt_manager,name='tre_receipt_manager'),
-    
-    path('tre_CooperativeBankAccounts_add/', treasurer_views.tre_CooperativeBankAccounts_add,name='tre_CooperativeBankAccounts_add'),
-    path('tre_CooperativeBankAccounts_Remove/<str:pk>/', treasurer_views.tre_CooperativeBankAccounts_Remove,name='tre_CooperativeBankAccounts_Remove'),
-    path('tre_CooperativeBankAccounts_Update/<str:pk>/', treasurer_views.tre_CooperativeBankAccounts_Update,name='tre_CooperativeBankAccounts_Update'),
-
 
 
     ###########################################################################
@@ -723,6 +777,10 @@ urlpatterns = [
     path('monthly_deductions_salary_institution_select/', shop_views.monthly_deductions_salary_institution_select,name='monthly_deductions_salary_institution_select'),
     path('monthly_deductions_generate/<str:pk>/', shop_views.monthly_deductions_generate,name='monthly_deductions_generate'),
     path('monthly_deductions_generate_process/<str:pk>/', shop_views.monthly_deductions_generate_process,name='monthly_deductions_generate_process'),
+    path('monthly_deductions_generate_process_Completed/<str:pk>/', shop_views.monthly_deductions_generate_process_Completed,name='monthly_deductions_generate_process_Completed'),
+    path('monthly_deductions_ledger_posting/', shop_views.monthly_deductions_ledger_posting,name='monthly_deductions_ledger_posting'),
+    path('monthly_deductions_ledger_posting_preview/', shop_views.monthly_deductions_ledger_posting_preview,name='monthly_deductions_ledger_posting_preview'),
+    path('monthly_deductions_ledger_posting_process/<str:institution>/<str:period>/', shop_views.monthly_deductions_ledger_posting_process,name='monthly_deductions_ledger_posting_process'),
 
     path('Members_Credit_sales_Cash_Deposit_search/', shop_views.Members_Credit_sales_Cash_Deposit_search,name='Members_Credit_sales_Cash_Deposit_search'),
     path('Members_Credit_sales_Cash_Deposit_list_load/', shop_views.Members_Credit_sales_Cash_Deposit_list_load,name='Members_Credit_sales_Cash_Deposit_list_load'),
@@ -818,31 +876,31 @@ urlpatterns = [
     ####################################################
     ############### SEO DESK ###########################
     ####################################################
-    path('SEO_home/', SEO_views.SEO_home,name='SEO_home'),
+    # path('SEO_home/', SEO_views.SEO_home,name='SEO_home'),
     
-    path('members_credit_purchase_approval/', SEO_views.members_credit_purchase_approval,name='members_credit_purchase_approval'),
-    path('members_credit_purchase_approval_preview/<str:ticket>/', SEO_views.members_credit_purchase_approval_preview,name='members_credit_purchase_approval_preview'),
+    # path('members_credit_purchase_approval/', SEO_views.members_credit_purchase_approval,name='members_credit_purchase_approval'),
+    # path('members_credit_purchase_approval_preview/<str:ticket>/', SEO_views.members_credit_purchase_approval_preview,name='members_credit_purchase_approval_preview'),
 
-    path('members_salary_update_request_approval_load_list/', SEO_views.members_salary_update_request_approval_load_list,name='members_salary_update_request_approval_load_list'),
-    path('members_salary_update_request_approval/<str:pk>/', SEO_views.members_salary_update_request_approval,name='members_salary_update_request_approval'),
+    # path('members_salary_update_request_approval_load_list/', SEO_views.members_salary_update_request_approval_load_list,name='members_salary_update_request_approval_load_list'),
+    # path('members_salary_update_request_approval/<str:pk>/', SEO_views.members_salary_update_request_approval,name='members_salary_update_request_approval'),
 
-    path('external_fascilities_update_request_approval_load_list/', SEO_views.external_fascilities_update_request_approval_load_list,name='external_fascilities_update_request_approval_load_list'),
-    path('external_fascilities_update_request_approval/<str:pk>/', SEO_views.external_fascilities_update_request_approval,name='external_fascilities_update_request_approval'),
+    # path('external_fascilities_update_request_approval_load_list/', SEO_views.external_fascilities_update_request_approval_load_list,name='external_fascilities_update_request_approval_load_list'),
+    # path('external_fascilities_update_request_approval/<str:pk>/', SEO_views.external_fascilities_update_request_approval,name='external_fascilities_update_request_approval'),
 
-    path('members_exclusiveness_request_approval_list_load/', SEO_views.members_exclusiveness_request_approval_list_load,name='members_exclusiveness_request_approval_list_load'),
-    path('members_exclusiveness_request_approval_process/<str:pk>/', SEO_views.members_exclusiveness_request_approval_process,name='members_exclusiveness_request_approval_process'),
+    # path('members_exclusiveness_request_approval_list_load/', SEO_views.members_exclusiveness_request_approval_list_load,name='members_exclusiveness_request_approval_list_load'),
+    # path('members_exclusiveness_request_approval_process/<str:pk>/', SEO_views.members_exclusiveness_request_approval_process,name='members_exclusiveness_request_approval_process'),
 
-    path('Shop_Cheque_Sales_List_Load/', SEO_views.Shop_Cheque_Sales_List_Load,name='Shop_Cheque_Sales_List_Load'),
-    path('Shop_Cheque_Sales_process/<str:pk>/', SEO_views.Shop_Cheque_Sales_process,name='Shop_Cheque_Sales_process'),
+    # path('Shop_Cheque_Sales_List_Load/', SEO_views.Shop_Cheque_Sales_List_Load,name='Shop_Cheque_Sales_List_Load'),
+    # path('Shop_Cheque_Sales_process/<str:pk>/', SEO_views.Shop_Cheque_Sales_process,name='Shop_Cheque_Sales_process'),
 
-    path('Initial_Shares_Update_List_Load/', SEO_views.Initial_Shares_Update_List_Load,name='Initial_Shares_Update_List_Load'),
-    path('Initial_Shares_Update_preview/<str:pk>/', SEO_views.Initial_Shares_Update_preview,name='Initial_Shares_Update_preview'),
+    # path('Initial_Shares_Update_List_Load/', SEO_views.Initial_Shares_Update_List_Load,name='Initial_Shares_Update_List_Load'),
+    # path('Initial_Shares_Update_preview/<str:pk>/', SEO_views.Initial_Shares_Update_preview,name='Initial_Shares_Update_preview'),
    
-    path('Transaction_Adjustment_Approval_list_Load/', SEO_views.Transaction_Adjustment_Approval_list_Load,name='Transaction_Adjustment_Approval_list_Load'),
-    path('Transaction_Adjustment_Approval_Process/<str:pk>/', SEO_views.Transaction_Adjustment_Approval_Process,name='Transaction_Adjustment_Approval_Process'),
+    # path('Transaction_Adjustment_Approval_list_Load/', SEO_views.Transaction_Adjustment_Approval_list_Load,name='Transaction_Adjustment_Approval_list_Load'),
+    # path('Transaction_Adjustment_Approval_Process/<str:pk>/', SEO_views.Transaction_Adjustment_Approval_Process,name='Transaction_Adjustment_Approval_Process'),
 
-    path('Transaction_Loan_Adjustment_Approval_list_Load/', SEO_views.Transaction_Loan_Adjustment_Approval_list_Load,name='Transaction_Loan_Adjustment_Approval_list_Load'),
-    path('Transaction_Loan_Adjustment_Approval_list_Process/<str:pk>/', SEO_views.Transaction_Loan_Adjustment_Approval_list_Process,name='Transaction_Loan_Adjustment_Approval_list_Process'),
+    # path('Transaction_Loan_Adjustment_Approval_list_Load/', SEO_views.Transaction_Loan_Adjustment_Approval_list_Load,name='Transaction_Loan_Adjustment_Approval_list_Load'),
+    # path('Transaction_Loan_Adjustment_Approval_list_Process/<str:pk>/', SEO_views.Transaction_Loan_Adjustment_Approval_list_Process,name='Transaction_Loan_Adjustment_Approval_list_Process'),
     
 
 

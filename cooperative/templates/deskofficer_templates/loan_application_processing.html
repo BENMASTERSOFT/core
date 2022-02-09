@@ -62,7 +62,7 @@
                                         <div class="col-sm-9 ml-sm-auto">
                                             <button class="btn btn-info" type="submit" name="application">Submit</button>
                                             {% if new_amount > 0 %}
-                                            <a href="{% url 'loan_application_preview' loan_pk %}" class="btn btn-success">Preview</a>
+                                            <a href="{% url 'loan_application_preview' loan_pk return_pk %}" class="btn btn-success">Preview</a>
                                             {% endif %}
                                         </div>
                                     </div>
@@ -298,4 +298,5 @@
     <div class="preloader-backdrop">
         <div class="page-preloader">Loading</div>
     </div>
+    {% include 'cooperative/includes/emptyspace.html' %}
 {% endblock %}

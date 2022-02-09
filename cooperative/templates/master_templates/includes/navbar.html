@@ -14,618 +14,694 @@
                             <span class="nav-label">Dashboard</span>
                         </a>
                     </li>
-                    <li class="heading">FEATURES </li>
-                             
-                    <li>
-                        <a href="javascript:;"><i class="sidebar-item-icon fa fa-bar-chart"></i>
-                            <span class="nav-label">Authentications</span><i class="fa fa-angle-left arrow"></i></a>
-                        <ul class="nav-2-level collapse">
-                            <li>
-                                <a href="{% url 'AddApprovableTransactions' %}">Add Approvable Transactions</a>
-                            </li>
-                            <li>
-                                <a href="{% url 'AddCertifiableTransactions' %}">Add Certifiable Transactions</a>
-                            </li>
-                            <li>
-                                <a href="{% url 'ApprovableOfficers' %}">Add Approval Officers</a>
-                            </li>
-                            <li>
-                                <a href="{% url 'AddCertificationOfficers' %}">Add Certification Officers</a>
-                            </li>
-                            <li>
-                                <a href="{% url 'AddDisbursementOfficers' %}">Add Disbursement Officers</a>
-                            </li>
-
-
-                        </ul>
-                    </li>
-                    <li>
-                        <a href="javascript:;"><i class="sidebar-item-icon fa fa-map"></i>
-                            <span class="nav-label">Loans</span><i class="fa fa-angle-left arrow"></i></a>
-                        <ul class="nav-2-level collapse">
-                            <li>
-                                <a href="{% url 'loan_settings_load' %}">Loan Settings</a>
-                            </li>
-                            <li>
-                                <a href="{% url 'loan_based_savings_update' %}">Loan Based Savings</a>
-                            </li> 
-                            <li>
-                                <a href="{% url 'Loan_Number_Manager' %}">Loan Number</a>
-                            </li>
-                        </ul>
-                    </li>
-                   <li>
-                        <a href="javascript:;"><i class="sidebar-item-icon fa fa-map"></i>
-                            <span class="nav-label">Service Charges</span><i class="fa fa-angle-left arrow"></i></a>
-                        <ul class="nav-2-level collapse">
-                            <li>
-                                <a href="{% url 'membership_price_settings_load' %}">Members Registration</a>
-                            </li>
-
-                            
-                            <li>
-                                <a href="{% url 'AddShares_Configurations' %}">Members Shares</a>
-                            </li>
-
-                            <li>
-                                <a href="{% url 'addWelfare_Configurations' %}">Members Welfare</a>
-                            </li>
-
-                        </ul>
-                    </li>
-                    <li>
-                        <a href="javascript:;"><i class="sidebar-item-icon fa fa-file-text"></i>
-                            <span class="nav-label">Utilities</span><i class="fa fa-angle-left arrow"></i></a>
-                        <ul class="nav-2-level collapse">
-                            <li>
-                                <a href="{% url 'Invoice_Title' %}">Invoice Title </a>
-                            </li>
-                            <li>
-                                <a href="{% url 'AutoReceipt_Setup' %}">Auto Receipt </a>
-                            </li> 
-                            <li>
-                                <a href="{% url 'FormAutoPrint_Settings' %}">Form and Receipt Print </a>
-                            </li>
-                            <li>
-                                <a href="{% url 'receipt_manager' %}">Main Receipt Manager</a>
-                            </li> 
-                            <li>
-                                <a href="{% url 'receipt_manager_shop' %}">Shop Receipt Manager</a>
-                            </li>
-                             <li>
-                                <a href="{% url 'Members_IdManager' %}">Membership ID</a>
-                            </li> 
-                            <li>
-                                <a href="{% url 'addDefaultPassword' %}">Default Password</a>
-                            </li>
-                            <li>
-                                <a href="{% url 'system_reset' %}">Reset Setting Database</a>
-                            </li> 
-                            <li>
-                                <a href="{% url 'SharesUnits_add' %}">Shares Units</a>
-                            </li>  
-                            <li>
-                                <a href="{% url 'Shares_Deduction_savings' %}">Shares Deduction Savings</a>
-                            </li> 
-                            <li>
-                                <a href="{% url 'CooperativeBankAccounts_add' %}">Bank Accounts</a>
-                            </li> 
-                            <li>
-                                <a href="{% url 'WithdrawalController' %}">Withdrawal Controller</a>
-                            </li>
-                            <li>
-                                <a href="{% url 'DataCapture_Manager' %}">Manage Data Capture</a>
-                            </li> 
-                            <li>
-                                <a href="{% url 'CustomerID_Manager' %}">Manage Customer ID</a>
-                            </li> 
-                            <li>
-                                <a href="{% url 'MembersCompulsorySavings' %}">Compulsory Savings</a>
-                            </li>
-                            
-                        </ul>
-                    </li>
-
+                    <li class="heading">SHARED FEATURES </li>
+                    {% if request.user.user_type == '1' or request.user.user_type == '2' %}            
                         <li>
-                            <a href="javascript:;"><i class="sidebar-item-icon fa fa-sitemap"></i>
-                                <span class="nav-label">Components</span><i class="fa fa-angle-left arrow"></i></a>
+                            <a href="javascript:;"><i class="sidebar-item-icon fa fa-bar-chart"></i>
+                                <span class="nav-label">Authentications</span><i class="fa fa-angle-left arrow"></i></a>
                             <ul class="nav-2-level collapse">
-                               
-
                                 <li>
-                                    <a href="javascript:;">
-                                        <span class="nav-label">States</span><i class="fa fa-angle-left arrow"></i></a>
-                                    <ul class="nav-3-level collapse">
-                                        <li>
-                                            <a href="{% url 'addState' %}">Add States</a>
-                                        </li>
-                                        <li>
-                                            <a href="{% url 'Manage_state' %}">Manage State</a>
-                                        </li>
-                                    </ul>
+                                    <a href="{% url 'AddApprovableTransactions' %}">Add Approvable Transactions</a>
                                 </li>
                                 <li>
-                                    <a href="javascript:;">
-                                        <span class="nav-label">NOK Relationships</span><i class="fa fa-angle-left arrow"></i></a>
-                                    <ul class="nav-3-level collapse">
-                                        <li>
-                                            <a href="{% url 'Manage_NOKRelationships_Max_No' %}">Max. NOK</a>
-                                        </li>
-                                        <li>
-                                            <a href="{% url 'addNOKRelationships' %}">Add NOK Relationships</a>
-                                        </li>
-                                        <li>
-                                            <a href="{% url 'Manage_NOKRelationships' %}">Manage NOK Relationships</a>
-                                        </li>
-                                    </ul>
-                                </li>
-
-
-                                <li>
-                                    <a href="javascript:;">
-                                        <span class="nav-label">LGA</span><i class="fa fa-angle-left arrow"></i></a>
-                                    <ul class="nav-3-level collapse">
-                                        <li>
-                                            <a href="">Add LGA</a>
-                                        </li>
-                                        <li>
-                                            <a href="">Manage LGA</a>
-                                        </li>
-                                    </ul>
+                                    <a href="{% url 'AddCertifiableTransactions' %}">Add Certifiable Transactions</a>
                                 </li>
                                 <li>
-                                    <a href="javascript:;">
-                                        <span class="nav-label">Departments</span><i class="fa fa-angle-left arrow"></i></a>
-                                    <ul class="nav-3-level collapse">
-                                        <li>
-                                            <a href="{% url 'addDepartments' %}">Add Departments</a>
-                                        </li>
-                                        <li>
-                                            <a href="">Manage Departments</a>
-                                        </li>
-                                    </ul>
-                                </li>
-
-
-                                <li>
-                                    <a href="javascript:;">
-                                        <span class="nav-label">Transaction Types</span><i class="fa fa-angle-left arrow"></i></a>
-                                    <ul class="nav-3-level collapse">
-                                        <li>
-                                            <a href="{% url 'addTransactionTypes' %}">Add Transaction Types</a>
-                                        </li>
-                                        <li>
-                                            <a href="{% url 'TransactionTypes_Manage_Load' %}">Manage Transaction Types</a>
-                                        </li>
-                                    </ul>
-                                </li>
-
-
-                                <li>
-                                    <a href="javascript:;">
-                                        <span class="nav-label">Salary Institutions</span><i class="fa fa-angle-left arrow"></i></a>
-                                    <ul class="nav-3-level collapse">
-                                        <li>
-                                            <a href="{% url 'addSalaryInstitution' %}">Add Salary Institutions</a>
-                                        </li>
-                                        <li>
-                                            <a href="">Manage Salary Institutions</a>
-                                        </li>
-                                    </ul>
-                                </li>
-
-
-                                <li>
-                                    <a href="javascript:;">
-                                        <span class="nav-label">Locations</span><i class="fa fa-angle-left arrow"></i></a>
-                                    <ul class="nav-3-level collapse">
-                                        <li>
-                                            <a href="">Add Locations</a>
-                                        </li>
-                                        <li>
-                                            <a href="">Manage Locations</a>
-                                        </li>
-                                    </ul>
-                                </li>
-
-
-                               
-
-
-                                <li>
-                                    <a href="javascript:;">
-                                        <span class="nav-label">Banks</span><i class="fa fa-angle-left arrow"></i></a>
-                                    <ul class="nav-3-level collapse">
-                                        <li>
-                                            <a href="{% url 'addBanks' %}">Add Banks</a>
-                                        </li>
-                                        <li>
-                                            <a href="">Manage Banks</a>
-                                        </li>
-                                    </ul>
-                                </li> 
-                                <li>
-                                    <a href="javascript:;">
-                                        <span class="nav-label">Locations</span><i class="fa fa-angle-left arrow"></i></a>
-                                    <ul class="nav-3-level collapse">
-                                        <li>
-                                            <a href="{% url 'addLocations' %}">Add Locations</a>
-                                        </li>
-                                        <li>
-                                            <a href="">Manage Locations</a>
-                                        </li>
-                                    </ul>
-                                </li> 
-
-
-                                <li>
-                                    <a href="javascript:;">
-                                        <span class="nav-label">Gender</span><i class="fa fa-angle-left arrow"></i></a>
-                                    <ul class="nav-3-level collapse">
-                                        <li>
-                                            <a href="{% url 'addGender' %}">Add Gender</a>
-                                        </li>
-                                        <li>
-                                            <a href="">Manage Gender</a>
-                                        </li>
-                                    </ul>
+                                    <a href="{% url 'ApprovableOfficers' %}">Add Approval Officers</a>
                                 </li>
                                 <li>
-                                    <a href="javascript:;">
-                                        <span class="nav-label">Initials</span><i class="fa fa-angle-left arrow"></i></a>
-                                    <ul class="nav-3-level collapse">
-                                        <li>
-                                            <a href="{% url 'addTitles' %}">Add Initials</a>
-                                        </li>
-                                        <li>
-                                            <a href="">Manage Initials</a>
-                                        </li>
-                                    </ul>
+                                    <a href="{% url 'AddCertificationOfficers' %}">Add Certification Officers</a>
                                 </li>
                                 <li>
-                                    <a href="javascript:;">
-                                        <span class="nav-label">User Levels</span><i class="fa fa-angle-left arrow"></i></a>
-                                    <ul class="nav-3-level collapse">
-                                        <li>
-                                            {% comment %}<a href="{% url 'addUserLevels' %}">Add User Level</a>{% endcomment %}
-                                        </li>
-                                        <li>
-                                            <a href="">Manage User Level</a>
-                                        </li>
-                                    </ul>
+                                    <a href="{% url 'AddDisbursementOfficers' %}">Add Disbursement Officers</a>
                                 </li>
-                                <li>
-                                    <a href="javascript:;">
-                                        <span class="nav-label">Transaction Sources</span><i class="fa fa-angle-left arrow"></i></a>
-                                    <ul class="nav-3-level collapse">
-                                        <li>
-                                            <a href="{% url 'addTransactionSources' %}">Add Transaction Sources</a>
-                                        </li>
-                                        <li>
-                                            <a href="">Manage Transaction Sources</a>
-                                        </li>
-                                    </ul>
-                                </li>
-                                <li>
-                                    <a href="javascript:;">
-                                        <span class="nav-label">Loan Interest Sources</span><i class="fa fa-angle-left arrow"></i></a>
-                                    <ul class="nav-3-level collapse">
-                                        <li>
-                                            <a href="{% url 'addInterestDeductionSource' %}">Add Interest Sources</a>
-                                        </li>
-                                        <li>
-                                            <a href="">Manage Interest Sources</a>
-                                        </li>
-                                    </ul>
-                                </li>
+
 
                             </ul>
                         </li>
 
-
-                    <li>
-                        <a href="javascript:;"><i class="sidebar-item-icon fa fa-bookmark"></i>
-                            <span class="nav-label">Operational Status</span><i class="fa fa-angle-left arrow"></i></a>
-                        <ul class="nav-2-level collapse">
-                            <li>
-                                <a href="{% url 'addMembershipStatus' %}">Membership Status</a>
-                            </li>
-                            <li>
-                        <a href="{% url 'addTransactionStatus' %}">Transaction Status</a>
-                            </li>
-                         
-                            <li>
-                                <a href="{% url 'addProcessingStatus' %}">Processing Status</a>
-                            </li>
-                            <li>
-                                <a href="{% url 'addReceiptStatus' %}">Receipt Status</a>
-                            </li>
-                           
-                           
-                         
-                        </ul>
-                    </li>
-
-                    <li>
-                        <a href="javascript:;"><i class="sidebar-item-icon fa fa-edit"></i>
-                            <span class="nav-label">System Users</span><i class="fa fa-angle-left arrow"></i></a>
-                        <ul class="nav-2-level collapse">
-                            <li>
-                                <a href="{% url 'add_staff' %}">System Users</a>
-                            </li>
-                            <li>
-                                <a href="{% url 'add_staff_manage' %}">Manage System Users</a>
-                            </li>
-                            
-                            <li>
-                                <a href="">Super Users</a>
-                            </li> 
-                            <li>
-                                <a href="{% url 'super_user_manage' %}">Manage Super Users</a>
-                            </li> 
-                            <li>
-                              <a href="{% url 'addUserType' %}">Add User Types</a>{% 
-                            </li>
-                        </ul>
-                    </li>
-
+                         <li>
+                            <a href="javascript:;"><i class="sidebar-item-icon fa fa-edit"></i>
+                                <span class="nav-label">System Users</span><i class="fa fa-angle-left arrow"></i></a>
+                            <ul class="nav-2-level collapse">
+                                <li>
+                                    <a href="{% url 'add_staff' %}">System Users</a>
+                                </li>
+                                <li>
+                                    <a href="{% url 'add_staff_manage' %}">Manage System Users</a>
+                                </li>
+                                
+                                <li>
+                                    <a href="">Super Users</a>
+                                </li> 
+                                <li>
+                                    <a href="{% url 'super_user_manage' %}">Manage Super Users</a>
+                                </li> 
+                                <li>
+                                  <a href="{% url 'addUserType' %}">Add User Types</a>{% 
+                                </li>
+                            </ul>
+                        </li>
+                    {% endif %}
+                    {% if request.user.user_type == '1' or request.user.user_type == '2' or request.user.user_type == '3' or request.user.user_type == '4' %}  
                     <li>
                         <a href="javascript:;"><i class="sidebar-item-icon fa fa-sitemap"></i>
-                            <span class="nav-label">REPORTS</span><i class="fa fa-angle-left arrow"></i></a>
+                            <span class="nav-label">Commodity Manager</span><i class="fa fa-angle-left arrow"></i></a>
                         <ul class="nav-2-level collapse">
                             <li>
-                                <a href="{% url 'transaction_views_ranked' %}">Ranked Transaction Types</a>
+                                <a href="{% url 'Commodity_Products_Categories' %}">Product Capturing</a>
+                            </li>
+                            <li>
+                                <a href="{% url 'Commodity_Products_Manage_Load' %}">Manage Commodity</a>
                             </li>
                             <li>
                                 <a href="javascript:;">
-                                    <span class="nav-label">Level 2</span><i class="fa fa-angle-left arrow"></i></a>
+                                    <span class="nav-label">Companies Info</span><i class="fa fa-angle-left arrow"></i></a>
                                 <ul class="nav-3-level collapse">
                                     <li>
-                                        <a href="javascript:;">Level 3</a>
+                                        <a href="{% url 'addCompanies' %}">Register Companies</a>
                                     </li>
                                     <li>
-                                        <a href="javascript:;">Level 3</a>
+                                        <a href="{% url 'Manage_Companies' %}">Manage Companies</a>
                                     </li>
                                 </ul>
                             </li>
-                        </ul>
-                    </li>
-                    <li>
-                        <a href="javascript:;"><i class="sidebar-item-icon fa fa-edit"></i>
-                            <span class="nav-label">Forms</span><i class="fa fa-angle-left arrow"></i></a>
-                        <ul class="nav-2-level collapse">
                             <li>
-                              <a href="{% url 'basic_form' %}">Basic Forms</a> 
-                            </li>
-                            
-                        </ul>
-                    </li>
-                    <li>
-                        <a href="javascript:;"><i class="sidebar-item-icon fa fa-table"></i>
-                            <span class="nav-label">Tables</span><i class="fa fa-angle-left arrow"></i></a>
-                        <ul class="nav-2-level collapse">
-                          <li>
-                            <a href="{% url 'basic_table' %}">Basic Tables</a>
+                                <a href="{% url 'Product_Linking_Load' %}">Products Linking</a>
                             </li>
                             <li>
-                            <a href="{% url 'datatable_table' %}">Datatables</a>
+                                <a href="{% url 'Product_Price_Settings_Load' %}">Products Price Setting</a>
                             </li>
                         </ul>
                     </li>
+                    {% endif %}
+                {% if request.user.user_type == '1'  %} 
+                        <li>
+                            <a href="javascript:;"><i class="sidebar-item-icon fa fa-map"></i>
+                                <span class="nav-label">Loans</span><i class="fa fa-angle-left arrow"></i></a>
+                            <ul class="nav-2-level collapse">
+                                <li>
+                                    <a href="{% url 'loan_settings_load' %}">Monetary Loan Settings</a>
+                                </li>
+                                <li>
+                                    <a href="{% url 'loan_settings_non_monetary_load' %}">Non-Monetary Loan Settings</a>
+                                </li>
+                                <li>
+                                    <a href="{% url 'loan_based_savings_update' %}">Loan Based Savings</a>
+                                </li> 
+                                <li>
+                                    <a href="{% url 'Loan_Number_Manager' %}">Loan Number</a>
+                                </li> 
+                                
+                            </ul>
+                        </li>
+                       <li>
+                            <a href="javascript:;"><i class="sidebar-item-icon fa fa-map"></i>
+                                <span class="nav-label">Service Charges</span><i class="fa fa-angle-left arrow"></i></a>
+                            <ul class="nav-2-level collapse">
+                                <li>
+                                    <a href="{% url 'membership_price_settings_load' %}">Members Registration</a>
+                                </li>
 
-                    
+                                
+                                <li>
+                                    <a href="{% url 'AddShares_Configurations' %}">Members Shares</a>
+                                </li>
 
-                    <li class="heading">IMPORT/EXPORT</li>
-                     
-                    <li>
-                        <a href="javascript:;"><i class="sidebar-item-icon fa fa-sitemap"></i>
-                            <span class="nav-label">IMPORT</span><i class="fa fa-angle-left arrow"></i></a>
-                        <ul class="nav-2-level collapse">
-                            
-                           {% comment %} {% if values.status.title == 'ACTIVE' %}{% endcomment %}
+                                <li>
+                                    <a href="{% url 'addWelfare_Configurations' %}">Members Welfare</a>
+                                </li>
+
+                            </ul>
+                        </li>
+                        <li>
+                            <a href="javascript:;"><i class="sidebar-item-icon fa fa-file-text"></i>
+                                <span class="nav-label">Utilities</span><i class="fa fa-angle-left arrow"></i></a>
+                            <ul class="nav-2-level collapse">
+                          
+                                 <li>
+                                    <a href="{% url 'Members_IdManager' %}">Membership ID</a>
+                                </li> 
+                                <li>
+                                    <a href="{% url 'addDefaultPassword' %}">Default Password</a>
+                                </li>
+                                <li>
+                                    <a href="{% url 'system_reset' %}">Reset Setting Database</a>
+                                </li> 
+                                <li>
+                                    <a href="{% url 'SharesUnits_add' %}">Shares Units</a>
+                                </li>  
+                                <li>
+                                    <a href="{% url 'Shares_Deduction_savings' %}">Shares Deduction Savings</a>
+                                </li> 
+                               
+                                <li>
+                                    <a href="{% url 'WithdrawalController' %}">Withdrawal Controller</a>
+                                </li>
+                                <li>
+                                    <a href="{% url 'DataCapture_Manager' %}">Manage Data Capture</a>
+                                </li> 
+                                <li>
+                                    <a href="{% url 'CustomerID_Manager' %}">Manage Customer ID</a>
+                                </li> 
+                                <li>
+                                    <a href="{% url 'MembersCompulsorySavings' %}">Compulsory Savings</a>
+                                </li>
+                                
+                            </ul>
+                        </li>
+                        {% endif %}
+
+                            {% if request.user.user_type == '1'  or request.user.user_type == '5' or request.user.user_type == '4' %}
                             <li>
-                                <a href="javascript:;">
+                                    <a href="javascript:;"><i class="sidebar-item-icon fa fa-file-text"></i>
+                                        <span class="nav-label">Invoice Manager</span><i class="fa fa-angle-left arrow"></i></a>
+                                    <ul class="nav-2-level collapse">
+                                        <li>
+                                            <a href="{% url 'Invoice_Title' %}">Invoice Title </a>
+                                        </li>
+                                        <li>
+                                            <a href="{% url 'AutoReceipt_Setup' %}">Auto Receipt </a>
+                                        </li> 
+                                        <li>
+                                            <a href="{% url 'FormAutoPrint_Settings' %}">Form and Receipt Print </a>
+                                        </li>
+                                        <li>
+                                            <a href="{% url 'receipt_manager' %}">Main Receipt Manager</a>
+                                        </li> 
+                                        <li>
+                                            <a href="{% url 'receipt_manager_shop' %}">Shop Receipt Manager</a>
+                                        </li>
+                                      
+                                       
+                                       
+                                        <li>
+                                            <a href="{% url 'CooperativeBankAccounts_add' %}">Bank Accounts</a>
+                                        </li> 
+                                    
+                                        
+                                    </ul>
+                                </li>
+                            {% endif %}
+                    {% if request.user.user_type == '1' %}
+                        <li>
+                                <a href="javascript:;"><i class="sidebar-item-icon fa fa-sitemap"></i>
                                     <span class="nav-label">Components</span><i class="fa fa-angle-left arrow"></i></a>
-                                <ul class="nav-3-level collapse">
+                                <ul class="nav-2-level collapse">
+                                   
+
                                     <li>
-                                        <a href="{% url 'title_upload' %}">Title</a>
+                                        <a href="javascript:;">
+                                            <span class="nav-label">Commodity Category</span><i class="fa fa-angle-left arrow"></i></a>
+                                        <ul class="nav-3-level collapse">
+                                            <li>
+                                                <a href="{% url 'addCommodityCategory' %}">Add Categories</a>
+                                            </li>
+                                            <li>
+                                                <a href="{% url 'Manage_Commodity_Categories' %}">Manage Categories</a>
+                                            </li>
+                                        </ul>
                                     </li>
                                     <li>
-                                        <a href="{% url 'states_upload' %}">States</a>
+                                        <a href="javascript:;">
+                                            <span class="nav-label">States</span><i class="fa fa-angle-left arrow"></i></a>
+                                        <ul class="nav-3-level collapse">
+                                            <li>
+                                                <a href="{% url 'addState' %}">Add States</a>
+                                            </li>
+                                            <li>
+                                                <a href="{% url 'Manage_state' %}">Manage State</a>
+                                            </li>
+                                        </ul>
                                     </li>
                                     <li>
-                                        <a href="{% url 'lga_upload' %}">LGA</a>
+                                        <a href="javascript:;">
+                                            <span class="nav-label">NOK Relationships</span><i class="fa fa-angle-left arrow"></i></a>
+                                        <ul class="nav-3-level collapse">
+                                            <li>
+                                                <a href="{% url 'Manage_NOKRelationships_Max_No' %}">Max. NOK</a>
+                                            </li>
+                                            <li>
+                                                <a href="{% url 'addNOKRelationships' %}">Add NOK Relationships</a>
+                                            </li>
+                                            <li>
+                                                <a href="{% url 'Manage_NOKRelationships' %}">Manage NOK Relationships</a>
+                                            </li>
+                                        </ul>
                                     </li>
-                                     
-                                     <li>
-                                         <a href="{% url 'MembershipStatus_upload' %}">Membership Status</a>
-                                     </li> 
-                                     <li>
-                                         <a href="{% url 'ProcessingStatus_upload' %}">Processing Status</a>
-                                     </li>  
-                                     <li>
-                                         <a href="{% url 'TransactionStatus_upload' %}">Transaction Status</a>
-                                     </li> 
-                                     <li>
-                                         <a href="{% url 'ReceiptStatus_upload' %}">Receipt Status</a>
-                                     </li>
-                                         <li>
-                                        <a href="{% url 'ReceiptTypes_upload' %}">Receipt Types</a>
-                                     </li>  
-                                     <li>
-                                         <a href="{% url 'CertificationStatus_upload' %}">Certification Status</a>
-                                     </li> 
-                                     <li>
-                                         <a href="{% url 'ApprovalStatus_upload' %}">Approval Status</a>
-                                     </li>  
 
 
-                                     <li>
-                                         <a href="{% url 'SubmissionStatus_upload' %}">Submission Status </a>
-                                     </li>
-    
-                                     <li>
-                                         <a href="{% url 'TicketStatus_upload' %}">Ticket Status </a>
-                                     </li>
+                                    <li>
+                                        <a href="javascript:;">
+                                            <span class="nav-label">LGA</span><i class="fa fa-angle-left arrow"></i></a>
+                                        <ul class="nav-3-level collapse">
+                                            <li>
+                                                <a href="">Add LGA</a>
+                                            </li>
+                                            <li>
+                                                <a href="">Manage LGA</a>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                    <li>
+                                        <a href="javascript:;">
+                                            <span class="nav-label">Departments</span><i class="fa fa-angle-left arrow"></i></a>
+                                        <ul class="nav-3-level collapse">
+                                            <li>
+                                                <a href="{% url 'addDepartments' %}">Add Departments</a>
+                                            </li>
+                                            <li>
+                                                <a href="">Manage Departments</a>
+                                            </li>
+                                        </ul>
+                                    </li>
 
 
-                                      <li>
-                                        <a href="{% url 'Gender_upload' %}">Gender</a>
-                                     </li> 
-                                     <li>
-                                        <a href="{% url 'Banks_upload' %}">Banks</a>
-                                     </li> 
-                                     <li>
-                                        <a href="{% url 'PaymentChannels_upload' %}">Payment Channels</a>
-                                     </li> 
-                                 
-                                      <li>
-                                        <a href="{% url 'Locations_upload' %}">Locations</a>
-                                     </li>
-                                     <li>
-                                        <a href="{% url 'AccountTypes_upload' %}">Account Types</a>
-                                     </li>
-                                     <li>
-                                        <a href="{% url 'Departments_upload' %}">Departments</a>
-                                     </li> 
-                                     <li>
-                                        <a href="{% url 'SalaryInstitution_upload' %}">Salary Institution</a>
-                                     </li>
-                                     <li>
-                                        <a href="{% url 'InterestDeductionSource_upload' %}">Interest Deduction Source</a>
-                                     </li> 
-                                     <li>
-                                        <a href="{% url 'TransactionSources_upload' %}">Transaction Sources</a>
-                                     </li>  
-                                     <li>
-                                        <a href="{% url 'AdminCharges_upload' %}">Admin Charges</a>
-                                     </li> 
-                                     <li>
-                                        <a href="{% url 'UserType_upload' %}">User Type</a>
-                                     </li>
-                                     <li>
-                                        <a href="{% url 'NOKRelationships_upload' %}">NOK Relationships</a>
-                                     </li>
+                                    <li>
+                                        <a href="javascript:;">
+                                            <span class="nav-label">Transaction Types</span><i class="fa fa-angle-left arrow"></i></a>
+                                        <ul class="nav-3-level collapse">
+                                            <li>
+                                                <a href="{% url 'addTransactionTypes' %}">Add Transaction Types</a>
+                                            </li>
+                                            <li>
+                                                <a href="{% url 'TransactionTypes_Manage_Load' %}">Manage Transaction Types</a>
+                                            </li>
+                                        </ul>
+                                    </li>
 
-                                      <li>
-                                        <a href="{% url 'loan_criteria_base_upload' %}">Loan Criteria Bases</a>
-                                    </li> 
+
                                     <li>
-                                        <a href="{% url 'ProductCategory_upload' %}">Product Category </a>
+                                        <a href="javascript:;">
+                                            <span class="nav-label">Salary Institutions</span><i class="fa fa-angle-left arrow"></i></a>
+                                        <ul class="nav-3-level collapse">
+                                            <li>
+                                                <a href="{% url 'addSalaryInstitution' %}">Add Salary Institutions</a>
+                                            </li>
+                                            <li>
+                                                <a href="">Manage Salary Institutions</a>
+                                            </li>
+                                        </ul>
                                     </li>
-                                    
+
+
                                     <li>
-                                        <a href="{% url 'Stock_upload' %}">Product Upload </a>
-                                        <a href="{% url 'upload_stock_roll' %}">Product Upload1 </a>
-                                    </li>   
-                                    <li>
-                                        <a href="{% url 'SalesCategory_upload' %}">Sales Category Upload </a>
-                                    </li>                                    
-                                    <li>
-                                        <a href="{% url 'Product_Write_off_Reasons_upload' %}">Item Write-off Reasons </a>
-                                    </li>    
-                                    <li>
-                                        <a href="{% url 'LockedStatus_upload' %}">Locked Status </a>
-                                    </li> 
-                                    <li>
-                                        <a href="{% url 'ExlusiveStatus_upload' %}">Exclusive Status </a>
+                                        <a href="javascript:;">
+                                            <span class="nav-label">Locations</span><i class="fa fa-angle-left arrow"></i></a>
+                                        <ul class="nav-3-level collapse">
+                                            <li>
+                                                <a href="">Add Locations</a>
+                                            </li>
+                                            <li>
+                                                <a href="">Manage Locations</a>
+                                            </li>
+                                        </ul>
                                     </li>
-                                    <li>
-                                        <a href="{% url 'LoanScheduleStatus_upload' %}">Loan Schedule Status </a>
-                                    </li>
-                                    <li>
-                                        <a href="{% url 'LoansUploadStatus_upload' %}">Loans Upload Status </a>
-                                    </li>
-                                    <li>
-                                        <a href="{% url 'SavingsUploadStatus_upload' %}">Savings Upload Status </a>
-                                    </li>
-                                    <li>
-                                        <a href="{% url 'LoanCategory_upload' %}">Loan Category </a>
-                                    </li> 
-                                    <li>
-                                        <a href="{% url 'SharesUnits_upload' %}">Shares Units</a>
-                                    </li> 
-                                    <li>
-                                        <a href="{% url 'UsersLevel_upload' %}">Users Level</a>
-                                    </li> 
-                                    <li>
-                                        <a href="{% url 'SharesUploadStatus_upload' %}">Shares Upload Status</a>
-                                    </li>  
-                                    <li>
-                                        <a href="{% url 'WelfareUploadStatus_upload' %}">Welfare Upload Status</a>
-                                    </li>
-                                    <li>
-                                        <a href="{% url 'DateJoinedUploadStatus_upload' %}">Date Joined Status</a>
-                                    </li> 
-                                    <li>
-                                        <a href="{% url 'WithdrawalStatus_upload' %}">Withdrawal Status</a>
-                                    </li>   
-                                    <li>
-                                        <a href="{% url 'MultipleLoanStatus_upload' %}">Multiple Loan Status</a>
-                                    </li> 
-                                    <li>
-                                        <a href="{% url 'LoanMergeStatus_upload' %}">Loan Merge Status</a>
-                                    </li>   
-                                    <li>
-                                        <a href="{% url 'YesNo_upload' %}">Yes and No Status</a>
-                                    </li>   
-                                    
+
 
                                    
+
+
+                                    <li>
+                                        <a href="javascript:;">
+                                            <span class="nav-label">Banks</span><i class="fa fa-angle-left arrow"></i></a>
+                                        <ul class="nav-3-level collapse">
+                                            <li>
+                                                <a href="{% url 'addBanks' %}">Add Banks</a>
+                                            </li>
+                                            <li>
+                                                <a href="">Manage Banks</a>
+                                            </li>
+                                        </ul>
+                                    </li> 
+                                    <li>
+                                        <a href="javascript:;">
+                                            <span class="nav-label">Locations</span><i class="fa fa-angle-left arrow"></i></a>
+                                        <ul class="nav-3-level collapse">
+                                            <li>
+                                                <a href="{% url 'addLocations' %}">Add Locations</a>
+                                            </li>
+                                            <li>
+                                                <a href="">Manage Locations</a>
+                                            </li>
+                                        </ul>
+                                    </li> 
+
+
+                                    <li>
+                                        <a href="javascript:;">
+                                            <span class="nav-label">Gender</span><i class="fa fa-angle-left arrow"></i></a>
+                                        <ul class="nav-3-level collapse">
+                                            <li>
+                                                <a href="{% url 'addGender' %}">Add Gender</a>
+                                            </li>
+                                            <li>
+                                                <a href="">Manage Gender</a>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                    <li>
+                                        <a href="javascript:;">
+                                            <span class="nav-label">Initials</span><i class="fa fa-angle-left arrow"></i></a>
+                                        <ul class="nav-3-level collapse">
+                                            <li>
+                                                <a href="{% url 'addTitles' %}">Add Initials</a>
+                                            </li>
+                                            <li>
+                                                <a href="">Manage Initials</a>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                    <li>
+                                        <a href="javascript:;">
+                                            <span class="nav-label">User Levels</span><i class="fa fa-angle-left arrow"></i></a>
+                                        <ul class="nav-3-level collapse">
+                                            <li>
+                                                {% comment %}<a href="{% url 'addUserLevels' %}">Add User Level</a>{% endcomment %}
+                                            </li>
+                                            <li>
+                                                <a href="">Manage User Level</a>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                    <li>
+                                        <a href="javascript:;">
+                                            <span class="nav-label">Transaction Sources</span><i class="fa fa-angle-left arrow"></i></a>
+                                        <ul class="nav-3-level collapse">
+                                            <li>
+                                                <a href="{% url 'addTransactionSources' %}">Add Transaction Sources</a>
+                                            </li>
+                                            <li>
+                                                <a href="">Manage Transaction Sources</a>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                    <li>
+                                        <a href="javascript:;">
+                                            <span class="nav-label">Loan Interest Sources</span><i class="fa fa-angle-left arrow"></i></a>
+                                        <ul class="nav-3-level collapse">
+                                            <li>
+                                                <a href="{% url 'addInterestDeductionSource' %}">Add Interest Sources</a>
+                                            </li>
+                                            <li>
+                                                <a href="">Manage Interest Sources</a>
+                                            </li>
+                                        </ul>
+                                    </li>
+
                                 </ul>
+                        </li>
+                        <li>
+                            <a href="javascript:;"><i class="sidebar-item-icon fa fa-bookmark"></i>
+                                <span class="nav-label">Operational Status</span><i class="fa fa-angle-left arrow"></i></a>
+                            <ul class="nav-2-level collapse">
+                                <li>
+                                    <a href="{% url 'addMembershipStatus' %}">Membership Status</a>
+                                </li>
+                                <li>
+                            <a href="{% url 'addTransactionStatus' %}">Transaction Status</a>
+                                </li>
+                             
+                                <li>
+                                    <a href="{% url 'addProcessingStatus' %}">Processing Status</a>
+                                </li>
+                                <li>
+                                    <a href="{% url 'addReceiptStatus' %}">Receipt Status</a>
+                                </li>
+                               
+                               
+                             
+                            </ul>
+                        </li>
+                       
+
+                
+
+                        <li class="heading">IMPORT/EXPORT</li>
+                         
+                        <li>
+                            <a href="javascript:;"><i class="sidebar-item-icon fa fa-sitemap"></i>
+                                <span class="nav-label">IMPORT</span><i class="fa fa-angle-left arrow"></i></a>
+                            <ul class="nav-2-level collapse">
+                                
+                               {% comment %} {% if values.status.title == 'ACTIVE' %}{% endcomment %}
+                                <li>
+                                    <a href="javascript:;">
+                                        <span class="nav-label">Components</span><i class="fa fa-angle-left arrow"></i></a>
+                                    <ul class="nav-3-level collapse">
+                                        <li>
+                                            <a href="{% url 'title_upload' %}">Title</a>
+                                        </li>
+                                        <li>
+                                            <a href="{% url 'states_upload' %}">States</a>
+                                        </li>
+                                        <li>
+                                            <a href="{% url 'lga_upload' %}">LGA</a>
+                                        </li>
+                                         
+                                         <li>
+                                             <a href="{% url 'MembershipStatus_upload' %}">Membership Status</a>
+                                         </li> 
+                                         <li>
+                                             <a href="{% url 'ProcessingStatus_upload' %}">Processing Status</a>
+                                         </li>  
+                                         <li>
+                                             <a href="{% url 'TransactionStatus_upload' %}">Transaction Status</a>
+                                         </li> 
+                                         <li>
+                                             <a href="{% url 'ReceiptStatus_upload' %}">Receipt Status</a>
+                                         </li>
+                                             <li>
+                                            <a href="{% url 'ReceiptTypes_upload' %}">Receipt Types</a>
+                                         </li>  
+                                         <li>
+                                             <a href="{% url 'CertificationStatus_upload' %}">Certification Status</a>
+                                         </li> 
+                                         <li>
+                                             <a href="{% url 'ApprovalStatus_upload' %}">Approval Status</a>
+                                         </li>  
+
+
+                                         <li>
+                                             <a href="{% url 'SubmissionStatus_upload' %}">Submission Status </a>
+                                         </li>
+        
+                                         <li>
+                                             <a href="{% url 'TicketStatus_upload' %}">Ticket Status </a>
+                                         </li>
+
+
+                                          <li>
+                                            <a href="{% url 'Gender_upload' %}">Gender</a>
+                                         </li> 
+                                         <li>
+                                            <a href="{% url 'Banks_upload' %}">Banks</a>
+                                         </li> 
+                                         <li>
+                                            <a href="{% url 'PaymentChannels_upload' %}">Payment Channels</a>
+                                         </li> 
+                                     
+                                          <li>
+                                            <a href="{% url 'Locations_upload' %}">Locations</a>
+                                         </li>
+                                         <li>
+                                            <a href="{% url 'AccountTypes_upload' %}">Account Types</a>
+                                         </li>
+                                         <li>
+                                            <a href="{% url 'Departments_upload' %}">Departments</a>
+                                         </li> 
+                                         <li>
+                                            <a href="{% url 'SalaryInstitution_upload' %}">Salary Institution</a>
+                                         </li>
+                                         <li>
+                                            <a href="{% url 'InterestDeductionSource_upload' %}">Interest Deduction Source</a>
+                                         </li> 
+                                         <li>
+                                            <a href="{% url 'TransactionSources_upload' %}">Transaction Sources</a>
+                                         </li>  
+                                         <li>
+                                            <a href="{% url 'AdminCharges_upload' %}">Admin Charges</a>
+                                         </li> 
+                                         <li>
+                                            <a href="{% url 'UserType_upload' %}">User Type</a>
+                                         </li>
+                                         <li>
+                                            <a href="{% url 'NOKRelationships_upload' %}">NOK Relationships</a>
+                                         </li>
+
+                                          <li>
+                                            <a href="{% url 'loan_criteria_base_upload' %}">Loan Criteria Bases</a>
+                                        </li> 
+                                        <li>
+                                            <a href="{% url 'ProductCategory_upload' %}">Product Category </a>
+                                        </li>
+                                        
+                                        <li>
+                                            <a href="{% url 'Stock_upload' %}">Product Upload </a>
+                                            <a href="{% url 'upload_stock_roll' %}">Product Upload1 </a>
+                                        </li>   
+                                        <li>
+                                            <a href="{% url 'SalesCategory_upload' %}">Sales Category Upload </a>
+                                        </li>                                    
+                                        <li>
+                                            <a href="{% url 'Product_Write_off_Reasons_upload' %}">Item Write-off Reasons </a>
+                                        </li>    
+                                        <li>
+                                            <a href="{% url 'LockedStatus_upload' %}">Locked Status </a>
+                                        </li> 
+                                        <li>
+                                            <a href="{% url 'ExlusiveStatus_upload' %}">Exclusive Status </a>
+                                        </li>
+                                        <li>
+                                            <a href="{% url 'LoanScheduleStatus_upload' %}">Loan Schedule Status </a>
+                                        </li>
+                                        <li>
+                                            <a href="{% url 'LoansUploadStatus_upload' %}">Loans Upload Status </a>
+                                        </li>
+                                        <li>
+                                            <a href="{% url 'SavingsUploadStatus_upload' %}">Savings Upload Status </a>
+                                        </li>
+                                        <li>
+                                            <a href="{% url 'LoanCategory_upload' %}">Loan Category </a>
+                                        </li> 
+                                        <li>
+                                            <a href="{% url 'SharesUnits_upload' %}">Shares Units</a>
+                                        </li> 
+                                        <li>
+                                            <a href="{% url 'UsersLevel_upload' %}">Users Level</a>
+                                        </li> 
+                                        <li>
+                                            <a href="{% url 'SharesUploadStatus_upload' %}">Shares Upload Status</a>
+                                        </li>  
+                                        <li>
+                                            <a href="{% url 'WelfareUploadStatus_upload' %}">Welfare Upload Status</a>
+                                        </li>
+                                        <li>
+                                            <a href="{% url 'DateJoinedUploadStatus_upload' %}">Date Joined Status</a>
+                                        </li> 
+                                        <li>
+                                            <a href="{% url 'WithdrawalStatus_upload' %}">Withdrawal Status</a>
+                                        </li>   
+                                        <li>
+                                            <a href="{% url 'MultipleLoanStatus_upload' %}">Multiple Loan Status</a>
+                                        </li> 
+                                        <li>
+                                            <a href="{% url 'LoanMergeStatus_upload' %}">Loan Merge Status</a>
+                                        </li>   
+                                        <li>
+                                            <a href="{% url 'YesNo_upload' %}">Yes and No Status</a>
+                                        </li> 
+                                        <li>
+                                            <a href="{% url 'MonthlyDeductionGenerationHeaders_upload' %}">Monthly Deduction Headers</a>
+                                        </li>   
+                                        <li>
+                                            <a href="{% url 'Termination_Sources_upload' %}">Termination Types</a>
+                                        </li>   
+                                        
+
+                                       
+                                    </ul>
+                                </li>
+                             
+                            </ul>
+                        </li>
+                        
+                     
+                    {% endif %}
+
+                    
+                    
+                    {% if request.user.user_type == '2' %}
+                        <li class="heading">PRESIDENT</li>
+                             
+                        <li>
+                        <a href="javascript:;"><i class="sidebar-item-icon fa fa-bar-chart"></i>
+                            <span class="nav-label">Approvals</span><i class="fa fa-angle-left arrow"></i></a>
+                        <ul class="nav-2-level collapse">
+                            <li>
+                                <a href="{% url 'membership_request_approvals_list_load' %}">Membership Request</a>
                             </li>
-                          {% comment %}  {% endif %} {% endcomment %}
+                            <li>
+                                <a href="{% url 'loan_request_approval_list_load' %}">Loan Request</a>
+                            </li>
+                            <li>
+                                <a href="{% url 'loan_application_approval_list_load' %}">Loan Application</a>
+                            </li> 
+                            <li>
+                                <a href="{% url 'savings_cash_withdrawal_list_load' %}">Cash Withdrawal</a>
+                            </li> 
+                            <li>
+                                <a href="{% url 'members_exclusiveness_list_load' %}">Members Exclusiveness</a>
+                            </li> 
+                            <li>
+                                <a href="{% url 'Shares_Purchase_Request_Approval_List_Load' %}">Shares Purchase Request</a>
+                            </li>
+                            
+                        </ul>
+                        </li>
+                    {% endif %}
+
+                    {% if request.user.user_type == '3' %}
+                        <li class="heading">SECRETARY</li>
+                          <li>
+                        <a href="javascript:;"><i class="sidebar-item-icon fa fa-bar-chart"></i>
+                            <span class="nav-label">Certifications</span><i class="fa fa-angle-left arrow"></i></a>
+                        <ul class="nav-2-level collapse">
+                            <li>
+                                <a href="{% url 'membership_request_certification_list_load' %}">Membership Request</a>
+                            </li>
+                            <li>
+                                <a href="{% url 'Loan_request_certification_list_load' %}">Loan Request</a>
+                            </li>
+                            <li>
+                                <a href="{% url 'Loan_application_certification_list_load' %}">Loan Application</a>
+                            </li>
+                            
                         </ul>
                     </li>
-                    
+                     {% endif %}
+
+                {% if request.user.user_type == '4' %}
+                <li class="heading">TREASURER</li>
                     <li>
-                        <a href="javascript:;"><i class="sidebar-item-icon fa fa-sitemap"></i>
-                            <span class="nav-label">EXPORT</span><i class="fa fa-angle-left arrow"></i></a>
+                        <a href="javascript:;"><i class="sidebar-item-icon fa fa-edit"></i>
+                            <span class="nav-label">Membership</span><i class="fa fa-angle-left arrow"></i></a>
                         <ul class="nav-2-level collapse">
                            
                             <li>
-                                <a href="javascript:;">
-                                    <span class="nav-label">Components</span><i class="fa fa-angle-left arrow"></i></a>
-                                <ul class="nav-3-level collapse">
-                                    <li>
-                                        <a href="javascript:;">Level 3</a>
-                                    </li>
-                                    <li>
-                                        <a href="javascript:;">Level 3</a>
-                                    </li>
-                                </ul>
+                                <a href="{% url 'withdrawal_confirmation_list_load' %}">Withdrawal Confirmation</a>
                             </li>
+                            
+
                         </ul>
                     </li>
-                    
+                {% endif %}
 
-                    <li>
-                        <a href="javascript:;"><i class="sidebar-item-icon fa fa-calendar"></i>
-                            <span class="nav-label">Calendar</span>
-                        </a>
-                    </li>
-                    
+                {% if request.user.user_type == '5' %}
+                <li class="heading">FINANCIAL SECRETARY</li>
                     <li>
                         <a href="javascript:;"><i class="sidebar-item-icon fa fa-sitemap"></i>
-                            <span class="nav-label">Menu Levels</span><i class="fa fa-angle-left arrow"></i></a>
+                            <span class="nav-label">FINSEC Desk</span><i class="fa fa-angle-left arrow"></i></a>
                         <ul class="nav-2-level collapse">
-                            <li>
-                                <a href="javascript:;">Level 2</a>
-                            </li>
+                            
                             <li>
                                 <a href="javascript:;">
-                                    <span class="nav-label">Level 2</span><i class="fa fa-angle-left arrow"></i></a>
+                                    <span class="nav-label">Withdrawals</span><i class="fa fa-angle-left arrow"></i></a>
                                 <ul class="nav-3-level collapse">
                                     <li>
-                                        <a href="javascript:;">Level 3</a>
+                                        <a href="{% url 'Cash_Withdrawal_Approved_list_load' %}">Savings  </a>
                                     </li>
                                     <li>
-                                        <a href="javascript:;">Level 3</a>
+                                        <a href="">Others</a>
                                     </li>
                                 </ul>
                             </li>
+
                         </ul>
                     </li>
+
+                     
+                {% endif %}
                 </ul>
             </div>
         </nav>

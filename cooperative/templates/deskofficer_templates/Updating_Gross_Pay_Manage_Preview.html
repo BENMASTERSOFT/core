@@ -12,7 +12,7 @@
                             <div class="ibox-head">
                                 <div class="ibox-title">Uploading Gross Pay | {{member.admin.last_name}}
                                 {{member.admin.first_name}}
-                                {{member.get_middle_name}}
+                                {{member.get_middle_name}} |  <input type="button" class="btn btn-secondary" value="Back" onclick="history.back()"/>
 
                                 </div>
                                 
@@ -52,4 +52,5 @@
     <div class="preloader-backdrop">
         <div class="page-preloader">Loading</div>
     </div>
+    {% include 'cooperative/includes/emptyspace.html' %}
 {% endblock %}

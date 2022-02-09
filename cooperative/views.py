@@ -25,23 +25,25 @@ def doLogin(request):
 			if user.user_type=="1":
 				return HttpResponseRedirect(reverse('admin_home'))
 			elif user.user_type=="2":
-			
-				return HttpResponseRedirect(reverse('president_home'))
+
+				return HttpResponseRedirect(reverse('admin_home'))
+				# return HttpResponseRedirect(reverse('president_home'))
 			elif user.user_type=="3":
-				return HttpResponseRedirect(reverse('secretary_home'))
-
+				# return HttpResponseRedirect(reverse('secretary_home'))
+				return HttpResponseRedirect(reverse('admin_home'))
 			elif user.user_type=="4":
-				return HttpResponseRedirect(reverse('treasurer_home'))
-
+				# return HttpResponseRedirect(reverse('treasurer_home'))
+				return HttpResponseRedirect(reverse('admin_home'))
 			elif user.user_type=="5":
-				return HttpResponseRedirect(reverse('FINSEC_home'))
-			
+				# return HttpResponseRedirect(reverse('FINSEC_home'))
+				return HttpResponseRedirect(reverse('admin_home'))
 			elif user.user_type=="6":
 				return HttpResponseRedirect(reverse('deskofficer_home'))
 			
 
 			elif user.user_type=="7":
-				return HttpResponseRedirect(reverse('SEO_home'))
+				# return HttpResponseRedirect(reverse('SEO_home'))
+				return HttpResponseRedirect(reverse('deskofficer_home'))
 			
 
 			elif user.user_type=="8":
