@@ -45,6 +45,7 @@
                                     <thead>
                                         <tr>
                                             <th>#</th>
+                                            <th>Member ID</th>
                                             <th>IPPIS No</th>
                                             <th>Name</th>
                                             <th>Coop Amount</th>
@@ -59,6 +60,7 @@
                                     {% for record in records %}
                                         <tr>
                                             <td>{{forloop.counter}}</td>
+                                            <td>{{record.member.get_member_Id}}</td>
                                             <td>{{record.member.ippis_no}}</td>
                                             <td>{{record.member.admin.first_name}} {{record.member.admin.last_name}} {{record.member.get_middle_name}}</td>
                                             <td>{{record.amount}}</td>

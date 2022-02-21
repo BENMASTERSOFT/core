@@ -17,6 +17,7 @@
                             <thead>
                                 <tr>
                                     <th>#</th>
+                                    <th>Member ID</th>
                                     <th>Last Name</th>
                                     <th>First Name</th>
                                     <th>Middle Name</th>
@@ -28,6 +29,7 @@
                             <tfoot>
                                 <tr>
                                     <th>#</th>
+                                    <th>Member ID</th>
                                     <th>Last Name</th>
                                     <th>First Name</th>
                                     <th>Middle Name</th>
@@ -40,6 +42,7 @@
                                 {% for member in members %}
                                 <tr>
                                     <td>{{forloop.counter}}</td>
+                                    <td>{{member.get_member_Id}}</td>
                                     <td>{{member.admin.last_name}}</td>
                                     <td>{{member.admin.first_name}}</td>
                                     <td>{{member.get_middle_name}}</td>

@@ -1,0 +1,60 @@
+{% extends 'deskofficer_templates/base_template.html' %}
+{% load static %}
+
+{% block content %}
+            <div class="page-content fade-in-up">
+                
+                <div class="ibox">
+                    <div class="ibox-head">
+                        <div class="ibox-title">PRODUCT SELECTION DETAILS | {{full_name}} |  <input type="button" class="btn btn-secondary" value="Back" onclick="history.back()"/></div>
+                    </div>
+                    <div class="ibox-body">
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        
+                                        <th>#</th>
+                                        <th>Product Name</th>
+                                        <th>Model</th>
+                                        <th>Quantity</th>
+                                        <th>Comp. Price</th>
+                                        <th>Interest</th>
+                                        <th>Coop. Price</th>
+                                        <th>Duration</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                {% for item in records %}
+                                    <tr>
+                                        
+                                        <td>{{forloop.counter}}</td>
+                                        <td>{{item.product.product.product_name}}</td>
+                                        <td>{{item.product.product.product_model}}</td>
+                                        <td>{{item.quantity}}</td>
+                                        <td>{{item.company_price}}</td>
+                                        <td>{{item.interest}}</td>
+                                        <td>{{item.coop_price}}</td>
+                                        <td>{{item.duration}}</td>
+                                        <td>
+                                         
+                                            {% comment %} <a href="{% url 'membership_commodity_loan_manage_details_edit' item.pk %}" class="btn btn-default btn-xs m-r-5" data-toggle="tooltip" data-original-title="Edit"><i class="fa fa-pencil font-14"></i></a>{% endcomment %}
+                                            <a href="{% url 'membership_commodity_loan_manage_details_reset_Confirmation' item.pk %}" class="btn btn-default btn-xs m-r-5" data-toggle="tooltip" data-original-title="Edit"><i class="fa fa-pencil font-14"></i></a>
+                                            <a href="{% url 'membership_commodity_loan_manage_details_delete' item.pk %}" class="btn btn-default btn-xs" data-toggle="tooltip" data-original-title="Delete"><i class="fa fa-trash font-14"></i></a>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                
+           
+            </div>
+  <div class="sidenav-backdrop backdrop"></div>
+    <div class="preloader-backdrop">
+        <div class="page-preloader">Loading</div>
+    </div>
+{% endblock %}

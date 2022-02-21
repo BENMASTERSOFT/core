@@ -7,10 +7,12 @@
              
                 <div class="row">
                    
-                    <div class="col-xl-6">
+                    <div class="col-xl-7">
                         <div class="ibox">
                             <div class="ibox-head">
-                                <div class="ibox-title">{{company.title}} | {{product.product.product_name}} | #{{product.amount}} </div>
+                                <div class="ibox-title">{{company.title}} | {{member.get_full_name}} | <input type="button" class="btn btn-secondary" value="Back" onclick="history.back()"/>
+
+                                </div>
                             </div>
                             <div class="ibox-body">
                                 <table class="table table-hover">
@@ -26,57 +28,57 @@
                                         <tr>
                                             <td>1</td>
                                             <td>Loan Type</td>
-                                            <td>{{record.transaction.name}}</td>
+                                            <td>{{product_data.loan_type}}</td>
                                         </tr>
                                         <tr>
                                             <td>2</td>
                                             <td>Category</td>
-                                            <td>{{record.title}}</td>
+                                            <td>{{product_data.title}}</td>
                                         </tr>
                                         <tr>
                                             <td>3</td>
                                             <td>Product Name</td>
-                                            <td>{{product.product.product_name}}</td>
+                                            <td>{{product_data.product_name}}</td>
                                         </tr>
                                         <tr>
                                             <td>3</td>
                                             <td>Product Model</td>
-                                            <td>{{product.product.product_model}}</td>
+                                            <td>{{product_data.product_model}}</td>
                                         </tr>
                                         <tr>
                                             <td>3</td>
                                             <td>Company Price</td>
-                                            <td>#{{product.amount}}</td>
+                                            <td>#{{product_data.company_price}}</td>
                                         </tr>
                                         <tr>
                                             <td>3</td>
                                             <td>Interest Amount</td>
-                                            <td>#{{interest}}</td>
+                                            <td>#{{product_data.interest_amount}}</td>
                                         </tr>
                                         <tr>
                                             <td>4</td>
                                             <td>Duration</td>
-                                            <td>{{record.duration}}</td>
+                                            <td>{{product_data.duration}}</td>
                                         </tr>
                                         <tr>
                                             <td>5</td>
                                             <td>Interest Rate</td>
-                                            <td>{{record.interest_rate}}</td>
+                                            <td>{{product_data.interest_rate}}</td>
                                         </tr>
                                         <tr>
                                             <td>6</td>
                                             <td>Admin Charges</td>
-                                            <td>{{record.admin_charges}}</td>
+                                            <td>{{product_data.admin_charge}}</td>
                                         </tr> 
                                         <tr>
                                             <td>7</td>
                                             <td>Guarantors</td>
-                                            <td>{{record.guarantors}}</td>
+                                            <td>{{product_data.gaurantors}}</td>
                                         </tr>
                                         <tr>
                                             <td>8</td>
                                             <td>Loan Age</td>
-                                            <td>{{record.loan_age}}</td>
+                                            <td>{{product_data.loan_age}}</td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -84,45 +86,42 @@
                         </div>
                     </div>
 
-                <div class="col-md-6">
+                <div class="col-md-5">
                         <div class="ibox">
                             <div class="ibox-head">
-                                <div class="ibox-title">Horizontal Form</div>
-                                <div class="ibox-tools">
-                                    <a class="ibox-collapse"><i class="fa fa-minus"></i></a>
-                                    <a class="fullscreen-link"><i class="fa fa-expand"></i></a>
-                                </div>
+                                <div class="ibox-title">LOAN PROCESSING</div>
+                                
                             </div>
+                            <div class="form-group">
+                              {% if messages %}
+                                
+                                  {% for message in messages %}
+                                  {% if message.tags == "error" %}
+                                   <div class="alert alert-warning alert-dismissable fade show"  style="margin-top:10px">
+                                    <button class="close" data-dismiss="alert" aria-label="Close">×</button><strong>Warning!</strong> {{message}}</div>
+                                  
+                                  {% endif %}
+
+                                  
+                                  {% endfor %}
+                              
+                              {% endif %}
+                        </div>
                             <div class="ibox-body">
-                                <form class="form-horizontal">
+                                <form class="form-horizontal" method="POST" action="" enctype="multipart/form-data" novalidate>
+                                    {% csrf_token %}
+                                   
                                     <div class="form-group row">
-                                        <label class="col-sm-2 col-form-label">Email</label>
+                                        <label class="col-sm-2 col-form-label">Quantity</label>
                                         <div class="col-sm-10">
-                                            <input class="form-control" type="text" placeholder="Email address">
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <label class="col-sm-2 col-form-label">Password</label>
-                                        <div class="col-sm-10">
-                                            <input class="form-control" type="password" placeholder="Password">
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <label class="col-sm-2 col-form-label">Gender</label>
-                                        <div class="col-sm-10">
-                                            <input class="form-control" type="password" placeholder="Password">
+                                            {{form.quantity}}
                                         </div>
                                     </div>
                                     <div class="form-group row">
                                         <div class="col-sm-10 ml-sm-auto">
-                                            <label class="ui-checkbox ui-checkbox-gray">
-                                                <input type="checkbox">
-                                                <span class="input-span"></span>Remamber me</label>
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <div class="col-sm-10 ml-sm-auto">
+                                          
                                             <button class="btn btn-info" type="submit">Submit</button>
+                                     
                                         </div>
                                     </div>
                                 </form>

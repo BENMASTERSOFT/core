@@ -56,7 +56,7 @@
                             {% for record in records %}
                                 <tr>
                                     <td>{{forloop.counter}}</td>
-                                    <td>{{record.member_id}}</td>
+                                    <td>{{record.get_member_Id}}</td>
                                     <td>{{record.admin.last_name}} {{record.admin.first_name}} {{record.get_middle_name}}</td>
                                                                                                       
                                

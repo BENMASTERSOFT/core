@@ -28,7 +28,7 @@
                                             <td>{{company.title}}</td>
                                             
                                             <td>
-                                                <a href="{% url 'Delete_Companies' company.pk %}" class="btn btn-success">Edit</a> 
+                                                <a href="{% url 'Manage_Companies_update' company.pk %}" class="btn btn-success">Edit</a> 
                                                 <a href="{% url 'Delete_Companies' company.pk %}" class="btn btn-danger">Remove</a> </td>
                                         </tr>
                                     {% endfor %}

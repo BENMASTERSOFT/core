@@ -58,7 +58,7 @@
                             {% for member in members %}
                                 <tr>
                                     <td>{{forloop.counter}}</td>
-                                    <td>{{member.member.member.member_id}}</td>
+                                    <td>{{member.member.member.get_member_Id}}</td>
                                     <td>{{member.member.member.admin.get_full_name}} </td>
                                     <td>{{member.member.account_number}} </td>
                                     <td>{{member.shares}}</td>

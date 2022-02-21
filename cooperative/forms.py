@@ -3198,6 +3198,25 @@ class addCommodityCategoryForm(forms.Form):
 
 
 class Commodity_Products_add_Form(forms.Form):
+   product_name=forms.CharField(label="Product Name",max_length=30,widget=forms.TextInput(attrs={"class":"form-control"}),required=True)
+   product_model=forms.CharField(label="Product Name",max_length=30,widget=forms.TextInput(attrs={"class":"form-control"}),required=True)
+   details= forms.CharField(widget=forms.Textarea(attrs={"rows":2, "cols":57}))
+   unit_cost_price = forms.DecimalField(initial=0,label='Unit Cost Price', label_suffix=" : ",
+                              widget=forms.NumberInput(attrs={'class': 'form-control'}),
+                              decimal_places=2, required=True, 
+                              disabled = False)
+   status_list=[]
+   try:
+      statuses = MembershipStatus.objects.all()                 
+      for status in statuses:
+         small_status=(status.id,status.title)
+         status_list.append(small_status)
+   except:
+      status_list=[]
+   status = forms.ChoiceField(label="Status", choices=status_list,widget=forms.Select(attrs={"class":"form-control"}))
+
+
+class Commodity_Products_Update_Form(forms.Form):
    product_name=forms.CharField(label="Product Name",max_length=30,widget=forms.TextInput(attrs={"class":"form-control",'readonly':'readonly'}),required=True)
    product_model=forms.CharField(label="Product Name",max_length=30,widget=forms.TextInput(attrs={"class":"form-control",'readonly':'readonly'}),required=True)
    details= forms.CharField(widget=forms.Textarea(attrs={'readonly':'readonly',"rows":2, "cols":57}))
@@ -3214,3 +3233,209 @@ class Commodity_Products_add_Form(forms.Form):
    except:
       status_list=[]
    status = forms.ChoiceField(label="Status", choices=status_list,widget=forms.Select(attrs={"class":"form-control"}))
+
+
+class membership_commodity_loan_Company_products_details_Form(forms.Form):
+   try:
+      transaction=CertifiableTransactions.objects.get(transaction__code='204')  
+      certification_officers_list=[]
+
+      certification_officers = CertificationOfficers.objects.filter(transaction=transaction)  
+
+      for certification_officer in certification_officers:
+         small_certification_officer=(certification_officer.id,certification_officer.officer.username)
+         certification_officers_list.append(small_certification_officer)
+   except:
+      certification_officers_list=[]
+
+   certification_officers = forms.ChoiceField(label="Certification Officers", choices=certification_officers_list,widget=forms.Select(attrs={"class":"form-control"}))
+   quantity = forms.IntegerField(label='Request Quantity', label_suffix=" : ",
+                  widget=forms.NumberInput(attrs={'class': 'form-control','autocomplete':'off'}),
+                  disabled = False)
+
+
+
+class membership_commodity_loan_Company_products_process_Form(forms.Form):
+   try:
+      transaction=CertifiableTransactions.objects.get(transaction__code='204')  
+      certification_officers_list=[]
+
+      certification_officers = CertificationOfficers.objects.filter(transaction=transaction)  
+
+      for certification_officer in certification_officers:
+         small_certification_officer=(certification_officer.id,certification_officer.officer.username)
+         certification_officers_list.append(small_certification_officer)
+   except:
+      certification_officers_list=[]
+
+   certification_officers = forms.ChoiceField(label="Certification Officers", choices=certification_officers_list,widget=forms.Select(attrs={"class":"form-control"}))
+   comments= forms.CharField(widget=forms.Textarea(attrs={"rows":2, "cols":55}),required=True)
+
+
+class Dedicated_Commodity_Product_List_Add_Form1(forms.Form):
+   product_name=forms.CharField(label="Product Name",max_length=30,widget=forms.TextInput(attrs={"class":"form-control"}),required=True)
+   details=forms.CharField(label="Details",max_length=30,widget=forms.TextInput(attrs={"class":"form-control"}),required=True)
+   unit_cost_price = forms.DecimalField(initial=0,label='Unit Cost Price', label_suffix=" : ",
+                              widget=forms.NumberInput(attrs={'class': 'form-control'}),
+                              decimal_places=2, required=True, 
+                              disabled = False) 
+   selling_price = forms.DecimalField(initial=0,label='Unit Cost Price', label_suffix=" : ",
+                              widget=forms.NumberInput(attrs={'class': 'form-control'}),
+                              decimal_places=2, required=True, 
+                              disabled = False)
+   tyear=forms.CharField(label="Year",max_length=30,widget=forms.TextInput(attrs={"class":"form-control"}),required=True)
+   period=forms.CharField(label="Period",max_length=30,widget=forms.TextInput(attrs={"class":"form-control",'readonly':'readonly'}),required=True)
+  
+
+class Dedicated_Commodity_Product_List_Add_Form(forms.Form):
+   product_name=forms.CharField(label="Product Name",max_length=30,widget=forms.TextInput(attrs={"class":"form-control",'readonly':'readonly'}),required=True)
+   details=forms.CharField(label="Details",max_length=30,widget=forms.TextInput(attrs={"class":"form-control",'readonly':'readonly'}),required=True)
+   unit_cost_price = forms.DecimalField(initial=0,label='Unit Cost Price', label_suffix=" : ",
+                              widget=forms.NumberInput(attrs={'class': 'form-control'}),
+                              decimal_places=2, required=True, 
+                              disabled = False) 
+   selling_price = forms.DecimalField(initial=0,label='Unit Cost Price', label_suffix=" : ",
+                              widget=forms.NumberInput(attrs={'class': 'form-control'}),
+                              decimal_places=2, required=True, 
+                              disabled = False)
+   tyear=forms.CharField(label="Year",max_length=30,widget=forms.TextInput(attrs={"class":"form-control"}),required=True)
+   period=forms.CharField(label="Period",max_length=30,widget=forms.TextInput(attrs={"class":"form-control",'readonly':'readonly'}),required=True)
+  
+
+
+class Essential_Commodity_Product_Select_Form(forms.Form):
+   product_name=forms.CharField(label="Product Name",max_length=30,widget=forms.TextInput(attrs={"class":"form-control",'readonly':'readonly'}),required=True)
+   details=forms.CharField(label="Details",max_length=30,widget=forms.TextInput(attrs={"class":"form-control",'readonly':'readonly'}),required=True)
+   unit_price = forms.DecimalField(initial=0,label='Unit Cost Price', label_suffix=" : ",
+                              widget=forms.NumberInput(attrs={'class': 'form-control','readonly':'readonly'}),
+                              decimal_places=2, required=True, 
+                              disabled = False)
+   quantity = forms.IntegerField(initial=0,label='Request Quantity', label_suffix=" : ",
+                  widget=forms.NumberInput(attrs={'class': 'form-control','autocomplete':'off'}),
+                  disabled = False)
+
+
+class Essential_Commodity_Product_Selection_Summary_Form(forms.Form):
+   approval_officers_list=[]
+   try: 
+      transaction=ApprovableTransactions.objects.get(transaction__code='205') 
+      approval_officers = ApprovalOfficers.objects.filter(transaction=transaction)                          
+      for approval_officer in approval_officers:
+         small_approval_officer=(approval_officer.id,approval_officer.officer.username)
+         approval_officers_list.append(small_approval_officer)
+   except:
+      approval_officers_list=[]
+   
+   approval_officers = forms.ChoiceField(label="Approval Officers", choices=approval_officers_list,widget=forms.Select(attrs={"class":"form-control"}))
+   comments= forms.CharField(widget=forms.Textarea(attrs={"rows":2, "cols":55}),required=True)
+
+
+class Essential_Commodity_Loan_Request_Approval_Details_form(forms.Form):  
+   comment= forms.CharField(widget=forms.Textarea(attrs={"rows":2, "cols":50}))
+   approval_status_list=[]
+   try:
+      approval_statuss = ApprovalStatus.objects.all()  
+                                
+      for approval_status in approval_statuss:
+         small_approval_status=(approval_status.id,approval_status.title)
+         approval_status_list.append(small_approval_status)
+   except:
+      approval_status_list=[]
+
+   approval_status = forms.ChoiceField(label="Approval Status", choices=approval_status_list,widget=forms.Select(attrs={"class":"form-control"}))
+
+class Essential_Commodity_Loan_Request_Approved_Process_Form(forms.Form):
+ 
+   start_date = forms.DateField(label='Start Date', label_suffix=" : ",
+                             required=True, disabled=False,
+                             widget=DateInput(attrs={'class': 'form-control'}),
+                             error_messages={'required': "This field is required."})
+
+
+class Non_Monetary_Loan_Request_certification_Load_details_form(forms.Form):  
+   approval_officers_list=[]
+   try: 
+      transaction=ApprovableTransactions.objects.get(transaction__code='204') 
+      approval_officers = ApprovalOfficers.objects.filter(transaction=transaction)                          
+      for approval_officer in approval_officers:
+         small_approval_officer=(approval_officer.id,approval_officer.officer.username)
+         approval_officers_list.append(small_approval_officer)
+   except:
+      approval_officers_list=[]
+   
+   approval_officers = forms.ChoiceField(label="Approval Officers", choices=approval_officers_list,widget=forms.Select(attrs={"class":"form-control"}))
+   
+   certication_status_list=[]
+   try:
+      certication_statuss = CertificationStatus.objects.all()  
+                                
+      for certication_status in certication_statuss:
+         small_certication_status=(certication_status.id,certication_status.title)
+         certication_status_list.append(small_certication_status)
+   except:
+      certication_status_list=[]
+
+   certication_status = forms.ChoiceField(label="certication_status", choices=certication_status_list,widget=forms.Select(attrs={"class":"form-control"}))
+   comment= forms.CharField(widget=forms.Textarea(attrs={"rows":2, "cols":50}))
+
+class ProformaInvoicedCommodityLoan_details_Form(forms.Form):
+   
+   company_list=[]
+   try:
+      companies = Companies.objects.all()  
+                                
+      for company in companies:
+         small_company=(company.id,company.title)
+         company_list.append(small_company)
+   except:
+      company_list=[]
+
+   company = forms.ChoiceField(label="company", choices=company_list,widget=forms.Select(attrs={"class":"form-control"}))
+
+
+   invoice=forms.CharField(label="Invoice",max_length=30,widget=forms.TextInput(attrs={"class":"form-control"}),required=True)
+   product_name=forms.CharField(label="Product Name",max_length=30,widget=forms.TextInput(attrs={"class":"form-control"}),required=True)
+   details=forms.CharField(label="Details",max_length=30,widget=forms.TextInput(attrs={"class":"form-control"}),required=True)
+   unit_price = forms.DecimalField(initial=0,label='Unit Cost Price', label_suffix=" : ",
+                              widget=forms.NumberInput(attrs={'class': 'form-control'}),
+                              decimal_places=2, required=True, 
+                              disabled = False)
+   quantity = forms.IntegerField(initial=0,label='Request Quantity', label_suffix=" : ",
+                  widget=forms.NumberInput(attrs={'class': 'form-control','autocomplete':'off'}),
+                  disabled = False)
+   invoice_date = forms.DateField(label='Invoice Date', label_suffix=" : ",
+                             required=True, disabled=False,
+                             widget=DateInput(attrs={'class': 'form-control'}),
+                             error_messages={'required': "This field is required."})
+
+class ProformaInvoicedCommodityLoan_details_preview_Form(forms.Form):
+   try:
+      transaction=CertifiableTransactions.objects.get(transaction__code='206')  
+      certification_officers_list=[]
+
+      certification_officers = CertificationOfficers.objects.filter(transaction=transaction)  
+
+      for certification_officer in certification_officers:
+         small_certification_officer=(certification_officer.id,certification_officer.officer.username)
+         certification_officers_list.append(small_certification_officer)
+   except:
+      certification_officers_list=[]
+
+   certification_officers = forms.ChoiceField(label="Certification Officers", choices=certification_officers_list,widget=forms.Select(attrs={"class":"form-control"}))
+   comments= forms.CharField(widget=forms.Textarea(attrs={"rows":2, "cols":60}),required=True)
+
+
+class ProformaInvoicedCommodityLoan_details_payslip_analysis_form(forms.Form):
+   period = forms.DateField(label='Period', label_suffix=" : ",
+                             required=True, disabled=False,
+                             widget=DateInput(attrs={'class': 'form-control'}),
+                             error_messages={'required': "This field is required."})
+
+   gross_pay = forms.DecimalField(initial=0,label='Gross Pay', label_suffix=" : ",
+                              widget=forms.NumberInput(attrs={'class': 'form-control'}),
+                              decimal_places=2, required=True, 
+                              disabled = False)
+   net_pay = forms.DecimalField(initial=0,label='Net Pay', label_suffix=" : ",
+                              widget=forms.NumberInput(attrs={'class': 'form-control'}),
+                              decimal_places=2, required=True, 
+                              disabled = False)

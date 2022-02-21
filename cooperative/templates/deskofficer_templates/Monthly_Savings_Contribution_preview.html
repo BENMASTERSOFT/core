@@ -63,7 +63,7 @@
                             {% for member in members %}
                                 <tr>
                                     <td>{{forloop.counter}}</td>
-                                    <td>{{member.transaction.member.member_id}}</td>
+                                    <td>{{member.transaction.member.get_member_Id}}</td>
                                     <td>{{member.transaction.member.file_no}}</td>
                                     <td>{{member.transaction.member.get_full_name}}</td>
                                     <td>{{member.transaction.account_number}}</td>

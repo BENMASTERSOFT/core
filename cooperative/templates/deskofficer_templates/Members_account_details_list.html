@@ -34,7 +34,7 @@
                                {% for record in records %}
                                         <tr>
                                             <td>{{forloop.counter}}</td>
-                                            <td>{{record.member.member_id}}</td>
+                                            <td>{{record.member.get_member_Id}}</td>
                                             <td>{{record.member.get_full_name}}</td>
                                             <td>{{record.account_number}}</td>
                                         </tr>

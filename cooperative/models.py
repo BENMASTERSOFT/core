@@ -524,6 +524,12 @@ class AutoReceipt(DateObjectsModels):
     # class Meta(DateObjectsModels.Meta):
     #     db_table="Auto_Receipt"
 
+class ProformaInvoice(DateObjectsModels):
+    invoice= models.CharField(max_length=255,default=1)
+    
+    # class Meta(DateObjectsModels.Meta):
+    #     db_table="Proforma_Invoice"
+
 
 class LoanNumber(DateObjectsModels):
     code= models.IntegerField(unique=True)
@@ -859,6 +865,15 @@ class Members(DateObjectsModels):
         else:
             return ""
     
+
+    @property
+    def get_member_Id(self):
+        if self.member_id:
+            return self.member_id[13:]
+        else:
+            return ""
+
+
     # class Meta(DateObjectsModels.Meta):
     #     db_table="Members"
 
@@ -1652,7 +1667,209 @@ class Company_Products(DateObjectsModels):
     # class Meta(DateObjectsModels.Meta):
     #     db_table="company_products"
 
+class Members_Commodity_Loam_Products_Selection(DateObjectsModels):
+    member=models.ForeignKey(Members,on_delete=models.CASCADE)
+    product=models.ForeignKey(Company_Products,on_delete=models.CASCADE)
+    quantity=models.IntegerField(default=0)
+    company_price=models.DecimalField(max_digits=20,decimal_places = 2,default=0)
+    coop_price=models.DecimalField(max_digits=20,decimal_places = 2,default=0)
+    interest= models.DecimalField(max_digits=20,decimal_places = 2,blank=True,null=True)
+    admin_charge = models.DecimalField(max_digits=20,decimal_places = 2,blank=True,null=True)
+    duration= models.PositiveSmallIntegerField(validators=[MinValueValidator(0)],default=0)
+    ticket=models.CharField(max_length=255,blank=True,null=True)
+   
 
+    processed_by=models.ForeignKey(CustomUser,on_delete=models.CASCADE,blank=True,null=True)
+    
+
+    status= models.ForeignKey(TransactionStatus,on_delete=models.DO_NOTHING,default=1)
+    tdate=models.DateField()
+   
+
+    # class Meta(DateObjectsModels.Meta):
+    #     db_table="members_commodity_loam_products_selection"
+
+
+
+class Members_Commodity_Loam_Application(DateObjectsModels):
+    member=models.ForeignKey(Members_Commodity_Loam_Products_Selection,on_delete=models.CASCADE)
+    company_price=models.DecimalField(max_digits=20,decimal_places = 2,default=0)
+    coop_price=models.DecimalField(max_digits=20,decimal_places = 2,default=0)
+    interest= models.DecimalField(max_digits=20,decimal_places = 2,blank=True,null=True)
+    admin_charge = models.DecimalField(max_digits=20,decimal_places = 2,blank=True,null=True)
+    duration= models.PositiveSmallIntegerField(validators=[MinValueValidator(0)],default=0)
+    repayment= models.DecimalField(max_digits=20,decimal_places = 2,default=0)
+    comments=models.TextField(blank=True,null=True)
+    ticket=models.CharField(max_length=255,blank=True,null=True)
+
+    certification_officer=models.ForeignKey(CertificationOfficers,on_delete=models.DO_NOTHING,blank=True,null=True)
+    certification_status = models.ForeignKey(CertificationStatus,on_delete=models.DO_NOTHING,default=1)
+    certification_comment=models.TextField(blank=True,null=True)
+    certification_date=models.DateField(blank=True,null=True)
+ 
+    approval_officer=models.ForeignKey(ApprovalOfficers,on_delete=models.DO_NOTHING,blank=True,null=True)
+    approval_status=models.ForeignKey(ApprovalStatus,on_delete=models.DO_NOTHING,blank=True,null=True)
+    approval_comment=models.TextField(blank=True,null=True)
+    approval_date=models.DateField(blank=True,null=True)
+
+    processed_by=models.ForeignKey(CustomUser,on_delete=models.CASCADE,blank=True,null=True)
+    
+
+    status= models.ForeignKey(TransactionStatus,on_delete=models.DO_NOTHING,default=1)
+    tdate=models.DateField()
+   
+    @property
+    def get_total(self):
+        return float(self.company_price) + float(self.interest)
+      
+
+    # class Meta(DateObjectsModels.Meta):
+    #     db_table="members_commodity_loam_application"
+
+class Members_Commodity_Loam_Application_Settings(DateObjectsModels):
+    applicant=models.ForeignKey(Members_Commodity_Loam_Application,on_delete=models.CASCADE)
+    description=models.CharField(max_length=255)
+    value=models.CharField(max_length=255)
+    status= models.ForeignKey(TransactionStatus,on_delete=models.CASCADE,default=1)
+    ticket=models.CharField(max_length=255,blank=True,null=True)
+   
+    # class Meta(DateObjectsModels.Meta):
+    #     db_table="members_commodity_loam_application_settings"
+
+
+class Dedicated_Commodity_Period(DateObjectsModels):
+    tyear=models.CharField(max_length=4)
+    batch=models.CharField(max_length=10)
+    status= models.ForeignKey(MembershipStatus,on_delete=models.DO_NOTHING)
+    
+    
+    def __str__(self):
+        return str(self.tyear) + ' ' + str(self.batch)
+
+class Dedicated_Commodity_Product_List(DateObjectsModels):
+    product_name=models.CharField(max_length=255)
+    details=models.CharField(max_length=255)
+    status= models.ForeignKey(MembershipStatus,on_delete=models.DO_NOTHING)
+    
+    
+    def __str__(self):
+        return self.product_name
+
+class Dedicated_Commodity_Price_List(DateObjectsModels):
+    product= models.ForeignKey(Dedicated_Commodity_Product_List,on_delete=models.CASCADE)
+    cost_price= models.DecimalField(max_digits=20,decimal_places = 2,default=0)
+    selling_price= models.DecimalField(max_digits=20,decimal_places = 2,default=0)
+    period= models.ForeignKey(Dedicated_Commodity_Period,on_delete=models.CASCADE)
+    processed_by=models.ForeignKey(CustomUser,on_delete=models.CASCADE,blank=True,null=True)
+    tdate=models.DateField()
+    status= models.ForeignKey(MembershipStatus,on_delete=models.DO_NOTHING)
+    
+    
+    def __str__(self):
+        return self.product.product_name
+
+    @property
+    def get_interest(self):
+        return float(self.selling_price) - float(self.cost_price)
+  
+
+class Essential_Commodity_Product_Select(DateObjectsModels):
+    member=models.ForeignKey(Members,on_delete=models.CASCADE)
+    product= models.ForeignKey(Dedicated_Commodity_Price_List,on_delete=models.CASCADE)
+    quantity= models.PositiveSmallIntegerField(validators=[MinValueValidator(0)],default=0)
+    total= models.DecimalField(max_digits=20,decimal_places = 2,default=0)
+    interest= models.DecimalField(max_digits=20,decimal_places = 2,default=0)
+    processed_by=models.ForeignKey(CustomUser,on_delete=models.CASCADE,blank=True,null=True)
+    ticket=models.CharField(max_length=255,blank=True,null=True)
+    tdate=models.DateField()
+    status= models.ForeignKey(TransactionStatus,on_delete=models.DO_NOTHING)
+    
+    
+    def __str__(self):
+        return self.product.product.product_name
+
+class Essential_Commodity_Product_Selection_Summary(DateObjectsModels):
+    transaction= models.ForeignKey(TransactionTypes,on_delete=models.CASCADE)
+    product= models.ForeignKey(Essential_Commodity_Product_Select,on_delete=models.CASCADE)
+    quantity= models.PositiveSmallIntegerField(validators=[MinValueValidator(0)],default=0)
+    total= models.DecimalField(max_digits=20,decimal_places = 2,default=0)
+    interest= models.DecimalField(max_digits=20,decimal_places = 2,default=0)
+    comments=models.TextField(blank=True,null=True)
+    repayment= models.DecimalField(max_digits=20,decimal_places = 2,default=0)
+    duration=models.CharField(max_length=4)
+
+    approval_officer=models.ForeignKey(ApprovalOfficers,on_delete=models.DO_NOTHING,blank=True,null=True)
+    approval_status=models.ForeignKey(ApprovalStatus,on_delete=models.DO_NOTHING,blank=True,null=True)
+    approval_comment=models.TextField(blank=True,null=True)
+    approval_date=models.DateField(blank=True,null=True)
+
+    processed_by=models.ForeignKey(CustomUser,on_delete=models.CASCADE,blank=True,null=True)
+    ticket=models.CharField(max_length=255,blank=True,null=True)
+    tdate=models.DateField()
+    status= models.ForeignKey(TransactionStatus,on_delete=models.DO_NOTHING)
+    
+    # @property
+    # def get_total(self):
+    #     return float(self.company_price) + float(self.interest)
+    
+    
+    
+class Customized_Commodity_Loan_Application_Summary(DateObjectsModels):
+    member=models.ForeignKey(Members,on_delete=models.CASCADE)
+    transaction= models.ForeignKey(TransactionTypes,on_delete=models.CASCADE)
+    company=models.ForeignKey(Companies,on_delete=models.CASCADE,blank=True,null=True)
+    quantity= models.PositiveSmallIntegerField(validators=[MinValueValidator(0)],default=0)
+    total_amount= models.DecimalField(max_digits=20,decimal_places = 2,default=0)
+    interest= models.DecimalField(max_digits=20,decimal_places = 2,default=0)
+    comments=models.TextField(blank=True,null=True)
+    repayment= models.DecimalField(max_digits=20,decimal_places = 2,default=0)
+    duration=models.CharField(max_length=4)
+    
+    certification_officer=models.ForeignKey(CertificationOfficers,on_delete=models.DO_NOTHING,blank=True,null=True)
+    certification_status = models.ForeignKey(CertificationStatus,on_delete=models.DO_NOTHING,default=1)
+    certification_comment=models.TextField(blank=True,null=True)
+    certification_date=models.DateField(blank=True,null=True)
+ 
+    approval_officer=models.ForeignKey(ApprovalOfficers,on_delete=models.DO_NOTHING,blank=True,null=True)
+    approval_status=models.ForeignKey(ApprovalStatus,on_delete=models.DO_NOTHING,blank=True,null=True)
+    approval_comment=models.TextField(blank=True,null=True)
+    approval_date=models.DateField(blank=True,null=True)
+
+    processed_by=models.ForeignKey(CustomUser,on_delete=models.CASCADE,blank=True,null=True)
+    invoice=models.CharField(max_length=255,blank=True,null=True)
+    invoice_date=models.DateField()
+    tdate=models.DateField()
+    status= models.ForeignKey(TransactionStatus,on_delete=models.DO_NOTHING)
+    
+
+
+class Customized_Commodity_Loan_Application_Details(DateObjectsModels):
+    applicant=models.ForeignKey(Customized_Commodity_Loan_Application_Summary,on_delete=models.CASCADE)
+    product_name=models.CharField(max_length=255)
+    details=models.TextField()
+    quantity= models.PositiveSmallIntegerField(validators=[MinValueValidator(0)],default=0)
+    unit_price= models.DecimalField(max_digits=20,decimal_places = 2,default=0)
+    total= models.DecimalField(max_digits=20,decimal_places = 2,default=0)
+
+    processed_by=models.ForeignKey(CustomUser,on_delete=models.CASCADE,blank=True,null=True)
+    invoice=models.CharField(max_length=255,blank=True,null=True)
+    tdate=models.DateField()
+    status= models.ForeignKey(TransactionStatus,on_delete=models.DO_NOTHING)
+
+
+class Customized_Commodity_Loan_Application_Payslip(DateObjectsModels):
+    applicant=models.ForeignKey(Customized_Commodity_Loan_Application_Summary,on_delete=models.CASCADE)
+    period=models.DateField()
+    gross_pay= models.DecimalField(max_digits=20,decimal_places = 2,default=0)
+    net_pay= models.DecimalField(max_digits=20,decimal_places = 2,default=0)
+
+    processed_by=models.ForeignKey(CustomUser,on_delete=models.CASCADE,blank=True,null=True)
+    invoice=models.CharField(max_length=255,blank=True,null=True)
+    tdate=models.DateField()
+    status= models.ForeignKey(TransactionStatus,on_delete=models.DO_NOTHING)
+
+
+   
 ####################################################################
 ##################### LEDGER, CASH BOOK AND OTHERS##################
 ####################################################################

@@ -17,6 +17,7 @@
                             <thead>
                                 <tr>
                                     <th>#</th>
+                                    <th>Member ID</th>
                                     <th>Name</th>
                                     <th>Source</th>
                                     <th>Amount</th>
@@ -29,6 +30,7 @@
                             <tfoot>
                                 <tr>
                                     <th>#</th>
+                                    <th>Member ID</th>
                                     <th>Name</th>
                                     <th>Source</th>
                                     <th>Amount</th>
@@ -42,6 +44,7 @@
                             {% for member in members %}
                                 <tr>
                                     <td>{{forloop.counter}}</td>
+                                    <td>{{member.member.member.member.get_member_Id}}</td>
                                     <td>{{member.member.member.member.get_full_name}}</td>
                                     <td>{{member.transaction.name}}</td>
                                     <td>{{member.amount}}</td>

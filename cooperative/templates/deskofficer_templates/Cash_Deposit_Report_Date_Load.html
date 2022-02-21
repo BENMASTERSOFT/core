@@ -59,6 +59,7 @@
                             <thead>
                                 <tr>
                                     <th>#</th>
+                                    <th>ID</th>
                                     <th>Name</th>
                                     <th>Bank</th>
                                     <th>Account No</th>
@@ -72,6 +73,7 @@
                             <tfoot>
                                 <tr>
                                     <th>#</th>
+                                    <th>ID</th>
                                     <th>Name</th>
                                     <th>Bank</th>
                                     <th>Account No</th>
@@ -86,6 +88,7 @@
                             {% for record in records %}
                                 <tr>
                                     <td>{{forloop.counter}}</td>
+                                    <td>{{record.member.get_member_Id}}</td>
                                     <td>{{record.member.get_full_name}}</td>
                                     <td>{{record.bank_accounts.bank.title}}</td>
                                     <td>{{record.account_number}}</td>

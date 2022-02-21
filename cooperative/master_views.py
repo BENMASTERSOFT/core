@@ -14,6 +14,13 @@ from django.contrib.auth.decorators import permission_required
 from django.db.models import Value
 from django.db.models.functions import Concat
 from cooperative.resources import StockListResource
+from .current_date import get_current_date
+from datetime import datetime
+from datetime import date
+import datetime
+from django.utils.dateparse import parse_date
+from dateutil.relativedelta import relativedelta
+now = datetime.datetime.now()
 ####################################################################
 ###################### HOME PAGE ###################################
 ####################################################################
@@ -1678,6 +1685,8 @@ def Commodity_Products_add(request,pk):
     form = Commodity_Products_add_Form(request.POST or None)
     record =Commodity_Categories.objects.get(id=pk)
     status=MembershipStatus.objects.get(title='ACTIVE')
+    records=Commodity_Product_List.objects.filter(category=record)
+ 
     if request.method=="POST":
         product_name = request.POST.get('product_name')
         product_model = request.POST.get('product_model')
@@ -1689,6 +1698,7 @@ def Commodity_Products_add(request,pk):
     context={
     'form':form,
     'record':record,
+    'records':records,
     }
     return render(request,'master_templates/Commodity_Products_add.html',context)
 
@@ -1701,7 +1711,7 @@ def Commodity_Products_Manage_Load(request):
     return render(request,'master_templates/Commodity_Products_Manage_Load.html',context)
 
 def Commodity_Products_Manage_Update(request,pk):
-    form = Commodity_Products_add_Form(request.POST or None)
+    form = Commodity_Products_Update_Form(request.POST or None)
     record=Commodity_Product_List.objects.get(id=pk)
     
     form.fields['product_name'].initial = record.product_name
@@ -1728,6 +1738,17 @@ def Commodity_Products_Manage_Update(request,pk):
     'record':record,
     }
     return render(request,'master_templates/Commodity_Products_Manage_Update.html',context)
+
+
+def Commodity_Products_Manage_Remove(request,pk):
+    record=Commodity_Product_List.objects.get(id=pk)
+   
+    if Members_Commodity_Loam_Products_Selection.objects.filter(product__product=record).exists():
+        messages.error(request,'Record Already in Use')
+        return HttpResponseRedirect(reverse('Commodity_Products_Manage_Load'))
+    record.delete()
+    messages.success(request,'Record Deleted Successfully')
+    return HttpResponseRedirect(reverse('Commodity_Products_Manage_Load'))
 
 
 
@@ -1758,6 +1779,24 @@ def Manage_Companies(request):
     'companies':companies,
     }
     return render(request,'master_templates/manage_companies.html', context)
+
+def Manage_Companies_update(request,pk):
+    form = addCompaniesForm(request.POST or None)
+    company=Companies.objects.get(id=pk)
+
+    form.fields['title'].initial=company.title
+
+    if request.method == "POST":
+        title=request.POST.get('title')
+        company.title=title
+        company.save()
+        return HttpResponseRedirect(reverse('Manage_Companies'))
+    context={
+    'form':form,
+    'company':company,
+    }
+    return render(request,'master_templates/Manage_Companies_update.html', context)
+
 
 def Delete_Companies(request,pk):
     record=Companies.objects.get(id=pk)
@@ -1831,7 +1870,7 @@ def Product_Price_Settings_details(request,pk):
 
 
 def Product_Price_Settings_Update(request,comp_pk,pk):
-    form=Commodity_Products_add_Form(request.POST or None)
+    form=Commodity_Products_Update_Form(request.POST or None)
     company=Companies.objects.get(id=comp_pk)
     record=Company_Products.objects.get(id=pk)
 
@@ -1854,6 +1893,228 @@ def Product_Price_Settings_Update(request,comp_pk,pk):
     'form':form,
     }
     return render(request,'master_templates/Product_Price_Settings_Update.html',context)
+
+
+def Dedicated_Commodity_Product_List_Add(request):
+    form=Dedicated_Commodity_Product_List_Add_Form1(request.POST or None)
+    status=MembershipStatus.objects.get(title='ACTIVE')
+    records=Dedicated_Commodity_Product_List.objects.all()
+    if request.method == 'POST':
+        product_name=request.POST.get("product_name")
+        details=request.POST.get("details")
+        if not product_name or not details:
+            messages.error(request,"Some Data is Missing")
+            return HttpResponseRedirect(reverse('Dedicated_Commodity_Product_List_Add'))
+        Dedicated_Commodity_Product_List(product_name=product_name,details=details,status=status).save()
+        return HttpResponseRedirect(reverse('Dedicated_Commodity_Product_List_Add'))
+    context={
+    'form':form,
+    'records':records,
+    }
+    return render(request,'master_templates/Dedicated_Commodity_Product_List_Add.html',context)
+
+
+def Dedicated_Commodity_Product_List_Edit(request,pk):
+    form=Dedicated_Commodity_Product_List_Add_Form1(request.POST or None)
+    record=Dedicated_Commodity_Product_List.objects.get(id=pk)
+
+    form.fields['product_name'].initial=record.product_name
+    form.fields['details'].initial=record.details
+
+    if request.method == 'POST':
+        product_name=request.POST.get("product_name")
+        details=request.POST.get("details")
+        record.product_name=product_name
+        record.details=details
+        record.save()
+        messages.success(request,"Record Successfully Updated")
+        return HttpResponseRedirect(reverse('Dedicated_Commodity_Product_List_Add'))
+    context={
+    'form':form,
+    'record':record,
+    }
+    return render(request,'master_templates/Dedicated_Commodity_Product_List_Edit.html',context)
+
+
+def Dedicated_Commodity_Price_List_Setting(request):
+    form=Dedicated_Commodity_Product_List_Add_Form(request.POST or None)
+    status=MembershipStatus.objects.get(title="ACTIVE")
+    status1=MembershipStatus.objects.get(title="INACTIVE")
+
+    records=Dedicated_Commodity_Period.objects.all()
+    if request.method == 'POST':
+        tyear=request.POST.get('tyear')
+        alpha=request.POST.get('alpha')
+        batch='BATCH ' + str(alpha)
+
+        Dedicated_Commodity_Period.objects.all().update(status=status1)
+        Dedicated_Commodity_Period(tyear=tyear,batch=batch,status=status).save()
+        messages.success(request,"Record Successfully Added")
+        return HttpResponseRedirect(reverse('Dedicated_Commodity_Price_List_Setting'))
+    context={
+    'form':form,
+    'records':records,
+    }
+    return render(request,'master_templates/Dedicated_Commodity_Price_List_Setting.html',context)
+
+
+def Dedicated_Commodity_Price_List_Setting_Status(request,pk):
+    status=MembershipStatus.objects.get(title="ACTIVE")
+    status1=MembershipStatus.objects.get(title="INACTIVE")
+   
+    record=Dedicated_Commodity_Period.objects.get(id=pk)
+    if record.status == status:
+        record.status=status1
+        Dedicated_Commodity_Period.objects.all().update(status=status1)
+    elif record.status == status1:
+        record.status=status
+        Dedicated_Commodity_Period.objects.filter(~Q(id=pk)).update(status=status1)
+    record.save()
+    messages.success(request,"Record Successfully Updated")
+    return HttpResponseRedirect(reverse('Dedicated_Commodity_Price_List_Setting'))
+
+
+def Dedicated_Commodity_Price_List_Setting_Select(request,pk):
+    status=MembershipStatus.objects.get(title='ACTIVE')
+    period=Dedicated_Commodity_Period.objects.get(id=pk)
+    records=Dedicated_Commodity_Product_List.objects.filter(status=status)
+
+    selected_items = Dedicated_Commodity_Price_List.objects.filter(period=period)
+
+
+    context={
+    'period':period,
+    'records':records,
+    'selected_items':selected_items,
+    }
+    return render(request,'master_templates/Dedicated_Commodity_Price_List_Setting_Select.html',context)
+
+
+def Dedicated_Commodity_Price_List_Setting_Update(request,pk,period_pk):
+    form=Dedicated_Commodity_Product_List_Add_Form(request.POST or None)
+    status=MembershipStatus.objects.get(title='ACTIVE')
+    period=Dedicated_Commodity_Period.objects.get(id=period_pk)
+    
+    product=Dedicated_Commodity_Product_List.objects.get(id=pk)
+    
+    processed_by=CustomUser.objects.get(id=request.user.id)
+    selected_item=[]
+   
+    if Dedicated_Commodity_Price_List.objects.filter(product=product,period=period).exists():
+        selected_item=Dedicated_Commodity_Price_List.objects.get(product=product,period=period)
+
+    form.fields['product_name'].initial=product.product_name
+    form.fields['details'].initial=product.details
+    form.fields['period'].initial=str(period.tyear) + " " + period.batch
+    if selected_item:
+        form.fields['unit_cost_price'].initial=selected_item.cost_price
+        form.fields['selling_price'].initial=selected_item.selling_price
+
+    if request.method == "POST":
+        tdate=get_current_date(now)
+        cost_price=request.POST.get('unit_cost_price')
+        selling_price=request.POST.get('selling_price')
+
+        if  Dedicated_Commodity_Price_List.objects.filter(product=product,period=period).exists():
+            item = Dedicated_Commodity_Price_List.objects.get(product=product,period=period)
+            
+            item.cost_price=cost_price
+            item.selling_price=selling_price
+            item.save()
+            messages.success(request,"Record Successfully Updated")
+            return HttpResponseRedirect(reverse('Dedicated_Commodity_Price_List_Setting_Select',args=(period_pk,)))
+
+
+       
+        Dedicated_Commodity_Price_List(product=product,
+                                        period=period,
+                                        cost_price=cost_price,
+                                        selling_price=selling_price,
+                                        tdate=tdate,
+                                        processed_by=processed_by,
+                                        status=status,
+                                        ).save()
+        messages.success(request,"Record Successfully Selected")
+        return HttpResponseRedirect(reverse('Dedicated_Commodity_Price_List_Setting_Select',args=(period_pk,)))
+    context={
+    'form':form,
+    'period':period,
+    'record':product,
+    }
+    return render(request,'master_templates/Dedicated_Commodity_Price_List_Setting_Update.html',context)
+
+def Dedicated_Commodity_Price_List_Setting_Delete(request,pk):
+    record=Dedicated_Commodity_Price_List.objects.get(id=pk)
+    return_pk=record.period.pk
+    record.delete()
+    return HttpResponseRedirect(reverse('Dedicated_Commodity_Price_List_Setting_Select',args=(return_pk,)))
+
+
+def Essential_Commodity_Settings(request):
+    transaction=TransactionTypes.objects.get(code='205')
+    context={
+    'transaction':transaction,
+    }
+    return render(request,'master_templates/Essential_Commodity_Settings.html',context)
+
+
+def essential_commodity_loan_duration_update(request,pk):
+    item= TransactionTypes.objects.get(id=pk)
+    title="Update Loan Duration for " +  item.name
+    instructions='''
+    This page enable you to set the duration of Loans.
+    '''
+    form = loan_duration_update_form(request.POST or None)
+
+    if request.method ==  "POST":
+        form = loan_duration_update_form(request.POST)
+        if form.is_valid():
+            duration=form.cleaned_data["duration"]
+            
+            item.duration=duration
+            item.save()
+            messages.success(request,"Record Updated Successfully")
+            return  HttpResponseRedirect(reverse('Essential_Commodity_Settings'))
+
+    form.fields['duration'].initial=item.duration
+    context={
+    'form':form,
+    'instructions':instructions,
+    'url':'essential_commodity_loan_duration_update',
+    'button_text':"Update Record",
+    'title':title,
+    }
+    return render(request,'master_templates/loan_criteria_update.html', context)
+
+
+def essential_commodity_admin_charges_update(request,pk):
+    item= TransactionTypes.objects.get(id=pk)
+    title="Update Default Admin Charges for " +  item.name
+    instructions='''
+    This page enable you to set the default admin Charge, this will apply if the the laon amount
+    is not greater to Minimum Loan Admin Charge for this loan. 
+    '''
+    form = default_admin_charges_update_form(request.POST or None)
+
+    if request.method ==  "POST":
+        form = default_admin_charges_update_form(request.POST)
+        if form.is_valid():
+            admin_charges=form.cleaned_data["default_admin_charges"]
+            item.admin_charges=admin_charges
+            item.save()
+            messages.success(request,"Record Updated Successfully")
+            return  HttpResponseRedirect(reverse('Essential_Commodity_Settings'))
+
+    form.fields['default_admin_charges'].initial=item.admin_charges
+    context={
+    'form':form,
+    'instructions':instructions,
+    'url':'essential_commodity_admin_charges_update',
+    'button_text':"Update Record",
+    'title':title,
+    }
+    return render(request,'master_templates/loan_criteria_update.html', context)
+
 
 
 ####################################################################
@@ -3260,8 +3521,6 @@ def loan_admin_charges_rate_update(request,pk):
     return render(request,'master_templates/loan_criteria_update.html', context)
 
 
-
-
 def loan_admin_charges_update(request,pk):
     item= TransactionTypes.objects.get(id=pk)
     title="Update Loan Admin Charges  for " +  item.name
@@ -3439,35 +3698,6 @@ def non_monetary_oan_guarantors_update(request,pk):
     return render(request,'master_templates/loan_criteria_update.html', context)
 
 
-# def default_admin_charges_update(request,pk):
-#     item= TransactionTypes.objects.get(id=pk)
-#     title="Update Default Admin Charges for " +  item.name
-#     instructions='''
-#     This page enable you to set the default admin Charge, this will apply if the the laon amount
-#     is not greater to Minimum Loan Admin Charge for this loan. 
-#     '''
-#     form = default_admin_charges_update_form(request.POST or None)
-
-#     if request.method ==  "POST":
-#         form = default_admin_charges_update_form(request.POST)
-#         if form.is_valid():
-#             admin_charges=form.cleaned_data["default_admin_charges"]
-#             record = TransactionTypes.objects.get(id=pk)
-#             record.default_admin_charges=admin_charges
-#             record.save()
-#             messages.success(request,"Record Updated Successfully")
-#             return  HttpResponseRedirect(reverse('loan_settings_details_load',args=(pk,)))
-
-#     form.fields['default_admin_charges'].initial=item.default_admin_charges
-#     context={
-#     'form':form,
-#     'instructions':instructions,
-#     'url':'default_admin_charges_update',
-#     'button_text':"Update Record",
-#     'title':title,
-#     }
-#     return render(request,'master_templates/loan_criteria_update.html', context)
-
     
 def Non_Monetary_MultipleLoanStatus_update(request,pk):
     item= Commodity_Categories.objects.get(id=pk)
@@ -3498,37 +3728,6 @@ def Non_Monetary_MultipleLoanStatus_update(request,pk):
     'title':title,
     }
     return render(request,'master_templates/loan_criteria_update.html', context)
-
-
-# def loan_savings_based_update(request,pk):
-#     item= TransactionTypes.objects.get(id=pk)
-#     title="Update Loan Savings Based for " +  item.name
-#     instructions='''
-#     This page enable you to set the percentage amout to be saved in 
-#     order to access a given loan.
-#     '''
-#     form = loan_savings_based_update_form(request.POST or None)
-
-#     if request.method ==  "POST":
-#         form = loan_savings_based_update_form(request.POST)
-#         if form.is_valid():
-#             savings_rate=form.cleaned_data["loan_savings_based"]
-#             record = TransactionTypes.objects.get(id=pk)
-#             record.savings_rate=savings_rate
-#             record.save()
-#             messages.success(request,"Record Updated Successfully")
-#             return  HttpResponseRedirect(reverse('loan_settings_details_load',args=(pk,)))
-
-#     form.fields['loan_savings_based'].initial=item.savings_rate
-#     context={
-#     'form':form,
-#     'instructions':instructions,
-#     'url':'loan_savings_based_update',
-#     'button_text':"Update Record",
-#     'title':title,
-#     }
-#     return render(request,'master_templates/loan_criteria_update.html', context)
-
 
 
 
@@ -3640,8 +3839,9 @@ def non_monetary_loan_admin_charges_rate_update(request,pk):
             record.save()
             messages.success(request,"Record Updated Successfully")
             return  HttpResponseRedirect(reverse('loan_settings_non_monetary_settings',args=(pk,)))
-
-    form.fields['admin_charges_rating'].initial=item.admin_charges_rating.id
+    if item.admin_charges_rating:
+        form.fields['admin_charges_rating'].initial=item.admin_charges_rating.id
+    
     context={
     'form':form,
     'instructions':instructions,
@@ -3771,6 +3971,530 @@ def non_monetary_loan_loan_age_update(request,pk):
     'form':form,
     'instructions':instructions,
     'url':'non_monetary_loan_loan_age_update',
+    'button_text':"Update Record",
+    'title':title,
+    }
+    return render(request,'master_templates/loan_criteria_update.html', context)
+
+
+####################################################################
+###################### CUSTOMIZED COMMODITY LOAN SETTINGS ##########
+####################################################################
+def Customized_Commodity_Loan_Settings(request):
+    transaction=TransactionTypes.objects.get(code='206')
+    context={
+    'transaction':transaction,
+    }
+    return render(request,'master_templates/Customized_Commodity_Loan_Settings.html',context)
+
+
+def Customized_loan_guarantors_update(request,pk):
+    item= TransactionTypes.objects.get(id=pk)
+    title="Update Loan Guarnators for " +  item.name
+    instructions='''
+    This page enable you to set the total number of Gaurantors 
+    needed to access this loan. 
+    '''
+    form = loan_guarantors_update_form(request.POST or None)
+
+    if request.method ==  "POST":
+        form = loan_guarantors_update_form(request.POST)
+        if form.is_valid():
+            guarantors=form.cleaned_data["guarantors"]
+            record = TransactionTypes.objects.get(id=pk)
+            record.guarantors=guarantors
+            record.save()
+            messages.success(request,"Record Updated Successfully")
+            return  HttpResponseRedirect(reverse('Customized_Commodity_Loan_Settings'))
+
+    form.fields['guarantors'].initial=item.guarantors
+    context={
+    'form':form,
+    'instructions':instructions,
+    'url':'loan_guarantors_update',
+    'button_text':"Update Record",
+    'title':title,
+    }
+    return render(request,'master_templates/loan_criteria_update.html', context)
+
+
+def Customized_loan_form_print_update(request,pk):
+    item= TransactionTypes.objects.get(id=pk)
+    title="Update Loan Form Print  for " +  item.name
+    instructions='''
+    This page enable you to set if Form should be Printed out Automatically. 
+    '''
+    form = loan_form_print_form(request.POST or None)
+
+    if request.method ==  "POST":
+        form = loan_form_print_form(request.POST)
+        if form.is_valid():
+            form_print_id=form.cleaned_data["form_print"]
+            form_print=YesNo.objects.get(id=form_print_id)
+            record = TransactionTypes.objects.get(id=pk)
+            record.form_print=form_print
+            record.save()
+            messages.success(request,"Record Updated Successfully")
+            return  HttpResponseRedirect(reverse('Customized_Commodity_Loan_Settings'))
+
+    form.fields['form_print'].initial=item.form_print.id
+    context={
+    'form':form,
+    'instructions':instructions,
+    'url':'Customized__loan_form_print_update',
+    'button_text':"Update Record",
+    'title':title,
+    }
+    return render(request,'master_templates/loan_criteria_update.html', context)
+
+def Customized_receipt_type_update(request,pk):
+    item= TransactionTypes.objects.get(id=pk)
+    title="Update Receipt Type for " +  item.name
+    instructions='''
+    This page enable you to set the Receipt Type. 
+    '''
+    form = loan_Receipt_type_update_form(request.POST or None)
+
+    if request.method ==  "POST":
+        form = loan_Receipt_type_update_form(request.POST)
+        if form.is_valid():
+            receipt_type_id=form.cleaned_data["receipt_type"]
+            receipt_type=ReceiptTypes.objects.get(id=receipt_type_id)
+            record = TransactionTypes.objects.get(id=pk)
+            record.receipt_type=receipt_type
+            record.save()
+            messages.success(request,"Record Updated Successfully")
+            return  HttpResponseRedirect(reverse('Customized_Commodity_Loan_Settings'))
+
+    form.fields['receipt_type'].initial=item.receipt_type
+    context={
+    'form':form,
+    'instructions':instructions,
+    'url':'Customized_receipt_type_update',
+    'button_text':"Update Record",
+    'title':title,
+    }
+    return render(request,'master_templates/loan_criteria_update.html', context)
+
+    
+# def Customized_MultipleLoanStatus_update(request,pk):
+#     item= TransactionTypes.objects.get(id=pk)
+#     title="Update Default Admin Charges for " +  item.name
+#     instructions='''
+#     This page enable you to set if members are allowed to access multiple 
+#     fascilities for for this loan. 
+#     '''
+#     form = MultipleLoanStatus_update_form(request.POST or None)
+
+#     if request.method ==  "POST":
+#         form = MultipleLoanStatus_update_form(request.POST)
+#         if form.is_valid():
+#             multiple_loan_status_id=form.cleaned_data["multiple_loan_status"]
+#             multiple_loan_status=MultipleLoanStatus.objects.get(id=multiple_loan_status_id)
+#             record = TransactionTypes.objects.get(id=pk)
+#             record.multiple_loan_status=multiple_loan_status
+#             record.save()
+#             messages.success(request,"Record Updated Successfully")
+#             return  HttpResponseRedirect(reverse('Customized_Commodity_Loan_Settings'))
+
+#     form.fields['multiple_loan_status'].initial=item.multiple_loan_status
+#     context={
+#     'form':form,
+#     'instructions':instructions,
+#     'url':'MultipleLoanStatus_update',
+#     'button_text':"Update Record",
+#     'title':title,
+#     }
+#     return render(request,'master_templates/loan_criteria_update.html', context)
+
+
+# def Customized_loan_savings_based_update(request,pk):
+#     item= TransactionTypes.objects.get(id=pk)
+#     title="Update Loan Savings Based for " +  item.name
+#     instructions='''
+#     This page enable you to set the percentage amout to be saved in 
+#     order to access a given loan.
+#     '''
+#     form = loan_savings_based_update_form(request.POST or None)
+
+#     if request.method ==  "POST":
+#         form = loan_savings_based_update_form(request.POST)
+#         if form.is_valid():
+#             savings_rate=form.cleaned_data["loan_savings_based"]
+#             record = TransactionTypes.objects.get(id=pk)
+#             record.savings_rate=savings_rate
+#             record.save()
+#             messages.success(request,"Record Updated Successfully")
+#             return  HttpResponseRedirect(reverse('Customized_Commodity_Loan_Settings'))
+
+#     form.fields['loan_savings_based'].initial=item.savings_rate
+#     context={
+#     'form':form,
+#     'instructions':instructions,
+#     'url':'loan_savings_based_update',
+#     'button_text':"Update Record",
+#     'title':title,
+#     }
+#     return render(request,'master_templates/loan_criteria_update.html', context)
+
+
+
+def Customized_loan_category_update(request,pk):
+    item= TransactionTypes.objects.get(id=pk)
+    title="Update Loan Category for " +  item.name
+    instructions='''
+    This page enable you to set whether a loan is monetary or Not.
+    '''
+    form = loan_category_update_form(request.POST or None)
+
+    if request.method ==  "POST":
+        form = loan_category_update_form(request.POST)
+        if form.is_valid():
+            category_id=form.cleaned_data["category"]
+            category=LoanCategory.objects.get(id=category_id)
+            record = TransactionTypes.objects.get(id=pk)
+            record.category=category
+            record.save()
+            messages.success(request,"Record Updated Successfully")
+            return  HttpResponseRedirect(reverse('Customized_Commodity_Loan_Settings'))
+
+    form.fields['category'].initial=item.category
+    context={
+    'form':form,
+    'instructions':instructions,
+    'url':'loan_category_update',
+    'button_text':"Update Record",
+    'title':title,
+    }
+    return render(request,'master_templates/loan_criteria_update.html', context)
+
+
+def Customized_loan_duration_update(request,pk):
+    item= TransactionTypes.objects.get(id=pk)
+    title="Update Loan Duration for " +  item.name
+    instructions='''
+    This page enable you to set the duration of Loans.
+    '''
+    form = loan_duration_update_form(request.POST or None)
+
+    if request.method ==  "POST":
+        form = loan_duration_update_form(request.POST)
+        if form.is_valid():
+            duration=form.cleaned_data["duration"]
+            record = TransactionTypes.objects.get(id=pk)
+            record.duration=duration
+            record.save()
+            messages.success(request,"Record Updated Successfully")
+            return  HttpResponseRedirect(reverse('Customized_Commodity_Loan_Settings'))
+
+    form.fields['duration'].initial=item.duration
+    context={
+    'form':form,
+    'instructions':instructions,
+    'url':'loan_duration_update',
+    'button_text':"Update Record",
+    'title':title,
+    }
+    return render(request,'master_templates/loan_criteria_update.html', context)
+
+
+def Customized_loan_name_update(request,pk):
+    item= TransactionTypes.objects.get(id=pk)
+    title="Update Loan Description for " +  item.name
+    instructions='''
+    This page enable you to modify the Title of Loans.
+    '''
+    form = loan_name_update_form(request.POST or None)
+
+    if request.method ==  "POST":
+        form = loan_name_update_form(request.POST)
+        if form.is_valid():
+            name=form.cleaned_data["name"]
+            record = TransactionTypes.objects.get(id=pk)
+            record.name=name
+            record.save()
+            messages.success(request,"Record Updated Successfully")
+            return  HttpResponseRedirect(reverse('Customized_Commodity_Loan_Settings'))
+
+    form.fields['name'].initial=item.name
+    context={
+    'form':form,
+    'instructions':instructions,
+    'url':'loan_name_update',
+    'button_text':"Update Record",
+    'title':title,
+    }
+    return render(request,'master_templates/loan_criteria_update.html', context)
+
+
+def Customized_loan_interest_rate_update(request,pk):
+    item= TransactionTypes.objects.get(id=pk)
+    title="Update Loan Interest Rate  for " +  item.name
+    instructions='''
+    This page enable you to set the interest rate of Loans.
+    '''
+
+    form = loan_interest_rate_update_form(request.POST or None)
+
+    if request.method ==  "POST":
+        form = loan_interest_rate_update_form(request.POST)
+        if form.is_valid():
+            interest_rate=form.cleaned_data["interest_rate"]
+            record = TransactionTypes.objects.get(id=pk)
+            record.interest_rate=interest_rate
+            record.save()
+            messages.success(request,"Record Updated Successfully")
+            return  HttpResponseRedirect(reverse('Customized_Commodity_Loan_Settings'))
+    form.fields['interest_rate'].initial=item.interest_rate
+    context={
+    'form':form,
+    'instructions':instructions,
+    'url':'loan_interest_rate_update',
+    'button_text':"Update Record",
+    'title':title,
+    }
+    return render(request,'master_templates/loan_criteria_update.html', context)
+
+
+# def Customized_loan_interest_deduction_soucrces_update(request,pk):
+#     item= TransactionTypes.objects.get(id=pk)
+#     title="Update Loan Interest Deduction Sources  for " +  item.name
+#     instructions='''
+#     This page enable you to set whether the interest will be deducted at source or 
+#     be spread out with the monthly deduction of the Loans.
+#     '''
+#     form = loan_interest_deduction_soucrces_Form(request.POST or None)
+
+#     if request.method ==  "POST":
+#         form = loan_interest_deduction_soucrces_Form(request.POST)
+#         if form.is_valid():
+#             source=form.cleaned_data["source"]
+#             interest_deduction=InterestDeductionSource.objects.get(id=source)
+
+#             record = TransactionTypes.objects.get(id=pk)
+#             record.interest_deduction=interest_deduction
+#             record.save()
+#             messages.success(request,"Record Updated Successfully")
+#             return  HttpResponseRedirect(reverse('Customized_Commodity_Loan_Settings'))
+
+#     form.fields['source'].initial=item.interest_deduction
+#     context={
+#     'form':form,
+#     'instructions':instructions,
+#     'url':'loan_interest_deduction_soucrces_update',
+#     'button_text':"Update Record",
+#     'title':title,
+#     }
+#     return render(request,'master_templates/loan_criteria_update.html', context)
+
+
+# def Customized_loan_maximum_amount_update(request,pk):
+#     item= TransactionTypes.objects.get(id=pk)
+#     title="Update Loan Maximum Amount  for " +  item.name
+#     instructions='''
+#     This page enable you to set maximum amount of Loans.
+#     '''
+#     form = loan_maximum_amount_update_form(request.POST or None)
+
+#     if request.method ==  "POST":
+#         form = loan_maximum_amount_update_form(request.POST)
+#         if form.is_valid():
+#             maximum_amount=form.cleaned_data["maximum_amount"]
+#             record = TransactionTypes.objects.get(id=pk)
+#             record.maximum_amount=maximum_amount
+#             record.save()
+#             messages.success(request,"Record Updated Successfully")
+#             return  HttpResponseRedirect(reverse('Customized_Commodity_Loan_Settings'))
+
+#     form.fields['maximum_amount'].initial=item.maximum_amount
+#     context={
+#     'form':form,
+#     'instructions':instructions,
+#     'url':'loan_maximum_amount_update',
+#     'button_text':"Update Record",
+#     'title':title,
+#     }
+#     return render(request,'master_templates/loan_criteria_update.html', context)
+
+
+def Customized_loan_rank_update_update(request,pk):
+    item= TransactionTypes.objects.get(id=pk)
+    title="Update Loan Rank  for " +  item.name
+    instructions='''
+    This page enable you to set the order in which 
+    monthly deduction shall flow fro the bulk deduction.
+    '''
+
+    form = loan_rank_update_form(request.POST or None)
+
+    if request.method ==  "POST":
+        form = loan_rank_update_form(request.POST)
+        if form.is_valid():
+            rank=form.cleaned_data["rank"]
+            record = TransactionTypes.objects.get(id=pk)
+            record.rank=rank
+            record.save()
+            messages.success(request,"Record Updated Successfully")
+            return  HttpResponseRedirect(reverse('Customized_Commodity_Loan_Settings'))
+
+    form.fields['rank'].initial=item.rank
+    context={
+    'form':form,
+    'instructions':instructions,
+    'url':'loan_rank_update_update',
+    'button_text':"Update Record",
+    'title':title,
+    }
+    return render(request,'master_templates/loan_criteria_update.html', context)
+
+
+def Customized_loan_admin_charges_rate_update(request,pk):
+    item= TransactionTypes.objects.get(id=pk)
+    title="Update Loan Rank  for " +  item.name
+    instructions='''
+    This page enable you to set whether admin charge is Cash or a 
+    percentage of amount requested for loan.
+    '''
+    form = loan_admin_charges_rate_update_form(request.POST or None)
+
+    if request.method ==  "POST":
+        form = loan_admin_charges_rate_update_form(request.POST)
+        if form.is_valid():
+            admin_charge_id=form.cleaned_data["admin_charges_rating"]
+            admin_charges_rating=AdminCharges.objects.get(id=admin_charge_id)
+            record = TransactionTypes.objects.get(id=pk)
+            record.admin_charges_rating=admin_charges_rating
+            record.save()
+            messages.success(request,"Record Updated Successfully")
+            return  HttpResponseRedirect(reverse('Customized_Commodity_Loan_Settings'))
+
+    form.fields['admin_charges_rating'].initial=item.admin_charges_rating
+    context={
+    'form':form,
+    'instructions':instructions,
+    'url':'loan_admin_charges_rate_update',
+    'button_text':"Update Record",
+    'title':title,
+    }
+    return render(request,'master_templates/loan_criteria_update.html', context)
+
+
+def Customized_loan_admin_charges_update(request,pk):
+    item= TransactionTypes.objects.get(id=pk)
+    title="Update Loan Admin Charges  for " +  item.name
+    instructions='''
+    This page enable you to set the percentage rating of 
+    the Admin charge if it percentage based.
+    '''
+    form = loan_admin_charges_update_form(request.POST or None)
+
+    if request.method ==  "POST":
+        form = loan_admin_charges_update_form(request.POST)
+        if form.is_valid():
+            admin_charges=form.cleaned_data["admin_charges"]
+            record = TransactionTypes.objects.get(id=pk)
+            record.admin_charges=admin_charges
+            record.save()
+            messages.success(request,"Record Updated Successfully")
+            return  HttpResponseRedirect(reverse('Customized_Commodity_Loan_Settings'))
+
+    form.fields['admin_charges'].initial=item.admin_charges
+    context={
+    'form':form,
+    'instructions':instructions,
+    'url':'loan_admin_charges_update',
+    'button_text':"Update Record",
+    'title':title,
+    }
+    return render(request,'master_templates/loan_criteria_update.html', context)
+
+    
+
+# def Customized_loan_admin_charges_minimum_update(request,pk):
+#     item= TransactionTypes.objects.get(id=pk)
+#     title="Update Loan Admin Charges Minimum  for " +  item.name
+#     instructions='''
+#     This page enable you to set the minimum loan amount 
+#     upon which there would be flat rate in cash of Admin Charges. 
+#     '''
+#     form = loan_admin_charges_minimum_update_form(request.POST or None)
+
+#     if request.method ==  "POST":
+#         form = loan_admin_charges_minimum_update_form(request.POST)
+#         if form.is_valid():
+#             admin_charges_minimum=form.cleaned_data["admin_charges_minimum"]
+#             record = TransactionTypes.objects.get(id=pk)
+#             record.admin_charges_minimum=admin_charges_minimum
+#             record.save()
+#             messages.success(request,"Record Updated Successfully")
+#             return  HttpResponseRedirect(reverse('Customized_Commodity_Loan_Settings'))
+
+#     form.fields['admin_charges_minimum'].initial=item.admin_charges_minimum
+#     context={
+#     'form':form,
+#     'instructions':instructions,
+#     'url':'loan_admin_charges_minimum_update',
+#     'button_text':"Update Record",
+#     'title':title,
+#     }
+#     return render(request,'master_templates/loan_criteria_update.html', context)
+
+    
+# def Customized_loan_salary_relationship_update(request,pk):
+#     item= TransactionTypes.objects.get(id=pk)
+#     title="Update Loan Salary Loan Relationship  for " +  item.name
+
+#     instructions='''
+#     This page enable you to set the percentage which loans is allowed to be 
+#     given from the members Net Salary. 
+#     '''
+#     form = loan_salary_relationship_update_form(request.POST or None)
+
+#     if request.method ==  "POST":
+#         form = loan_salary_relationship_update_form(request.POST)
+#         if form.is_valid():
+#             salary_loan_relationship=form.cleaned_data["salary_loan_relationship"]
+#             record = TransactionTypes.objects.get(id=pk)
+#             record.salary_loan_relationship=salary_loan_relationship
+#             record.save()
+#             messages.success(request,"Record Updated Successfully")
+#             return  HttpResponseRedirect(reverse('Customized_Commodity_Loan_Settings'))
+
+#     form.fields['salary_loan_relationship'].initial=item.salary_loan_relationship
+#     context={
+#     'form':form,
+#     'instructions':instructions,
+#     'url':'loan_salary_relationship_update',
+#     'button_text':"Update Record",
+#     'title':title,
+#     }
+#     return render(request,'master_templates/loan_criteria_update.html', context)
+
+
+def Customized_loan_loan_age_update(request,pk):
+    item= TransactionTypes.objects.get(id=pk)
+    title="Update Loan Age  for " +  item.name
+    instructions='''
+    This page enable you to set the number of months one has to a member before 
+    Such person can access this loan. 
+    '''
+    form = loan_loan_age_update_form(request.POST or None)
+
+    if request.method ==  "POST":
+        form = loan_loan_age_update_form(request.POST)
+        if form.is_valid():
+            loan_age=form.cleaned_data["loan_age"]
+            record = TransactionTypes.objects.get(id=pk)
+            record.loan_age=loan_age
+            record.save()
+            messages.success(request,"Record Updated Successfully")
+            return  HttpResponseRedirect(reverse('Customized_Commodity_Loan_Settings'))
+
+    form.fields['loan_age'].initial=item.loan_age
+    context={
+    'form':form,
+    'instructions':instructions,
+    'url':'loan_loan_age_update',
     'button_text':"Update Record",
     'title':title,
     }
@@ -4922,6 +5646,56 @@ def Loan_application_certification_details(request,pk):
     'certification_status':certification_status,
     }
     return render(request,'master_templates/SECRETARY/Loan_application_certification_details.html',context)
+
+
+def Non_Monetary_Loan_Request_certification_Load(request):
+    status=TransactionStatus.objects.get(title='UNTREATED')
+    transaction=TransactionTypes.objects.get(code='204')
+   
+    user=CustomUser.objects.get(id=request.user.id)
+   
+    certification_officer=CertificationOfficers.objects.get(officer=user,transaction__transaction=transaction)
+  
+    certification_status=CertificationStatus.objects.get(title='PENDING')
+
+    records=Members_Commodity_Loam_Application.objects.filter(status=status,certification_officer=certification_officer,certification_status=certification_status)
+    
+   
+    context={
+    'records':records,
+    
+    }
+    return render(request,'master_templates/SECRETARY/Non_Monetary_Loan_Request_certification_Load.html',context)
+
+def Non_Monetary_Loan_Request_certification_Load_details(request,pk):
+    form=Non_Monetary_Loan_Request_certification_Load_details_form(request.POST or None)
+    record=Members_Commodity_Loam_Application.objects.get(id=pk)
+    ticket=record.ticket
+    queryset=Members_Commodity_Loam_Products_Selection.objects.filter(ticket=ticket)
+
+    if request.method == 'POST':
+        certification_status=CertificationStatus.objects.get(title="CERTIFIED")
+        certification_comment=request.POST.get('comment')
+        approval_officer_id=request.POST.get('approval_officers')
+        approval_officer=ApprovalOfficers.objects.get(id=approval_officer_id)
+        certification_date=get_current_date(now)
+        
+        record.certification_date=certification_date
+        record.certification_comment=certification_comment
+        record.approval_officer=approval_officer
+        record.certification_status=certification_status
+        record.save()
+        return HttpResponseRedirect(reverse('Non_Monetary_Loan_Request_certification_Load'))
+
+    form.fields['comment'].initial="For your Consideration"
+    context={
+    'queryset':queryset,
+    'ticket':ticket,
+    'record':record,
+    'form':form,
+    }
+    return render(request,'master_templates/SECRETARY/Non_Monetary_Loan_Request_certification_Load_details.html',context)
+
 
 
 #######################################################################

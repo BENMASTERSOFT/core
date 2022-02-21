@@ -40,7 +40,7 @@
                             {% for applicant in applicants %}
                                 <tr>
                                     <td>{{forloop.counter}}</td>
-                                    <td>{{applicant.member_id}}</td>
+                                    <td>{{applicant.get_member_Id}}</td>
                                     <td>{{applicant.admin.first_name}}</td>
                                     <td>{{applicant.admin.last_name}}</td>
                                     <td>{{applicant.get_middle_name}}</td>

@@ -73,7 +73,7 @@
                                     {% for guarantor in guarantors %}
                                         <tr>
                                             <td>{{forloop.counter}}</td>
-                                            <td>{{guarantor.guarantor.member_id}}</td>
+                                            <td>{{guarantor.guarantor.get_member_Id}}</td>
                                             <td>{{guarantor.guarantor.admin.first_name}} {{guarantor.guarantor.admin.last_name}} {{guarantor.guarantor.middle_name}}</td>
                                             <td>{{guarantor.guarantor.gross_pay}}</td>
                                            

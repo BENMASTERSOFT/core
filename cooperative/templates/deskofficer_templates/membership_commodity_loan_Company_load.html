@@ -9,7 +9,9 @@
                     <div class="col-xl-6">
                         <div class="ibox">
                             <div class="ibox-head">
-                                <div class="ibox-title">LIST OF COMPANIES</div>
+                                <div class="ibox-title">LIST OF COMPANIES | {{member.get_full_name}} | <input type="button" class="btn btn-secondary" value="Back" onclick="history.back()"/>
+
+</div>
                             </div>
                             <div class="ibox-body">
                                 <table class="table table-hover">
@@ -26,7 +28,7 @@
                                         <tr>
                                             <td>{{forloop.counter}}</td>
                                             <td>{{record.title}}</td>
-                                            <td><a href="{% url 'membership_commodity_loan_Company_products' record.pk %}" class="btn btn-primary">Select</a></td>
+                                            <td><a href="{% url 'membership_commodity_loan_Company_products' member.pk record.pk  %}" class="btn btn-primary">Select</a></td>
                                          
                                         </tr>
                                     {% endfor %}

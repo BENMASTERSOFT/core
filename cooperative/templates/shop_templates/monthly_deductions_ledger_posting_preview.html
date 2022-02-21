@@ -28,6 +28,7 @@
                             <thead>
                                 <tr>
                                     <th>#</th>
+                                    <th>Member ID</th>
                                     <th>Name</th>
                                     <th>Amount</th>
                                     <th>Amount Deducted</th>
@@ -38,6 +39,7 @@
                             <tfoot>
                                 <tr>
                                     <<th>#</th>
+                                    <th>Member ID</th>
                                     <th>Name</th>
                                     <th>Amount</th>
                                     <th>Amount Deducted</th>
@@ -49,6 +51,7 @@
                         {% for record in records %}
                                 <tr>
                                     <td>{{forloop.counter}}</td>
+                                    <td>{{record.member.get_member_Id}}</td>
                                     <td>{{record.member.get_full_name}}</td>
                                     <td>{{record.amount}}</td>
                                     <td>{{record.amount_deducted}}</td>

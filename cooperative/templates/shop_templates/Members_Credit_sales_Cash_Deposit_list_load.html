@@ -19,8 +19,9 @@
                             <thead>
                                 <tr>
                                     <th>#</th>
-                                    <th>First Name</th>
+                                    <th>Member ID</th>
                                     <th>Last Name</th>
+                                    <th>First Name</th>
                                     <th>Middle Name</th>
                                     <th>Phone Number</th>
                                     <th>Department</th>
@@ -31,8 +32,9 @@
                             <tfoot>
                                 <tr>
                                     <th>#</th>
-                                    <th>First Name</th>
+                                    <th>Member ID</th>
                                     <th>Last Name</th>
+                                    <th>First Name</th>
                                     <th>Middle Name</th>
                                     <th>Phone Number</th>
                                     <th>Department</th>
@@ -44,8 +46,9 @@
                                 {% for member in members %}
                                 <tr>
                                     <td>{{forloop.counter}}</td>
-                                    <td>{{member.member.member.admin.first_name}}</td>
+                                    <td>{{member.member.member.get_member_Id}}</td>
                                     <td>{{member.member.member.admin.last_name}}</td>
+                                    <td>{{member.member.member.admin.first_name}}</td>
                                     <td>{{member.member.member.middle_name}}</td>
                                     <td>{{member.member.member.phone_number}}</td>
                                     <td>{{member.member.member.department.title}}</td>

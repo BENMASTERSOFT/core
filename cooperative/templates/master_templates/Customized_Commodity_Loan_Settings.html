@@ -1,0 +1,104 @@
+{% extends 'master_templates/base_template.html' %}
+{% load static %}
+
+{% block content %}
+            <div class="page-content fade-in-up">
+                <div class="row">
+                    <div class="col-xl-7">
+                        <div class="ibox">
+                            <div class="ibox-head">
+                                <div class="ibox-title">Basic Settings</div>
+                            </div>
+                            <div class="ibox-body">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Description</th>
+                                            <th>Value</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+
+                                        <tr>
+                                            <td>1</td>
+                                            <td>Name</td>
+                                            <td>{{transaction.name}}</td>
+                                            <td><a href="{% url 'Customized_loan_name_update' transaction.pk %}" class="btn btn-primary">Update</a></td>
+                                        </tr>
+                                        <tr>
+                                            <td>2</td>
+                                            <td>Duration</td>
+                                             <td>{{transaction.duration}}</td>
+                                            <td><a href="{% url 'Customized_loan_duration_update' transaction.pk %}" class="btn btn-primary">Update</a></td>
+                                        </tr>
+                                        <tr>
+                                            <td>3</td>
+                                            <td>Interest Rate</td>
+                                            <td>{{transaction.interest_rate}}</td>
+                                            <td><a href="{% url 'Customized_loan_interest_rate_update' transaction.pk %}" class="btn btn-primary">Update</a></td>
+                                        </tr>
+                                        <tr>
+                                            <td>4</td>
+                                            <td>Category</td>
+                                            <td>{{transaction.category}}</td>
+                                            <td><a href="{% url 'Customized_loan_category_update' transaction.pk %}" class="btn btn-primary">Update</a></td>
+                                        </tr>
+                                        <tr>
+                                            <td>5</td>
+                                            <td>Rank</td>
+                                            <td>{{transaction.rank}}</td>
+                                            <td><a href="{% url 'Customized_loan_rank_update_update' transaction.pk %}" class="btn btn-primary">Update</a></td>
+                                        </tr>
+                                        <tr>
+                                            <td>6</td>
+                                            <td>Admin Charges Rating</td>
+                                            <td>{{transaction.admin_charges_rating}}</td>
+                                            <td><a href="{% url 'Customized_loan_admin_charges_rate_update' transaction.pk %}" class="btn btn-primary">Update</a></td>
+                                        </tr> 
+                                        <tr>
+                                            <td>7</td>
+                                            <td>Admin Charges </td>
+                                            <td>{{transaction.admin_charges}}</td>
+                                            <td><a href="{% url 'Customized_loan_admin_charges_update' transaction.pk %}" class="btn btn-primary">Update</a></td>
+                                        </tr>
+                                        <tr>
+                                            <td>8</td>
+                                            <td>Guarantors </td>
+                                            <td>{{transaction.guarantors}}</td>
+                                            <td><a href="{% url 'Customized_loan_guarantors_update' transaction.pk %}" class="btn btn-primary">Update</a></td>
+                                        </tr>
+                                        <tr>
+                                            <td>9</td>
+                                            <td>Loan Age </td>
+                                            <td>{{transaction.loan_age}}</td>
+                                            <td><a href="{% url 'Customized_loan_loan_age_update' transaction.pk %}" class="btn btn-primary">Update</a></td>
+                                        </tr>
+                                        <tr>
+                                            <td>10</td>
+                                            <td>Receipt Type </td>
+                                            <td>{{transaction.receipt_type}}</td>
+                                            <td><a href="{% url 'Customized_receipt_type_update' transaction.pk %}" class="btn btn-primary">Update</a></td>
+                                        </tr>   
+                                        <tr>
+                                            <td>11</td>
+                                            <td>Form Print</td>
+                                            <td>{{transaction.form_print}}</td>
+                                            <td><a href="{% url 'Customized_loan_form_print_update' transaction.pk %}" class="btn btn-primary">Update</a></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    
+                </div>
+             
+           
+            </div>
+  <div class="sidenav-backdrop backdrop"></div>
+    <div class="preloader-backdrop">
+        <div class="page-preloader">Loading</div>
+    </div>
+{% endblock %}

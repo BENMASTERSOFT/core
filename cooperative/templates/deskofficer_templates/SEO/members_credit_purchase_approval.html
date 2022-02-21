@@ -29,7 +29,7 @@
                                     {% for record in records %}
                                         <tr>
                                             <td>{{forloop.counter}}</td>
-                                            <td>{{record.trans_code.member.member_id}}</td>
+                                            <td>{{record.trans_code.member.get_member_Id}}</td>
                                             <td>{{record.trans_code.member.admin.first_name}} {{record.trans_code.member.admin.last_name}} {{record.trans_code.member.middle_name}}</td>
                                             <td>{{record.trans_code.ticket}}</td>
                                             <td>{{record.debit}}</td>

@@ -4,7 +4,7 @@
                         <div class="ibox bg-success color-white widget-stat">
                             <div class="ibox-body">
                                  <h2 class="m-b-5 font-strong">{{member_count}}</h2>
-                                <div class="m-b-5"><a style="color: white;" href="{% url 'PersonalLedger_Selected_Search' %}">NEW MEMBERS</a> </div><i class="ti-bar-chart widget-stat-icon"></i>
+                                <div class="m-b-5"><a style="color: white;" href="{% url 'membership_request' %}">NEW MEMBERS</a> </div><i class="ti-bar-chart widget-stat-icon"></i>
                             </div>
                         </div>
                     </div>
@@ -27,7 +27,7 @@
                     <div class="col-lg-3 col-md-6">
                         <div class="ibox bg-danger color-white widget-stat">
                              <div class="ibox-body">
-                                <h2 class="m-b-5 font-strong">201</h2>
+                                <h2 class="m-b-5 font-strong">{{applicants}}</h2>
 
                                 <div class="m-b-5"><a href="{% url 'membership_form_sales_list_load' %}" style="color: white;">APPROVED MEMBERSHIP</a> </div>
                                 <i class="ti-shopping-cart widget-stat-icon"></i>

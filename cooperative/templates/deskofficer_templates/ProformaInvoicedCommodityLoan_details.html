@@ -1,0 +1,168 @@
+{% extends 'deskofficer_templates/base_template.html' %}
+{% load static %}
+
+{% block content %}
+            <div class="page-content fade-in-up">
+                
+                <div class="row">
+                    <div class="col-md-7">
+                        <div class="ibox">
+                            <div class="ibox-head">
+                                <div class="ibox-title">Proforma Invoice Prodcuts Register | {{record.member.get_full_name}} | {{record.invoice}}</div>
+                                
+                            </div>
+                            <div class="ibox-body">
+                             <form class="form-horizontal" method="POST" action="" enctype="multipart/form-data" novalidate>
+                                    {% csrf_token %}
+                                    
+                                    <div class="form-group row">
+                                        <label class="col-sm-4 col-form-label">Product Name</label>
+                                        <div class="col-sm-8">
+                                            {{form.product_name}}
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-sm-4 col-form-label">Details</label>
+                                        <div class="col-sm-8">
+                                            {{form.details}}
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-sm-4 col-form-label">Unit Price</label>
+                                        <div class="col-sm-8">
+                                           {{form.unit_price}}
+                                        </div>
+                                    </div>                   
+                                    <div class="form-group row">
+                                        <label class="col-sm-4 col-form-label">Quantity</label>
+                                        <div class="col-sm-8">
+                                           {{form.quantity}}
+                                        </div>
+                                    </div>
+                                  
+                                    <div class="form-group row">
+                                        <div class="col-sm-8 ml-sm-auto">
+                                            <button class="btn btn-info" type="submit">Submit</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                   <div class="col-xl-5">
+                        <div class="ibox">
+                            <div class="ibox-head">
+                                <div class="ibox-title">Pay Slip Status</div>
+                            </div>
+                            <div class="form-group">
+                                  {% if messages %}
+                                    
+                                      {% for message in messages %}
+                                      {% if message.tags == "error" %}
+                                      <div class="alert alert-danger" style="margin-top:10px">{{message}}</div>
+                                      
+                                      {% endif %}
+
+                                      {% if message.tags == "success" %}
+                                      <div class="alert alert-success" style="margin-top:10px">{{message}}</div>
+                                      
+                                      {% endif %}
+                                      {% endfor %}
+                                  
+                                  {% endif %}
+                              </div>
+                            <div class="ibox-body">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Description</th>
+                                            <th>Value</th>
+                                            
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>1</td>
+                                            <td>Gross Pay</td>
+                                            <td>{{applicant.gross_pay}}</td>
+                                           
+                                        </tr>
+                                        <tr>
+                                            <td>2</td>
+                                            <td>Net Pay</td>
+                                            <td>{{applicant.net_pay}}</td>
+                                       
+                                         
+                                        </tr>
+                                        <tr>
+                                            <td>3</td>
+                                            <td>Payslip Period</td>
+                                            <td>{{applicant.period}}</td>
+                                          
+                                         
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-xl-10">
+                        <div class="ibox">
+                            <div class="ibox-head">
+                                <div class="ibox-title">Captured Products 
+                                    | <a href="{% url 'ProformaInvoicedCommodityLoan_details_payslip_analysis' record.pk %}" class="btn btn-primary">Payslip Analysis</a>
+                                    | <a href="{% url 'ProformaInvoicedCommodityLoan_details_preview' record.pk %}" class="btn btn-success">Preview</a>
+                                </div>
+                            </div>
+                            <div class="ibox-body">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Product Name</th>
+                                            <th>Details</th>
+                                            <th>Unit Price</th>
+                                            <th>Quantity</th>
+                                            <th>Total</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for item in queryset %}
+                                        <tr>
+                                            <td>{{forloop.counter}}</td>
+                                            <td>{{item.product_name}}</td>
+                                            <td>{{item.details}}</td>
+                                            <td>{{item.unit_price}}</td>
+                                            <td>{{item.quantity}}</td>
+                                            <td>{{item.total}}</td>
+                                            <td><a href="{% url 'ProformaInvoicedCommodityLoan_details_delete' item.pk %}" class="btn btn-danger">Remove</a></td>
+                                           
+                                        </tr>
+                                    {% endfor %} 
+                                    <tr>
+                                        <td colspan="4">Summary</td>
+                                        <td>{{total_item}}</td>
+                                        <td>{{total_amount}}</td>
+                                        <td></td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                   
+                </div>
+            </div>
+            
+
+
+    <div class="sidenav-backdrop backdrop"></div>
+    <div class="preloader-backdrop">
+        <div class="page-preloader">Loading</div>
+    </div>
+{% endblock %}

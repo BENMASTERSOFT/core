@@ -4,7 +4,6 @@
 {% block content %}
             <div class="page-content fade-in-up">
                 <div class="row">
-                   
                     <div class="col-md-6">
                         <div class="ibox">
                             <div class="ibox-head">
@@ -27,7 +26,7 @@
                                   {% endfor %}
                               
                               {% endif %}
-                          </div>
+                            </div>
                             <div class="ibox-body">
                                 <form class="form-horizontal" method="POST" action="" enctype="multipart/form-data" novalidate>
                                     {% csrf_token %}
@@ -61,6 +60,43 @@
                         </div>
                     </div>
                 </div>
+
+                <div class="row">
+                    <div class="col-xl-8">
+                        <div class="ibox">
+                            <div class="ibox-head">
+                                <div class="ibox-title">Basic Table</div>
+                            </div>
+                            <div class="ibox-body">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Product Name</th>
+                                            <th>Model</th>
+                                            <th>Details</th>
+                                            <th>Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for item in records %}
+                                        <tr>
+                                            <td>{{forloop.counter}}</td>
+                                            <td>{{item.product_name}}</td>
+                                            <td>{{item.product_model}}</td>
+                                            <td>{{item.details}}</td>
+                                            <td>{{item.status.title}}</td>
+                                           
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
 
 
       <div class="sidenav-backdrop backdrop"></div>

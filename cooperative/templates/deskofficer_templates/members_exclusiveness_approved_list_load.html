@@ -17,6 +17,7 @@
                             <thead>
                                 <tr>
                                     <th>#</th>
+                                    <th>Member ID</th>
                                     <th>Name</th>
                                     <th>Purpose</th>
                                     <th>Comment</th>
@@ -27,6 +28,7 @@
                             <tfoot>
                                 <tr>
                                     <th>#</th>
+                                    <th>Member ID</th>
                                     <th>Name</th>
                                     <th>Purpose</th>
                                     <th>Comment</th>
@@ -39,6 +41,7 @@
                                 <tr>
                                     <td>{{forloop.counter}}</td>
                                     
+                                    <td>{{member.member.get_member_Id}}</td>
                                     <td>{{member.member.admin.first_name}} {{member.member.admin.last_name}} {{member.member.get_middle_name}}</td>
                                     <td>{{member.transaction.name}}</td>
                                     <td>{{member.approval_comment}}</td>

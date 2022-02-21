@@ -13,22 +13,22 @@
                         <div class="ibox-title">LIST OF PRODUCTS</div>
                     </div>
                      <div class="form-group">
-                              {% if messages %}
-                                
-                                  {% for message in messages %}
-                                  {% if message.tags == "error" %}
-                                  <div class="alert alert-danger" style="margin-top:10px">{{message}}</div>
-                                  
-                                  {% endif %}
+                                  {% if messages %}
+                                    
+                                      {% for message in messages %}
+                                      {% if message.tags == "error" %}
+                                      <div class="alert alert-danger" style="margin-top:10px">{{message}}</div>
+                                      
+                                      {% endif %}
 
-                                  {% if message.tags == "success" %}
-                                  <div class="alert alert-success" style="margin-top:10px">{{message}}</div>
+                                      {% if message.tags == "success" %}
+                                      <div class="alert alert-success" style="margin-top:10px">{{message}}</div>
+                                      
+                                      {% endif %}
+                                      {% endfor %}
                                   
                                   {% endif %}
-                                  {% endfor %}
-                              
-                              {% endif %}
-                          </div>
+                              </div>
                     <div class="ibox-body">
                         <table class="table table-striped table-bordered table-hover" id="example-table" cellspacing="0" width="100%">
                             <thead>
@@ -64,7 +64,10 @@
                                     <td>{{record.product_model}}</td>
                                     <td>{{record.details}}</td>
                                     <td>{{record.status.title}}</td>
-                                    <td><a href="{% url 'Commodity_Products_Manage_Update' record.pk %}" class="btn btn-primary">Update</a></td>
+                                    <td>
+                                        <a href="{% url 'Commodity_Products_Manage_Update' record.pk %}" class="btn btn-primary">Update</a>
+                                        <a href="{% url 'Commodity_Products_Manage_Remove' record.pk %}" class="btn btn-danger">Remove</a>
+                                    </td>
                                    
                                 </tr>
                             {% endfor %} 

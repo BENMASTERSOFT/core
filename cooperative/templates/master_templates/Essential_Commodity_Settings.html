@@ -1,0 +1,50 @@
+{% extends 'master_templates/base_template.html' %}
+{% load static %}
+
+{% block content %}
+            <div class="page-content fade-in-up">
+                <div class="row">
+                    <div class="col-xl-6">
+                        <div class="ibox">
+                            <div class="ibox-head">
+                                <div class="ibox-title">Basic Settings | {{transaction.name}}</div>
+                            </div>
+                            <div class="ibox-body">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Description</th>
+                                            <th>Values</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>1</td>
+                                            <td>Duration</td>
+                                            <td>{{transaction.duration}}</td>
+                                            <td><a href="{% url 'essential_commodity_loan_duration_update' transaction.pk %}" class="btn btn-primary">Update</a></td>
+                                        </tr>
+                                        <tr>
+                                            <td>2</td>
+                                            <td>Admin Charges</td>
+                                            <td>{{transaction.admin_charges|default_if_none:"0"}}</td>
+                                            <td><a href="{% url 'essential_commodity_admin_charges_update' transaction.pk %}" class="btn btn-primary">Update</a></td>
+                                        </tr>
+                                        
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    
+                </div>
+            
+           
+            </div>
+  <div class="sidenav-backdrop backdrop"></div>
+    <div class="preloader-backdrop">
+        <div class="page-preloader">Loading</div>
+    </div>
+{% endblock %}

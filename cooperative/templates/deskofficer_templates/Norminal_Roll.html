@@ -22,7 +22,9 @@
                                 <tr>
                                     <th>#</th>
                                     <th>Title</th>
+                                    <th>Member ID</th>
                                     <th>Name</th>
+                                    <th>Departments</th>
                                     <th>Phone No</th>
                                    
                                     <th>Action</th>
@@ -32,7 +34,9 @@
                                 <tr>
                                     <th>#</th>
                                      <th>Title</th>
+                                     <th>Member ID</th>
                                     <th>Name</th>
+                                    <th>Departments</th>
                                     <th>Phone No</th>
                                    
                                     <th>Action</th>
@@ -43,8 +47,10 @@
                                 <tr>
                                     <td>{{forloop.counter}}</td>
                                     <td>{{member.title.title}}</td>
+                                    <td>{{member.get_member_Id}}</td>
                                     <td>{{member.get_full_name}}</td>
-                                    <td>{{member.phone_number}}</td>
+                                    <td>{{member.department|default_if_none:"&nbsp;"}}</td>
+                                    <td>{{member.phone_number|default_if_none:"&nbsp;"}}</td>
                                     <td>
                                         <a href="{% url 'Norminal_Roll_Update' member.id %}" class="btn btn-default btn-xs m-r-5"><i class="fa fa-pencil font-14"></i></a> 
 

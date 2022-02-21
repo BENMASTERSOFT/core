@@ -2,6 +2,12 @@ from .models import *
 from django.db.models import Q
 
 
+def generalMemberSearch(frm,status):
+	records=Members.objects.filter(Q(phone_number__icontains=frm) | Q(file_no__icontains=frm) | Q(ippis_no__icontains=frm)  | Q(admin__first_name__icontains=frm) | Q(admin__last_name__icontains=frm) | Q(middle_name__icontains=frm)).filter(status=status)
+	print(records)
+	return records
+
+
 def searchMembers(frm,status):
 	records=Members.objects.filter(Q(phone_number__icontains=frm) | Q(file_no__icontains=frm) | Q(ippis_no__icontains=frm)  | Q(admin__first_name__icontains=frm) | Q(admin__last_name__icontains=frm) | Q(middle_name__icontains=frm)).filter(status=status)
 	

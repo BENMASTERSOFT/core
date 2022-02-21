@@ -17,14 +17,18 @@ from cooperative.resources import NorminalRollResource, AccountDeductionsResourc
 from tablib import Dataset
 from django.template import defaultfilters
 from django.contrib import messages
+from datetime import datetime
+from datetime import date
+import datetime
 from django.utils.dateparse import parse_date
 from dateutil.relativedelta import relativedelta
 import xlwt
 from .personnal_ledger_diplay import Display_PersonalLedger
 from .current_date import get_current_date
-from .members_search import searchMembers
+from .members_search import *
 now = datetime.datetime.now()
-
+import math
+from .load_ticket import get_ticket
 
 
 def deskofficer_home(request):
@@ -32,11 +36,18 @@ def deskofficer_home(request):
 	status=MembershipStatus.objects.get(title='ACTIVE')
 	member_count=Members.objects.filter(status=status).count()
 
+	approval_status=ApprovalStatus.objects.get(title='APPROVED')
+	transaction_status=TransactionStatus.objects.get(title='UNTREATED')
+	applicants=MemberShipRequest.objects.filter(transaction_status=transaction_status,approval_status=approval_status).count()
+	
+	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
+
 	title="System User"
 	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
 
 	context={
 	'user_level':user_level.userlevel.title,
+	'applicants':applicants,
 	'title':title,
 	'member_count':member_count,
 	'DataCapture':DataCapture,
@@ -430,7 +441,9 @@ def membership_form_sales_list_load(request):
 	
 	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
 
+
 	context={
+	'approved_applicant':applicants.count(),
 	'user_level':user_level.userlevel.title,
 	'applicants':applicants,
 	'DataCapture':DataCapture,
@@ -605,7 +618,7 @@ def membership_registration_register(request,pk):
 	processed_by = CustomUser.objects.get(id=request.user.id)
 
 	shares=applicant.shares
-	unit_cost=float(applicant.share_amount)/float(applicant.shares)
+	unit_cost=math.ceil(float(applicant.share_amount)/float(applicant.shares))
 	total_cost=applicant.share_amount
 	welfare_amount=applicant.welfare_amount
 
@@ -7931,6 +7944,7 @@ def membership_termination_transactions_load(request,pk):
 		return HttpResponseRedirect(reverse(membership_termination_search))
 	form.fields['date_applied'].initial = now
 	form.fields['loan_amount'].initial = abs(total_loan)
+	form.fields['comments'].initial = "Please for your Consideration"
 	context={
 	'form':form,
 	'loans':loans,
@@ -7982,32 +7996,1162 @@ def membership_commodity_loan_Company_load(request,pk):
 	}
 	return render(request,'deskofficer_templates/membership_commodity_loan_Company_load.html',context)
 
-def membership_commodity_loan_Company_products(request,pk):
+def membership_commodity_loan_Company_products(request,return_pk,pk):
+	form=membership_commodity_loan_Company_products_process_Form(request.POST or None)
+	status=TransactionStatus.objects.get(title='UNTREATED')
+	member=Members.objects.get(id=return_pk)
+	
 	company=Companies.objects.get(id=pk)
+	print(company)
+	
+	if not Company_Products.objects.filter(company=company).exists():
+		messages.error(request,'Missing Records')
+		return HttpResponseRedirect(reverse('membership_commodity_loan_Company_load', args=(return_pk,)))
+
 	records=Company_Products.objects.filter(company=company)
+	
+	queryset=Members_Commodity_Loam_Products_Selection.objects.filter(product__company=company, member=member,status=status).order_by("-duration")
+	
+	querysum=Members_Commodity_Loam_Products_Selection.objects.filter(product__company=company, member=member,status=status).aggregate(total_coop=Sum('coop_price'),total_comp=Sum('company_price'),total_interest=Sum('interest'),total_admin_charge=Sum('admin_charge'))
+	
+	button_enabled=False
+	if queryset:
+		button_enabled=True
+
+
+	total_coop=querysum['total_coop']
+	total_comp=querysum['total_comp']
+	total_interest=querysum['total_interest']
+	total_admin_charge=querysum['total_admin_charge']
+
+
+	
 	context={
 	'company':company,
 	'records':records,
+	'return_pk':return_pk,
+	'member':member,
+	'queryset':queryset,
+	'form':form,
+	'total_coop':total_coop,
+	'total_comp':total_comp,
+	'total_interest':total_interest,
+	'total_admin_charge':total_admin_charge,
+	'button_enabled':button_enabled,
 	}
 	return render(request,'deskofficer_templates/membership_commodity_loan_Company_products.html',context)
 
 
-def membership_commodity_loan_Company_products_details(request,comp_pk,pk):
+def membership_commodity_loan_Company_products_details(request,comp_pk,pk, member_pk):
+	form=membership_commodity_loan_Company_products_details_Form(request.POST or None)
+	member=Members.objects.get(id=member_pk)
+	processed_by=CustomUser.objects.get(id=request.user.id)
 	company=Companies.objects.get(id=comp_pk)
 	product=Company_Products.objects.get(id=pk)
+	
 	record=Commodity_Categories.objects.get(id=product.product.category_id)
 	interest=float(product.amount) *  (float(record.interest_rate)/100)
+	coop_price=float(interest) + float(product.amount)
+	
+	admin_charge_rate=AdminCharges.objects.get(title='PERCENTAGE')
+	if record.admin_charges_rating==admin_charge_rate:
+		admin_charge= (float(record.admin_charges)/100) * float(product.amount) 
+	else:
+		admin_charge=record.admin_charges
+
+	if not record.interest_rate:
+		messages.error(request,'Interest Rate is Missing')
+		return HttpResponseRedirect(reverse('membership_commodity_loan_Company_products',args=(member.pk,company.pk)))
+	
+	if not record.duration:
+		messages.error(request,'Duration is Missing')
+		return HttpResponseRedirect(reverse('membership_commodity_loan_Company_products',args=(member.pk,company.pk)))
+	
+	if not record.guarantors:
+		messages.error(request,'Guarantor is Missing')
+		return HttpResponseRedirect(reverse('membership_commodity_loan_Company_products',args=(member.pk,company.pk)))
+	
+	if not record.loan_age:
+		messages.error(request,'Loan Age is Missing')
+		return HttpResponseRedirect(reverse('membership_commodity_loan_Company_products',args=(member.pk,company.pk)))
+	
+	if not admin_charge:
+		messages.error(request,'Admin Charge is Missing')
+		return HttpResponseRedirect(reverse('membership_commodity_loan_Company_products',args=(member.pk,company.pk)))
+	
+	if not product.amount:
+		messages.error(request,'Product Cost is Missing')
+		return HttpResponseRedirect(reverse('membership_commodity_loan_Company_products',args=(member.pk,company.pk)))
+
+	if request.method =='POST':
+		tdate=get_current_date(now)
+		quantity=request.POST.get('quantity')
+		
+		if quantity:
+			Members_Commodity_Loam_Products_Selection(tdate=tdate,member=member,product=product,quantity=quantity,company_price=float(product.amount) *float(quantity),
+								coop_price=float(coop_price)*float(quantity),interest=float(interest)*float(quantity),admin_charge=admin_charge,
+								duration=record.duration,processed_by=processed_by).save()
+			return HttpResponseRedirect(reverse('membership_commodity_loan_Company_products',args=(member.pk,comp_pk,)))
+		else:
+			messages.error(request,'Quantity Missing')
+			return HttpResponseRedirect(reverse('membership_commodity_loan_Company_products_details',args=(comp_pk,pk,member_pk)))
+	
+	product_data={
+	'loan_type':record.transaction.name,
+	'title':record.title,
+	'product_name':product.product.product_name,
+	'product_model':product.product.product_model,
+	'company_price':product.amount,
+	'interest_amount':interest,
+	'duration':record.duration,
+	'interest_rate':record.interest_rate,
+	'admin_charge':admin_charge,
+	'gaurantors':record.guarantors,
+	'loan_age':record.loan_age,
+	}
+
+	form.fields['quantity'].initial='1'
 	context={
+	'form':form,
+	'member':member,
 	'company':company,
 	'product':product,
 	'record':record,
 	'interest':interest,
+	'product_data':product_data,
 	}
 	return render(request,'deskofficer_templates/membership_commodity_loan_Company_products_details.html',context)
+
+
+def membership_commodity_loan_Company_products_delete(request,pk,mem_pk,comp_pk):
+	record=Members_Commodity_Loam_Products_Selection.objects.get(id=pk)
+	record.delete()
+	return HttpResponseRedirect(reverse('membership_commodity_loan_Company_products',args=(mem_pk,comp_pk)))
+
+
+
+def membership_commodity_loan_Company_products_proceed(request,mem_pk,comp_pk):
+	form=membership_commodity_loan_Company_products_process_Form(request.POST or None)
+	processed_by=CustomUser.objects.get(id=request.user.id)
+	status=TransactionStatus.objects.get(title='UNTREATED')
+	status1=TransactionStatus.objects.get(title='TREATED')
+	
+	member=Members.objects.get(id=mem_pk)
+	company=Companies.objects.get(id=comp_pk)
+	records=Company_Products.objects.filter(company=company)
+	
+	queryset=Members_Commodity_Loam_Products_Selection.objects.filter(product__company=company, member=member,status=status).order_by("-duration")
+	
+	querysum=Members_Commodity_Loam_Products_Selection.objects.filter(product__company=company, member=member,status=status).aggregate(total_coop=Sum('coop_price'),total_comp=Sum('company_price'),total_interest=Sum('interest'),total_admin_charge=Sum('admin_charge'))
+	
+	transaction_type=queryset[0].product.product.category.transaction.name
+
+	standing_order_total=0
+	standing_orders =StandingOrderAccounts.objects.filter(transaction__member=member,transaction__transaction__source__title="SAVINGS")
+	if standing_orders:
+		standing_order_sum=StandingOrderAccounts.objects.filter(transaction__member=member,transaction__transaction__source__title="SAVINGS").aggregate(total_amount=Sum('amount'))
+		standing_order_total=standing_order_sum['total_amount']
+	
+	loan_total=0
+	loans=LoansDisbursed.objects.filter(member=member).filter(Q(balance__lt=0))
+	if loans:
+		loan_sum=LoansDisbursed.objects.filter(member=member).filter(Q(balance__lt=0)).aggregate(total_amount=Sum('repayment'))
+		loan_total=loan_sum['total_amount']
+
+	external_fascility_total=0
+	external_fascilities=ExternalFascilitiesMain.objects.filter(member__member=member,status=status)
+	if external_fascilities:
+		external_fascility_sum=ExternalFascilitiesMain.objects.filter(member__member=member,status=status).aggregate(total_amount=Sum('member__amount'))
+		external_fascility_total=external_fascility_sum['total_amount']
+	
+
+	total_debit=float(standing_order_total) + float(loan_total) + float(external_fascility_total)
+	
+	total_coop=querysum['total_coop']
+	total_comp=querysum['total_comp']
+	total_interest=querysum['total_interest']
+	total_admin_charge=querysum['total_admin_charge']
+
+	selected_Duration=queryset[0].duration
+	monthly_repayment=math.ceil(float(total_coop)/float(selected_Duration))
+
+	expected_salary_balance=float(member.gross_pay)-float(total_debit)-float(monthly_repayment)
+
+	button_enabled=False
+	if not standing_order_total:
+		messages.error(request,"Members Standing Order Not set")
+
+	if not member.gross_pay:
+		messages.error(request,"Members Gross Pay Not set")
+	
+	if standing_order_total or member.gross_pay:
+		button_enabled=True
+	
+
+	if request.method == "POST":
+		tdate=get_current_date(now)
+		ticket=get_ticket()
+	
+		
+		certification_officer_id=request.POST.get('certification_officers')
+		certification_officer=CertificationOfficers.objects.get(id=certification_officer_id)	
+		comments=request.POST.get("comments")
+		if not comments:
+			messages.error(request,"Comment is Missing")
+			return HttpResponseRedirect(reverse('membership_commodity_loan_Company_products_proceed',args=(mem_pk,comp_pk)))
+		applicant=Members_Commodity_Loam_Application(ticket=ticket,member=queryset[0],
+											company_price=total_comp,
+											coop_price=total_coop,
+											interest=total_interest,
+											admin_charge=total_admin_charge,
+											duration=selected_Duration,
+											repayment=expected_salary_balance,
+											comments=comments,
+											certification_officer=certification_officer,
+											processed_by=processed_by,
+											status=status,
+											tdate=tdate,
+										)
+		applicant.save()
+	
+		for item in standing_orders:
+			description=item.transaction.transaction.name
+			value=item.amount
+			Members_Commodity_Loam_Application_Settings(ticket=ticket,applicant=applicant,description=description,value=value).save()
+		
+		for item in loans:
+			description=item.transaction.name
+			value=item.repayment
+			Members_Commodity_Loam_Application_Settings(ticket=ticket,applicant=applicant,description=description,value=value).save()
+		
+		for item in external_fascilities:
+			description=item.member.description
+			value=item.member.amount
+			Members_Commodity_Loam_Application_Settings(ticket=ticket,applicant=applicant,description=description,value=value).save()
+		
+		Members_Commodity_Loam_Products_Selection.objects.filter(product__company=company, member=member,status=status).update(ticket=ticket,status=status1)
+
+		return HttpResponseRedirect(reverse('deskofficer_home')) 
+	form.fields['comments'].initial='For your Consideration'
+	context={
+	'button_enabled':button_enabled,
+	'company':company,
+	'records':records,
+	'member':member,
+	'queryset':queryset,
+	'form':form,
+	'total_coop':total_coop,
+	'total_comp':total_comp,
+	'total_interest':total_interest,
+	'total_admin_charge':total_admin_charge,
+	'selected_Duration':selected_Duration,
+	'monthly_repayment':monthly_repayment,
+	'total_admin_charge':total_admin_charge,
+	'standing_orders':standing_orders,
+	'loans':loans,
+	'salary':member.gross_pay,
+	'total_debit':total_debit,
+	'expected_salary_balance':expected_salary_balance,
+	'external_fascilities':external_fascilities,
+	'transaction_type':transaction_type,
+	}
+	return render(request,'deskofficer_templates/membership_commodity_loan_Company_products_proceed.html',context)
+
+
+
+def membership_commodity_loan_manage(request):
+	status=TransactionStatus.objects.get(title='UNTREATED')
+	certification_status=CertificationStatus.objects.get(title='PENDING')
+	records=Members_Commodity_Loam_Application.objects.filter(status=status,certification_status=certification_status)
+	context={
+	'records':records,
+	}
+	return render(request,'deskofficer_templates/membership_commodity_loan_manage.html',context)
+
+
+
+
+def membership_commodity_loan_manage_delete(request,pk):
+	record=Members_Commodity_Loam_Application.objects.get(id=pk)
+	item=Members_Commodity_Loam_Products_Selection.objects.filter(ticket=record.ticket)
+	item.delete()
+	return HttpResponseRedirect(reverse('membership_commodity_loan_manage'))
+
+
+def membership_commodity_loan_manage_details(request,pk):
+	record=Members_Commodity_Loam_Application.objects.get(id=pk)
+
+	records=Members_Commodity_Loam_Products_Selection.objects.filter(ticket=record.ticket)
+	
+	context={
+	'full_name':records[0].member.get_full_name,
+	'records':records,
+	}
+	return render(request,'deskofficer_templates/membership_commodity_loan_manage_details.html',context)
+
+
+
+def membership_commodity_loan_manage_details_reset_Confirmation(request,pk):
+	title = "Are you sure you want to reset this Product"
+	record=Members_Commodity_Loam_Products_Selection.objects.get(id=pk)
+	context={
+	'record':record,
+	'title':title,
+	}
+	return render(request,'deskofficer_templates/membership_commodity_loan_manage_details_reset_Confirmation.html',context)
+
+
+def membership_commodity_loan_manage_details_delete(request,pk):
+	processed_by=CustomUser.objects.get(id=request.user.id)
+	status=TransactionStatus.objects.get(title='UNTREATED')
+	status1=TransactionStatus.objects.get(title='TREATED')
+
+	record=Members_Commodity_Loam_Products_Selection.objects.get(id=pk)
+	ticket=record.ticket
+	tdate=record.tdate
+	member=record.member
+
+	query_item=Members_Commodity_Loam_Application.objects.get(ticket=ticket)
+	certification_officer=query_item.certification_officer
+	comments=query_item.comments
+
+	record.delete()
+
+	if not Members_Commodity_Loam_Products_Selection.objects.filter(ticket=ticket).exists():
+		return HttpResponseRedirect(reverse('membership_commodity_loan_manage'))
+
+	queryset=Members_Commodity_Loam_Products_Selection.objects.filter(ticket=ticket).order_by("-duration")
+	
+	querysum=Members_Commodity_Loam_Products_Selection.objects.filter(ticket=ticket).aggregate(total_coop=Sum('coop_price'),total_comp=Sum('company_price'),total_interest=Sum('interest'),total_admin_charge=Sum('admin_charge'))
+	
+	transaction_type=queryset[0].product.product.category.transaction.name
+
+	standing_order_total=0
+	standing_orders =StandingOrderAccounts.objects.filter(transaction__member=member,transaction__transaction__source__title="SAVINGS")
+	if standing_orders:
+		standing_order_sum=StandingOrderAccounts.objects.filter(transaction__member=member,transaction__transaction__source__title="SAVINGS").aggregate(total_amount=Sum('amount'))
+		standing_order_total=standing_order_sum['total_amount']
+	
+	loan_total=0
+	loans=LoansDisbursed.objects.filter(member=member).filter(Q(balance__lt=0))
+	if loans:
+		loan_sum=LoansDisbursed.objects.filter(member=member).filter(Q(balance__lt=0)).aggregate(total_amount=Sum('repayment'))
+		loan_total=loan_sum['total_amount']
+
+	external_fascility_total=0
+	external_fascilities=ExternalFascilitiesMain.objects.filter(member__member=member,status=status)
+	if external_fascilities:
+		external_fascility_sum=ExternalFascilitiesMain.objects.filter(member__member=member,status=status).aggregate(total_amount=Sum('member__amount'))
+		external_fascility_total=external_fascility_sum['total_amount']
+	
+
+	total_debit=float(standing_order_total) + float(loan_total) + float(external_fascility_total)
+	
+	total_coop=querysum['total_coop']
+	total_comp=querysum['total_comp']
+	total_interest=querysum['total_interest']
+	total_admin_charge=querysum['total_admin_charge']
+
+	selected_Duration=queryset[0].duration
+	monthly_repayment=math.ceil(float(total_coop)/float(selected_Duration))
+
+	expected_salary_balance=float(member.gross_pay)-float(total_debit)-float(monthly_repayment)
+
+
+	applicant=Members_Commodity_Loam_Application(ticket=ticket,member=queryset[0],
+											company_price=total_comp,
+											coop_price=total_coop,
+											interest=total_interest,
+											admin_charge=total_admin_charge,
+											duration=selected_Duration,
+											repayment=expected_salary_balance,
+											comments=comments,
+											certification_officer=certification_officer,
+											processed_by=processed_by,
+											status=status,
+											tdate=tdate,
+										)
+	applicant.save()
+	
+	for item in standing_orders:
+		description=item.transaction.transaction.name
+		value=item.amount
+		Members_Commodity_Loam_Application_Settings(ticket=ticket,applicant=applicant,description=description,value=value).save()
+	
+	for item in loans:
+		description=item.transaction.name
+		value=item.repayment
+		Members_Commodity_Loam_Application_Settings(ticket=ticket,applicant=applicant,description=description,value=value).save()
+	
+	for item in external_fascilities:
+		description=item.member.description
+		value=item.member.amount
+		Members_Commodity_Loam_Application_Settings(ticket=ticket,applicant=applicant,description=description,value=value).save()
+	
+	return HttpResponseRedirect(reverse('membership_commodity_loan_manage_details',args=(applicant.pk,)))
+
+
+def membership_commodity_loan_manage_details_edit(request,pk):
+	status=TransactionStatus.objects.get(title='UNTREATED')
+	form=membership_commodity_loan_Company_products_details_Form(request.POST or None)
+	record=Members_Commodity_Loam_Products_Selection.objects.get(id=pk)
+	
+	Members_Commodity_Loam_Products_Selection.objects.filter(ticket=record.ticket).update(status=status)
+	
+	item=Members_Commodity_Loam_Application.objects.get(ticket=record.ticket)
+	member=item.member.member.pk
+	company=item.member.product.company.pk
+	
+
+	item.delete()
+	return HttpResponseRedirect(reverse('membership_commodity_loan_Company_products',args=(member,company)))
+
+
+
+def membership_commodity_loan_form_sales(request):
+	context={
+
+	}
+	return render(request,'deskofficer_templates/membership_commodity_loan_form_sales.html',context)
+
+
+def ProformaInvoicedCommodityLoanSearch(request):
+	DataCapture=DataCaptureManager.objects.first()
+	title="Proforma Invoiced Commodity"
+	form = searchForm(request.POST or None)
+	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
+	return render(request,'deskofficer_templates/ProformaInvoicedCommodityLoanSearch.html',{'form':form,'title':title,'user_level':user_level.userlevel.title,})
+
+
+def ProformaInvoicedCommodityLoan_list_load(request):
+	DataCapture=DataCaptureManager.objects.first()
+	title="Proforma Commodity Loan"
+	form = searchForm(request.POST)
+	members=[]
+	if request.method == "POST":
+		if request.POST.get("title")=="":
+			return HttpResponseRedirect(reverse('ProformaInvoicedCommodityLoanSearch'))
+
+		status=MembershipStatus.objects.get(title="ACTIVE")
+		form = searchForm(request.POST)
+		members=searchMembers(form['title'].value(),status)
+
+	
+	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
+
+	context={
+	'user_level':user_level.userlevel.title,
+	'members':members,
+	'title':title.upper(),
+	'DataCapture':DataCapture,
+	}
+	return render(request,'deskofficer_templates/ProformaInvoicedCommodityLoan_list_load.html',context)
+
+
+
+def Company_add(request,pk):
+	if request.method =='POST':
+		company=request.POST.get('company')
+		if not company:
+			messages.error(request,'Company Name Missing')
+			return HttpResponseRedirect(reverse('Company_add'))
+		Companies(title=company).save()
+		
+		return HttpResponseRedirect(reverse('ProformaInvoicedCommodityLoan_Invoice',args=(pk,))) 
+
+	context={
+
+	}
+	return render(request,'deskofficer_templates/Company_add.html',context)
+
+
+def ProformaInvoicedCommodityLoan_Invoice(request,pk):
+	form=ProformaInvoicedCommodityLoan_details_Form(request.POST or None)
+	status=TransactionStatus.objects.get(title="UNTREATED")
+	member=Members.objects.get(id=pk)
+	records=Customized_Commodity_Loan_Application_Summary.objects.filter(status=status,member=member)
+	
+	
+
+	if request.method == 'POST':
+		company_id=request.POST.get('company')
+		company=Companies.objects.get(id=company_id)
+		processed_by=CustomUser.objects.get(id=request.user.id)
+		transaction=TransactionTypes.objects.get(code='206')
+		invoice=request.POST.get('invoice')
+		invoice_date=request.POST.get('invoice_date')
+
+		date_format = '%Y-%m-%d'
+		dtObj = datetime.datetime.strptime(invoice_date, date_format)
+		invoice_date=get_current_date(dtObj)
+
+
+		tdate=get_current_date(now)
+		if not ProformaInvoice.objects.all().exists():
+			_invoice=ProformaInvoice(invoice=1)
+			_invoice.save()
+		else:
+			_invoice=ProformaInvoice.objects.first()
+		invoice=str(invoice) + "-" + str(_invoice.invoice).zfill(5)
+		_invoice.invoice=int(_invoice.invoice)+1
+		_invoice.save()
+		
+		queryset=Customized_Commodity_Loan_Application_Summary(member=member,
+																company=company,
+																invoice=invoice,
+																transaction=transaction,
+																tdate=tdate,processed_by=processed_by,
+																invoice_date=invoice_date,status=status,
+																)
+		queryset.save()	
+		return HttpResponseRedirect(reverse('ProformaInvoicedCommodityLoan_Invoice',args=(pk,)))
+	form.fields['invoice_date'].initial=now
+	context={
+	'form':form,
+	'records':records,
+
+	'member':member,
+	}
+	return render(request,'deskofficer_templates/ProformaInvoicedCommodityLoan_Invoice.html',context)
+
+
+
+def ProformaInvoicedCommodityLoan_details(request,pk):
+	form=ProformaInvoicedCommodityLoan_details_Form(request.POST or None)
+	record=Customized_Commodity_Loan_Application_Summary.objects.get(id=pk)
+	queryset=Customized_Commodity_Loan_Application_Details.objects.filter(applicant=record)
+	query_sum=Customized_Commodity_Loan_Application_Details.objects.filter(applicant=record).aggregate(total=Sum('total'),total_item=Sum('quantity'))
+	total_amount=query_sum['total']
+	total_item=query_sum['total_item']
+
+
+	applicant=Customized_Commodity_Loan_Application_Payslip.objects.filter(applicant=record).first()
+
+
+	if request.method == "POST":
+		invoice=record.invoice
+		processed_by=CustomUser.objects.get(id=request.user.id)
+		unit_price=request.POST.get('unit_price')
+		product_name=request.POST.get('product_name')
+		details=request.POST.get('details')
+		quantity=request.POST.get('quantity')
+		total=float(quantity)*float(unit_price)
+		tdate=get_current_date(now)
+		status=TransactionStatus.objects.get(title='UNTREATED')
+		Customized_Commodity_Loan_Application_Details(invoice=invoice,applicant=record,
+													product_name=product_name,unit_price=unit_price,
+													details=details,quantity=quantity,processed_by=processed_by,
+													total=total,tdate=tdate,status=status,
+													).save()
+		return HttpResponseRedirect(reverse('ProformaInvoicedCommodityLoan_details', args=(pk,)))
+	context={
+	'form':form,
+	'total_amount':total_amount,
+	'total_item':total_item,
+	'record':record,
+	'applicant':applicant,
+	'queryset':queryset,
+	}
+	return render(request,'deskofficer_templates/ProformaInvoicedCommodityLoan_details.html',context)
+
+
+def ProformaInvoicedCommodityLoan_details_delete(request,pk):
+	record=Customized_Commodity_Loan_Application_Details.objects.get(id=pk)
+	return_pk=record.applicant.id
+	record.delete()
+	return HttpResponseRedirect(reverse('ProformaInvoicedCommodityLoan_details',args=(return_pk,)))
+
+
+def ProformaInvoicedCommodityLoan_details_payslip_analysis(request,pk):
+	form=ProformaInvoicedCommodityLoan_details_payslip_analysis_form(request.POST or None)
+	applicant=Customized_Commodity_Loan_Application_Summary.objects.get(id=pk)
+
+	
+	status = TransactionStatus.objects.get(title='UNTREATED')
+	
+	record=[]
+	if Customized_Commodity_Loan_Application_Payslip.objects.filter(applicant=applicant).exists():
+		record=Customized_Commodity_Loan_Application_Payslip.objects.filter(applicant=applicant).first()
+
+	if request.method == 'POST':
+
+		tdate=get_current_date(now)
+		invoice=applicant.invoice
+		processed_by=CustomUser.objects.get(id=request.user.id)
+		period = request.POST.get('period')
+		date_format = '%Y-%m-%d'
+		dtObj = datetime.datetime.strptime(period, date_format)
+		period=get_current_date(dtObj)
+
+		gross_pay=float(request.POST.get('gross_pay'))
+		net_pay=float(request.POST.get('net_pay'))
+
+		if not gross_pay and not net_pay:
+			messages.error(request,'Grosspay and net_pay Missing')
+		elif not gross_pay:
+			messages.error(request,'Grosspay is Missing')
+		elif not net_pay:
+			messages.error(request,'Net pay Missing')
+
+		elif gross_pay and net_pay:
+			if record:
+				record.gross_pay=gross_pay
+				record.net_pay=net_pay
+				record.period=period
+				record.tdate=tdate
+				record.processed_by=processed_by
+				record.save()
+				messages.success(request,'Record Successfully Update')
+			else:
+				Customized_Commodity_Loan_Application_Payslip(applicant=applicant,period=period,
+															gross_pay=gross_pay,net_pay=net_pay,
+															processed_by=processed_by,invoice=invoice,
+															tdate=tdate,status=status,
+															).save()
+				messages.success(request,'Record Successfully Added')
+		return HttpResponseRedirect(reverse('ProformaInvoicedCommodityLoan_details',args=(pk,)))
+		
+	form.fields['period'].initial=now
+	if record:
+		form.fields['gross_pay'].initial=record.gross_pay
+		form.fields['net_pay'].initial=record.net_pay
+		form.fields['period'].initial=record.period
+	context={
+	'form':form,
+	'record':record,
+	}
+	return render(request,'deskofficer_templates/ProformaInvoicedCommodityLoan_details_payslip_analysis.html',context)
+
+
+def ProformaInvoicedCommodityLoan_details_preview(request,pk):
+	form=ProformaInvoicedCommodityLoan_details_preview_Form(request.POST or None)
+	record=Customized_Commodity_Loan_Application_Summary.objects.get(id=pk)
+
+	queryset=Customized_Commodity_Loan_Application_Details.objects.filter(applicant=record)
+	query_sum=Customized_Commodity_Loan_Application_Details.objects.filter(applicant=record).aggregate(total=Sum('total'),total_item=Sum('quantity'))
+	total_amount=query_sum['total']
+	total_item=query_sum['total_item']
+
+	contributions=0
+	if StandingOrderAccounts.objects.filter(transaction__member=record.member,transaction__transaction__source__title="SAVINGS").exists():
+		query_sum=StandingOrderAccounts.objects.filter(transaction__member=record.member,transaction__transaction__source__title="SAVINGS").aggregate(total=Sum('amount'))
+		contributions=query_sum['total']
+
+	if not Customized_Commodity_Loan_Application_Payslip.objects.filter(applicant=record).exists():
+		messages.error(request, "Current Payslip Details missing")
+		return HttpResponseRedirect(reverse('ProformaInvoicedCommodityLoan_details',args=(pk,)))
+	salary_record=Customized_Commodity_Loan_Application_Payslip.objects.filter(applicant=record).first()
+	duration=record.transaction.duration
+	interest=(float(record.transaction.interest_rate)/100)* float(total_amount)
+	monthly_repayment=math.ceil(float(total_amount)/float(duration))
+	
+	balance = float(salary_record.net_pay) -float(contributions)+ float(monthly_repayment)
+	
+	if request.method == 'POST':
+		status1=TransactionStatus.objects.get(title="TREATED")
+		certification_officer_id=request.POST.get('certification_officers')
+		certification_officer=CertificationOfficers.objects.get(id=certification_officer_id)
+		comments=request.POST.get('comments')
+		
+		record.quantity=total_item
+		record.total_amount=total_amount
+		record.total_amount=total_amount
+		record.comments=comments
+		record.repayment=monthly_repayment
+		record.duration=duration
+		record.certification_officer=certification_officer
+		record.interest=interest
+		record.status=status1
+		record.save()
+		return HttpResponseRedirect(reverse('deskofficer_home'))
+
+	context={
+	'form':form,
+	'salary_record':salary_record,
+	'record':record,
+	'queryset':queryset,
+	'total_amount':total_amount,
+	'total_item':total_item,
+	'contributions':contributions,
+	'monthly_repayment':monthly_repayment,
+	'balance':balance,
+	}
+	return render(request,'deskofficer_templates/ProformaInvoicedCommodityLoan_details_preview.html',context)
+
+
+#################################################################
+################ membership_essential_commodity #################
+#################################################################
+
+def membership_essential_commodity_loan_search(request):
+	DataCapture=DataCaptureManager.objects.first()
+	title="Search Membership Request Commodity"
+	form = searchForm(request.POST or None)
+	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
+	return render(request,'deskofficer_templates/membership_essential_commodity_loan_search.html',{'form':form,'title':title,'user_level':user_level.userlevel.title,})
+
+
+def membership_essential_commodity_loan_list_load(request):
+	DataCapture=DataCaptureManager.objects.first()
+	title="Essential Commodity Loan"
+	form = searchForm(request.POST)
+	members=[]
+	if request.method == "POST":
+		if request.POST.get("title")=="":
+			return HttpResponseRedirect(reverse('membership_essential_commodity_loan_search'))
+
+		status=MembershipStatus.objects.get(title="ACTIVE")
+		form = searchForm(request.POST)
+		members=searchMembers(form['title'].value(),status)
+
+	
+	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
+
+	context={
+	'user_level':user_level.userlevel.title,
+	'members':members,
+	'title':title,
+	'DataCapture':DataCapture,
+	}
+	return render(request,'deskofficer_templates/membership_essential_commodity_loan_list_load.html',context)
+
+
+def membership_essential_commodity_loan_products_load(request,pk):
+	DataCapture=DataCaptureManager.objects.first()
+	title="Essential Commodity Loan"
+	member=Members.objects.get(id=pk)
+	status=MembershipStatus.objects.get(title="ACTIVE")
+	item_status=TransactionStatus.objects.get(title="UNTREATED")
+	period=[]
+	if Dedicated_Commodity_Period.objects.filter(status=status).exists():
+		period=Dedicated_Commodity_Period.objects.get(status=status)
+	
+	selected_items=[]
+	button_enabled=False
+	if period:
+		selected_items=Essential_Commodity_Product_Select.objects.filter(member=member,product__period=period,status=item_status)
+	
+	if selected_items:
+		button_enabled=True
+		
+	records=[]
+	if period:
+		records=Dedicated_Commodity_Price_List.objects.filter(period=period,status=status)
+	
+
+	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
+
+	context={
+	'user_level':user_level.userlevel.title,
+	'records':records,
+	'title':title,
+	'member':member,
+	'period':period,
+	'selected_items':selected_items,
+	'button_enabled':button_enabled,
+	'DataCapture':DataCapture,
+	}
+	return render(request,'deskofficer_templates/membership_essential_commodity_loan_products_load.html',context)
+
+
+def membership_essential_commodity_loan_products_select(request,pk, mem_pk):
+	form=Essential_Commodity_Product_Select_Form(request.POST or None)
+	DataCapture=DataCaptureManager.objects.first()
+	title="Essential Commodity Loan"
+	member=Members.objects.get(id=mem_pk)
+	status=MembershipStatus.objects.get(title="ACTIVE")
+	
+	
+	record=Dedicated_Commodity_Price_List.objects.get(id=pk)
+	
+
+	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
+	tdate=get_current_date(now)
+	processed_by=CustomUser.objects.get(id=request.user.id)
+	status=TransactionStatus.objects.get(title="UNTREATED")
+
+	if request.method == 'POST':
+		quantity=request.POST.get("quantity")
+		if not quantity or quantity == '0':
+			messages.error(request,"Quantity is Missing")
+			return HttpResponseRedirect(reverse('membership_essential_commodity_loan_products_select',args=(pk, mem_pk)))
+		
+		total=float(record.selling_price) * float(quantity)
+		interest=float(record.get_interest)* float(quantity)
+		if Essential_Commodity_Product_Select.objects.filter(member=member,product=record).exists():
+			record_exist=Essential_Commodity_Product_Select(member=member,product=record)
+			record_exist.quantity=quantity
+			record_exist.total=total
+			record_exist.save()
+			return HttpResponseRedirect(reverse('membership_essential_commodity_loan_products_load',args=(mem_pk,)))
+
+		Essential_Commodity_Product_Select(interest=interest,member=member,product=record,quantity=quantity,total=total,processed_by=processed_by,tdate=tdate,status=status).save()
+		return HttpResponseRedirect(reverse('membership_essential_commodity_loan_products_load',args=(mem_pk,)))
+
+	form.fields['product_name'].initial=record.product.product_name
+	form.fields['details'].initial=record.product.details
+	form.fields['unit_price'].initial=record.selling_price
+	context={
+	'user_level':user_level.userlevel.title,
+	'member':member,
+	'form':form,
+	'record':record,
+	'title':title,
+	'DataCapture':DataCapture,
+	}
+	return render(request,'deskofficer_templates/membership_essential_commodity_loan_products_select.html',context)
+
+
+def membership_essential_commodity_loan_products_remove(request,pk, mem_pk):
+	record=Essential_Commodity_Product_Select.objects.get(id=pk)
+	record.delete()
+	return HttpResponseRedirect(reverse('membership_essential_commodity_loan_products_load',args=(mem_pk,)))
+
+def membership_essential_commodity_loan_products_update(request,pk, mem_pk):
+	form=Essential_Commodity_Product_Select_Form(request.POST or None)
+	DataCapture=DataCaptureManager.objects.first()
+	title="Essential Commodity Loan"
+	member=Members.objects.get(id=mem_pk)
+	
+	record=Essential_Commodity_Product_Select.objects.get(id=pk)
+
+	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
+	
+	if request.method == 'POST':
+		quantity=request.POST.get("quantity")
+		if not quantity or quantity == '0':
+			messages.error(request,"Quantity is Missing")
+			return HttpResponseRedirect(reverse('membership_essential_commodity_loan_products_select',args=(pk, mem_pk)))
+		
+		total=float(record.product.selling_price) * float(quantity)
+	
+		record.quantity=quantity
+		record.total=total
+		record.save()
+		return HttpResponseRedirect(reverse('membership_essential_commodity_loan_products_load',args=(mem_pk,)))
+
+	
+	form.fields['product_name'].initial=record.product.product.product_name
+	form.fields['details'].initial=record.product.product.details
+	form.fields['unit_price'].initial=record.product.selling_price
+	form.fields['quantity'].initial=record.quantity
+	context={
+	'user_level':user_level.userlevel.title,
+	'member':member,
+	'form':form,
+	'record':record,
+	'title':title,
+	'DataCapture':DataCapture,
+	}
+	return render(request,'deskofficer_templates/membership_essential_commodity_loan_products_select.html',context)
+
+
+def membership_essential_commodity_loan_products_selection_preview(request,pk):
+	form=Essential_Commodity_Product_Selection_Summary_Form(request.POST or None)
+	DataCapture=DataCaptureManager.objects.first()
+	title="Essential Commodity Loan"
+	member=Members.objects.get(id=pk)
+	transaction=TransactionTypes.objects.get(code='205')
+	duration=transaction.duration
+	status=MembershipStatus.objects.get(title="ACTIVE")
+	
+	period=[]
+	if Dedicated_Commodity_Period.objects.filter(status=status).exists():
+		period=Dedicated_Commodity_Period.objects.get(status=status)
+	
+	selected_items=[]
+	total_amount=0
+	total_interest=0
+	if period:
+		records=Essential_Commodity_Product_Select.objects.filter(member=member,product__period=period)
+		queryset=Essential_Commodity_Product_Select.objects.filter(member=member,product__period=period).aggregate(total=Sum('total'),total_item=Sum('quantity'),total_interest=Sum('interest'))
+		total_amount=queryset['total']
+		total_item=queryset['total_item']
+		total_interest=queryset['total_interest']
+	
+	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
+	
+
+	repayment=math.ceil(float(total_amount)/float(duration))
+
+	if request.method == 'POST':
+		ticket=get_ticket()
+		approval_status=ApprovalStatus.objects.get(title='PENDING')
+		tdate=get_current_date(now)
+		if Essential_Commodity_Product_Select.objects.filter(member=member,product__period=period,quantity=0).exists():
+			messages.error(request,"Please complete product selection as some has invalid amount specification")
+			return HttpResponseRedirect(reverse('membership_essential_commodity_loan_products_selection_preview', args=(pk,)))
+		
+		officer_id=request.POST.get('approval_officers')
+		approval_officer=ApprovalOfficers.objects.get(id=officer_id)
+		comments=request.POST.get('comments')
+		processed_by=CustomUser.objects.get(id=request.user.id)
+		status=TransactionStatus.objects.get(title='UNTREATED')
+		status1=TransactionStatus.objects.get(title='TREATED')
+		
+
+		Essential_Commodity_Product_Selection_Summary(interest=total_interest,ticket=ticket,transaction=transaction,
+														product=records[0],
+														quantity=total_item,
+														total=total_amount,
+														repayment=repayment,
+														tdate=tdate,status=status,
+														approval_officer=approval_officer,
+														comments=comments,
+														processed_by=processed_by,
+														duration=duration,
+														approval_status=approval_status,
+														).save()
+		
+		Essential_Commodity_Product_Select.objects.filter(member=member,product__period=period).update(ticket=ticket,status=status1)
+		return HttpResponseRedirect(reverse('membership_essential_commodity_loan_products_load',args=(pk,)))
+	
+	form.fields['comments'].initial='For your Consideration'
+	context={
+	'user_level':user_level.userlevel.title,
+	'member':member,
+	'form':form,
+	'records':records,
+	'title':title,
+	'period':period,
+	'total_item':total_item,
+	'total_amount':total_amount,
+	'total_interest':total_interest,
+	'transaction':transaction,
+	'repayment':repayment,
+	'DataCapture':DataCapture,
+	}
+	return render(request,'deskofficer_templates/membership_essential_commodity_loan_products_selection_preview.html',context)
+
+
+
+
+def Essential_Commodity_Product_Selection_Active(request):
+	status=TransactionStatus.objects.get(title="UNTREATED")
+	approval_status=ApprovalStatus.objects.get(title='PENDING')
+	records=[]
+	queryset=Dedicated_Commodity_Period.objects.all()
+	if request.method == 'POST':
+		period_id=request.POST.get('periods')
+		periods=Dedicated_Commodity_Period.objects.get(id=period_id)
+		records=Essential_Commodity_Product_Selection_Summary.objects.filter(
+									product__product__period=periods,
+									status=status,approval_status=approval_status)
+	
+	context={
+	'records':records,
+	'queryset':queryset,
+	}
+	return render(request,'deskofficer_templates/Essential_Commodity_Product_Selection_Active.html',context)
+
+
+def Essential_Commodity_Product_Selection_Active_Preview(request,pk):
+	queryset=Essential_Commodity_Product_Selection_Summary.objects.get(id=pk)
+	records=Essential_Commodity_Product_Select.objects.filter(member=queryset.product.member,product__period=queryset.product.product.period)
+	
+	total_query=Essential_Commodity_Product_Select.objects.filter(member=queryset.product.member,product__period=queryset.product.product.period).aggregate(total=Sum('total'),total_item=Sum('quantity'))
+	total_amount=total_query['total']
+	total_item=total_query['total_item']
+
+	context={
+	'records':records,
+	'queryset':queryset,
+	'total_amount':total_amount,
+	'total_item':total_item,
+	}
+	return render(request,'deskofficer_templates/Essential_Commodity_Product_Selection_Active_Preview.html',context)
+
+
+
+def Essential_Commodity_Product_Selection_Active_Edit(request,pk,update_pk):
+	form=Essential_Commodity_Product_Select_Form(request.POST or None)	
+	record=Essential_Commodity_Product_Select.objects.get(id=pk)
+
+	form.fields['product_name'].initial=record.product.product.product_name
+	form.fields['details'].initial=record.product.product.details
+	form.fields['unit_price'].initial=record.product.selling_price
+	form.fields['quantity'].initial=record.quantity
+
+	if request.method == 'POST':
+		queryset=Essential_Commodity_Product_Selection_Summary.objects.get(id=update_pk)
+		
+		quantity=request.POST.get('quantity')
+		total=float(record.product.selling_price) * float(quantity)
+		record.quantity=quantity
+		record.total=total
+		record.save()
+		
+		total_query=Essential_Commodity_Product_Select.objects.filter(member=queryset.product.member,product__period=queryset.product.product.period).aggregate(total=Sum('total'),total_item=Sum('quantity'))
+		total_amount=total_query['total']
+		total_item=total_query['total_item']
+
+		queryset.product=record
+		queryset.quantity=total_item
+		queryset.save()
+	
+		return HttpResponseRedirect(reverse('Essential_Commodity_Product_Selection_Active_Preview',args=(update_pk,)))
+	context={
+	'form':form,
+	}
+	return render(request,'deskofficer_templates/Essential_Commodity_Product_Selection_Active_Edit.html',context)
+
+
+def Essential_Commodity_Product_Selection_Active_Delete(request,pk,update_pk):
+	transaction=TransactionTypes.objects.get(code='205')
+	duration=transaction.duration
+	status=TransactionStatus.objects.get(title="UNTREATED")
+	processed_by=CustomUser.objects.get(id=request.user.id)
+	approval_status=ApprovalStatus.objects.get(title='PENDING')
+
+
+	record_exist=Essential_Commodity_Product_Selection_Summary.objects.get(id=update_pk)
+	approval_officer=record_exist.approval_officer
+	comments=record_exist.comments
+	tdate=record_exist.tdate
+	
+	record=Essential_Commodity_Product_Select.objects.get(id=pk)
+	member=record.member
+	period=record.product.period
+	
+	record.delete()
+
+	
+	if Essential_Commodity_Product_Select.objects.filter(member=member,product__period=period).exists():
+		record=Essential_Commodity_Product_Select.objects.filter(member=member,product__period=period).first()
+		
+		total_query=Essential_Commodity_Product_Select.objects.filter(member=member,product__period=period).aggregate(total=Sum('total'),total_item=Sum('quantity'))
+		total_amount=total_query['total']
+		total_item=total_query['total_item']
+
+		return_q=Essential_Commodity_Product_Selection_Summary(transaction=transaction,
+														product=record,
+														quantity=total_item,
+														tdate=tdate,status=status,
+														approval_officer=approval_officer,
+														comments=comments,
+														processed_by=processed_by,
+														duration=duration,
+														approval_status=approval_status,
+														)
+		return_q.save()
+	
+	
+		return HttpResponseRedirect(reverse('Essential_Commodity_Product_Selection_Active_Preview',args=(return_q.pk,)))
+	return HttpResponseRedirect(reverse('Essential_Commodity_Product_Selection_Active'))
+	context={
+	'form':form,
+	}
+	return render(request,'deskofficer_templates/Essential_Commodity_Product_Selection_Active_Edit.html',context)
+
+
+def Essential_Commodity_Loan_Request_Approved_List_Load(request):
+	status=TransactionStatus.objects.get(title='UNTREATED')
+	approval_status=ApprovalStatus.objects.get(title='PENDING')
+	records=Essential_Commodity_Product_Selection_Summary.objects.filter(~Q(approval_status=approval_status)).filter(status=status)
+	context={
+	'records':records,
+	}
+	return render(request,'deskofficer_templates/Essential_Commodity_Loan_Request_Approved_List_Load.html',context)
+
+
+def Essential_Commodity_Loan_Request_Approved_Details(request,pk):
+	form =Essential_Commodity_Loan_Request_Approved_Process_Form(request.POST or None)
+	record=Essential_Commodity_Product_Selection_Summary.objects.get(id=pk)
+	tdate=get_current_date(now)
+	transaction=TransactionTypes.objects.get(code='205')
+	
+	status=TransactionStatus.objects.get(title='TREATED')
+	processed_by=CustomUser.objects.get(id=request.user.id)
+
+
+	button_enabled=False
+	if record.approval_status.title=='APPROVED':
+		button_enabled=True
+
+	if request.method == 'POST':
+	
+		my_id=record.product.member.get_member_Id
+		
+		member=record.product.member
+		
+		loan_code=transaction.code
+		loan_number_selector_id=LoanNumber.objects.first()
+		loan_number_selector=loan_number_selector_id.code
+
+		loan_date= str(now.year)[:1] + str(now.month)[:1]   
+		loan_number=str(loan_code) + str(my_id) + str(loan_date) + str(loan_number_selector).zfill(5)
+		loan_number_selector_id.code=int(loan_number_selector)+1
+		loan_number_selector_id.save()
+
+	
+		start_date_id=request.POST.get('start_date')
+		start_date=datetime.datetime.strptime(start_date_id, '%Y-%m-%d')	
+		stop_date = start_date+ relativedelta(months=int(record.duration))
+
+
+		if not start_date:
+			return HttpResponseRedirect(reverse('Essential_Commodity_Loan_Request_Approved_Process',args=(pk,)))
+		
+		particulars=transaction.name + " ITEMS COLLECTION" 
+		debit=record.total
+		credit=0
+		balance=-debit
+		repayment=record.repayment
+		duration=record.duration
+		interest=record.interest
+
+		
+		ledger_status=MembershipStatus.objects.get(title='ACTIVE')
+		queryset=PersonalLedger(tdate=tdate,member=member,transaction=transaction,account_number=loan_number,particulars=particulars,debit=debit,credit=credit,balance=balance,transaction_period=tdate,status=ledger_status)
+		queryset.save()
+
+
+		loan_record=LoansRepaymentBase(tdate=tdate,start_date=start_date,member=member,transaction=transaction,loan_number=loan_number,loan_amount=abs(balance),repayment=float(repayment),balance=balance,processed_by=processed_by,status=ledger_status)
+		loan_record.save()
+		
+		loan_record=LoansDisbursed(tdate=tdate,start_date=start_date,stop_date=stop_date,member=member,transaction=transaction,duration=duration,loan_number=loan_number,loan_amount=abs(balance),repayment=float(repayment),balance=balance,processed_by=processed_by,status=ledger_status)
+		loan_record.save()
+
+		# return HttpResponse("Ok")
+		record.status=status
+		record.save()
+
+		return HttpResponseRedirect(reverse('Essential_Commodity_Loan_Request_Approved_List_Load'))
+
+	form.fields['start_date'].initial= now + relativedelta(months=1)
+	context={
+	'form':form,
+	'record':record,
+	'button_enabled':button_enabled,
+	}
+	return render(request,'deskofficer_templates/Essential_Commodity_Loan_Request_Approved_Details.html',context)
+
+
+	
+
+############################################################
+##################### REPORTS      ########################
+############################################################
+
+
+
+############################################################
+##################### GENERAL SEARCH #######################
+############################################################
+def Members_General_Search(request):
+	status=MembershipStatus.objects.get(title='ACTIVE')
+	members=[]
+	if request.method == 'POST':
+		frm=request.POST.get("search")
+		members=generalMemberSearch(frm,status)
+
+		print(members)
+	return HttpResponse("OK")
 
 ############################################################
 ##################### ACTIVE LOANS ########################
 ############################################################
+
 def Load_Active_loans(request):
 	status=MembershipStatus.objects.get(title='ACTIVE')
 	records=LoansDisbursed.objects.filter(status=status)
@@ -8550,7 +9694,42 @@ def Transaction_Loan_Adjustment_Approval_list_Process(request,pk):
 	return HttpResponseRedirect(reverse('Transaction_Loan_Adjustment_Approval_list_Load'))
 
 
+def Essential_Commodity_Loan_Request_Approval(request):
+	approval_status=ApprovalStatus.objects.get(title='PENDING')
+	records=Essential_Commodity_Product_Selection_Summary.objects.filter(approval_status=approval_status)
+	context={
+	'records':records,
+	}
+	return render(request,'deskofficer_templates/SEO/Essential_Commodity_Loan_Request_Approval.html',context)
 
+
+def Essential_Commodity_Loan_Request_Approval_Details(request,pk):
+	form=Essential_Commodity_Loan_Request_Approval_Details_form(request.POST or None)
+	
+	record=Essential_Commodity_Product_Selection_Summary.objects.get(id=pk)
+	ticket=record.ticket
+	records=Essential_Commodity_Product_Select.objects.filter(ticket=ticket)
+	
+	if request.method == "POST":
+		tdate=get_current_date(now)
+		comment=request.POST.get("comment")
+		approval_status_id = request.POST.get('approval_status')
+		approval_status=ApprovalStatus.objects.get(id=approval_status_id)
+
+		record.approval_comment=comment
+		record.approval_status=approval_status
+		record.approval_date=tdate
+
+		record.save()
+		
+		return HttpResponseRedirect(reverse('Essential_Commodity_Loan_Request_Approval'))
+	form.fields['comment'].initial="APPROVED"
+	context={
+	'form':form,
+	'record':record,
+	'records':records,
+	}
+	return render(request,'deskofficer_templates/SEO/Essential_Commodity_Loan_Request_Approval_Details.html',context)
 
 ############################################################
 ##################### GENERAL REPORTS ######################

@@ -1,7 +1,7 @@
 {% load static %}
         <header class="header">
             <div class="page-brand">
-                <a class="link" href="index.html">
+                <a class="link" href="{% url 'deskofficer_home' %}">
                     <span class="brand">FETH II 
                         <span class="brand-tip"> CTCS</span>
                     </span>
@@ -15,10 +15,11 @@
                         <a class="nav-link sidebar-toggler js-sidebar-toggler"><i class="ti-menu"></i></a>
                     </li>
                     <li>
-                        <form class="navbar-search" action="javascript:;">
+                        <form class="navbar-search" action="{% url 'Members_General_Search' %}" method="POST">
+                             {% csrf_token %}
                             <div class="rel">
                                 <span class="search-icon"><i class="ti-search"></i></span>
-                                <input class="form-control" placeholder="Search here...">
+                                <input class="form-control" placeholder="Search here..." name='search'>
                             </div>
                         </form>
                     </li>
