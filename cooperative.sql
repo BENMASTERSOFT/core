@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 31, 2022 at 12:04 AM
+-- Generation Time: Feb 21, 2022 at 07:31 AM
 -- Server version: 10.4.21-MariaDB
 -- PHP Version: 7.3.31
 
@@ -685,7 +685,112 @@ INSERT INTO `auth_permission` (`id`, `name`, `content_type_id`, `codename`) VALU
 (621, 'Can add day_ end_ desk_ office_ transactions', 155, 'add_day_end_desk_office_transactions'),
 (622, 'Can change day_ end_ desk_ office_ transactions', 155, 'change_day_end_desk_office_transactions'),
 (623, 'Can delete day_ end_ desk_ office_ transactions', 155, 'delete_day_end_desk_office_transactions'),
-(624, 'Can view day_ end_ desk_ office_ transactions', 155, 'view_day_end_desk_office_transactions');
+(624, 'Can view day_ end_ desk_ office_ transactions', 155, 'view_day_end_desk_office_transactions'),
+(625, 'Can add monthly deduction generation headers', 156, 'add_monthlydeductiongenerationheaders'),
+(626, 'Can change monthly deduction generation headers', 156, 'change_monthlydeductiongenerationheaders'),
+(627, 'Can delete monthly deduction generation headers', 156, 'delete_monthlydeductiongenerationheaders'),
+(628, 'Can view monthly deduction generation headers', 156, 'view_monthlydeductiongenerationheaders'),
+(629, 'Can add monthly deduction generation heading', 157, 'add_monthlydeductiongenerationheading'),
+(630, 'Can change monthly deduction generation heading', 157, 'change_monthlydeductiongenerationheading'),
+(631, 'Can delete monthly deduction generation heading', 157, 'delete_monthlydeductiongenerationheading'),
+(632, 'Can view monthly deduction generation heading', 157, 'view_monthlydeductiongenerationheading'),
+(633, 'Can add monthly deduction list generated certified', 158, 'add_monthlydeductionlistgeneratedcertified'),
+(634, 'Can change monthly deduction list generated certified', 158, 'change_monthlydeductionlistgeneratedcertified'),
+(635, 'Can delete monthly deduction list generated certified', 158, 'delete_monthlydeductionlistgeneratedcertified'),
+(636, 'Can view monthly deduction list generated certified', 158, 'view_monthlydeductionlistgeneratedcertified'),
+(637, 'Can add monthly shop deduction certified', 159, 'add_monthlyshopdeductioncertified'),
+(638, 'Can change monthly shop deduction certified', 159, 'change_monthlyshopdeductioncertified'),
+(639, 'Can delete monthly shop deduction certified', 159, 'delete_monthlyshopdeductioncertified'),
+(640, 'Can view monthly shop deduction certified', 159, 'view_monthlyshopdeductioncertified'),
+(641, 'Can add monthly overdeductions refund', 160, 'add_monthlyoverdeductionsrefund'),
+(642, 'Can change monthly overdeductions refund', 160, 'change_monthlyoverdeductionsrefund'),
+(643, 'Can delete monthly overdeductions refund', 160, 'delete_monthlyoverdeductionsrefund'),
+(644, 'Can view monthly overdeductions refund', 160, 'view_monthlyoverdeductionsrefund'),
+(645, 'Can add termination_ types', 161, 'add_termination_types'),
+(646, 'Can change termination_ types', 161, 'change_termination_types'),
+(647, 'Can delete termination_ types', 161, 'delete_termination_types'),
+(648, 'Can view termination_ types', 161, 'view_termination_types'),
+(649, 'Can add member ship termination request', 162, 'add_membershipterminationrequest'),
+(650, 'Can change member ship termination request', 162, 'change_membershipterminationrequest'),
+(651, 'Can delete member ship termination request', 162, 'delete_membershipterminationrequest'),
+(652, 'Can view member ship termination request', 162, 'view_membershipterminationrequest'),
+(653, 'Can add commodity_ category', 163, 'add_commodity_category'),
+(654, 'Can change commodity_ category', 163, 'change_commodity_category'),
+(655, 'Can delete commodity_ category', 163, 'delete_commodity_category'),
+(656, 'Can view commodity_ category', 163, 'view_commodity_category'),
+(657, 'Can add non_ monetary_ loan_ settings', 164, 'add_non_monetary_loan_settings'),
+(658, 'Can change non_ monetary_ loan_ settings', 164, 'change_non_monetary_loan_settings'),
+(659, 'Can delete non_ monetary_ loan_ settings', 164, 'delete_non_monetary_loan_settings'),
+(660, 'Can view non_ monetary_ loan_ settings', 164, 'view_non_monetary_loan_settings'),
+(661, 'Can add commodity_ categories', 165, 'add_commodity_categories'),
+(662, 'Can change commodity_ categories', 165, 'change_commodity_categories'),
+(663, 'Can delete commodity_ categories', 165, 'delete_commodity_categories'),
+(664, 'Can view commodity_ categories', 165, 'view_commodity_categories'),
+(665, 'Can add commodity_ product_ list', 166, 'add_commodity_product_list'),
+(666, 'Can change commodity_ product_ list', 166, 'change_commodity_product_list'),
+(667, 'Can delete commodity_ product_ list', 166, 'delete_commodity_product_list'),
+(668, 'Can view commodity_ product_ list', 166, 'view_commodity_product_list'),
+(669, 'Can add companies', 167, 'add_companies'),
+(670, 'Can change companies', 167, 'change_companies'),
+(671, 'Can delete companies', 167, 'delete_companies'),
+(672, 'Can view companies', 167, 'view_companies'),
+(673, 'Can add company_ products', 168, 'add_company_products'),
+(674, 'Can change company_ products', 168, 'change_company_products'),
+(675, 'Can delete company_ products', 168, 'delete_company_products'),
+(676, 'Can view company_ products', 168, 'view_company_products'),
+(677, 'Can add members_ commodity_ loam_ products_ selection', 169, 'add_members_commodity_loam_products_selection'),
+(678, 'Can change members_ commodity_ loam_ products_ selection', 169, 'change_members_commodity_loam_products_selection'),
+(679, 'Can delete members_ commodity_ loam_ products_ selection', 169, 'delete_members_commodity_loam_products_selection'),
+(680, 'Can view members_ commodity_ loam_ products_ selection', 169, 'view_members_commodity_loam_products_selection'),
+(681, 'Can add members_ commodity_ loam_ application_ settings', 170, 'add_members_commodity_loam_application_settings'),
+(682, 'Can change members_ commodity_ loam_ application_ settings', 170, 'change_members_commodity_loam_application_settings'),
+(683, 'Can delete members_ commodity_ loam_ application_ settings', 170, 'delete_members_commodity_loam_application_settings'),
+(684, 'Can view members_ commodity_ loam_ application_ settings', 170, 'view_members_commodity_loam_application_settings'),
+(685, 'Can add members_ commodity_ loam_ application', 171, 'add_members_commodity_loam_application'),
+(686, 'Can change members_ commodity_ loam_ application', 171, 'change_members_commodity_loam_application'),
+(687, 'Can delete members_ commodity_ loam_ application', 171, 'delete_members_commodity_loam_application'),
+(688, 'Can view members_ commodity_ loam_ application', 171, 'view_members_commodity_loam_application'),
+(689, 'Can add dedicated_ commodity_ product_ list', 172, 'add_dedicated_commodity_product_list'),
+(690, 'Can change dedicated_ commodity_ product_ list', 172, 'change_dedicated_commodity_product_list'),
+(691, 'Can delete dedicated_ commodity_ product_ list', 172, 'delete_dedicated_commodity_product_list'),
+(692, 'Can view dedicated_ commodity_ product_ list', 172, 'view_dedicated_commodity_product_list'),
+(693, 'Can add dedicated_ commodity_ price_ list', 173, 'add_dedicated_commodity_price_list'),
+(694, 'Can change dedicated_ commodity_ price_ list', 173, 'change_dedicated_commodity_price_list'),
+(695, 'Can delete dedicated_ commodity_ price_ list', 173, 'delete_dedicated_commodity_price_list'),
+(696, 'Can view dedicated_ commodity_ price_ list', 173, 'view_dedicated_commodity_price_list'),
+(697, 'Can add dedicated_ commodity_ period', 174, 'add_dedicated_commodity_period'),
+(698, 'Can change dedicated_ commodity_ period', 174, 'change_dedicated_commodity_period'),
+(699, 'Can delete dedicated_ commodity_ period', 174, 'delete_dedicated_commodity_period');
+INSERT INTO `auth_permission` (`id`, `name`, `content_type_id`, `codename`) VALUES
+(700, 'Can view dedicated_ commodity_ period', 174, 'view_dedicated_commodity_period'),
+(701, 'Can add essential_ commodity_ product_ select', 175, 'add_essential_commodity_product_select'),
+(702, 'Can change essential_ commodity_ product_ select', 175, 'change_essential_commodity_product_select'),
+(703, 'Can delete essential_ commodity_ product_ select', 175, 'delete_essential_commodity_product_select'),
+(704, 'Can view essential_ commodity_ product_ select', 175, 'view_essential_commodity_product_select'),
+(705, 'Can add essential_ commodity_ product_ selection_ summary', 176, 'add_essential_commodity_product_selection_summary'),
+(706, 'Can change essential_ commodity_ product_ selection_ summary', 176, 'change_essential_commodity_product_selection_summary'),
+(707, 'Can delete essential_ commodity_ product_ selection_ summary', 176, 'delete_essential_commodity_product_selection_summary'),
+(708, 'Can view essential_ commodity_ product_ selection_ summary', 176, 'view_essential_commodity_product_selection_summary'),
+(709, 'Can add proforma invoice', 177, 'add_proformainvoice'),
+(710, 'Can change proforma invoice', 177, 'change_proformainvoice'),
+(711, 'Can delete proforma invoice', 177, 'delete_proformainvoice'),
+(712, 'Can view proforma invoice', 177, 'view_proformainvoice'),
+(713, 'Can add proforma invoiced commodity loan_ application_summary', 178, 'add_proformainvoicedcommodityloan_application_summary'),
+(714, 'Can change proforma invoiced commodity loan_ application_summary', 178, 'change_proformainvoicedcommodityloan_application_summary'),
+(715, 'Can delete proforma invoiced commodity loan_ application_summary', 178, 'delete_proformainvoicedcommodityloan_application_summary'),
+(716, 'Can view proforma invoiced commodity loan_ application_summary', 178, 'view_proformainvoicedcommodityloan_application_summary'),
+(717, 'Can add customized_ commodity_ loan_ application_ summary', 178, 'add_customized_commodity_loan_application_summary'),
+(718, 'Can change customized_ commodity_ loan_ application_ summary', 178, 'change_customized_commodity_loan_application_summary'),
+(719, 'Can delete customized_ commodity_ loan_ application_ summary', 178, 'delete_customized_commodity_loan_application_summary'),
+(720, 'Can view customized_ commodity_ loan_ application_ summary', 178, 'view_customized_commodity_loan_application_summary'),
+(721, 'Can add customized_ commodity_ loan_ application_ details', 179, 'add_customized_commodity_loan_application_details'),
+(722, 'Can change customized_ commodity_ loan_ application_ details', 179, 'change_customized_commodity_loan_application_details'),
+(723, 'Can delete customized_ commodity_ loan_ application_ details', 179, 'delete_customized_commodity_loan_application_details'),
+(724, 'Can view customized_ commodity_ loan_ application_ details', 179, 'view_customized_commodity_loan_application_details'),
+(725, 'Can add customized_ commodity_ loan_ application_ payslip', 180, 'add_customized_commodity_loan_application_payslip'),
+(726, 'Can change customized_ commodity_ loan_ application_ payslip', 180, 'change_customized_commodity_loan_application_payslip'),
+(727, 'Can delete customized_ commodity_ loan_ application_ payslip', 180, 'delete_customized_commodity_loan_application_payslip'),
+(728, 'Can view customized_ commodity_ loan_ application_ payslip', 180, 'view_customized_commodity_loan_application_payslip');
 
 -- --------------------------------------------------------
 
@@ -705,6 +810,22 @@ CREATE TABLE `cooperative_accountdeductions` (
   `transaction_status_id` int(11) NOT NULL,
   `tdate` date NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `cooperative_accountdeductions`
+--
+
+INSERT INTO `cooperative_accountdeductions` (`id`, `created_at`, `updated_at`, `ippis_no`, `name`, `amount`, `salary_institution_id`, `transaction_period_id`, `transaction_status_id`, `tdate`) VALUES
+(11, '2022-02-02 01:36:12.448867', '2022-02-02 01:36:12.448867', '00001', 'BEN IDAKA MAUREEN', '52500.00', 1, 3, 2, '2022-02-02'),
+(12, '2022-02-02 01:36:12.521516', '2022-02-02 01:36:12.521516', '00002', 'UCHENNA OKOLI OBIA', '83000.00', 1, 3, 2, '2022-02-02'),
+(13, '2022-02-02 01:36:12.589476', '2022-02-02 01:36:12.589476', '00003', 'NKONYELU OKONKWO E', '19334.00', 1, 3, 2, '2022-02-02'),
+(14, '2022-02-02 01:36:12.710400', '2022-02-02 01:36:12.710400', '00004', 'OPHELIA AMADI CHIB', '10000.00', 1, 3, 2, '2022-02-02'),
+(15, '2022-02-02 01:36:12.778361', '2022-02-02 01:36:12.778361', '00005', 'IKWUO NNACHI IJEM', '10000.00', 1, 3, 2, '2022-02-02'),
+(16, '2022-02-02 01:36:12.810336', '2022-02-02 01:36:12.810336', '00006', 'IFEOMA AGBOWO MARY', '7000.00', 1, 3, 2, '2022-02-02'),
+(17, '2022-02-02 01:36:12.868305', '2022-02-02 01:36:12.868305', '00015', 'OBASI ABBA DORCAS', '13000.00', 1, 3, 2, '2022-02-02'),
+(18, '2022-02-02 01:36:12.944338', '2022-02-02 01:36:12.944338', '00036', 'EMMANUEL ADIDU AME', '10000.00', 1, 3, 2, '2022-02-02'),
+(19, '2022-02-02 01:36:13.020377', '2022-02-02 01:36:13.020377', '233232', 'EMMANUEL ONWE CHIKE', '12000.00', 1, 3, 2, '2022-02-02'),
+(20, '2022-02-02 01:36:13.137767', '2022-02-02 01:36:13.137767', '342330.0', 'EMMANUEL NWOKE', '2000.00', 1, 3, 2, '2022-02-02');
 
 -- --------------------------------------------------------
 
@@ -795,7 +916,12 @@ INSERT INTO `cooperative_approvabletransactions` (`id`, `created_at`, `updated_a
 (6, '2021-12-16 13:29:43.623352', '2021-12-16 13:29:43.623352', 1, 8),
 (8, '2021-12-31 07:07:57.480483', '2021-12-31 07:07:57.480483', 1, 12),
 (9, '2021-12-31 07:46:05.974015', '2021-12-31 07:46:05.974015', 1, 7),
-(10, '2022-01-31 01:48:09.166553', '2022-01-31 01:48:09.166553', 1, 9);
+(10, '2022-01-31 01:48:09.166553', '2022-01-31 01:48:09.166553', 1, 9),
+(11, '2022-01-31 00:25:54.469185', '2022-01-31 00:25:54.469185', 1, 13),
+(12, '2022-02-07 18:42:13.232216', '2022-02-07 18:42:13.232216', 1, 20),
+(13, '2022-02-12 00:46:22.914250', '2022-02-12 00:46:22.914250', 1, 22),
+(14, '2022-02-17 20:56:48.231105', '2022-02-17 20:56:48.231105', 1, 21),
+(15, '2022-02-19 17:42:08.702616', '2022-02-19 17:42:08.702616', 1, 23);
 
 -- --------------------------------------------------------
 
@@ -829,7 +955,15 @@ INSERT INTO `cooperative_approvalofficers` (`id`, `created_at`, `updated_at`, `o
 (11, '2021-12-31 07:08:30.812343', '2021-12-31 07:08:30.812343', 11, 1, 8),
 (12, '2021-12-31 07:46:39.695344', '2021-12-31 07:46:39.695344', 11, 1, 9),
 (13, '2022-01-31 01:49:16.921563', '2022-01-31 01:49:16.921563', 2, 1, 10),
-(14, '2022-01-31 01:49:25.007785', '2022-01-31 01:49:25.007785', 3, 1, 10);
+(14, '2022-01-31 01:49:25.007785', '2022-01-31 01:49:25.007785', 3, 1, 10),
+(15, '2022-01-31 00:26:39.525734', '2022-01-31 00:26:39.525734', 11, 1, 11),
+(16, '2022-02-07 18:43:35.021650', '2022-02-07 18:43:35.021650', 2, 1, 12),
+(17, '2022-02-07 18:43:44.044775', '2022-02-07 18:43:44.044775', 3, 1, 12),
+(18, '2022-02-12 00:47:03.201803', '2022-02-12 00:47:03.201803', 11, 1, 13),
+(19, '2022-02-17 20:57:23.300016', '2022-02-17 20:57:23.300016', 2, 1, 14),
+(20, '2022-02-17 20:57:30.020362', '2022-02-17 20:57:30.020362', 3, 1, 14),
+(21, '2022-02-19 17:42:38.372804', '2022-02-19 17:42:38.372804', 2, 1, 15),
+(22, '2022-02-19 17:42:46.334479', '2022-02-19 17:42:46.335480', 3, 1, 15);
 
 -- --------------------------------------------------------
 
@@ -871,7 +1005,7 @@ CREATE TABLE `cooperative_autoreceipt` (
 --
 
 INSERT INTO `cooperative_autoreceipt` (`id`, `created_at`, `updated_at`, `receipt`) VALUES
-(1, '2021-12-07 21:23:50.000000', '2022-01-30 21:26:20.092715', '445');
+(1, '2021-12-07 21:23:50.000000', '2022-02-02 00:10:47.423744', '448');
 
 -- --------------------------------------------------------
 
@@ -956,7 +1090,9 @@ INSERT INTO `cooperative_certifiabletransactions` (`id`, `created_at`, `updated_
 (1, '2021-12-15 05:11:29.060345', '2021-12-15 05:11:29.060345', 1, 18),
 (2, '2021-12-16 07:42:41.631585', '2021-12-16 07:42:41.632584', 1, 1),
 (3, '2021-12-16 13:30:00.969362', '2021-12-16 13:30:00.969362', 1, 8),
-(4, '2021-12-16 13:33:14.434120', '2021-12-16 13:33:14.434120', 1, 9);
+(4, '2021-12-16 13:33:14.434120', '2021-12-16 13:33:14.434120', 1, 9),
+(5, '2022-02-10 06:22:29.164231', '2022-02-10 06:22:29.164231', 1, 21),
+(6, '2022-02-19 17:41:58.649657', '2022-02-19 17:41:58.649657', 1, 23);
 
 -- --------------------------------------------------------
 
@@ -981,7 +1117,11 @@ INSERT INTO `cooperative_certificationofficers` (`id`, `created_at`, `updated_at
 (1, '2021-12-15 05:12:08.342668', '2021-12-15 09:12:08.771353', 7, 2, 1),
 (2, '2021-12-16 07:43:07.573953', '2021-12-16 07:43:07.573953', 4, 1, 2),
 (3, '2021-12-16 13:34:00.213120', '2021-12-16 13:34:00.213120', 4, 1, 3),
-(4, '2022-01-31 01:39:24.565566', '2022-01-31 01:39:24.565566', 4, 1, 4);
+(4, '2022-01-31 01:39:24.565566', '2022-01-31 01:39:24.565566', 4, 1, 4),
+(5, '2022-02-10 06:23:00.321574', '2022-02-10 06:23:00.321574', 4, 1, 5),
+(6, '2022-02-10 06:23:08.203266', '2022-02-10 06:23:08.203266', 5, 1, 5),
+(7, '2022-02-19 17:42:55.956161', '2022-02-19 17:42:55.956161', 4, 1, 6),
+(8, '2022-02-19 17:43:02.849602', '2022-02-19 17:43:02.849602', 5, 1, 6);
 
 -- --------------------------------------------------------
 
@@ -1025,6 +1165,122 @@ CREATE TABLE `cooperative_cheque_table` (
   `sales_id` int(11) DEFAULT NULL,
   `status_id` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `cooperative_commodity_categories`
+--
+
+CREATE TABLE `cooperative_commodity_categories` (
+  `id` int(11) NOT NULL,
+  `created_at` datetime(6) NOT NULL,
+  `updated_at` datetime(6) NOT NULL,
+  `title` varchar(100) NOT NULL,
+  `duration` smallint(5) UNSIGNED NOT NULL CHECK (`duration` >= 0),
+  `interest_rate` smallint(5) UNSIGNED NOT NULL CHECK (`interest_rate` >= 0),
+  `admin_charges` decimal(20,2) DEFAULT NULL,
+  `admin_charges_minimum` decimal(20,2) DEFAULT NULL,
+  `default_admin_charges` decimal(20,2) NOT NULL,
+  `guarantors` int(11) NOT NULL,
+  `loan_age` int(11) NOT NULL,
+  `admin_charges_rating_id` int(11) DEFAULT NULL,
+  `form_print_id` int(11) NOT NULL,
+  `interest_deduction_id` int(11) DEFAULT NULL,
+  `multiple_loan_status_id` int(11) NOT NULL,
+  `receipt_type_id` int(11) NOT NULL,
+  `status_id` int(11) NOT NULL,
+  `transaction_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `cooperative_commodity_categories`
+--
+
+INSERT INTO `cooperative_commodity_categories` (`id`, `created_at`, `updated_at`, `title`, `duration`, `interest_rate`, `admin_charges`, `admin_charges_minimum`, `default_admin_charges`, `guarantors`, `loan_age`, `admin_charges_rating_id`, `form_print_id`, `interest_deduction_id`, `multiple_loan_status_id`, `receipt_type_id`, `status_id`, `transaction_id`) VALUES
+(1, '2022-02-07 23:18:45.824327', '2022-02-08 00:18:27.419020', 'LAPTOP COMPUTERS', 6, 5, '1000.00', NULL, '0.00', 2, 6, 2, 2, NULL, 2, 4, 1, 21),
+(2, '2022-02-07 23:19:20.371007', '2022-02-13 07:14:26.824329', 'DESKTOP COMPUTERS', 4, 2, '500.00', NULL, '0.00', 1, 3, 2, 1, NULL, 2, 4, 1, 21),
+(3, '2022-02-07 23:19:41.874165', '2022-02-10 08:39:34.727904', 'PHONES', 4, 5, '1.00', NULL, '0.00', 1, 6, 1, 2, NULL, 1, 4, 1, 21),
+(4, '2022-02-07 23:19:48.315469', '2022-02-07 23:19:48.315469', 'ELECTRONICS', 0, 0, NULL, NULL, '0.00', 0, 0, NULL, 1, NULL, 1, 3, 1, 21),
+(5, '2022-02-07 23:20:02.793144', '2022-02-07 23:20:02.794140', 'MOTORCYLES', 0, 0, NULL, NULL, '0.00', 0, 0, NULL, 1, NULL, 1, 3, 1, 21),
+(6, '2022-02-07 23:20:18.158737', '2022-02-07 23:20:18.158737', 'TRICYLES', 0, 0, NULL, NULL, '0.00', 0, 0, NULL, 1, NULL, 1, 3, 1, 21),
+(7, '2022-02-07 23:20:35.037720', '2022-02-07 23:20:35.037720', 'CARS/VEHICLES', 0, 0, NULL, NULL, '0.00', 0, 0, NULL, 1, NULL, 1, 3, 1, 21),
+(8, '2022-02-07 23:20:47.526514', '2022-02-07 23:20:47.526514', 'GROCERIES', 0, 0, NULL, NULL, '0.00', 0, 0, NULL, 1, NULL, 1, 3, 1, 21);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `cooperative_commodity_product_list`
+--
+
+CREATE TABLE `cooperative_commodity_product_list` (
+  `id` int(11) NOT NULL,
+  `created_at` datetime(6) NOT NULL,
+  `updated_at` datetime(6) NOT NULL,
+  `product_name` varchar(255) NOT NULL,
+  `product_model` varchar(100) NOT NULL,
+  `category_id` int(11) NOT NULL,
+  `status_id` int(11) NOT NULL,
+  `details` longtext NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `cooperative_commodity_product_list`
+--
+
+INSERT INTO `cooperative_commodity_product_list` (`id`, `created_at`, `updated_at`, `product_name`, `product_model`, `category_id`, `status_id`, `details`) VALUES
+(5, '2022-02-08 02:26:21.076868', '2022-02-08 02:26:21.076868', 'SamSUNG', 's7', 3, 1, '64gb Memory, 6 gb RAM'),
+(7, '2022-02-13 00:38:30.813455', '2022-02-13 00:38:30.813455', 'HP Palvelion', 'Core i7', 2, 1, '500 GB HDD, 8GB RAM'),
+(8, '2022-02-13 00:39:55.486276', '2022-02-13 00:39:55.486276', 'DELL Latitude', 'Core i3', 2, 1, '350GB HDD, 4GB RAM');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `cooperative_companies`
+--
+
+CREATE TABLE `cooperative_companies` (
+  `id` int(11) NOT NULL,
+  `created_at` datetime(6) NOT NULL,
+  `updated_at` datetime(6) NOT NULL,
+  `title` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `cooperative_companies`
+--
+
+INSERT INTO `cooperative_companies` (`id`, `created_at`, `updated_at`, `title`) VALUES
+(5, '2022-02-11 22:10:46.841368', '2022-02-11 22:19:41.804382', 'MAYOR ELECTRONICS WA LTD.'),
+(6, '2022-02-19 05:46:45.508398', '2022-02-19 05:46:45.508398', 'Fine Brothers Ltd'),
+(7, '2022-02-19 05:49:26.794006', '2022-02-19 05:49:26.794006', 'MASTERSOFT TECHNOLOGY LTD.'),
+(8, '2022-02-19 11:23:50.270609', '2022-02-19 11:23:50.270609', 'Coop'),
+(9, '2022-02-19 05:31:01.916560', '2022-02-19 05:31:01.916560', 'ben');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `cooperative_company_products`
+--
+
+CREATE TABLE `cooperative_company_products` (
+  `id` int(11) NOT NULL,
+  `created_at` datetime(6) NOT NULL,
+  `updated_at` datetime(6) NOT NULL,
+  `amount` decimal(20,2) NOT NULL,
+  `company_id` int(11) NOT NULL,
+  `product_id` int(11) NOT NULL,
+  `status_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `cooperative_company_products`
+--
+
+INSERT INTO `cooperative_company_products` (`id`, `created_at`, `updated_at`, `amount`, `company_id`, `product_id`, `status_id`) VALUES
+(7, '2022-02-13 01:07:52.882615', '2022-02-13 01:08:18.743782', '120000.00', 5, 5, 1),
+(8, '2022-02-13 01:07:55.485432', '2022-02-13 01:08:29.627579', '230000.00', 5, 7, 1),
+(9, '2022-02-13 01:07:57.557223', '2022-02-13 01:08:37.804856', '170000.00', 5, 8, 1);
 
 -- --------------------------------------------------------
 
@@ -1096,11 +1352,15 @@ CREATE TABLE `cooperative_cooperativeshopledger` (
 
 INSERT INTO `cooperative_cooperativeshopledger` (`id`, `created_at`, `updated_at`, `particulars`, `debit`, `credit`, `balance`, `member_id`, `processed_by_id`, `status_id`, `receipt`, `tdate`) VALUES
 (16, '2022-01-28 11:00:12.991851', '2022-01-28 15:25:34.510131', 'Purchases with receipt No AUT-00419', '18300.00', '0.00', '-38800.00', 716, 12, 2, 'AUT-00419', '2022-01-28'),
-(21, '2022-01-28 15:25:34.379735', '2022-01-28 15:25:34.379735', 'CASH DEPOSIT/4565 ON 2022-01-28 00:00:00', '0.00', '38800.00', '0.00', 716, 12, 1, 'AUT-00429', '2022-01-28'),
+(21, '2022-01-28 15:25:34.379735', '2022-01-28 15:25:34.379735', 'CASH DEPOSIT/4565 ON 2022-01-28 00:00:00', '0.00', '38800.00', '0.00', 716, 12, 2, 'AUT-00429', '2022-01-28'),
 (22, '2022-01-28 16:51:12.748785', '2022-01-28 18:35:50.877785', 'Purchases with receipt No AUT-00435', '5500.00', '0.00', '-5500.00', 716, 12, 2, 'AUT-00435', '2022-01-28'),
-(23, '2022-01-28 18:35:50.779216', '2022-01-28 18:35:50.779216', 'CASH DEPOSIT/67876 ON 2022-01-28 00:00:00', '0.00', '5500.00', '0.00', 716, 12, 1, 'AUT-00436', '2022-01-28'),
+(23, '2022-01-28 18:35:50.779216', '2022-01-28 18:35:50.779216', 'CASH DEPOSIT/67876 ON 2022-01-28 00:00:00', '0.00', '5500.00', '0.00', 716, 12, 2, 'AUT-00436', '2022-01-28'),
 (24, '2022-01-28 19:32:18.128149', '2022-01-28 20:27:57.603606', 'Purchases with receipt No AUT-00437', '6650.00', '0.00', '-6650.00', 713, 12, 2, 'AUT-00437', '2022-01-28'),
-(25, '2022-01-28 20:27:57.537649', '2022-01-28 20:27:57.537649', 'CASH DEPOSIT/5566556 ON 2022-01-28 00:00:00', '0.00', '6650.00', '0.00', 713, 12, 1, 'AUT-00439', '2022-01-28');
+(25, '2022-01-28 20:27:57.537649', '2022-01-28 20:27:57.537649', 'CASH DEPOSIT/5566556 ON 2022-01-28 00:00:00', '0.00', '6650.00', '0.00', 713, 12, 2, 'AUT-00439', '2022-01-28'),
+(26, '2022-02-01 21:13:16.298546', '2022-02-04 05:19:15.542848', 'Purchases with receipt No AUT-00445', '23000.00', '0.00', '-23000.00', 716, 12, 2, 'AUT-00445', '2022-02-01'),
+(27, '2022-02-02 00:01:03.349057', '2022-02-02 00:10:47.772114', 'Purchases with receipt No AUT-00446', '6000.00', '0.00', '-6000.00', 718, 12, 2, 'AUT-00446', '2022-02-01'),
+(28, '2022-02-02 00:10:47.716156', '2022-02-02 00:10:47.716156', 'CASH DEPOSIT/98776 ON 2022-02-01 00:00:00', '0.00', '6000.00', '0.00', 718, 12, 1, 'AUT-00447', '2022-02-01'),
+(30, '2022-02-04 05:19:15.492054', '2022-02-04 05:21:41.187135', 'MONTHLY DEDCUTION AS AT: 2022-01-31', '0.00', '23000.00', '0.00', 716, 13, 2, '0', '2022-02-04');
 
 -- --------------------------------------------------------
 
@@ -1131,7 +1391,8 @@ CREATE TABLE `cooperative_cooperative_shop_cash_deposit` (
 
 INSERT INTO `cooperative_cooperative_shop_cash_deposit` (`id`, `created_at`, `updated_at`, `narrations`, `amount`, `receipt`, `tdate`, `member_id`, `processed_by_id`, `status_id`, `bank_id`, `coop_account_id`, `payment_reference`, `processing_status_id`) VALUES
 (6, '2022-01-28 18:35:50.523624', '2022-01-28 18:35:50.523624', 'CASH DEPOSIT/67876 ON 2022-01-28 00:00:00', '5500.00', 'AUT-00436', '2022-01-28', 152, 12, 2, 1, 1, '67876', 1),
-(8, '2022-01-28 20:27:57.496674', '2022-01-28 20:27:57.496674', 'CASH DEPOSIT/5566556 ON 2022-01-28 00:00:00', '6650.00', 'AUT-00439', '2022-01-28', 151, 12, 2, 1, 1, '5566556', 1);
+(8, '2022-01-28 20:27:57.496674', '2022-01-28 20:27:57.496674', 'CASH DEPOSIT/5566556 ON 2022-01-28 00:00:00', '6650.00', 'AUT-00439', '2022-01-28', 151, 12, 2, 1, 1, '5566556', 1),
+(9, '2022-02-02 00:10:47.545643', '2022-02-02 00:10:47.545643', 'CASH DEPOSIT/98776 ON 2022-02-01 00:00:00', '6000.00', 'AUT-00447', '2022-02-01', 156, 12, 1, 1, 1, '98776', 1);
 
 -- --------------------------------------------------------
 
@@ -1186,6 +1447,104 @@ INSERT INTO `cooperative_customers` (`id`, `created_at`, `updated_at`, `customer
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `cooperative_customized_commodity_loan_application_details`
+--
+
+CREATE TABLE `cooperative_customized_commodity_loan_application_details` (
+  `id` int(11) NOT NULL,
+  `created_at` datetime(6) NOT NULL,
+  `updated_at` datetime(6) NOT NULL,
+  `product_name` varchar(255) NOT NULL,
+  `details` longtext NOT NULL,
+  `quantity` smallint(5) UNSIGNED NOT NULL CHECK (`quantity` >= 0),
+  `total` decimal(20,2) NOT NULL,
+  `invoice` varchar(255) DEFAULT NULL,
+  `tdate` date NOT NULL,
+  `applicant_id` int(11) NOT NULL,
+  `processed_by_id` bigint(20) DEFAULT NULL,
+  `status_id` int(11) NOT NULL,
+  `unit_price` decimal(20,2) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `cooperative_customized_commodity_loan_application_details`
+--
+
+INSERT INTO `cooperative_customized_commodity_loan_application_details` (`id`, `created_at`, `updated_at`, `product_name`, `details`, `quantity`, `total`, `invoice`, `tdate`, `applicant_id`, `processed_by_id`, `status_id`, `unit_price`) VALUES
+(3, '2022-02-19 17:03:07.632576', '2022-02-19 17:03:07.632576', 'LG Televeision', '48\'\' Size', 1, '80000.00', '3456-00007', '2022-02-19', 3, 9, 1, '80000.00'),
+(5, '2022-02-19 17:20:27.510642', '2022-02-19 17:20:27.510642', 'LG DVD', 'Chrome', 1, '15000.00', '3456-00007', '2022-02-19', 3, 9, 1, '15000.00');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `cooperative_customized_commodity_loan_application_payslip`
+--
+
+CREATE TABLE `cooperative_customized_commodity_loan_application_payslip` (
+  `id` int(11) NOT NULL,
+  `created_at` datetime(6) NOT NULL,
+  `updated_at` datetime(6) NOT NULL,
+  `period` date NOT NULL,
+  `gross_pay` decimal(20,2) NOT NULL,
+  `net_pay` decimal(20,2) NOT NULL,
+  `invoice` varchar(255) DEFAULT NULL,
+  `tdate` date NOT NULL,
+  `applicant_id` int(11) NOT NULL,
+  `processed_by_id` bigint(20) DEFAULT NULL,
+  `status_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `cooperative_customized_commodity_loan_application_payslip`
+--
+
+INSERT INTO `cooperative_customized_commodity_loan_application_payslip` (`id`, `created_at`, `updated_at`, `period`, `gross_pay`, `net_pay`, `invoice`, `tdate`, `applicant_id`, `processed_by_id`, `status_id`) VALUES
+(13, '2022-02-19 19:30:47.599276', '2022-02-19 19:30:47.599276', '2022-02-19', '180000.00', '140000.00', '3456-00007', '2022-02-19', 3, 9, 1);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `cooperative_customized_commodity_loan_application_summary`
+--
+
+CREATE TABLE `cooperative_customized_commodity_loan_application_summary` (
+  `id` int(11) NOT NULL,
+  `created_at` datetime(6) NOT NULL,
+  `updated_at` datetime(6) NOT NULL,
+  `quantity` smallint(5) UNSIGNED NOT NULL CHECK (`quantity` >= 0),
+  `total_amount` decimal(20,2) NOT NULL,
+  `interest` decimal(20,2) NOT NULL,
+  `comments` longtext DEFAULT NULL,
+  `repayment` decimal(20,2) NOT NULL,
+  `duration` varchar(4) NOT NULL,
+  `certification_comment` longtext DEFAULT NULL,
+  `certification_date` date DEFAULT NULL,
+  `approval_comment` longtext DEFAULT NULL,
+  `approval_date` date DEFAULT NULL,
+  `invoice` varchar(255) DEFAULT NULL,
+  `tdate` date NOT NULL,
+  `approval_officer_id` int(11) DEFAULT NULL,
+  `approval_status_id` int(11) DEFAULT NULL,
+  `certification_officer_id` int(11) DEFAULT NULL,
+  `certification_status_id` int(11) NOT NULL,
+  `processed_by_id` bigint(20) DEFAULT NULL,
+  `status_id` int(11) NOT NULL,
+  `transaction_id` int(11) NOT NULL,
+  `member_id` int(11) NOT NULL,
+  `invoice_date` date NOT NULL,
+  `company_id` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `cooperative_customized_commodity_loan_application_summary`
+--
+
+INSERT INTO `cooperative_customized_commodity_loan_application_summary` (`id`, `created_at`, `updated_at`, `quantity`, `total_amount`, `interest`, `comments`, `repayment`, `duration`, `certification_comment`, `certification_date`, `approval_comment`, `approval_date`, `invoice`, `tdate`, `approval_officer_id`, `approval_status_id`, `certification_officer_id`, `certification_status_id`, `processed_by_id`, `status_id`, `transaction_id`, `member_id`, `invoice_date`, `company_id`) VALUES
+(3, '2022-02-19 05:32:15.340787', '2022-02-20 21:49:32.879379', 2, '95000.00', '4750.00', 'ok', '15834.00', '6', NULL, NULL, NULL, NULL, '3456-00007', '2022-02-19', NULL, NULL, 7, 1, 9, 2, 23, 151, '2022-02-19', 5);
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `cooperative_customuser`
 --
 
@@ -1209,19 +1568,19 @@ CREATE TABLE `cooperative_customuser` (
 --
 
 INSERT INTO `cooperative_customuser` (`id`, `password`, `last_login`, `is_superuser`, `username`, `first_name`, `last_name`, `email`, `is_staff`, `is_active`, `date_joined`, `user_type`) VALUES
-(1, 'pbkdf2_sha256$260000$32YxiL3Ua8QNbmylDXX0qY$0UoeH/uqVA5iXYzN3bDPfxp18DfZUG3C7SeJmPhW/VE=', '2022-01-29 23:46:24.034733', 1, 'admin', '', '', 'admin@gmail.com', 1, 1, '2021-12-07 18:50:58.504932', '1'),
-(2, 'pbkdf2_sha256$260000$jTl5qFnl9pnVXlgGhzJhHu$Fywehh7bctwCKWQuTMJWF0GcuEvsgaXEuTCxAtCq8jg=', '2022-01-29 03:33:11.093499', 0, 'iyare', 'Festus', 'Iyare', 'iyare@gmail.com', 0, 1, '2021-12-07 19:42:36.060017', '2'),
+(1, 'pbkdf2_sha256$260000$32YxiL3Ua8QNbmylDXX0qY$0UoeH/uqVA5iXYzN3bDPfxp18DfZUG3C7SeJmPhW/VE=', '2022-02-21 07:29:26.460080', 1, 'admin', '', '', 'admin@gmail.com', 1, 1, '2021-12-07 18:50:58.504932', '1'),
+(2, 'pbkdf2_sha256$260000$jTl5qFnl9pnVXlgGhzJhHu$Fywehh7bctwCKWQuTMJWF0GcuEvsgaXEuTCxAtCq8jg=', '2022-02-08 01:21:23.851386', 0, 'iyare', 'Festus', 'Iyare', 'iyare@gmail.com', 0, 1, '2021-12-07 19:42:36.060017', '2'),
 (3, 'pbkdf2_sha256$260000$IC3rZOrx2NROW7OOHifwCC$SVAHRitbe5LvMZzlPSPPu5v4A1eih2Vx5dRZ1gt7zeU=', NULL, 0, 'mission', 'Mission', 'Egwu', 'mission@gmail.com', 0, 1, '2021-12-07 19:43:34.285541', '2'),
-(4, 'pbkdf2_sha256$260000$fCsaikrWD9JtSqMQumVW2e$e6AMZ7eZO844qm+PjwAkKjzNVxotEsR80G5XxdjkKzA=', '2022-01-29 23:39:47.452722', 0, 'benjamin', 'Benjamin', 'Akpueze', 'benjamin@gmail.com', 0, 1, '2021-12-07 19:44:24.871864', '3'),
+(4, 'pbkdf2_sha256$260000$fCsaikrWD9JtSqMQumVW2e$e6AMZ7eZO844qm+PjwAkKjzNVxotEsR80G5XxdjkKzA=', '2022-02-17 12:01:24.567194', 0, 'benjamin', 'Benjamin', 'Akpueze', 'benjamin@gmail.com', 0, 1, '2021-12-07 19:44:24.871864', '3'),
 (5, 'pbkdf2_sha256$260000$z4HJvupZucKQ1Fg5kj9b0d$Zh/TxnwykCZLz4Bk7YLZhFijCmcLVqqystgOdtQwMzc=', NULL, 0, 'kinsley', 'Kingsley', 'Igwe', 'kingsley@gmail.com', 0, 1, '2021-12-07 19:45:10.423954', '3'),
-(6, 'pbkdf2_sha256$260000$Sul8s1LLmb6LYHez8JS8Fe$lHin38O9hMseyeSpJsSoKTJTNprjw7P9py1rpQvIUac=', '2021-12-15 21:15:27.146672', 0, 'nneka', 'Nneka', 'Ogah', 'nneka@gmail.com', 0, 1, '2021-12-07 19:46:16.106235', '4'),
-(7, 'pbkdf2_sha256$260000$X65PJFMIcbqauOcXMUyUeO$+SUgcA+FxfpHrjl5kJ5aj7+c5DeKvOQUfq2mcbdxCJQ=', '2021-12-15 21:14:55.065539', 0, 'ofoke', 'Sunday', 'Ofoke', 'ofoke@gmail.com', 0, 1, '2021-12-07 19:47:20.327903', '5'),
+(6, 'pbkdf2_sha256$260000$Sul8s1LLmb6LYHez8JS8Fe$lHin38O9hMseyeSpJsSoKTJTNprjw7P9py1rpQvIUac=', '2022-02-04 22:51:35.199590', 0, 'nneka', 'Nneka', 'Ogah', 'nneka@gmail.com', 0, 1, '2021-12-07 19:46:16.106235', '4'),
+(7, 'pbkdf2_sha256$260000$X65PJFMIcbqauOcXMUyUeO$+SUgcA+FxfpHrjl5kJ5aj7+c5DeKvOQUfq2mcbdxCJQ=', '2022-02-04 22:42:27.751898', 0, 'ofoke', 'Sunday', 'Ofoke', 'ofoke@gmail.com', 0, 1, '2021-12-07 19:47:20.327903', '5'),
 (8, 'pbkdf2_sha256$260000$Fjcn9NSpnhtPeUZBKxHtBT$3sYXRFc/kTpaZMIMmEG9F0VpBLfFy2uNQ/8K9cKYzQY=', NULL, 0, 'nnenna', 'Nnnenna', 'Udu', 'nnenna@gmail.com', 0, 1, '2021-12-07 19:48:22.291528', '9'),
-(9, 'pbkdf2_sha256$260000$52uRCNpA0H8eCurYpf0Eo3$ccpXbJhRFaznPmgT63fE6GGSTjNHz5Nu3YgYgVthIWs=', '2022-01-30 23:30:31.396496', 0, 'chinwendu', 'Chinwendu', 'Okafor', 'chinwendu@gmail.com', 0, 1, '2021-12-07 19:49:28.259710', '6'),
-(10, 'pbkdf2_sha256$260000$W8TZuwETjwyHA6aqcUbxbO$4f8mJ7LgGgUoJCv/uhxGfUXHkzh/3bNUrtFyNPCVODQ=', '2021-12-23 02:12:43.335425', 0, 'omiko', 'Mary', 'Omiko', 'mary@gmail.com', 0, 1, '2021-12-07 19:50:04.034981', '6'),
-(11, 'pbkdf2_sha256$260000$4C8c2gTJjdoZmKJvgtMrst$CNXqAqWHlWxWoR+IO1gU0LLDq1aY7VVCX3S0RWkg8W8=', '2022-01-28 16:50:45.995933', 0, 'emmanuella', 'Nwankaego', 'Elijah', 'emmanuella@gmail.com', 0, 1, '2021-12-07 19:50:50.489249', '7'),
-(12, 'pbkdf2_sha256$260000$zBjS16wmKq77bRDASHYzTJ$ExM9Oz1tU8xjXlncOK96ZEFzgK283zczZP8rzoPaq5U=', '2022-01-30 23:30:04.614385', 0, 'onuoha', 'Esther', 'Onuoha', 'esther@gmail.com', 0, 1, '2021-12-07 19:51:52.194475', '8'),
-(13, 'pbkdf2_sha256$260000$dwnI1i4m1iDtSRD5kzGYWQ$Q12EEgxGbcpHyeRmhJtgELZMpgS4UpJT+eJ/Bv3z5uA=', '2022-01-28 12:46:10.427013', 0, 'onuoha1', 'Esther', 'Onuoha', 'esther1@gmail.com', 0, 1, '2021-12-07 19:52:48.700293', '8'),
+(9, 'pbkdf2_sha256$260000$52uRCNpA0H8eCurYpf0Eo3$ccpXbJhRFaznPmgT63fE6GGSTjNHz5Nu3YgYgVthIWs=', '2022-02-18 00:03:04.480053', 0, 'chinwendu', 'Chinwendu', 'Okafor', 'chinwendu@gmail.com', 0, 1, '2021-12-07 19:49:28.259710', '6'),
+(10, 'pbkdf2_sha256$260000$W8TZuwETjwyHA6aqcUbxbO$4f8mJ7LgGgUoJCv/uhxGfUXHkzh/3bNUrtFyNPCVODQ=', '2022-02-04 22:39:18.597500', 0, 'omiko', 'Mary', 'Omiko', 'mary@gmail.com', 0, 1, '2021-12-07 19:50:04.034981', '6'),
+(11, 'pbkdf2_sha256$260000$4C8c2gTJjdoZmKJvgtMrst$CNXqAqWHlWxWoR+IO1gU0LLDq1aY7VVCX3S0RWkg8W8=', '2022-02-16 07:48:42.026402', 0, 'emmanuella', 'Nwankaego', 'Elijah', 'emmanuella@gmail.com', 0, 1, '2021-12-07 19:50:50.489249', '7'),
+(12, 'pbkdf2_sha256$260000$zBjS16wmKq77bRDASHYzTJ$ExM9Oz1tU8xjXlncOK96ZEFzgK283zczZP8rzoPaq5U=', '2022-02-02 00:56:17.781521', 0, 'onuoha', 'Esther', 'Onuoha', 'esther@gmail.com', 0, 1, '2021-12-07 19:51:52.194475', '8'),
+(13, 'pbkdf2_sha256$260000$dwnI1i4m1iDtSRD5kzGYWQ$Q12EEgxGbcpHyeRmhJtgELZMpgS4UpJT+eJ/Bv3z5uA=', '2022-02-03 22:40:01.239206', 0, 'onuoha1', 'Esther', 'Onuoha', 'esther1@gmail.com', 0, 1, '2021-12-07 19:52:48.700293', '8'),
 (167, 'pbkdf2_sha256$260000$yYpjxzGQ4BcAiedGvs6iU3$//88eAp4hMm3ANYQJQBu1jQ86+LooZFsiRPtFgAdtqg=', NULL, 0, 'BENIDAKA00001', 'BEN', 'IDAKA', 'BEN00001@gmail.com', 0, 1, '2021-12-07 21:04:28.256219', '10'),
 (168, 'pbkdf2_sha256$260000$Vz2cSFKoSbvIZ6O8WI4Sbm$7ByEWGUeDZcGi1EzzvmrLYqloaxVzqKeNbPkswiMxb4=', NULL, 0, 'UCHENNAOKOLI00002', 'UCHENNA', 'OKOLI', 'UCHENNA00002@gmail.com', 0, 1, '2021-12-07 21:04:29.704326', '10'),
 (169, 'pbkdf2_sha256$260000$dCw9Mr8Q41FmZLBuVfLCpI$2tkkfQYn4rSStlHvS9F19dKJu3No+cG66pE2boDOt/o=', NULL, 0, 'NKONYELUOKONKWO00003', 'NKONYELU', 'OKONKWO', 'NKONYELU00003@gmail.com', 0, 1, '2021-12-07 21:04:30.378892', '10'),
@@ -1279,7 +1638,8 @@ INSERT INTO `cooperative_customuser` (`id`, `password`, `last_login`, `is_superu
 (233, 'pbkdf2_sha256$260000$1nQ3mH3nVyb0VdGJ520EDi$tqcdsBSW5wylZWGEVAwAODjy5kNN5tdtrLkuxlFZufA=', NULL, 0, 'emekanjoku', 'EMEKA', 'NJOKU', 'emekanjoku@gmail.com', 0, 1, '2022-01-30 17:07:19.252578', '10'),
 (234, 'pbkdf2_sha256$260000$EgkDURYxXgY4JsQY5jegvm$sDHWssW1IRzgBgkkiaX810kuTJptge0A2wgWQ1ZBXVA=', NULL, 0, 'onwe', 'EMMANUEL', 'ONWE', 'onwe@gmail.com', 0, 1, '2022-01-30 17:08:21.038406', '10'),
 (235, 'pbkdf2_sha256$260000$8mhda7Q8DzyPfDVYJnx5bu$ZjOwNyBoAnot9xmmWh3g0s3dGvDuczddA+0aLXL2Bsg=', NULL, 0, 'chuma', 'CHUKWUMA', 'NWEKPA', 'nwekpa@gmail.com', 0, 1, '2022-01-30 19:51:29.453228', '10'),
-(236, 'pbkdf2_sha256$260000$iRUUJWmJOFmho92aHvnGaQ$qJ/aoBvImseeFWjgS6si3NYj+wwC6cz3Ly86+aXlpnI=', NULL, 0, 'agunweke', 'NWEKE', 'AGU', 'agu@gmail.com', 0, 1, '2022-01-30 19:52:13.737523', '10');
+(236, 'pbkdf2_sha256$260000$iRUUJWmJOFmho92aHvnGaQ$qJ/aoBvImseeFWjgS6si3NYj+wwC6cz3Ly86+aXlpnI=', NULL, 0, 'agunweke', 'NWEKE', 'AGU', 'agu@gmail.com', 0, 1, '2022-01-30 19:52:13.737523', '10'),
+(237, 'pbkdf2_sha256$260000$LActkxXDo0bJo3dKvDiyhF$v9KmFnsOS8ygRzqN9ZQuVDNIO/upAGJdedQRXH1maKo=', '2022-02-02 07:22:22.798734', 0, 'emmanuella1', 'Nwankaego', 'Elijah', 'emmanuella1@gmail.com', 0, 1, '2022-02-02 06:34:48.454418', '6');
 
 -- --------------------------------------------------------
 
@@ -1371,7 +1731,9 @@ INSERT INTO `cooperative_daily_sales` (`id`, `created_at`, `updated_at`, `ticket
 (224, '2022-01-28 16:49:33.598189', '2022-01-28 16:49:33.598189', '2022000031', 'BEN IDAKA MAUREEN', '08064004355', 'Abakaliki', 4, '350.00', '1400.00', 12, 2, 'AUT-00434', 946, '2022-01-28', 1),
 (225, '2022-01-28 16:51:11.730173', '2022-01-28 16:51:11.730173', '2022000032', 'OKOLI UCHENNA OBIA', '08064004356', 'FETHA II CTCS', 5, '950.00', '4750.00', 12, 2, 'AUT-00435', 924, '2022-01-28', 2),
 (226, '2022-01-28 16:51:12.323225', '2022-01-28 16:51:12.323225', '2022000032', 'OKOLI UCHENNA OBIA', '08064004356', 'FETHA II CTCS', 5, '150.00', '750.00', 12, 2, 'AUT-00435', 1024, '2022-01-28', 2),
-(227, '2022-01-28 19:32:17.745542', '2022-01-28 19:32:17.745542', '2022000033', 'IDAKA BEN MAUREEN', '08064004355', 'Abakaliki', 7, '950.00', '6650.00', 12, 1, 'AUT-00437', 925, '2022-01-28', 2);
+(227, '2022-01-28 19:32:17.745542', '2022-01-28 19:32:17.745542', '2022000033', 'IDAKA BEN MAUREEN', '08064004355', 'Abakaliki', 7, '950.00', '6650.00', 12, 1, 'AUT-00437', 925, '2022-01-28', 2),
+(228, '2022-02-01 21:13:15.976027', '2022-02-01 21:13:15.976027', '2022000034', 'OKOLI UCHENNA OBIA', '08064004356', 'FETHA II CTCS', 10, '2300.00', '23000.00', 12, 1, 'AUT-00445', 917, '2022-02-01', 2),
+(229, '2022-02-02 00:01:02.869548', '2022-02-02 00:01:02.869548', '2022000035', 'AGBOWO IFEOMA MARY', '08064004360', 'FETHA II CTCS', 5, '1200.00', '6000.00', 12, 1, 'AUT-00446', 918, '2022-02-01', 2);
 
 -- --------------------------------------------------------
 
@@ -1427,7 +1789,9 @@ INSERT INTO `cooperative_daily_sales_summary` (`id`, `created_at`, `updated_at`,
 (123, '2022-01-28 16:48:53.887440', '2022-01-28 16:48:53.887440', 'AUT-00433', '8200.00', 222, 2, '2022-01-28'),
 (124, '2022-01-28 16:49:33.704087', '2022-01-28 16:49:33.704087', 'AUT-00434', '15400.00', 223, 2, '2022-01-28'),
 (125, '2022-01-28 16:51:12.542969', '2022-01-28 16:51:12.542969', 'AUT-00435', '5500.00', 225, 2, '2022-01-28'),
-(126, '2022-01-28 19:32:17.957408', '2022-01-28 19:32:17.957408', 'AUT-00437', '6650.00', 227, 1, '2022-01-28');
+(126, '2022-01-28 19:32:17.957408', '2022-01-28 19:32:17.957408', 'AUT-00437', '6650.00', 227, 1, '2022-01-28'),
+(127, '2022-02-01 21:13:16.095586', '2022-02-01 21:13:16.095586', 'AUT-00445', '23000.00', 228, 1, '2022-02-01'),
+(128, '2022-02-02 00:01:03.002465', '2022-02-02 00:01:03.002465', 'AUT-00446', '6000.00', 229, 1, '2022-02-01');
 
 -- --------------------------------------------------------
 
@@ -1505,6 +1869,83 @@ CREATE TABLE `cooperative_day_end_sales_transactions` (
   `sales_category_id` int(11) DEFAULT NULL,
   `status_id` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `cooperative_dedicated_commodity_period`
+--
+
+CREATE TABLE `cooperative_dedicated_commodity_period` (
+  `id` int(11) NOT NULL,
+  `created_at` datetime(6) NOT NULL,
+  `updated_at` datetime(6) NOT NULL,
+  `tyear` varchar(4) NOT NULL,
+  `batch` varchar(10) NOT NULL,
+  `status_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `cooperative_dedicated_commodity_period`
+--
+
+INSERT INTO `cooperative_dedicated_commodity_period` (`id`, `created_at`, `updated_at`, `tyear`, `batch`, `status_id`) VALUES
+(1, '2022-02-11 19:32:26.189520', '2022-02-11 23:59:11.988111', '2022', 'BATCH A', 1),
+(2, '2022-02-11 19:36:53.938590', '2022-02-11 23:59:01.699778', '2022', 'BATCH B', 2),
+(3, '2022-02-11 19:37:07.683650', '2022-02-11 20:02:27.409823', '2022', 'BATCH C', 2),
+(4, '2022-02-11 22:01:09.371343', '2022-02-11 22:01:13.703880', '2022', 'BATCH D', 2);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `cooperative_dedicated_commodity_price_list`
+--
+
+CREATE TABLE `cooperative_dedicated_commodity_price_list` (
+  `id` int(11) NOT NULL,
+  `created_at` datetime(6) NOT NULL,
+  `updated_at` datetime(6) NOT NULL,
+  `cost_price` decimal(20,2) NOT NULL,
+  `selling_price` decimal(20,2) NOT NULL,
+  `tdate` date NOT NULL,
+  `processed_by_id` bigint(20) DEFAULT NULL,
+  `product_id` int(11) NOT NULL,
+  `status_id` int(11) NOT NULL,
+  `period_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `cooperative_dedicated_commodity_price_list`
+--
+
+INSERT INTO `cooperative_dedicated_commodity_price_list` (`id`, `created_at`, `updated_at`, `cost_price`, `selling_price`, `tdate`, `processed_by_id`, `product_id`, `status_id`, `period_id`) VALUES
+(5, '2022-02-11 21:13:56.053076', '2022-02-11 21:50:29.837172', '9000.00', '11500.00', '2022-02-11', 1, 1, 1, 1),
+(7, '2022-02-11 21:58:17.709578', '2022-02-11 21:58:17.709578', '6000.00', '7500.00', '2022-02-11', 1, 2, 1, 1),
+(8, '2022-02-12 03:07:09.400590', '2022-02-12 03:56:43.464495', '5000.00', '6000.00', '2022-02-12', 1, 3, 1, 1);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `cooperative_dedicated_commodity_product_list`
+--
+
+CREATE TABLE `cooperative_dedicated_commodity_product_list` (
+  `id` int(11) NOT NULL,
+  `created_at` datetime(6) NOT NULL,
+  `updated_at` datetime(6) NOT NULL,
+  `product_name` varchar(255) NOT NULL,
+  `details` varchar(255) NOT NULL,
+  `status_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `cooperative_dedicated_commodity_product_list`
+--
+
+INSERT INTO `cooperative_dedicated_commodity_product_list` (`id`, `created_at`, `updated_at`, `product_name`, `details`, `status_id`) VALUES
+(1, '2022-02-10 14:43:08.239286', '2022-02-10 14:43:08.239286', 'Abakaliki Rice', 'Size 25 kg ', 1),
+(2, '2022-02-10 15:03:22.231735', '2022-02-10 15:25:56.130916', 'Big Carton Tomatoes', 'Full Packs', 1),
+(3, '2022-02-12 03:06:36.865326', '2022-02-12 03:06:36.865326', 'Vegetable Oil', 'Kings 10 litres', 1);
 
 -- --------------------------------------------------------
 
@@ -1610,6 +2051,70 @@ INSERT INTO `cooperative_disbursementofficers` (`id`, `created_at`, `updated_at`
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `cooperative_essential_commodity_product_select`
+--
+
+CREATE TABLE `cooperative_essential_commodity_product_select` (
+  `id` int(11) NOT NULL,
+  `created_at` datetime(6) NOT NULL,
+  `updated_at` datetime(6) NOT NULL,
+  `quantity` smallint(5) UNSIGNED NOT NULL CHECK (`quantity` >= 0),
+  `tdate` date NOT NULL,
+  `processed_by_id` bigint(20) DEFAULT NULL,
+  `product_id` int(11) NOT NULL,
+  `status_id` int(11) NOT NULL,
+  `member_id` int(11) NOT NULL,
+  `total` decimal(20,2) NOT NULL,
+  `ticket` varchar(255) DEFAULT NULL,
+  `interest` decimal(20,2) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `cooperative_essential_commodity_product_select`
+--
+
+INSERT INTO `cooperative_essential_commodity_product_select` (`id`, `created_at`, `updated_at`, `quantity`, `tdate`, `processed_by_id`, `product_id`, `status_id`, `member_id`, `total`, `ticket`, `interest`) VALUES
+(43, '2022-02-16 07:32:38.532688', '2022-02-16 07:32:38.532688', 1, '2022-02-16', 9, 7, 2, 151, '7500.00', '2022000050', '1500.00'),
+(44, '2022-02-16 07:32:44.741701', '2022-02-16 07:32:44.741701', 1, '2022-02-16', 9, 5, 2, 151, '11500.00', '2022000050', '2500.00');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `cooperative_essential_commodity_product_selection_summary`
+--
+
+CREATE TABLE `cooperative_essential_commodity_product_selection_summary` (
+  `id` int(11) NOT NULL,
+  `created_at` datetime(6) NOT NULL,
+  `updated_at` datetime(6) NOT NULL,
+  `quantity` smallint(5) UNSIGNED NOT NULL CHECK (`quantity` >= 0),
+  `tdate` date NOT NULL,
+  `processed_by_id` bigint(20) DEFAULT NULL,
+  `product_id` int(11) NOT NULL,
+  `status_id` int(11) NOT NULL,
+  `approval_comment` longtext DEFAULT NULL,
+  `approval_date` date DEFAULT NULL,
+  `approval_officer_id` int(11) DEFAULT NULL,
+  `approval_status_id` int(11) DEFAULT NULL,
+  `comments` longtext DEFAULT NULL,
+  `duration` varchar(4) NOT NULL,
+  `transaction_id` int(11) NOT NULL,
+  `ticket` varchar(255) DEFAULT NULL,
+  `repayment` decimal(20,2) NOT NULL,
+  `total` decimal(20,2) NOT NULL,
+  `interest` decimal(20,2) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `cooperative_essential_commodity_product_selection_summary`
+--
+
+INSERT INTO `cooperative_essential_commodity_product_selection_summary` (`id`, `created_at`, `updated_at`, `quantity`, `tdate`, `processed_by_id`, `product_id`, `status_id`, `approval_comment`, `approval_date`, `approval_officer_id`, `approval_status_id`, `comments`, `duration`, `transaction_id`, `ticket`, `repayment`, `total`, `interest`) VALUES
+(26, '2022-02-16 07:48:26.828299', '2022-02-16 10:42:46.150219', 2, '2022-02-16', 9, 43, 2, 'APPROVED', '2022-02-16', 18, 2, 'For your Consideration', '3', 22, '2022000050', '6334.00', '19000.00', '4000.00');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `cooperative_exclusivestatus`
 --
 
@@ -1642,6 +2147,13 @@ CREATE TABLE `cooperative_externalfascilitiesmain` (
   `status_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+--
+-- Dumping data for table `cooperative_externalfascilitiesmain`
+--
+
+INSERT INTO `cooperative_externalfascilitiesmain` (`id`, `created_at`, `updated_at`, `member_id`, `status_id`) VALUES
+(1, '2022-01-31 00:28:37.725602', '2022-01-31 00:28:37.725602', 1, 1);
+
 -- --------------------------------------------------------
 
 --
@@ -1662,6 +2174,13 @@ CREATE TABLE `cooperative_externalfascilitiestemp` (
   `status_id` int(11) NOT NULL,
   `transaction_status_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `cooperative_externalfascilitiestemp`
+--
+
+INSERT INTO `cooperative_externalfascilitiestemp` (`id`, `created_at`, `updated_at`, `description`, `amount`, `image`, `approval_comment`, `approved_at`, `approval_officer_id`, `member_id`, `status_id`, `transaction_status_id`) VALUES
+(1, '2022-01-31 00:27:22.991837', '2022-01-31 00:28:37.626657', 'First Bank Loan Repayment', '10000.00', '/media/boxed-bg_KkMoEPd.jpg', 'ok', '2022-01-31', 15, 153, 2, 2);
 
 -- --------------------------------------------------------
 
@@ -1748,7 +2267,7 @@ CREATE TABLE `cooperative_generalticket` (
 --
 
 INSERT INTO `cooperative_generalticket` (`id`, `created_at`, `updated_at`, `ticket`) VALUES
-(1, '2022-01-27 16:13:07.000000', '2022-01-28 19:29:05.854479', 2022000034);
+(1, '2022-01-27 16:13:07.000000', '2022-02-17 17:45:31.722242', 2022000053);
 
 -- --------------------------------------------------------
 
@@ -2737,6 +3256,14 @@ CREATE TABLE `cooperative_loanapplication` (
   `tdate` date NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+--
+-- Dumping data for table `cooperative_loanapplication`
+--
+
+INSERT INTO `cooperative_loanapplication` (`id`, `created_at`, `updated_at`, `loan_amount`, `approved_amount`, `comment`, `certification_comment`, `certification_date`, `approval_comment`, `approval_date`, `applicant_id`, `approval_officer_id`, `approval_status_id`, `bank_account_id`, `certification_officer_id`, `certification_status_id`, `nok_id`, `processed_by_id`, `submission_status_id`, `transaction_status_id`, `tdate`) VALUES
+(2, '2022-01-31 00:46:34.061476', '2022-01-31 02:48:20.276425', '200000.00', '200000.00', 'FOR YOUR CONSIDERATION', 'CERTIFIED FOR YOUR CONSIDERATION', '2022-01-31', 'Please Process', '2022-01-31', 2, 13, 2, 1, 4, 2, 1, NULL, 2, 2, '2022-01-31'),
+(3, '2022-01-31 01:17:45.904643', '2022-01-31 02:48:59.379606', '50000.00', '50000.00', 'FOR YOUR CONSIDERATION', 'CERTIFIED FOR YOUR CONSIDERATION', '2022-01-31', 'Please Process', '2022-01-31', 1, 9, 2, 2, 3, 2, 2, NULL, 2, 2, '2022-01-31');
+
 -- --------------------------------------------------------
 
 --
@@ -2751,6 +3278,16 @@ CREATE TABLE `cooperative_loanapplicationguarnators` (
   `guarantor_id` int(11) DEFAULT NULL,
   `status_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `cooperative_loanapplicationguarnators`
+--
+
+INSERT INTO `cooperative_loanapplicationguarnators` (`id`, `created_at`, `updated_at`, `applicant_id`, `guarantor_id`, `status_id`) VALUES
+(1, '2022-01-31 00:46:44.256820', '2022-01-31 00:46:44.256820', 2, 151, 1),
+(2, '2022-01-31 00:46:52.578325', '2022-01-31 00:46:52.578325', 2, 155, 1),
+(3, '2022-01-31 01:32:41.547037', '2022-01-31 01:32:41.547037', 3, 166, 1),
+(4, '2022-01-31 01:32:59.268524', '2022-01-31 01:32:59.268524', 3, 168, 1);
 
 -- --------------------------------------------------------
 
@@ -2768,6 +3305,76 @@ CREATE TABLE `cooperative_loanapplicationsettings` (
   `applicant_id` int(11) DEFAULT NULL,
   `status_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `cooperative_loanapplicationsettings`
+--
+
+INSERT INTO `cooperative_loanapplicationsettings` (`id`, `created_at`, `updated_at`, `description`, `value`, `category`, `applicant_id`, `status_id`) VALUES
+(1, '2022-01-31 01:17:30.649825', '2022-01-31 01:17:30.649825', 'GROSS PAY', '190000.00', 'ANALYSIS', 2, 1),
+(2, '2022-01-31 01:17:30.915663', '2022-01-31 01:17:30.915663', 'SALARY BALANCE AFTER DEDUCTIONS', '169000.0', 'ANALYSIS', 2, 1),
+(3, '2022-01-31 01:17:31.006312', '2022-01-31 01:17:31.006312', 'LONG TERM LOAN', '200000.00', 'ANALYSIS', 2, 1),
+(4, '2022-01-31 01:17:31.116838', '2022-01-31 01:17:31.116838', 'MONTHLY DEDUCTIONS', '11000.00', 'ANALYSIS', 2, 1),
+(5, '2022-01-31 01:17:31.160698', '2022-01-31 01:17:31.160698', 'OUTSTANDING MONTHLY LOAN REPAYMENTS', '0.00', 'ANALYSIS', 2, 1),
+(6, '2022-01-31 01:17:31.267636', '2022-01-31 01:17:31.267636', 'COOPERATIVE SHOP', '0', 'ANALYSIS', 2, 1),
+(7, '2022-01-31 01:17:31.383608', '2022-01-31 01:17:31.383608', 'EXTERNAL FASCILITIES', '10000.00', 'ANALYSIS', 2, 1),
+(8, '2022-01-31 01:17:31.761124', '2022-01-31 01:17:31.761124', 'LOAN DURATION', '24 MONTHS', 'ANALYSIS', 2, 1),
+(9, '2022-01-31 01:17:31.805142', '2022-01-31 01:17:31.805142', 'SALARY LOAN RELATIONSHIP', '65%', 'ANALYSIS', 2, 1),
+(10, '2022-01-31 01:17:31.839231', '2022-01-31 01:17:31.839231', 'SALARY LOAN RELATIONSHIP COMPUTED', '109850.0', 'ANALYSIS', 2, 1),
+(11, '2022-01-31 01:17:31.882520', '2022-01-31 01:17:31.882520', 'LOAN AGE', '6 MONTHS', 'ANALYSIS', 2, 1),
+(12, '2022-01-31 01:17:31.927491', '2022-01-31 01:17:31.927491', 'DATE JOINED', '2020-01-01', 'ANALYSIS', 2, 1),
+(13, '2022-01-31 01:17:31.977657', '2022-01-31 01:17:31.977657', 'MEMBER AGE', '24MONTH(S)', 'ANALYSIS', 2, 1),
+(14, '2022-01-31 01:17:32.004857', '2022-01-31 01:17:32.005855', 'LOAN INTEREST RATE', '5%', 'ANALYSIS', 2, 1),
+(15, '2022-01-31 01:17:32.038835', '2022-01-31 01:17:32.038835', 'INTEREST DEDUCTION', 'SOURCE', 'ANALYSIS', 2, 1),
+(16, '2022-01-31 01:17:32.082808', '2022-01-31 01:17:32.082808', 'LOAN INTEREST', '10000.0', 'ANALYSIS', 2, 1),
+(17, '2022-01-31 01:17:32.115785', '2022-01-31 01:17:32.115785', 'AMOUNT SCHEDULED', '200000.0', 'ANALYSIS', 2, 1),
+(18, '2022-01-31 01:17:32.149765', '2022-01-31 01:17:32.149765', 'MONTHLY REPAYMENT', '8334.0', 'ANALYSIS', 2, 1),
+(19, '2022-01-31 01:17:32.182745', '2022-01-31 01:17:32.182745', 'LOAN BASED SAVINGS', 'PROJECT SAVINGS', 'ANALYSIS', 2, 1),
+(20, '2022-01-31 01:17:32.227717', '2022-01-31 01:17:32.227717', 'SAVED AMOUNT', '250000.00', 'ANALYSIS', 2, 1),
+(21, '2022-01-31 01:17:32.295564', '2022-01-31 01:17:32.295564', 'LOAN BASED SAVINGS RATE', '35%', 'ANALYSIS', 2, 1),
+(22, '2022-01-31 01:17:32.350076', '2022-01-31 01:17:32.350076', 'Guarantors', '[(1, \'BEN IDAKA MAUREEN\'), (2, \'IKWUO NNACHI IJEM\')]', 'ANALYSIS', 2, 1),
+(23, '2022-01-31 01:17:32.397187', '2022-01-31 01:17:32.397187', 'Bank Details', 'OKONKWO NKONYELU E - 4565677766 - Access Bank Plc ', 'ANALYSIS', 2, 1),
+(24, '2022-01-31 01:17:32.443313', '2022-01-31 01:17:32.443313', 'Next of Kin', 'OKONKWO GRACE - SPOUSE', 'ANALYSIS', 2, 1),
+(25, '2022-01-31 01:17:32.495468', '2022-01-31 01:17:32.495468', 'MEMBER STATUS', 'True', 'SUMMARY', 2, 1),
+(26, '2022-01-31 01:17:32.549334', '2022-01-31 01:17:32.549334', 'EXCLUSIVE STATUS', 'EXCLUSIVE', 'SUMMARY', 2, 1),
+(27, '2022-01-31 01:17:32.594944', '2022-01-31 01:17:32.594944', 'SAME LOAN TYPE', 'False', 'SUMMARY', 2, 1),
+(28, '2022-01-31 01:17:32.649143', '2022-01-31 01:17:32.649143', 'SALARY STATUS', 'True', 'SUMMARY', 2, 1),
+(29, '2022-01-31 01:17:32.694678', '2022-01-31 01:17:32.694678', 'LOAN SAVINGS BASED STATUS', 'True', 'SUMMARY', 2, 1),
+(30, '2022-01-31 01:17:32.738226', '2022-01-31 01:17:32.738226', 'NOK Status', 'True', 'SUMMARY', 2, 1),
+(31, '2022-01-31 01:17:32.794974', '2022-01-31 01:17:32.794974', 'Bank Account Status', 'True', 'SUMMARY', 2, 1),
+(32, '2022-01-31 01:17:32.839250', '2022-01-31 01:17:32.839250', 'Guarantors Status', 'True', 'SUMMARY', 2, 1),
+(33, '2022-01-31 01:33:13.464570', '2022-01-31 01:33:13.464570', 'GROSS PAY', '250000.00', 'ANALYSIS', 3, 1),
+(34, '2022-01-31 01:33:13.631318', '2022-01-31 01:33:13.631318', 'SALARY BALANCE AFTER DEDUCTIONS', '215000.0', 'ANALYSIS', 3, 1),
+(35, '2022-01-31 01:33:13.675631', '2022-01-31 01:33:13.675631', 'SHORT TERM LOAN', '50000.00', 'ANALYSIS', 3, 1),
+(36, '2022-01-31 01:33:13.793926', '2022-01-31 01:33:13.793926', 'MONTHLY DEDUCTIONS', '35000.00', 'ANALYSIS', 3, 1),
+(37, '2022-01-31 01:33:13.900988', '2022-01-31 01:33:13.900988', 'OUTSTANDING MONTHLY LOAN REPAYMENTS', '0.00', 'ANALYSIS', 3, 1),
+(38, '2022-01-31 01:33:14.032189', '2022-01-31 01:33:14.032189', 'COOPERATIVE SHOP', '0', 'ANALYSIS', 3, 1),
+(39, '2022-01-31 01:33:14.209108', '2022-01-31 01:33:14.209108', 'EXTERNAL FASCILITIES', '0', 'ANALYSIS', 3, 1),
+(40, '2022-01-31 01:33:14.241086', '2022-01-31 01:33:14.241086', 'LOAN DURATION', '3 MONTHS', 'ANALYSIS', 3, 1),
+(41, '2022-01-31 01:33:14.275063', '2022-01-31 01:33:14.275063', 'SALARY LOAN RELATIONSHIP', '35%', 'ANALYSIS', 3, 1),
+(42, '2022-01-31 01:33:14.308042', '2022-01-31 01:33:14.308042', 'SALARY LOAN RELATIONSHIP COMPUTED', '75250.0', 'ANALYSIS', 3, 1),
+(43, '2022-01-31 01:33:14.354021', '2022-01-31 01:33:14.355016', 'LOAN AGE', '6 MONTHS', 'ANALYSIS', 3, 1),
+(44, '2022-01-31 01:33:14.385996', '2022-01-31 01:33:14.385996', 'DATE JOINED', '2020-01-01', 'ANALYSIS', 3, 1),
+(45, '2022-01-31 01:33:14.430845', '2022-01-31 01:33:14.430845', 'MEMBER AGE', '24MONTH(S)', 'ANALYSIS', 3, 1),
+(46, '2022-01-31 01:33:14.487230', '2022-01-31 01:33:14.487230', 'LOAN INTEREST RATE', '5%', 'ANALYSIS', 3, 1),
+(47, '2022-01-31 01:33:14.531448', '2022-01-31 01:33:14.531448', 'INTEREST DEDUCTION', 'SPREAD', 'ANALYSIS', 3, 1),
+(48, '2022-01-31 01:33:14.574815', '2022-01-31 01:33:14.574815', 'LOAN INTEREST', '2500.0', 'ANALYSIS', 3, 1),
+(49, '2022-01-31 01:33:14.608726', '2022-01-31 01:33:14.608726', 'AMOUNT SCHEDULED', '52500.0', 'ANALYSIS', 3, 1),
+(50, '2022-01-31 01:33:14.654435', '2022-01-31 01:33:14.654435', 'MONTHLY REPAYMENT', '17500.0', 'ANALYSIS', 3, 1),
+(51, '2022-01-31 01:33:14.708547', '2022-01-31 01:33:14.708547', 'LOAN BASED SAVINGS', 'PROJECT SAVINGS', 'ANALYSIS', 3, 1),
+(52, '2022-01-31 01:33:14.764732', '2022-01-31 01:33:14.764732', 'SAVED AMOUNT', '458000.00', 'ANALYSIS', 3, 1),
+(53, '2022-01-31 01:33:14.831677', '2022-01-31 01:33:14.831677', 'LOAN BASED SAVINGS RATE', '35%', 'ANALYSIS', 3, 1),
+(54, '2022-01-31 01:33:15.018345', '2022-01-31 01:33:15.018345', 'Guarantors', '[(3, \'EFFIONG ABIA ANIET\'), (4, \'DR ABIA EFFIONG NDO\')]', 'ANALYSIS', 3, 1),
+(55, '2022-01-31 01:33:15.135821', '2022-01-31 01:33:15.135821', 'Bank Details', 'IDAKA BEN MAUREEN - 3012736346 - FIRST BANK NIGERIA LIMITED ', 'ANALYSIS', 3, 1),
+(56, '2022-01-31 01:33:15.215764', '2022-01-31 01:33:15.215764', 'Next of Kin', 'IDAKA SUNDAY - SON', 'ANALYSIS', 3, 1),
+(57, '2022-01-31 01:33:15.249181', '2022-01-31 01:33:15.250192', 'MEMBER STATUS', 'True', 'SUMMARY', 3, 1),
+(58, '2022-01-31 01:33:15.304740', '2022-01-31 01:33:15.305751', 'EXCLUSIVE STATUS', 'EXCLUSIVE', 'SUMMARY', 3, 1),
+(59, '2022-01-31 01:33:15.331899', '2022-01-31 01:33:15.331899', 'SAME LOAN TYPE', 'False', 'SUMMARY', 3, 1),
+(60, '2022-01-31 01:33:15.363811', '2022-01-31 01:33:15.364820', 'SALARY STATUS', 'True', 'SUMMARY', 3, 1),
+(61, '2022-01-31 01:33:15.397794', '2022-01-31 01:33:15.398805', 'LOAN SAVINGS BASED STATUS', 'True', 'SUMMARY', 3, 1),
+(62, '2022-01-31 01:33:15.431413', '2022-01-31 01:33:15.431413', 'NOK Status', 'True', 'SUMMARY', 3, 1),
+(63, '2022-01-31 01:33:15.464393', '2022-01-31 01:33:15.464393', 'Bank Account Status', 'True', 'SUMMARY', 3, 1),
+(64, '2022-01-31 01:33:15.508367', '2022-01-31 01:33:15.508367', 'Guarantors Status', 'True', 'SUMMARY', 3, 1);
 
 -- --------------------------------------------------------
 
@@ -2833,8 +3440,8 @@ CREATE TABLE `cooperative_loanformissuance` (
 --
 
 INSERT INTO `cooperative_loanformissuance` (`id`, `created_at`, `updated_at`, `receipt`, `admin_charge`, `applicant_id`, `processing_status_id`, `status_id`, `tdate`) VALUES
-(1, '2022-01-30 21:26:19.792874', '2022-01-30 21:26:19.792874', 'C-00444', '1000.00', 2, 1, 1, '2022-01-30'),
-(2, '2022-01-31 02:20:51.666002', '2022-01-31 02:20:51.666002', '00004', '2000.00', 4, 1, 1, '2022-01-31');
+(1, '2022-01-30 21:26:19.792874', '2022-01-31 01:33:15.567329', 'C-00444', '1000.00', 2, 2, 1, '2022-01-30'),
+(2, '2022-01-31 02:20:51.666002', '2022-01-31 01:17:32.890299', '00004', '2000.00', 4, 2, 1, '2022-01-31');
 
 -- --------------------------------------------------------
 
@@ -2889,7 +3496,7 @@ CREATE TABLE `cooperative_loannumber` (
 --
 
 INSERT INTO `cooperative_loannumber` (`id`, `created_at`, `updated_at`, `code`) VALUES
-(1, '2021-12-13 15:38:23.230298', '2021-12-13 16:22:58.298337', 3);
+(1, '2021-12-13 15:38:23.230298', '2022-02-16 10:42:45.572755', 61);
 
 -- --------------------------------------------------------
 
@@ -3094,6 +3701,15 @@ CREATE TABLE `cooperative_loansdisbursed` (
   `tdate` date NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+--
+-- Dumping data for table `cooperative_loansdisbursed`
+--
+
+INSERT INTO `cooperative_loansdisbursed` (`id`, `created_at`, `updated_at`, `loan_number`, `loan_amount`, `repayment`, `amount_paid`, `balance`, `duration`, `interest_rate`, `interest_deduction`, `start_date`, `stop_date`, `merge_account_number`, `loan_merge_status_id`, `member_id`, `processed_by_id`, `schedule_status_id`, `status_id`, `transaction_id`, `tdate`) VALUES
+(3, '2022-01-31 02:48:20.200278', '2022-01-31 02:48:20.200278', '20200003202213124800035', '210000.00', '8334.00', '18334.00', '-191666.00', 24, 5, 'SOURCE', '2021-12-31', '2023-12-31', NULL, 1, 153, 9, 1, 1, 9, '2022-01-31'),
+(4, '2022-01-31 02:48:59.236561', '2022-01-31 02:48:59.236561', '20100001202213124800037', '52500.00', '17500.00', '17500.00', '-35000.00', 3, 5, 'SPREAD', '2021-12-31', '2022-03-31', NULL, 1, 151, 9, 1, 1, 8, '2022-01-31'),
+(7, '2022-02-16 10:42:46.079263', '2022-02-16 10:42:46.080262', '205000012200060', '19000.00', '6334.00', '0.00', '-19000.00', 3, 0, NULL, '2022-03-16', '2022-06-16', NULL, 1, 151, 9, 1, 1, 22, '2022-02-16');
+
 -- --------------------------------------------------------
 
 --
@@ -3116,8 +3732,18 @@ CREATE TABLE `cooperative_loansrepaymentbase` (
   `member_id` int(11) DEFAULT NULL,
   `processed_by_id` bigint(20) DEFAULT NULL,
   `status_id` int(11) DEFAULT NULL,
-  `transaction_id` int(11) DEFAULT NULL
+  `transaction_id` int(11) DEFAULT NULL,
+  `tdate` date NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `cooperative_loansrepaymentbase`
+--
+
+INSERT INTO `cooperative_loansrepaymentbase` (`id`, `created_at`, `updated_at`, `loan_number`, `loan_amount`, `repayment`, `amount_paid`, `balance`, `start_date`, `stop_date`, `merged_loans`, `loan_merge_status_id`, `member_id`, `processed_by_id`, `status_id`, `transaction_id`, `tdate`) VALUES
+(3, '2022-01-31 02:48:20.090261', '2022-01-31 02:48:20.090261', '20200003202213124800035', '210000.00', '8334.00', '18334.00', '-191666.00', '2021-12-31', NULL, NULL, 1, 153, 9, 1, 9, '2022-01-31'),
+(4, '2022-01-31 02:48:59.169812', '2022-01-31 02:48:59.169812', '20100001202213124800037', '52500.00', '17500.00', '17500.00', '-35000.00', '2021-12-31', NULL, NULL, 1, 151, 9, 1, 8, '2022-01-31'),
+(8, '2022-02-16 10:42:45.873748', '2022-02-16 10:42:45.873748', '205000012200060', '19000.00', '6334.00', '0.00', '-19000.00', '2022-03-16', NULL, NULL, 1, 151, 9, 1, 22, '2022-02-16');
 
 -- --------------------------------------------------------
 
@@ -3271,7 +3897,7 @@ INSERT INTO `cooperative_members` (`id`, `created_at`, `updated_at`, `member_id`
 (154, '2021-12-07 21:04:31.628875', '2022-01-10 14:53:34.820748', 'FETHAII/2013/00004', 'CHIB', 'OPHELIA AMADI CHIB', '08064004358', '', '', '', '00004', '00004', '158000.00', 'Salary as at 01/10/2022', 0, '2020-01-01', 170, 355, 1, NULL, 1, NULL, 2, NULL, 1, 1, 1, 1, NULL, 1, NULL, 1),
 (155, '2021-12-07 21:04:32.330190', '2022-01-10 18:45:14.948229', 'FETHAII/2014/00005', 'IJEM', 'IKWUO NNACHI IJEM', '08064004359', '', '', '', '00005', '00005', '200000.00', 'Salary as at 01/10/2022', 0, '2020-01-01', 171, 356, 1, NULL, 1, NULL, 2, NULL, 1, 1, 1, 1, NULL, 1, NULL, 1),
 (156, '2021-12-07 21:04:32.917815', '2022-01-10 14:45:05.297590', 'FETHAII/2015/00006', 'MARY', 'IFEOMA AGBOWO MARY', '08064004360', '', '', '', '00006', '00006', '190000.00', 'Salary as at 01/10/2022', 0, '2020-01-01', 172, 357, 1, NULL, 1, NULL, 2, NULL, 1, 1, 1, 1, NULL, 1, NULL, 1),
-(157, '2021-12-07 21:04:33.585676', '2021-12-07 21:04:33.659120', 'FETHAII/2016/00007', 'OKUTA J', 'DR NWANKWO OKUTA J', '08064004361', '', '', '', '00007', '00007', '0.00', NULL, 0, '2020-01-01', 173, 358, 1, NULL, 1, NULL, 1, NULL, 1, 1, 1, 1, NULL, 1, NULL, 1),
+(157, '2021-12-07 21:04:33.585676', '2022-02-13 08:35:26.494284', 'FETHAII/2016/00007', 'OKUTA J', 'DR NWANKWO OKUTA J', '08064004361', '', '', '', '00007', '00007', '167000.00', 'Salary as at 02/13/2022', 0, '2020-01-01', 173, 358, 1, NULL, 1, NULL, 2, NULL, 1, 1, 1, 1, NULL, 1, NULL, 1),
 (158, '2021-12-07 21:04:34.483294', '2021-12-07 21:04:34.583147', 'FETHAII/2017/00008', '', 'EMMANUEL ABAA ', '08064004362', '', '', '', '00008', '00008', '0.00', NULL, 0, '2020-01-01', 174, 359, 1, NULL, 1, NULL, 1, NULL, 1, 1, 1, 1, NULL, 1, NULL, 1),
 (159, '2021-12-07 21:04:35.469113', '2021-12-07 21:04:35.583399', 'FETHAII/2018/00009', 'AGNES', 'UGO ABAGHA AGNES', '08064004363', '', '', '', '00009', '00009', '0.00', NULL, 0, '2020-01-01', 175, 360, 1, NULL, 1, NULL, 1, NULL, 1, 1, 1, 1, NULL, 1, NULL, 1),
 (160, '2021-12-07 21:04:36.106691', '2021-12-07 21:04:36.331501', 'FETHAII/2019/00010', '', 'CHIGOZI ABAGHAUGWU ', '08064004364', '', '', '', '00010', '00010', '0.00', NULL, 0, '2020-01-01', 176, 361, 1, NULL, 1, NULL, 1, NULL, 1, 1, 1, 1, NULL, 1, NULL, 1),
@@ -3280,9 +3906,9 @@ INSERT INTO `cooperative_members` (`id`, `created_at`, `updated_at`, `member_id`
 (163, '2021-12-07 21:04:38.532958', '2021-12-07 21:04:38.763592', 'FETHAII/2010/00013', 'CHI', 'LAWRENCE ABARA CHI', '08064004367', '', '', '', '00013', '00013', '0.00', NULL, 0, '2020-01-01', 179, 364, 1, NULL, 1, NULL, 1, NULL, 1, 1, 1, 1, NULL, 1, NULL, 1),
 (164, '2021-12-07 21:04:39.374579', '2021-12-07 21:04:39.488758', 'FETHAII/2011/00014', 'EUC', 'NWAKAEGO ABARA EUC', '08064004368', '', '', '', '00014', '00014', '0.00', NULL, 0, '2020-01-01', 180, 365, 1, NULL, 1, NULL, 1, NULL, 1, 1, 1, 1, NULL, 1, NULL, 1),
 (165, '2021-12-07 21:04:40.370419', '2022-01-26 05:20:44.786921', 'FETHAII/2012/00015', 'DORCAS', 'OBASI ABBA DORCAS', '08064004369', '', '', '', '00015', '00015', '140000.00', 'Salary as at 01/26/2022', 0, '2020-01-01', 181, 366, 1, NULL, 1, NULL, 2, NULL, 1, 1, 2, 1, NULL, 1, NULL, 1),
-(166, '2021-12-07 21:04:40.942450', '2021-12-07 21:04:40.983089', 'FETHAII/2013/00016', 'ANIET', 'EFFIONG ABIA ANIET', '08064004370', '', '', '', '00016', '00016', '0.00', NULL, 0, '2020-01-01', 182, 367, 1, NULL, 1, NULL, 1, NULL, 1, 1, 1, 1, NULL, 1, NULL, 1),
+(166, '2021-12-07 21:04:40.942450', '2022-01-31 01:32:05.104423', 'FETHAII/2013/00016', 'ANIET', 'EFFIONG ABIA ANIET', '08064004370', '', '', '', '00016', '00016', '350000.00', 'Salary as at 01/31/2022', 0, '2020-01-01', 182, 367, 1, NULL, 1, NULL, 2, NULL, 1, 1, 1, 1, NULL, 1, NULL, 1),
 (167, '2021-12-07 21:04:41.497046', '2021-12-07 21:04:41.561632', 'FETHAII/2014/00017', 'NDON', 'NKIRUKA ABIA NDON', '08064004371', '', '', '', '00017', '00017', '0.00', NULL, 0, '2020-01-01', 183, 368, 1, NULL, 1, NULL, 1, NULL, 1, 1, 1, 1, NULL, 1, NULL, 1),
-(168, '2021-12-07 21:04:42.105763', '2021-12-07 21:04:42.215456', 'FETHAII/2015/00018', 'EFFIONG NDO', 'DR ABIA EFFIONG NDO', '08064004372', '', '', '', '00018', '00018', '0.00', NULL, 0, '2020-01-01', 184, 369, 1, NULL, 1, NULL, 1, NULL, 1, 1, 1, 1, NULL, 1, NULL, 1),
+(168, '2021-12-07 21:04:42.105763', '2022-01-31 01:32:19.186371', 'FETHAII/2015/00018', 'EFFIONG NDO', 'DR ABIA EFFIONG NDO', '08064004372', '', '', '', '00018', '00018', '400000.00', 'Salary as at 01/31/2022', 0, '2020-01-01', 184, 369, 1, NULL, 1, NULL, 2, NULL, 1, 1, 1, 1, NULL, 1, NULL, 1),
 (169, '2021-12-07 21:04:42.742450', '2021-12-07 21:04:42.928571', 'FETHAII/2016/00019', 'GLORIA', 'UGOCHI ABII GLORIA', '08064004373', '', '', '', '00019', '00019', '0.00', NULL, 0, '2020-01-01', 185, 370, 1, NULL, 1, NULL, 1, NULL, 1, 1, 1, 1, NULL, 1, NULL, 1),
 (170, '2021-12-07 21:04:43.450302', '2021-12-07 21:04:43.687229', 'FETHAII/2017/00020', 'ZULAY', 'ABEKE ABIOLA ZULAY', '08064004374', '', '', '', '00020', '00020', '0.00', NULL, 0, '2020-01-01', 186, 371, 1, NULL, 1, NULL, 1, NULL, 1, 1, 1, 1, NULL, 1, NULL, 1),
 (171, '2021-12-07 21:04:44.289093', '2021-12-07 21:04:44.398736', 'FETHAII/2018/00021', 'CLARA', 'CHIOMA ABIRI CLARA', '08064004375', '', '', '', '00021', '00021', '0.00', NULL, 0, '2020-01-01', 187, 372, 1, NULL, 1, NULL, 1, NULL, 1, 1, 1, 1, NULL, 1, NULL, 1),
@@ -3310,7 +3936,7 @@ INSERT INTO `cooperative_members` (`id`, `created_at`, `updated_at`, `member_id`
 (193, '2021-12-07 21:05:02.474177', '2021-12-07 21:05:02.561181', 'FETHAII/2016/00043', '', 'OGHENEOCHUKO ADOKA ', '08064004397', '', '', '', '00043', '00043', '0.00', NULL, 0, '2020-01-01', 209, 394, 1, NULL, 1, NULL, 1, NULL, 1, 1, 1, 1, NULL, 1, NULL, 1),
 (194, '2021-12-07 21:05:03.019273', '2021-12-07 21:05:03.109420', 'FETHAII/2017/00044', 'JOHN', 'NWOVA ADOKE JOHN', '08064004398', '', '', '', '00044', '00044', '0.00', NULL, 0, '2020-01-01', 210, 395, 1, NULL, 1, NULL, 1, NULL, 1, 1, 1, 1, NULL, 1, NULL, 1),
 (195, '2021-12-07 21:05:03.608681', '2021-12-07 21:05:03.705383', 'FETHAII/2018/00045', 'ELDA', 'EDACHE ADOKWU ELDA', '08064004399', '', '', '', '00045', '00045', '0.00', NULL, 0, '2020-01-01', 211, 396, 1, NULL, 1, NULL, 1, NULL, 1, 1, 1, 1, NULL, 1, NULL, 1),
-(196, '2021-12-07 21:05:04.174988', '2021-12-07 21:05:04.270349', 'FETHAII/2019/00046', 'BENJA', 'OBINNA ADONU BENJA', '08064004400', '', '', '', '00046', '00046', '0.00', NULL, 0, '2020-01-01', 212, 397, 1, NULL, 1, NULL, 1, NULL, 1, 1, 1, 1, NULL, 1, NULL, 1),
+(196, '2021-12-07 21:05:04.174988', '2022-02-17 11:35:55.764702', 'FETHAII/2019/00046', 'BENJA', 'OBINNA ADONU BENJA', '08064004400', '', '', '', '00046', '00046', '158000.00', 'Salary as at 02/17/2022', 0, '2020-01-01', 212, 397, 1, NULL, 1, NULL, 2, NULL, 1, 1, 1, 1, NULL, 1, NULL, 1),
 (197, '2021-12-07 21:05:04.945655', '2021-12-07 21:05:05.028132', 'FETHAII/2020/00047', 'UKAMA', 'LINDA ADUAKA UKAMA', '08064004401', '', '', '', '00047', '00047', '0.00', NULL, 0, '2020-01-01', 213, 398, 1, NULL, 1, NULL, 1, NULL, 1, 1, 1, 1, NULL, 1, NULL, 1),
 (198, '2021-12-07 21:05:05.539143', '2021-12-07 21:05:05.792605', 'FETHAII/2021/00048', 'ELIZA', 'NGOZI ADUAKA ELIZA', '08064004402', '', '', '', '00048', '00048', '0.00', NULL, 0, '2020-01-01', 214, 399, 1, NULL, 1, NULL, 1, NULL, 1, 1, 1, 1, NULL, 1, NULL, 1),
 (199, '2021-12-07 21:05:06.294739', '2021-12-07 21:05:06.398963', 'FETHAII/2010/00049', 'ONYI', 'VIVIAN ADUAKA ONYI', '08064004403', '', '', '', '00049', '00049', '0.00', NULL, 0, '2020-01-01', 215, 400, 1, NULL, 1, NULL, 1, NULL, 1, 1, 1, 1, NULL, 1, NULL, 1),
@@ -3321,7 +3947,7 @@ INSERT INTO `cooperative_members` (`id`, `created_at`, `updated_at`, `member_id`
 (214, '2022-01-30 17:06:07.886447', '2022-01-30 17:06:08.120152', 'FETHAII/2021/05009', 'SONIA', 'CHINYERE IGWE SONIA', '08145674655', '', 'Onueke', 'Onueke', '3434554', '3434554', '0.00', NULL, 0, '2022-01-30', 232, 405, 1, 26, 1, 2, 1, 217, 1, 1, 1, 1, 11, 1, 2, 1),
 (215, '2022-01-30 17:07:19.717842', '2022-01-30 17:07:19.889198', 'FETHAII/2021/05010', 'NJOKU', 'EMEKA NJOKU NJOKU', '08608686423', '/media/avatar04_IN1TkDC.png', '', '', '233443', '233443', '0.00', NULL, 0, '2022-01-30', 233, 404, 1, 1, 1, 1, 1, 3, 1, 1, 1, 1, 1, 1, 4, 1),
 (216, '2022-01-30 17:08:21.545256', '2022-01-30 17:08:21.786705', 'FETHAII/2021/05011', 'CHIKE', 'EMMANUEL ONWE CHIKE', '08039555648', '', 'ONWE', '', '34233232', '233232', '0.00', NULL, 0, '2022-01-30', 234, 406, 1, 37, 1, 1, 1, 217, 1, 1, 1, 1, 11, 1, 8, 1),
-(217, '2022-01-30 19:51:29.981227', '2022-01-30 19:51:30.159865', 'FETHAII/2021/05012', 'PROF', 'CHUKWUMA NWEKPA PROF', '0907777789', '/media/avatar5_s1uCHvB.png', '', '', '343455', '32233232', '0.00', NULL, 0, '2022-01-30', 235, 407, 1, 2, 1, 1, 1, 217, 1, 2, 1, 1, 11, 1, 1, 1),
+(217, '2022-01-30 19:51:29.981227', '2022-02-16 03:33:02.420821', 'FETHAII/2021/05012', 'PROF', 'CHUKWUMA NWEKPA PROF', '0907777789', '/media/avatar5_s1uCHvB.png', '', '', '343455', '32233232', '158000.00', 'Salary as at 02/16/2022', 0, '2022-01-30', 235, 407, 1, 2, 1, 1, 2, 217, 1, 2, 1, 1, 11, 1, 1, 1),
 (218, '2022-01-30 19:52:14.240215', '2022-01-30 19:52:14.357266', 'FETHAII/2021/05013', '', 'NWEKE AGU ', '09505857445', '/media/avatar3_grqylVq.png', '', '', '7676767', '5454541', '0.00', NULL, 0, '2022-01-30', 236, 408, 1, 1, 1, 1, 1, 15, 1, 1, 1, 1, 1, 1, 7, 1);
 
 -- --------------------------------------------------------
@@ -3761,6 +4387,14 @@ CREATE TABLE `cooperative_membersbankaccounts` (
   `member_id_id` int(11) DEFAULT NULL,
   `status_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `cooperative_membersbankaccounts`
+--
+
+INSERT INTO `cooperative_membersbankaccounts` (`id`, `created_at`, `updated_at`, `account_name`, `account_number`, `account_type_id`, `bank_id`, `lock_status_id`, `member_id_id`, `status_id`) VALUES
+(1, '2022-01-31 00:30:24.435067', '2022-01-31 00:30:24.435067', 'OKONKWO NKONYELU E', '4565677766', 2, 1, 2, 153, 1),
+(2, '2022-01-31 01:30:07.300535', '2022-01-31 01:30:07.300535', 'IDAKA BEN MAUREEN', '3012736346', 2, 5, 2, 151, 1);
 
 -- --------------------------------------------------------
 
@@ -4448,7 +5082,8 @@ INSERT INTO `cooperative_membershiprequest` (`id`, `created_at`, `updated_at`, `
 (406, '2022-01-01 08:43:48.387405', '2022-01-29 23:52:18.717465', 'NWEKE', 'AGU', '', '09505857445', '2022-01-01', NULL, '2022-01-01', NULL, NULL, NULL, NULL, 7, 2, 2, 2, 1, 1, 9, NULL, 2, 7, 2, '2022-01-29'),
 (409, '2022-01-30 00:02:21.502077', '2022-01-29 23:51:51.348453', 'CHUKWUMA', 'NWEKPA', 'PROF', '0907777789', '2022-01-29', NULL, '2022-01-29', NULL, NULL, NULL, NULL, 7, 2, 2, 2, 2, 1, 9, NULL, 2, 1, 2, '2022-01-29'),
 (410, '2022-01-30 00:44:02.877035', '2022-01-30 00:57:44.336042', 'NNNENA', 'IGWE', 'VERA', '08048447755', '2022-01-30', NULL, '2022-01-30', NULL, NULL, NULL, NULL, 7, 2, 2, 2, 25, 2, 9, NULL, 2, 3, 2, '2022-01-29'),
-(411, '2022-01-30 17:10:23.783911', '2022-01-30 18:19:02.315679', 'EZINNE', 'AGBO', 'STENORA', '34555434343', '2022-01-30', NULL, '2022-01-30', NULL, NULL, NULL, NULL, 7, 2, 2, 2, 1, 2, 9, NULL, 2, 4, 2, '2022-01-30');
+(411, '2022-01-30 17:10:23.783911', '2022-01-30 18:19:02.315679', 'EZINNE', 'AGBO', 'STENORA', '34555434343', '2022-01-30', NULL, '2022-01-30', NULL, NULL, NULL, NULL, 7, 2, 2, 2, 1, 2, 9, NULL, 2, 4, 2, '2022-01-30'),
+(412, '2022-02-07 14:21:09.134010', '2022-02-07 14:21:09.134010', 'NNENMA', 'UDUMA', '', '09389398383', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, 1, 2, 2, 9, NULL, 1, 2, 1, '2022-02-07');
 
 -- --------------------------------------------------------
 
@@ -4543,6 +5178,37 @@ INSERT INTO `cooperative_membershipstatus` (`id`, `title`, `created_at`, `update
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `cooperative_membershipterminationrequest`
+--
+
+CREATE TABLE `cooperative_membershipterminationrequest` (
+  `id` int(11) NOT NULL,
+  `created_at` datetime(6) NOT NULL,
+  `updated_at` datetime(6) NOT NULL,
+  `loan_amount` decimal(20,2) NOT NULL,
+  `comment` longtext DEFAULT NULL,
+  `applied_date` date NOT NULL,
+  `approval_comment` longtext DEFAULT NULL,
+  `approved_at` date DEFAULT NULL,
+  `tdate` date NOT NULL,
+  `approval_officer_id` int(11) DEFAULT NULL,
+  `approval_status_id` int(11) NOT NULL,
+  `member_id` int(11) DEFAULT NULL,
+  `status_id` int(11) NOT NULL,
+  `termination_id` int(11) DEFAULT NULL,
+  `processed_by_id` bigint(20) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `cooperative_membershipterminationrequest`
+--
+
+INSERT INTO `cooperative_membershipterminationrequest` (`id`, `created_at`, `updated_at`, `loan_amount`, `comment`, `applied_date`, `approval_comment`, `approved_at`, `tdate`, `approval_officer_id`, `approval_status_id`, `member_id`, `status_id`, `termination_id`, `processed_by_id`) VALUES
+(2, '2022-02-07 19:43:14.857469', '2022-02-07 19:43:14.857469', '191666.00', NULL, '2022-02-07', NULL, NULL, '2022-02-07', 16, 1, 153, 1, 3, NULL);
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `cooperative_membersidmanager`
 --
 
@@ -4580,6 +5246,14 @@ CREATE TABLE `cooperative_membersnextofkins` (
   `relationships_id` int(11) DEFAULT NULL,
   `status_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `cooperative_membersnextofkins`
+--
+
+INSERT INTO `cooperative_membersnextofkins` (`id`, `created_at`, `updated_at`, `name`, `address`, `phone_number`, `lock_status_id`, `member_id`, `relationships_id`, `status_id`) VALUES
+(1, '2022-01-31 00:10:45.412067', '2022-01-31 00:10:45.412067', 'OKONKWO GRACE', 'Abakaliki', '08595855555', 2, 153, 3, 1),
+(2, '2022-01-31 01:29:18.148339', '2022-01-31 01:29:18.148339', 'IDAKA SUNDAY', 'Enugu', '47475757656', 2, 151, 6, 1);
 
 -- --------------------------------------------------------
 
@@ -4791,6 +5465,102 @@ CREATE TABLE `cooperative_members_cash_sales_selected` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `cooperative_members_commodity_loam_application`
+--
+
+CREATE TABLE `cooperative_members_commodity_loam_application` (
+  `id` int(11) NOT NULL,
+  `created_at` datetime(6) NOT NULL,
+  `updated_at` datetime(6) NOT NULL,
+  `company_price` decimal(20,2) NOT NULL,
+  `coop_price` decimal(20,2) NOT NULL,
+  `interest` decimal(20,2) DEFAULT NULL,
+  `admin_charge` decimal(20,2) DEFAULT NULL,
+  `duration` smallint(5) UNSIGNED NOT NULL CHECK (`duration` >= 0),
+  `certification_comment` longtext DEFAULT NULL,
+  `certification_date` date DEFAULT NULL,
+  `approval_comment` longtext DEFAULT NULL,
+  `approval_date` date DEFAULT NULL,
+  `approval_officer_id` int(11) DEFAULT NULL,
+  `approval_status_id` int(11) DEFAULT NULL,
+  `certification_officer_id` int(11) DEFAULT NULL,
+  `certification_status_id` int(11) NOT NULL,
+  `member_id` int(11) NOT NULL,
+  `processed_by_id` bigint(20) DEFAULT NULL,
+  `status_id` int(11) NOT NULL,
+  `repayment` decimal(20,2) NOT NULL,
+  `comments` longtext DEFAULT NULL,
+  `tdate` date NOT NULL,
+  `ticket` varchar(255) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `cooperative_members_commodity_loam_application`
+--
+
+INSERT INTO `cooperative_members_commodity_loam_application` (`id`, `created_at`, `updated_at`, `company_price`, `coop_price`, `interest`, `admin_charge`, `duration`, `certification_comment`, `certification_date`, `approval_comment`, `approval_date`, `approval_officer_id`, `approval_status_id`, `certification_officer_id`, `certification_status_id`, `member_id`, `processed_by_id`, `status_id`, `repayment`, `comments`, `tdate`, `ticket`) VALUES
+(22, '2022-02-17 17:45:31.795678', '2022-02-17 21:24:16.359734', '170000.00', '173400.00', '3400.00', '500.00', 4, 'For your Consideration', '2022-02-17', NULL, NULL, 19, NULL, 5, 2, 21, 9, 1, '101650.00', 'For your Consideration', '2022-02-17', '2022000052');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `cooperative_members_commodity_loam_application_settings`
+--
+
+CREATE TABLE `cooperative_members_commodity_loam_application_settings` (
+  `id` int(11) NOT NULL,
+  `created_at` datetime(6) NOT NULL,
+  `updated_at` datetime(6) NOT NULL,
+  `description` varchar(255) NOT NULL,
+  `value` varchar(255) NOT NULL,
+  `applicant_id` int(11) NOT NULL,
+  `status_id` int(11) NOT NULL,
+  `ticket` varchar(255) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `cooperative_members_commodity_loam_application_settings`
+--
+
+INSERT INTO `cooperative_members_commodity_loam_application_settings` (`id`, `created_at`, `updated_at`, `description`, `value`, `applicant_id`, `status_id`, `ticket`) VALUES
+(52, '2022-02-17 17:45:31.850647', '2022-02-17 17:45:31.850647', 'ORDINARY SAVINGS', '5000.00', 22, 1, '2022000052'),
+(53, '2022-02-17 17:45:32.022571', '2022-02-17 17:45:32.022571', 'PROJECT SAVINGS', '3000.00', 22, 1, '2022000052'),
+(54, '2022-02-17 17:45:32.137664', '2022-02-17 17:45:32.137664', 'XMAS SAVINGS', '5000.00', 22, 1, '2022000052');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `cooperative_members_commodity_loam_products_selection`
+--
+
+CREATE TABLE `cooperative_members_commodity_loam_products_selection` (
+  `id` int(11) NOT NULL,
+  `created_at` datetime(6) NOT NULL,
+  `updated_at` datetime(6) NOT NULL,
+  `quantity` int(11) NOT NULL,
+  `company_price` decimal(20,2) NOT NULL,
+  `coop_price` decimal(20,2) NOT NULL,
+  `interest` decimal(20,2) DEFAULT NULL,
+  `admin_charge` decimal(20,2) DEFAULT NULL,
+  `duration` smallint(5) UNSIGNED NOT NULL CHECK (`duration` >= 0),
+  `processed_by_id` bigint(20) DEFAULT NULL,
+  `product_id` int(11) NOT NULL,
+  `status_id` int(11) NOT NULL,
+  `member_id` int(11) NOT NULL,
+  `tdate` date NOT NULL,
+  `ticket` varchar(255) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `cooperative_members_commodity_loam_products_selection`
+--
+
+INSERT INTO `cooperative_members_commodity_loam_products_selection` (`id`, `created_at`, `updated_at`, `quantity`, `company_price`, `coop_price`, `interest`, `admin_charge`, `duration`, `processed_by_id`, `product_id`, `status_id`, `member_id`, `tdate`, `ticket`) VALUES
+(21, '2022-02-17 17:45:07.899244', '2022-02-17 17:45:07.899244', 1, '170000.00', '173400.00', '3400.00', '500.00', 4, 9, 9, 2, 196, '2022-02-17', '2022000052');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `cooperative_members_credit_purchase_analysis`
 --
 
@@ -4821,7 +5591,16 @@ INSERT INTO `cooperative_members_credit_purchase_analysis` (`id`, `created_at`, 
 (94, '2022-01-28 19:29:13.043784', '2022-01-28 19:29:13.043784', 'PROJECT SAVINGS', '15000.00', '0.00', 1, 38, '2022-01-28'),
 (95, '2022-01-28 19:29:13.216317', '2022-01-28 19:29:13.216317', 'XMAS SAVINGS', '5000.00', '0.00', 1, 38, '2022-01-28'),
 (96, '2022-01-28 19:29:13.321405', '2022-01-28 19:29:13.321405', 'SHORT TERM LOAN', '35000.00', '0.00', 1, 38, '2022-01-28'),
-(97, '2022-01-28 19:29:13.485365', '2022-01-28 19:29:13.485365', 'LONG TERM LOAN', '50000.00', '0.00', 1, 38, '2022-01-28');
+(97, '2022-01-28 19:29:13.485365', '2022-01-28 19:29:13.485365', 'LONG TERM LOAN', '50000.00', '0.00', 1, 38, '2022-01-28'),
+(98, '2022-02-01 21:12:11.930823', '2022-02-01 21:12:11.930823', 'Salary as at 01/10/2022', '0.00', '158000.00', 1, 39, '2022-02-01'),
+(99, '2022-02-01 21:12:12.008779', '2022-02-01 21:12:12.008779', 'ORDINARY SAVINGS', '20000.00', '0.00', 1, 39, '2022-02-01'),
+(100, '2022-02-01 21:12:12.060760', '2022-02-01 21:12:12.060760', 'PROJECT SAVINGS', '10000.00', '0.00', 1, 39, '2022-02-01'),
+(101, '2022-02-01 21:12:12.277613', '2022-02-01 21:12:12.277613', 'XMAS SAVINGS', '30000.00', '0.00', 1, 39, '2022-02-01'),
+(102, '2022-02-01 21:12:12.335581', '2022-02-01 21:12:12.335581', 'LAND SAVINGS', '3000.00', '0.00', 1, 39, '2022-02-01'),
+(103, '2022-02-02 00:00:32.197769', '2022-02-02 00:00:32.197769', 'Salary as at 01/10/2022', '0.00', '190000.00', 1, 40, '2022-02-01'),
+(104, '2022-02-02 00:00:32.273718', '2022-02-02 00:00:32.273718', 'ORDINARY SAVINGS', '2000.00', '0.00', 1, 40, '2022-02-01'),
+(105, '2022-02-02 00:00:32.470635', '2022-02-02 00:00:32.470635', 'PROJECT SAVINGS', '3000.00', '0.00', 1, 40, '2022-02-01'),
+(106, '2022-02-02 00:00:32.637166', '2022-02-02 00:00:32.637166', 'XMAS SAVINGS', '2000.00', '0.00', 1, 40, '2022-02-01');
 
 -- --------------------------------------------------------
 
@@ -4851,7 +5630,9 @@ CREATE TABLE `cooperative_members_credit_purchase_summary` (
 
 INSERT INTO `cooperative_members_credit_purchase_summary` (`id`, `created_at`, `updated_at`, `debit`, `credit`, `balance`, `approval_comment`, `approval_date`, `approval_officer_id`, `approval_status_id`, `status_id`, `trans_code_id`, `tdate`) VALUES
 (18, '2022-01-28 16:50:21.109441', '2022-01-28 16:51:12.669942', '68500.00', '158000.00', '89500.00', 'APPROVED', NULL, 11, 2, 2, 36, '2022-01-28'),
-(19, '2022-01-28 19:29:12.766979', '2022-01-28 19:32:18.058346', '126650.00', '250000.00', '123350.00', 'APPROVED', NULL, 11, 2, 2, 38, '2022-01-28');
+(19, '2022-01-28 19:29:12.766979', '2022-01-28 19:32:18.058346', '126650.00', '250000.00', '123350.00', 'APPROVED', NULL, 11, 2, 2, 38, '2022-01-28'),
+(20, '2022-02-01 21:12:11.801906', '2022-02-01 21:13:16.179618', '86000.00', '158000.00', '72000.00', 'APPROVED', NULL, 11, 2, 2, 39, '2022-02-01'),
+(21, '2022-02-02 00:00:32.147799', '2022-02-02 00:01:03.189137', '13000.00', '190000.00', '177000.00', 'APPROVED', NULL, 11, 2, 2, 40, '2022-02-01');
 
 -- --------------------------------------------------------
 
@@ -4897,7 +5678,56 @@ CREATE TABLE `cooperative_members_credit_sales_selected` (
 INSERT INTO `cooperative_members_credit_sales_selected` (`id`, `created_at`, `updated_at`, `ticket`, `quantity`, `unit_selling_price`, `total`, `member_id`, `processed_by_id`, `product_id`, `status_id`, `tdate`) VALUES
 (36, '2022-01-28 16:49:59.260594', '2022-01-28 16:49:59.260594', '2022000032', 5, '950.00', '4750.00', 152, 12, 924, 2, '2022-01-28'),
 (37, '2022-01-28 16:50:13.452399', '2022-01-28 16:50:13.452399', '2022000032', 5, '150.00', '750.00', 152, 12, 1024, 2, '2022-01-28'),
-(38, '2022-01-28 19:29:05.929899', '2022-01-28 19:29:05.929899', '2022000033', 7, '950.00', '6650.00', 151, 12, 925, 2, '2022-01-28');
+(38, '2022-01-28 19:29:05.929899', '2022-01-28 19:29:05.929899', '2022000033', 7, '950.00', '6650.00', 151, 12, 925, 2, '2022-01-28'),
+(39, '2022-02-01 21:12:05.610076', '2022-02-01 21:12:05.610076', '2022000034', 10, '2300.00', '23000.00', 152, 12, 917, 2, '2022-02-01'),
+(40, '2022-02-02 00:00:24.187043', '2022-02-02 00:00:24.187043', '2022000035', 5, '1200.00', '6000.00', 156, 12, 918, 2, '2022-02-01');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `cooperative_monthlydeductiongenerationheaders`
+--
+
+CREATE TABLE `cooperative_monthlydeductiongenerationheaders` (
+  `id` int(11) NOT NULL,
+  `title` varchar(255) NOT NULL,
+  `created_at` datetime(6) NOT NULL,
+  `updated_at` datetime(6) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `cooperative_monthlydeductiongenerationheaders`
+--
+
+INSERT INTO `cooperative_monthlydeductiongenerationheaders` (`id`, `title`, `created_at`, `updated_at`) VALUES
+(1, 'SAVINGS', '2022-02-01 18:49:21.327121', '2022-02-01 18:49:21.327121'),
+(2, 'LOANS', '2022-02-01 18:49:21.380486', '2022-02-01 18:49:21.380486'),
+(3, 'SHOP', '2022-02-01 18:49:21.447336', '2022-02-01 18:49:21.447336');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `cooperative_monthlydeductiongenerationheading`
+--
+
+CREATE TABLE `cooperative_monthlydeductiongenerationheading` (
+  `id` int(11) NOT NULL,
+  `created_at` datetime(6) NOT NULL,
+  `updated_at` datetime(6) NOT NULL,
+  `heading` varchar(255) NOT NULL,
+  `salary_institution_id` int(11) NOT NULL,
+  `status_id` int(11) NOT NULL,
+  `transaction_period_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `cooperative_monthlydeductiongenerationheading`
+--
+
+INSERT INTO `cooperative_monthlydeductiongenerationheading` (`id`, `created_at`, `updated_at`, `heading`, `salary_institution_id`, `status_id`, `transaction_period_id`) VALUES
+(3, '2022-02-01 19:37:04.436754', '2022-02-01 19:37:04.436754', 'SAVINGS', 1, 1, 3),
+(4, '2022-02-01 19:37:07.150573', '2022-02-01 19:37:07.150573', 'LOANS', 1, 1, 3),
+(9, '2022-02-02 01:00:59.311505', '2022-02-02 01:00:59.311505', 'SHOP', 1, 1, 3);
 
 -- --------------------------------------------------------
 
@@ -4919,6 +5749,37 @@ CREATE TABLE `cooperative_monthlydeductionlist` (
   `tdate` date NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+--
+-- Dumping data for table `cooperative_monthlydeductionlist`
+--
+
+INSERT INTO `cooperative_monthlydeductionlist` (`id`, `created_at`, `updated_at`, `account_number`, `amount`, `amount_deducted`, `member_id`, `transaction_id`, `transaction_period_id`, `transaction_status_id`, `tdate`) VALUES
+(14, '2022-01-31 03:52:06.121798', '2022-01-31 03:52:06.121798', '20200003202213124800035', '8334.00', '8334.00', 153, 9, 3, 2, '2022-01-31'),
+(15, '2022-01-31 03:52:28.827305', '2022-01-31 03:52:28.827305', '20100001202213124800037', '17500.00', '17500.00', 151, 8, 3, 2, '2022-01-31'),
+(25, '2022-01-31 04:17:38.582818', '2022-01-31 04:17:38.582818', '10100001', '15000.00', '15000.00', 151, 2, 3, 2, '2022-01-31'),
+(26, '2022-01-31 04:17:38.643830', '2022-01-31 04:17:38.643830', '10100006', '2000.00', '2000.00', 156, 2, 3, 2, '2022-01-31'),
+(27, '2022-01-31 04:17:38.796523', '2022-01-31 04:17:38.796523', '10100036', '10000.00', '10000.00', 186, 2, 3, 2, '2022-01-31'),
+(28, '2022-01-31 04:17:38.875190', '2022-01-31 04:17:38.875190', '10100002', '20000.00', '20000.00', 152, 2, 3, 2, '2022-01-31'),
+(29, '2022-01-31 04:17:38.946110', '2022-01-31 04:17:38.946110', '10100004', '10000.00', '10000.00', 154, 2, 3, 2, '2022-01-31'),
+(30, '2022-01-31 04:17:38.999718', '2022-01-31 04:17:38.999718', '10100005', '8000.00', '8000.00', 155, 2, 3, 2, '2022-01-31'),
+(31, '2022-01-31 04:17:39.037207', '2022-01-31 04:17:39.037207', '10100015', '5000.00', '5000.00', 165, 2, 3, 2, '2022-01-31'),
+(32, '2022-01-31 04:17:39.119512', '2022-01-31 04:17:39.119512', '10100003', '5000.00', '5000.00', 153, 2, 3, 2, '2022-01-31'),
+(33, '2022-01-31 04:17:39.170752', '2022-01-31 04:17:39.170752', '10105011', '5000.00', '5000.00', 216, 2, 3, 2, '2022-01-31'),
+(34, '2022-01-31 04:17:58.763953', '2022-01-31 04:17:58.763953', '10200001', '15000.00', '15000.00', 151, 3, 3, 2, '2022-01-31'),
+(35, '2022-01-31 04:17:58.839031', '2022-01-31 04:17:58.839031', '10200006', '3000.00', '3000.00', 156, 3, 3, 2, '2022-01-31'),
+(36, '2022-01-31 04:17:58.888141', '2022-01-31 04:17:58.888141', '10200002', '10000.00', '10000.00', 152, 3, 3, 2, '2022-01-31'),
+(37, '2022-01-31 04:17:59.107060', '2022-01-31 04:17:59.107060', '10200015', '5000.00', '5000.00', 165, 3, 3, 2, '2022-01-31'),
+(38, '2022-01-31 04:17:59.157028', '2022-01-31 04:17:59.157028', '10200003', '3000.00', '3000.00', 153, 3, 3, 2, '2022-01-31'),
+(39, '2022-01-31 04:17:59.208997', '2022-01-31 04:17:59.208997', '10205011', '2000.00', '2000.00', 216, 3, 3, 2, '2022-01-31'),
+(40, '2022-01-31 04:18:04.068747', '2022-01-31 04:18:04.068747', '10300001', '5000.00', '5000.00', 151, 4, 3, 2, '2022-01-31'),
+(41, '2022-01-31 04:18:04.124148', '2022-01-31 04:18:04.124148', '10300006', '2000.00', '2000.00', 156, 4, 3, 2, '2022-01-31'),
+(42, '2022-01-31 04:18:04.165563', '2022-01-31 04:18:04.166558', '10300002', '30000.00', '7000.00', 152, 4, 3, 2, '2022-01-31'),
+(43, '2022-01-31 04:18:04.234520', '2022-01-31 04:18:04.234520', '10300015', '3000.00', '3000.00', 165, 4, 3, 2, '2022-01-31'),
+(44, '2022-01-31 04:18:04.285536', '2022-01-31 04:18:04.285536', '10300003', '3000.00', '3000.00', 153, 4, 3, 2, '2022-01-31'),
+(45, '2022-01-31 04:18:04.342482', '2022-01-31 04:18:04.342482', '10305011', '5000.00', '5000.00', 216, 4, 3, 2, '2022-01-31'),
+(46, '2022-01-31 04:18:08.723969', '2022-01-31 04:18:08.723969', '10400002', '3000.00', '3000.00', 152, 5, 3, 2, '2022-01-31'),
+(56, '2022-02-02 01:00:59.170548', '2022-02-02 01:00:59.170548', '60000002', '23000.00', '23000.00', 152, 14, 3, 2, '2022-02-02');
+
 -- --------------------------------------------------------
 
 --
@@ -4939,6 +5800,65 @@ CREATE TABLE `cooperative_monthlydeductionlistgenerated` (
   `tdate` date NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+--
+-- Dumping data for table `cooperative_monthlydeductionlistgenerated`
+--
+
+INSERT INTO `cooperative_monthlydeductionlistgenerated` (`id`, `created_at`, `updated_at`, `amount`, `amount_deducted`, `balance`, `member_id`, `salary_institution_id`, `transaction_period_id`, `transaction_status_id`, `tdate`) VALUES
+(4, '2022-02-02 01:08:07.824890', '2022-02-02 01:08:07.824890', '52500.00', '52500.00', '0.00', 151, 1, 3, 2, '2022-02-02'),
+(5, '2022-02-02 01:08:08.010285', '2022-02-02 01:08:08.010285', '86000.00', '83000.00', '-3000.00', 152, 1, 3, 2, '2022-02-02'),
+(6, '2022-02-02 01:08:08.203210', '2022-02-02 01:08:08.203210', '19334.00', '19334.00', '0.00', 153, 1, 3, 2, '2022-02-02'),
+(7, '2022-02-02 01:08:08.344292', '2022-02-02 01:08:08.344292', '10000.00', '10000.00', '0.00', 154, 1, 3, 2, '2022-02-02'),
+(8, '2022-02-02 01:08:08.427994', '2022-02-02 01:08:08.427994', '8000.00', '10000.00', '2000.00', 155, 1, 3, 2, '2022-02-02'),
+(9, '2022-02-02 01:08:08.494830', '2022-02-02 01:08:08.494830', '7000.00', '7000.00', '0.00', 156, 1, 3, 2, '2022-02-02'),
+(10, '2022-02-02 01:08:08.579993', '2022-02-02 01:08:08.579993', '13000.00', '13000.00', '0.00', 165, 1, 3, 2, '2022-02-02'),
+(11, '2022-02-02 01:08:08.702924', '2022-02-02 01:08:08.702924', '10000.00', '10000.00', '0.00', 186, 1, 3, 2, '2022-02-02'),
+(12, '2022-02-02 01:08:08.891807', '2022-02-02 01:08:08.891807', '12000.00', '12000.00', '0.00', 216, 1, 3, 2, '2022-02-02');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `cooperative_monthlydeductionlistgeneratedcertified`
+--
+
+CREATE TABLE `cooperative_monthlydeductionlistgeneratedcertified` (
+  `id` int(11) NOT NULL,
+  `created_at` datetime(6) NOT NULL,
+  `updated_at` datetime(6) NOT NULL,
+  `amount` decimal(20,2) NOT NULL,
+  `amount_deducted` decimal(20,2) NOT NULL,
+  `balance` decimal(20,2) NOT NULL,
+  `tdate` date NOT NULL,
+  `member_id` int(11) DEFAULT NULL,
+  `salary_institution_id` int(11) NOT NULL,
+  `transaction_period_id` int(11) NOT NULL,
+  `transaction_status_id` int(11) NOT NULL,
+  `refund_status_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `cooperative_monthlydeductionlistgeneratedcertified`
+--
+
+INSERT INTO `cooperative_monthlydeductionlistgeneratedcertified` (`id`, `created_at`, `updated_at`, `amount`, `amount_deducted`, `balance`, `tdate`, `member_id`, `salary_institution_id`, `transaction_period_id`, `transaction_status_id`, `refund_status_id`) VALUES
+(55, '2022-02-02 03:48:20.498725', '2022-02-02 03:48:20.498725', '52500.00', '52500.00', '0.00', '2022-02-02', 151, 1, 3, 2, 1),
+(56, '2022-02-02 03:48:20.666807', '2022-02-02 03:48:20.666807', '63000.00', '60000.00', '-3000.00', '2022-02-02', 152, 1, 3, 2, 1),
+(57, '2022-02-02 03:48:20.945776', '2022-02-02 03:48:20.946778', '19334.00', '19334.00', '0.00', '2022-02-02', 153, 1, 3, 2, 1),
+(58, '2022-02-02 03:48:21.009735', '2022-02-02 03:48:21.009735', '10000.00', '10000.00', '0.00', '2022-02-02', 154, 1, 3, 2, 1),
+(60, '2022-02-02 03:48:21.110675', '2022-02-02 03:48:21.110675', '7000.00', '7000.00', '0.00', '2022-02-02', 156, 1, 3, 2, 1),
+(61, '2022-02-02 03:48:21.162640', '2022-02-02 03:48:21.162640', '13000.00', '13000.00', '0.00', '2022-02-02', 165, 1, 3, 2, 1),
+(62, '2022-02-02 03:48:21.212609', '2022-02-02 03:48:21.212609', '10000.00', '10000.00', '0.00', '2022-02-02', 186, 1, 3, 2, 1),
+(63, '2022-02-02 03:48:21.243591', '2022-02-02 03:48:21.243591', '12000.00', '12000.00', '0.00', '2022-02-02', 216, 1, 3, 2, 1),
+(64, '2022-02-02 14:24:42.406811', '2022-02-02 14:24:42.407806', '52500.00', '52500.00', '0.00', '2022-02-02', 151, 1, 3, 2, 1),
+(65, '2022-02-02 14:24:42.643805', '2022-02-02 14:24:42.643805', '63000.00', '60000.00', '-3000.00', '2022-02-02', 152, 1, 3, 2, 1),
+(66, '2022-02-02 14:24:42.810667', '2022-02-02 14:24:42.810667', '19334.00', '19334.00', '0.00', '2022-02-02', 153, 1, 3, 2, 1),
+(67, '2022-02-02 14:24:42.849875', '2022-02-02 14:24:42.849875', '10000.00', '10000.00', '0.00', '2022-02-02', 154, 1, 3, 2, 1),
+(68, '2022-02-02 14:24:42.911283', '2022-02-02 14:38:56.441623', '8000.00', '10000.00', '2000.00', '2022-02-02', 155, 1, 3, 2, 2),
+(69, '2022-02-02 14:24:43.016337', '2022-02-02 14:24:43.016337', '7000.00', '7000.00', '0.00', '2022-02-02', 156, 1, 3, 2, 1),
+(70, '2022-02-02 14:24:43.079191', '2022-02-02 14:24:43.079191', '13000.00', '13000.00', '0.00', '2022-02-02', 165, 1, 3, 2, 1),
+(71, '2022-02-02 14:24:43.125073', '2022-02-02 14:24:43.125073', '10000.00', '10000.00', '0.00', '2022-02-02', 186, 1, 3, 2, 1),
+(72, '2022-02-02 14:24:43.165086', '2022-02-02 14:24:43.165086', '12000.00', '12000.00', '0.00', '2022-02-02', 216, 1, 3, 2, 1);
+
 -- --------------------------------------------------------
 
 --
@@ -4956,6 +5876,21 @@ CREATE TABLE `cooperative_monthlygeneratedtransactions` (
   `tdate` date NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+--
+-- Dumping data for table `cooperative_monthlygeneratedtransactions`
+--
+
+INSERT INTO `cooperative_monthlygeneratedtransactions` (`id`, `created_at`, `updated_at`, `processed_by_id`, `transaction_id`, `transaction_period_id`, `transaction_status_id`, `tdate`) VALUES
+(3, '2022-01-31 03:52:06.196150', '2022-01-31 03:52:06.196150', 9, 9, 3, 2, '2022-01-31'),
+(4, '2022-01-31 03:52:28.999218', '2022-01-31 03:52:28.999218', 9, 8, 3, 2, '2022-01-31'),
+(5, '2022-01-31 04:17:39.237131', '2022-01-31 04:17:39.237131', 9, 2, 3, 2, '2022-01-31'),
+(6, '2022-01-31 04:17:59.252971', '2022-01-31 04:17:59.252971', 9, 3, 3, 2, '2022-01-31'),
+(7, '2022-01-31 04:18:04.433637', '2022-01-31 04:18:04.433637', 9, 4, 3, 2, '2022-01-31'),
+(8, '2022-01-31 04:18:08.789975', '2022-01-31 04:18:08.789975', 9, 5, 3, 2, '2022-01-31'),
+(9, '2022-02-01 23:59:04.362969', '2022-02-01 23:59:04.362969', 13, 14, 3, 2, '2022-02-01'),
+(10, '2022-02-02 00:58:07.488345', '2022-02-02 00:58:07.488345', 13, 14, 3, 2, '2022-02-01'),
+(11, '2022-02-02 01:00:59.252504', '2022-02-02 01:00:59.252504', 13, 14, 3, 2, '2022-02-02');
+
 -- --------------------------------------------------------
 
 --
@@ -4971,6 +5906,65 @@ CREATE TABLE `cooperative_monthlygroupgeneratedtransactions` (
   `transaction_period_id` int(11) NOT NULL,
   `transaction_status_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `cooperative_monthlygroupgeneratedtransactions`
+--
+
+INSERT INTO `cooperative_monthlygroupgeneratedtransactions` (`id`, `created_at`, `updated_at`, `processed_by_id`, `salary_institution_id`, `transaction_period_id`, `transaction_status_id`) VALUES
+(2, '2022-02-02 01:08:09.141274', '2022-02-02 01:08:09.142273', 9, 1, 3, 1);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `cooperative_monthlyoverdeductionsrefund`
+--
+
+CREATE TABLE `cooperative_monthlyoverdeductionsrefund` (
+  `id` int(11) NOT NULL,
+  `created_at` datetime(6) NOT NULL,
+  `updated_at` datetime(6) NOT NULL,
+  `channel` varchar(255) NOT NULL,
+  `ref_number` varchar(255) DEFAULT NULL,
+  `tdate` date NOT NULL,
+  `member_id` int(11) NOT NULL,
+  `over_deduction_id` int(11) NOT NULL,
+  `processed_by_id` bigint(20) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `cooperative_monthlyoverdeductionsrefund`
+--
+
+INSERT INTO `cooperative_monthlyoverdeductionsrefund` (`id`, `created_at`, `updated_at`, `channel`, `ref_number`, `tdate`, `member_id`, `over_deduction_id`, `processed_by_id`) VALUES
+(3, '2022-02-02 14:38:56.341629', '2022-02-02 14:38:56.341629', 'SAVINGS', 'ORDINARY SAVINGS(10100005)', '2022-02-02', 155, 68, 9);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `cooperative_monthlyshopdeductioncertified`
+--
+
+CREATE TABLE `cooperative_monthlyshopdeductioncertified` (
+  `id` int(11) NOT NULL,
+  `created_at` datetime(6) NOT NULL,
+  `updated_at` datetime(6) NOT NULL,
+  `amount` decimal(20,2) NOT NULL,
+  `amount_deducted` decimal(20,2) NOT NULL,
+  `balance` decimal(20,2) NOT NULL,
+  `tdate` date NOT NULL,
+  `member_id` int(11) DEFAULT NULL,
+  `salary_institution_id` int(11) NOT NULL,
+  `transaction_period_id` int(11) NOT NULL,
+  `transaction_status_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `cooperative_monthlyshopdeductioncertified`
+--
+
+INSERT INTO `cooperative_monthlyshopdeductioncertified` (`id`, `created_at`, `updated_at`, `amount`, `amount_deducted`, `balance`, `tdate`, `member_id`, `salary_institution_id`, `transaction_period_id`, `transaction_status_id`) VALUES
+(8, '2022-02-02 14:24:42.558760', '2022-02-04 05:21:41.353159', '23000.00', '23000.00', '0.00', '2022-02-02', 152, 1, 3, 2);
 
 -- --------------------------------------------------------
 
@@ -5005,6 +5999,13 @@ CREATE TABLE `cooperative_nextofkinsmaximun` (
   `updated_at` datetime(6) NOT NULL,
   `maximun` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `cooperative_nextofkinsmaximun`
+--
+
+INSERT INTO `cooperative_nextofkinsmaximun` (`id`, `created_at`, `updated_at`, `maximun`) VALUES
+(1, '2022-01-31 00:09:45.932031', '2022-01-31 00:10:05.190551', '1');
 
 -- --------------------------------------------------------
 
@@ -5052,6 +6053,13 @@ CREATE TABLE `cooperative_nonmemberaccountdeductions` (
   `transaction_status_id` int(11) NOT NULL,
   `tdate` date NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `cooperative_nonmemberaccountdeductions`
+--
+
+INSERT INTO `cooperative_nonmemberaccountdeductions` (`id`, `created_at`, `updated_at`, `ippis_no`, `name`, `amount`, `salary_institution_id`, `transaction_period_id`, `transaction_status_id`, `tdate`) VALUES
+(1, '2022-02-02 01:44:17.079350', '2022-02-02 01:44:17.079350', '342330.0', 'EMMANUEL NWOKE', '2000.00', 1, 3, 1, '2022-02-02');
 
 -- --------------------------------------------------------
 
@@ -5270,7 +6278,40 @@ INSERT INTO `cooperative_personalledger` (`id`, `created_at`, `updated_at`, `acc
 (57, '2022-01-30 17:07:20.141131', '2022-01-30 17:07:20.141131', '70005010', 'SHARES INITIAL PURCHASE OF 2 BY 10000.0 PER A UNIT', '0.00', '20000.00', '20000.00', '2022-01-30', 215, 1, 15, '2022-01-30'),
 (58, '2022-01-30 17:08:22.206850', '2022-01-30 17:08:22.206850', '70005011', 'SHARES INITIAL PURCHASE OF 2 BY 10000.0 PER A UNIT', '0.00', '20000.00', '20000.00', '2022-01-30', 216, 1, 15, '2022-01-30'),
 (59, '2022-01-30 19:51:30.775551', '2022-01-30 19:51:30.775551', '70005012', 'SHARES INITIAL PURCHASE OF 1 BY 10000.0 PER A UNIT', '0.00', '10000.00', '10000.00', '2022-01-30', 217, 1, 15, '2022-01-30'),
-(60, '2022-01-30 19:52:14.891420', '2022-01-30 19:52:14.891420', '70005013', 'SHARES INITIAL PURCHASE OF 2 BY 10000.0 PER A UNIT', '0.00', '20000.00', '20000.00', '2022-01-30', 218, 1, 15, '2022-01-30');
+(60, '2022-01-30 19:52:14.891420', '2022-01-30 19:52:14.891420', '70005013', 'SHARES INITIAL PURCHASE OF 2 BY 10000.0 PER A UNIT', '0.00', '20000.00', '20000.00', '2022-01-30', 218, 1, 15, '2022-01-30'),
+(64, '2022-01-31 02:48:19.900380', '2022-01-31 02:48:19.900380', '20200003202213124800035', 'LONG TERM LOAN LOAN ISSUANCE', '200000.00', '0.00', '-200000.00', '2022-01-31', 153, 1, 9, '2022-01-31'),
+(65, '2022-01-31 02:48:19.967337', '2022-01-31 02:48:19.967337', '20200003202213124800035', 'INTEREST ON LONG TERM LOAN', '10000.00', '0.00', '-210000.00', '2022-01-31', 153, 1, 9, '2022-01-31'),
+(66, '2022-01-31 02:48:20.021305', '2022-01-31 02:48:20.021305', '20200003202213124800035', 'INTEREST DEDUCTION AT SOURCE', '0.00', '10000.00', '-200000.00', '2022-01-31', 153, 1, 9, '2022-01-31'),
+(67, '2022-01-31 02:48:59.043335', '2022-01-31 02:48:59.043335', '20100001202213124800037', 'SHORT TERM LOAN LOAN ISSUANCE', '50000.00', '0.00', '-50000.00', '2022-01-31', 151, 1, 8, '2022-01-31'),
+(68, '2022-01-31 02:48:59.102356', '2022-01-31 02:48:59.102356', '20100001202213124800037', 'INTEREST ON SHORT TERM LOAN', '2500.00', '0.00', '-52500.00', '2022-01-31', 151, 1, 8, '2022-01-31'),
+(72, '2022-02-02 14:19:10.666228', '2022-02-02 14:19:10.666228', '10100005', 'OVER DEDUCTIONS REFUND AS AT 31 January, 2022', '0.00', '2000.00', '2000.00', '2022-01-31', 155, 1, 2, '2022-02-02'),
+(73, '2022-02-02 14:27:07.524271', '2022-02-02 14:27:07.524271', '10100005', 'OVER DEDUCTIONS REFUND AS AT 31 January, 2022', '0.00', '2000.00', '4000.00', '2022-01-31', 155, 1, 2, '2022-02-02'),
+(74, '2022-02-02 14:38:56.295638', '2022-02-02 14:38:56.295638', '10100005', 'OVER DEDUCTIONS REFUND AS AT 31 January, 2022', '0.00', '2000.00', '6000.00', '2022-01-31', 155, 1, 2, '2022-02-02'),
+(75, '2022-02-02 19:33:06.383638', '2022-02-02 19:33:06.383638', '10100001', 'Monthly Contribution for the Period of 2022-01-31', '0.00', '15000.00', '236000.00', '2022-01-31', 151, 1, 2, '2022-02-02'),
+(76, '2022-02-02 19:33:06.769401', '2022-02-02 19:33:06.769401', '20100001202213124800037', 'Loan Repayment for the Period of 2022-01-31', '0.00', '17500.00', '-35000.00', '2022-01-31', 151, 1, 8, '2022-02-02'),
+(77, '2022-02-02 19:33:07.222004', '2022-02-02 19:33:07.222004', '10200001', 'Monthly Contribution for the Period of 2022-01-31', '0.00', '15000.00', '473000.00', '2022-01-31', 151, 1, 3, '2022-02-02'),
+(78, '2022-02-02 19:33:07.321653', '2022-02-02 19:33:07.321653', '10300001', 'Monthly Contribution for the Period of 2022-01-31', '0.00', '5000.00', '155000.00', '2022-01-31', 151, 1, 4, '2022-02-02'),
+(79, '2022-02-02 19:33:07.573875', '2022-02-02 19:33:07.573875', '10100002', 'Monthly Contribution for the Period of 2022-01-31', '0.00', '20000.00', '220000.00', '2022-01-31', 152, 1, 2, '2022-02-02'),
+(80, '2022-02-02 19:33:07.708151', '2022-02-02 19:33:07.708151', '10200002', 'Monthly Contribution for the Period of 2022-01-31', '0.00', '10000.00', '160000.00', '2022-01-31', 152, 1, 3, '2022-02-02'),
+(81, '2022-02-02 19:33:08.010991', '2022-02-02 19:33:08.010991', '10300002', 'Monthly Contribution for the Period of 2022-01-31', '0.00', '7000.00', '207000.00', '2022-01-31', 152, 1, 4, '2022-02-02'),
+(82, '2022-02-02 19:33:08.114050', '2022-02-02 19:33:08.114050', '10400002', 'Monthly Contribution for the Period of 2022-01-31', '0.00', '3000.00', '123000.00', '2022-01-31', 152, 1, 5, '2022-02-02'),
+(83, '2022-02-02 19:33:08.280229', '2022-02-02 19:33:08.280229', '10100003', 'Monthly Contribution for the Period of 2022-01-31', '0.00', '5000.00', '355000.00', '2022-01-31', 153, 1, 2, '2022-02-02'),
+(84, '2022-02-02 19:33:08.348148', '2022-02-02 19:33:08.348148', '20200003202213124800035', 'Loan Repayment for the Period of 2022-01-31', '0.00', '8334.00', '-191666.00', '2022-01-31', 153, 1, 9, '2022-02-02'),
+(85, '2022-02-02 19:33:08.581990', '2022-02-02 19:33:08.581990', '10200003', 'Monthly Contribution for the Period of 2022-01-31', '0.00', '3000.00', '253000.00', '2022-01-31', 153, 1, 3, '2022-02-02'),
+(86, '2022-02-02 19:33:08.684074', '2022-02-02 19:33:08.684074', '10300003', 'Monthly Contribution for the Period of 2022-01-31', '0.00', '3000.00', '83000.00', '2022-01-31', 153, 1, 4, '2022-02-02'),
+(87, '2022-02-02 19:33:08.834167', '2022-02-02 19:33:08.834167', '10100004', 'Monthly Contribution for the Period of 2022-01-31', '0.00', '10000.00', '10000.00', '2022-01-31', 154, 1, 2, '2022-02-02'),
+(88, '2022-02-02 19:33:09.436524', '2022-02-02 19:33:09.436524', '10100006', 'Monthly Contribution for the Period of 2022-01-31', '0.00', '2000.00', '2000.00', '2022-01-31', 156, 1, 2, '2022-02-02'),
+(89, '2022-02-02 19:33:09.544409', '2022-02-02 19:33:09.544409', '10200006', 'Monthly Contribution for the Period of 2022-01-31', '0.00', '3000.00', '3000.00', '2022-01-31', 156, 1, 3, '2022-02-02'),
+(90, '2022-02-02 19:33:09.638199', '2022-02-02 19:33:09.638199', '10300006', 'Monthly Contribution for the Period of 2022-01-31', '0.00', '2000.00', '2000.00', '2022-01-31', 156, 1, 4, '2022-02-02'),
+(91, '2022-02-02 19:33:09.794098', '2022-02-02 19:33:09.794098', '10100015', 'Monthly Contribution for the Period of 2022-01-31', '0.00', '5000.00', '25000.00', '2022-01-31', 165, 1, 2, '2022-02-02'),
+(92, '2022-02-02 19:33:09.874130', '2022-02-02 19:33:09.874130', '10200015', 'Monthly Contribution for the Period of 2022-01-31', '0.00', '5000.00', '255000.00', '2022-01-31', 165, 1, 3, '2022-02-02'),
+(93, '2022-02-02 19:33:10.035547', '2022-02-02 19:33:10.035547', '10300015', 'Monthly Contribution for the Period of 2022-01-31', '0.00', '3000.00', '63000.00', '2022-01-31', 165, 1, 4, '2022-02-02'),
+(94, '2022-02-02 19:33:10.167019', '2022-02-02 19:33:10.167019', '10100036', 'Monthly Contribution for the Period of 2022-01-31', '0.00', '10000.00', '210000.00', '2022-01-31', 186, 1, 2, '2022-02-02'),
+(95, '2022-02-02 19:33:10.361955', '2022-02-02 19:33:10.361955', '10105011', 'Monthly Contribution for the Period of 2022-01-31', '0.00', '5000.00', '5000.00', '2022-01-31', 216, 1, 2, '2022-02-02'),
+(96, '2022-02-02 19:33:10.466890', '2022-02-02 19:33:10.466890', '10205011', 'Monthly Contribution for the Period of 2022-01-31', '0.00', '2000.00', '2000.00', '2022-01-31', 216, 1, 3, '2022-02-02'),
+(97, '2022-02-02 19:33:10.546841', '2022-02-02 19:33:10.546841', '10305011', 'Monthly Contribution for the Period of 2022-01-31', '0.00', '5000.00', '5000.00', '2022-01-31', 216, 1, 4, '2022-02-02'),
+(98, '2022-02-02 19:33:11.069539', '2022-02-02 19:33:11.069539', '10100005', 'Monthly Contribution for the Period of 2022-01-31', '0.00', '8000.00', '14000.00', '2022-01-31', 155, 1, 2, '2022-02-02'),
+(101, '2022-02-16 10:42:45.627160', '2022-02-16 10:42:45.627160', '205000012200060', 'ESSENTIAL COMMODITY ITEMS COLLECTION', '19000.00', '0.00', '-19000.00', '2022-02-16', 151, 1, 22, '2022-02-16');
 
 -- --------------------------------------------------------
 
@@ -5338,6 +6379,26 @@ INSERT INTO `cooperative_productcategory` (`id`, `title`, `created_at`, `updated
 (79, 'X', '2021-12-23 01:12:20.966609', '2021-12-23 01:12:20.966609', '24'),
 (80, 'Y', '2021-12-23 01:12:21.034851', '2021-12-23 01:12:21.034851', '25'),
 (81, 'Z', '2021-12-23 01:12:21.111490', '2021-12-23 01:12:21.111490', '26');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `cooperative_proformainvoice`
+--
+
+CREATE TABLE `cooperative_proformainvoice` (
+  `id` int(11) NOT NULL,
+  `created_at` datetime(6) NOT NULL,
+  `updated_at` datetime(6) NOT NULL,
+  `invoice` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `cooperative_proformainvoice`
+--
+
+INSERT INTO `cooperative_proformainvoice` (`id`, `created_at`, `updated_at`, `invoice`) VALUES
+(1, '2022-02-18 22:26:54.610593', '2022-02-19 05:32:15.263151', '8');
 
 -- --------------------------------------------------------
 
@@ -7270,26 +8331,28 @@ CREATE TABLE `cooperative_staff` (
   `admin_id` bigint(20) DEFAULT NULL,
   `gender_id` int(11) DEFAULT NULL,
   `title_id` int(11) DEFAULT NULL,
-  `userlevel_id` int(11) NOT NULL
+  `userlevel_id` int(11) NOT NULL,
+  `status_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `cooperative_staff`
 --
 
-INSERT INTO `cooperative_staff` (`id`, `created_at`, `updated_at`, `middle_name`, `address`, `phone_number`, `admin_id`, `gender_id`, `title_id`, `userlevel_id`) VALUES
-(1, '2021-12-07 19:42:36.634035', '2021-12-07 19:42:36.777968', 'E', 'FETHA', '08087777765', 2, 1, 5, 1),
-(2, '2021-12-07 19:43:34.730268', '2021-12-07 19:43:34.830204', 'K', 'FETHA', '54545455454', 3, 1, 7, 1),
-(3, '2021-12-07 19:44:25.371651', '2021-12-07 19:44:25.434430', 'O.', 'FETHA', '08064004351', 4, 1, 1, 1),
-(4, '2021-12-07 19:45:10.832172', '2021-12-07 19:45:10.944819', 'Ifeanyi', 'FETHA', '01187888888', 5, 1, 1, 1),
-(5, '2021-12-07 19:46:16.596302', '2021-12-07 19:46:16.698061', 'Nweke', 'FETHA', '78878767667', 6, 2, 2, 1),
-(6, '2021-12-07 19:47:20.736030', '2021-12-07 19:47:20.816816', '', 'FETHA', '08097765655', 7, 1, 1, 1),
-(7, '2021-12-07 19:48:22.816645', '2021-12-07 19:48:22.896215', 'Ama', 'FETHA', '87787778787', 8, 2, 2, 1),
-(8, '2021-12-07 19:49:28.680440', '2021-12-07 19:49:28.788206', '', 'FETHA', '98887878787', 9, 2, 3, 1),
-(9, '2021-12-07 19:50:04.459500', '2021-12-07 19:50:04.686369', '', 'FETHA', '09098877666', 10, 2, 2, 1),
-(10, '2021-12-07 19:50:50.967827', '2021-12-31 07:25:03.195958', 'Emmanuella', 'FETHA', '08989898778', 11, 2, 2, 1),
-(11, '2021-12-07 19:51:52.608219', '2022-01-11 21:22:08.456116', '', 'FETHA', '08988777776', 12, 2, 2, 2),
-(12, '2021-12-07 19:52:49.111042', '2021-12-07 19:52:49.195080', '', 'FETHA', '09090988889', 13, 2, 2, 1);
+INSERT INTO `cooperative_staff` (`id`, `created_at`, `updated_at`, `middle_name`, `address`, `phone_number`, `admin_id`, `gender_id`, `title_id`, `userlevel_id`, `status_id`) VALUES
+(1, '2021-12-07 19:42:36.634035', '2021-12-07 19:42:36.777968', 'E', 'FETHA', '08087777765', 2, 1, 5, 1, 1),
+(2, '2021-12-07 19:43:34.730268', '2021-12-07 19:43:34.830204', 'K', 'FETHA', '54545455454', 3, 1, 7, 1, 1),
+(3, '2021-12-07 19:44:25.371651', '2021-12-07 19:44:25.434430', 'O.', 'FETHA', '08064004351', 4, 1, 1, 1, 1),
+(4, '2021-12-07 19:45:10.832172', '2021-12-07 19:45:10.944819', 'Ifeanyi', 'FETHA', '01187888888', 5, 1, 1, 1, 1),
+(5, '2021-12-07 19:46:16.596302', '2021-12-07 19:46:16.698061', 'Nweke', 'FETHA', '78878767667', 6, 2, 2, 1, 1),
+(6, '2021-12-07 19:47:20.736030', '2021-12-07 19:47:20.816816', '', 'FETHA', '08097765655', 7, 1, 1, 1, 1),
+(7, '2021-12-07 19:48:22.816645', '2021-12-07 19:48:22.896215', 'Ama', 'FETHA', '87787778787', 8, 2, 2, 1, 1),
+(8, '2021-12-07 19:49:28.680440', '2021-12-07 19:49:28.788206', '', 'FETHA', '98887878787', 9, 2, 3, 1, 1),
+(9, '2021-12-07 19:50:04.459500', '2021-12-07 19:50:04.686369', '', 'FETHA', '09098877666', 10, 2, 2, 1, 1),
+(10, '2021-12-07 19:50:50.967827', '2021-12-31 07:25:03.195958', 'Emmanuella', 'FETHA', '08989898778', 11, 2, 2, 1, 1),
+(11, '2021-12-07 19:51:52.608219', '2022-01-11 21:22:08.456116', '', 'FETHA', '08988777776', 12, 2, 2, 2, 1),
+(12, '2021-12-07 19:52:49.111042', '2021-12-07 19:52:49.195080', '', 'FETHA', '09090988889', 13, 2, 2, 1, 1),
+(13, '2022-02-02 06:34:49.010200', '2022-02-02 06:34:49.108779', 'Emmanuella', 'FETHA', '0898989877', 237, 2, 8, 2, 1);
 
 -- --------------------------------------------------------
 
@@ -7333,7 +8396,16 @@ INSERT INTO `cooperative_standingorderaccounts` (`id`, `created_at`, `updated_at
 (34, '2022-01-26 10:54:36.717048', '2022-01-26 10:54:36.717048', '3000.00', 2, 1, 367),
 (35, '2022-01-30 19:57:53.228967', '2022-01-30 19:57:53.229967', '5000.00', 2, 1, 740),
 (36, '2022-01-30 19:58:03.359844', '2022-01-30 19:58:03.359844', '2000.00', 2, 1, 741),
-(37, '2022-01-30 19:58:12.459804', '2022-01-30 19:58:12.459804', '5000.00', 2, 1, 742);
+(37, '2022-01-30 19:58:12.459804', '2022-01-30 19:58:12.459804', '5000.00', 2, 1, 742),
+(38, '2022-02-13 08:34:00.773366', '2022-02-13 08:34:00.773366', '5000.00', 2, 1, 393),
+(39, '2022-02-13 08:34:07.940008', '2022-02-13 08:34:07.940008', '4000.00', 2, 1, 394),
+(40, '2022-02-13 08:34:14.848970', '2022-02-13 08:34:14.848970', '2000.00', 2, 1, 395),
+(41, '2022-02-16 03:35:19.795626', '2022-02-16 03:35:19.795626', '4000.00', 2, 1, 734),
+(42, '2022-02-16 03:35:32.329460', '2022-02-16 03:35:32.329460', '10000.00', 2, 1, 735),
+(43, '2022-02-16 03:35:41.059730', '2022-02-16 03:35:41.059730', '2000.00', 2, 1, 736),
+(44, '2022-02-17 11:33:23.457754', '2022-02-17 11:33:23.457754', '5000.00', 2, 1, 666),
+(45, '2022-02-17 11:33:29.879084', '2022-02-17 11:33:29.879084', '3000.00', 2, 1, 667),
+(46, '2022-02-17 11:33:36.180861', '2022-02-17 11:33:36.180861', '5000.00', 2, 1, 668);
 
 -- --------------------------------------------------------
 
@@ -7418,8 +8490,8 @@ CREATE TABLE `cooperative_stock` (
 --
 
 INSERT INTO `cooperative_stock` (`id`, `created_at`, `updated_at`, `code`, `item_name`, `quantity`, `unit_selling_price`, `re_order_level`, `no_in_pack`, `category_id`, `details`, `lock_status_id`, `unit_cost_price`) VALUES
-(917, '2021-12-23 02:18:43.603848', '2022-01-29 00:11:39.145549', '00001', 'BOURNVITA 900G', 280, '2300.00', 2, 6, 57, 'TIN', 2, '2000.00'),
-(918, '2021-12-23 02:18:43.664589', '2022-01-28 16:47:35.105767', '00002', 'BOURNVITA 500G', 280, '1200.00', 6, 12, 57, 'SACHET', 2, '0.00'),
+(917, '2021-12-23 02:18:43.603848', '2022-02-01 21:13:16.042127', '00001', 'BOURNVITA 900G', 270, '2300.00', 2, 6, 57, 'TIN', 2, '2000.00'),
+(918, '2021-12-23 02:18:43.664589', '2022-02-02 00:01:02.958493', '00002', 'BOURNVITA 500G', 275, '1200.00', 6, 12, 57, 'SACHET', 2, '0.00'),
 (919, '2021-12-23 02:18:43.808194', '2022-01-28 16:47:35.270963', '00003', 'OVALTINE 900G', 60, '2650.00', 2, 6, 70, 'TIN', 2, '0.00'),
 (920, '2021-12-23 02:18:43.847290', '2022-01-28 09:50:28.672685', '00004', 'OVALTINE 400G', 35, '1500.00', 4, 12, 70, 'TIN', 2, '0.00'),
 (921, '2021-12-23 02:18:43.897825', '2022-01-29 00:11:39.349272', '00005', 'OVALTINE 400G', 138, '1200.00', 4, 12, 70, 'SACHET', 2, '0.00'),
@@ -7800,6 +8872,30 @@ CREATE TABLE `cooperative_taskmanager` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `cooperative_termination_types`
+--
+
+CREATE TABLE `cooperative_termination_types` (
+  `id` int(11) NOT NULL,
+  `title` varchar(255) NOT NULL,
+  `created_at` datetime(6) NOT NULL,
+  `updated_at` datetime(6) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `cooperative_termination_types`
+--
+
+INSERT INTO `cooperative_termination_types` (`id`, `title`, `created_at`, `updated_at`) VALUES
+(1, 'RETIREMENT', '2022-02-07 18:20:09.918749', '2022-02-07 18:20:09.918749'),
+(2, 'DECEASED', '2022-02-07 18:20:09.987785', '2022-02-07 18:20:09.987785'),
+(3, 'TRANSFER', '2022-02-07 18:20:10.574680', '2022-02-07 18:20:10.574680'),
+(4, 'VOLUNTARY', '2022-02-07 18:20:10.676616', '2022-02-07 18:20:10.676616'),
+(5, 'OTHERS', '2022-02-07 18:20:10.813533', '2022-02-07 18:20:10.813533');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `cooperative_ticketstatus`
 --
 
@@ -7928,7 +9024,8 @@ CREATE TABLE `cooperative_transactionperiods` (
 
 INSERT INTO `cooperative_transactionperiods` (`id`, `created_at`, `updated_at`, `transaction_period`, `status_id`) VALUES
 (1, '2021-12-07 23:12:22.735344', '2021-12-07 23:13:53.199160', '2021-12-08', 2),
-(2, '2021-12-31 09:48:25.090224', '2021-12-31 09:48:31.287061', '2021-12-31', 1);
+(2, '2021-12-31 09:48:25.090224', '2021-12-31 09:48:31.287061', '2021-12-31', 2),
+(3, '2022-01-31 03:00:40.973351', '2022-01-31 03:00:44.088791', '2022-01-31', 1);
 
 -- --------------------------------------------------------
 
@@ -8016,16 +9113,16 @@ CREATE TABLE `cooperative_transactiontypes` (
 --
 
 INSERT INTO `cooperative_transactiontypes` (`id`, `created_at`, `updated_at`, `code`, `name`, `maximum_amount`, `minimum_amount`, `duration`, `interest_rate`, `rank`, `admin_charges`, `admin_charges_minimum`, `default_admin_charges`, `salary_loan_relationship`, `savings_rate`, `guarantors`, `loan_age`, `share_unit_min`, `share_unit_max`, `admin_charges_rating_id`, `category_id`, `interest_deduction_id`, `multiple_loan_status_id`, `receipt_type_id`, `source_id`, `status_id`, `form_print_id`) VALUES
-(1, '2021-12-07 19:27:59.367810', '2022-01-29 23:48:18.408751', '100', 'MEMBERSHIP', '0.00', '0.00', 0, 0, 0, '2000.00', NULL, '0.00', 0, 0, 0, 0, 1, 2, NULL, NULL, NULL, 1, 4, 3, 1, 1),
-(2, '2021-12-07 19:28:42.246244', '2021-12-14 20:47:06.681048', '101', 'ORDINARY SAVINGS', '0.00', '2000.00', 0, 0, 0, NULL, NULL, '0.00', 0, 0, 0, 0, 0, 0, NULL, NULL, NULL, 1, 4, 1, 1, 1),
-(3, '2021-12-07 19:29:13.419218', '2021-12-07 19:29:13.419218', '102', 'PROJECT SAVINGS', '0.00', '1000.00', 0, 0, 0, NULL, NULL, '0.00', 0, 0, 0, 0, 0, 0, NULL, NULL, NULL, 1, 3, 1, 1, 1),
-(4, '2021-12-07 19:29:45.410484', '2021-12-07 19:29:45.410484', '103', 'XMAS SAVINGS', '0.00', '1000.00', 0, 0, 0, NULL, NULL, '0.00', 0, 0, 0, 0, 0, 0, NULL, NULL, NULL, 1, 3, 1, 1, 1),
-(5, '2021-12-07 19:30:11.741450', '2021-12-07 19:30:11.741450', '104', 'LAND SAVINGS', '0.00', '10000.00', 0, 0, 0, NULL, NULL, '0.00', 0, 0, 0, 0, 0, 0, NULL, NULL, NULL, 1, 3, 1, 1, 1),
-(6, '2021-12-07 19:30:36.076200', '2021-12-07 19:30:36.076200', '105', 'OTHER SAVINGS', '0.00', '10000.00', 0, 0, 0, NULL, NULL, '0.00', 0, 0, 0, 0, 0, 0, NULL, NULL, NULL, 1, 3, 1, 1, 1),
+(1, '2021-12-07 19:27:59.367810', '2022-02-07 23:35:44.800242', '100', 'MEMBERSHIP', '0.00', '0.00', 0, 0, 0, '2000.00', NULL, '0.00', 0, 0, 0, 0, 1, 2, NULL, NULL, NULL, 1, 4, 3, 1, 1),
+(2, '2021-12-07 19:28:42.246244', '2022-02-02 19:01:59.895219', '101', 'ORDINARY SAVINGS', '0.00', '2000.00', 0, 0, 1, NULL, NULL, '0.00', 0, 0, 0, 0, 0, 0, NULL, NULL, NULL, 1, 4, 1, 1, 1),
+(3, '2021-12-07 19:29:13.419218', '2022-02-02 19:03:25.702737', '102', 'PROJECT SAVINGS', '0.00', '1000.00', 0, 0, 5, NULL, NULL, '0.00', 0, 0, 0, 0, 0, 0, NULL, NULL, NULL, 1, 3, 1, 1, 1),
+(4, '2021-12-07 19:29:45.410484', '2022-02-02 19:03:35.864798', '103', 'XMAS SAVINGS', '0.00', '1000.00', 0, 0, 6, NULL, NULL, '0.00', 0, 0, 0, 0, 0, 0, NULL, NULL, NULL, 1, 3, 1, 1, 1),
+(5, '2021-12-07 19:30:11.741450', '2022-02-02 19:03:54.915604', '104', 'LAND SAVINGS', '0.00', '10000.00', 0, 0, 7, NULL, NULL, '0.00', 0, 0, 0, 0, 0, 0, NULL, NULL, NULL, 1, 3, 1, 1, 1),
+(6, '2021-12-07 19:30:36.076200', '2022-02-02 19:04:13.753455', '105', 'OTHER SAVINGS', '0.00', '10000.00', 0, 0, 8, NULL, NULL, '0.00', 0, 0, 0, 0, 0, 0, NULL, NULL, NULL, 1, 3, 1, 1, 1),
 (7, '2021-12-07 19:31:07.631782', '2021-12-07 19:31:07.631782', '200', 'SALARY UPDATE', '0.00', '0.00', 0, 0, 0, NULL, NULL, '0.00', 0, 0, 0, 0, 0, 0, NULL, NULL, NULL, 1, 3, 3, 1, 1),
-(8, '2021-12-07 19:31:33.677197', '2022-01-30 21:23:58.050650', '201', 'SHORT TERM LOAN', '100000.00', '0.00', 3, 5, 0, '2.00', '10000.00', '1000.00', 35, 35, 2, 6, 0, 0, 1, 1, 2, 1, 4, 2, 1, 1),
-(9, '2021-12-07 19:32:05.776788', '2022-01-31 01:02:04.125524', '202', 'LONG TERM LOAN', '3000000.00', '0.00', 24, 5, 3, '1.00', '10000.00', '1000.00', 65, 35, 2, 6, 0, 0, 1, 1, 1, 1, 5, 2, 1, 1),
-(10, '2021-12-07 19:32:37.587963', '2021-12-07 19:32:37.587963', '203', 'SOFT LOAN', '50000.00', '0.00', 0, 0, 0, NULL, NULL, '0.00', 0, 0, 0, 0, 0, 0, NULL, NULL, NULL, 1, 5, 2, 1, 1),
+(8, '2021-12-07 19:31:33.677197', '2022-02-02 19:02:21.264212', '201', 'SHORT TERM LOAN', '100000.00', '0.00', 3, 5, 2, '2.00', '10000.00', '1000.00', 35, 35, 2, 6, 0, 0, 1, 1, 2, 1, 4, 2, 1, 1),
+(9, '2021-12-07 19:32:05.776788', '2022-02-02 19:02:59.681039', '202', 'LONG TERM LOAN', '3000000.00', '0.00', 24, 5, 4, '1.00', '10000.00', '1000.00', 65, 35, 2, 6, 0, 0, 1, 1, 1, 1, 5, 2, 1, 1),
+(10, '2021-12-07 19:32:37.587963', '2022-02-07 21:21:45.011143', '203', 'SOFT LOAN', '50000.00', '0.00', 0, 0, 3, NULL, NULL, '0.00', 0, 0, 0, 0, 0, 0, NULL, 1, NULL, 1, 5, 2, 1, 1),
 (11, '2021-12-07 19:32:57.749761', '2021-12-07 19:32:57.749761', '300', 'EXCLUSIVENESS', '0.00', '0.00', 0, 0, 0, NULL, NULL, '0.00', 0, 0, 0, 0, 0, 0, NULL, NULL, NULL, 1, 3, 3, 1, 1),
 (12, '2021-12-07 19:33:19.849377', '2021-12-07 19:33:19.849377', '400', 'MEMBERS CREDIT PURCHASE', '0.00', '0.00', 0, 0, 0, NULL, NULL, '0.00', 0, 0, 0, 0, 0, 0, NULL, NULL, NULL, 1, 3, 3, 1, 1),
 (13, '2021-12-07 19:33:40.107874', '2021-12-07 19:33:40.107874', '500', 'EXTERNAL FASCILITIES', '0.00', '0.00', 0, 0, 0, NULL, NULL, '0.00', 0, 0, 0, 0, 0, 0, NULL, NULL, NULL, 1, 3, 3, 1, 1),
@@ -8034,7 +9131,11 @@ INSERT INTO `cooperative_transactiontypes` (`id`, `created_at`, `updated_at`, `c
 (16, '2021-12-07 19:34:52.867563', '2021-12-07 19:34:52.867563', '701', 'SHARES INITIAL UPDATE', '0.00', '0.00', 0, 0, 0, NULL, NULL, '0.00', 0, 0, 0, 0, 0, 0, NULL, NULL, NULL, 1, 3, 3, 1, 1),
 (17, '2021-12-07 19:35:12.173582', '2021-12-14 04:00:11.508694', '800', 'WELFARE', '0.00', '0.00', 0, 0, 0, NULL, NULL, '0.00', 0, 0, 0, 0, 0, 0, NULL, NULL, NULL, 1, 5, 4, 1, 1),
 (18, '2021-12-07 19:35:35.019458', '2021-12-07 19:35:35.019458', '900', 'CASH WITHDRAWAL', '0.00', '0.00', 0, 0, 0, NULL, NULL, '0.00', 0, 0, 0, 0, 0, 0, NULL, NULL, NULL, 1, 3, 3, 1, 1),
-(19, '2021-12-07 19:36:06.323242', '2021-12-07 19:38:10.472494', '901', 'TRANSACTION ADJUSTMENT', '3600.00', '3600.00', 0, 0, 0, NULL, NULL, '0.00', 0, 0, 0, 0, 0, 0, NULL, NULL, NULL, 1, 3, 3, 1, 1);
+(19, '2021-12-07 19:36:06.323242', '2021-12-07 19:38:10.472494', '901', 'TRANSACTION ADJUSTMENT', '3600.00', '3600.00', 0, 0, 0, NULL, NULL, '0.00', 0, 0, 0, 0, 0, 0, NULL, NULL, NULL, 1, 3, 3, 1, 1),
+(20, '2022-02-07 18:37:44.919771', '2022-02-07 18:37:44.919771', '902', 'MEMBERSHIP TERMINATION', '0.00', '0.00', 0, 0, 0, NULL, NULL, '0.00', 0, 0, 0, 0, 0, 0, NULL, NULL, NULL, 1, 3, 3, 1, 1),
+(21, '2022-02-07 20:56:12.784725', '2022-02-07 21:02:08.383460', '204', 'COMMODITY LOAN', '0.00', '0.00', 24, 5, 0, '500.00', NULL, '0.00', 0, 35, 2, 6, 0, 0, 2, 2, 2, 2, 4, 2, 1, 1),
+(22, '2022-02-12 00:45:28.485027', '2022-02-12 01:27:08.731657', '205', 'ESSENTIAL COMMODITY', '0.00', '0.00', 3, 0, 0, '300.00', NULL, '300.00', 0, 0, 0, 0, 0, 0, NULL, NULL, NULL, 1, 4, 2, 1, 1),
+(23, '2022-02-18 22:50:47.905977', '2022-02-19 03:06:47.457905', '206', 'CUSTOMIZED COMMODITY LOAN', '0.00', '0.00', 6, 5, 5, '1.00', NULL, '0.00', 0, 0, 2, 5, 0, 0, 2, 2, NULL, 1, 4, 2, 1, 1);
 
 -- --------------------------------------------------------
 
@@ -8224,12 +9325,20 @@ INSERT INTO `django_content_type` (`id`, `app_label`, `model`) VALUES
 (15, 'cooperative', 'certificationofficers'),
 (16, 'cooperative', 'certificationstatus'),
 (128, 'cooperative', 'cheque_table'),
+(165, 'cooperative', 'commodity_categories'),
+(163, 'cooperative', 'commodity_category'),
+(166, 'cooperative', 'commodity_product_list'),
+(167, 'cooperative', 'companies'),
+(168, 'cooperative', 'company_products'),
 (135, 'cooperative', 'compulsorysavings'),
 (17, 'cooperative', 'cooperativebankaccounts'),
 (127, 'cooperative', 'cooperativeshopledger'),
 (153, 'cooperative', 'cooperative_shop_cash_deposit'),
 (18, 'cooperative', 'customerid'),
 (19, 'cooperative', 'customers'),
+(179, 'cooperative', 'customized_commodity_loan_application_details'),
+(180, 'cooperative', 'customized_commodity_loan_application_payslip'),
+(178, 'cooperative', 'customized_commodity_loan_application_summary'),
 (6, 'cooperative', 'customuser'),
 (154, 'cooperative', 'daily_cash_deposit_summary'),
 (20, 'cooperative', 'daily_sales'),
@@ -8239,9 +9348,14 @@ INSERT INTO `django_content_type` (`id`, `app_label`, `model`) VALUES
 (21, 'cooperative', 'datejoineduploadstatus'),
 (155, 'cooperative', 'day_end_desk_office_transactions'),
 (152, 'cooperative', 'day_end_sales_transactions'),
+(174, 'cooperative', 'dedicated_commodity_period'),
+(173, 'cooperative', 'dedicated_commodity_price_list'),
+(172, 'cooperative', 'dedicated_commodity_product_list'),
 (22, 'cooperative', 'defaultpassword'),
 (23, 'cooperative', 'departments'),
 (124, 'cooperative', 'disbursementofficers'),
+(175, 'cooperative', 'essential_commodity_product_select'),
+(176, 'cooperative', 'essential_commodity_product_selection_summary'),
 (24, 'cooperative', 'exclusivestatus'),
 (123, 'cooperative', 'externalfascilitiesmain'),
 (122, 'cooperative', 'externalfascilitiestemp'),
@@ -8290,6 +9404,7 @@ INSERT INTO `django_content_type` (`id`, `app_label`, `model`) VALUES
 (98, 'cooperative', 'membershiprequestadditionalattachment'),
 (97, 'cooperative', 'membershiprequestadditionalinfo'),
 (41, 'cooperative', 'membershipstatus'),
+(162, 'cooperative', 'membershipterminationrequest'),
 (42, 'cooperative', 'membersidmanager'),
 (96, 'cooperative', 'membersnextofkins'),
 (95, 'cooperative', 'memberssalaryupdaterequest'),
@@ -8302,23 +9417,33 @@ INSERT INTO `django_content_type` (`id`, `app_label`, `model`) VALUES
 (91, 'cooperative', 'memberswelfareaccounts'),
 (90, 'cooperative', 'memberswelfareaccountsmain'),
 (108, 'cooperative', 'members_cash_sales_selected'),
+(171, 'cooperative', 'members_commodity_loam_application'),
+(170, 'cooperative', 'members_commodity_loam_application_settings'),
+(169, 'cooperative', 'members_commodity_loam_products_selection'),
 (107, 'cooperative', 'members_credit_purchase_analysis'),
 (106, 'cooperative', 'members_credit_purchase_summary'),
 (105, 'cooperative', 'members_credit_sales_external_fascilities'),
 (104, 'cooperative', 'members_credit_sales_selected'),
+(156, 'cooperative', 'monthlydeductiongenerationheaders'),
+(157, 'cooperative', 'monthlydeductiongenerationheading'),
 (89, 'cooperative', 'monthlydeductionlist'),
 (88, 'cooperative', 'monthlydeductionlistgenerated'),
+(158, 'cooperative', 'monthlydeductionlistgeneratedcertified'),
 (87, 'cooperative', 'monthlygeneratedtransactions'),
 (86, 'cooperative', 'monthlygroupgeneratedtransactions'),
+(160, 'cooperative', 'monthlyoverdeductionsrefund'),
+(159, 'cooperative', 'monthlyshopdeductioncertified'),
 (46, 'cooperative', 'multipleloanstatus'),
 (47, 'cooperative', 'nextofkinsmaximun'),
 (48, 'cooperative', 'nokrelationships'),
 (85, 'cooperative', 'nonmemberaccountdeductions'),
+(164, 'cooperative', 'non_monetary_loan_settings'),
 (84, 'cooperative', 'norminalroll'),
 (49, 'cooperative', 'paymentchannels'),
 (83, 'cooperative', 'personalledger'),
 (50, 'cooperative', 'processingstatus'),
 (51, 'cooperative', 'productcategory'),
+(177, 'cooperative', 'proformainvoice'),
 (141, 'cooperative', 'purchases'),
 (142, 'cooperative', 'purchases_temp'),
 (143, 'cooperative', 'purchase_header'),
@@ -8345,6 +9470,7 @@ INSERT INTO `django_content_type` (`id`, `app_label`, `model`) VALUES
 (139, 'cooperative', 'suppliers_majors'),
 (138, 'cooperative', 'suppliers_reps'),
 (74, 'cooperative', 'taskmanager'),
+(161, 'cooperative', 'termination_types'),
 (61, 'cooperative', 'ticketstatus'),
 (62, 'cooperative', 'titles'),
 (73, 'cooperative', 'transactionajustmentrequest'),
@@ -8488,7 +9614,71 @@ INSERT INTO `django_migrations` (`id`, `app`, `name`, `applied`) VALUES
 (106, 'cooperative', '0085_auto_20220129_0449', '2022-01-29 04:49:53.116833'),
 (107, 'cooperative', '0086_transactiontypes_form_print', '2022-01-29 23:56:01.554025'),
 (108, 'cooperative', '0087_membershipformsalesrecord_total_amount', '2022-01-30 18:02:27.050972'),
-(109, 'cooperative', '0088_day_end_desk_office_transactions', '2022-01-30 18:43:28.516900');
+(109, 'cooperative', '0088_day_end_desk_office_transactions', '2022-01-30 18:43:28.516900'),
+(110, 'cooperative', '0089_loansrepaymentbase_tdate', '2022-01-31 02:47:30.844881'),
+(111, 'cooperative', '0090_monthlydeductiongenerationheaders', '2022-02-01 18:44:37.702813'),
+(112, 'cooperative', '0091_monthlydeductiongenerationheading', '2022-02-01 19:08:04.380405'),
+(113, 'cooperative', '0092_monthlydeductionlistgeneratedcertified_monthlyshopdeductioncertified', '2022-02-02 02:36:23.636066'),
+(114, 'cooperative', '0093_monthlyoverdeductionsrefund', '2022-02-02 14:06:47.258583'),
+(115, 'cooperative', '0094_alter_monthlyoverdeductionsrefund_member', '2022-02-02 14:08:55.606333'),
+(116, 'cooperative', '0095_rename_over_deduction_monthlyoverdeductionsrefund_amount', '2022-02-02 14:11:22.979203'),
+(117, 'cooperative', '0096_rename_amount_monthlyoverdeductionsrefund_over_deduction', '2022-02-02 14:21:06.544914'),
+(118, 'cooperative', '0097_monthlydeductionlistgeneratedcertified_refund_status', '2022-02-02 14:30:21.887721'),
+(119, 'cooperative', '0098_staff_status', '2022-02-07 15:29:00.011061'),
+(120, 'cooperative', '0099_termination_types', '2022-02-07 18:18:38.086483'),
+(121, 'cooperative', '0100_alter_termination_types_options', '2022-02-07 18:31:26.906865'),
+(122, 'cooperative', '0101_membershipterminationrequest', '2022-02-07 19:17:19.574421'),
+(123, 'cooperative', '0102_membershipterminationrequest_processed_by', '2022-02-07 19:20:47.179082'),
+(124, 'cooperative', '0103_commodity_category', '2022-02-07 20:17:04.088591'),
+(125, 'cooperative', '0104_auto_20220207_2106', '2022-02-07 21:07:09.598738'),
+(126, 'cooperative', '0105_alter_commodity_category_title', '2022-02-07 21:07:56.604531'),
+(127, 'cooperative', '0106_auto_20220207_2154', '2022-02-07 22:18:44.302427'),
+(128, 'cooperative', '0107_commodity_categories', '2022-02-07 22:52:55.514371'),
+(129, 'cooperative', '0108_alter_commodity_categories_receipt_type', '2022-02-07 22:58:05.951172'),
+(130, 'cooperative', '0109_delete_commodity_categories', '2022-02-07 23:09:38.500751'),
+(131, 'cooperative', '0110_commodity_categories', '2022-02-07 23:11:53.176816'),
+(132, 'cooperative', '0111_auto_20220207_2323', '2022-02-07 23:23:22.956143'),
+(133, 'cooperative', '0112_commodity_product_list', '2022-02-07 23:12:18.789079'),
+(134, 'cooperative', '0113_commodity_product_list_details', '2022-02-07 23:24:38.162936'),
+(135, 'cooperative', '0114_companies', '2022-02-08 00:58:57.610734'),
+(136, 'cooperative', '0115_alter_companies_options', '2022-02-08 01:01:55.252527'),
+(137, 'cooperative', '0116_company_products', '2022-02-08 01:57:21.571145'),
+(138, 'cooperative', '0117_members_commodity_loam_products_selection', '2022-02-10 04:55:42.171529'),
+(139, 'cooperative', '0118_members_commodity_loam_products_selection_member', '2022-02-10 05:23:04.624999'),
+(140, 'cooperative', '0119_members_commodity_loam_application_members_commodity_loam_application_settings', '2022-02-10 12:14:32.387596'),
+(141, 'cooperative', '0120_members_commodity_loam_application_repayment', '2022-02-10 12:21:15.893653'),
+(142, 'cooperative', '0121_members_commodity_loam_application_comments', '2022-02-10 12:25:41.367205'),
+(143, 'cooperative', '0122_auto_20220210_1231', '2022-02-10 12:32:05.017180'),
+(144, 'cooperative', '0123_auto_20220210_1235', '2022-02-10 12:35:24.768854'),
+(145, 'cooperative', '0124_dedicated_commodity_price_list_dedicated_commodity_product_list', '2022-02-10 14:07:33.225006'),
+(146, 'cooperative', '0125_dedicated_commodity_period', '2022-02-10 15:39:36.584418'),
+(147, 'cooperative', '0126_dedicated_commodity_price_list_batch', '2022-02-11 20:18:47.005382'),
+(148, 'cooperative', '0127_auto_20220211_2056', '2022-02-11 20:56:21.099962'),
+(149, 'cooperative', '0128_essential_commodity_product_select', '2022-02-12 00:10:07.107570'),
+(150, 'cooperative', '0129_essential_commodity_product_select_member', '2022-02-12 00:20:38.529822'),
+(151, 'cooperative', '0130_auto_20220212_0145', '2022-02-12 01:45:22.931982'),
+(152, 'cooperative', '0131_essential_commodity_product_selection_summary', '2022-02-12 03:17:12.742422'),
+(153, 'cooperative', '0132_auto_20220212_0342', '2022-02-12 03:42:18.831757'),
+(154, 'cooperative', '0133_essential_commodity_product_selection_summary_comments', '2022-02-12 03:46:44.797455'),
+(155, 'cooperative', '0134_remove_essential_commodity_product_selection_summary_total', '2022-02-12 04:11:06.973301'),
+(156, 'cooperative', '0135_auto_20220212_0417', '2022-02-12 04:17:16.321822'),
+(157, 'cooperative', '0136_alter_essential_commodity_product_selection_summary_product', '2022-02-12 18:54:13.608445'),
+(158, 'cooperative', '0137_alter_essential_commodity_product_selection_summary_product', '2022-02-12 18:57:33.755246'),
+(159, 'cooperative', '0138_auto_20220215_1928', '2022-02-15 19:28:41.999485'),
+(160, 'cooperative', '0139_auto_20220216_0302', '2022-02-16 03:02:44.729934'),
+(161, 'cooperative', '0140_auto_20220216_0318', '2022-02-16 03:18:37.782787'),
+(162, 'cooperative', '0141_essential_commodity_product_select_interest', '2022-02-16 07:26:16.278669'),
+(163, 'cooperative', '0142_essential_commodity_product_selection_summary_interest', '2022-02-16 07:46:06.747379'),
+(164, 'cooperative', '0143_proformainvoice', '2022-02-18 22:23:04.765217'),
+(165, 'cooperative', '0144_proformainvoicedcommodityloan_application_summary', '2022-02-18 22:46:54.333160'),
+(166, 'cooperative', '0145_rename_proformainvoicedcommodityloan_application_summary_customized_commodity_loan_application_summa', '2022-02-19 03:12:54.818136'),
+(167, 'cooperative', '0146_rename_ticket_customized_commodity_loan_application_summary_invoice', '2022-02-19 03:14:37.255978'),
+(168, 'cooperative', '0147_customized_commodity_loan_application_summary_member', '2022-02-19 03:21:22.318071'),
+(169, 'cooperative', '0148_customized_commodity_loan_application_summary_invoice_date', '2022-02-19 03:26:38.504384'),
+(170, 'cooperative', '0149_customized_commodity_loan_application_summary_company', '2022-02-19 05:26:36.187049'),
+(171, 'cooperative', '0150_customized_commodity_loan_application_details', '2022-02-19 16:30:49.257890'),
+(172, 'cooperative', '0151_auto_20220219_1644', '2022-02-19 16:44:35.596443'),
+(173, 'cooperative', '0152_customized_commodity_loan_application_payslip', '2022-02-19 19:12:40.855069');
 
 -- --------------------------------------------------------
 
@@ -8507,16 +9697,19 @@ CREATE TABLE `django_session` (
 --
 
 INSERT INTO `django_session` (`session_key`, `session_data`, `expire_date`) VALUES
+('0jw9v5fgq5cinl766w5yr804nh9hqcs0', '.eJxVjDsOwjAQBe_iGllZf2IvJT1nsNafxQHkSHFSIe4OkVJA-2bmvUSgba1h62UJUxZnYcTpd4uUHqXtIN-p3WaZ5rYuU5S7Ig_a5XXO5Xk53L-DSr1-awJGPxBnZwyrmJUzGi1ZxkLeOwAsyVpiUKiN42g1I4IaRmP1CKDE-wPhYTb2:1nKeXM:6i61LnKIpQG6CWPdtXAXiTYKhLFtRC3UKvX-wKiDPZU', '2022-03-03 12:01:24.645515'),
 ('1ipiv63lrp9txistsoi6r0k8kz2nf5z8', '.eJxVjEEOwiAQRe_C2hBAOoBL956BDMwgVUOT0q6Md7dNutDtf--_t4i4LjWunec4krgIbcTpd0yYn9x2Qg9s90nmqS3zmOSuyIN2eZuIX9fD_QtU7HV7s3Yq-aAQCLDAQM6hzWiSQxNSCLClzqCLYszovXWgFITCxRIXGrT4fAEZeTjM:1n5Mqo:NiNS3TRxdfKCEYhVva5G-QLyBhHrBBmZg9QxasAvilM', '2022-01-20 07:06:18.813528'),
 ('3oab3pgcaggqd8d2p1fjugxm3bt0zo1n', '.eJxVjDsOwjAQBe_iGllZf2IvJT1nsNafxQHkSHFSIe4OkVJA-2bmvUSgba1h62UJUxZnYcTpd4uUHqXtIN-p3WaZ5rYuU5S7Ig_a5XXO5Xk53L-DSr1-awJGPxBnZwyrmJUzGi1ZxkLeOwAsyVpiUKiN42g1I4IaRmP1CKDE-wPhYTb2:1n3Zzv:c6rtzB6BF0Y5-Uq7s4MXVAiJs2U1u4V4IOMWaBZadJk', '2022-01-15 08:44:19.886311'),
 ('875xfiobrcsjiu0ulbkq5xf48t2vjbp8', '.eJxVjEEOwiAQRe_C2hAKQwGX7j0DgZlBqqYkpV0Z765NutDtf-_9l4hpW2vcOi9xInEWQZx-t5zwwfMO6J7mW5PY5nWZstwVedAur434eTncv4Oaev3WUIwij6wMaE1QEiI7zyVYBuswZO01hQCDT04NY7EjAhk22iMUrQbx_gDv6Te1:1n9JEM:l6y816OQMSODQIzcWXcVVOmN1u7b1CsW1ThCeZ3kj_s', '2022-01-31 04:02:54.422647'),
-('abfqhllc4wkg11qfx524vnukq3y7b8bs', '.eJxVjEEOwiAQRe_C2hBkpgO4dN8zkGGgUjVtUtqV8e7apAvd_vfef6nI21rj1soSx6wu6qxOv1tieZRpB_nO023WMk_rMia9K_qgTfdzLs_r4f4dVG71WyN67JixUMnWOgGSIYQuDQQWjQMgxgQoJllPJju0DC4Ie0oEJYh6fwDL1DdH:1nDwUC:urA_RfL6hgMd_CCC8LLikIjhdKkUDe6TVBdaKbQ9I3Q', '2022-02-12 23:46:24.156727'),
+('9g4e035dj6c84bipsb15lqmgn8tj5f5s', '.eJxVjEEOwiAQRe_C2hBkpgO4dN8zkGGgUjVtUtqV8e7apAvd_vfef6nI21rj1soSx6wu6qxOv1tieZRpB_nO023WMk_rMia9K_qgTfdzLs_r4f4dVG71WyN67JixUMnWOgGSIYQuDQQWjQMgxgQoJllPJju0DC4Ie0oEJYh6fwDL1DdH:1nJ4Bx:zew88_8bdRuubGposPKmHGwTS1n_GYNDclw7P6WuPuA', '2022-02-27 03:00:45.820909'),
+('aur75r7swm2jcidmsr3gde8ivanh1312', '.eJxVjEEOwiAQRe_C2hBkpgO4dN8zkGGgUjVtUtqV8e7apAvd_vfef6nI21rj1soSx6wu6qxOv1tieZRpB_nO023WMk_rMia9K_qgTfdzLs_r4f4dVG71WyN67JixUMnWOgGSIYQuDQQWjQMgxgQoJllPJju0DC4Ie0oEJYh6fwDL1DdH:1nI1uG:C6JcfrhsNVBUwLSj5V-XjXqjq-hBeWV78wATAHvEmrw', '2022-02-24 06:22:12.450106'),
 ('b5bqdvtswzmta2ihe8vagnll9b0iwg93', '.eJxVjEEOwiAQRe_C2hBkpgO4dN8zkGGgUjVtUtqV8e7apAvd_vfef6nI21rj1soSx6wu6qxOv1tieZRpB_nO023WMk_rMia9K_qgTfdzLs_r4f4dVG71WyN67JixUMnWOgGSIYQuDQQWjQMgxgQoJllPJju0DC4Ie0oEJYh6fwDL1DdH:1n2Y3E:mR2RvAud8Re50ToUkmOvrzbNVHkftMVP4ukxnpOe6wI', '2022-01-12 12:27:28.168534'),
-('c198fytdjpczcc7uqnjrs5o3t367ngrs', '.eJxVjDsOgzAQRO_iOrLwf0mZnjNYy3odk0RGwlBFuXtAokjKmfdm3iLitpa4NV7ilMRVaHH57UakJ9cDpAfW-yxprusyjfJQ5EmbHObEr9vp_h0UbGVfc_JgOuOyJtsprXJ2bBG1y3mPziA4yorAKSBtbQDDpILvew7BA5P4fAHSCzdO:1nDdY7:aed86NoXIFRbZ_xFxm9ZNcYv5kB2k5KUSnSI8FX7FrA', '2022-02-12 03:33:11.134058'),
+('bk1nkudmp7hletdloxt7cvgt19e6mpoi', '.eJxVjEEOwiAQRe_C2hBkpgO4dN8zkGGgUjVtUtqV8e7apAvd_vfef6nI21rj1soSx6wu6qxOv1tieZRpB_nO023WMk_rMia9K_qgTfdzLs_r4f4dVG71WyN67JixUMnWOgGSIYQuDQQWjQMgxgQoJllPJju0DC4Ie0oEJYh6fwDL1DdH:1nH4fc:CZ5r4Jr4Onae-GtR4WSTVkLTqlnmo7zL9dKD8cIj6F0', '2022-02-21 15:07:08.250847'),
+('f3nh96egpyniru1s5mbxmb7locn4hkot', '.eJxVjEEOwiAQRe_C2hBkpgO4dN8zkGGgUjVtUtqV8e7apAvd_vfef6nI21rj1soSx6wu6qxOv1tieZRpB_nO023WMk_rMia9K_qgTfdzLs_r4f4dVG71WyN67JixUMnWOgGSIYQuDQQWjQMgxgQoJllPJju0DC4Ie0oEJYh6fwDL1DdH:1nM2CM:4rztS0S3fP_na7fcXhQEXESJYirOvfnVSu0WCEZeBkg', '2022-03-07 07:29:26.646267'),
 ('gdz9k66v1ursiugb6ho1st6zw1ynlsja', '.eJxVjEEOwiAQRe_C2hBkpgO4dN8zkGGgUjVtUtqV8e7apAvd_vfef6nI21rj1soSx6wu6qxOv1tieZRpB_nO023WMk_rMia9K_qgTfdzLs_r4f4dVG71WyN67JixUMnWOgGSIYQuDQQWjQMgxgQoJllPJju0DC4Ie0oEJYh6fwDL1DdH:1n7hbv:PSUZPXOL9oNdNZeCOw1ctmP6pDbkn_lIHF44gTZq12k', '2022-01-26 17:40:35.902605'),
-('mibfv39m3ivylki9u5a94p5cpqwgpc0o', '.eJxVjDsOwjAQBe_iGllZf2IvJT1nsNafxQHkSHFSIe4OkVJA-2bmvUSgba1h62UJUxZnYcTpd4uUHqXtIN-p3WaZ5rYuU5S7Ig_a5XXO5Xk53L-DSr1-awJGPxBnZwyrmJUzGi1ZxkLeOwAsyVpiUKiN42g1I4IaRmP1CKDE-wPhYTb2:1nDwNn:Ch5qSBK7q4nk2X5cywRlrPmzrTg8GmmhYUi17kyXhkU', '2022-02-12 23:39:47.543776'),
+('ij2afbq6jwxc40tsmsvxcuih64rh6wmz', '.eJxVjEsOwjAMBe-SNYqa1HYqluw5Q-QkNimgVupnVXF3FKkL2L6ZeYeJvG817qsscSzmalxvLr9j4vySqZHy5Okx2zxP2zIm2xR70tXe5yLv2-n-HVRea6szZqc0KHtWPwj3oRCzYieqDqAPiJAAAnqfXGIcSBAyKRB14sB8vifBODE:1nEzX6:WO2L-oGaWMsE1LgisYq-HPIZDZQXNwDCbZooycATmco', '2022-02-15 21:13:44.383282'),
 ('n8gda5op5w28js67ysq6ri73am5w8c4y', '.eJxVjEEOwiAQRe_C2hBkpgO4dN8zkGGgUjVtUtqV8e7apAvd_vfef6nI21rj1soSx6wu6qxOv1tieZRpB_nO023WMk_rMia9K_qgTfdzLs_r4f4dVG71WyN67JixUMnWOgGSIYQuDQQWjQMgxgQoJllPJju0DC4Ie0oEJYh6fwDL1DdH:1n0BHE:zAvo2jMVCj2nwn5hlYskIoo3ptXgZYAzvbKmi72-Gs4', '2022-01-05 23:44:08.689984'),
-('qocuvgk250dr8zifcwds81vkep1qdic2', '.eJxVjEEOwiAQRe_C2hAKQwGX7j0DgZlBqqYkpV0Z765NutDtf-_9l4hpW2vcOi9xInEWQZx-t5zwwfMO6J7mW5PY5nWZstwVedAur434eTncv4Oaev3WUIwij6wMaE1QEiI7zyVYBuswZO01hQCDT04NY7EjAhk22iMUrQbx_gDv6Te1:1nEIiN:WvH3EpGEE_jz0O18oQONYfVgzPV6TiM3_5C0tp34mi4', '2022-02-13 23:30:31.564434'),
+('ns49sy98qo0v1w6jdqtijzysxb11q9c0', '.eJxVjDsOwjAQBe_iGllZf2IvJT1nsNafxQHkSHFSIe4OkVJA-2bmvUSgba1h62UJUxZnYcTpd4uUHqXtIN-p3WaZ5rYuU5S7Ig_a5XXO5Xk53L-DSr1-awJGPxBnZwyrmJUzGi1ZxkLeOwAsyVpiUKiN42g1I4IaRmP1CKDE-wPhYTb2:1nI56U:TQogIC1U77SgIHdDwEQVu17ggVsxzeLFZ8g3KdRd7ng', '2022-02-24 09:47:02.186548'),
 ('wep7kdrpybce8tssiuln7pt4bcfo8cvn', '.eJxVjEEOwiAQRe_C2hBkpgO4dN8zkGGgUjVtUtqV8e7apAvd_vfef6nI21rj1soSx6wu6qxOv1tieZRpB_nO023WMk_rMia9K_qgTfdzLs_r4f4dVG71WyN67JixUMnWOgGSIYQuDQQWjQMgxgQoJllPJju0DC4Ie0oEJYh6fwDL1DdH:1n3Bia:9mynIoTLJbMupMOUtA_SZ-qN_7am48YWOaBX51InEUo', '2022-01-14 06:48:48.216062');
 
 --
@@ -8655,6 +9848,44 @@ ALTER TABLE `cooperative_cheque_table`
   ADD KEY `cooperative_cheque_t_status_id_5b8d9344_fk_cooperati` (`status_id`);
 
 --
+-- Indexes for table `cooperative_commodity_categories`
+--
+ALTER TABLE `cooperative_commodity_categories`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `title` (`title`),
+  ADD KEY `cooperative_commodit_admin_charges_rating_50613a4d_fk_cooperati` (`admin_charges_rating_id`),
+  ADD KEY `cooperative_commodit_form_print_id_2b8b7b35_fk_cooperati` (`form_print_id`),
+  ADD KEY `cooperative_commodit_interest_deduction_i_0869f978_fk_cooperati` (`interest_deduction_id`),
+  ADD KEY `cooperative_commodit_multiple_loan_status_ff8edb1d_fk_cooperati` (`multiple_loan_status_id`),
+  ADD KEY `cooperative_commodit_receipt_type_id_7155aac9_fk_cooperati` (`receipt_type_id`),
+  ADD KEY `cooperative_commodit_status_id_66b370b5_fk_cooperati` (`status_id`),
+  ADD KEY `cooperative_commodit_transaction_id_77075010_fk_cooperati` (`transaction_id`);
+
+--
+-- Indexes for table `cooperative_commodity_product_list`
+--
+ALTER TABLE `cooperative_commodity_product_list`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `cooperative_commodit_category_id_3c338436_fk_cooperati` (`category_id`),
+  ADD KEY `cooperative_commodit_status_id_5986ceb6_fk_cooperati` (`status_id`);
+
+--
+-- Indexes for table `cooperative_companies`
+--
+ALTER TABLE `cooperative_companies`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `title` (`title`);
+
+--
+-- Indexes for table `cooperative_company_products`
+--
+ALTER TABLE `cooperative_company_products`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `cooperative_company__company_id_c9f20eea_fk_cooperati` (`company_id`),
+  ADD KEY `cooperative_company__product_id_07ca2cf8_fk_cooperati` (`product_id`),
+  ADD KEY `cooperative_company__status_id_d028471e_fk_cooperati` (`status_id`);
+
+--
 -- Indexes for table `cooperative_compulsorysavings`
 --
 ALTER TABLE `cooperative_compulsorysavings`
@@ -8708,6 +9939,39 @@ ALTER TABLE `cooperative_customers`
   ADD KEY `cooperative_customer_status_id_49bd06cc_fk_cooperati` (`status_id`),
   ADD KEY `cooperative_customer_ticket_status_id_c8210255_fk_cooperati` (`ticket_status_id`),
   ADD KEY `cooperative_customer_processed_by_id_90b025c4_fk_cooperati` (`processed_by_id`);
+
+--
+-- Indexes for table `cooperative_customized_commodity_loan_application_details`
+--
+ALTER TABLE `cooperative_customized_commodity_loan_application_details`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `cooperative_customiz_applicant_id_cea88a4f_fk_cooperati` (`applicant_id`),
+  ADD KEY `cooperative_customiz_processed_by_id_683ca8fc_fk_cooperati` (`processed_by_id`),
+  ADD KEY `cooperative_customiz_status_id_83d5536b_fk_cooperati` (`status_id`);
+
+--
+-- Indexes for table `cooperative_customized_commodity_loan_application_payslip`
+--
+ALTER TABLE `cooperative_customized_commodity_loan_application_payslip`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `cooperative_customiz_applicant_id_c1869142_fk_cooperati` (`applicant_id`),
+  ADD KEY `cooperative_customiz_processed_by_id_e7296a3a_fk_cooperati` (`processed_by_id`),
+  ADD KEY `cooperative_customiz_status_id_83cdf1e0_fk_cooperati` (`status_id`);
+
+--
+-- Indexes for table `cooperative_customized_commodity_loan_application_summary`
+--
+ALTER TABLE `cooperative_customized_commodity_loan_application_summary`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `cooperative_proforma_approval_officer_id_2ee82e1e_fk_cooperati` (`approval_officer_id`),
+  ADD KEY `cooperative_proforma_approval_status_id_5b1820f7_fk_cooperati` (`approval_status_id`),
+  ADD KEY `cooperative_proforma_certification_office_d5c0bdb9_fk_cooperati` (`certification_officer_id`),
+  ADD KEY `cooperative_proforma_certification_status_2664c10b_fk_cooperati` (`certification_status_id`),
+  ADD KEY `cooperative_proforma_processed_by_id_7716a5f3_fk_cooperati` (`processed_by_id`),
+  ADD KEY `cooperative_proforma_status_id_28f8818d_fk_cooperati` (`status_id`),
+  ADD KEY `cooperative_proforma_transaction_id_3c7f7d1c_fk_cooperati` (`transaction_id`),
+  ADD KEY `cooperative_customiz_member_id_eb3fa6d7_fk_cooperati` (`member_id`),
+  ADD KEY `cooperative_customiz_company_id_b0747b04_fk_cooperati` (`company_id`);
 
 --
 -- Indexes for table `cooperative_customuser`
@@ -8799,6 +10063,30 @@ ALTER TABLE `cooperative_day_end_sales_transactions`
   ADD KEY `cooperative_day_end__status_id_ddb63c4b_fk_cooperati` (`status_id`);
 
 --
+-- Indexes for table `cooperative_dedicated_commodity_period`
+--
+ALTER TABLE `cooperative_dedicated_commodity_period`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `cooperative_dedicate_status_id_37d9ef5c_fk_cooperati` (`status_id`);
+
+--
+-- Indexes for table `cooperative_dedicated_commodity_price_list`
+--
+ALTER TABLE `cooperative_dedicated_commodity_price_list`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `cooperative_dedicate_processed_by_id_c47336b9_fk_cooperati` (`processed_by_id`),
+  ADD KEY `cooperative_dedicate_product_id_19d48d68_fk_cooperati` (`product_id`),
+  ADD KEY `cooperative_dedicate_status_id_c602c88d_fk_cooperati` (`status_id`),
+  ADD KEY `cooperative_dedicate_period_id_b860f711_fk_cooperati` (`period_id`);
+
+--
+-- Indexes for table `cooperative_dedicated_commodity_product_list`
+--
+ALTER TABLE `cooperative_dedicated_commodity_product_list`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `cooperative_dedicate_status_id_dc3a8757_fk_cooperati` (`status_id`);
+
+--
 -- Indexes for table `cooperative_defaultpassword`
 --
 ALTER TABLE `cooperative_defaultpassword`
@@ -8819,6 +10107,28 @@ ALTER TABLE `cooperative_disbursementofficers`
   ADD PRIMARY KEY (`id`),
   ADD KEY `cooperative_disburse_officer_id_4eb840f2_fk_cooperati` (`officer_id`),
   ADD KEY `cooperative_disburse_status_id_6b79cac8_fk_cooperati` (`status_id`);
+
+--
+-- Indexes for table `cooperative_essential_commodity_product_select`
+--
+ALTER TABLE `cooperative_essential_commodity_product_select`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `cooperative_essentia_processed_by_id_ad71befb_fk_cooperati` (`processed_by_id`),
+  ADD KEY `cooperative_essentia_product_id_6f65d787_fk_cooperati` (`product_id`),
+  ADD KEY `cooperative_essentia_member_id_19a6da2a_fk_cooperati` (`member_id`),
+  ADD KEY `cooperative_essentia_status_id_57b2588f_fk_cooperati` (`status_id`);
+
+--
+-- Indexes for table `cooperative_essential_commodity_product_selection_summary`
+--
+ALTER TABLE `cooperative_essential_commodity_product_selection_summary`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `cooperative_essentia_processed_by_id_8073dc88_fk_cooperati` (`processed_by_id`),
+  ADD KEY `cooperative_essentia_product_id_d4c0a200_fk_cooperati` (`product_id`),
+  ADD KEY `cooperative_essentia_status_id_02d24963_fk_cooperati` (`status_id`),
+  ADD KEY `cooperative_essentia_approval_officer_id_d683c132_fk_cooperati` (`approval_officer_id`),
+  ADD KEY `cooperative_essentia_approval_status_id_8d73dbca_fk_cooperati` (`approval_status_id`),
+  ADD KEY `cooperative_essentia_transaction_id_8f6b23ea_fk_cooperati` (`transaction_id`);
 
 --
 -- Indexes for table `cooperative_exclusivestatus`
@@ -9284,6 +10594,18 @@ ALTER TABLE `cooperative_membershipstatus`
   ADD UNIQUE KEY `title` (`title`);
 
 --
+-- Indexes for table `cooperative_membershipterminationrequest`
+--
+ALTER TABLE `cooperative_membershipterminationrequest`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `cooperative_membersh_approval_officer_id_0c86544b_fk_cooperati` (`approval_officer_id`),
+  ADD KEY `cooperative_membersh_approval_status_id_3b883677_fk_cooperati` (`approval_status_id`),
+  ADD KEY `cooperative_membersh_member_id_9b7ff952_fk_cooperati` (`member_id`),
+  ADD KEY `cooperative_membersh_status_id_2766cf11_fk_cooperati` (`status_id`),
+  ADD KEY `cooperative_membersh_termination_id_4301c356_fk_cooperati` (`termination_id`),
+  ADD KEY `cooperative_membersh_processed_by_id_b4a9dcc2_fk_cooperati` (`processed_by_id`);
+
+--
 -- Indexes for table `cooperative_membersidmanager`
 --
 ALTER TABLE `cooperative_membersidmanager`
@@ -9382,6 +10704,37 @@ ALTER TABLE `cooperative_members_cash_sales_selected`
   ADD KEY `cooperative_members__status_id_e5d21dba_fk_cooperati` (`status_id`);
 
 --
+-- Indexes for table `cooperative_members_commodity_loam_application`
+--
+ALTER TABLE `cooperative_members_commodity_loam_application`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `cooperative_members__approval_officer_id_d7d61e8c_fk_cooperati` (`approval_officer_id`),
+  ADD KEY `cooperative_members__approval_status_id_dc1dd78f_fk_cooperati` (`approval_status_id`),
+  ADD KEY `cooperative_members__certification_office_4ba264d2_fk_cooperati` (`certification_officer_id`),
+  ADD KEY `cooperative_members__certification_status_7baf1aaa_fk_cooperati` (`certification_status_id`),
+  ADD KEY `cooperative_members__member_id_71f6375c_fk_cooperati` (`member_id`),
+  ADD KEY `cooperative_members__processed_by_id_fd3b6a5b_fk_cooperati` (`processed_by_id`),
+  ADD KEY `cooperative_members__status_id_0c2e97eb_fk_cooperati` (`status_id`);
+
+--
+-- Indexes for table `cooperative_members_commodity_loam_application_settings`
+--
+ALTER TABLE `cooperative_members_commodity_loam_application_settings`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `cooperative_members__applicant_id_a3f34f63_fk_cooperati` (`applicant_id`),
+  ADD KEY `cooperative_members__status_id_1e0227c3_fk_cooperati` (`status_id`);
+
+--
+-- Indexes for table `cooperative_members_commodity_loam_products_selection`
+--
+ALTER TABLE `cooperative_members_commodity_loam_products_selection`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `cooperative_members__processed_by_id_a23a09fb_fk_cooperati` (`processed_by_id`),
+  ADD KEY `cooperative_members__product_id_3c4d8f0a_fk_cooperati` (`product_id`),
+  ADD KEY `cooperative_members__status_id_05ed4a30_fk_cooperati` (`status_id`),
+  ADD KEY `cooperative_members__member_id_bb15ade1_fk_cooperati` (`member_id`);
+
+--
 -- Indexes for table `cooperative_members_credit_purchase_analysis`
 --
 ALTER TABLE `cooperative_members_credit_purchase_analysis`
@@ -9418,6 +10771,22 @@ ALTER TABLE `cooperative_members_credit_sales_selected`
   ADD KEY `cooperative_members__status_id_ac97f5c5_fk_cooperati` (`status_id`);
 
 --
+-- Indexes for table `cooperative_monthlydeductiongenerationheaders`
+--
+ALTER TABLE `cooperative_monthlydeductiongenerationheaders`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `title` (`title`);
+
+--
+-- Indexes for table `cooperative_monthlydeductiongenerationheading`
+--
+ALTER TABLE `cooperative_monthlydeductiongenerationheading`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `cooperative_monthlyd_salary_institution_i_4570fcc4_fk_cooperati` (`salary_institution_id`),
+  ADD KEY `cooperative_monthlyd_status_id_ee6e1fa1_fk_cooperati` (`status_id`),
+  ADD KEY `cooperative_monthlyd_transaction_period_i_8e2c844d_fk_cooperati` (`transaction_period_id`);
+
+--
 -- Indexes for table `cooperative_monthlydeductionlist`
 --
 ALTER TABLE `cooperative_monthlydeductionlist`
@@ -9438,6 +10807,17 @@ ALTER TABLE `cooperative_monthlydeductionlistgenerated`
   ADD KEY `cooperative_monthlyd_transaction_status_i_50f3c119_fk_cooperati` (`transaction_status_id`);
 
 --
+-- Indexes for table `cooperative_monthlydeductionlistgeneratedcertified`
+--
+ALTER TABLE `cooperative_monthlydeductionlistgeneratedcertified`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `cooperative_monthlyd_member_id_24f6aeb8_fk_cooperati` (`member_id`),
+  ADD KEY `cooperative_monthlyd_salary_institution_i_d5b0bdc6_fk_cooperati` (`salary_institution_id`),
+  ADD KEY `cooperative_monthlyd_transaction_period_i_5f854b33_fk_cooperati` (`transaction_period_id`),
+  ADD KEY `cooperative_monthlyd_transaction_status_i_32e6dfaa_fk_cooperati` (`transaction_status_id`),
+  ADD KEY `cooperative_monthlyd_refund_status_id_0085eadf_fk_cooperati` (`refund_status_id`);
+
+--
 -- Indexes for table `cooperative_monthlygeneratedtransactions`
 --
 ALTER TABLE `cooperative_monthlygeneratedtransactions`
@@ -9456,6 +10836,25 @@ ALTER TABLE `cooperative_monthlygroupgeneratedtransactions`
   ADD KEY `cooperative_monthlyg_salary_institution_i_043b8c06_fk_cooperati` (`salary_institution_id`),
   ADD KEY `cooperative_monthlyg_transaction_period_i_0725d14e_fk_cooperati` (`transaction_period_id`),
   ADD KEY `cooperative_monthlyg_transaction_status_i_bcb3cb05_fk_cooperati` (`transaction_status_id`);
+
+--
+-- Indexes for table `cooperative_monthlyoverdeductionsrefund`
+--
+ALTER TABLE `cooperative_monthlyoverdeductionsrefund`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `cooperative_monthlyo_processed_by_id_436e1c93_fk_cooperati` (`processed_by_id`),
+  ADD KEY `cooperative_monthlyo_member_id_07f0c282_fk_cooperati` (`member_id`),
+  ADD KEY `cooperative_monthlyo_over_deduction_id_8a8fa1f6_fk_cooperati` (`over_deduction_id`);
+
+--
+-- Indexes for table `cooperative_monthlyshopdeductioncertified`
+--
+ALTER TABLE `cooperative_monthlyshopdeductioncertified`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `cooperative_monthlys_member_id_40b1d625_fk_cooperati` (`member_id`),
+  ADD KEY `cooperative_monthlys_salary_institution_i_2c0e4994_fk_cooperati` (`salary_institution_id`),
+  ADD KEY `cooperative_monthlys_transaction_period_i_47ed3c7a_fk_cooperati` (`transaction_period_id`),
+  ADD KEY `cooperative_monthlys_transaction_status_i_3d8981e0_fk_cooperati` (`transaction_status_id`);
 
 --
 -- Indexes for table `cooperative_multipleloanstatus`
@@ -9523,6 +10922,12 @@ ALTER TABLE `cooperative_productcategory`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `title` (`title`),
   ADD UNIQUE KEY `code` (`code`);
+
+--
+-- Indexes for table `cooperative_proformainvoice`
+--
+ALTER TABLE `cooperative_proformainvoice`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `cooperative_purchases`
@@ -9661,7 +11066,8 @@ ALTER TABLE `cooperative_staff`
   ADD UNIQUE KEY `admin_id` (`admin_id`),
   ADD KEY `cooperative_staff_gender_id_4cf59a27_fk_cooperative_gender_id` (`gender_id`),
   ADD KEY `cooperative_staff_title_id_cf71f771_fk_cooperative_titles_id` (`title_id`),
-  ADD KEY `cooperative_staff_userlevel_id_89a425f0_fk_cooperati` (`userlevel_id`);
+  ADD KEY `cooperative_staff_userlevel_id_89a425f0_fk_cooperati` (`userlevel_id`),
+  ADD KEY `cooperative_staff_status_id_1b3aef6e_fk_cooperati` (`status_id`);
 
 --
 -- Indexes for table `cooperative_standingorderaccounts`
@@ -9728,6 +11134,13 @@ ALTER TABLE `cooperative_suppliers_reps`
 ALTER TABLE `cooperative_taskmanager`
   ADD PRIMARY KEY (`id`),
   ADD KEY `cooperative_taskmana_processed_by_id_60704725_fk_cooperati` (`processed_by_id`);
+
+--
+-- Indexes for table `cooperative_termination_types`
+--
+ALTER TABLE `cooperative_termination_types`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `title` (`title`);
 
 --
 -- Indexes for table `cooperative_ticketstatus`
@@ -9892,13 +11305,13 @@ ALTER TABLE `auth_group_permissions`
 -- AUTO_INCREMENT for table `auth_permission`
 --
 ALTER TABLE `auth_permission`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=625;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=729;
 
 --
 -- AUTO_INCREMENT for table `cooperative_accountdeductions`
 --
 ALTER TABLE `cooperative_accountdeductions`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 
 --
 -- AUTO_INCREMENT for table `cooperative_accounttypes`
@@ -9922,13 +11335,13 @@ ALTER TABLE `cooperative_adminmaster`
 -- AUTO_INCREMENT for table `cooperative_approvabletransactions`
 --
 ALTER TABLE `cooperative_approvabletransactions`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT for table `cooperative_approvalofficers`
 --
 ALTER TABLE `cooperative_approvalofficers`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
 
 --
 -- AUTO_INCREMENT for table `cooperative_approvalstatus`
@@ -9958,13 +11371,13 @@ ALTER TABLE `cooperative_cashbook`
 -- AUTO_INCREMENT for table `cooperative_certifiabletransactions`
 --
 ALTER TABLE `cooperative_certifiabletransactions`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `cooperative_certificationofficers`
 --
 ALTER TABLE `cooperative_certificationofficers`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `cooperative_certificationstatus`
@@ -9977,6 +11390,30 @@ ALTER TABLE `cooperative_certificationstatus`
 --
 ALTER TABLE `cooperative_cheque_table`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `cooperative_commodity_categories`
+--
+ALTER TABLE `cooperative_commodity_categories`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+
+--
+-- AUTO_INCREMENT for table `cooperative_commodity_product_list`
+--
+ALTER TABLE `cooperative_commodity_product_list`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+
+--
+-- AUTO_INCREMENT for table `cooperative_companies`
+--
+ALTER TABLE `cooperative_companies`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+
+--
+-- AUTO_INCREMENT for table `cooperative_company_products`
+--
+ALTER TABLE `cooperative_company_products`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `cooperative_compulsorysavings`
@@ -9994,13 +11431,13 @@ ALTER TABLE `cooperative_cooperativebankaccounts`
 -- AUTO_INCREMENT for table `cooperative_cooperativeshopledger`
 --
 ALTER TABLE `cooperative_cooperativeshopledger`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
 
 --
 -- AUTO_INCREMENT for table `cooperative_cooperative_shop_cash_deposit`
 --
 ALTER TABLE `cooperative_cooperative_shop_cash_deposit`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `cooperative_customerid`
@@ -10015,10 +11452,28 @@ ALTER TABLE `cooperative_customers`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=106;
 
 --
+-- AUTO_INCREMENT for table `cooperative_customized_commodity_loan_application_details`
+--
+ALTER TABLE `cooperative_customized_commodity_loan_application_details`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
+--
+-- AUTO_INCREMENT for table `cooperative_customized_commodity_loan_application_payslip`
+--
+ALTER TABLE `cooperative_customized_commodity_loan_application_payslip`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+
+--
+-- AUTO_INCREMENT for table `cooperative_customized_commodity_loan_application_summary`
+--
+ALTER TABLE `cooperative_customized_commodity_loan_application_summary`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
 -- AUTO_INCREMENT for table `cooperative_customuser`
 --
 ALTER TABLE `cooperative_customuser`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=237;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=238;
 
 --
 -- AUTO_INCREMENT for table `cooperative_customuser_groups`
@@ -10042,7 +11497,7 @@ ALTER TABLE `cooperative_daily_cash_deposit_summary`
 -- AUTO_INCREMENT for table `cooperative_daily_sales`
 --
 ALTER TABLE `cooperative_daily_sales`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=228;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=230;
 
 --
 -- AUTO_INCREMENT for table `cooperative_daily_sales_cash_flow_summary`
@@ -10054,7 +11509,7 @@ ALTER TABLE `cooperative_daily_sales_cash_flow_summary`
 -- AUTO_INCREMENT for table `cooperative_daily_sales_summary`
 --
 ALTER TABLE `cooperative_daily_sales_summary`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=127;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=129;
 
 --
 -- AUTO_INCREMENT for table `cooperative_datacapturemanager`
@@ -10081,6 +11536,24 @@ ALTER TABLE `cooperative_day_end_sales_transactions`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
+-- AUTO_INCREMENT for table `cooperative_dedicated_commodity_period`
+--
+ALTER TABLE `cooperative_dedicated_commodity_period`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- AUTO_INCREMENT for table `cooperative_dedicated_commodity_price_list`
+--
+ALTER TABLE `cooperative_dedicated_commodity_price_list`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+
+--
+-- AUTO_INCREMENT for table `cooperative_dedicated_commodity_product_list`
+--
+ALTER TABLE `cooperative_dedicated_commodity_product_list`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
 -- AUTO_INCREMENT for table `cooperative_defaultpassword`
 --
 ALTER TABLE `cooperative_defaultpassword`
@@ -10099,6 +11572,18 @@ ALTER TABLE `cooperative_disbursementofficers`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
+-- AUTO_INCREMENT for table `cooperative_essential_commodity_product_select`
+--
+ALTER TABLE `cooperative_essential_commodity_product_select`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=45;
+
+--
+-- AUTO_INCREMENT for table `cooperative_essential_commodity_product_selection_summary`
+--
+ALTER TABLE `cooperative_essential_commodity_product_selection_summary`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
+
+--
 -- AUTO_INCREMENT for table `cooperative_exclusivestatus`
 --
 ALTER TABLE `cooperative_exclusivestatus`
@@ -10108,13 +11593,13 @@ ALTER TABLE `cooperative_exclusivestatus`
 -- AUTO_INCREMENT for table `cooperative_externalfascilitiesmain`
 --
 ALTER TABLE `cooperative_externalfascilitiesmain`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `cooperative_externalfascilitiestemp`
 --
 ALTER TABLE `cooperative_externalfascilitiestemp`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `cooperative_formautoprint`
@@ -10132,7 +11617,7 @@ ALTER TABLE `cooperative_formautoprints`
 -- AUTO_INCREMENT for table `cooperative_gender`
 --
 ALTER TABLE `cooperative_gender`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `cooperative_generalticket`
@@ -10192,19 +11677,19 @@ ALTER TABLE `cooperative_lga`
 -- AUTO_INCREMENT for table `cooperative_loanapplication`
 --
 ALTER TABLE `cooperative_loanapplication`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `cooperative_loanapplicationguarnators`
 --
 ALTER TABLE `cooperative_loanapplicationguarnators`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `cooperative_loanapplicationsettings`
 --
 ALTER TABLE `cooperative_loanapplicationsettings`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=65;
 
 --
 -- AUTO_INCREMENT for table `cooperative_loanbasedsavings`
@@ -10276,13 +11761,13 @@ ALTER TABLE `cooperative_loanscleared`
 -- AUTO_INCREMENT for table `cooperative_loansdisbursed`
 --
 ALTER TABLE `cooperative_loansdisbursed`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `cooperative_loansrepaymentbase`
 --
 ALTER TABLE `cooperative_loansrepaymentbase`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `cooperative_loansuploaded`
@@ -10324,7 +11809,7 @@ ALTER TABLE `cooperative_membersaccountsdomain`
 -- AUTO_INCREMENT for table `cooperative_membersbankaccounts`
 --
 ALTER TABLE `cooperative_membersbankaccounts`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `cooperative_memberscashdeposits`
@@ -10366,7 +11851,7 @@ ALTER TABLE `cooperative_membershipformsalesrecord`
 -- AUTO_INCREMENT for table `cooperative_membershiprequest`
 --
 ALTER TABLE `cooperative_membershiprequest`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=412;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=413;
 
 --
 -- AUTO_INCREMENT for table `cooperative_membershiprequestadditionalattachment`
@@ -10387,6 +11872,12 @@ ALTER TABLE `cooperative_membershipstatus`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
+-- AUTO_INCREMENT for table `cooperative_membershipterminationrequest`
+--
+ALTER TABLE `cooperative_membershipterminationrequest`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
 -- AUTO_INCREMENT for table `cooperative_membersidmanager`
 --
 ALTER TABLE `cooperative_membersidmanager`
@@ -10396,7 +11887,7 @@ ALTER TABLE `cooperative_membersidmanager`
 -- AUTO_INCREMENT for table `cooperative_membersnextofkins`
 --
 ALTER TABLE `cooperative_membersnextofkins`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `cooperative_memberssalaryupdaterequest`
@@ -10453,16 +11944,34 @@ ALTER TABLE `cooperative_members_cash_sales_selected`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=38;
 
 --
+-- AUTO_INCREMENT for table `cooperative_members_commodity_loam_application`
+--
+ALTER TABLE `cooperative_members_commodity_loam_application`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
+
+--
+-- AUTO_INCREMENT for table `cooperative_members_commodity_loam_application_settings`
+--
+ALTER TABLE `cooperative_members_commodity_loam_application_settings`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=55;
+
+--
+-- AUTO_INCREMENT for table `cooperative_members_commodity_loam_products_selection`
+--
+ALTER TABLE `cooperative_members_commodity_loam_products_selection`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
+
+--
 -- AUTO_INCREMENT for table `cooperative_members_credit_purchase_analysis`
 --
 ALTER TABLE `cooperative_members_credit_purchase_analysis`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=98;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=107;
 
 --
 -- AUTO_INCREMENT for table `cooperative_members_credit_purchase_summary`
 --
 ALTER TABLE `cooperative_members_credit_purchase_summary`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
 
 --
 -- AUTO_INCREMENT for table `cooperative_members_credit_sales_external_fascilities`
@@ -10474,31 +11983,61 @@ ALTER TABLE `cooperative_members_credit_sales_external_fascilities`
 -- AUTO_INCREMENT for table `cooperative_members_credit_sales_selected`
 --
 ALTER TABLE `cooperative_members_credit_sales_selected`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=39;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=41;
+
+--
+-- AUTO_INCREMENT for table `cooperative_monthlydeductiongenerationheaders`
+--
+ALTER TABLE `cooperative_monthlydeductiongenerationheaders`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
+-- AUTO_INCREMENT for table `cooperative_monthlydeductiongenerationheading`
+--
+ALTER TABLE `cooperative_monthlydeductiongenerationheading`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `cooperative_monthlydeductionlist`
 --
 ALTER TABLE `cooperative_monthlydeductionlist`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=57;
 
 --
 -- AUTO_INCREMENT for table `cooperative_monthlydeductionlistgenerated`
 --
 ALTER TABLE `cooperative_monthlydeductionlistgenerated`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+
+--
+-- AUTO_INCREMENT for table `cooperative_monthlydeductionlistgeneratedcertified`
+--
+ALTER TABLE `cooperative_monthlydeductionlistgeneratedcertified`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=73;
 
 --
 -- AUTO_INCREMENT for table `cooperative_monthlygeneratedtransactions`
 --
 ALTER TABLE `cooperative_monthlygeneratedtransactions`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `cooperative_monthlygroupgeneratedtransactions`
 --
 ALTER TABLE `cooperative_monthlygroupgeneratedtransactions`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT for table `cooperative_monthlyoverdeductionsrefund`
+--
+ALTER TABLE `cooperative_monthlyoverdeductionsrefund`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
+-- AUTO_INCREMENT for table `cooperative_monthlyshopdeductioncertified`
+--
+ALTER TABLE `cooperative_monthlyshopdeductioncertified`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `cooperative_multipleloanstatus`
@@ -10510,7 +12049,7 @@ ALTER TABLE `cooperative_multipleloanstatus`
 -- AUTO_INCREMENT for table `cooperative_nextofkinsmaximun`
 --
 ALTER TABLE `cooperative_nextofkinsmaximun`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `cooperative_nokrelationships`
@@ -10522,7 +12061,7 @@ ALTER TABLE `cooperative_nokrelationships`
 -- AUTO_INCREMENT for table `cooperative_nonmemberaccountdeductions`
 --
 ALTER TABLE `cooperative_nonmemberaccountdeductions`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `cooperative_norminalroll`
@@ -10540,7 +12079,7 @@ ALTER TABLE `cooperative_paymentchannels`
 -- AUTO_INCREMENT for table `cooperative_personalledger`
 --
 ALTER TABLE `cooperative_personalledger`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=61;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=102;
 
 --
 -- AUTO_INCREMENT for table `cooperative_processingstatus`
@@ -10553,6 +12092,12 @@ ALTER TABLE `cooperative_processingstatus`
 --
 ALTER TABLE `cooperative_productcategory`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=82;
+
+--
+-- AUTO_INCREMENT for table `cooperative_proformainvoice`
+--
+ALTER TABLE `cooperative_proformainvoice`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `cooperative_purchases`
@@ -10654,13 +12199,13 @@ ALTER TABLE `cooperative_sharesuploadstatus`
 -- AUTO_INCREMENT for table `cooperative_staff`
 --
 ALTER TABLE `cooperative_staff`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT for table `cooperative_standingorderaccounts`
 --
 ALTER TABLE `cooperative_standingorderaccounts`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=38;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=47;
 
 --
 -- AUTO_INCREMENT for table `cooperative_states`
@@ -10711,6 +12256,12 @@ ALTER TABLE `cooperative_taskmanager`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT for table `cooperative_termination_types`
+--
+ALTER TABLE `cooperative_termination_types`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
+--
 -- AUTO_INCREMENT for table `cooperative_ticketstatus`
 --
 ALTER TABLE `cooperative_ticketstatus`
@@ -10738,7 +12289,7 @@ ALTER TABLE `cooperative_transactionloanajustmentrequest`
 -- AUTO_INCREMENT for table `cooperative_transactionperiods`
 --
 ALTER TABLE `cooperative_transactionperiods`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `cooperative_transactionsources`
@@ -10756,7 +12307,7 @@ ALTER TABLE `cooperative_transactionstatus`
 -- AUTO_INCREMENT for table `cooperative_transactiontypes`
 --
 ALTER TABLE `cooperative_transactiontypes`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
 
 --
 -- AUTO_INCREMENT for table `cooperative_userslevel`
@@ -10804,13 +12355,13 @@ ALTER TABLE `django_admin_log`
 -- AUTO_INCREMENT for table `django_content_type`
 --
 ALTER TABLE `django_content_type`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=156;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=181;
 
 --
 -- AUTO_INCREMENT for table `django_migrations`
 --
 ALTER TABLE `django_migrations`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=110;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=174;
 
 --
 -- Constraints for dumped tables
@@ -10890,6 +12441,33 @@ ALTER TABLE `cooperative_cheque_table`
   ADD CONSTRAINT `cooperative_cheque_t_status_id_5b8d9344_fk_cooperati` FOREIGN KEY (`status_id`) REFERENCES `cooperative_transactionstatus` (`id`);
 
 --
+-- Constraints for table `cooperative_commodity_categories`
+--
+ALTER TABLE `cooperative_commodity_categories`
+  ADD CONSTRAINT `cooperative_commodit_admin_charges_rating_50613a4d_fk_cooperati` FOREIGN KEY (`admin_charges_rating_id`) REFERENCES `cooperative_admincharges` (`id`),
+  ADD CONSTRAINT `cooperative_commodit_form_print_id_2b8b7b35_fk_cooperati` FOREIGN KEY (`form_print_id`) REFERENCES `cooperative_yesno` (`id`),
+  ADD CONSTRAINT `cooperative_commodit_interest_deduction_i_0869f978_fk_cooperati` FOREIGN KEY (`interest_deduction_id`) REFERENCES `cooperative_interestdeductionsource` (`id`),
+  ADD CONSTRAINT `cooperative_commodit_multiple_loan_status_ff8edb1d_fk_cooperati` FOREIGN KEY (`multiple_loan_status_id`) REFERENCES `cooperative_multipleloanstatus` (`id`),
+  ADD CONSTRAINT `cooperative_commodit_receipt_type_id_7155aac9_fk_cooperati` FOREIGN KEY (`receipt_type_id`) REFERENCES `cooperative_receipttypes` (`id`),
+  ADD CONSTRAINT `cooperative_commodit_status_id_66b370b5_fk_cooperati` FOREIGN KEY (`status_id`) REFERENCES `cooperative_membershipstatus` (`id`),
+  ADD CONSTRAINT `cooperative_commodit_transaction_id_77075010_fk_cooperati` FOREIGN KEY (`transaction_id`) REFERENCES `cooperative_transactiontypes` (`id`);
+
+--
+-- Constraints for table `cooperative_commodity_product_list`
+--
+ALTER TABLE `cooperative_commodity_product_list`
+  ADD CONSTRAINT `cooperative_commodit_category_id_3c338436_fk_cooperati` FOREIGN KEY (`category_id`) REFERENCES `cooperative_commodity_categories` (`id`),
+  ADD CONSTRAINT `cooperative_commodit_status_id_5986ceb6_fk_cooperati` FOREIGN KEY (`status_id`) REFERENCES `cooperative_membershipstatus` (`id`);
+
+--
+-- Constraints for table `cooperative_company_products`
+--
+ALTER TABLE `cooperative_company_products`
+  ADD CONSTRAINT `cooperative_company__company_id_c9f20eea_fk_cooperati` FOREIGN KEY (`company_id`) REFERENCES `cooperative_companies` (`id`),
+  ADD CONSTRAINT `cooperative_company__product_id_07ca2cf8_fk_cooperati` FOREIGN KEY (`product_id`) REFERENCES `cooperative_commodity_product_list` (`id`),
+  ADD CONSTRAINT `cooperative_company__status_id_d028471e_fk_cooperati` FOREIGN KEY (`status_id`) REFERENCES `cooperative_membershipstatus` (`id`);
+
+--
 -- Constraints for table `cooperative_compulsorysavings`
 --
 ALTER TABLE `cooperative_compulsorysavings`
@@ -10930,6 +12508,36 @@ ALTER TABLE `cooperative_customers`
   ADD CONSTRAINT `cooperative_customer_processed_by_id_90b025c4_fk_cooperati` FOREIGN KEY (`processed_by_id`) REFERENCES `cooperative_customuser` (`id`),
   ADD CONSTRAINT `cooperative_customer_status_id_49bd06cc_fk_cooperati` FOREIGN KEY (`status_id`) REFERENCES `cooperative_receiptstatus` (`id`),
   ADD CONSTRAINT `cooperative_customer_ticket_status_id_c8210255_fk_cooperati` FOREIGN KEY (`ticket_status_id`) REFERENCES `cooperative_ticketstatus` (`id`);
+
+--
+-- Constraints for table `cooperative_customized_commodity_loan_application_details`
+--
+ALTER TABLE `cooperative_customized_commodity_loan_application_details`
+  ADD CONSTRAINT `cooperative_customiz_applicant_id_cea88a4f_fk_cooperati` FOREIGN KEY (`applicant_id`) REFERENCES `cooperative_customized_commodity_loan_application_summary` (`id`),
+  ADD CONSTRAINT `cooperative_customiz_processed_by_id_683ca8fc_fk_cooperati` FOREIGN KEY (`processed_by_id`) REFERENCES `cooperative_customuser` (`id`),
+  ADD CONSTRAINT `cooperative_customiz_status_id_83d5536b_fk_cooperati` FOREIGN KEY (`status_id`) REFERENCES `cooperative_transactionstatus` (`id`);
+
+--
+-- Constraints for table `cooperative_customized_commodity_loan_application_payslip`
+--
+ALTER TABLE `cooperative_customized_commodity_loan_application_payslip`
+  ADD CONSTRAINT `cooperative_customiz_applicant_id_c1869142_fk_cooperati` FOREIGN KEY (`applicant_id`) REFERENCES `cooperative_customized_commodity_loan_application_summary` (`id`),
+  ADD CONSTRAINT `cooperative_customiz_processed_by_id_e7296a3a_fk_cooperati` FOREIGN KEY (`processed_by_id`) REFERENCES `cooperative_customuser` (`id`),
+  ADD CONSTRAINT `cooperative_customiz_status_id_83cdf1e0_fk_cooperati` FOREIGN KEY (`status_id`) REFERENCES `cooperative_transactionstatus` (`id`);
+
+--
+-- Constraints for table `cooperative_customized_commodity_loan_application_summary`
+--
+ALTER TABLE `cooperative_customized_commodity_loan_application_summary`
+  ADD CONSTRAINT `cooperative_customiz_company_id_b0747b04_fk_cooperati` FOREIGN KEY (`company_id`) REFERENCES `cooperative_companies` (`id`),
+  ADD CONSTRAINT `cooperative_customiz_member_id_eb3fa6d7_fk_cooperati` FOREIGN KEY (`member_id`) REFERENCES `cooperative_members` (`id`),
+  ADD CONSTRAINT `cooperative_proforma_approval_officer_id_2ee82e1e_fk_cooperati` FOREIGN KEY (`approval_officer_id`) REFERENCES `cooperative_approvalofficers` (`id`),
+  ADD CONSTRAINT `cooperative_proforma_approval_status_id_5b1820f7_fk_cooperati` FOREIGN KEY (`approval_status_id`) REFERENCES `cooperative_approvalstatus` (`id`),
+  ADD CONSTRAINT `cooperative_proforma_certification_office_d5c0bdb9_fk_cooperati` FOREIGN KEY (`certification_officer_id`) REFERENCES `cooperative_certificationofficers` (`id`),
+  ADD CONSTRAINT `cooperative_proforma_certification_status_2664c10b_fk_cooperati` FOREIGN KEY (`certification_status_id`) REFERENCES `cooperative_certificationstatus` (`id`),
+  ADD CONSTRAINT `cooperative_proforma_processed_by_id_7716a5f3_fk_cooperati` FOREIGN KEY (`processed_by_id`) REFERENCES `cooperative_customuser` (`id`),
+  ADD CONSTRAINT `cooperative_proforma_status_id_28f8818d_fk_cooperati` FOREIGN KEY (`status_id`) REFERENCES `cooperative_transactionstatus` (`id`),
+  ADD CONSTRAINT `cooperative_proforma_transaction_id_3c7f7d1c_fk_cooperati` FOREIGN KEY (`transaction_id`) REFERENCES `cooperative_transactiontypes` (`id`);
 
 --
 -- Constraints for table `cooperative_customuser_groups`
@@ -10998,11 +12606,52 @@ ALTER TABLE `cooperative_day_end_sales_transactions`
   ADD CONSTRAINT `cooperative_day_end__status_id_ddb63c4b_fk_cooperati` FOREIGN KEY (`status_id`) REFERENCES `cooperative_transactionstatus` (`id`);
 
 --
+-- Constraints for table `cooperative_dedicated_commodity_period`
+--
+ALTER TABLE `cooperative_dedicated_commodity_period`
+  ADD CONSTRAINT `cooperative_dedicate_status_id_37d9ef5c_fk_cooperati` FOREIGN KEY (`status_id`) REFERENCES `cooperative_membershipstatus` (`id`);
+
+--
+-- Constraints for table `cooperative_dedicated_commodity_price_list`
+--
+ALTER TABLE `cooperative_dedicated_commodity_price_list`
+  ADD CONSTRAINT `cooperative_dedicate_period_id_b860f711_fk_cooperati` FOREIGN KEY (`period_id`) REFERENCES `cooperative_dedicated_commodity_period` (`id`),
+  ADD CONSTRAINT `cooperative_dedicate_processed_by_id_c47336b9_fk_cooperati` FOREIGN KEY (`processed_by_id`) REFERENCES `cooperative_customuser` (`id`),
+  ADD CONSTRAINT `cooperative_dedicate_product_id_19d48d68_fk_cooperati` FOREIGN KEY (`product_id`) REFERENCES `cooperative_dedicated_commodity_product_list` (`id`),
+  ADD CONSTRAINT `cooperative_dedicate_status_id_c602c88d_fk_cooperati` FOREIGN KEY (`status_id`) REFERENCES `cooperative_membershipstatus` (`id`);
+
+--
+-- Constraints for table `cooperative_dedicated_commodity_product_list`
+--
+ALTER TABLE `cooperative_dedicated_commodity_product_list`
+  ADD CONSTRAINT `cooperative_dedicate_status_id_dc3a8757_fk_cooperati` FOREIGN KEY (`status_id`) REFERENCES `cooperative_membershipstatus` (`id`);
+
+--
 -- Constraints for table `cooperative_disbursementofficers`
 --
 ALTER TABLE `cooperative_disbursementofficers`
   ADD CONSTRAINT `cooperative_disburse_officer_id_4eb840f2_fk_cooperati` FOREIGN KEY (`officer_id`) REFERENCES `cooperative_customuser` (`id`),
   ADD CONSTRAINT `cooperative_disburse_status_id_6b79cac8_fk_cooperati` FOREIGN KEY (`status_id`) REFERENCES `cooperative_membershipstatus` (`id`);
+
+--
+-- Constraints for table `cooperative_essential_commodity_product_select`
+--
+ALTER TABLE `cooperative_essential_commodity_product_select`
+  ADD CONSTRAINT `cooperative_essentia_member_id_19a6da2a_fk_cooperati` FOREIGN KEY (`member_id`) REFERENCES `cooperative_members` (`id`),
+  ADD CONSTRAINT `cooperative_essentia_processed_by_id_ad71befb_fk_cooperati` FOREIGN KEY (`processed_by_id`) REFERENCES `cooperative_customuser` (`id`),
+  ADD CONSTRAINT `cooperative_essentia_product_id_6f65d787_fk_cooperati` FOREIGN KEY (`product_id`) REFERENCES `cooperative_dedicated_commodity_price_list` (`id`),
+  ADD CONSTRAINT `cooperative_essentia_status_id_57b2588f_fk_cooperati` FOREIGN KEY (`status_id`) REFERENCES `cooperative_transactionstatus` (`id`);
+
+--
+-- Constraints for table `cooperative_essential_commodity_product_selection_summary`
+--
+ALTER TABLE `cooperative_essential_commodity_product_selection_summary`
+  ADD CONSTRAINT `cooperative_essentia_approval_officer_id_d683c132_fk_cooperati` FOREIGN KEY (`approval_officer_id`) REFERENCES `cooperative_approvalofficers` (`id`),
+  ADD CONSTRAINT `cooperative_essentia_approval_status_id_8d73dbca_fk_cooperati` FOREIGN KEY (`approval_status_id`) REFERENCES `cooperative_approvalstatus` (`id`),
+  ADD CONSTRAINT `cooperative_essentia_processed_by_id_8073dc88_fk_cooperati` FOREIGN KEY (`processed_by_id`) REFERENCES `cooperative_customuser` (`id`),
+  ADD CONSTRAINT `cooperative_essentia_product_id_d4c0a200_fk_cooperati` FOREIGN KEY (`product_id`) REFERENCES `cooperative_essential_commodity_product_select` (`id`),
+  ADD CONSTRAINT `cooperative_essentia_status_id_02d24963_fk_cooperati` FOREIGN KEY (`status_id`) REFERENCES `cooperative_transactionstatus` (`id`),
+  ADD CONSTRAINT `cooperative_essentia_transaction_id_8f6b23ea_fk_cooperati` FOREIGN KEY (`transaction_id`) REFERENCES `cooperative_transactiontypes` (`id`);
 
 --
 -- Constraints for table `cooperative_externalfascilitiesmain`
@@ -11321,6 +12970,17 @@ ALTER TABLE `cooperative_membershiprequestadditionalinfo`
   ADD CONSTRAINT `cooperative_membersh_officer_id_ba6272be_fk_cooperati` FOREIGN KEY (`officer_id`) REFERENCES `cooperative_customuser` (`id`);
 
 --
+-- Constraints for table `cooperative_membershipterminationrequest`
+--
+ALTER TABLE `cooperative_membershipterminationrequest`
+  ADD CONSTRAINT `cooperative_membersh_approval_officer_id_0c86544b_fk_cooperati` FOREIGN KEY (`approval_officer_id`) REFERENCES `cooperative_approvalofficers` (`id`),
+  ADD CONSTRAINT `cooperative_membersh_approval_status_id_3b883677_fk_cooperati` FOREIGN KEY (`approval_status_id`) REFERENCES `cooperative_approvalstatus` (`id`),
+  ADD CONSTRAINT `cooperative_membersh_member_id_9b7ff952_fk_cooperati` FOREIGN KEY (`member_id`) REFERENCES `cooperative_members` (`id`),
+  ADD CONSTRAINT `cooperative_membersh_processed_by_id_b4a9dcc2_fk_cooperati` FOREIGN KEY (`processed_by_id`) REFERENCES `cooperative_customuser` (`id`),
+  ADD CONSTRAINT `cooperative_membersh_status_id_2766cf11_fk_cooperati` FOREIGN KEY (`status_id`) REFERENCES `cooperative_transactionstatus` (`id`),
+  ADD CONSTRAINT `cooperative_membersh_termination_id_4301c356_fk_cooperati` FOREIGN KEY (`termination_id`) REFERENCES `cooperative_termination_types` (`id`);
+
+--
 -- Constraints for table `cooperative_membersnextofkins`
 --
 ALTER TABLE `cooperative_membersnextofkins`
@@ -11392,6 +13052,34 @@ ALTER TABLE `cooperative_members_cash_sales_selected`
   ADD CONSTRAINT `cooperative_members__status_id_e5d21dba_fk_cooperati` FOREIGN KEY (`status_id`) REFERENCES `cooperative_transactionstatus` (`id`);
 
 --
+-- Constraints for table `cooperative_members_commodity_loam_application`
+--
+ALTER TABLE `cooperative_members_commodity_loam_application`
+  ADD CONSTRAINT `cooperative_members__approval_officer_id_d7d61e8c_fk_cooperati` FOREIGN KEY (`approval_officer_id`) REFERENCES `cooperative_approvalofficers` (`id`),
+  ADD CONSTRAINT `cooperative_members__approval_status_id_dc1dd78f_fk_cooperati` FOREIGN KEY (`approval_status_id`) REFERENCES `cooperative_approvalstatus` (`id`),
+  ADD CONSTRAINT `cooperative_members__certification_office_4ba264d2_fk_cooperati` FOREIGN KEY (`certification_officer_id`) REFERENCES `cooperative_certificationofficers` (`id`),
+  ADD CONSTRAINT `cooperative_members__certification_status_7baf1aaa_fk_cooperati` FOREIGN KEY (`certification_status_id`) REFERENCES `cooperative_certificationstatus` (`id`),
+  ADD CONSTRAINT `cooperative_members__member_id_71f6375c_fk_cooperati` FOREIGN KEY (`member_id`) REFERENCES `cooperative_members_commodity_loam_products_selection` (`id`),
+  ADD CONSTRAINT `cooperative_members__processed_by_id_fd3b6a5b_fk_cooperati` FOREIGN KEY (`processed_by_id`) REFERENCES `cooperative_customuser` (`id`),
+  ADD CONSTRAINT `cooperative_members__status_id_0c2e97eb_fk_cooperati` FOREIGN KEY (`status_id`) REFERENCES `cooperative_transactionstatus` (`id`);
+
+--
+-- Constraints for table `cooperative_members_commodity_loam_application_settings`
+--
+ALTER TABLE `cooperative_members_commodity_loam_application_settings`
+  ADD CONSTRAINT `cooperative_members__applicant_id_a3f34f63_fk_cooperati` FOREIGN KEY (`applicant_id`) REFERENCES `cooperative_members_commodity_loam_application` (`id`),
+  ADD CONSTRAINT `cooperative_members__status_id_1e0227c3_fk_cooperati` FOREIGN KEY (`status_id`) REFERENCES `cooperative_transactionstatus` (`id`);
+
+--
+-- Constraints for table `cooperative_members_commodity_loam_products_selection`
+--
+ALTER TABLE `cooperative_members_commodity_loam_products_selection`
+  ADD CONSTRAINT `cooperative_members__member_id_bb15ade1_fk_cooperati` FOREIGN KEY (`member_id`) REFERENCES `cooperative_members` (`id`),
+  ADD CONSTRAINT `cooperative_members__processed_by_id_a23a09fb_fk_cooperati` FOREIGN KEY (`processed_by_id`) REFERENCES `cooperative_customuser` (`id`),
+  ADD CONSTRAINT `cooperative_members__product_id_3c4d8f0a_fk_cooperati` FOREIGN KEY (`product_id`) REFERENCES `cooperative_company_products` (`id`),
+  ADD CONSTRAINT `cooperative_members__status_id_05ed4a30_fk_cooperati` FOREIGN KEY (`status_id`) REFERENCES `cooperative_transactionstatus` (`id`);
+
+--
 -- Constraints for table `cooperative_members_credit_purchase_analysis`
 --
 ALTER TABLE `cooperative_members_credit_purchase_analysis`
@@ -11424,6 +13112,14 @@ ALTER TABLE `cooperative_members_credit_sales_selected`
   ADD CONSTRAINT `cooperative_members__status_id_ac97f5c5_fk_cooperati` FOREIGN KEY (`status_id`) REFERENCES `cooperative_transactionstatus` (`id`);
 
 --
+-- Constraints for table `cooperative_monthlydeductiongenerationheading`
+--
+ALTER TABLE `cooperative_monthlydeductiongenerationheading`
+  ADD CONSTRAINT `cooperative_monthlyd_salary_institution_i_4570fcc4_fk_cooperati` FOREIGN KEY (`salary_institution_id`) REFERENCES `cooperative_salaryinstitution` (`id`),
+  ADD CONSTRAINT `cooperative_monthlyd_status_id_ee6e1fa1_fk_cooperati` FOREIGN KEY (`status_id`) REFERENCES `cooperative_transactionstatus` (`id`),
+  ADD CONSTRAINT `cooperative_monthlyd_transaction_period_i_8e2c844d_fk_cooperati` FOREIGN KEY (`transaction_period_id`) REFERENCES `cooperative_transactionperiods` (`id`);
+
+--
 -- Constraints for table `cooperative_monthlydeductionlist`
 --
 ALTER TABLE `cooperative_monthlydeductionlist`
@@ -11442,6 +13138,16 @@ ALTER TABLE `cooperative_monthlydeductionlistgenerated`
   ADD CONSTRAINT `cooperative_monthlyd_transaction_status_i_50f3c119_fk_cooperati` FOREIGN KEY (`transaction_status_id`) REFERENCES `cooperative_transactionstatus` (`id`);
 
 --
+-- Constraints for table `cooperative_monthlydeductionlistgeneratedcertified`
+--
+ALTER TABLE `cooperative_monthlydeductionlistgeneratedcertified`
+  ADD CONSTRAINT `cooperative_monthlyd_member_id_24f6aeb8_fk_cooperati` FOREIGN KEY (`member_id`) REFERENCES `cooperative_members` (`id`),
+  ADD CONSTRAINT `cooperative_monthlyd_refund_status_id_0085eadf_fk_cooperati` FOREIGN KEY (`refund_status_id`) REFERENCES `cooperative_processingstatus` (`id`),
+  ADD CONSTRAINT `cooperative_monthlyd_salary_institution_i_d5b0bdc6_fk_cooperati` FOREIGN KEY (`salary_institution_id`) REFERENCES `cooperative_salaryinstitution` (`id`),
+  ADD CONSTRAINT `cooperative_monthlyd_transaction_period_i_5f854b33_fk_cooperati` FOREIGN KEY (`transaction_period_id`) REFERENCES `cooperative_transactionperiods` (`id`),
+  ADD CONSTRAINT `cooperative_monthlyd_transaction_status_i_32e6dfaa_fk_cooperati` FOREIGN KEY (`transaction_status_id`) REFERENCES `cooperative_transactionstatus` (`id`);
+
+--
 -- Constraints for table `cooperative_monthlygeneratedtransactions`
 --
 ALTER TABLE `cooperative_monthlygeneratedtransactions`
@@ -11458,6 +13164,23 @@ ALTER TABLE `cooperative_monthlygroupgeneratedtransactions`
   ADD CONSTRAINT `cooperative_monthlyg_salary_institution_i_043b8c06_fk_cooperati` FOREIGN KEY (`salary_institution_id`) REFERENCES `cooperative_salaryinstitution` (`id`),
   ADD CONSTRAINT `cooperative_monthlyg_transaction_period_i_0725d14e_fk_cooperati` FOREIGN KEY (`transaction_period_id`) REFERENCES `cooperative_transactionperiods` (`id`),
   ADD CONSTRAINT `cooperative_monthlyg_transaction_status_i_bcb3cb05_fk_cooperati` FOREIGN KEY (`transaction_status_id`) REFERENCES `cooperative_transactionstatus` (`id`);
+
+--
+-- Constraints for table `cooperative_monthlyoverdeductionsrefund`
+--
+ALTER TABLE `cooperative_monthlyoverdeductionsrefund`
+  ADD CONSTRAINT `cooperative_monthlyo_member_id_07f0c282_fk_cooperati` FOREIGN KEY (`member_id`) REFERENCES `cooperative_members` (`id`),
+  ADD CONSTRAINT `cooperative_monthlyo_over_deduction_id_8a8fa1f6_fk_cooperati` FOREIGN KEY (`over_deduction_id`) REFERENCES `cooperative_monthlydeductionlistgeneratedcertified` (`id`),
+  ADD CONSTRAINT `cooperative_monthlyo_processed_by_id_436e1c93_fk_cooperati` FOREIGN KEY (`processed_by_id`) REFERENCES `cooperative_customuser` (`id`);
+
+--
+-- Constraints for table `cooperative_monthlyshopdeductioncertified`
+--
+ALTER TABLE `cooperative_monthlyshopdeductioncertified`
+  ADD CONSTRAINT `cooperative_monthlys_member_id_40b1d625_fk_cooperati` FOREIGN KEY (`member_id`) REFERENCES `cooperative_members` (`id`),
+  ADD CONSTRAINT `cooperative_monthlys_salary_institution_i_2c0e4994_fk_cooperati` FOREIGN KEY (`salary_institution_id`) REFERENCES `cooperative_salaryinstitution` (`id`),
+  ADD CONSTRAINT `cooperative_monthlys_transaction_period_i_47ed3c7a_fk_cooperati` FOREIGN KEY (`transaction_period_id`) REFERENCES `cooperative_transactionperiods` (`id`),
+  ADD CONSTRAINT `cooperative_monthlys_transaction_status_i_3d8981e0_fk_cooperati` FOREIGN KEY (`transaction_status_id`) REFERENCES `cooperative_transactionstatus` (`id`);
 
 --
 -- Constraints for table `cooperative_nonmemberaccountdeductions`
@@ -11555,6 +13278,7 @@ ALTER TABLE `cooperative_sharessalesrecord`
 ALTER TABLE `cooperative_staff`
   ADD CONSTRAINT `cooperative_staff_admin_id_6022e122_fk_cooperative_customuser_id` FOREIGN KEY (`admin_id`) REFERENCES `cooperative_customuser` (`id`),
   ADD CONSTRAINT `cooperative_staff_gender_id_4cf59a27_fk_cooperative_gender_id` FOREIGN KEY (`gender_id`) REFERENCES `cooperative_gender` (`id`),
+  ADD CONSTRAINT `cooperative_staff_status_id_1b3aef6e_fk_cooperati` FOREIGN KEY (`status_id`) REFERENCES `cooperative_membershipstatus` (`id`),
   ADD CONSTRAINT `cooperative_staff_title_id_cf71f771_fk_cooperative_titles_id` FOREIGN KEY (`title_id`) REFERENCES `cooperative_titles` (`id`),
   ADD CONSTRAINT `cooperative_staff_userlevel_id_89a425f0_fk_cooperati` FOREIGN KEY (`userlevel_id`) REFERENCES `cooperative_userslevel` (`id`);
 
