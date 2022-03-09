@@ -37,9 +37,10 @@
                                             <td>{{account.account_type.title}}</td>
                                             <td>{{account.bank.title}}</td>
                                             <td>
+                                                {% if account.lock_status.title == 'OPEN' %}
                                                 <a href="{% url 'Members_Bank_Accounts_update_form' account.pk return_pk %}" class="btn btn-success">Update</a>  
                                                 
-                                                {% if account.lock_status.title == 'OPEN' %}
+                                                
                                                 <a href="{% url 'Members_Bank_Accounts_delete' account.pk return_pk %}" class="btn btn-danger">Remove</a>
                                                 {% endif %}
                                             </td>

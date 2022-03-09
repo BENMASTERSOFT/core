@@ -1,0 +1,54 @@
+{% extends 'master_templates/base_template.html' %}
+{% load static %}
+
+{% block content %}
+            <div class="page-content fade-in-up">
+                <div class="row">
+                 
+                    <div class="col-xl-6">
+                        <div class="ibox">
+                            <div class="ibox-head">
+                                <div class="ibox-title">Users Categories</div>
+                            </div>
+                            <div class="ibox-body">
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Category</th>
+                                            <th>Settings</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>1</td>
+                                            <td>Executives</td>
+                                            <td><a href="{% url 'Executive_Users' %}" class="btn btn-primary">Update</a></td>
+                                       
+                                        </tr>
+                                        <tr>
+                                            <td>2</td>
+                                            <td>Customer Service</td>
+                                            <td><a href="{% url 'Desk_Office_Users' %}" class="btn btn-primary">Update</a></td>
+                                         
+                                        </tr>
+                                        <tr>
+                                            <td>3</td>
+                                            <td>Cooperative Shop</td>
+                                            <td><a href="{% url 'Shop_Users' %}" class="btn btn-primary">Update</a></td>
+                                          
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+           
+            </div>
+  <div class="sidenav-backdrop backdrop"></div>
+    <div class="preloader-backdrop">
+        <div class="page-preloader">Loading</div>
+    </div>
+{% endblock %}

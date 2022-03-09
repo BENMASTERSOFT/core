@@ -1,0 +1,35 @@
+{% extends 'deskofficer_templates/base_template.html' %}
+
+{% load static %}
+{% load crispy_forms_tags %}
+{% block content %}
+
+<div class="container-fluid">
+      <div class="row"> 
+        <div class="col-md-6">
+          <!-- general form elements -->
+          <div class="card card-primary">
+            <div class="card-header">
+              <h3 class="card-title">Share Request Drop</h3>
+            </div>
+            
+                  
+
+                  <div class="col-md-12">
+                   <h4>{{title}}?</h4>
+                   <hr>
+                    <p>{{record.member.member.get_full_name}}</p>            
+                    <p>This action will remove the Request Made</p>
+                  </div>
+                <div class="card-footer">
+                  <a href="{% url 'Members_Share_Purchase_Request_Manage_Details_delete' record.pk %}" class="btn btn-danger">Drop</a>
+                  <input type="button" class="btn btn-primary" value="Cancel" onclick="history.back()"/>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+{% endblock content %}

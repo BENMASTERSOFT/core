@@ -7,7 +7,10 @@
 {% block content %}
 
       
-            <div class="page-content fade-in-up">
+    <div class="page-content fade-in-up">
+       <div class="row">
+
+            <div class="col-xl-12">
                 <div class="ibox">
                     <div class="ibox-head">
                         <div class="ibox-title">LIST OF PRODUCTS | {{company.title}} | {{member.get_full_name}} |   <input type="button" class="btn btn-secondary" value="Back" onclick="history.back()"/>
@@ -39,6 +42,7 @@
                                     <th>Model</th>
                                     <th>Details</th>
                                     <th>Company Price</th>
+                                    <th>Price Status</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
@@ -49,6 +53,7 @@
                                     <th>Model</th>
                                     <th>Details</th>
                                     <th>Company Price</th>
+                                    <th>Price Status</th>
                                     <th>Action</th>
                                 </tr>
                             </tfoot>
@@ -60,10 +65,15 @@
                                     <td>{{record.product.product_name}}</td>
                                     <td>{{record.product.product_model}}</td>
                                     <td>{{record.product.details}}</td>
+                                   
                                     <td>{{record.amount}}</td>
-                              
+                                   {% if record.product.category.price_status == '0' %}
+                                        <td>FIXED</td>
+                                    {% elif record.product.category.price_status == '1' %}
+                                        <td>UNFIXED</td>
+                                    {% endif %}
             
-                                    <td><a href="{% url 'membership_commodity_loan_Company_products_details' company.pk record.pk member.pk %}" class="btn btn-primary">Details</a></td>
+                                    <td><a href="{% url 'membership_commodity_loan_Company_products_details' company.pk record.pk member.pk period.pk batch.pk transaction.pk %}" class="btn btn-primary">Details</a></td>
                                 </tr>
                             {% endfor %}
                                
@@ -72,6 +82,9 @@
                         </table>
                     </div>
                 </div>
+            </div>
+        </div>
+
                <div class="row">
                    
                     <div class="col-xl-12">
@@ -79,7 +92,7 @@
                             <div class="ibox-head">
                                 <div class="ibox-title">SELECTED PRODUCTS | 
                                     {% if button_enabled %}
-                                    <a href="{% url 'membership_commodity_loan_Company_products_proceed' member.pk company.pk %}" class="btn btn-success">Proceed</a>
+                                    <a href="{% url 'membership_commodity_loan_Company_products_proceed' member.pk company.pk period.pk batch.pk transaction.pk %}" class="btn btn-success">Proceed</a>
 
                                    {% endif %}
                                </div>
@@ -114,9 +127,9 @@
                                             <td>{{item.product.product.category.interest_rate}}</td>
                                             <td>{{item.interest}}</td>
                                             <td>{{item.coop_price}}</td>
-                                            <td>{{item.admin_charge}}</td>
+                                            <td>{{item.admin_charges}}</td>
                                             <td>{{item.duration}}</td>
-                                            <td><a href="{% url 'membership_commodity_loan_Company_products_delete' item.pk member.pk company.pk %}" class="btn btn-danger">Remove</a></td>  
+                                            <td><a href="{% url 'membership_commodity_loan_Company_products_delete' item.pk member.pk  period.pk batch.pk transaction.pk company.pk %}" class="btn btn-danger">Remove</a></td>  
                                         </tr>
                                     {% endfor %}
                                     <tr>

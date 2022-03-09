@@ -29,7 +29,7 @@
         <!-- END HEADER-->
         <!-- START SIDEBAR-->
 
-{% include 'master_templates/includes/navbar.html' with values=record %}
+{% include 'master_templates/includes/navbar.html' with values=request.current_user %}
         <!-- END SIDEBAR-->
         <div class="content-wrapper">
             <!-- START PAGE CONTENT-->

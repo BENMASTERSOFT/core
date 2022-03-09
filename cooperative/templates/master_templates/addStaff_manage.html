@@ -7,7 +7,9 @@
 {% block content %}
 
       
-            <div class="page-content fade-in-up">
+    <div class="page-content fade-in-up">
+        <div class="row">
+            <div class="col-md-10">
                 <div class="ibox">
                     <div class="ibox-head">
                         <div class="ibox-title">System Users</div>
@@ -17,8 +19,8 @@
                             <thead>
                                 <tr>
                                     <th>#</th>
-                                    <th>First Name</th>
                                     <th>Last Name</th>
+                                    <th>First ame</th>
                                     <th>Middle Name</th>
                                     <th>Username</th>
                                     <th>User Type</th>
@@ -28,8 +30,8 @@
                             <tfoot>
                                 <tr>
                                    <th>#</th>
-                                    <th>First Name</th>
                                     <th>Last Name</th>
+                                    <th>First Name</th>
                                     <th>Middle Name</th>
                                     <th>Username</th>
                                     <th>User Type</th>
@@ -40,8 +42,8 @@
                                 {% for user in users %}
                                         <tr>
                                             <td>{{forloop.counter}}</td>
-                                            <td>{{user.first_name}}</td>
                                             <td>{{user.last_name}}</td>
+                                            <td>{{user.first_name}}</td>
                                             <td>{{user.staff.middle_name}}</td>
                                             <td>{{user.username}}</td>
                                             <td>{{user.user_type}}</td>
@@ -56,7 +58,8 @@
                 </div>
                
             </div>
-  
+        </div>
+    </div>
     
     <!-- BEGIN PAGA BACKDROPS-->
     <div class="sidenav-backdrop backdrop"></div>

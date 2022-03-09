@@ -25,79 +25,77 @@
                                     <tbody>
                                          <tr>
                                             <td>1</td>
-                                            <td> Gross Pay </td>
-                                            <td>{{gross_pay}}</td>
+                                            <td> Net Pay </td>
+                                            <td>{{net_pay}}</td>
                                             
                                         </tr>
                                         <tr>
                                             <td>2</td>
+                                            <td>Monthly Contributions</td>
+                                            <td>{{total_savings}}</td>
+                                           
+                                        </tr> 
+                                        <tr>
+                                            <td>3</td>
+                                            <td>Existing Loan Monthly Repayment </td>
+                                            <td>{{total_loans}}</td>
+                                           
+                                        </tr>
+                                        <tr>
+                                            <td>4</td>
+                                            <td>Cooperative Shop </td>
+                                            <td>{{shop_balance}}</td>
+                                           
+                                        </tr> 
+                                        <tr>
+                                            <td>5</td>
                                             <td>Salary Balance After Deductions</td>
                                             <td>{{balance}}</td>
                                             
-                                        </tr> <tr>
-                                            <td>3</td>
+                                        </tr> 
+                                        <tr>
+                                            <td>6</td>
                                             <td>{{loan_type}}</td>
                                             <td>{{loan_amount}}</td>
                                             
                                         </tr>
                                        
                                         <tr>
-                                            <td>4</td>
-                                            <td>Monthly Contributions</td>
-                                            <td>{{total_savings}}</td>
-                                           
-                                        </tr> 
-                                        <tr>
-                                            <td>5</td>
-                                            <td>Loan Monthly Repayment </td>
-                                            <td>{{total_loans}}</td>
-                                           
-                                        </tr>
-                                        <tr>
-                                            <td>6</td>
-                                            <td>Cooperative Shop </td>
-                                            <td>{{shop_balance}}</td>
-                                           
-                                        </tr> 
-                                        <tr>
                                             <td>7</td>
-                                            <td>External Fascilities </td>
-                                            <td>{{records_amount}}</td>
-                                           
-                                        </tr> 
-                                        <tr>
-                                            <td>8</td>
                                             <td>Loan Duration </td>
                                             <td>{{duration}} Months</td>
                                            
-                                        </tr>  
+                                        </tr> 
+                                        
+                                    
+                                         
                                         <tr>
-                                            <td>9</td>
+                                            <td>8</td>
                                             <td>Salary Loan Relationship </td>
                                             <td>{{salary_loan_relationship}}%</td>
                                            
                                         </tr>  
                                         <tr>
-                                            <td>10</td>
+                                            <td>9</td>
                                             <td>Salary Loan Relationship Computed</td>
                                             <td>{{salary_loan_relationship_computed}}</td>
                                            
                                         </tr> 
 
                                          <tr>
-                                            <td>11</td>
+                                            <td>10</td>
                                             <td>Loan Age </td>
                                             <td>{{loan_age}} Months</td>
                                            
                                         </tr>
                                          <tr>
-                                            <td>12</td>
+                                            <td>11</td>
                                             <td>Date Joined </td>
                                             <td>{{date_joined}}</td>
                                            
                                         </tr>
                                         <tr>
-                                            <td>13</td>
+                                            <td>12</td>
                                             <td>Members Age </td>
                                             <td>{{members_age}} Months</td>
                                            
@@ -107,55 +105,62 @@
 
 
                                         <tr>
-                                            <td>14</td>
+                                            <td>13</td>
                                             <td>Loan Interest Rate </td>
                                             <td>{{interest_rate}}%</td>
                                            
                                         </tr>  
                                         <tr>
-                                            <td>15</td>
+                                            <td>14</td>
                                             <td>Interest Deduction </td>
                                             <td>{{interest_deduction}}</td>
                                            
                                         </tr> 
                                         <tr>
-                                            <td>16</td>
+                                            <td>15</td>
                                             <td>Loan Interest </td>
-                                            <td>=N={{interest}}</td>
+                                            <td>{{interest}}</td>
                                            
                                         </tr>
                                         <tr>
-                                            <td>17</td>
+                                            <td>16</td>
                                             <td>Amount Scheduled </td>
-                                            <td>=N={{amount_scheduled}}</td>
+                                            <td>{{amount_scheduled}}</td>
                                            
                                         </tr>
                                        <tr>
-                                            <td>18</td>
+                                            <td>17</td>
                                             <td>Monthly Repayment </td>
-                                            <td>=N={{monthly_repayment|floatformat:2}}</td>
+                                            <td>{{monthly_repayment|floatformat:2}}</td>
                                            
                                         </tr>
                                         <tr>
-                                            <td>19</td>
+                                            <td>18</td>
                                             <td>Loan Based Savings </td>
                                             <td>{{loan_based_saving.savings.name}}</td>
                                            
                                         </tr>  
                                         <tr>
-                                            <td>20</td>
-                                            <td>Amount Saved ({{loan_based_saving.savings.name}})</td>
-                                            <td>#{{savings_saved}}</td>
+                                            <td>19</td>
+                                            <td>Amount Saved ({{loan_based_saving.savings.name}})
+                                                <p style="color: red; font-weight: bold;">Not a true test, please Verify other 
+                                                loans that have been given based on this</p></td>
+                                            <td>{{savings_saved}}</td>
                                            
                                         </tr>
                                         <tr>
-                                            <td>21</td>
+                                            <td>20</td>
                                             <td>Loan Based Savings Rate</td>
                                             <td>{{loan_based_saving_rating}}%</td>
                                            
                                         </tr>
                                        
-                                      
+                                        <tr>
+                                            <td>21</td>
+                                            <td>Exclusive Status </td>
+                                            <td>{{exclusive}}</td>
+                                           
+                                        </tr> 
 
                                     </tbody>
                                 </table>
@@ -178,6 +183,7 @@
                                             <th>#</th>
                                             <th>Description</th>
                                             <th>Value</th>
+                                            <th>Status</th>
                                            
                                         </tr>
                                     </thead>
@@ -187,37 +193,48 @@
                                         
                                         <tr>
                                             <td>1</td>
-                                            <td>Member Status </td>
+                                            <td>Membership Status </td>
                                             <td>{{Member_Status}}</td>
-                                           
+                                            {% if Member_Status %}
+                                                <td><i class="fa fa-check text-success"></i></td>
+                                           {% else %}
+                                                <td><i class="fa fa-warning text-warning"></i></td>
+                                           {% endif %}
                                         </tr>  
+                                        
                                         <tr>
                                             <td>2</td>
-                                            <td>Exclusive Status </td>
-                                            <td>{{exclusive}}</td>
-                                           
-                                        </tr> 
-                                        <tr>
-                                            <td>3</td>
                                             <td>Same Type loan Exist </td>
                                             <td>{{same_type_loan}}</td>
-                                           
+                                           {% if not same_type_loan %}
+                                                <td><i class="fa fa-check text-success"></i></td>
+                                           {% else %}
+                                                <td><i class="fa fa-warning text-warning"></i></td>
+                                           {% endif %}
                                         </tr>
 
 
                                        
                                        
                                        <tr>
-                                            <td>4</td>
+                                            <td>3</td>
                                             <td>Salary Status </td>
                                             <td>{{salary_status}}</td>
-                                           
+                                           {% if salary_status %}
+                                                <td><i class="fa fa-check text-success"></i></td>
+                                           {% else %}
+                                                <td><i class="fa fa-warning text-warning"></i></td>
+                                           {% endif %}
                                         </tr>
                                         <tr>
-                                            <td>5</td>
+                                            <td>4</td>
                                             <td>Loan Based Savings Status</td>
                                             <td>{{loan_savings_status}}</td>
-                                           
+                                           {% if loan_savings_status %}
+                                                <td><i class="fa fa-check text-success"></i></td>
+                                           {% else %}
+                                                <td><i class="fa fa-warning text-warning"></i></td>
+                                           {% endif %}
                                         </tr>
 
                                     </tbody>
@@ -254,20 +271,11 @@
                             <div class="ibox-body">
                                <form class="form-horizontal" method="POST" action="" enctype="multipart/form-data" novalidate>
                                     {% csrf_token %}
-                                    <div class="form-group row">
-                                        <label class="col-sm-3 col-form-label">Certification Officer</label>
-                                        <div class="col-sm-9">
-                                            <select class="form-control" name="officer">
-                                                {% for officer in certification_officers %}
-                                                    <option value="{{ officer.id}}">{{officer.officer.username}}</option>
-                                                {% endfor %}
-                                         </select>
-                                        </div>
-                                    </div>
+                                   
                                     <div class="form-group row">
                                         <label class="col-sm-3 col-form-label">Comments (If any)</label>
                                         <div class="col-sm-9">
-                                            <input class="form-control" value="FOR YOUR CONSIDERATION" type="text"  name="comment" placeholder="Enter Comment">
+                                            {{form.comment}}
                                         </div>
                                     </div>
                                     
@@ -289,7 +297,7 @@
                 </div>
        
  
-
+            
            
             </div>
   <div class="sidenav-backdrop backdrop"></div>

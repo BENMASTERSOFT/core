@@ -1,0 +1,9 @@
+    exclusive_status=ExclusiveStatus.objects.get(title='NON EXCLUSIVE')
+        gross_pay_status=ProcessingStatus.objects.get(title='UNPROCESSED')
+        status=ProcessingStatus.objects.get(title='ACTIVE')
+        savings_status=SavingsUploadStatus.objects.get(title='PENDING')
+        loan_status=LoansUploadStatus.objects.get(title='PENDING')
+        shares_status=SharesUploadStatus.objects.get(title='PENDING')
+        welfare_status=WelfareUploadStatus.objects.get(title='PENDING')
+        date_joined_status=DateJoinedUploadStatus.objects.get(title='PENDING')
+        

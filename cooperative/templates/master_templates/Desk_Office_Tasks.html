@@ -1,0 +1,192 @@
+{% extends 'master_templates/base_template.html' %}
+{% load static %}
+
+{% block content %}
+            <div class="page-content fade-in-up">
+                <div class="row">
+                  
+                    <div class="col-md-6">
+                        <div class="ibox">
+                            <div class="ibox-head">
+                                <div class="ibox-title">Desk Office Users</div>
+                                
+                            </div>
+                            <div class="ibox-body">
+                                 <form class="form-horizontal" method="POST" action="" enctype="multipart/form-data" novalidate>
+                                    {% csrf_token %}
+                                    <div class="form-group row">
+                                        <label class="col-sm-5 col-form-label">General Report</label>
+                                        <div class="col-sm-3">
+                                            {{form.general_report}}
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-sm-5 col-form-label">Day End Transaction</label>
+                                        <div class="col-sm-3">
+                                            {{form.day_end_transaction}}
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-sm-5 col-form-label">Bank Accounts</label>
+                                        <div class="col-sm-3">
+                                            {{form.bank_accounts}}
+                                        </div>
+                                    </div> 
+                                    <div class="form-group row">
+                                        <label class="col-sm-5 col-form-label">Monthly Deductions</label>
+                                        <div class="col-sm-3">
+                                            {{form.monthly_deductions}}
+                                        </div>
+                                    </div> 
+                                    <div class="form-group row">
+                                        <label class="col-sm-5 col-form-label">External Fascilities</label>
+                                        <div class="col-sm-3">
+                                            {{form.external_fascilities}}
+                                        </div>
+                                    </div>
+                                     <div class="form-group row">
+                                        <label class="col-sm-5 col-form-label">Loan Management</label>
+                                        <div class="col-sm-3">
+                                            {{form.loan_management}}
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-sm-5 col-form-label">Exclusiveness Request</label>
+                                        <div class="col-sm-3">
+                                            {{form.exclusiveness_request}}
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-sm-5 col-form-label">Salary Update</label>
+                                        <div class="col-sm-3">
+                                            {{form.salary_update}}
+                                        </div>
+                                    </div>   
+                                     <div class="form-group row">
+                                        <label class="col-sm-5 col-form-label">Next of Kin</label>
+                                        <div class="col-sm-3">
+                                            {{form.next_of_kin}}
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-sm-5 col-form-label">Share Management</label>
+                                        <div class="col-sm-3">
+                                            {{form.share_management}}
+                                        </div>
+                                    </div>
+
+
+                                    <div class="form-group row">
+                                        <label class="col-sm-5 col-form-label">Cash Withdrawal</label>
+                                        <div class="col-sm-3">
+                                            {{form.cash_withdrawal}}
+                                        </div>
+                                    </div>                                    
+
+                                    <div class="form-group row">
+                                        <label class="col-sm-5 col-form-label">Cash Deposit</label>
+                                        <div class="col-sm-3">
+                                            {{form.cash_deposit}}
+                                        </div>
+                                    </div>                                    
+
+                                    <div class="form-group row">
+                                        <label class="col-sm-5 col-form-label">Transaction Adjustment</label>
+                                        <div class="col-sm-3">
+                                            {{form.transaction_adjustment}}
+                                        </div>
+                                    </div>                                    
+
+                                    <div class="form-group row">
+                                        <label class="col-sm-5 col-form-label">Standing Order Placement</label>
+                                        <div class="col-sm-3">
+                                            {{form.standing_order_placement}}
+                                        </div>
+                                    </div> 
+                                    <div class="form-group row">
+                                        <label class="col-sm-5 col-form-label">Membership Registration</label>
+                                        <div class="col-sm-3">
+                                            {{form.membership_registration}}
+                                        </div>
+                                    </div> 
+                                    <div class="form-group row">
+                                        <label class="col-sm-5 col-form-label">Data Capture</label>
+                                        <div class="col-sm-3">
+                                            {{form.data_capture}}
+                                        </div>
+                                    </div> 
+                                    <div class="form-group row">
+                                        <label class="col-sm-5 col-form-label">Personnel Information</label>
+                                        <div class="col-sm-3">
+                                            {{form.personnel_info}}
+                                        </div>
+                                    </div>
+                                     <div class="form-group row">
+                                        <label class="col-sm-5 col-form-label">Termination</label>
+                                        <div class="col-sm-3">
+                                            {{form.termination}}
+                                        </div>
+                                    </div> 
+                                    <div class="form-group row">
+                                        <label class="col-sm-5 col-form-label">Shop Credit Sales</label>
+                                        <div class="col-sm-3">
+                                            {{form.shop_credit_sales}}
+                                        </div>
+                                    </div>           
+                                     <div class="form-group row">
+                                        <label class="col-sm-5 col-form-label">Salary Update Approval</label>
+                                        <div class="col-sm-3">
+                                            {{form.salary_update_approval}}
+                                        </div>
+                                    </div>                                     
+                                    <div class="form-group row">
+                                        <label class="col-sm-5 col-form-label">External Fascilities Approval</label>
+                                        <div class="col-sm-3">
+                                            {{form.external_fascilities_approval}}
+                                        </div>
+                                    </div>
+                                      <div class="form-group row">
+                                        <label class="col-sm-5 col-form-label">Exclusiveness Approval</label>
+                                        <div class="col-sm-3">
+                                            {{form.exclusiveness_approval}}
+                                        </div>
+                                    </div>                              
+                                    <div class="form-group row">
+                                        <label class="col-sm-5 col-form-label">Essential Commodity Approval</label>
+                                        <div class="col-sm-3">
+                                            {{form.essential_commodity}}
+                                        </div>
+                                    </div>                             
+                                    <div class="form-group row">
+                                        <label class="col-sm-5 col-form-label">Share Update Approval</label>
+                                        <div class="col-sm-3">
+                                            {{form.share_update_approval}}
+                                        </div>
+                                    </div>                                    
+                                    <div class="form-group row">
+                                        <label class="col-sm-5 col-form-label">Transaction Adjustment Approval</label>
+                                        <div class="col-sm-3">
+                                            {{form.transaction_adjustment_approval}}
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="form-group row">
+                                        <div class="col-sm-7 ml-sm-auto">
+                                            <button class="btn btn-info" type="submit">Submit</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+      
+
+
+    <div class="sidenav-backdrop backdrop"></div>
+    <div class="preloader-backdrop">
+        <div class="page-preloader">Loading</div>
+    </div>
+{% endblock %}

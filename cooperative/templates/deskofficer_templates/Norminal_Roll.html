@@ -7,11 +7,15 @@
 {% block content %}
 
       
-            <div class="page-content fade-in-up">
+    <div class="page-content fade-in-up">
+        <div class="row">
+
+            <div class="col-xl-8">
+
                 <div class="ibox">
                     <div class="ibox-head">
                         <div class="ibox-title"> <input type="button" class="btn btn-secondary" value="Back" onclick="history.back()"/>
- | LIST OF MEMBERS | TITLE UPDATE | 
+                            | LIST OF MEMBERS | TITLE UPDATE | 
 
                         <a href="{% url 'export_norminal_roll_xls' %}" class="btn btn-secondary">Export</a>
                         </div>
@@ -24,8 +28,7 @@
                                     <th>Title</th>
                                     <th>Member ID</th>
                                     <th>Name</th>
-                                    <th>Departments</th>
-                                    <th>Phone No</th>
+                                    
                                    
                                     <th>Action</th>
                                 </tr>
@@ -36,8 +39,7 @@
                                      <th>Title</th>
                                      <th>Member ID</th>
                                     <th>Name</th>
-                                    <th>Departments</th>
-                                    <th>Phone No</th>
+                                  
                                    
                                     <th>Action</th>
                                 </tr>
@@ -49,11 +51,10 @@
                                     <td>{{member.title.title}}</td>
                                     <td>{{member.get_member_Id}}</td>
                                     <td>{{member.get_full_name}}</td>
-                                    <td>{{member.department|default_if_none:"&nbsp;"}}</td>
-                                    <td>{{member.phone_number|default_if_none:"&nbsp;"}}</td>
+                                    
                                     <td>
-                                        <a href="{% url 'Norminal_Roll_Update' member.id %}" class="btn btn-default btn-xs m-r-5"><i class="fa fa-pencil font-14"></i></a> 
-
+                                        <a href="{% url 'Norminal_Roll_Update' member.id %}" class="btn btn-primary">Update</a> 
+                                        
                                        
                                         
                                     </td>
@@ -68,6 +69,8 @@
                 </div>
                
             </div>
+        </div>
+    </div>
   
     
     <!-- BEGIN PAGA BACKDROPS-->

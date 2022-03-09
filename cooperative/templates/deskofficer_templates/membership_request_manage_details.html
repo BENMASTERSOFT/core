@@ -1,0 +1,219 @@
+{% extends 'deskofficer_templates/base_template.html' %}
+{% load static %}
+
+{% block content %}
+            <div class="page-content fade-in-up">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="ibox">
+                            <div class="ibox-head">
+                                <div class="ibox-title">Membership Request | <a href="{% url 'membership_request_manage_search' %}" class="btn btn-secondary">Back</a></div>
+                                
+                            </div>
+                              <form class="form-horizontal" method="POST" action="" enctype="multipart/form-data" novalidate>
+                                    {% csrf_token %}
+                            <div class="form-group">
+                              {% if messages %}
+                                
+                                  {% for message in messages %}
+                                  {% if message.tags == "error" %}
+                                  <div class="alert alert-danger" style="margin-top:10px">{{message}}</div>
+                                  
+                                  {% endif %}
+
+                                  {% if message.tags == "success" %}
+                                  <div class="alert alert-success" style="margin-top:10px">{{message}}</div>
+                                  
+                                  {% endif %}
+                                  {% endfor %}
+                              
+                              {% endif %}
+                          </div>
+                            <div class="ibox-body">
+                                <form class="form-horizontal" method="POST" action="">
+                                    {% csrf_token %}
+                                    <div class="form-group row">
+                                        <label class="col-sm-3 col-form-label">Titles</label>
+                                        <div class="col-sm-9">
+                                           {{form.titles}}
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-sm-3 col-form-label">Last Name</label>
+                                        <div class="col-sm-9">
+                                            {{form.last_name}}
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-sm-3 col-form-label">First Name</label>
+                                        <div class="col-sm-9">
+                                            {{form.first_name}}
+                                        </div>
+                                    </div>
+
+                                    
+                                    <div class="form-group row">
+                                        <label class="col-sm-3 col-form-label">Middle Name</label>
+                                        <div class="col-sm-9">
+                                            {{form.middle_name}}
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-sm-3 col-form-label">Phone Number</label>
+                                        <div class="col-sm-9">
+                                            {{form.phone_no}}
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group row">
+                                        <label class="col-sm-3 col-form-label">Gender</label>
+                                        <div class="col-sm-9">
+                                            {{form.gender}}
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-sm-3 col-form-label">Departments</label>
+                                        <div class="col-sm-9">
+                                            {{form.department}}
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="form-group row">
+                                        <div class="col-sm-9 ml-sm-auto">
+                                            <button class="btn btn-info" type="submit">Update</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                            <div class="col-xl-8">
+                                <div class="ibox">
+                                <div class="ibox-head">
+                                    <div class="ibox-title">Comments
+                                        <a href="{% url 'membership_request_manage_details_add_comment' record.pk %}" class="btn btn-success">Add Comments</a>
+                                    </div>
+                                </div>
+                                <div class="ibox-body">
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th>#</th>
+                                                <th>Comments</th>
+                                                <th>Officer</th>
+                                                <th>Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                        {% for item in comment %}
+                                            <tr>
+                                                <td>{{forloop.counter}}</td>
+                                                <td>{{item.comment | linebreaks}}</td>
+                                                <td>{{item.officer.username}}</td>
+                                                <td>
+                                                    <a href="{% url 'membership_request_manage_details_edit_comment' item.pk %}" class="btn btn-secondary">Edit</a>
+                                                    <a href="{% url 'membership_request_manage_details_delete_comment' item.pk %}" class="btn btn-danger">Delete</a>
+                                                </td>
+                                            </tr>
+                                        {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                                </div>
+                            </div>
+                </div>
+
+                <div class="row">
+                            <div class="col-xl-8">
+                                <div class="ibox">
+                                <div class="ibox-head">
+                                    <div class="ibox-title">Attachment
+                                        <a href="{% url 'membership_request_manage_details_edit_attachment_add' record.pk %}" class="btn btn-success">Attach Files</a>
+                                    </div>
+                                </div>
+                                <div class="ibox-body">
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th>#</th>
+                                                <th>Description</th>
+                                                <th>Sample</th>
+                                                <th>Officer</th>
+                                                <th>Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                        {% for item in attachment %}
+                                            <tr>
+                                                <td>{{forloop.counter}}</td>
+                                                <td>{{item.caption}}</td>
+                                                <td>{% if item.image %}<img src="{{item.image}}" style="width:100px">{% endif %}</td>
+                                                <td>{{item.officer.username}}</td>
+                                                <td>
+                                                    <a href="{% url 'membership_request_manage_details_edit_attachment' item.pk %}" class="btn btn-secondary">Edit</a>
+                                                    <a href="{% url 'membership_request_manage_details_edit_attachment_delete' item.pk %}" class="btn btn-danger">Delete</a>
+                                                </td>
+                                            </tr>
+                                        {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                                </div>
+                            </div>
+                </div>
+           
+            </div>
+            
+
+
+    <div class="sidenav-backdrop backdrop"></div>
+    <div class="preloader-backdrop">
+        <div class="page-preloader">Loading</div>
+    </div>
+    {% include 'cooperative/includes/emptyspace.html' %}
+{% endblock %}
+{% block custom_js %}
+ <script>
+    $(document).ready(function(){
+
+        $("#id_phone_no").keyup(function(){
+            var phone_no=$(this).val();
+
+            if(phone_no!=""){
+              $.ajax({
+                url:'{% url "check_membership_phone_no_exist" %}',
+                type:'POST',
+                data:{phone_no:phone_no}
+                })
+                  .done(function(response){
+                  console.log(response);
+                  if(response == "True"){
+                    $(".phone_no_error").remove();
+                    
+                        $("<span class='phone_no_error' style='padding: 5px; color: red;font-weight: bold;'>Phone No Not Available</span>").insertAfter("#id_phone_no");
+                  }
+                  else{
+                  $(".phone_no_error").remove();
+                   // $("<span class='alert alert-success email_error'>Email Available</span>").insertAfter("#id_email");
+                    $("<span class='phone_no_error' style='padding: 5px;color: green;font-weight: bold;'>Phone Number Available</span>").insertAfter("#id_phone_no");
+                      
+                  }
+              })
+              .fail(function(){
+                  console.log("Failed");
+              })
+
+            }
+            else{
+            $(".phone_no_error").remove();
+          }
+
+          });
+      
+
+    })
+ </script>
+{% endblock %}

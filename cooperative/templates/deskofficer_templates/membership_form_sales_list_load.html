@@ -21,7 +21,7 @@
                                     <th>First Name</th>
                                     <th>Middle Name</th>
                                     <th>Date Approved</th>
-                                    <th>Comment</th>
+                                  
                                     <th>Action</th>
                                 </tr>
                             </thead>
@@ -32,7 +32,7 @@
                                     <th>First Name</th>
                                     <th>Middle Name</th>
                                     <th>Date Approved</th>
-                                    <th>Comment</th>
+                                   
                                     <th>Action</th>
                                 </tr>
                             </tfoot>
@@ -44,7 +44,6 @@
                                     <td>{{applicant.first_name}}</td>
                                     <td>{{applicant.middle_name}}</td>
                                     <td>{{applicant.approved_date}}</td>
-                                    <td>{{applicant.approval_comment}}</td>
                                     <td>
                                         <a href="{% url 'membership_form_sales_preview' applicant.pk  %}" class="btn btn-primary">View Details</a>
                                         <a href="{% url 'membership_form_sales_issue' applicant.pk %}" class="btn btn-success">Issue Form</a>

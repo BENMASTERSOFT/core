@@ -7,9 +7,9 @@
 {% block content %}
 
       
-            <div class="page-content fade-in-up">
+    <div class="page-content fade-in-up">
                 
-                     <div class="row">
+        <div class="row">
                    
                     <div class="col-xl-6">
                         <div class="ibox">
@@ -69,9 +69,11 @@
                             </div>
                         </div>
                     </div>
-                </div>
+        </div>
 
-
+        <div class="row">
+                   
+            <div class="col-xl-8">
                 <div class="ibox">
                     <div class="ibox-head">
                         <div class="ibox-title">LIST OF MEMBERS | ACCOUNT CREATION</div>
@@ -82,11 +84,8 @@
                                 <tr>
                                     <th>#</th>
                                     <th>Member ID</th>
-                                    <th>First Name</th>
-                                    <th>Last Name</th>
-                                    <th>Middle Name</th>
-                                    <th>Phone Number</th>
-                                    <th>Department</th>
+                                    <th>Name</th>
+                                    
                                   
                                 </tr>
                             </thead>
@@ -94,11 +93,8 @@
                                 <tr>
                                     <th>#</th>
                                     <th>Member ID</th>
-                                    <th>First Name</th>
-                                    <th>Last Name</th>
-                                    <th>Middle Name</th>
-                                    <th>Phone Number</th>
-                                    <th>Department</th>
+                                    <th>Name</th>
+                                    
                                     
                                 </tr>
                             </tfoot>
@@ -107,11 +103,8 @@
                                 <tr>
                                     <td>{{forloop.counter}}</td>
                                     <td>{{member.get_member_Id}}</td>
-                                    <td>{{member.admin.first_name}}</td>
-                                    <td>{{member.admin.last_name}}</td>
-                                    <td>{{member.get_middle_name}}</td>
-                                    <td>{{member.phone_number}}</td>
-                                    <td>{{member.department.title}}</td>
+                                    <td>{{member.get_full_name}}</td>
+                                    
                                     
                                     
                                 </tr>
@@ -124,6 +117,8 @@
                 </div>
                
             </div>
+        </div>
+    </div>
   
     
     <!-- BEGIN PAGA BACKDROPS-->

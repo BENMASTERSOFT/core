@@ -27,49 +27,18 @@ class LoginCheckMiddleWare(MiddlewareMixin):
 				else:
 					return HttpResponseRedirect(reverse("admin_home"))
 			
+	
 			elif user.user_type == "3":
-				if modulename == "cooperative.master_views":
+				if modulename == "cooperative.deskofficer_views":
 					pass
 				elif modulename == "cooperative.views"  or modulename == "django.views.static":
 					pass
 				else:
-					return HttpResponseRedirect(reverse('admin_home'))
+					return HttpResponseRedirect(reverse('deskofficer_home'))
 			
+		
+
 			elif user.user_type == "4":
-				if modulename == "cooperative.master_views":
-					pass
-				elif modulename == "cooperative.views"  or modulename == "django.views.static":
-					pass
-				else:
-					return HttpResponseRedirect(reverse('admin_home'))
-
-
-			elif user.user_type == "5":
-				if modulename == "cooperative.master_views":
-					pass
-				elif modulename == "cooperative.views"  or modulename == "django.views.static":
-					pass
-				else:
-					return HttpResponseRedirect(reverse('admin_home'))
-
-			elif user.user_type == "6":
-				if modulename == "cooperative.deskofficer_views":
-					pass
-				elif modulename == "cooperative.views"  or modulename == "django.views.static":
-					pass
-				else:
-					return HttpResponseRedirect(reverse('deskofficer_home'))
-			
-			elif user.user_type == "7":
-				if modulename == "cooperative.deskofficer_views":
-					pass
-				elif modulename == "cooperative.views"  or modulename == "django.views.static":
-					pass
-				else:
-					return HttpResponseRedirect(reverse('deskofficer_home'))
-			
-
-			elif user.user_type == "8":
 				if modulename == "cooperative.shop_views":
 					pass
 				elif modulename == "cooperative.views"  or modulename == "django.views.static":
@@ -78,14 +47,6 @@ class LoginCheckMiddleWare(MiddlewareMixin):
 					return HttpResponseRedirect(reverse('shop_home'))
 			
 
-			elif user.user_type == "9":
-				if modulename == "cooperative.auditor_views":
-					pass
-				elif modulename == "cooperative.views"  or modulename == "django.views.static":
-					pass
-				else:
-					return HttpResponseRedirect(reverse('auditor_home'))
-			
 
 			elif user.user_type == "10":
 				pass

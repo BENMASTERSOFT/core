@@ -3,3 +3,13 @@ author =  CustomUser.objects.annotate(screen_name=Concat('first_name', V(' ') ,'
 
 
 &nbsp; or &#160;
+
+
+
+    month_list =['JANUARY','FEBRUARY','MARCH','APRIL','MAY','JUNE','JULY','AUGUST','SEPTEMBER','OCTOBER','NOVEMBER','DECEMBER']
+    # for item in range(0,len(month_list)):
+    #   print(month_list[item],month_list.index(month_list[item]))
+    # return HttpResponse("ok")
+
+    print(month)
+        return HttpResponse(int(month_list.index(month))+1)

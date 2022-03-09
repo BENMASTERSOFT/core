@@ -15,12 +15,12 @@
                         </a>
                     </li>
                     <li class="heading">FEATURES</li>
-                {% if request.user.user_type == '6' or request.user.user_type == '7' %}
+                {% if  current_user.membership_registration or current_user.termination %}
                     <li>
                         <a href="javascript:;"><i class="sidebar-item-icon fa fa-sitemap"></i>
                             <span class="nav-label">Membership</span><i class="fa fa-angle-left arrow"></i></a>
                         <ul class="nav-2-level collapse">
-                           
+                            {% if  current_user.membership_registration  %}
                             <li>
                                 <a href="javascript:;">
                                     <span class="nav-label"> New Members</span><i class="fa fa-angle-left arrow"></i></a>
@@ -38,7 +38,7 @@
                                         <a href="{% url 'membership_form_sales_list_load' %}">Membership Form Sales</a>
                                     </li>
                                     <li>
-                                        <a href="{% url 'membership_registration_list_load' %}">Membership Registration</a>
+                                        <a href="{% url 'membership_registration_applicant_search' %}">Membership Registration</a>
                                     </li>  
                                    
                                     <li>
@@ -50,7 +50,8 @@
                            
                                 </ul>
                             </li>
-
+                            {% endif %}
+                         {% if  current_user.termination %}
                             <li>
                                 <a href="javascript:;">
                                     <span class="nav-label">Members Termination</span><i class="fa fa-angle-left arrow"></i></a>
@@ -61,16 +62,15 @@
                                     <li>
                                         <a href="">Termination Processing</a>
                                     </li>
-                                      
                                     
-                           
                                 </ul>
                             </li>
+                        {% endif %}
                         </ul>
                     </li>
-
+            {% endif %}
          
-            
+            {% if current_user.standing_order_placement %}
                     <li>
                         <a href="javascript:;"><i class="sidebar-item-icon fa fa-edit"></i>
                             <span class="nav-label">Standing Order</span><i class="fa fa-angle-left arrow"></i></a>
@@ -85,9 +85,9 @@
 
                         </ul>
                     </li>
-                    {% endif %}
+                {% endif %}
 
-                {% if request.user.user_type == '6'  %}
+                {% if current_user.transaction_adjustment  %}
                      <li>
                         <a href="javascript:;"><i class="sidebar-item-icon fa fa-sitemap"></i>
                             <span class="nav-label">Transaction Adjustment</span><i class="fa fa-angle-left arrow"></i></a>
@@ -116,12 +116,28 @@
                                     </li>
                                 </ul>
                             </li>
+                            <li>
+                                <a href="javascript:;">
+                                    <span class="nav-label">Gross Salary Update</span><i class="fa fa-angle-left arrow"></i></a>
+                                <ul class="nav-3-level collapse">
+                                    <li>
+                                        <a href="{% url 'Transaction_Salary_adjustment_Request_search' %}">Place Request</a>
+                                    </li>
+                                    <li>
+                                        <a href="{% url 'Transaction_Salary_adjustment_Request_Manage_List_Load' %}">Manage Request</a>
+                                    </li> 
+                                    <li>
+                                        <a href="{% url 'Transaction_Salary_adjustment_Request_Manage_Process_List_Load' %}">Process Request</a>
+                                    </li>
+                                </ul>
+                            </li>
                         </ul>
                     </li>
 
 
                 {% endif %} 
-                {% if request.user.user_type == '6' or request.user.user_type == '7' %}
+
+                {% if current_user.cash_deposit %}
                     <li>
                         <a href="javascript:;"><i class="sidebar-item-icon fa fa-edit"></i>
                             <span class="nav-label">Cash Deposit</span><i class="fa fa-angle-left arrow"></i></a>
@@ -142,6 +158,8 @@
 
                         </ul>
                     </li>
+                {% endif %}
+                {% if current_user.cash_withdrawal %}
                     <li>
                         <a href="javascript:;"><i class="sidebar-item-icon fa fa-edit"></i>
                             <span class="nav-label">Cash Withdrawal</span><i class="fa fa-angle-left arrow"></i></a>
@@ -158,67 +176,24 @@
 
                         </ul>
                     </li>
-
+                {% endif %}
+                {% if current_user.personnel_info %}
                     <li>
                         <a href="javascript:;"><i class="sidebar-item-icon fa fa-sitemap"></i>
                             <span class="nav-label">Personnel Info</span><i class="fa fa-angle-left arrow"></i></a>
                         <ul class="nav-2-level collapse">
                            <li>
                                 <a href="{% url 'Norminal_Roll' %}">Norminal Roll</a>
-                            </li>
-                           
-                            
-                          
-                            <li>
-                                <a href="javascript:;">
-                                    <span class="nav-label">Title</span><i class="fa fa-angle-left arrow"></i></a>
-                                <ul class="nav-3-level collapse">
-                                     <li>
-                                        <a href="{% url 'Updating_Title_list_load' %}">Group Title</a>
-                                     </li>
-                                      <li>
-                                        <a href="{% url 'Updating_Title_selected_search' %}">Selected Title</a>
-                                     </li> 
-                                     
-                                </ul>
-                            </li> 
-                            <li>
-                                <a href="javascript:;">
-                                    <span class="nav-label">Departments</span><i class="fa fa-angle-left arrow"></i></a>
-                                <ul class="nav-3-level collapse">
-                                     <li>
-                                        <a href="{% url 'Updating_Department_list_load' %}">Group Departments</a>
-                                     </li>
-                                      <li>
-                                        <a href="{% url 'Updating_Department_selected_search' %}">Selected Departments</a>
-                                     </li>
-                                     
-                                </ul>
-                            </li> 
-
-                               <li>
-                                <a href="javascript:;">
-                                    <span class="nav-label">Gender</span><i class="fa fa-angle-left arrow"></i></a>
-                                <ul class="nav-3-level collapse">
-                                    
-                                  
-                                     <li>
-                                        <a href="{% url 'Updating_Gender_list_load' %}">Group Records</a>
-                                     </li>
-                                      <li>
-                                        <a href="{% url 'Updating_Gender_selected_search' %}">Selected Records</a>
-                                     </li>
-
-                                </ul>
-                            </li> 
+                            </li>                              
                         </ul>
                     </li>
-                {% endif %}   
+                {% endif %}  
+                {% if current_user.share_management %} 
                     <li>
                         <a href="javascript:;"><i class="sidebar-item-icon fa fa-sitemap"></i>
                             <span class="nav-label">Shares Manager</span><i class="fa fa-angle-left arrow"></i></a>
                             <ul class="nav-2-level collapse">
-                             {% if request.user.user_type == '6' %}
+                           
                                 <li>
                                     <a href="javascript:;">
                                         <span class="nav-label">Initial Shares Record</span><i class="fa fa-angle-left arrow"></i></a>
@@ -233,9 +208,7 @@
                                      </ul>
                                 </li>
 
-                            {% endif %}
-
-                             {% if request.user.user_type == '6' or request.user.user_type == '7' %}
+                          
                                 <li>
                                     <a href="javascript:;">
                                         <span class="nav-label">Shares Requesition</span><i class="fa fa-angle-left arrow"></i></a>
@@ -244,18 +217,20 @@
                                             <a href="{% url 'Members_Share_Purchase_Request_Search' %}">Request for Shares</a>
                                         </li>
                                         <li>
-                                            <a href="">Manage Request</a>
+                                            <a href="{% url 'Members_Share_Purchase_Request_Manage_Search' %}">Manage Request</a>
                                          </li>
                                         <li>
                                             <a href="{% url 'Members_Share_Purchase_Request_Process' %}">Process Request</a>
                                         </li>
                                      </ul>
                                 </li>
-                            {% endif %}
+                            
                         </ul>
                     </li>
+                {% endif %}
 
-                  {% if request.user.user_type == '6' or request.user.user_type == '7' %}
+
+                  {% if current_user.next_of_kin %}
                     <li>
                         <a href="javascript:;"><i class="sidebar-item-icon fa fa-edit"></i>
                             <span class="nav-label">Next of Kin</span><i class="fa fa-angle-left arrow"></i></a>
@@ -270,24 +245,9 @@
 
                         </ul>
                     </li>
-                    {% endif %}
-                {% if request.user.user_type == '6' %}
-                    <li>
-                        <a href="javascript:;"><i class="sidebar-item-icon fa fa-edit"></i>
-                            <span class="nav-label">Salary Update</span><i class="fa fa-angle-left arrow"></i></a>
-                        <ul class="nav-2-level collapse">
-                           
-                            <li>
-                                <a href="{% url 'Members_Salary_Update_request_search' %}">Salary Update Request</a>
-                            </li>
-                            <li>
-                                <a href="{% url 'Members_Salary_Update_Request_approval_Load' %}">Process Salary Update</a>
-                            </li>
-
-                        </ul>
-                    </li>
-
-
+                 {% endif %}
+                
+                {% if current_user.exclusiveness_request %}
                    <li>
                             <a href="javascript:;"><i class="sidebar-item-icon fa fa-sitemap"></i>
                                 <span class="nav-label">Exclusiveness</span><i class="fa fa-angle-left arrow"></i></a>
@@ -297,18 +257,21 @@
                                 </li>
                                 <li>
                                     <a href="{% url 'members_exclusiveness_approved_list_load' %}">Approved Exclusiveness</a>
+                                </li>      
+                                 <li>
+                                    <a href="javascript:;">Deactivate Exclusiveness</a>
                                 </li>                                        
                             </ul>
                     </li>
-                   {% endif %}
+                {% endif %}
                 
                     
 
+                  {% if current_user.loan_management %}
                     <li>
                         <a href="javascript:;"><i class="sidebar-item-icon fa fa-sitemap"></i>
                             <span class="nav-label">Loan Manager</span><i class="fa fa-angle-left arrow"></i></a>
                         <ul class="nav-2-level collapse">
-                          {% if request.user.user_type == '6' or request.user.user_type == '7' %}
                             <li>
                                 <a href="javascript:;">
                                     <span class="nav-label">Cash Loans</span><i class="fa fa-angle-left arrow"></i></a>
@@ -330,26 +293,11 @@
                                     </li>
                                 </ul>
                             </li>
-                               <li>
-                                <a href="javascript:;">
-                                    <span class="nav-label">Proforma Invoiced Commodity</span><i class="fa fa-angle-left arrow"></i></a>
-                                <ul class="nav-3-level collapse">
-                                    <li>
-                                        <a href="{% url 'ProformaInvoicedCommodityLoanSearch' %}">Purchase Request</a>
-                                    </li>
-                                    <li>
-                                        <a href="{% url 'membership_commodity_loan_manage' %}">Manage Request</a>
-                                    </li>
-                                  
-                                    <li>
-                                        <a href="javascript:;">Process Applications</a>
-                                    </li>
-                                </ul>
-                            </li>
+                               
                             
                             <li>
                                 <a href="javascript:;">
-                                    <span class="nav-label">Standard Commodity Loans</span><i class="fa fa-angle-left arrow"></i></a>
+                                    <span class="nav-label">Commodity Loans</span><i class="fa fa-angle-left arrow"></i></a>
                                 <ul class="nav-3-level collapse">
                                     <li>
                                         <a href="{% url 'membership_commodity_loan_search' %}">Commodity Request</a>
@@ -368,53 +316,13 @@
                                     </li>
                                 </ul>
                             </li>
-                            {% endif %}
-                            {% if request.user.user_type == '6' %}
-                            <li>
-                                <a href="javascript:;">
-                                    <span class="nav-label">Essential Commodity Loans</span><i class="fa fa-angle-left arrow"></i></a>
-                                <ul class="nav-3-level collapse">
-                                    <li>
-                                        <a href="{% url 'membership_essential_commodity_loan_search' %}">Commodity Applications</a>
-                                    </li>
-                                
-                                    <li>
-                                        <a href="{% url 'Essential_Commodity_Product_Selection_Active' %}">Manage Applications</a>
-                                    </li>
-                                    <li>
-                                        <a href="{% url 'Essential_Commodity_Loan_Request_Approved_List_Load' %}">Process Applications</a>
-                                    </li>
-                                </ul>
-                            </li>
-                         {% endif %}
-                    </ul>
+                           
+                            </ul>
                 </li>
-
+            {% endif %}
                
-            {% if request.user.user_type == '6'  %}
-                    <li>
-                        <a href="javascript:;"><i class="sidebar-item-icon fa fa-edit"></i>
-                            <span class="nav-label">External Fascilities</span><i class="fa fa-angle-left arrow"></i></a>
-                        <ul class="nav-2-level collapse">
-                            <li>
-                              <a href="{% url 'external_fascility_update_search' %}">Add Fascility Update</a> 
-                            </li>
-                            <li>
-                              <a href="{% url 'external_fascility_update_approved_list_load' %}">Approved Fascility</a> 
-                            </li>
-                             <li>
-                              <a href="">Request Fascility Liquidation</a> 
-                            </li> 
-                            <li>
-                              <a href="">Process Fascility Liquidation</a> 
-                            </li>
-                            
-
-                        </ul>
-                    </li>
-
-                {% endif %}
-                {% if request.user.user_type == '6' or request.user.user_type == '7' %}
+                
+                {% if current_user.monthly_deductions %}
                     <li>
                         <a href="javascript:;"><i class="sidebar-item-icon fa fa-table"></i>
                             <span class="nav-label">Monthly Deductions</span><i class="fa fa-angle-left arrow"></i></a>
@@ -456,8 +364,9 @@
                            
                         </ul>
                     </li>
+                {% endif %}
 
-
+                {% if current_user.bank_accounts %}
                     <li>
                         <a href="javascript:;"><i class="sidebar-item-icon fa fa-bar-chart"></i>
                             <span class="nav-label">Bank Accounts</span><i class="fa fa-angle-left arrow"></i></a>
@@ -471,6 +380,9 @@
                             
                         </ul>
                     </li>
+                {% endif %}
+
+                {% if current_user.day_end_transaction %}
                       <li>
                         <a href="javascript:;"><i class="sidebar-item-icon fa fa-sitemap"></i>
                             <span class="nav-label">Day End Transactions</span><i class="fa fa-angle-left arrow"></i></a>
@@ -482,25 +394,22 @@
                              <li>
                                 <a href="{% url 'Cash_Deposit_Report_Date_Load' %}">Loan Form Sales</a>
                             </li>
-                    <li>
+                            <li>
                                 <a href="{% url 'Cash_Deposit_Report_Date_Load' %}">Cash Deposit</a>
                             </li>
 
                         </ul>
-                    </li>
-                   
-
-                    
+                    </li>                    
                    
                 {% endif %}
 
-                 {% if request.user.user_type == '7' %}
-                  <li class="heading">SEO</li>
+               {% if current_user.essential_commodity or current_user.share_update_approval or current_user.exclusiveness_approval or current_user.shop_credit_sales or current_user.share_update_approval or current_user.transaction_adjustment_approval  %}
+                <li class="heading">APPROVALS</li>
                     <li>
                         <a href="javascript:;"><i class="sidebar-item-icon fa fa-sitemap"></i>
-                            <span class="nav-label">SEO Desk</span><i class="fa fa-angle-left arrow"></i></a>
+                            <span class="nav-label">ADJUSTMENT APPROVAL</span><i class="fa fa-angle-left arrow"></i></a>
                         <ul class="nav-2-level collapse">
-                            
+                        {% if current_user.shop_credit_sales %}
                             <li>
                                 <a href="javascript:;">
                                     <span class="nav-label">Shop Credit Sales</span><i class="fa fa-angle-left arrow"></i></a>
@@ -510,33 +419,15 @@
                                     </li>
                                     <li>
                                         <a href="{% url 'Shop_Cheque_Sales_List_Load' %}">Cheque Sales Approval</a>
-                                    </li>
-                                </ul>
-                            </li>
-
-
-                            <li>
-                                <a href="javascript:;">
-                                    <span class="nav-label">Salary Update</span><i class="fa fa-angle-left arrow"></i></a>
-                                <ul class="nav-3-level collapse">
-                                    <li>
-                                        <a href="{% url 'members_salary_update_request_approval_load_list' %}">Salary Update</a>
-                                    </li>
-                                    <li>
-                                        <a href="">Manage Salary Update</a>
-                                    </li>
-                                </ul>
-                            </li> 
-                            <li>
-                                <a href="javascript:;">
-                                    <span class="nav-label">External Fascilities </span><i class="fa fa-angle-left arrow"></i></a>
-                                <ul class="nav-3-level collapse">
-                                    <li>
-                                        <a href="{% url 'external_fascilities_update_request_approval_load_list' %}">Approve Registering</a>
-                                    </li>
+                                    </li> 
                                    
                                 </ul>
-                            </li>  
+                            </li>
+                        {% endif %}
+                        
+
+                        
+                        {% if current_user.exclusiveness_approval %}
                             <li>
                                 <a href="javascript:;">
                                     <span class="nav-label">Members Exclusiveness </span><i class="fa fa-angle-left arrow"></i></a>
@@ -549,13 +440,18 @@
                                     </li>
                                 </ul>
                             </li>
+                        {% endif %}
+                        {% if current_user.share_update_approval %}
                             <li>
                                <a href="{% url 'Initial_Shares_Update_List_Load' %}">Initial Share Update</a>
-                             </li> 
-                             
-                             <li>
+                            </li> 
+                        {% endif %} 
+                        {% if current_user.essential_commodity %}
+                            <li>
                                <a href="{% url 'Essential_Commodity_Loan_Request_Approval' %}">Essential Commodity</a>
-                             </li>
+                            </li>
+                        {% endif %}
+                        {% if current_user.transaction_adjustment_approval %}
                             <li>
                                 <a href="javascript:;">
                                     <span class="nav-label">Transaction Adjustment </span><i class="fa fa-angle-left arrow"></i></a>
@@ -566,22 +462,27 @@
                                     <li>
                                         <a href="{% url 'Transaction_Loan_Adjustment_Approval_list_Load' %}">Loans</a>
                                     </li>
+                                     <li>
+                                        <a href="{% url 'Transaction_Salary_adjustment_Request_Approval_List_Load' %}">Salary Update</a>
+                                    </li>
                                 </ul>
                             </li>
+                        {% endif %}
                         </ul>
                     </li>
-
-                                    
-                
                 {% endif %}
+             
                 
-
+            {% if current_user.general_report %}
                 <li class="heading">REPORTS</li>
                     <li>
                             <a href="javascript:;"><i class="sidebar-item-icon fa fa-sitemap"></i>
                                 <span class="nav-label">General Reports</span><i class="fa fa-angle-left arrow"></i></a>
                             <ul class="nav-2-level collapse">
                                  <li>
+                                    <a href="{% url 'Transaction_adjustment_Search' %}">Transaction Adjustment History</a>
+                                </li>
+                                <li>
                                     <a href="{% url 'MemberShipFormSalesReport' %}">Membership Form Sales</a>
                                 </li>
 
@@ -666,6 +567,8 @@
 
                             </ul>
                     </li>
+            {% endif %}
+            {% if current_user.data_capture %}
                 <li class="heading">INITIAL DATA</li>
                     <li>
                         <a href="javascript:;"><i class="sidebar-item-icon fa fa-sitemap"></i>
@@ -721,33 +624,8 @@
                                 </ul>
                             </li>
                             
-                            <li>
-                                <a href="javascript:;">
-                                    <span class="nav-label">Salary GrossPay</span><i class="fa fa-angle-left arrow"></i></a>
-                                <ul class="nav-3-level collapse">
-                                    <li>
-                                       <a href="{% url 'Updating_Gross_Pay' %}">Group Salary GrossPay</a>
-                                    </li>
-                                       <li>
-                                       <a href="{% url 'Updating_Gross_Pay_selected_search' %}">Selected Salary GrossPay</a>
-                                    </li>
-                                   <li>
-                                        <a href="">Manage Salary GrossPay</a>
-                                     </li>
-                                </ul>
-                            </li>
-                             <li>
-                                <a href="javascript:;">
-                                    <span class="nav-label">Date Joined</span><i class="fa fa-angle-left arrow"></i></a>
-                                <ul class="nav-3-level collapse">
-                                    <li>
-                                       <a href="{% url 'Updating_Date_Joined' %}">Uploading Date Joined</a>
-                                    </li>
-                                   <li>
-                                        <a href="{% url 'Updating_Date_Joined_Manage_List_load' %}">Manage Data Joined</a>
-                                     </li>
-                                </ul>
-                            </li>
+                           
+                        
                             <li>
                                 <a href="javascript:;">
                                     <span class="nav-label">Shares</span><i class="fa fa-angle-left arrow"></i></a>
@@ -774,6 +652,8 @@
 
                         </ul>
                     </li>
+            {% endif %}
+                
 
                 {% comment %}
                     <li>

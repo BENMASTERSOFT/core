@@ -108,18 +108,7 @@ class addUsersForm(forms.Form):
    user_type=forms.ChoiceField(label="user_type",choices=user_type_list,widget=forms.Select(attrs={"class":"form-control"}))
 	
  
-   userlevel_list=[]
  
-   try:
-      userlevels = UsersLevel.objects.all()
-      for userlevel in userlevels:
-         small_userlevel=(userlevel.id,userlevel.title)
-         userlevel_list.append(small_userlevel)
-   except:
-      userlevel_list=[]
-
-   userlevel=forms.ChoiceField(label="User level",choices=userlevel_list,widget=forms.Select(attrs={"class":"form-control"}))
-   
  
 
 
@@ -172,18 +161,7 @@ class add_staff_manage_form(forms.Form):
    user_type=forms.ChoiceField(label="user_type",choices=user_type_list,widget=forms.Select(attrs={"class":"form-control"}))
    
  
-   userlevel_list=[]
- 
-   try:
-      userlevels = UsersLevel.objects.all()
-      for userlevel in userlevels:
-         small_userlevel=(userlevel.id,userlevel.title)
-         userlevel_list.append(small_userlevel)
-   except:
-      userlevel_list=[]
-
-   userlevel=forms.ChoiceField(label="User level",choices=userlevel_list,widget=forms.Select(attrs={"class":"form-control"}))
-   
+  
 
 class super_user_manage_form(forms.Form):
    
@@ -301,71 +279,6 @@ class addNOKRelationshipsForm(forms.ModelForm):
          if instance.title == title:
             raise forms.ValidationError(str(title) + ' is already created')
       return title
-
-
-class addTransactionStatusForm(forms.ModelForm):
-   class Meta:
-      model = TransactionStatus
-      fields=['title',]
-
-      widgets = {
-      'title': forms.TextInput(attrs={'class':'form-control','placeholder':"Enter Title"})
-      }
-
-
-   def clean_title(self):
-      title = self.cleaned_data.get('title')
-      if not title:
-         raise forms.ValidationError('This field is required')
-
-      for instance in TransactionStatus.objects.all():
-         if instance.title == title:
-            raise forms.ValidationError(str(title) + ' is already created')
-      return title
-
-
-class addProcessingStatusForm(forms.ModelForm):
-   class Meta:
-      model = ProcessingStatus
-      fields=['title',]
-
-      widgets = {
-      'title': forms.TextInput(attrs={'class':'form-control','placeholder':"Enter Title"})
-      }
-
-
-   def clean_title(self):
-      title = self.cleaned_data.get('title')
-      if not title:
-         raise forms.ValidationError('This field is required')
-
-      for instance in ProcessingStatus.objects.all():
-         if instance.title == title:
-            raise forms.ValidationError(str(title) + ' is already created')
-      return title
-
-
-
-class addReceiptStatusForm(forms.ModelForm):
-   class Meta:
-      model = ReceiptStatus
-      fields=['title',]
-
-      widgets = {
-      'title': forms.TextInput(attrs={'class':'form-control','placeholder':"Enter Title"})
-      }
-
-
-   def clean_title(self):
-      title = self.cleaned_data.get('title')
-      if not title:
-         raise forms.ValidationError('This field is required')
-
-      for instance in ReceiptStatus.objects.all():
-         if instance.title == title:
-            raise forms.ValidationError(str(title) + ' is already created')
-      return title
-
 
 
 class addGenderForm(forms.ModelForm):
@@ -1046,13 +959,14 @@ class MembershipRequest_form(forms.Form):
    
 
 class MemberShipRequestAdditionalInfo_form(forms.Form):
-   comment= forms.CharField(widget=forms.Textarea(attrs={"rows":2, "cols":50}))
+   comment= forms.CharField(widget=forms.Textarea(attrs={"rows":5, "cols":50}))
 
 
 class MemberShipRequestAdditionalAttachment_form(forms.Form):
    caption=forms.CharField(label="Caption",max_length=150,widget=forms.TextInput(attrs={"class":"form-control"}))
    image=forms.FileField(label="Image", widget=forms.FileInput(attrs={"class":"form-control"}),required=False)
-
+   
+   edit_image = forms.BooleanField(label="image", initial=False)
 
 class MemberShipRequest_submit_form(forms.Form):  
    try:
@@ -1098,7 +1012,7 @@ class MemberShipRequest_certification_submit_form(forms.Form):
 
 
 class MemberShipRequest_approval_comment_form(forms.Form):  
-   comment= forms.CharField(widget=forms.Textarea(attrs={"rows":2, "cols":50}))
+   comment= forms.CharField(widget=forms.Textarea(attrs={"rows":5, "cols":50}))
  
 
 class MemberShipRequest_approval_attachment_form(forms.Form):  
@@ -1146,13 +1060,12 @@ class membership_form_sales_issue_form(forms.Form):
 
    unit_list=[]
    try:
-      admin_charge = TransactionTypes.objects.get(code='100')
+      admin_charge = TransactionTypes.objects.get(code='700')
       max_unit=admin_charge.share_unit_max
       min_unit=admin_charge.share_unit_min
 
-      units = SharesUnits.objects.filter(Q(unit__gte=int(min_unit)) & Q(unit__lte=max_unit))  
-      # units = SharesUnits.objects.all()  
-                                
+      units = SharesUnits.objects.filter(Q(unit__gte=min_unit) & Q(unit__lte=max_unit))  
+                      
       for unit in units:
          small_unit=(unit.id,unit.unit)
          unit_list.append(small_unit)
@@ -1163,7 +1076,7 @@ class membership_form_sales_issue_form(forms.Form):
 
 
    receipt = forms.IntegerField(label='Receipt', label_suffix=" : ", min_value=1, required=True,
-                                 widget=forms.NumberInput(attrs={'class': 'form-control'}),
+                                 widget=forms.NumberInput(attrs={'class': 'form-control','autocomplete':'off'}),
                                 help_text="This value is greater than  less than 1.",
                                 disabled = False, error_messages={'required': "Please Enter Receipt No."})
 
@@ -1324,7 +1237,7 @@ class membership_registration_register_form(forms.Form):
    
    salary_institution_list=[]
    try:
-      salary_institutions = SalaryInstitution.objects.all().order_by('title')                          
+      salary_institutions = SalaryInstitution.objects.all().order_by('-title')                          
       for salary_institution in salary_institutions:
          small_salary_institution=(salary_institution.id,salary_institution.title)
          salary_institution_list.append(small_salary_institution)
@@ -1337,6 +1250,15 @@ class membership_registration_register_form(forms.Form):
                              required=True, disabled=False,
                              widget=DateInput(attrs={'class': 'form-control'}),
                              error_messages={'required': "This field is required."})
+   date_of_first_appointment = forms.DateField(label='Date of First Appointment', label_suffix=" : ",
+                             required=True, disabled=False,
+                             widget=DateInput(attrs={'class': 'form-control'}),
+                             error_messages={'required': "This field is required."})
+   dob = forms.DateField(label='Date of Birth', label_suffix=" : ",
+                             required=True, disabled=False,
+                             widget=DateInput(attrs={'class': 'form-control'}),
+                             error_messages={'required': "This field is required."})
+   
    form_print = forms.ChoiceField(label="Form Print", choices=FORM_PRINT_CHOICES,widget=forms.Select(attrs={"class":"form-control"}))
     
   
@@ -1444,7 +1366,19 @@ class temporallyloan_form(forms.Form):
 class loan_request_document_attachment_form(forms.Form):
    description=forms.CharField(label="Description",max_length=255,widget=forms.TextInput(attrs={"class":"form-control"}))
    image=forms.FileField(label="Image", widget=forms.FileInput(attrs={"class":"form-control"}),required=False)
-   
+     
+   gross_pay = forms.DecimalField(initial=0,label='Gross Pay', label_suffix=" : ", min_value=0,  max_digits=20,
+                              widget=forms.NumberInput(attrs={'class': 'form-control'}),
+                              decimal_places=2, required=False, 
+                              disabled = False,
+                              error_messages={'required': "Please Enter Amount"})
+  
+   net_pay = forms.DecimalField(initial=0,label='Net Pay', label_suffix=" : ", min_value=0,  max_digits=20,
+                              widget=forms.NumberInput(attrs={'class': 'form-control'}),
+                              decimal_places=2, required=False, 
+                              disabled = False,
+                              error_messages={'required': "Please Enter Amount"})
+
 
 class MembersBankAccounts_form(forms.Form):
    account_type_list=[]
@@ -1944,18 +1878,7 @@ class members_exclusiveness_request_register_form(forms.Form):
    transactions = forms.ChoiceField(label="Transactions", choices=transaction_list,widget=forms.Select(attrs={"class":"form-control"}))
   
 
-   approval_officers_list=[]
-   try: 
-      transaction=ApprovableTransactions.objects.get(transaction__code='300') 
-      approval_officers = ApprovalOfficers.objects.filter(transaction=transaction)                          
-      for approval_officer in approval_officers:
-         small_approval_officer=(approval_officer.id,approval_officer.officer.username)
-         approval_officers_list.append(small_approval_officer)
-   except:
-      approval_officers_list=[]
-
-   approval_officers = forms.ChoiceField(label="Approval Officers", choices=approval_officers_list,widget=forms.Select(attrs={"class":"form-control"}))
-
+  
 
 class members_exclusiveness_request_approval_process_form(forms.Form):
    approval_status_list=[]
@@ -1969,7 +1892,7 @@ class members_exclusiveness_request_approval_process_form(forms.Form):
    
    approval_status = forms.ChoiceField(label="Approval Status", choices=approval_status_list,widget=forms.Select(attrs={"class":"form-control"}))
    
-   comment= forms.CharField(widget=forms.Textarea(attrs={"rows":2, "cols":55}))
+   comment= forms.CharField(widget=forms.Textarea(attrs={"rows":2, "cols":62}))
    
    
 
@@ -2247,6 +2170,16 @@ class Norminal_Roll_Update_form(forms.Form):
                              widget=DateInput(attrs={'class': 'form-control'}),
                              error_messages={'required': "This field is required."})
 
+   dob = forms.DateField(label='Date of Birth', label_suffix=" : ",
+                             required=True, disabled=False,
+                             widget=DateInput(attrs={'class': 'form-control'}),
+                             error_messages={'required': "This field is required."})
+
+   date_of_first_appointment = forms.DateField(label='Date of First Appointment', label_suffix=" : ",
+                             required=True, disabled=False,
+                             widget=DateInput(attrs={'class': 'form-control'}),
+                             error_messages={'required': "This field is required."})
+
 
 
 class MembersShareConfigurations_form(forms.Form):
@@ -2307,18 +2240,7 @@ class Members_Share_Purchase_Request_form(forms.Form):
                                 help_text="This value is greater than or equal to 0 & less than or equal to 100.",
                                 disabled = False, error_messages={'required': "Please Maximum Unit."})
   
-   approval_officers_list=[]
-   try: 
-      transaction=ApprovableTransactions.objects.get(transaction__code='700') 
-      approval_officers = ApprovalOfficers.objects.filter(transaction=transaction)                          
-      for approval_officer in approval_officers:
-         small_approval_officer=(approval_officer.id,approval_officer.officer.username)
-         approval_officers_list.append(small_approval_officer)
-   except:
-      approval_officers_list=[]
-
-   approval_officers = forms.ChoiceField(label="Approval Officers", choices=approval_officers_list,widget=forms.Select(attrs={"class":"form-control"}))
-
+   
 
 class Existing_Shares_Upload_form(forms.Form):
    shares_amount = forms.DecimalField(initial=0,label='Shares Amount', label_suffix=" : ", min_value=0,  max_digits=20,
@@ -2436,19 +2358,7 @@ class Cash_Deposit_Loans_form(forms.Form):
 
 
 class Cash_Withdrawal_form(forms.Form):
-   approval_officers_list=[]
-   try: 
-      transaction=ApprovableTransactions.objects.get(transaction__code='900') 
-      approval_officers = ApprovalOfficers.objects.filter(transaction=transaction)                          
-      for approval_officer in approval_officers:
-         small_approval_officer=(approval_officer.id,approval_officer.officer.username)
-         approval_officers_list.append(small_approval_officer)
-   except:
-      approval_officers_list=[]
-
-   approval_officers = forms.ChoiceField(label="Approval Officers", choices=approval_officers_list,widget=forms.Select(attrs={"class":"form-control"}))
-
-
+  
    try:
       status=WithdrawalStatus.objects.get(title='UNLOCKED')
       transaction_list=[]
@@ -2701,18 +2611,7 @@ class Transaction_adjustment_selection_form(forms.Form):
                               decimal_places=2, required=True, 
                               disabled = False,
                               error_messages={'required': "Please Enter Amount Approved"})
-   approval_officers_list=[]
-   try: 
-      transaction=ApprovableTransactions.objects.get(transaction__code='901') 
-      approval_officers = ApprovalOfficers.objects.filter(transaction=transaction)                          
-      for approval_officer in approval_officers:
-         small_approval_officer=(approval_officer.id,approval_officer.officer.username)
-         approval_officers_list.append(small_approval_officer)
-   except:
-      approval_officers_list=[]
-
-   approval_officers = forms.ChoiceField(label="Approval Officers", choices=approval_officers_list,widget=forms.Select(attrs={"class":"form-control"}))
-
+ 
 
 
 class Transaction_Loan_adjustment_selection_form(forms.Form):
@@ -2862,6 +2761,7 @@ class Members_Share_Purchase_Request_Process_View_Form(forms.Form):
 
 
 class Cash_Deposit_Welfare_Preview_Form(forms.Form):
+   enforce_payment=forms.BooleanField( )
    payment_date = forms.DateField(label='Payment Date', label_suffix=" : ",
                              required=True, disabled=False,
                              widget=DateInput(attrs={'class': 'form-control'}),
@@ -3184,8 +3084,87 @@ class Termination_Sources_upload_form(forms.Form):
 
 
 class addCommodityCategoryForm(forms.Form):
+   PRICE_STATUS=(
+        ('0','FIXED'),
+        ('1','UNFIXED')
+        )
    title=forms.CharField(label="Title",max_length=30,widget=forms.TextInput(attrs={"class":"form-control",}),required=True)
    
+   
+   
+   interest_deduction_list=[]
+   try:
+      interest_deductions = InterestDeductionSource.objects.all()                 
+      for interest_deduction in interest_deductions:
+         small_interest_deduction=(interest_deduction.id,interest_deduction.title)
+         interest_deduction_list.append(small_interest_deduction)
+   except:
+      interest_deduction_list=[]
+   interest_deductions = forms.ChoiceField(label="Interest Deductions", choices=interest_deduction_list,widget=forms.Select(attrs={"class":"form-control"}))
+
+
+   duration = forms.IntegerField(label='Duration', label_suffix=" : ",
+                  widget=forms.NumberInput(attrs={'class': 'form-control','autocomplete':'off'}),
+                  disabled = False)
+   interest_rate=forms.DecimalField(initial=0,label='Interest Rate', label_suffix=" : ",
+                                 widget=forms.NumberInput(attrs={'class': 'form-control'}),
+                                 decimal_places=2, required=True, 
+                                 disabled = False)
+
+   admin_charges_rating_list=[]
+   try:
+      admin_charges_ratings = AdminCharges.objects.all()
+      for admin_charges_rating in admin_charges_ratings:
+         small_admin_charges_rating=(admin_charges_rating.id,admin_charges_rating.title)
+         admin_charges_rating_list.append(small_admin_charges_rating)
+   except:
+      admin_charges_rating_list=[]
+
+   admin_charges_rating = forms.ChoiceField(label="Admin Charges Rating", choices=admin_charges_rating_list,widget=forms.Select(attrs={"class":"form-control"}))
+  
+
+
+
+ 
+   admin_charges =forms.DecimalField(initial=0,label='Interest Rate', label_suffix=" : ",
+                                 widget=forms.NumberInput(attrs={'class': 'form-control'}),
+                                 decimal_places=2, required=True, 
+                                 disabled = False)
+
+   admin_charges_minimum=forms.DecimalField(initial=0,label='Interest Rate', label_suffix=" : ",
+                                 widget=forms.NumberInput(attrs={'class': 'form-control'}),
+                                 decimal_places=2, required=True, 
+                                 disabled = False)
+
+   default_admin_charges=forms.DecimalField(initial=0,label='Interest Rate', label_suffix=" : ",
+                                 widget=forms.NumberInput(attrs={'class': 'form-control'}),
+                                 decimal_places=2, required=True, 
+                                 disabled = False)
+
+ 
+   guarantors= forms.IntegerField(label='Guarantors', label_suffix=" : ",
+                  widget=forms.NumberInput(attrs={'class': 'form-control','autocomplete':'off'}),
+                  disabled = False)
+
+   loan_age=  forms.IntegerField(label='Guarantors', label_suffix=" : ",
+                  widget=forms.NumberInput(attrs={'class': 'form-control','autocomplete':'off'}),
+                  disabled = False)
+   
+   
+   
+   receipt_type_list=[]
+   try:
+      receipt_types = ReceiptTypes.objects.all()                 
+      for receipt_type in receipt_types:
+         small_receipt_type=(receipt_type.id,receipt_type.title)
+         receipt_type_list.append(small_receipt_type)
+   except:
+      receipt_type_list=[]
+   receipt_type = forms.ChoiceField(label="Receipt Type", choices=receipt_type_list,widget=forms.Select(attrs={"class":"form-control"}))
+
+ 
+
+
    transaction_list=[]
    try:
       transactions = TransactionTypes.objects.filter(source__title='LOAN')                 
@@ -3195,6 +3174,20 @@ class addCommodityCategoryForm(forms.Form):
    except:
       transaction_list=[]
    transactions = forms.ChoiceField(label="Transactions", choices=transaction_list,widget=forms.Select(attrs={"class":"form-control"}))
+   price_status = forms.ChoiceField(label="Price Status", choices=PRICE_STATUS,widget=forms.Select(attrs={"class":"form-control"}))
+ 
+
+
+
+
+class Manage_Commodity_Categories_Optional_properties_Form(forms.Form):
+   REQUIRED_STATUS=(
+        ('0','NO'),
+        ('1','YES')
+        )
+   interest_rate_required = forms.ChoiceField(label="Interest Rate Required", choices=REQUIRED_STATUS,widget=forms.Select(attrs={"class":"form-control"}))
+   admin_charges_required = forms.ChoiceField(label="Admin Charges Required", choices=REQUIRED_STATUS,widget=forms.Select(attrs={"class":"form-control"}))
+   guarantor_required = forms.ChoiceField(label="Guarantor Required", choices=REQUIRED_STATUS,widget=forms.Select(attrs={"class":"form-control"}))
 
 
 class Commodity_Products_add_Form(forms.Form):
@@ -3217,9 +3210,29 @@ class Commodity_Products_add_Form(forms.Form):
 
 
 class Commodity_Products_Update_Form(forms.Form):
+   product_name=forms.CharField(label="Product Name",max_length=30,widget=forms.TextInput(attrs={"class":"form-control"}),required=True)
+   product_model=forms.CharField(label="Product Name",max_length=30,widget=forms.TextInput(attrs={"class":"form-control"}),required=True)
+   details= forms.CharField(widget=forms.Textarea(attrs={"rows":2, "cols":57}))
+   unit_cost_price = forms.DecimalField(initial=0,label='Unit Cost Price', label_suffix=" : ",
+                              widget=forms.NumberInput(attrs={'class': 'form-control'}),
+                              decimal_places=2, required=True, 
+                              disabled = False)
+   status_list=[]
+   try:
+      statuses = MembershipStatus.objects.all()                 
+      for status in statuses:
+         small_status=(status.id,status.title)
+         status_list.append(small_status)
+   except:
+      status_list=[]
+   status = forms.ChoiceField(label="Status", choices=status_list,widget=forms.Select(attrs={"class":"form-control"}))
+
+
+
+class Commodity_Products_Price_Update_Form(forms.Form):
    product_name=forms.CharField(label="Product Name",max_length=30,widget=forms.TextInput(attrs={"class":"form-control",'readonly':'readonly'}),required=True)
    product_model=forms.CharField(label="Product Name",max_length=30,widget=forms.TextInput(attrs={"class":"form-control",'readonly':'readonly'}),required=True)
-   details= forms.CharField(widget=forms.Textarea(attrs={'readonly':'readonly',"rows":2, "cols":57}))
+   details= forms.CharField(widget=forms.Textarea(attrs={"rows":2, "cols":57,'readonly':'readonly'}))
    unit_cost_price = forms.DecimalField(initial=0,label='Unit Cost Price', label_suffix=" : ",
                               widget=forms.NumberInput(attrs={'class': 'form-control'}),
                               decimal_places=2, required=True, 
@@ -3439,3 +3452,247 @@ class ProformaInvoicedCommodityLoan_details_payslip_analysis_form(forms.Form):
                               widget=forms.NumberInput(attrs={'class': 'form-control'}),
                               decimal_places=2, required=True, 
                               disabled = False)
+
+
+
+class Shop_Tasks_form(forms.Form):
+   
+   # class Meta:
+   #    model = Shop_Tasks_Models
+   #    exclude=['user',]
+
+   #    # widgets = {
+   #    # 'title': forms.TextInput(attrs={'class':'form-control','placeholder':"Enter Title"})
+   #    # }
+
+   CHOICES =(
+    ("False", "NO"),
+    ("True", "YES"),
+   )
+   sales= forms.ChoiceField(label="Sales", choices=CHOICES,widget=forms.Select(attrs={"class":"form-control"}))
+   debt_recovery=forms.ChoiceField(label="Debt Recovery", choices=CHOICES,widget=forms.Select(attrs={"class":"form-control"}))
+   purchases=forms.ChoiceField(label="Purchases", choices=CHOICES,widget=forms.Select(attrs={"class":"form-control"}))
+   item_write_off=forms.ChoiceField(label="Item Write Off", choices=CHOICES,widget=forms.Select(attrs={"class":"form-control"}))
+   personal_ledger=forms.ChoiceField(label="Personal Ledger", choices=CHOICES,widget=forms.Select(attrs={"class":"form-control"}))
+   general_report=forms.ChoiceField(label="General Report", choices=CHOICES,widget=forms.Select(attrs={"class":"form-control"}))
+   day_end_transaction=forms.ChoiceField(label="Day End Transaction", choices=CHOICES,widget=forms.Select(attrs={"class":"form-control"}))
+   monthly_deduction=forms.ChoiceField(label="Monthly Deduction", choices=CHOICES,widget=forms.Select(attrs={"class":"form-control"}))
+   product_manager=forms.ChoiceField(label="Product Manager", choices=CHOICES,widget=forms.Select(attrs={"class":"form-control"}))
+   suppliers_manager=forms.ChoiceField(label="Suppliers Manager", choices=CHOICES,widget=forms.Select(attrs={"class":"form-control"}))
+
+
+class Executive_Tasks_Model_form(forms.Form):
+   CHOICES =(
+   ("0", "NO"),
+   ("1", "YES"),
+   )
+   user_manager=forms.ChoiceField(label="User Manager", choices=CHOICES,widget=forms.Select(attrs={"class":"form-control"}))
+   commodity_loan_products=forms.ChoiceField(label="Commodity Loan Products", choices=CHOICES,widget=forms.Select(attrs={"class":"form-control"}))
+   loan_criteria_settings=forms.ChoiceField(label="Loan Criteria Settings", choices=CHOICES,widget=forms.Select(attrs={"class":"form-control"}))
+   service_charges=forms.ChoiceField(label="Service Charges", choices=CHOICES,widget=forms.Select(attrs={"class":"form-control"}))
+   utilities=forms.ChoiceField(label="Utilities", choices=CHOICES,widget=forms.Select(attrs={"class":"form-control"}))
+   invoice_management=forms.ChoiceField(label="Invoice Management", choices=CHOICES,widget=forms.Select(attrs={"class":"form-control"}))
+   components=forms.ChoiceField(label="Components", choices=CHOICES,widget=forms.Select(attrs={"class":"form-control"}))
+   data_imports=forms.ChoiceField(label="Imports", choices=CHOICES,widget=forms.Select(attrs={"class":"form-control"}))
+   membership_approval=forms.ChoiceField(label="Membership Approval", choices=CHOICES,widget=forms.Select(attrs={"class":"form-control"}))
+   loan_request_approval=forms.ChoiceField(label="Loan Request Approval", choices=CHOICES,widget=forms.Select(attrs={"class":"form-control"}))
+   loan_application_certification=forms.ChoiceField(label="Loan Application Certification", choices=CHOICES,widget=forms.Select(attrs={"class":"form-control"}))
+   loan_application_approval=forms.ChoiceField(label="Loan Application Approval", choices=CHOICES,widget=forms.Select(attrs={"class":"form-control"}))
+   membership_exclusiveness_approval=forms.ChoiceField(label="Membership Exclusiveness Approval", choices=CHOICES,widget=forms.Select(attrs={"class":"form-control"}))
+   commodity_loan_approval=forms.ChoiceField(label="Commodity Loan Approval", choices=CHOICES,widget=forms.Select(attrs={"class":"form-control"}))
+   share_purchase_approval=forms.ChoiceField(label="Share Purchase Request", choices=CHOICES,widget=forms.Select(attrs={"class":"form-control"}))
+   commodity_loan_certification=forms.ChoiceField(label="Commodity Loan Certication", choices=CHOICES,widget=forms.Select(attrs={"class":"form-control"}))
+   cash_withdrawal_certification=forms.ChoiceField(label="Cash Withdrawal Certication", choices=CHOICES,widget=forms.Select(attrs={"class":"form-control"}))
+   cash_withdrawal_approval=forms.ChoiceField(label="Cash Withdrawal Approval", choices=CHOICES,widget=forms.Select(attrs={"class":"form-control"}))
+   system_admin=forms.ChoiceField(label="System Admin", choices=CHOICES,widget=forms.Select(attrs={"class":"form-control"}))
+
+
+class Desk_Office_Tasks_form(forms.Form):
+   CHOICES =(
+   ("False", "NO"),
+   ("True", "YES"),
+   )
+   general_report=forms.ChoiceField(label="General Reportr", choices=CHOICES,widget=forms.Select(attrs={"class":"form-control"}))
+   day_end_transaction=forms.ChoiceField(label="Day End Transaction", choices=CHOICES,widget=forms.Select(attrs={"class":"form-control"}))
+   bank_accounts=forms.ChoiceField(label="Bank Accounts", choices=CHOICES,widget=forms.Select(attrs={"class":"form-control"}))
+   monthly_deductions=forms.ChoiceField(label="Monthly Deductions", choices=CHOICES,widget=forms.Select(attrs={"class":"form-control"}))
+   external_fascilities=forms.ChoiceField(label="External Fascilities", choices=CHOICES,widget=forms.Select(attrs={"class":"form-control"}))
+   loan_management=forms.ChoiceField(label="Loan Management", choices=CHOICES,widget=forms.Select(attrs={"class":"form-control"}))
+   exclusiveness_request=forms.ChoiceField(label="Exclusiveness Request", choices=CHOICES,widget=forms.Select(attrs={"class":"form-control"}))
+   salary_update=forms.ChoiceField(label="Salary Update", choices=CHOICES,widget=forms.Select(attrs={"class":"form-control"}))
+   next_of_kin=forms.ChoiceField(label="Next of Kin", choices=CHOICES,widget=forms.Select(attrs={"class":"form-control"}))
+   share_management=forms.ChoiceField(label="Share Management", choices=CHOICES,widget=forms.Select(attrs={"class":"form-control"}))
+   cash_withdrawal=forms.ChoiceField(label="Cash Withdrawal", choices=CHOICES,widget=forms.Select(attrs={"class":"form-control"}))
+   cash_deposit=forms.ChoiceField(label="Cash Deposit", choices=CHOICES,widget=forms.Select(attrs={"class":"form-control"}))
+   transaction_adjustment=forms.ChoiceField(label="Transaction Adjustment", choices=CHOICES,widget=forms.Select(attrs={"class":"form-control"}))
+   standing_order_placement=forms.ChoiceField(label="Standing Order Placement", choices=CHOICES,widget=forms.Select(attrs={"class":"form-control"}))
+   membership_registration=forms.ChoiceField(label="Membership Registration", choices=CHOICES,widget=forms.Select(attrs={"class":"form-control"}))
+   data_capture=forms.ChoiceField(label="Data Capture", choices=CHOICES,widget=forms.Select(attrs={"class":"form-control"}))
+   personnel_info=forms.ChoiceField(label="Personnel Info", choices=CHOICES,widget=forms.Select(attrs={"class":"form-control"}))
+   termination=forms.ChoiceField(label="Termination", choices=CHOICES,widget=forms.Select(attrs={"class":"form-control"}))
+   shop_credit_sales=forms.ChoiceField(label="Shop Credit Sales", choices=CHOICES,widget=forms.Select(attrs={"class":"form-control"}))
+   salary_update_approval=forms.ChoiceField(label="Salary Update Approval", choices=CHOICES,widget=forms.Select(attrs={"class":"form-control"}))
+   external_fascilities_approval=forms.ChoiceField(label="External Fascilities Approval", choices=CHOICES,widget=forms.Select(attrs={"class":"form-control"}))
+   exclusiveness_approval=forms.ChoiceField(label="Exclusiveness Approval", choices=CHOICES,widget=forms.Select(attrs={"class":"form-control"}))
+   essential_commodity=forms.ChoiceField(label="Essential Commodity", choices=CHOICES,widget=forms.Select(attrs={"class":"form-control"}))
+   share_update_approval=forms.ChoiceField(label="Share Update Approval", choices=CHOICES,widget=forms.Select(attrs={"class":"form-control"}))
+   transaction_adjustment_approval=forms.ChoiceField(label="Transaction Adjustment Approval", choices=CHOICES,widget=forms.Select(attrs={"class":"form-control"}))
+
+
+class loan_category_settings_form(forms.Form):
+   try:
+      loan_list=[]
+
+      loans=TransactionTypes.objects.filter(source__title="LOAN")  
+     
+
+      for loan in loans:
+         small_loan=(loan.id,loan.name)
+         loan_list.append(small_loan)
+   except:
+      loan_list=[]
+
+   loan = forms.ChoiceField(label="Loans", choices=loan_list,widget=forms.Select(attrs={"class":"form-control"}))
+   
+   try:
+      category_list=[]
+
+      categories=LoanCategory.objects.all()  
+     
+
+      for category in categories:
+         small_category=(category.id,category.title)
+         category_list.append(small_category)
+   except:
+      category_list=[]
+
+   category = forms.ChoiceField(label="categorys", choices=category_list,widget=forms.Select(attrs={"class":"form-control"}))
+
+
+class Commodity_Transaction_Period_form(forms.Form):
+   period=forms.CharField(label="Period",max_length=255,widget=forms.TextInput(attrs={"class":"form-control"}),required=True)
+
+
+class Commodity_Transaction_Period_Batch_form(forms.Form):
+   batch=forms.CharField(label="Batch",max_length=255,widget=forms.TextInput(attrs={"class":"form-control"}),required=True)
+
+
+class Product_Linking_Period_Load_form(forms.Form):
+   try:
+      transaction_list=[]
+
+      transactions=TransactionTypes.objects.filter(category__title="NON-MONETARY")  
+     
+
+      for transaction in transactions:
+         small_transaction=(transaction.id,transaction.name)
+         transaction_list.append(small_transaction)
+   except:
+      transaction_list=[]
+
+   transaction = forms.ChoiceField(label="Transactions", choices=transaction_list,widget=forms.Select(attrs={"class":"form-control"}))
+   
+
+   try:
+      period_list=[]
+
+      periods=Commodity_Period.objects.all()  
+     
+     
+      for period in periods:
+         small_period=(period.id,period.title)
+         period_list.append(small_period)
+   except:
+      period_list=[]
+
+   period = forms.ChoiceField(label="Periods", choices=period_list,widget=forms.Select(attrs={"class":"form-control"}))
+
+
+   try:
+      batch_list=[]
+
+      batches=Commodity_Period_Batch.objects.all()  
+     
+
+      for batch in batches:
+         small_batch=(batch.id,batch.title)
+         batch_list.append(small_batch)
+   except:
+      batch_list=[]
+
+   batch = forms.ChoiceField(label="Batches", choices=batch_list,widget=forms.Select(attrs={"class":"form-control"}))
+
+   
+
+
+class Product_Linking_Details_Preview_form(forms.Form):
+   
+   product_name=forms.CharField(label="Name",max_length=255,widget=forms.TextInput(attrs={"class":"form-control","readonly":"readonly"}),required=True)
+   product_model=forms.CharField(label="Model",max_length=255,widget=forms.TextInput(attrs={"class":"form-control","readonly":"readonly"}),required=True)
+   details=forms.CharField(label="detials",max_length=255,widget=forms.TextInput(attrs={"class":"form-control","readonly":"readonly"}),required=True)
+
+
+   amount = forms.DecimalField(initial=0,label='Amount', label_suffix=" : ",
+                              widget=forms.NumberInput(attrs={'class': 'form-control'}),
+                              decimal_places=2, required=True, 
+                              disabled = False)
+
+
+class membership_commodity_loan_Company_products_Criteria_Settings_form(forms.Form):
+   period = forms.DateField(label='Payment Period', label_suffix=" : ",
+                             required=True, disabled=False,
+                             widget=DateInput(attrs={'class': 'form-control'}),
+                             error_messages={'required': "This field is required."})
+
+   gross_pay = forms.DecimalField(initial=0,label='Gross Pay', label_suffix=" : ",
+                              widget=forms.NumberInput(attrs={'class': 'form-control','readonly':'readonly'}),
+                              decimal_places=2, required=True, 
+                              disabled = False)
+
+   net_pay = forms.DecimalField(initial=0,label='Net Pay', label_suffix=" : ",
+                              widget=forms.NumberInput(attrs={'class': 'form-control'}),
+                              decimal_places=2, required=True, 
+                              disabled = False)
+
+
+class Transaction_Salary_adjustment_Request_Process_form(forms.Form):
+   CHOICES =(
+    ("False", "NO"),
+    ("True", "YES"),
+   )
+   update_payslip=forms.ChoiceField(label="Update Payslip", choices=CHOICES,widget=forms.Select(attrs={"class":"form-control"}))
+
+   image=forms.FileField(label="Payslip Evidience", widget=forms.FileInput(attrs={"class":"form-control"}),required=False)
+   period = forms.DateField(label='Payment Period', label_suffix=" : ",
+                             required=True, disabled=False,
+                             widget=DateInput(attrs={'class': 'form-control'}),
+                             error_messages={'required': "This field is required."})
+
+   existing_gross_pay = forms.DecimalField(initial=0,label='Existing Gross Pay', label_suffix=" : ",
+                              widget=forms.NumberInput(attrs={'class': 'form-control','readonly':'readonly'}),
+                              decimal_places=2, required=True, 
+                              disabled = False)
+
+   current_gross_pay = forms.DecimalField(initial=0,label='Current Gross Pay', label_suffix=" : ",
+                              widget=forms.NumberInput(attrs={'class': 'form-control'}),
+                              decimal_places=2, required=True, 
+                              disabled = False)
+
+
+class Transaction_Salary_adjustment_Request_Approval_Process_form(forms.Form):
+
+   comment= forms.CharField(widget=forms.Textarea(attrs={"rows":5, "cols":50}))
+
+   approval_status_list=[]
+   try:
+      approval_statuss = ApprovalStatus.objects.all()  
+                                
+      for approval_status in approval_statuss:
+         small_approval_status=(approval_status.id,approval_status.title)
+         approval_status_list.append(small_approval_status)
+   except:
+      approval_status_list=[]
+
+   approval_status = forms.ChoiceField(label="Approval Status", choices=approval_status_list,widget=forms.Select(attrs={"class":"form-control"}))
+
+

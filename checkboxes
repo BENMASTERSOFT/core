@@ -1,0 +1,17 @@
+id_list = list_of_ids_from_checkboxes
+MyModel.objects.filter(id__in=id_list).update(myattribute=True)
+
+Your display HTML is missing a name value for the checkboxes. If you just have a single name across all checkboxes, then the list of IDs will be passed into a single POST variable, which you can get straight from request.POST (assuming you're submitting your form as a post, which you should be):
+
+id_list = request.POST.getlist('checkboxname')
+
+
+
+
+LoanRequestAttachments
+
+
+
+
+
+

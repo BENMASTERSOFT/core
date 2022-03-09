@@ -4,7 +4,7 @@
 {% block content %}
             <div class="page-content fade-in-up">
                 <div class="row">
-                   <div class="col-md-6">
+                   <div class="col-md-8">
                         <div class="ibox">
                             <div class="ibox-head">
                                 <div class="ibox-title">UPDATE | {{record.title}} |  <input type="button" class="btn btn-secondary" value="Back" onclick="history.back()"/>
@@ -15,15 +15,74 @@
                                 <form class="form-horizontal" action="" method="POST">
                                     {% csrf_token %}
                                     <div class="form-group row">
-                                        <label class="col-sm-2 col-form-label">Title</label>
-                                        <div class="col-sm-10">
+                                        <label class="col-sm-4 col-form-label">Title</label>
+                                        <div class="col-sm-8">
                                             {{form.title}}
                                         </div>
                                     </div>
+
+                                  
+                                   <div class="form-group row">
+                                        <label class="col-sm-4 col-form-label">Duration</label>
+                                        <div class="col-sm-8">
+                                            {{form.duration}}
+                                        </div>
+                                    </div>
+                                {% if record.interest_rate_required == '1' %}
+                                    
+                                   <div class="form-group row">
+                                        <label class="col-sm-4 col-form-label">Interest Rate</label>
+                                        <div class="col-sm-8">
+                                            {{form.interest_rate}}
+                                        </div>
+                                    </div>
+                                {% endif %}
+                            {% if record.admin_charges_required == '1' %}
+                                   <div class="form-group row">
+                                        <label class="col-sm-4 col-form-label">Admin Charge Rating</label>
+                                        <div class="col-sm-8">
+                                            {{form.admin_charges_rating}}
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-sm-4 col-form-label">Admin Charge</label>
+                                        <div class="col-sm-8">
+                                            {{form.admin_charges}}
+                                        </div>
+                                    </div>
+                                  
+                                {% endif %}
+                                 {% if record.guarantor_required == '1' %}
+                                    <div class="form-group row">
+                                        <label class="col-sm-4 col-form-label">Guarantor</label>
+                                        <div class="col-sm-8">
+                                            {{form.guarantors}}
+                                        </div>
+                                    </div>
+                                {% endif %}
+                                    <div class="form-group row">
+                                        <label class="col-sm-4 col-form-label">Price Status</label>
+                                        <div class="col-sm-8">
+                                            {{form.price_status}}
+                                        </div>
+                                    </div>  
+                                    <div class="form-group row">
+                                        <label class="col-sm-4 col-form-label">Loan Age</label>
+                                        <div class="col-sm-8">
+                                            {{form.loan_age}}
+                                        </div>
+                                    </div>
+                                     <div class="form-group row">
+                                        <label class="col-sm-4 col-form-label">Receipt Type</label>
+                                        <div class="col-sm-8">
+                                            {{form.receipt_type}}
+                                        </div>
+                                    </div>  
+                                
                                    
                                     
                                     <div class="form-group row">
-                                        <div class="col-sm-10 ml-sm-auto">
+                                        <div class="col-sm-8 ml-sm-auto">
                                             <button class="btn btn-info" type="submit">Submit</button>
                                         </div>
                                     </div>

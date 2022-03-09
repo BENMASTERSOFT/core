@@ -7,7 +7,10 @@
 {% block content %}
 
       
-            <div class="page-content fade-in-up">
+    <div class="page-content fade-in-up">
+        <div class="row">
+                   
+            <div class="col-xl-8">
                 <div class="ibox">
                     <div class="ibox-head">
                         <div class="ibox-title">LIST OF MEMBERS FOR LOAN REQUEST |  <input type="button" class="btn btn-primary" value="Back" onclick="history.back()"/></div>
@@ -18,10 +21,7 @@
                                 <tr>
                                     <th>#</th>
                                     <th>Member ID</th>
-                                    <th>First Name</th>
-                                    <th>Last Name</th>
-                                    <th>Middle Name</th>
-                                    <th>Phone Number</th>
+                                    <th>Name</th>
                                     <th>Department</th>
                                     <th>Action</th>
                                 </tr>
@@ -30,10 +30,7 @@
                                 <tr>
                                     <th>#</th>
                                     <th>Member ID</th>
-                                    <th>First Name</th>
-                                    <th>Last Name</th>
-                                    <th>Middle Name</th>
-                                    <th>Phone Number</th>
+                                    <th>Name</th>
                                     <th>Department</th>
                                     <th>Action</th>
                                 </tr>
@@ -43,13 +40,11 @@
                                 <tr>
                                     <td>{{forloop.counter}}</td>
                                     <td>{{member.get_member_Id}}</td>
-                                    <td>{{member.admin.first_name}}</td>
-                                    <td>{{member.admin.last_name}}</td>
-                                    <td>{{member.get_middle_name}}</td>
-                                    <td>{{member.phone_number}}</td>
+                                    <td>{{member.get_full_name}}</td>
+                                    
                                     <td>{{member.department.title}}</td>
                                     <td>
-                                        <a href="{% url 'loan_request_order' member.pk %}"> Request </a> 
+                                        <a href="{% url 'loan_request_order' member.pk %}" class="btn btn-primary"> Request </a> 
 
                                        
                                     </td>
@@ -64,7 +59,8 @@
                 </div>
                
             </div>
-  
+        </div>
+    </div>
     
     <!-- BEGIN PAGA BACKDROPS-->
     <div class="sidenav-backdrop backdrop"></div>

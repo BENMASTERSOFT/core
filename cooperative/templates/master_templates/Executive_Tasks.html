@@ -1,0 +1,158 @@
+{% extends 'master_templates/base_template.html' %}
+{% load static %}
+
+{% block content %}
+            <div class="page-content fade-in-up">
+                <div class="row">
+                  
+                    <div class="col-md-6">
+                        <div class="ibox">
+                            <div class="ibox-head">
+                                <div class="ibox-title">Executive Users
+
+                                    {% if record %}
+                                    | {{record.user.username}}
+                                    {% endif %}
+                                </div>
+                                
+                            </div>
+                            <div class="ibox-body">
+                                 <form class="form-horizontal" method="POST" action="" enctype="multipart/form-data" novalidate>
+                                    {% csrf_token %}
+                                    <div class="form-group row">
+                                        <label class="col-sm-6 col-form-label">User Manager</label>
+                                        <div class="col-sm-3">
+                                            {{form.user_manager}}
+                                        </div>
+                                    </div>  
+                                    <div class="form-group row">
+                                        <label class="col-sm-6 col-form-label">Commodity Loan Products</label>
+                                        <div class="col-sm-3">
+                                            {{form.commodity_loan_products}}
+                                        </div>
+                                    </div>                 
+                                    <div class="form-group row">
+                                        <label class="col-sm-6 col-form-label">Loan Criteria Settings</label>
+                                        <div class="col-sm-3">
+                                            {{form.loan_criteria_settings}}
+                                        </div>
+                                    </div>     
+                                    <div class="form-group row">
+                                        <label class="col-sm-6 col-form-label">Service Charges</label>
+                                        <div class="col-sm-3">
+                                            {{form.service_charges}}
+                                        </div>
+                                    </div>     
+                                    <div class="form-group row">
+                                        <label class="col-sm-6 col-form-label">Utilities</label>
+                                        <div class="col-sm-3">
+                                            {{form.utilities}}
+                                        </div>
+                                    </div>   
+                                    <div class="form-group row">
+                                        <label class="col-sm-6 col-form-label">Invoice Management</label>
+                                        <div class="col-sm-3">
+                                            {{form.invoice_management}}
+                                        </div>
+                                    </div>    
+                                    <div class="form-group row">
+                                        <label class="col-sm-6 col-form-label">Components</label>
+                                        <div class="col-sm-3">
+                                            {{form.components}}
+                                        </div>
+                                    </div>     
+                                    <div class="form-group row">
+                                        <label class="col-sm-6 col-form-label">Data Imports</label>
+                                        <div class="col-sm-3">
+                                            {{form.data_imports}}
+                                        </div>
+                                    </div>      
+                                    <div class="form-group row">
+                                        <label class="col-sm-6 col-form-label">Membership Approval</label>
+                                        <div class="col-sm-3">
+                                            {{form.membership_approval}}
+                                        </div>
+                                    </div>  
+                                    <div class="form-group row">
+                                        <label class="col-sm-6 col-form-label">Loan Request Approval</label>
+                                        <div class="col-sm-3">
+                                            {{form.loan_request_approval}}
+                                        </div>
+                                    </div>  
+                                        <div class="form-group row">
+                                        <label class="col-sm-6 col-form-label">Loan Application Certification</label>
+                                        <div class="col-sm-3">
+                                            {{form.loan_application_certification}}
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-sm-6 col-form-label">Loan Application Approval</label>
+                                        <div class="col-sm-3">
+                                            {{form.loan_application_approval}}
+                                        </div>
+                                    </div>
+                                
+                                    <div class="form-group row">
+                                        <label class="col-sm-6 col-form-label">Cash Withdrawal Certification</label>
+                                        <div class="col-sm-3">
+                                            {{form.cash_withdrawal_certification}}
+                                        </div>
+                                    </div>   
+                                    <div class="form-group row">
+                                        <label class="col-sm-6 col-form-label">Cash Withdrawal Approval</label>
+                                        <div class="col-sm-3">
+                                            {{form.cash_withdrawal_approval}}
+                                        </div>
+                                    </div> 
+                                    <div class="form-group row">
+                                        <label class="col-sm-6 col-form-label">Membership Exclusiveness Approval</label>
+                                        <div class="col-sm-3">
+                                            {{form.membership_exclusiveness_approval}}
+                                        </div>
+                                    </div>    
+                                        <div class="form-group row">
+                                        <label class="col-sm-6 col-form-label">Share Purchase Approval</label>
+                                        <div class="col-sm-3">
+                                            {{form.share_purchase_approval}}
+                                        </div>
+                                    </div>
+                                     <div class="form-group row">
+                                        <label class="col-sm-6 col-form-label">Commodity Loan Certification</label>
+                                        <div class="col-sm-3">
+                                            {{form.commodity_loan_certification}}
+                                        </div>
+                                    </div>                  
+                                    <div class="form-group row">
+                                        <label class="col-sm-6 col-form-label">Commodity Loan Approvals</label>
+                                        <div class="col-sm-3">
+                                            {{form.commodity_loan_approval}}
+                                        </div>
+                                    </div>
+                                    
+                                   
+                                     <div class="form-group row">
+                                        <label class="col-sm-6 col-form-label">System Admin</label>
+                                        <div class="col-sm-3">
+                                            {{form.system_admin}}
+                                        </div>
+                                    </div>                                    
+                                    <div class="form-group row">
+                                        <div class="col-sm-6 ml-sm-auto">
+                                            <button class="btn btn-info" type="submit">Submit</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+      
+
+
+    <div class="sidenav-backdrop backdrop"></div>
+    <div class="preloader-backdrop">
+        <div class="page-preloader">Loading</div>
+    </div>
+{% endblock %}

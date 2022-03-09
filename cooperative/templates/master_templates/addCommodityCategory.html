@@ -32,21 +32,27 @@
                                  <form class="form-horizontal" method="POST" action="" enctype="multipart/form-data" novalidate>
                                     {% csrf_token %}
                                     <div class="form-group row">
-                                        <label class="col-sm-2 col-form-label">Transactions</label>
-                                        <div class="col-sm-10">
+                                        <label class="col-sm-4 col-form-label">Transactions</label>
+                                        <div class="col-sm-8">
                                             {{form.transactions}}
                                         </div>
                                     </div>
                                     <div class="form-group row">
-                                        <label class="col-sm-2 col-form-label">Title</label>
-                                        <div class="col-sm-10">
+                                        <label class="col-sm-4 col-form-label">Title</label>
+                                        <div class="col-sm-8">
                                             {{form.title}}
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-sm-4 col-form-label">Price Status</label>
+                                        <div class="col-sm-8">
+                                            {{form.price_status}}
                                         </div>
                                     </div>
                                     
                                     
                                     <div class="form-group row">
-                                        <div class="col-sm-10 ml-sm-auto">
+                                        <div class="col-sm-8 ml-sm-auto">
                                             <button class="btn btn-info" type="submit">Submit</button>
                                         </div>
                                     </div>
@@ -56,6 +62,51 @@
                     </div>
                 </div>
 
+                  <div class="row">
+                    
+
+                      <div class="col-xl-10">
+                        <div class="ibox">
+                            <div class="ibox-head">
+                                <div class="ibox-title">LIST OF COMMODITY CATEGORY |  <input type="button" class="btn btn-secondary" value="Back" onclick="history.back()"/>
+                            </div>
+                            </div>
+                            <div class="ibox-body">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Title</th>
+                                            <th>Transaction Type</th>
+                                            <th>Price Status</th>
+                                            <th>Action</th>
+                                      
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for record in records %}
+                                        <tr>
+                                            <td>{{forloop.counter}}</td>
+                                            <td>{{record.title}}</td>
+                                            <td>{{record.transaction.name}}</td>
+                                            {% if record.price_status == '1' %}
+                                                <td>UNFIXED</td>
+                                            {% elif record.price_status == '0' %}
+                                                <td>FIXED</td>
+                                            {% endif %}
+                                            <td>
+                                                <a href="{% url 'Manage_Commodity_Categories_Update' record.pk %}" class="btn btn-success">Update</a> 
+                                                <a href="{% url 'Manage_Commodity_Categories_Delete' record.pk %}" class="btn btn-danger">Remove</a> 
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
     <div class="sidenav-backdrop backdrop"></div>
     <div class="preloader-backdrop">
         <div class="page-preloader">Loading</div>

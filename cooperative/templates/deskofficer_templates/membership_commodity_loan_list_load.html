@@ -7,7 +7,10 @@
 {% block content %}
 
       
-            <div class="page-content fade-in-up">
+    <div class="page-content fade-in-up">
+       <div class="row">
+    
+            <div class="col-xl-8">
                 <div class="ibox">
                     <div class="ibox-head">
                         <div class="ibox-title">Members For Commodity Loans |  <input type="button" class="btn btn-secondary" value="Back" onclick="history.back()"/></div>
@@ -19,9 +22,7 @@
                                     <th>#</th>
                                     <th>Member ID</th>
                                     <th>Name</th>
-                                    <th>Department</th>
                                     <th>Date Joined</th>
-                                    <th>Phone No</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
@@ -30,9 +31,7 @@
                                     <th>#</th>
                                     <th>Member ID</th>
                                     <th>Name</th>
-                                    <th>Department</th>
                                     <th>Date Joined</th>
-                                    <th>Phone No</th>
                                     <th>Action</th>
                                 </tr>
                             </tfoot>
@@ -43,11 +42,9 @@
                                     
                                     <td>{{member.get_member_Id}}</td>
                                     <td>{{member.get_full_name}}</td>
-                                    <td>{{member.department.title}}</td>
                                     <td>{{member.date_joined}}</td>
-                                    <td>{{member.Phone_number}}</td>
             
-                                    <td><a href="{% url 'membership_commodity_loan_Company_load' member.pk %}" class="btn btn-primary">Proceed</a></td>
+                                    <td><a href="{% url 'membership_commodity_loan_Period_Transactions_load' member.pk %}" class="btn btn-primary">Proceed</a></td>
                                 </tr>
                             {% endfor %}
                                
@@ -59,6 +56,8 @@
                
             </div>
   
+        </div>
+    </div>
     
     <!-- BEGIN PAGA BACKDROPS-->
     <div class="sidenav-backdrop backdrop"></div>

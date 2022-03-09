@@ -47,7 +47,12 @@
                                     <td>{{member.approval_comment}}</td>
                                     <td>{{member.approved_at}}</td>
             
-                                    <td><a href="{% url 'members_exclusiveness_approved_processed' member.pk %}" class="btn btn-primary">Proceed</a></td>
+                                    <td>
+                                        {% if member.approval_status.title == "APPROVED" %}
+                                        <a href="{% url 'members_exclusiveness_approved_processed' member.pk %}" class="btn btn-primary">Proceed</a>
+                                        {% endif %}
+
+                                    </td>
                                 </tr>
                             {% endfor %}
                                

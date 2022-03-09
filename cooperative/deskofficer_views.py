@@ -32,25 +32,28 @@ from .load_ticket import get_ticket
 
 
 def deskofficer_home(request):
+	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
 	DataCapture=DataCaptureManager.objects.first()
 	status=MembershipStatus.objects.get(title='ACTIVE')
 	member_count=Members.objects.filter(status=status).count()
-
+	
 	approval_status=ApprovalStatus.objects.get(title='APPROVED')
 	transaction_status=TransactionStatus.objects.get(title='UNTREATED')
 	applicants=MemberShipRequest.objects.filter(transaction_status=transaction_status,approval_status=approval_status).count()
 	
-	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
+	
 
 	title="System User"
-	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
+	
 
 	context={
-	'user_level':user_level.userlevel.title,
+	
 	'applicants':applicants,
 	'title':title,
 	'member_count':member_count,
+	'current_user':current_user,
 	'DataCapture':DataCapture,
+	'current_user':current_user,
 	}
 	return render(request, "deskofficer_templates/dashboard.html",context)
 
@@ -84,6 +87,7 @@ def check_receipt_no_already_used(request):
 ############### PROFILE MANAGER #########################
 #########################################################
 def Useraccount_manager(request):
+	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
 	DataCapture=DataCaptureManager.objects.first()
 	form=Useraccount_manager_form(request.POST or None)
 	user=CustomUser.objects.get(id=request.user.id)
@@ -112,11 +116,12 @@ def Useraccount_manager(request):
 
 
 	
-	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
+	
 
 	context={
-	'user_level':user_level.userlevel.title,
+	
 	'form':form,
+	'current_user':current_user,
 	'DataCapture':DataCapture,
 	}
 	return render(request,'deskofficer_templates/Useraccount_manager.html',context)
@@ -127,6 +132,7 @@ def Useraccount_manager(request):
 #########################################################
 
 def membership_request(request):
+	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
 	DataCapture=DataCaptureManager.objects.first()
 	form=MembershipRequest_form(request.POST or None)
 	if request.method=="POST":
@@ -137,8 +143,13 @@ def membership_request(request):
 		tdate=get_current_date(now)
 		
 		form=MembershipRequest_form(request.POST)
-		processed_by = CustomUser.objects.get(id=request.user.id)
-		
+		transaction_status=TransactionStatus.objects.get(title="UNTREATED")
+		# certification_status=CertificationStatus.objects.get(title='PENDING')
+		submission_status=SubmissionStatus.objects.get(title='PENDING')
+		approval_status=ApprovalStatus.objects.get(title='PENDING')
+		processed_by_obj = CustomUser.objects.get(id=request.user.id)
+		processed_by=processed_by_obj.username
+
 		title_id=request.POST.get("titles")
 		title=Titles.objects.get(id=title_id)
 
@@ -152,30 +163,36 @@ def membership_request(request):
 
 		department_id=request.POST.get("department")
 		department=Departments.objects.get(id=department_id)
-		record=MemberShipRequest(tdate=tdate,title=title,first_name=first_name,last_name=last_name,middle_name=middle_name,phone_number=phone_no,gender=gender,department=department,processed_by=processed_by)
+		record=MemberShipRequest(transaction_status=transaction_status,
+								submission_status=submission_status,
+								approval_status=approval_status,
+			tdate=tdate,title=title,first_name=first_name,last_name=last_name,middle_name=middle_name,phone_number=phone_no,gender=gender,department=department,processed_by=processed_by)
 		record.save()
 
 		
 		return HttpResponseRedirect(reverse('membership_request_additional_info',args=(record.pk,)))
-	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
+	
 
 	context={
-	'user_level':user_level.userlevel.title,
+	
 	'form':form,
+	'current_user':current_user,
 	'DataCapture':DataCapture,
 	}
 	return render(request, 'deskofficer_templates/membership_request.html',context)
 
 
 def membership_request_complete_search(request):
+	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
 	DataCapture=DataCaptureManager.objects.first()
 	title="Search Membership Request Completetion"
 	form = searchForm(request.POST or None)
-	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
-	return render(request,'deskofficer_templates/membership_request_complete_search.html',{'form':form,'title':title,'user_level':user_level.userlevel.title,})
+	
+	return render(request,'deskofficer_templates/membership_request_complete_search.html',{'form':form,'title':title,})
 
 
 def membership_request_complete_load(request):
+	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
 	DataCapture=DataCaptureManager.objects.first()
 	title="Complete Membership Request"
 	form = searchForm(request.POST)
@@ -188,43 +205,48 @@ def membership_request_complete_load(request):
 		# members=searchMemberShip(form['title'].value(),submission_status)
 		members=MemberShipRequest.objects.filter(Q(phone_number__icontains=form['title'].value()) | Q(first_name__icontains=form['title'].value()) | Q(last_name__icontains=form['title'].value()) | Q(middle_name__icontains=form['title'].value())).filter(submission_status=submission_status)
 	
-	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
+	
 
 	context={
-	'user_level':user_level.userlevel.title,
+	
 	'members':members,
 	'title':title,
+	'current_user':current_user,
 	'DataCapture':DataCapture,
 	}
 	return render(request,'deskofficer_templates/membership_request_complete_list_load.html',context)
 
 
 def membership_request_additional_info(request,pk):
+	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
 	DataCapture=DataCaptureManager.objects.first()
 	applicant=MemberShipRequest.objects.get(id=pk)
 	officer=CustomUser.objects.get(id=request.user.id)
 	
 	records=MemberShipRequestAdditionalInfo.objects.filter(officer=officer,applicant=applicant)
+	
 	attached_infos=MemberShipRequestAdditionalAttachment.objects.filter(officer=officer,applicant=applicant)
 	
 	comment_form =MemberShipRequestAdditionalInfo_form(request.POST or None)
 	attachment_form =MemberShipRequestAdditionalAttachment_form(request.POST or None)
 
-	if MemberShipRequestAdditionalInfo.objects.filter(officer=officer,applicant=applicant).exists():	
-		comment_form.fields['comment'].initial=records[0].comment
+	# if MemberShipRequestAdditionalInfo.objects.filter(officer=officer,applicant=applicant).exists():	
+	# 	comment_form.fields['comment'].initial=records[0].comment
 
-	if MemberShipRequestAdditionalAttachment.objects.filter(officer=officer,applicant=applicant).exists():	
-		attachment_form.fields['caption'].initial=attached_infos[0].caption
+	# if MemberShipRequestAdditionalAttachment.objects.filter(officer=officer,applicant=applicant).exists():	
+	# 	attachment_form.fields['caption'].initial=attached_infos[0].caption
 
-	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
+
+	
 
 	context={
-	'user_level':user_level.userlevel.title,
+	
 	'comment_form':comment_form,
 	'attachment_form':attachment_form,
 	'pk':pk,
 	'records':records,
 	'attached_infos':attached_infos,
+	'current_user':current_user,
 	'DataCapture':DataCapture,
 	}
 	return render(request,'deskofficer_templates/membership_request_additional_info.html',context)
@@ -235,12 +257,12 @@ def membership_request_additional_info_save(request,pk):
 	officer=CustomUser.objects.get(id=request.user.id)
 
 	comment = request.POST.get('comment')
-	if MemberShipRequestAdditionalInfo.objects.filter(officer=officer,applicant=applicant).exists():
-		record=MemberShipRequestAdditionalInfo.objects.filter(officer=officer,applicant=applicant).first()
-		record.comment=comment
-		record.save()
-		messages.success(request,"Record Updated Successfully")
-		return HttpResponseRedirect(reverse('membership_request_additional_info',args=(pk,)))
+	# if MemberShipRequestAdditionalInfo.objects.filter(officer=officer,applicant=applicant,comment=comment).exists():
+	# 	record=MemberShipRequestAdditionalInfo.objects.filter(officer=officer,applicant=applicant).first()
+	# 	record.comment=comment
+	# 	record.save()
+	# 	messages.success(request,"Record Updated Successfully")
+	# 	return HttpResponseRedirect(reverse('membership_request_additional_info',args=(pk,)))
 
 	record=MemberShipRequestAdditionalInfo(comment=comment,officer=officer,applicant=applicant)
 	record.save()
@@ -248,16 +270,40 @@ def membership_request_additional_info_save(request,pk):
 	return HttpResponseRedirect(reverse('membership_request_additional_info',args=(pk,)))
 
 
+def membership_request_additional_info_update(request,pk):
+	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
+	DataCapture=DataCaptureManager.objects.first()
+
+	form=MemberShipRequestAdditionalInfo_form(request.POST or None)
+	record=MemberShipRequestAdditionalInfo.objects.get(id=pk)
+	form.fields['comment'].initial=record.comment
+
+	if request.method == "POST":
+		comment=request.POST.get('comment')
+		record.comment=comment
+		record.save()
+		return HttpResponseRedirect(reverse('membership_request_additional_info',args=(record.applicant.pk,)))
+	context={
+	'form':form,
+	'record':record,
+	}
+	return render(request,'deskofficer_templates/membership_request_additional_info_update.html',context)
+
+
+
+
 def membership_request_additional_info_delete_confirm(request,pk,return_pk):
+	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
 	DataCapture=DataCaptureManager.objects.first()
 	comment=MemberShipRequestAdditionalInfo.objects.get(id=pk)
-	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
+	
 
 	context={
-	'user_level':user_level.userlevel.title,
+	
 	'comment':comment,
 	'pk':pk,
 	'return_pk':return_pk,
+	'current_user':current_user,
 	'DataCapture':DataCapture,
 	}
 	return render(request,'deskofficer_templates/membership_request_additional_info_delete_confirm.html',context)
@@ -273,6 +319,9 @@ def membership_request_additional_info_delete(request,pk,return_pk):
 
 
 def MemberShipRequestAdditionalAttachment_save(request,pk):
+	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
+	DataCapture=DataCaptureManager.objects.first()
+
 	applicant=MemberShipRequest.objects.get(id=pk)
 	officer=CustomUser.objects.get(id=request.user.id)
 
@@ -300,12 +349,15 @@ def MemberShipRequestAdditionalAttachment_save(request,pk):
 
 
 def MemberShipRequest_Delete_confirmation(request,pk):
+	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
+	DataCapture=DataCaptureManager.objects.first()
+
 	title="Delete Applicant"
 	applicant=MemberShipRequest.objects.get(id=pk)
-	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
+	
 
 	context={
-	'user_level':user_level.userlevel.title,
+	
 	'title':title,
 	'applicant':applicant,
 	}
@@ -319,40 +371,30 @@ def MemberShipRequest_Delete(request,pk):
 
 
 def MemberShipRequest_submit(request,pk):
+	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
 	DataCapture=DataCaptureManager.objects.first()
-	form=MemberShipRequest_submit_form(request.POST or None)
-	if request.method=="POST":
-		submission_status=SubmissionStatus.objects.get(title="SUBMITTED")
-		form=MemberShipRequest_submit_form(request.POST)
-		certification_officer_id=request.POST.get("certification_officers")
-		certification_officer=CertificationOfficers.objects.get(id=certification_officer_id)
-		record=MemberShipRequest.objects.get(id=pk)
-		record.certification_officer=certification_officer
-		record.submission_status=submission_status
-		
-		record.save()
-		messages.success(request,"Record Successfully Updated")
-		return HttpResponseRedirect(reverse('membership_request_complete_search'))
-
-	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
-
-	context={
-	'user_level':user_level.userlevel.title,
-	'form':form,
-	'DataCapture':DataCapture,
-	}
-	return render(request,'deskofficer_templates/MemberShipRequest_submit.html', context)
+	
+	submission_status=SubmissionStatus.objects.get(title="SUBMITTED")
+	record=MemberShipRequest.objects.get(id=pk)
+	record.submission_status=submission_status
+	record.save()
+	messages.success(request,"Record Successfully Updated")
+	return HttpResponseRedirect(reverse('deskofficer_home'))
 
 
 def membership_request_manage_search(request):
+	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
 	DataCapture=DataCaptureManager.objects.first()
 	title="Search Membership Request for Update"
 	form = searchForm(request.POST or None)
-	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
-	return render(request,'deskofficer_templates/membership_request_manage_search.html',{'form':form,'title':title,'user_level':user_level.userlevel.title,})
+	
+	return render(request,'deskofficer_templates/membership_request_manage_search.html',{'form':form,'title':title,'current_user':current_user,})
+
 
 def membership_request_manage_list_load(request):
 	DataCapture=DataCaptureManager.objects.first()
+	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
+	
 	title="Update Membership Request"
 	form = searchForm(request.POST)
 	if request.method == "POST":
@@ -363,126 +405,313 @@ def membership_request_manage_list_load(request):
 		certification_status=CertificationStatus.objects.get(title="PENDING")
 		
 		form = searchForm(request.POST)
-		members=MemberShipRequest.objects.filter(Q(phone_number__icontains=form['title'].value()) | Q(first_name__icontains=form['title'].value()) | Q(last_name__icontains=form['title'].value()) | Q(middle_name__icontains=form['title'].value())).filter(submission_status=submission_status,certification_status=certification_status)
-	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
+		members=MemberShipRequest.objects.filter(Q(phone_number__icontains=form['title'].value()) | Q(first_name__icontains=form['title'].value()) | Q(last_name__icontains=form['title'].value()) | Q(middle_name__icontains=form['title'].value())).filter(submission_status=submission_status)
+		if not members:
+			messages.error(request,'No Record Found')
+			return HttpResponseRedirect(reverse('membership_request_manage_search'))
 
 	context={
-	'user_level':user_level.userlevel.title,
+	
 	'members':members,
 	'title':title,
+	'current_user':current_user,
 	'DataCapture':DataCapture,
 	}
 	return render(request,'deskofficer_templates/membership_request_manage_list_load.html',context)
 
 
-def membership_request_manage_list_update(request,pk):
-	form_request=MembershipRequest_form(request.POST or None) 
-	form_submit=MemberShipRequest_submit_form(request.POST or None)
-	applicant=MemberShipRequest.objects.get(id=pk)
-
-	form_request.fields['titles'].initial=applicant.title.id
-	form_request.fields['last_name'].initial=applicant.last_name
-	form_request.fields['first_name'].initial=applicant.first_name
-	form_request.fields['middle_name'].initial=applicant.middle_name
-	form_request.fields['phone_no'].initial=applicant.phone_number
-	form_request.fields['gender'].initial=applicant.gender.id
-	form_request.fields['department'].initial=applicant.department.id
-	form_submit.fields['certification_officers'].initial=applicant.certification_officer.id
+def membership_request_manage_details(request,pk):
+	DataCapture=DataCaptureManager.objects.first()
+	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
 	
-	if request.method == 'POST':	
-		
-		processed_by = CustomUser.objects.get(id=request.user.id)
-		
+	
+	form=MembershipRequest_form(request.POST or None)
+	record=MemberShipRequest.objects.get(id=pk)
+	
+	attachment=MemberShipRequestAdditionalAttachment.objects.filter(applicant_id=pk)
+	comment=MemberShipRequestAdditionalInfo.objects.filter(applicant_id=pk)
+	form.fields['titles'].initial=record.title.id
+	form.fields['first_name'].initial=record.first_name
+	form.fields['last_name'].initial=record.last_name
+	form.fields['middle_name'].initial=record.middle_name
+	form.fields['phone_no'].initial=record.phone_number
+	form.fields['gender'].initial=record.gender.id
+	form.fields['department'].initial=record.department.id
+
+	if request.method == "POST":
 		title_id=request.POST.get("titles")
 		title=Titles.objects.get(id=title_id)
 
 		first_name=request.POST.get("first_name").upper()
 		last_name=request.POST.get("last_name").upper()
 		middle_name=request.POST.get("middle_name").upper()
-		phone_no=request.POST.get("phone_no")
+		phone_number=request.POST.get("phone_no")
 
 		gender_id=request.POST.get("gender")
 		gender=Gender.objects.get(id=gender_id)
 
 		department_id=request.POST.get("department")
-		department=Departments.objects.get(id=department_id)		
+		department=Departments.objects.get(id=department_id)
+		record.title=title
+		record.first_name=first_name
+		record.last_name=last_name
+		record.middle_name=middle_name
+		record.phone_number=phone_number
+		record.gender=gender
+		record.department=department
+		record.save()
+		messages.success(request,'Personnel Record Updated Successfully')
+		return HttpResponseRedirect(reverse('membership_request_manage_details',args=(pk,)))
+	context={
+	'form':form,
+	'attachment':attachment,
+	'comment':comment,
+	'record':record,
+	
+	'current_user':current_user,
+	'DataCapture':DataCapture,
+	}
+	return render(request,'deskofficer_templates/membership_request_manage_details.html',context)
 
-		certification_officer_id=request.POST.get("certification_officers")
-		certification_officer=CertificationOfficers.objects.get(id=certification_officer_id)
+
+def membership_request_manage_details_edit_comment(request,pk):
+	DataCapture=DataCaptureManager.objects.first()
+	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
+	
+	
+	form=MemberShipRequestAdditionalInfo_form(request.POST or None)
+	record=MemberShipRequestAdditionalInfo.objects.get(id=pk)
+	title='Update Comment'
+	button_text="Update"
+	form.fields['comment'].initial=record.comment
+	if request.method == 'POST':
+		comment=request.POST.get('comment')
+		record.comment=comment
+		record.save()
+		messages.success(request,'Comment Updated Successfully')
+		return HttpResponseRedirect(reverse('membership_request_manage_details',args=(record.applicant_id,)))
+	context={
+	'form':form,
+	'record':record,
+	'title':title,
+	'button_text':button_text,
+	
+	'current_user':current_user,
+	'DataCapture':DataCapture,
+	}
+	return render(request,'deskofficer_templates/membership_request_manage_details_edit_comment.html',context)
+
+
+
+def membership_request_manage_details_delete_comment(request,pk):
+	record=MemberShipRequestAdditionalInfo.objects.get(id=pk)
+	return_pk=record.applicant_id
+	record.delete()
+	messages.info(request,'Comment Deleted Successfully')
+	return HttpResponseRedirect(reverse('membership_request_manage_details',args=(return_pk,)))
+
+
+def membership_request_manage_details_add_comment(request,pk):
+	DataCapture=DataCaptureManager.objects.first()
+	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
+	
+	
+	form=MemberShipRequestAdditionalInfo_form(request.POST or None)
+	title="Add Comment"
+	button_text="Add"
+	applicant=MemberShipRequest.objects.get(id=pk)
+	officer=CustomUser.objects.get(id=request.user.id)
+	if request.method == 'POST':
+		comment=request.POST.get('comment')
+		MemberShipRequestAdditionalInfo(comment=comment,applicant=applicant,officer=officer).save()
 		
-		applicant.title=title
-		applicant.first_name=first_name
-		applicant.last_name=last_name
-		applicant.middle_name=middle_name
-		applicant.phone_number=phone_no
-		applicant.gender=gender
-		applicant.department=department
-		applicant.certification_officer=certification_officer
-		applicant.processed_by=processed_by
-		applicant.save()
+		messages.success(request,'Comment added Successfully')
+		return HttpResponseRedirect(reverse('membership_request_manage_details',args=(pk,)))
+	context={
+	'form':form,
+	'title':title,
+	'button_text':button_text,
+	
+	'current_user':current_user,
+	'DataCapture':DataCapture,
+	}
+	return render(request,'deskofficer_templates/membership_request_manage_details_edit_comment.html',context)
 
-		return HttpResponseRedirect(reverse('membership_request_manage_search'))
 
-	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
+
+def membership_request_manage_details_edit_attachment(request,pk):
+	DataCapture=DataCaptureManager.objects.first()
+	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
+	
+
+	form =MemberShipRequestAdditionalAttachment_form(request.POST or None)
+	record=MemberShipRequestAdditionalAttachment.objects.get(id=pk)
+	button_text="Update"
+	form.fields['caption'].initial=record.caption
+
+	if request.method=="POST":
+		if request.FILES.get('image', False):
+			image = request.FILES['image']
+			fs=FileSystemStorage()
+			filename=fs.save(image.name,image)
+			image_url=fs.url(filename)
+			
+		else:
+			image_url=None
+			
+		caption=request.POST.get('caption')
+		
+		edit_image = request.POST.get('edit_image')
+		if edit_image:
+			record.image=image_url
+		record.caption=caption
+		record.save()
+		messages.success(request,'Attachment Updated Successfully')
+		return HttpResponseRedirect(reverse('membership_request_manage_details',args=(record.applicant_id,)))
+	context={
+	'form':form,
+	'button_text':button_text,
+	'record':record,
+	
+	'current_user':current_user,
+	'DataCapture':DataCapture,
+	}
+	return render(request,'deskofficer_templates/membership_request_manage_details_edit_attachment.html',context)
+
+
+def membership_request_manage_details_edit_attachment_delete(request,pk):
+	record=MemberShipRequestAdditionalAttachment.objects.get(id=pk)
+	return_pk=record.applicant_id
+	record.delete()
+	messages.info(request,'Attachment Deleted Successfully')
+	return HttpResponseRedirect(reverse('membership_request_manage_details',args=(return_pk,)))
+
+
+def membership_request_manage_details_edit_attachment_add(request,pk):
+	DataCapture=DataCaptureManager.objects.first()
+	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
+	
+
+	form =MemberShipRequestAdditionalAttachment_form(request.POST or None)
+	applicant=MemberShipRequest.objects.get(id=pk)
+	officer=CustomUser.objects.get(id=request.user.id)
+	if request.method=="POST":
+		if request.FILES.get('image', False):
+			image = request.FILES['image']
+			fs=FileSystemStorage()
+			filename=fs.save(image.name,image)
+			image_url=fs.url(filename)
+			
+		else:
+			image_url=None
+			
+		caption=request.POST.get('caption')
+		MemberShipRequestAdditionalAttachment(officer=officer,caption=caption,image=image_url,applicant=applicant).save()
+		messages.info(request,'Attachment added Successfully')
+		return HttpResponseRedirect(reverse('membership_request_manage_details',args=(pk,)))
+	context={
+	'form':form,
+	
+	'current_user':current_user,
+	'DataCapture':DataCapture,
+	}
+	return render(request,'deskofficer_templates/membership_request_manage_details_edit_attachment_add.html',context)
+
+
+def membership_request_delete_confirmation(request,pk):
+	title='Are you sure you want to delete the request'
+	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
+	DataCapture=DataCaptureManager.objects.first()
+	
+	member=MemberShipRequest.objects.get(id=pk)
 
 	context={
-	'user_level':user_level.userlevel.title,
-	'form_request':form_request,
-	'form_submit':form_submit,
+	'title':title,
+	'member':member,
+	
+	'current_user':current_user,
+	'DataCapture':DataCapture,
 	}
-	return render(request,'deskofficer_templates/membership_request_manage_list_update.html',context)
+	return render(request,'deskofficer_templates/membership_request_delete_confirmation.html',context)
+
+
+def membership_request_delete(request,pk):
+	member=MemberShipRequest.objects.get(id=pk)
+	member.delete()
+
+	return HttpResponseRedirect(reverse('membership_request_manage_search'))
+
 
 
 def membership_form_sales_list_load(request):
+	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
 	DataCapture=DataCaptureManager.objects.first()
 	approval_status=ApprovalStatus.objects.get(title='APPROVED')
 	transaction_status=TransactionStatus.objects.get(title='UNTREATED')
 	applicants=MemberShipRequest.objects.filter(transaction_status=transaction_status,approval_status=approval_status)
 	
-	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
+	
 
 
 	context={
 	'approved_applicant':applicants.count(),
-	'user_level':user_level.userlevel.title,
+	
 	'applicants':applicants,
+	'current_user':current_user,
 	'DataCapture':DataCapture,
 	}
 	return render(request,'deskofficer_templates/membership_form_sales_list_load.html',context)
 
 
 def membership_form_sales_preview(request,pk):
+	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
 	DataCapture=DataCaptureManager.objects.first()
 	applicant=MemberShipRequest.objects.get(pk=pk)
 	comments=MemberShipRequestAdditionalInfo.objects.filter(applicant_id=pk)
 	attachments=MemberShipRequestAdditionalAttachment.objects.filter(applicant_id=pk)
 	
 
-	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
+	
 
 	context={
-	'user_level':user_level.userlevel.title,
+	
 	'applicant':applicant,
 	'comments':comments,
 	'attachments':attachments,
+	'current_user':current_user,
 	'DataCapture':DataCapture,
 	}
 	return render(request,'deskofficer_templates/membership_form_sales_preview.html',context)
 
 
 def membership_form_sales_issue(request,pk):
+	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
 	DataCapture=DataCaptureManager.objects.first()
 	form=membership_form_sales_issue_form(request.POST or None)
+
+	
 	applicant=MemberShipRequest.objects.get(id=pk)
 
-	shares = MembersShareConfigurations.objects.first()
-	shares_uint_cost=shares.unit_cost
+	shares_uint_cost=0
+	if MembersShareConfigurations.objects.all().exists():
+		shares = MembersShareConfigurations.objects.first()
+		if shares:
+			shares_uint_cost=shares.unit_cost
+		else:
+			messages.error(request,'Shares Unit Cost Not Set')
+			return HttpResponseRedirect(reverse('membership_form_sales_preview',args=(pk,)))
+	else:
+		messages.error(request,'Shares Unit Cost Not Set')
+		return HttpResponseRedirect(reverse('membership_form_sales_preview',args=(pk,)))
 
 	welfare=0
 	if MembersWelfare.objects.all().exists():
 		welfare_obj=MembersWelfare.objects.first()
 		welfare=welfare_obj.amount
-
+	else:
+		messages.error(request,'Welfare Amount Not Set')
+		return HttpResponseRedirect(reverse('membership_form_sales_preview',args=(pk,)))
+	
 	admin_charge = TransactionTypes.objects.get(code='100')
 	registration_fees=admin_charge.admin_charges
 
@@ -532,8 +761,8 @@ def membership_form_sales_issue(request,pk):
 
 		if receipt_types_status==True:
 			receipt_id=request.POST.get('receipt')
-			receipt=Receipts.objects.get(receipt=receipt_id)
-		
+			receipt_obj=Receipts.objects.get(receipt=receipt_id)
+			receipt=receipt_obj.receipt
 			
 			if Receipts.objects.filter(receipt=receipt_id,status=status).exists():
 				messages.error(request,"Receipt Already in Use")
@@ -556,8 +785,8 @@ def membership_form_sales_issue(request,pk):
 		record.save()
 
 		if receipt_types_status==True:
-			receipt.status=status
-			receipt.save()
+			receipt_obj.status=status
+			receipt_obj.save()
 		else:
 			receipt_id.receipt= int(receipt_id.receipt) + 1
 			receipt_id.save()
@@ -580,38 +809,353 @@ def membership_form_sales_issue(request,pk):
 	form.fields['receipt'].initial=0
 	form.fields['form_print'].initial=0
 
-	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
+	
 
 	context={
-	'user_level':user_level.userlevel.title,
+	
 	'form':form,
 	'applicant':applicant,
 	'receipt_types_status':receipt_types_status,
 	'shares_uint_cost':shares_uint_cost,
+	'current_user':current_user,
 	'DataCapture':DataCapture,
 	}
 	return render(request,'deskofficer_templates/membership_form_sales_issue.html',context)
 
 
-
-
-
-def membership_registration_list_load(request):
+def membership_registration_applicant_search(request):
+	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
 	DataCapture=DataCaptureManager.objects.first()
-	status=TransactionStatus.objects.get(title='UNTREATED')
-	applicants=MemberShipFormSalesRecord.objects.filter(status=status)
+	title="Search Membership Request for Update"
+	form = searchForm(request.POST or None)
 	
-	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
+	return render(request,'deskofficer_templates/membership_registration_applicant_search.html',{'form':form,'title':title,'current_user':current_user,})
+
+
+
+def membership_registration_applicant_list_load(request):
+	DataCapture=DataCaptureManager.objects.first()
+	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
+	
+	title="Update Membership Request"
+	form = searchForm(request.POST)
+	if request.method == "POST":
+		if not request.POST.get("title"):
+			return HttpResponseRedirect(reverse('membership_registration_applicant_search'))
+
+		status=TransactionStatus.objects.get(title='UNTREATED')
+		
+		
+		form = searchForm(request.POST)
+		applicants=MemberShipFormSalesRecord.objects.filter(Q(applicant__phone_number__icontains=form['title'].value()) | Q(applicant__first_name__icontains=form['title'].value()) | Q(applicant__last_name__icontains=form['title'].value()) | Q(applicant__middle_name__icontains=form['title'].value())).filter(status=status)
+		if not applicants:
+			messages.error(request,'No Record Found')
+			return HttpResponseRedirect(reverse('membership_registration_applicant_search'))
 
 	context={
-	'user_level':user_level.userlevel.title,
+	
 	'applicants':applicants,
+	'title':title,
+	'current_user':current_user,
 	'DataCapture':DataCapture,
 	}
-	return render(request,'deskofficer_templates/membership_registration_list_load.html',context)
+	return render(request,'deskofficer_templates/membership_registration_applicant_list_load.html',context)
+
+
+# def membership_registration_list_load(request):
+# 	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
+# 	DataCapture=DataCaptureManager.objects.first()
+# 	status=TransactionStatus.objects.get(title='UNTREATED')
+# 	applicants=MemberShipFormSalesRecord.objects.filter(status=status)
+	
+# 	
+
+# 	context={
+# 	
+# 	'applicants':applicants,
+# 	'current_user':current_user,
+# 	'DataCapture':DataCapture,
+# 	}
+# 	return render(request,'deskofficer_templates/membership_registration_list_load.html',context)
+
 
 
 def membership_registration_register(request,pk):
+	form= membership_registration_register_form(request.POST or None)
+
+
+	if request.method == 'POST':
+		tdate=get_current_date(now)
+		processed_by = CustomUser.objects.get(id=request.user.id)
+		applicant=MemberShipFormSalesRecord.objects.get(id=pk)
+
+		shares=applicant.shares
+		unit_cost=math.ceil(float(applicant.share_amount)/float(applicant.shares))
+		total_cost=applicant.share_amount
+		welfare_amount=applicant.welfare_amount
+
+
+		status1=TransactionStatus.objects.get(title='TREATED')
+		status2=TransactionStatus.objects.get(title='UNTREATED')
+
+
+
+		account_status=MembershipStatus.objects.get(title='ACTIVE')
+		status=MembershipStatus.objects.get(title='ACTIVE')
+
+		exclusive_status=ExclusiveStatus.objects.get(title='NON EXCLUSIVE')
+		gross_pay_status=ProcessingStatus.objects.get(title='UNPROCESSED')
+
+		savings_status=SavingsUploadStatus.objects.get(title='PENDING')
+		loan_status=LoansUploadStatus.objects.get(title='PENDING')
+		shares_status=SharesUploadStatus.objects.get(title='PENDING')
+		welfare_status=WelfareUploadStatus.objects.get(title='PENDING')
+		
+		date_joined_status=DateJoinedUploadStatus.objects.get(title='PENDING')
+		date_joined_status1=DateJoinedUploadStatus.objects.get(title='UPLOADED')
+		
+		dob_status=Date_of_birth_status.objects.get(title='PENDING')
+		dob_status1=Date_of_birth_status.objects.get(title='UPLOADED')
+		
+		date_of_first_appointment_status=DateOfFirstAppointment_Status.objects.get(title='PENDING')
+		date_of_first_appointment_status1=DateOfFirstAppointment_Status.objects.get(title='UPLOADED')
+		
+
+
+		member_id_obj=[]
+		if MembersIdManager.objects.all().exists():
+			member_id_obj = MembersIdManager.objects.first()
+		else:
+			messages.error(request,"Membership ID Missing")
+			return HttpResponseRedirect(reverse('membership_registration_register',args=(pk,)))
+
+		default_password=[]
+		if DefaultPassword.objects.all().exists():
+			default_password = DefaultPassword.objects.first()
+			password=default_password.title
+		else:
+			messages.error(request,"Default Password Missing")
+			return HttpResponseRedirect(reverse('membership_registration_register',args=(pk,)))
+
+		user_type_obj = UserType.objects.get(title='MEMBERS')
+		user_type=user_type_obj.code
+
+
+		share_transaction=[]
+		if TransactionTypes.objects.filter(code=700).exists():
+			share_transaction=TransactionTypes.objects.get(code=700)
+			share_account=str(share_transaction.code) + str(member_id_obj.member_id).zfill(5) 
+		else:
+			messages.error(request,"Transaction Type(Shares) with Code 700 Missing")
+			return HttpResponseRedirect(reverse('membership_registration_register',args=(pk,)))
+
+		welfare_transaction=[]
+		if TransactionTypes.objects.filter(code=800).exists():
+			welfare_transaction=TransactionTypes.objects.get(code=800)
+			welfare_account=str(welfare_transaction.code) + str(member_id_obj.member_id).zfill(5)
+		else:
+			messages.error(request,"Transaction Type(Welfare) with Code 800 Missing")
+			return HttpResponseRedirect(reverse('membership_registration_register',args=(pk,)))
+
+		member_id = member_id_obj.prefix_title + "/" +  str(member_id_obj.prefix_year) + "/" + str(member_id_obj.member_id).zfill(5) 
+
+
+		form_print = request.POST.get('form_print')
+		
+		title_id = request.POST.get("title")
+		title = Titles.objects.get(id=title_id)
+
+		last_name=request.POST.get('last_name')
+		first_name=request.POST.get('first_name')
+		middle_name=request.POST.get('middle_name')
+		
+		dob=request.POST.get('dob')
+		
+		gender_id = request.POST.get("gender")
+		gender = Gender.objects.get(id=gender_id)
+
+		phone_number=request.POST.get('phone_number')
+		residential_address=request.POST.get('residential_address')
+		permanent_home_address=request.POST.get('permanent_home_address')
+		
+		department_id = request.POST.get("department")
+		department = Departments.objects.get(id=department_id)
+
+		dob_add=request.POST.get('dob_add')
+		date_of_first_appointment_add=request.POST.get('date_of_first_appointment_add')
+
+		
+		salary_institution_id = request.POST.get("salary_institution")
+		salary_institution = SalaryInstitution.objects.get(id=salary_institution_id)
+
+		file_no=request.POST.get('file_no')
+		ippis_no=request.POST.get('ippis_no')
+		email=request.POST.get('email')
+		username=request.POST.get('username')
+		date_of_first_appointment=request.POST.get('date_of_first_appointment')
+		date_joined=request.POST.get('date_joined')
+
+		if request.FILES.get('profile_pic', False):
+			profile_pic = request.FILES['profile_pic']
+			fs=FileSystemStorage()
+			filename=fs.save(profile_pic.name,profile_pic)
+			profile_pic_url=fs.url(filename)
+		else:
+			profile_pic_url=None
+
+		if not last_name:
+			messages.error(request,"Missing Last Name")
+			return HttpResponseRedirect(reverse('membership_registration_register',args=(pk,)))
+		
+		if not first_name:
+			messages.error(request,"First Name Missing")
+			return HttpResponseRedirect(reverse('membership_registration_register',args=(pk,)))
+
+		
+
+		if dob_add and not dob:
+			messages.error(request,"Missing Date of Birth")
+			return HttpResponseRedirect(reverse('membership_registration_register',args=(pk,)))
+		
+
+		if not phone_number:
+			messages.error(request,"Missing Phone No")
+			return HttpResponseRedirect(reverse('membership_registration_register',args=(pk,)))
+		
+		if not file_no:
+			messages.error(request,"Missing File No")
+			return HttpResponseRedirect(reverse('membership_registration_register',args=(pk,)))
+
+		if not ippis_no:
+			messages.error(request,"Missing IPPIS No or Salary Code")
+			return HttpResponseRedirect(reverse('membership_registration_register',args=(pk,)))
+			
+		if not email:
+			messages.error(request,"Missing Email Address")
+			return HttpResponseRedirect(reverse('membership_registration_register',args=(pk,)))
+		
+		if not username:
+			messages.error(request,"Missing Username")
+			return HttpResponseRedirect(reverse('membership_registration_register',args=(pk,)))
+		
+		
+		if date_of_first_appointment_add and not date_of_first_appointment:
+			messages.error(request,"Missing Date of First Appointment")
+			return HttpResponseRedirect(reverse('membership_registration_register',args=(pk,)))
+
+		
+		try:
+			user = CustomUser.objects.create_user(username=username,password=password,email=email,last_name=last_name,first_name=first_name,user_type=int(user_type))
+			user.members.applicant=applicant
+			user.members.member_id=member_id
+			user.members.title=title
+			user.members.middle_name=middle_name
+			user.members.full_name=str(first_name) + ' ' + str(last_name) + ' ' + str(middle_name)
+			user.members.phone_number=phone_number
+			user.members.gender=gender
+			user.members.residential_address=residential_address
+			user.members.permanent_home_address=permanent_home_address
+			user.members.department=department
+			
+			user.members.salary_institution=salary_institution
+			user.members.file_no=file_no
+			user.members.ippis_no=ippis_no
+			
+			if dob_add:
+				user.members.dob=dob
+				user.members.dob_status=dob_status1
+
+			if date_of_first_appointment_add:
+				user.members.date_of_first_appointment=date_of_first_appointment
+				user.members.date_of_first_appointment_status=date_of_first_appointment_status1
+
+			
+			user.members.date_joined=date_joined
+			user.members.date_joined_status=date_joined_status1
+			
+		
+			user.members.exclusive_status=exclusive_status
+			user.members.gross_pay_status=gross_pay_status
+			user.members.status=account_status
+			user.members.savings_status=savings_status
+			user.members.loan_status=loan_status
+			user.members.shares_status=shares_status
+			user.members.welfare_status=welfare_status
+			user.members.date_joined_status=date_joined_status
+		
+		
+			if profile_pic_url!=None:
+				user.members.profile_pic=profile_pic_url
+
+			user.members.save()
+			
+			member_id_obj.member_id=int(member_id_obj.member_id) + 1
+			member_id_obj.save()
+			
+			share_account=MembersAccountsDomain(status=account_status,member=user.members,transaction=share_transaction,account_number=share_account)
+			share_account.save()
+			
+			share_record=MembersShareAccounts(status=status2,member=share_account,shares=shares,unit_cost=unit_cost,total_cost=total_cost,effective_date=tdate,year=now.year,processed_by=processed_by)
+			share_record.save()
+			
+			
+
+			particulars=share_transaction.name + " INITIAL PURCHASE OF " + str(shares) + ' BY ' + str(unit_cost) + " PER A UNIT"
+			debit=0
+			credit=float(total_cost)
+			balance=credit
+
+			ledger_status=MembershipStatus.objects.get(title='ACTIVE')
+			record=PersonalLedger(tdate=tdate,member=user.members,transaction=share_transaction,account_number=share_account.account_number,particulars=particulars,debit=debit,credit=credit,balance=abs(balance),transaction_period=now,status=ledger_status)
+			record.save()
+
+			welfare_account=MembersAccountsDomain(status=account_status,member=user.members,transaction=welfare_transaction,account_number=welfare_account)
+			welfare_account.save()
+
+			welfare_record=MembersWelfareAccounts(processed_by=processed_by,status=status2,member=welfare_account,amount=welfare_amount,year=now.year)
+			welfare_record.save()
+
+
+
+
+			applicant.status=status1
+			applicant.save()
+
+			if form_print=="YES":
+				return HttpResponse("PRINTING FORM")
+			elif form_print == "NO":		
+				return HttpResponseRedirect(reverse("membership_registration_applicant_search"))
+		except:
+			messages.error(request,"Failed to add Member")
+			return HttpResponseRedirect(reverse('membership_registration_register',args=(pk,)))
+
+
+		
+
+	applicant=MemberShipFormSalesRecord.objects.get(id=pk)
+	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
+
+
+
+	form.fields['first_name'].initial=applicant.applicant.first_name
+	form.fields['last_name'].initial=applicant.applicant.last_name
+	form.fields['middle_name'].initial=applicant.applicant.middle_name
+	form.fields['title'].initial=applicant.applicant.title_id
+	form.fields['gender'].initial=applicant.applicant.gender.id
+	form.fields['phone_number'].initial=applicant.applicant.phone_number
+	form.fields['department'].initial=applicant.applicant.department.id
+	form.fields['date_joined'].initial=now
+
+
+
+	context={
+	'current_user':current_user,
+	'form':form,
+	}
+	return render(request,'deskofficer_templates/membership_registration_register.html',context)
+
+
+def membership_registration_register1(request,pk):
 	DataCapture=DataCaptureManager.objects.first()
 	applicant=MemberShipFormSalesRecord.objects.get(id=pk)
 	states=States.objects.all()
@@ -621,9 +1165,9 @@ def membership_registration_register(request,pk):
 	unit_cost=math.ceil(float(applicant.share_amount)/float(applicant.shares))
 	total_cost=applicant.share_amount
 	welfare_amount=applicant.welfare_amount
+	form= membership_registration_register_form(request.POST or None)
 
-
-	form= membership_registration_register_form()
+	
 	form.fields['first_name'].initial=applicant.applicant.first_name
 	form.fields['last_name'].initial=applicant.applicant.last_name
 	form.fields['middle_name'].initial=applicant.applicant.middle_name
@@ -635,14 +1179,13 @@ def membership_registration_register(request,pk):
 	
 	if request.method=="POST":
 
-		# tday=now.day
-		# tmonth=now.month
-		# tyear=now.year
-
 		tdate=get_current_date(now)
 
-		form=membership_registration_register_form(request.POST)
-		status=TransactionStatus.objects.get(title='TREATED')
+	
+		status1=TransactionStatus.objects.get(title='TREATED')
+		status2=TransactionStatus.objects.get(title='UNTREATED')
+		account_status=MembershipStatus.objects.get(title='ACTIVE')
+
 
 		form_print = request.POST.get('form_print')
 
@@ -660,9 +1203,13 @@ def membership_registration_register(request,pk):
 		welfare_account=str(welfare_transaction.code) + str(member_id_obj.member_id).zfill(5)
 
 		member_id = member_id_obj.prefix_title + "/" +  str(member_id_obj.prefix_year) + "/" + str(member_id_obj.member_id).zfill(5) 
+		
 		first_name = request.POST.get("first_name")
 		last_name= request.POST.get("last_name")
 		middle_name = request.POST.get("middle_name")
+		
+	
+
 		username = request.POST.get("username")
 		email = request.POST.get("email")
 		residential_address = request.POST.get("residential_address")
@@ -684,10 +1231,10 @@ def membership_registration_register(request,pk):
 		department_id = request.POST.get("department")
 		department = Departments.objects.get(id=department_id)
 
-		lga_id=request.POST.get('lga')
-		lga=Lga.objects.get(id=lga_id)
+		# lga_id=request.POST.get('lga')
+		# lga=Lga.objects.get(id=lga_id)
 		
-		state = lga.state
+		# state = lga.state
 			
 
 		salary_institution_id = request.POST.get("salary_institution")
@@ -701,99 +1248,103 @@ def membership_registration_register(request,pk):
 		else:
 			profile_pic_url=None
 
-		if first_name=="":
+		if not first_name:
 			messages.error(request,"First Name Missing")
 			return HttpResponseRedirect(reverse('membership_registration_register',args=(pk,)))
 
-		if last_name=="":
+		if not last_name:
 			messages.error(request,"Missing Last Name")
 			return HttpResponseRedirect(reverse('membership_registration_register',args=(pk,)))
 		
-		if file_no=="":
+		if not file_no:
 			messages.error(request,"Missing File No")
 			return HttpResponseRedirect(reverse('membership_registration_register',args=(pk,)))
 
-		if ippis_no=="":
+		if not ippis_no:
 			messages.error(request,"Missing IPPIS No or Salary Code")
 			return HttpResponseRedirect(reverse('membership_registration_register',args=(pk,)))
 			
-		if email=="":
+		if not email:
 			messages.error(request,"Missing Email Address")
 			return HttpResponseRedirect(reverse('membership_registration_register',args=(pk,)))
 		
-		if username=="":
+		if not username:
 			messages.error(request,"Missing Username")
 			return HttpResponseRedirect(reverse('membership_registration_register',args=(pk,)))
 			
-		try:
-			user = CustomUser.objects.create_user(username=username,password=password,email=email,last_name=last_name,first_name=first_name,user_type=int(user_type))
-			user.members.applicant=applicant
-			user.members.member_id=member_id
-			user.members.title=title
-			user.members.middle_name=middle_name
-			user.members.full_name=str(first_name) + ' ' + str(last_name) + ' ' + str(middle_name)
-			user.members.phone_number=phone_number
-			user.members.gender=gender
-			user.members.residential_address=residential_address
-			user.members.permanent_home_address=permanent_home_address
-			user.members.department=department
-			user.members.state=state
-			user.members.lga=lga
-			user.members.salary_institution=salary_institution
-			user.members.file_no=file_no
-			user.members.ippis_no=ippis_no
-			user.members.date_joined=date_joined
-		
-		
-			if profile_pic_url!=None:
-				user.members.profile_pic=profile_pic_url
-
-			user.save()
-			
-			member_id_obj.member_id=int(member_id_obj.member_id) + 1
-			member_id_obj.save()
-			
-			share_account=MembersAccountsDomain(member=user.members,transaction=share_transaction,account_number=share_account)
-			share_account.save()
-			
-			share_record=MembersShareAccounts(member=share_account,shares=shares,unit_cost=unit_cost,total_cost=total_cost,effective_date=now,year=now.year,processed_by=processed_by)
-			share_record.save()
-			
-			
-
-			particulars=share_transaction.name + " INITIAL PURCHASE OF " + str(shares) + ' BY ' + str(unit_cost) + " PER A UNIT"
-			debit=0
-			credit=float(total_cost)
-			balance=credit
-
-			ledger_status=MembershipStatus.objects.get(title='ACTIVE')
-			record=PersonalLedger(tdate=tdate,member=user.members,transaction=share_transaction,account_number=share_account.account_number,particulars=particulars,debit=debit,credit=credit,balance=abs(balance),transaction_period=now,status=ledger_status)
-			record.save()
-
-			welfare_account=MembersAccountsDomain(member=user.members,transaction=welfare_transaction,account_number=welfare_account)
-			welfare_account.save()
-
-			welfare_record=MembersWelfareAccounts(member=welfare_account,amount=welfare_amount,year=now.year)
-			welfare_record.save()
-
-
-
-
-			applicant.status=status
-			applicant.save()
-
-			if form_print=="YES":
-				return HttpResponse("PRINTING FORM")
-			elif form_print == "NO":		
-				return HttpResponseRedirect(reverse("membership_registration_list_load"))
-		except:
-			messages.error(request,"Failed to add Member")
-			return HttpResponseRedirect(reverse('membership_registration_register',args=(pk,)))
+		# try:
 	
-	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
+	
+		user = CustomUser.objects.create_user(username=username,password=password,email=email,last_name=last_name,first_name=first_name,user_type=int(user_type))
+		return HttpResponse("OK")
+		user.members.applicant=applicant
+		user.members.member_id=member_id
+		user.members.title=title
+		user.members.middle_name=middle_name
+		user.members.full_name=str(first_name) + ' ' + str(last_name) + ' ' + str(middle_name)
+		user.members.phone_number=phone_number
+		user.members.gender=gender
+		user.members.residential_address=residential_address
+		user.members.permanent_home_address=permanent_home_address
+		user.members.department=department
+		# user.members.state=state
+		# user.members.lga=lga
+		user.members.salary_institution=salary_institution
+		user.members.file_no=file_no
+		user.members.ippis_no=ippis_no
+		user.members.date_joined=date_joined
+		user.members.status=account_status
+	
+	
+		if profile_pic_url!=None:
+			user.members.profile_pic=profile_pic_url
+
+		user.save()
+		
+		member_id_obj.member_id=int(member_id_obj.member_id) + 1
+		member_id_obj.save()
+		
+		share_account=MembersAccountsDomain(status=account_status,member=user.members,transaction=share_transaction,account_number=share_account)
+		share_account.save()
+		
+		share_record=MembersShareAccounts(status=status2,member=share_account,shares=shares,unit_cost=unit_cost,total_cost=total_cost,effective_date=now,year=now.year,processed_by=processed_by)
+		share_record.save()
+		
+		
+
+		particulars=share_transaction.name + " INITIAL PURCHASE OF " + str(shares) + ' BY ' + str(unit_cost) + " PER A UNIT"
+		debit=0
+		credit=float(total_cost)
+		balance=credit
+
+		ledger_status=MembershipStatus.objects.get(title='ACTIVE')
+		record=PersonalLedger(tdate=tdate,member=user.members,transaction=share_transaction,account_number=share_account.account_number,particulars=particulars,debit=debit,credit=credit,balance=abs(balance),transaction_period=now,status=ledger_status)
+		record.save()
+
+		welfare_account=MembersAccountsDomain(status=account_status,member=user.members,transaction=welfare_transaction,account_number=welfare_account)
+		welfare_account.save()
+
+		welfare_record=MembersWelfareAccounts(processed_by=processed_by,status=status2,member=welfare_account,amount=welfare_amount,year=now.year)
+		welfare_record.save()
+
+
+
+
+		applicant.status=status1
+		# applicant.save()
+
+		if form_print=="YES":
+			return HttpResponse("PRINTING FORM")
+		elif form_print == "NO":		
+			return HttpResponseRedirect(reverse("membership_registration_list_load"))
+		# except:
+		# 	messages.error(request,"Failed to add Member")
+		# 	return HttpResponseRedirect(reverse('membership_registration_register',args=(pk,)))
+	
+	
 
 	context={
-	'user_level':user_level.userlevel.title,
+	
 	'form':form,
 	'applicant':applicant,
 	'DataCapture':DataCapture,
@@ -802,19 +1353,21 @@ def membership_registration_register(request,pk):
 	return render(request,'deskofficer_templates/membership_registration_register.html',context)
 
 
-
 #########################################################
 ############### MEMBERS ACCOUNT CRERATIONS###############
 #########################################################
 def Members_Account_Creation_Search(request):
+	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
 	DataCapture=DataCaptureManager.objects.first()
 	title="Search Membership for Account Creation"
 	form = searchForm(request.POST or None)
-	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
-	return render(request,'deskofficer_templates/Members_Account_Creation_Search.html',{'form':form,'title':title,'DataCapture':DataCapture,'user_level':user_level.userlevel.title,})
+	
+	return render(request,'deskofficer_templates/Members_Account_Creation_Search.html',{'form':form,'title':title,'current_user':current_user,
+	'DataCapture':DataCapture,})
 
 
 def Members_Account_Creation_list_load(request):
+	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
 	DataCapture=DataCaptureManager.objects.first()
 	title="Loan Request order"
 	form = searchForm(request.POST)
@@ -829,27 +1382,30 @@ def Members_Account_Creation_list_load(request):
 		if not members:
 			return HttpResponseRedirect(reverse('Members_Account_Creation_Search'))
 	
-	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
+	
 
 	context={
-	'user_level':user_level.userlevel.title,
+	
 	'members':members,
 	'title':title,
+	'current_user':current_user,
 	'DataCapture':DataCapture,
 	}
 	return render(request,'deskofficer_templates/Members_Account_Creation_list_load.html',context)
 
 def Members_Account_Creation_preview(request,pk):
+	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
 	DataCapture=DataCaptureManager.objects.first()
 	member=Members.objects.get(id=pk)
 	transactions=TransactionTypes.objects.filter(~Q(source__title="LOAN") & ~Q(source__title='GENERAL'))
 	records=MembersAccountsDomain.objects.filter(member=member)
-	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
+	
 
 	context={
-	'user_level':user_level.userlevel.title,
+	
 	'member':member,
 	'transactions':transactions,
+	'current_user':current_user,
 	'DataCapture':DataCapture,
 	'records':records,
 	}
@@ -857,6 +1413,7 @@ def Members_Account_Creation_preview(request,pk):
 
 
 def Members_Account_Creation_process(request,pk):
+	status=MembershipStatus.objects.get(title='ACTIVE')
 	member=Members.objects.get(id=pk)
 	transactions=TransactionTypes.objects.filter(~Q(source__title="LOAN") & ~Q(source__title='GENERAL'))
 	member_id=list((member.member_id).split("/"))
@@ -869,7 +1426,7 @@ def Members_Account_Creation_process(request,pk):
 			pass
 		else:
 			count +=1
-			record=MembersAccountsDomain(member=member,transaction=transaction,account_number=account_number)
+			record=MembersAccountsDomain(status=status,member=member,transaction=transaction,account_number=account_number)
 			record.save()
 	messages.success(request,str(count) + ' Account(s) Successfully Created' )
 	return HttpResponseRedirect(reverse('Members_Account_Creation_preview',args=(member.pk,)))
@@ -877,17 +1434,19 @@ def Members_Account_Creation_process(request,pk):
 
 
 def Members_Multiple_Account_Creation_preview(request):
+	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
 	DataCapture=DataCaptureManager.objects.first()
 	status=MembershipStatus.objects.get(title='ACTIVE')
 	members=Members.objects.filter(status=status)
 	transactions=TransactionTypes.objects.filter(~Q(source__title="LOAN") & ~Q(source__title='GENERAL'))
 	
-	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
+	
 
 	context={
-	'user_level':user_level.userlevel.title,
+	
 	'members':members,
 	'transactions':transactions,
+	'current_user':current_user,
 	'DataCapture':DataCapture,
 	}
 	return render(request,'deskofficer_templates/Members_Multiple_Account_Creation_preview.html',context)
@@ -909,19 +1468,23 @@ def Members_Multiple_Account_Creation_process(request):
 				pass
 			else:
 				count +=1
-				record=MembersAccountsDomain(member=member,transaction=transaction,account_number=account_number)
+				record=MembersAccountsDomain(status=status,member=member,transaction=transaction,account_number=account_number)
 				record.save()
 	messages.success(request,str(count) + ' Account(s) Successfully Created')
 	return HttpResponseRedirect(reverse('Members_Multiple_Account_Creation_preview'))
 
 
 def Members_account_details_list(request,pk):
+	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
+	DataCapture=DataCaptureManager.objects.first()
 	transaction=TransactionTypes.objects.get(id=pk)
 	records=MembersAccountsDomain.objects.filter(transaction=transaction)
-	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
+	
 
 	context={
-	'user_level':user_level.userlevel.title,
+	'current_user':current_user,
+	'DataCapture':DataCapture,
+	
 	'records':records,
 	'transaction':transaction,
 	}
@@ -933,14 +1496,17 @@ def Members_account_details_list(request,pk):
 ############### STANDING ORDER #########################
 #########################################################
 def standing_order_selected_search(request):
+	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
 	DataCapture=DataCaptureManager.objects.first()
 	title="Search Membership for Standing Order"
 	form = searchForm(request.POST or None)
-	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
-	return render(request,'deskofficer_templates/standing_order_selected_search.html',{'form':form,'title':title,'DataCapture':DataCapture,'user_level':user_level.userlevel.title,})
+	
+	return render(request,'deskofficer_templates/standing_order_selected_search.html',{'form':form,'title':title,'current_user':current_user,
+	'DataCapture':DataCapture,})
 
 
 def standing_order_selected_list_load(request):
+	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
 	DataCapture=DataCaptureManager.objects.first()
 	title="Loan Request order"
 	form = searchForm(request.POST)
@@ -952,18 +1518,20 @@ def standing_order_selected_list_load(request):
 		form = searchForm(request.POST)
 		members=searchMembers(form['title'].value(),status)
 		
-	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
+	
 
 	context={
-	'user_level':user_level.userlevel.title,
+	
 	'members':members,
 	'title':title,
+	'current_user':current_user,
 	'DataCapture':DataCapture,
 	}
 	return render(request,'deskofficer_templates/standing_order_selected_list_load.html',context)
 
 
 def standing_order_selected_form(request,pk):
+	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
 	DataCapture=DataCaptureManager.objects.first()
 	applicant=Members.objects.get(id=pk)
 	form=standing_orderform(request.POST or None)
@@ -1002,33 +1570,37 @@ def standing_order_selected_form(request,pk):
 			member=StandingOrderAccounts(member=applicant,transaction=saving,amount=amount,account_number=account_number)
 			member.save()
 			return HttpResponseRedirect(reverse('standing_order_selected_form', args=(pk,)))
-	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
+	
 
 	context={
-	'user_level':user_level.userlevel.title,
+	
 	'applicant':applicant,
 	'form':form,
 	'standing_orders':standing_orders,
+	'current_user':current_user,
 	'DataCapture':DataCapture,
 	}
 	return render(request,'deskofficer_templates/standing_order_selected_form.html',context)
 
 
 def standing_order_list_load(request):
+	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
 	DataCapture=DataCaptureManager.objects.first()
 	status=MembershipStatus.objects.get(title='ACTIVE')
 	applicants=Members.objects.filter(status=status)
-	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
+	
 
 	context={
-	'user_level':user_level.userlevel.title,
+	
 	'applicants':applicants,
+	'current_user':current_user,
 	'DataCapture':DataCapture,
 	}
 	return render(request,'deskofficer_templates/standing_order_list_load.html',context)
 
 
 def standing_order_form(request,pk):
+	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
 	DataCapture=DataCaptureManager.objects.first()
 	applicant=Members.objects.get(id=pk)
 	form=standing_orderform(request.POST or None)
@@ -1038,7 +1610,9 @@ def standing_order_form(request,pk):
 	
 
 	if request.method=="POST" and 'btn_submit' in request.POST:
-		lock_status=LockedStatus.objects.get(title='LOCKED')
+		status=MembershipStatus.objects.get(title='ACTIVE')
+		# lock_status=LockedStatus.objects.get(title='LOCKED')
+		lock_status=LockedStatus.objects.get(title='OPEN')
 		form=standing_orderform(request.POST)
 		
 		saving_id=request.POST.get("savings")
@@ -1070,20 +1644,21 @@ def standing_order_form(request,pk):
 				return HttpResponseRedirect(reverse('standing_order_form', args=(pk,)))
 
 
-			member=StandingOrderAccounts(transaction=account_number,amount=amount)
+			member=StandingOrderAccounts(lock_status=lock_status,status=status,transaction=account_number,amount=amount)
 			member.save()
 			return HttpResponseRedirect(reverse('standing_order_form', args=(pk,)))
 
 		else:
 			messages.error(request,"Account Number not Found")
 			return HttpResponseRedirect(reverse('standing_order_form', args=(pk,)))
-	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
+	
 
 	context={
-	'user_level':user_level.userlevel.title,
+	
 	'applicant':applicant,
 	'form':form,
 	'standing_orders':standing_orders,
+	'current_user':current_user,
 	'DataCapture':DataCapture,
 	'account_number':account_number,
 	}
@@ -1110,14 +1685,17 @@ def standing_order_remove(request,pk):
 ############### TRANSACTION  ADJUSTMENT #################
 #########################################################
 def Transaction_adjustment_search(request):
+	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
 	DataCapture=DataCaptureManager.objects.first()
 	title="Search Membership for Adjustment"
 	form = searchForm(request.POST or None)
-	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
-	return render(request,'deskofficer_templates/Transaction_adjustment_search.html',{'form':form,'title':title,'DataCapture':DataCapture,'user_level':user_level.userlevel.title,})
+	
+	return render(request,'deskofficer_templates/Transaction_adjustment_search.html',{'form':form,'title':title,'current_user':current_user,
+	'DataCapture':DataCapture,})
 
 
 def Transaction_adjustment_List_load(request):
+	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
 	DataCapture=DataCaptureManager.objects.first()
 	title="Loan Request order"
 	form = searchForm(request.POST)
@@ -1129,12 +1707,13 @@ def Transaction_adjustment_List_load(request):
 		form = searchForm(request.POST)
 		members=searchMembers(form['title'].value(),status)
 	
-	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
+	
 
 	context={
-	'user_level':user_level.userlevel.title,
+	
 	'members':members,
 	'title':title,
+	'current_user':current_user,
 	'DataCapture':DataCapture,
 	}
 	return render(request,'deskofficer_templates/Transaction_adjustment_List_load.html',context)
@@ -1142,6 +1721,7 @@ def Transaction_adjustment_List_load(request):
 
 def Transaction_adjustment_Transactions_load(request,pk):
 	status = TransactionStatus.objects.get(title='UNTREATED')
+	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
 	DataCapture=DataCaptureManager.objects.first()
 	form=Transaction_adjustment_Transactions_form(request.POST or None)
 	member=Members.objects.get(id=pk)
@@ -1157,15 +1737,16 @@ def Transaction_adjustment_Transactions_load(request,pk):
 		
 		return HttpResponseRedirect(reverse('Transaction_adjustment_Transactions_Accounts_load',args=(transaction.pk,pk,)))
 
-	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
+	
 
 	context={
-	'user_level':user_level.userlevel.title,
+	
 
 	'form':form,
 	'member':member,
 	'transactions':transactions,
 	'active_transactions':active_transactions,
+	'current_user':current_user,
 	'DataCapture':DataCapture,
 	'records':records,
 	}
@@ -1174,6 +1755,8 @@ def Transaction_adjustment_Transactions_load(request,pk):
 
 def Transaction_adjustment_Transactions_Accounts_load(request,pk, return_pk):
 	status = TransactionStatus.objects.get(title='UNTREATED')
+	approval_status = ApprovalStatus.objects.get(title='PENDING')
+	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
 	DataCapture=DataCaptureManager.objects.first()
 	transaction=TransactionTypes.objects.get(id=pk)
 	minimum_amount=transaction.minimum_amount
@@ -1184,13 +1767,11 @@ def Transaction_adjustment_Transactions_Accounts_load(request,pk, return_pk):
 
 	
 	if request.method=="POST":
-		
+		tdate=get_current_date(now)
 		account_number=request.POST.get("account_number")
 		transaction=StandingOrderAccounts.objects.get(transaction__account_number=account_number)
 		amount = request.POST.get('amount')
 		effective_date=request.POST.get('effective_date')
-		approval_officer_id=request.POST.get('approval_officers')
-		approval_officer=ApprovalOfficers.objects.get(id=approval_officer_id)
 		
 		if TransactionAjustmentRequest.objects.filter(member=member_selected,status=status).exists():
 			messages.info(request,'You still have an Incomplete Transactions')
@@ -1203,21 +1784,22 @@ def Transaction_adjustment_Transactions_Accounts_load(request,pk, return_pk):
 			return HttpResponseRedirect(reverse('Transaction_adjustment_Transactions_Accounts_load',args=(pk, return_pk,)))
 		
 
-		record=TransactionAjustmentRequest(member=member_selected,amount=amount,effective_date=effective_date,approval_officer=approval_officer)
+		record=TransactionAjustmentRequest(approval_status=approval_status,tdate=tdate,status=status,member=member_selected,amount=amount,effective_date=effective_date)
 		record.save()
 		return HttpResponseRedirect(reverse('Transaction_adjustment_Transactions_load',args=(return_pk,)))
 
 	active_transactions=StandingOrderAccounts.objects.filter(transaction=member_selected).first()
 	if active_transactions:
 		form.fields['effective_date'].initial=now
-		user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
+		
 
 		context={
-		'user_level':user_level.userlevel.title,
+		
 		'active_transactions':active_transactions,
 		'form':form,
 		'pk':pk,
 		'return_pk':return_pk,
+		'current_user':current_user,
 		'DataCapture':DataCapture,
 
 		}
@@ -1236,23 +1818,37 @@ def Transaction_adjustment_Transactions_Accounts_Remove(request,pk):
 
 
 def Transaction_Adjustment_Approved_List_Load(request):
+	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
+	DataCapture=DataCaptureManager.objects.first()
+
 	approval_status=ApprovalStatus.objects.get(title='APPROVED')
 	status=TransactionStatus.objects.get(title='UNTREATED')
 	records=TransactionAjustmentRequest.objects.filter(approval_status=approval_status,status=status)
 
-	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
+	
 
 	context={
-	'user_level':user_level.userlevel.title,
+	'current_user':current_user,
+	'DataCapture':DataCapture,
+
+	
 	'records':records,
 	}
 	return render(request,'deskofficer_templates/Transaction_Adjustment_Approved_List_Load.html',context)
 
 
 def Transaction_Adjustment_Approved_Processed(request,pk):
+	tdate=get_current_date(now)
 	status=TransactionStatus.objects.get(title='TREATED')
 	record=TransactionAjustmentRequest.objects.get(id=pk)
 	amount=record.amount
+	member=record.member
+	
+	amount_exist=record.member.standingorderaccounts.amount
+	start_date=record.member.standingorderaccounts.updated_at
+	stop_date=tdate
+	TransactionAjustmentHistory(member=member,amount=amount_exist,start_date=start_date,stop_date=stop_date).save()
+	
 	if float(amount) == 0:
 		record.member.standingorderaccounts.delete()
 	else:
@@ -1264,49 +1860,51 @@ def Transaction_Adjustment_Approved_Processed(request,pk):
 
 
 def Transaction_Loan_adjustment_search(request):
+	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
 	DataCapture=DataCaptureManager.objects.first()
 	title="Search Membership for Loan Adjustment"
 	form = searchForm(request.POST or None)
-	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
-	return render(request,'deskofficer_templates/Transaction_Loan_adjustment_search.html',{'form':form,'title':title,'DataCapture':DataCapture,'user_level':user_level.userlevel.title,})
+	
+	return render(request,'deskofficer_templates/Transaction_Loan_adjustment_search.html',{'form':form,'title':title,'current_user':current_user,
+	'DataCapture':DataCapture,})
 
 
 def Transaction_Loan_adjustment_List_load(request):
+	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
 	DataCapture=DataCaptureManager.objects.first()
 	title="Loan Request order"
 	form = searchForm(request.POST)
 	if request.method == "POST":
 		if request.POST.get("title")=="":
-			return HttpResponseRedirect(reverse('Transaction_adjustment_search'))
+			return HttpResponseRedirect(reverse('Transaction_Loan_adjustment_search'))
 
 		status=MembershipStatus.objects.get(title="ACTIVE")
 		form = searchForm(request.POST)
-		
-		
+				
 		members=searchMembers(form['title'].value(),status)
 
-		user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
-
 		context={
-		'user_level':user_level.userlevel.title,
+		
 		'members':members,
 		'title':title,
+		'current_user':current_user,
 		'DataCapture':DataCapture,
 		}
 		return render(request,'deskofficer_templates/Transaction_Loan_adjustment_List_load.html',context)
 
 
 def Transaction_Loan_adjustment_Transaction_load(request,pk):
+	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
+	DataCapture=DataCaptureManager.objects.first()
+
 	status=TransactionStatus.objects.get(title='UNTREATED')
 	member=Members.objects.get(id=pk)
 	records=LoansRepaymentBase.objects.filter(member=member,balance__lt=0)
 
 	existing_requests=TransactionLoanAjustmentRequest.objects.filter(member__member=member,status=status)
 	
-	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
-
 	context={
-	'user_level':user_level.userlevel.title,
+	
 	'records':records,
 	'member':member,
 	'existing_requests':existing_requests,
@@ -1315,6 +1913,9 @@ def Transaction_Loan_adjustment_Transaction_load(request,pk):
 
 
 def Transaction_Loan_adjustment_Transaction_Preview(request,pk,loan_code):
+	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
+	DataCapture=DataCaptureManager.objects.first()
+
 	form=Transaction_Loan_adjustment_selection_form(request.POST or None)
 
 	member=Members.objects.get(id=pk)
@@ -1325,10 +1926,10 @@ def Transaction_Loan_adjustment_Transaction_Preview(request,pk,loan_code):
 	else:
 		loan=LoansRepaymentBase.objects.get(id=loan_code)
 
-	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
+	
 
 	context={
-	'user_level':user_level.userlevel.title,
+	
 	'member':member,
 	'loan':loan,
 	'form':form,
@@ -1372,17 +1973,259 @@ def Transaction_Loan_adjustment_Transaction_Cancel(request,pk):
 	return HttpResponseRedirect(reverse('Transaction_Loan_adjustment_Transaction_load',args=(return_pk,)))
 
 def Transaction_Loan_adjustment_Transaction_Approved_List_Load(request):
+	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
+	DataCapture=DataCaptureManager.objects.first()
+
 	status=TransactionStatus.objects.get(title='UNTREATED')
 	approval_status=ApprovalStatus.objects.get(title="APPROVED")
 	records=TransactionLoanAjustmentRequest.objects.filter(status=status,approval_status=approval_status)
 	
-	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
+	
 
 	context={
-	'user_level':user_level.userlevel.title,
+	
 	'records':records,
 	}
 	return render(request,'deskofficer_templates/Transaction_Loan_adjustment_Transaction_Approved_List_Load.html',context)
+
+
+
+def Transaction_Salary_adjustment_Request_search(request):
+	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
+	DataCapture=DataCaptureManager.objects.first()
+	title="Search Membership for Salary Adjustment"
+	form = searchForm(request.POST or None)
+	
+	return render(request,'deskofficer_templates/Transaction_Salary_adjustment_Request_search.html',{'form':form,'title':title,'current_user':current_user,
+	'DataCapture':DataCapture,})
+
+
+
+
+
+def Transaction_Salary_adjustment_Request_List_load(request):
+	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
+	DataCapture=DataCaptureManager.objects.first()
+	title="Loan Request order"
+	form = searchForm(request.POST)
+	if request.method == "POST":
+		if request.POST.get("title")=="":
+			return HttpResponseRedirect(reverse('Transaction_Salary_adjustment_Request_search'))
+
+		status=MembershipStatus.objects.get(title="ACTIVE")
+		form = searchForm(request.POST)
+				
+		members=searchMembers(form['title'].value(),status)
+
+		context={
+		
+		'members':members,
+		'title':title,
+		'current_user':current_user,
+		'DataCapture':DataCapture,
+		}
+		return render(request,'deskofficer_templates/Transaction_Salary_adjustment_Request_List_load.html',context)
+
+
+def Transaction_Salary_adjustment_Request_Process(request,pk):
+	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
+	DataCapture=DataCaptureManager.objects.first()
+	status=TransactionStatus.objects.get(title='UNTREATED')
+	approval_status=ApprovalStatus.objects.get(title='PENDING')
+	processed_by=CustomUser.objects.get(id=request.user.id)
+	form = Transaction_Salary_adjustment_Request_Process_form(request.POST or None)
+	member=Members.objects.get(id=pk)
+
+	if request.method == 'POST':
+		current_gross_pay = request.POST.get('current_gross_pay')
+		existing_gross_pay=request.POST.get('existing_gross_pay')
+		period_obj=request.POST.get('period')
+
+		date_format = '%Y-%m-%d'
+		dtObj = datetime.datetime.strptime(period_obj, date_format)
+		period=get_current_date(dtObj)
+
+
+		if request.FILES.get('image', False):
+			image = request.FILES['image']
+			fs=FileSystemStorage()
+			filename=fs.save(image.name,image)
+			image_url=fs.url(filename)
+		else:
+			image_url=None
+
+		if Member_Salary_Adjustment.objects.filter(member=member,status=status).exists():
+			messages.error(request,'Please you still have incomplete Transaction, Consult the Approval Officers')
+			return HttpResponseRedirect(reverse('Transaction_Salary_adjustment_Request_Process',args=(pk,)))
+		
+		Member_Salary_Adjustment(member=member,image=image_url,processed_by=processed_by,approval_status=approval_status,status=status,period=period,current_gross_pay=current_gross_pay,existing_gross_pay=existing_gross_pay).save()
+		return HttpResponseRedirect(reverse(deskofficer_home))
+
+	form.fields['existing_gross_pay'].initial=member.gross_pay
+	form.fields['period'].initial=now
+	context={
+	'member':member,
+	'current_user':current_user,
+	'DataCapture':DataCapture,
+	'form':form,
+	}
+	return render(request,'deskofficer_templates/Transaction_Salary_adjustment_Request_Process.html',context)
+
+
+
+def Transaction_Salary_adjustment_Request_Manage_List_Load(request):
+	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
+	DataCapture=DataCaptureManager.objects.first()
+	status=TransactionStatus.objects.get(title='UNTREATED')
+	approval_status=ApprovalStatus.objects.get(title='PENDING')
+
+	
+	members=Member_Salary_Adjustment.objects.filter(status=status,approval_status=approval_status)
+	context={
+	'members':members,
+	'current_user':current_user,
+	'DataCapture':DataCapture,
+
+	}
+	return render(request,'deskofficer_templates/Transaction_Salary_adjustment_Request_Manage_List_Load.html',context)
+
+
+def Transaction_Salary_adjustment_Request_Manage_Preview(request,pk):
+	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
+	DataCapture=DataCaptureManager.objects.first()
+	status=TransactionStatus.objects.get(title='UNTREATED')
+	approval_status=ApprovalStatus.objects.get(title='PENDING')
+	form = Transaction_Salary_adjustment_Request_Process_form(request.POST or None)
+	
+	member=Member_Salary_Adjustment.objects.get(id=pk)
+
+	if request.method == 'POST' and 'btn-submit' in request.POST:
+
+		current_gross_pay = request.POST.get('current_gross_pay')
+		existing_gross_pay=request.POST.get('existing_gross_pay')
+		period_obj=request.POST.get('period')
+
+		date_format = '%Y-%m-%d'
+		dtObj = datetime.datetime.strptime(period_obj, date_format)
+		period=get_current_date(dtObj)
+
+		update_payslip=request.POST.get('update_payslip')
+		
+
+		if update_payslip:
+			if request.FILES.get('image', False):
+				image = request.FILES['image']
+				fs=FileSystemStorage()
+				filename=fs.save(image.name,image)
+				image_url=fs.url(filename)
+			else:
+				image_url=None
+
+		
+			member.image=image_url
+
+		member.period=period
+		member.current_gross_pay=current_gross_pay
+		member.existing_gross_pay=existing_gross_pay
+		member.save()
+		return HttpResponseRedirect(reverse('deskofficer_home'))
+
+	if request.method == 'POST' and 'btn-delete' in request.POST:
+		member.delete()
+		return HttpResponseRedirect(reverse('deskofficer_home'))
+
+	form.fields['existing_gross_pay'].initial=member.existing_gross_pay
+	form.fields['current_gross_pay'].initial=member.current_gross_pay
+	form.fields['period'].initial=member.period
+	context={
+	'member':member,
+	'current_user':current_user,
+	'DataCapture':DataCapture,
+	'form':form,
+	}
+	return render(request,'deskofficer_templates/Transaction_Salary_adjustment_Request_Manage_Preview.html',context)
+
+
+
+def Transaction_Salary_adjustment_Request_Manage_Process_List_Load(request):
+	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
+	DataCapture=DataCaptureManager.objects.first()
+	status=TransactionStatus.objects.get(title='UNTREATED')
+	approval_status=ApprovalStatus.objects.get(title='PENDING')
+
+	members=Member_Salary_Adjustment.objects.filter(Q(status=status) & ~Q(approval_status=approval_status))
+	context={
+	'members':members,
+	'current_user':current_user,
+	'DataCapture':DataCapture,
+
+	}
+	return render(request,'deskofficer_templates/Transaction_Salary_adjustment_Request_Manage_Process_List_Load.html',context)
+
+
+def Transaction_Salary_adjustment_Request_Manage_Process(request,pk):
+	status=TransactionStatus.objects.get(title='TREATED')
+	member=Member_Salary_Adjustment.objects.get(id=pk)
+	member.status=status
+	member.save()
+	member.member.gross_pay=member.current_gross_pay
+	member.member.save()
+	return HttpResponseRedirect(reverse('Transaction_Salary_adjustment_Request_Manage_Process_List_Load'))
+
+
+
+
+def Transaction_Salary_adjustment_Request_Approval_List_Load(request):
+	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
+	DataCapture=DataCaptureManager.objects.first()
+	status=TransactionStatus.objects.get(title='UNTREATED')
+	approval_status=ApprovalStatus.objects.get(title='PENDING')
+
+	members=Member_Salary_Adjustment.objects.filter(status=status,approval_status=approval_status)
+	context={
+	'members':members,
+	'current_user':current_user,
+	'DataCapture':DataCapture,
+
+	}
+	return render(request,'deskofficer_templates/Transaction_Salary_adjustment_Request_Approval_List_Load.html',context)
+
+
+
+def Transaction_Salary_adjustment_Request_Approval_Process(request,pk):
+	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
+	DataCapture=DataCaptureManager.objects.first()
+	status=TransactionStatus.objects.get(title='UNTREATED')
+	approval_status=ApprovalStatus.objects.get(title='PENDING')
+	form=Transaction_Salary_adjustment_Request_Approval_Process_form(request.POST or None)
+	approval_officer=CustomUser.objects.get(id=request.user.id)
+	member=Member_Salary_Adjustment.objects.get(id=pk)
+	
+
+	if request.method == 'POST':
+		approval_date=get_current_date(now)
+		comment=request.POST.get('comment')
+		approval_status_id=request.POST.get('approval_status')
+		approval_status=ApprovalStatus.objects.get(id=approval_status_id)
+
+		member.approval_status=approval_status
+		member.approval_officer=approval_officer.username
+		member.comment=comment
+		member.approved_at=approval_date
+		member.save()
+		return HttpResponseRedirect(reverse('Transaction_Salary_adjustment_Request_Approval_List_Load'))
+
+	form.fields['comment'].initial="Please Process"
+	context={
+	'member':member,
+	'current_user':current_user,
+	'DataCapture':DataCapture,
+	'form':form,
+
+	}
+	return render(request,'deskofficer_templates/Transaction_Salary_adjustment_Request_Approval_Process.html',context)
+
+
 
 
 #########################################################
@@ -1391,14 +2234,17 @@ def Transaction_Loan_adjustment_Transaction_Approved_List_Load(request):
 
 
 def loan_request_search(request):
+	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
 	DataCapture=DataCaptureManager.objects.first()
 	title="Search Membership Loan Request"
 	form = searchForm(request.POST or None)
-	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
-	return render(request,'deskofficer_templates/loan_request_search.html',{'form':form,'title':title,'DataCapture':DataCapture,'user_level':user_level.userlevel.title,})
+	
+	return render(request,'deskofficer_templates/loan_request_search.html',{'form':form,'title':title,'current_user':current_user,
+	'DataCapture':DataCapture,})
 
 
 def loan_request_list_load(request):
+	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
 	DataCapture=DataCaptureManager.objects.first()
 	title="Loan Request order"
 	form = searchForm(request.POST)
@@ -1410,18 +2256,20 @@ def loan_request_list_load(request):
 		form = searchForm(request.POST)
 		members=searchMembers(form['title'].value(),status)
 
-		user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
+		
 
 		context={
-		'user_level':user_level.userlevel.title,
+		
 		'members':members,
 		'title':title,
+		'current_user':current_user,
 		'DataCapture':DataCapture,
 		}
 		return render(request,'deskofficer_templates/loan_request_list_load.html',context)
 
 
 def loan_request_order(request,pk):
+	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
 	DataCapture=DataCaptureManager.objects.first()
 	submission_status=SubmissionStatus.objects.get(title="PENDING")
 	transaction_status=TransactionStatus.objects.get(title="UNTREATED")
@@ -1431,14 +2279,12 @@ def loan_request_order(request,pk):
 	exist_loans = LoanRequest.objects.filter(member_id=member,submission_status=submission_status,transaction_status=transaction_status)
 
 	if request.method=="POST":
-		# tday=now.day
-		# tmonth=now.month
-		# tyear=now.year
 		
 		tdate=get_current_date(now)
 
 		form=loan_request_order_form(request.POST)
 		if form.is_valid():
+			approval_status=ApprovalStatus.objects.get(title='PENDING')
 			category=LoanCategory.objects.get(title='MONETARY')
 			processed_by=CustomUser.objects.get(id=request.user.id)
 			loan_obj = form.cleaned_data["loans"]
@@ -1447,7 +2293,9 @@ def loan_request_order(request,pk):
 			maximum_amount = loan.maximum_amount
 			multiple_loan_status=loan.multiple_loan_status
 
-
+			if not amount:
+				messages.error(request,'Loan Amount Missing')
+				return HttpResponseRedirect(reverse('loan_request_order',args=(pk,)))
 
 			if LoansDisbursed.objects.filter(member=member,transaction=loan).filter(Q(balance__lt=0)).exists():
 				if multiple_loan_status.title == 'NOT ALLOWED':
@@ -1473,18 +2321,19 @@ def loan_request_order(request,pk):
 				messages.error(request,"You still have Open Transaction")
 				return HttpResponseRedirect(reverse('loan_request_order', args=(pk,)))
 
-			record=LoanRequest(tdate=tdate,member=member,loan_amount=amount,loan=loan,submission_status=submission_status,transaction_status=transaction_status,processed_by=processed_by)
+			record=LoanRequest(tdate=tdate,member=member,loan_amount=amount,loan=loan,submission_status=submission_status,approval_status=approval_status,transaction_status=transaction_status,processed_by=processed_by.username)
 			record.save()
 			return HttpResponseRedirect(reverse('loan_request_order', args=(pk,)))
-	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
+	
 
 	context={
-	'user_level':user_level.userlevel.title,
+	
 	'form':form,
 
 	'member':member,
 	'exist_loans':exist_loans,
 	'pk':pk,
+	'current_user':current_user,
 	'DataCapture':DataCapture,
 	}
 	return render(request,'deskofficer_templates/loan_request_order.html',context)
@@ -1500,11 +2349,11 @@ def loan_request_order_delete(request,pk,return_pk):
 
 
 def loan_request_criteria_Load(request,pk):
+	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
 	DataCapture=DataCaptureManager.objects.first()
 	form=loan_criteria_external_fascilities_form(request.POST or None)
 	applicant=LoanRequest.objects.get(id=pk)
-	gross_pay=applicant.member.gross_pay
-
+	
 
 
 
@@ -1514,10 +2363,7 @@ def loan_request_criteria_Load(request,pk):
 		messages.info(request,"Members Department is Missing")
 		return HttpResponseRedirect(reverse('loan_request_order',args=(applicant.member_id,)))
 
-	if gross_pay <= 0:
-		messages.info(request,'Please Upload Salary Information')
-		return HttpResponseRedirect(reverse('loan_request_order',args=(applicant.member_id,)))
-
+	
 	total_savings=0
 	savings=[]
 	if StandingOrderAccounts.objects.filter(transaction__member_id=applicant.member_id).exists():
@@ -1541,102 +2387,115 @@ def loan_request_criteria_Load(request,pk):
 		shops =CooperativeShopLedger.objects.filter(Q(balance__lt=0) & Q(member_id=applicant.member_id)).order_by('-id').first()
 		shop_balance=abs(shops.balance)
 
-	records_amount=0
-	records=[]
-	if ExternalFascilitiesTemp.objects.filter(member=applicant.member_id).exists():
-		records=ExternalFascilitiesTemp.objects.filter(member=applicant.member_id)
-		records_amount_sum=ExternalFascilitiesTemp.objects.filter(member=applicant.member_id).aggregate(total_amount=Sum('amount'))
-		records_amount=records_amount_sum['total_amount']
 
+	total_debit=float(total_savings)+float(total_loans)+float(shop_balance)
 	
-
-	total_debit=float(total_savings)+float(total_loans)+float(shop_balance)+ float(records_amount)
-	
-
-
-	
-	balance=float(gross_pay)-total_debit
 	attachment_form=loan_request_document_attachment_form(request.POST or None)
-	items=LoanRequestAttachments.objects.filter(applicant=applicant)
 	
 	
 	if request.method=="POST" and 'attachment' in request.POST:
 		attachment_form=loan_request_document_attachment_form(request.POST)
-		if attachment_form.is_valid():
-			processed_by=CustomUser.objects.get(id=request.user.id)
-			description = attachment_form.cleaned_data["description"]
+		
+	
+		description = request.POST.get("description")
+		gross_pay=request.POST.get('gross_pay')
+		net_pay=request.POST.get('net_pay')
 
-			if request.FILES.get('image', False):
-				image = request.FILES['image']
-				fs=FileSystemStorage()
-				filename=fs.save(image.name,image)
-				image_url=fs.url(filename)
-			else:
-				image_url=None
-
-			if LoanRequestAttachments.objects.filter(applicant=applicant,description=description).exists():
-				record_exist=LoanRequestAttachments.objects.filter(applicant=applicant,description=description).order_by('id').first()
-				record_exist.image=image_url
-				record_exist.processed_by=processed_by
-				record_exist.save()
-				return HttpResponseRedirect(reverse('loan_request_criteria_Load',args=(pk,)))
-
-
-			record=LoanRequestAttachments(applicant=applicant,description=description,image=image_url,processed_by=processed_by)
-			record.save()
+		if request.FILES.get('image', False):
+			image = request.FILES['image']
+			fs=FileSystemStorage()
+			filename=fs.save(image.name,image)
+			image_url=fs.url(filename)
+		else:
+			image_url=None
+		
+		if not description:
+			messages.error(request,'Description Missing')
 			return HttpResponseRedirect(reverse('loan_request_criteria_Load',args=(pk,)))
+		
+		if not gross_pay or gross_pay == '0':
+			messages.error(request,'Gross Pay Missing')
+			return HttpResponseRedirect(reverse('loan_request_criteria_Load',args=(pk,)))
+		
+		if not net_pay or net_pay == '0':
+			messages.error(request,'Net Pay Missing')
+			return HttpResponseRedirect(reverse('loan_request_criteria_Load',args=(pk,)))
+		
 
-	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
+		applicant.description=description
+		applicant.gross_pay=gross_pay
+		applicant.net_pay=net_pay
+		applicant.image=image_url
+		applicant.save()
+		return HttpResponseRedirect(reverse('loan_request_criteria_Load',args=(pk,)))
+
+	
 
 	context={
-	'user_level':user_level.userlevel.title,
+	
 	'form':form,
 	'applicant':applicant,
 	'savings':savings,
 	'loans':loans,
 	'shops':shops,
 	'shop_balance':shop_balance,
-	'records':records,
-	'gross_pay':gross_pay,
+	# 'records':records,
+	# 'gross_pay':gross_pay,
 	'total_debit':total_debit,
-	'balance':balance,
+	# 'balance':balance,
 	'pk':pk,
 	'attachment_form':attachment_form,
-	'items':items,
+	
 
+	'current_user':current_user,
 	'DataCapture':DataCapture,
 	}
 	return render(request,'deskofficer_templates/loan_request_criteria_Load.html',context)
 
 
 def LoanRequestAttachments_delete(request,pk,return_pk):
-	item=LoanRequestAttachments.objects.get(id=pk)
-	item.delete()
+	item=LoanRequest.objects.get(id=pk)
+	
+	item.image=None
+	item.gross_pay=0
+	item.net_pay=0
+	item.description=""
+	item.save()
 	return HttpResponseRedirect(reverse('loan_request_criteria_Load',args=(return_pk,)))
 
 
 
 def loan_request_preview(request,pk):
+	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
 	DataCapture=DataCaptureManager.objects.first()
 	applicant=LoanRequest.objects.get(id=pk)
-	gross_pay=applicant.member.gross_pay
+	
+	net_pay=applicant.net_pay
 	
 	if LoanBasedSavings.objects.all().exists():
 		loan_based_saving = LoanBasedSavings.objects.first()
 	else:		
-		messages.info(request,'Loan Based Savings not Set')
+		messages.error(request,'Loan Based Savings not Set')
 		return HttpResponseRedirect(reverse('loan_request_criteria_Load', args=(pk,)))
 	
 	savings_saved=0
 	if StandingOrderAccounts.objects.filter(transaction__transaction=loan_based_saving.savings,transaction__member=applicant.member).exists():
 		account_id=StandingOrderAccounts.objects.get(transaction__transaction=loan_based_saving.savings,transaction__member=applicant.member)
-	
-		savings_ledger=PersonalLedger.objects.filter(account_number=account_id.transaction.account_number).last()
-		savings_saved=savings_ledger.balance
+		
+		savings_saved=0
+		if PersonalLedger.objects.filter(account_number=account_id.transaction.account_number).exists():
+			savings_ledger=PersonalLedger.objects.filter(account_number=account_id.transaction.account_number).last()
+			savings_saved=savings_ledger.balance
+		else:
+			messages.error(request,'No Savings Available for Loan Based Savings')
+			return HttpResponseRedirect(reverse('loan_request_criteria_Load', args=(pk,)))
+
+	else:
+		messages.error(request,'No account for Loan Based Savings')
+		return HttpResponseRedirect(reverse('loan_request_criteria_Load', args=(pk,)))
+
 
 	loan_based_saving_rating=applicant.loan.savings_rate
-
-
 
 	loan_saving_relationship=float(int(loan_based_saving_rating)/100) * float(applicant.loan_amount)
 	
@@ -1665,17 +2524,13 @@ def loan_request_preview(request,pk):
 		shop_balance=abs(shops.balance)
 
 	status=TransactionStatus.objects.get(title='UNTREATED')
-	records_amount=0
-	records_amount_sum=ExternalFascilitiesMain.objects.filter(member__member_id=applicant.member_id,status=status).aggregate(total_amount=Sum('member__amount'))
-	records_amount=records_amount_sum['total_amount']
-	if records_amount==None:
-		records_amount=0
+	
 
 	
-	total_debit=float(total_savings)+float(total_loans)+float(shop_balance)+ float(records_amount)
+	total_debit=float(total_savings)+float(total_loans)+float(shop_balance)
 
 	
-	balance=float(gross_pay)-total_debit
+	balance=float(net_pay)-total_debit
 		
 	date_joined = applicant.member.date_joined
 	now = datetime.datetime.now()
@@ -1690,6 +2545,7 @@ def loan_request_preview(request,pk):
 	loan_amount=applicant.loan_amount
 	duration = applicant.loan.duration
 	salary_loan_relationship = applicant.loan.salary_loan_relationship
+	
 	salary_loan_relationship_computed= float(int(salary_loan_relationship)/100) * float(balance)
 
 	interest_rate = applicant.loan.interest_rate
@@ -1707,13 +2563,9 @@ def loan_request_preview(request,pk):
 		messages.info(request,'Please set the Loan Duration')
 		return HttpResponseRedirect(reverse('loan_request_criteria_Load', args=(pk,)))
 	
-	part1= float(amount_scheduled)//float(duration)
-	part2= float(amount_scheduled)%float(duration)
+	
+	monthly_repayment=math.ceil(float(amount_scheduled)/float(duration))
 
-	if int(part2) >= 1:
-		monthly_repayment='{0:.2f}'.format(float(part1)+ 1)
-	else:
-		monthly_repayment='{0:.2f}'.format(float(part1))
 
 	salary_status=True
 	if float(monthly_repayment)> float(salary_loan_relationship_computed):
@@ -1723,170 +2575,169 @@ def loan_request_preview(request,pk):
 	if int(members_age)>int(loan_age):
 		Member_Status = True
 
-	exclusive=applicant.member.exclusive_status
+	
 
 
-	certification_officers=CertificationOfficers.objects.filter(transaction__transaction_id=applicant.loan_id)
+	# exclusive=applicant.member.exclusive_status
+	exclusive_status=False
+
+	# if exclusive.title == "EXCLUSIVE":
+
+	approval_status=ApprovalStatus.objects.get(title='APPROVED')
+	processing_status=ProcessingStatus.objects.get(title='UNPROCESSED')
+	if MembersExclusiveness.objects.filter(transaction=applicant.loan,processing_status=processing_status,approval_status=approval_status).exists():
+		exclusive_status=True
 
 	if request.method=="POST":
 		
 		submission_status=SubmissionStatus.objects.get(title="SUBMITTED")
 		comment=request.POST.get("comment")
-		officer_id=request.POST.get("officer")
-		if not officer_id:
-			messages.error(request,'Please the Certification Officer is missing')
-			return HttpResponseRedirect(reverse('loan_request_preview',args=(pk,)))
-		
-		officer=CertificationOfficers.objects.get(id=officer_id)
-		applicant.certification_officer=officer
+	
 		
 		applicant.comment=comment
 		applicant.submission_status=submission_status
 		applicant.save()
 
-		description="GROSS PAY"
-		value=gross_pay
-		loan_setting=LoanRequestSettings(applicant=applicant,description=description,value=value,category='ANALYSIS')
+		description="NET PAY"
+		value=net_pay
+		loan_setting=LoanRequestSettings(status=status,applicant=applicant,description=description,value=value,category='ANALYSIS')
 		loan_setting.save()
 		
 
 		description="SALARY BALANCE AFTER DEDUCTIONS"
 		value=balance
-		loan_setting=LoanRequestSettings(applicant=applicant,description=description,value=value,category='ANALYSIS')
+		loan_setting=LoanRequestSettings(status=status,applicant=applicant,description=description,value=value,category='ANALYSIS')
 		loan_setting.save()
 
 		description=loan_type
 		value=loan_amount
-		loan_setting=LoanRequestSettings(applicant=applicant,description=description,value=value,category='ANALYSIS')
+		loan_setting=LoanRequestSettings(status=status,applicant=applicant,description=description,value=value,category='ANALYSIS')
 		loan_setting.save()
 
 		description="MONTHLY DEDUCTIONS"
 		value=total_savings
-		loan_setting=LoanRequestSettings(applicant=applicant,description=description,value=value,category='ANALYSIS')
+		loan_setting=LoanRequestSettings(status=status,applicant=applicant,description=description,value=value,category='ANALYSIS')
 		loan_setting.save()
 
 		description="MONTHLY LOAN REPAYMENTS"
 		value=total_loans
-		loan_setting=LoanRequestSettings(applicant=applicant,description=description,value=value,category='ANALYSIS')
+		loan_setting=LoanRequestSettings(status=status,applicant=applicant,description=description,value=value,category='ANALYSIS')
 		loan_setting.save()
 
 		description="COOPERATIVE SHOP"
 		value=shop_balance
-		loan_setting=LoanRequestSettings(applicant=applicant,description=description,value=value,category='ANALYSIS')
+		loan_setting=LoanRequestSettings(status=status,applicant=applicant,description=description,value=value,category='ANALYSIS')
 		loan_setting.save()
 
-		description="EXTERNAL FASCILITIES"
-		value=records_amount
-		loan_setting=LoanRequestSettings(applicant=applicant,description=description,value=value,category='ANALYSIS')
-		loan_setting.save()
-
+	
 		description="LOAN DURATION"
 		value=str(duration) + " MONTHS"
-		loan_setting=LoanRequestSettings(applicant=applicant,description=description,value=value,category='ANALYSIS')
+		loan_setting=LoanRequestSettings(status=status,applicant=applicant,description=description,value=value,category='ANALYSIS')
 		loan_setting.save()
 
 		description="SALARY LOAN RELATIONSHIP"
 		value=str(salary_loan_relationship) + "%"
-		loan_setting=LoanRequestSettings(applicant=applicant,description=description,value=value,category='ANALYSIS')
+		loan_setting=LoanRequestSettings(status=status,applicant=applicant,description=description,value=value,category='ANALYSIS')
 		loan_setting.save()
 
 
 		description="SALARY LOAN RELATIONSHIP COMPUTED"
 		value=salary_loan_relationship_computed
-		loan_setting=LoanRequestSettings(applicant=applicant,description=description,value=value,category='ANALYSIS')
+		loan_setting=LoanRequestSettings(status=status,applicant=applicant,description=description,value=value,category='ANALYSIS')
 		loan_setting.save()
 
 		description="LOAN AGE"
 		value=str(loan_age) + " MONTHS" 
-		loan_setting=LoanRequestSettings(applicant=applicant,description=description,value=value,category='ANALYSIS')
+		loan_setting=LoanRequestSettings(status=status,applicant=applicant,description=description,value=value,category='ANALYSIS')
 		loan_setting.save()	
 
 
 		description="DATE JOINED"
 		value=date_joined
-		loan_setting=LoanRequestSettings(applicant=applicant,description=description,value=value,category='ANALYSIS')
+		loan_setting=LoanRequestSettings(status=status,applicant=applicant,description=description,value=value,category='ANALYSIS')
 		loan_setting.save()
 
 		description="MEMBER AGE"
 		value=str(members_age) + "MONTH(S)"
-		loan_setting=LoanRequestSettings(applicant=applicant,description=description,value=value,category='ANALYSIS')
+		loan_setting=LoanRequestSettings(status=status,applicant=applicant,description=description,value=value,category='ANALYSIS')
 		loan_setting.save()
 
 		description="LOAN INTEREST RATE"
 		value=str(interest_rate) + "%"
-		loan_setting=LoanRequestSettings(applicant=applicant,description=description,value=value,category='ANALYSIS')
+		loan_setting=LoanRequestSettings(status=status,applicant=applicant,description=description,value=value,category='ANALYSIS')
 		loan_setting.save()		
 
 
 		description="INTEREST DEDUCTION"
 		value=interest_deduction
-		loan_setting=LoanRequestSettings(applicant=applicant,description=description,value=value,category='ANALYSIS')
+		loan_setting=LoanRequestSettings(status=status,applicant=applicant,description=description,value=value,category='ANALYSIS')
 		loan_setting.save()
 
 
 		description="LOAN INTEREST"
 		value=interest
-		loan_setting=LoanRequestSettings(applicant=applicant,description=description,value=value,category='ANALYSIS')
+		loan_setting=LoanRequestSettings(status=status,applicant=applicant,description=description,value=value,category='ANALYSIS')
 		loan_setting.save()
 
 		description="AMOUNT SCHEDULED"
 		value=amount_scheduled
-		loan_setting=LoanRequestSettings(applicant=applicant,description=description,value=value,category='ANALYSIS')
+		loan_setting=LoanRequestSettings(status=status,applicant=applicant,description=description,value=value,category='ANALYSIS')
 		loan_setting.save()
 
 
 		description="MONTHLY REPAYMENT"
-		value= round(float(monthly_repayment), 2) 
+		value= monthly_repayment
+		# value= round(float(monthly_repayment), 2) 
 		# value= '{0:.2f}'.format(monthly_repayment) 
-		loan_setting=LoanRequestSettings(applicant=applicant,description=description,value=value,category='ANALYSIS')
+		loan_setting=LoanRequestSettings(status=status,applicant=applicant,description=description,value=value,category='ANALYSIS')
 		loan_setting.save()
 
 		description="LOAN BASED SAVINGS"
 		value=loan_based_saving.savings.name
-		loan_setting=LoanRequestSettings(applicant=applicant,description=description,value=value,category='ANALYSIS')
+		loan_setting=LoanRequestSettings(status=status,applicant=applicant,description=description,value=value,category='ANALYSIS')
 		loan_setting.save()
 		
 		description="AMOUNT SAVED"
 		value='#' + str(savings_saved)
-		loan_setting=LoanRequestSettings(applicant=applicant,description=description,value=value,category='ANALYSIS')
+		loan_setting=LoanRequestSettings(status=status,applicant=applicant,description=description,value=value,category='ANALYSIS')
 		loan_setting.save()
 
 		description="LOAN BASED SAVINGS RATE"
 		value=str(loan_based_saving_rating) + "%"
-		loan_setting=LoanRequestSettings(applicant=applicant,description=description,value=value,category='ANALYSIS')
+		loan_setting=LoanRequestSettings(status=status,applicant=applicant,description=description,value=value,category='ANALYSIS')
 		loan_setting.save()	
 
-		description="MEMBER STATUS"
-		value=Member_Status
-		loan_setting=LoanRequestSettings(applicant=applicant,description=description,value=value,category='SUMMARY')
-		loan_setting.save()
-
-
 		description="EXCLUSIVE STATUS"
-		value=exclusive
-		loan_setting=LoanRequestSettings(applicant=applicant,description=description,value=value,category='SUMMARY')
+		value=exclusive_status
+		loan_setting=LoanRequestSettings(status=status,applicant=applicant,description=description,value=value,category='ANALYSIS')
 		loan_setting.save()
+
+		description="MEMBERSHIP STATUS"
+		value=Member_Status
+		loan_setting=LoanRequestSettings(status=status,applicant=applicant,description=description,value=value,category='SUMMARY')
+		loan_setting.save()
+
 
 		description="SAME LOAN TYPE"
 		value=same_type_loan
-		loan_setting=LoanRequestSettings(applicant=applicant,description=description,value=value,category='SUMMARY')
+		loan_setting=LoanRequestSettings(status=status,applicant=applicant,description=description,value=value,category='SUMMARY')
 		loan_setting.save()
 
 		description="SALARY STATUS"
 		value=salary_status
-		loan_setting=LoanRequestSettings(applicant=applicant,description=description,value=value,category='SUMMARY')
+		loan_setting=LoanRequestSettings(status=status,applicant=applicant,description=description,value=value,category='SUMMARY')
 		loan_setting.save()
 
 		description="LOAN SAVINGS BASED STATUS"
 		value=loan_savings_status
-		loan_setting=LoanRequestSettings(applicant=applicant,description=description,value=value,category='SUMMARY')
+		loan_setting=LoanRequestSettings(status=status,applicant=applicant,description=description,value=value,category='SUMMARY')
 		loan_setting.save()
 
 
 		return HttpResponseRedirect(reverse('loan_request_search'))
 
 
-	if exclusive.title=="NON EXCLUSIVE":
+	if exclusive_status==False:
 	
 		button_enabled=False
 		if Member_Status == True and same_type_loan==False and salary_status==True and loan_savings_status==True:
@@ -1894,21 +2745,19 @@ def loan_request_preview(request,pk):
 	else:
 		button_enabled=True
 
-	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
-
+	
+	form=MemberShipRequestAdditionalInfo_form(request.POST or None)
 	context={
-	'user_level':user_level.userlevel.title,
-	# 'form':form,
+	
+	'form':form,
 	'loan_type':loan_type,
-	'exclusive':exclusive,
+	'exclusive':exclusive_status,
 	'applicant':applicant,
 	'loan_amount':loan_amount,
 	'total_savings':total_savings,
 	'total_loans':total_loans,
-	'certification_officers':certification_officers,
 	'shop_balance':shop_balance,
-	'records_amount':records_amount,
-	'gross_pay':gross_pay,
+	'net_pay':net_pay,
 	'total_debit':total_debit,
 	'balance':balance,
 	'pk':pk,
@@ -1930,6 +2779,7 @@ def loan_request_preview(request,pk):
 	'loan_based_saving_rating':loan_based_saving_rating,
 	'loan_savings_status':loan_savings_status,
 	'button_enabled':button_enabled,
+	'current_user':current_user,
 	'DataCapture':DataCapture,
 	'savings_saved':savings_saved,
 	}
@@ -1940,30 +2790,31 @@ def loan_request_preview(request,pk):
 
 
 def loan_request_approved_list_load(request):
+	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
 	DataCapture=DataCaptureManager.objects.first()
 	transaction_status=TransactionStatus.objects.get(title='UNTREATED')
 	approval_status=ApprovalStatus.objects.get(title='APPROVED')
 	applicants=LoanRequest.objects.filter(approval_status=approval_status,transaction_status=transaction_status)
-	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
+	
 
 	context={
-	'user_level':user_level.userlevel.title,
+	
 	'applicants':applicants,
+	'current_user':current_user,
 	'DataCapture':DataCapture,
 	}
 	return render(request,'deskofficer_templates/loan_request_approved_list_load.html',context)
 
 
 def loan_request_approved_list_form_sales(request,pk):
+	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
 	DataCapture=DataCaptureManager.objects.first()
 	loan=LoanRequest.objects.get(id=pk)
 	loan_amount=loan.approved_amount
 	admin_charges_minimum = loan.loan.admin_charges_minimum
 	receipt_type = loan.loan.receipt_type
 
-	# tday=now.day
-	# tmonth=now.month
-	# tyear=now.year
+
 	
 	tdate=get_current_date(now)
 
@@ -1982,6 +2833,8 @@ def loan_request_approved_list_form_sales(request,pk):
 	form.fields['loan_amount'].initial=loan_amount
 
 	if request.method == "POST":
+		processing_status=ProcessingStatus.objects.get(title='UNPROCESSED')
+		status=TransactionStatus.objects.get(title='UNTREATED')
 		transaction_status=TransactionStatus.objects.get(title='TREATED')
 		form_print=request.POST.get('status')
 
@@ -2002,7 +2855,7 @@ def loan_request_approved_list_form_sales(request,pk):
 			messages.error(request,'Receipt Format No Set')
 			return HttpResponseRedirect(reverse('loan_request_approved_list_form_sales',args=(pk,)))
 
-		record = LoanFormIssuance(tdate=tdate,applicant=loan,receipt=receipt,admin_charge=admin_charge)
+		record = LoanFormIssuance(processing_status=processing_status,tdate=tdate,applicant=loan,receipt=receipt,admin_charge=admin_charge,status=status)
 		record.save()
 
 		loan.transaction_status=transaction_status
@@ -2017,34 +2870,38 @@ def loan_request_approved_list_form_sales(request,pk):
 			return HttpResponseRedirect(reverse('loan_request_approved_list_load'))
 		elif form_print == '1':
 			return HttpResponseRedirect(reverse('loan_request_approved_list_load'))
-	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
+	
 
 	context={
-	'user_level':user_level.userlevel.title,
+	
 	'form':form,
 	'loan':loan,
 	'receipt_type':receipt_type,
+	'current_user':current_user,
 	'DataCapture':DataCapture,
 	}
 	return render(request,'deskofficer_templates/loan_request_approved_list_form_sales.html',context)
 
 
 def loan_application_list_load(request):
+	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
 	DataCapture=DataCaptureManager.objects.first()
 	processing_status=ProcessingStatus.objects.get(title="UNPROCESSED")
 	applicants=LoanFormIssuance.objects.filter(processing_status=processing_status)
 
-	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
+	
 
 	context={
-	'user_level':user_level.userlevel.title,
+	
 	'applicants':applicants,
+	'current_user':current_user,
 	'DataCapture':DataCapture,
 	}
 	return render(request,'deskofficer_templates/loan_application_list_load.html',context)
 
 
 def loan_application_processing(request,pk):
+	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
 	DataCapture=DataCaptureManager.objects.first()
 	status=MembershipStatus.objects.get(title="ACTIVE")
 	applicant=LoanFormIssuance.objects.get(id=pk)
@@ -2075,11 +2932,11 @@ def loan_application_processing(request,pk):
 	
 
 	if  request.method =='POST' and 'application' in request.POST:
-		tday = now.day
-		tmonth = now.month
-		tyear = now.year
-		tdate = date(int(tyear),int(tmonth),int(tday))
-		
+		tdate = get_current_date(now)
+		certification_status=CertificationStatus.objects.get(title="PENDING")
+		approval_status=ApprovalStatus.objects.get(title='PENDING')
+		transaction_status=TransactionStatus.objects.get(title='UNTREATED')
+		submission_status=SubmissionStatus.objects.get(title='PENDING')
 		exist_amount=request.POST.get('loan_amount')
 		new_amount=request.POST.get('loan_new_amount')
 		
@@ -2098,7 +2955,7 @@ def loan_application_processing(request,pk):
 			record.save()
 			return HttpResponseRedirect(reverse('loan_application_processing', args=(pk,)))
 
-		record=LoanApplication(tdate=tdate,applicant=applicant,loan_amount=new_amount)
+		record=LoanApplication(submission_status=submission_status,transaction_status=transaction_status,approval_status=approval_status,certification_status=certification_status,tdate=tdate,applicant=applicant,loan_amount=new_amount)
 		record.save()
 		return HttpResponseRedirect(reverse('loan_application_processing', args=(pk,)))
 
@@ -2166,10 +3023,10 @@ def loan_application_processing(request,pk):
 	if LoanApplication.objects.filter(applicant=applicant).exists():
 		form.fields['loan_new_amount'].initial=new_amount
 	
-	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
+	
 
 	context={
-	'user_level':user_level.userlevel.title,
+	
 	'form':form,
 	'applicant':applicant,
 	'loan_settings':loan_settings,
@@ -2180,6 +3037,7 @@ def loan_application_processing(request,pk):
 	'guarantors':guarantors,
 	'bank_accounts':bank_accounts,
 	'seleected_guarantors':seleected_guarantors,
+	'current_user':current_user,
 	'DataCapture':DataCapture,
 	'return_pk':pk,
 	}
@@ -2189,6 +3047,7 @@ def loan_application_processing(request,pk):
 
 
 def loan_application_preview(request,pk, return_pk):
+	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
 	DataCapture=DataCaptureManager.objects.first()
 	submission_status=SubmissionStatus.objects.get(title="SUBMITTED")
 
@@ -2553,10 +3412,10 @@ def loan_application_preview(request,pk, return_pk):
 			button_enabled=False
 
 
-	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
+	
 
 	context={
-	'user_level':user_level.userlevel.title,
+	
 	'loan_type':loan_type,
 	'exclusive':exclusive,
 	'applicant':applicant,
@@ -2593,6 +3452,7 @@ def loan_application_preview(request,pk, return_pk):
 	'guarnator_status':guarnator_status,
 	'nok_status':nok_status,
 	'bank_account_status':bank_account_status,
+	'current_user':current_user,
 	'DataCapture':DataCapture,
 	'savings_saved':savings_saved,
 	}
@@ -2602,15 +3462,17 @@ def loan_application_preview(request,pk, return_pk):
 
 
 def loan_application_approved_list_load(request):
+	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
 	DataCapture=DataCaptureManager.objects.first()
 	transaction_status=TransactionStatus.objects.get(title='UNTREATED')
 	approval_status=ApprovalStatus.objects.get(title='APPROVED')
 	applicants=LoanApplication.objects.filter(approval_status=approval_status,transaction_status=transaction_status)
-	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
+	
 
 	context={
-	'user_level':user_level.userlevel.title,
+	
 	'applicants':applicants,
+	'current_user':current_user,
 	'DataCapture':DataCapture,
 	}
 	return render(request,'deskofficer_templates/loan_application_approved_list_load.html',context)
@@ -2619,6 +3481,7 @@ def loan_application_approved_list_load(request):
 
 def loan_application_approved_process_preview(request,pk):
 
+	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
 	DataCapture=DataCaptureManager.objects.first()
 	form=loan_application_approved_process_preview__form(request.POST or None)
 	transaction_period=TransactionPeriods.objects.get(status__title='ACTIVE')
@@ -2842,10 +3705,10 @@ def loan_application_approved_process_preview(request,pk):
 				return HttpResponseRedirect(reverse('loan_application_approved_list_load'))
 
 	form.fields['effective_date'].initial=transaction_period.transaction_period
-	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
+	
 
 	context={
-	'user_level':user_level.userlevel.title,
+	
 	'loan_type':loan_type,
 	'applicant':applicant,
 	'loan_amount':loan_amount,
@@ -2858,6 +3721,7 @@ def loan_application_approved_process_preview(request,pk):
 	'amount_scheduled':amount_scheduled,
 	'records':records,
 	'form':form,
+	'current_user':current_user,
 	'DataCapture':DataCapture,
 	}
 
@@ -2870,6 +3734,7 @@ def loan_application_approved_process_preview(request,pk):
 ############### TRANSACTION PERIOD MANAGER  ###############
 #########################################################
 def TransactionPeriodManager(request):
+	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
 	DataCapture=DataCaptureManager.objects.first()
 	status=MembershipStatus.objects.get(title='INACTIVE')
 	records=TransactionPeriods.objects.all().order_by('transaction_period')
@@ -2880,12 +3745,13 @@ def TransactionPeriodManager(request):
 		record.save()
 		return HttpResponseRedirect(reverse('TransactionPeriodManager'))
 	form.fields['transaction_period'].initial=now
-	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
+	
 
 	context={
-	'user_level':user_level.userlevel.title,
+	
 	'form':form,
 	'records':records,
+	'current_user':current_user,
 	'DataCapture':DataCapture,
 	}
 	return render(request,'deskofficer_templates/TransactionPeriodManager.html',context)
@@ -2906,22 +3772,25 @@ def TransactionPeriodsUpdate(request,pk):
 ############### MONTHLY DEDUCTIONS SECTION  ###############
 #########################################################
 def Monthly_Deduction_Salary_Institution_Load(request):
+	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
 	DataCapture=DataCaptureManager.objects.first()
 	status=MembershipStatus.objects.get(title='ACTIVE')
 	transaction_period=TransactionPeriods.objects.get(status=status)
 	items=SalaryInstitution.objects.all()
-	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
+	
 
 	context={
-	'user_level':user_level.userlevel.title,
+	
 	'items':items,
 	'transaction_period':transaction_period,
+	'current_user':current_user,
 	'DataCapture':DataCapture,
 	}
 	return render(request,'deskofficer_templates/Monthly_Deduction_Salary_Institution_Load.html',context)
 
 
 def Monthly_Individual_Transactions_Load(request,pk):
+	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
 	DataCapture=DataCaptureManager.objects.first()
 	source1=TransactionSources.objects.get(title='SAVINGS')
 	source2=TransactionSources.objects.get(title='LOAN')
@@ -2945,10 +3814,10 @@ def Monthly_Individual_Transactions_Load(request,pk):
 		loans_status=True
 
 	
-	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
+	
 
 	context={
-	'user_level':user_level.userlevel.title,
+	
 	'savings_status':savings_status,
 	'loans_status':loans_status,
 	'transactions1':transactions1,
@@ -2956,6 +3825,7 @@ def Monthly_Individual_Transactions_Load(request,pk):
 	'transaction_period':transaction_period,
 	'salary_institution':salary_institution,
 	'generated_transactions':generated_transactions,
+	'current_user':current_user,
 	'DataCapture':DataCapture,
 	}
 	return render(request,'deskofficer_templates/Monthly_Individual_Transactions_Load.html',context)
@@ -2963,6 +3833,7 @@ def Monthly_Individual_Transactions_Load(request,pk):
 
 
 def Monthly_Savings_Contribution_preview(request,pk, salary_inst_key):
+	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
 	DataCapture=DataCaptureManager.objects.first()
 	status=MembershipStatus.objects.get(title='ACTIVE')
 	transaction_period=TransactionPeriods.objects.get(status=status)
@@ -2980,10 +3851,10 @@ def Monthly_Savings_Contribution_preview(request,pk, salary_inst_key):
 	if MonthlyGeneratedTransactions.objects.filter(transaction=transaction,transaction_period=transaction_period).exists():
 		record_exist=True
 	
-	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
+	
 
 	context={
-	'user_level':user_level.userlevel.title,
+	
 	'transaction':transaction,
 	'members':members,
 	'transaction_period':transaction_period,
@@ -2991,6 +3862,7 @@ def Monthly_Savings_Contribution_preview(request,pk, salary_inst_key):
 	'members':members,
 	'salary_inst_key':salary_inst_key,
 	'record_exist':record_exist,
+	'current_user':current_user,
 	'DataCapture':DataCapture,
 	}
 	return render(request,'deskofficer_templates/Monthly_Savings_Contribution_preview.html',context)
@@ -3029,6 +3901,7 @@ def Monthly_Savings_Contribution_Generate(request,pk,salary_inst_key):
 
 
 def Monthly_loan_repayement_preview(request,pk, salary_inst_key):
+	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
 	DataCapture=DataCaptureManager.objects.first()
 	status=MembershipStatus.objects.get(title='ACTIVE')
 	transaction_period=TransactionPeriods.objects.get(status=status)
@@ -3046,16 +3919,17 @@ def Monthly_loan_repayement_preview(request,pk, salary_inst_key):
 	if MonthlyGeneratedTransactions.objects.filter(transaction=transaction,transaction_period=transaction_period).exists():
 		record_exist=True
 
-	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
+	
 
 	context={
-	'user_level':user_level.userlevel.title,
+	
 	'transaction':transaction,
 	'members':members,
 	'transaction_period':transaction_period,
 	'pk':pk,
 	'salary_inst_key':salary_inst_key,
 	'record_exist':record_exist,
+	'current_user':current_user,
 	'DataCapture':DataCapture,
 	}
 	return render(request,'deskofficer_templates/Monthly_loan_repayement_preview.html',context)
@@ -3104,6 +3978,7 @@ def Monthly_loan_repayement_Generate(request,pk, salary_inst_key):
 
 
 def MonthlyDeductionGenerationHeader(request, caption,salary_inst_key):
+	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
 	DataCapture=DataCaptureManager.objects.first()
 	status=TransactionStatus.objects.get(title='UNTREATED')
 	status1=MembershipStatus.objects.get(title='ACTIVE')
@@ -3118,19 +3993,21 @@ def MonthlyDeductionGenerationHeader(request, caption,salary_inst_key):
 
 
 def Monthly_Group_transaction_Institution_Load(request):
+	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
 	DataCapture=DataCaptureManager.objects.first()
 	status=MembershipStatus.objects.get(title='ACTIVE')
 	transaction_period=TransactionPeriods.objects.get(status=status)
 	items=SalaryInstitution.objects.all()
 	
 	records=MonthlyGroupGeneratedTransactions.objects.filter(transaction_period=transaction_period)
-	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
+	
 
 	context={
-	'user_level':user_level.userlevel.title,
+	
 	'items':items,
 	'transaction_period':transaction_period,
 	'records':records,
+	'current_user':current_user,
 	'DataCapture':DataCapture,
 	}
 	return render(request,'deskofficer_templates/Monthly_Group_transaction_Institution_Load.html',context)
@@ -3139,6 +4016,7 @@ def Monthly_Group_transaction_Institution_Load(request):
 
 
 def Monthly_Group_Generated_Transaction(request,pk):
+	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
 	DataCapture=DataCaptureManager.objects.first()
 	status=MembershipStatus.objects.get(title="ACTIVE")	
 	transaction_period=TransactionPeriods.objects.get(status=status)
@@ -3175,14 +4053,15 @@ def Monthly_Group_Generated_Transaction(request,pk):
 	if Members.objects.filter(salary_institution=salary_institution,status=status).exists():
 		record_exist=True
 
-	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
+	
 
 	context={
-	'user_level':user_level.userlevel.title,
+	
 	'members':members,
 	'salary_institution':salary_institution,
 	'transaction_period':transaction_period,
 	'record_exist':record_exist,
+	'current_user':current_user,
 	'DataCapture':DataCapture,
 	'records':records,
 	'memebers_array':memebers_array,
@@ -3195,6 +4074,7 @@ def Monthly_Group_Generated_Transaction(request,pk):
 
 
 def Monthly_Group_Transaction_preview(request,pk):
+	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
 	DataCapture=DataCaptureManager.objects.first()
 	status=MembershipStatus.objects.get(title="ACTIVE")
 	
@@ -3210,14 +4090,15 @@ def Monthly_Group_Transaction_preview(request,pk):
 	total_deductions=deduction_sum['total_amount']
 
 
-	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
+	
 
 	context={
-	'user_level':user_level.userlevel.title,
+	
 	'records':records,
 	'member':member,
 	'transaction_period':transaction_period,
 	'total_deductions':total_deductions,
+	'current_user':current_user,
 	'DataCapture':DataCapture,
 	}
 	return render(request,'deskofficer_templates/Monthly_Group_Transaction_preview.html',context)
@@ -3263,6 +4144,7 @@ def Monthly_Group_Transaction_generate(request,pk):
 
 
 def Monthly_Group_Transaction_View(request,pk):
+	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
 	DataCapture=DataCaptureManager.objects.first()
 	salary_institution=SalaryInstitution.objects.get(id=pk)
 
@@ -3270,12 +4152,13 @@ def Monthly_Group_Transaction_View(request,pk):
 	transaction_period=TransactionPeriods.objects.get(status=status)
 	
 	records=MonthlyDeductionListGenerated.objects.filter(salary_institution=salary_institution,transaction_period=transaction_period)
-	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
+	
 
 	context={
-	'user_level':user_level.userlevel.title,
+	
 	'transaction_period':transaction_period,
 	'records':records,
+	'current_user':current_user,
 	'DataCapture':DataCapture,
 	}
 	return render(request,'deskofficer_templates/Monthly_Group_Transaction_View.html',context)
@@ -3285,19 +4168,21 @@ def Monthly_Group_Transaction_View(request,pk):
 
 
 def Monthly_Deduction_excel_Export_Institution_Load(request):
+	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
 	DataCapture=DataCaptureManager.objects.first()
 	status=MembershipStatus.objects.get(title='ACTIVE')
 	transaction_period=TransactionPeriods.objects.get(status=status)
 	items=SalaryInstitution.objects.all()
 	
 	records=MonthlyGroupGeneratedTransactions.objects.filter(transaction_period=transaction_period)
-	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
+	
 
 	context={
-	'user_level':user_level.userlevel.title,
+	
 	'items':items,
 	'transaction_period':transaction_period,
 	'records':records,
+	'current_user':current_user,
 	'DataCapture':DataCapture,
 	}
 	return render(request,'deskofficer_templates/Monthly_Deduction_excel_Export_Institution_Load.html',context)
@@ -3307,6 +4192,7 @@ def Monthly_Deduction_excel_Export_Institution_Load(request):
 
 
 def Monthly_Deduction_excel_Export_load(request,pk):
+	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
 	DataCapture=DataCaptureManager.objects.first()
 	salary_institution=SalaryInstitution.objects.get(id=pk)
 
@@ -3324,13 +4210,14 @@ def Monthly_Deduction_excel_Export_load(request,pk):
 		button_enabled=False
 
 	
-	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
+	
 
 	context={
-	'user_level':user_level.userlevel.title,
+	
 	'transaction_period':transaction_period,
 	'records':records,
 	'pk':pk,
+	'current_user':current_user,
 	'DataCapture':DataCapture,
 	'button_enabled':button_enabled,
 	}
@@ -3407,18 +4294,20 @@ def export_users_xls(request,pk):
 
 
 def Monthly_Account_deduction_Excel_import_Institution_Load(request):
+	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
 	DataCapture=DataCaptureManager.objects.first()
 	status=MembershipStatus.objects.get(title='ACTIVE')
 	transaction_period=TransactionPeriods.objects.get(status=status)
 	items=SalaryInstitution.objects.all()
 
-	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
+	
 
 	context={
-	'user_level':user_level.userlevel.title,
+	
 	'items':items,
 	'transaction_period':transaction_period,
 	
+	'current_user':current_user,
 	'DataCapture':DataCapture,
 	}
 	return render(request,'deskofficer_templates/Monthly_Account_deduction_Excel_import_Institution_Load.html',context)
@@ -3433,6 +4322,7 @@ def upload_AccountDeductionsResource(request,pk):
 
 	tdate=get_current_date(now)
 
+	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
 	DataCapture=DataCaptureManager.objects.first()
 	status=MembershipStatus.objects.get(title='ACTIVE')
 	transaction_period=TransactionPeriods.objects.get(status=status)
@@ -3462,11 +4352,12 @@ def upload_AccountDeductionsResource(request,pk):
 					amount=data[2],	
 				)
 			value.save()
-	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
+	
 
 	context={
-	'user_level':user_level.userlevel.title,
+	
 	'transaction_period':transaction_period,
+	'current_user':current_user,
 	'DataCapture':DataCapture,
 	}
 	return render(request,'deskofficer_templates/upload.html',context)	
@@ -3474,6 +4365,7 @@ def upload_AccountDeductionsResource(request,pk):
 
 def Monthly_Account_deduction_Processing_Institution_Load(request):
 	form = Monthly_Account_deduction_Processing_Institution_Load_form(request.POST or None)
+	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
 	DataCapture=DataCaptureManager.objects.first()
 	status=MembershipStatus.objects.get(title='ACTIVE')
 
@@ -3481,12 +4373,13 @@ def Monthly_Account_deduction_Processing_Institution_Load(request):
 	
 	
 		
-	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
+	
 
 	context={
-	'user_level':user_level.userlevel.title,
+	
 	'form':form,
 	'items':items,	
+	'current_user':current_user,
 	'DataCapture':DataCapture,
 	}
 	return render(request,'deskofficer_templates/Monthly_Account_deduction_Processing_Institution_Load.html',context)
@@ -3501,6 +4394,7 @@ def Monthly_Account_deduction_Processing_Preview(request):
 	salary_institution_id = request.POST.get('salary_institution')
 	salary_institution=SalaryInstitution.objects.get(id=salary_institution_id)
 
+	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
 	DataCapture=DataCaptureManager.objects.first()
 	transaction_status=TransactionStatus.objects.get(title='UNTREATED')
 	status=MembershipStatus.objects.get(title='ACTIVE')
@@ -3509,13 +4403,14 @@ def Monthly_Account_deduction_Processing_Preview(request):
 
 
 	records=AccountDeductions.objects.filter(salary_institution=salary_institution,transaction_period=transaction_period,transaction_status=transaction_status)
-	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
+	
 
 	context={
-	'user_level':user_level.userlevel.title,
+	
 	'records':records,
 	'transaction_period':transaction_period,
 	'pk':salary_institution_id,
+	'current_user':current_user,
 	'DataCapture':DataCapture,
 	}
 	return render(request,'deskofficer_templates/Monthly_Account_deduction_Processing_Preview.html',context)
@@ -3561,6 +4456,7 @@ def Monthly_Account_deductions_Separations(request):
 	transaction_status=TransactionStatus.objects.get(title="UNTREATED")
 	transaction_status1=TransactionStatus.objects.get(title="TREATED")
 
+	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
 	DataCapture=DataCaptureManager.objects.first()
 	form=deduction_ledger_posting_form(request.POST or None)
 	
@@ -3661,6 +4557,7 @@ def Monthly_Account_deductions_Separations(request):
 
 
 	if request.method=="POST" and 'btnview' in request.POST:
+		current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
 		DataCapture=DataCaptureManager.objects.first()
 		
 		
@@ -3676,13 +4573,14 @@ def Monthly_Account_deductions_Separations(request):
 		if records.count()>0:
 			process_status=True
 
-	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
+	
 
 	context={
-	'user_level':user_level.userlevel.title,
+	
 	'form':form,
 	'records':records,
 	'process_status':process_status,
+	'current_user':current_user,
 	'DataCapture':DataCapture,
 	}
 
@@ -3690,6 +4588,7 @@ def Monthly_Account_deductions_Separations(request):
 	
 
 def monthly_wrongful_deduction_transaction_period_load(request):
+	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
 	DataCapture=DataCaptureManager.objects.first()
 	form=TransactionPeriod_view_form(request.POST or None)
 	records=[]
@@ -3698,18 +4597,20 @@ def monthly_wrongful_deduction_transaction_period_load(request):
 		transaction_period=TransactionPeriods.objects.get(id=transaction_period_id)
 		records=NonMemberAccountDeductions.objects.filter(transaction_period=transaction_period)
 		
-	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
+	
 
 	context={
-	'user_level':user_level.userlevel.title,
+	
 	'form':form,
 	'records':records,
+	'current_user':current_user,
 	'DataCapture':DataCapture,
 	}
 	return render(request,'deskofficer_templates/monthly_wrongful_deduction_transaction_period_load.html',context)
 
 
 def Monthly_Unbalanced_transactions(request):
+	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
 	DataCapture=DataCaptureManager.objects.first()
 	form=TransactionPeriod_view_form(request.POST or None)
 	records=[]
@@ -3718,12 +4619,13 @@ def Monthly_Unbalanced_transactions(request):
 		transaction_period=TransactionPeriods.objects.get(id=transaction_period_id)
 		records=MonthlyDeductionListGeneratedCertified.objects.filter(transaction_period=transaction_period).filter(~Q(balance=0))
 		
-	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
+	
 
 	context={
-	'user_level':user_level.userlevel.title,
+	
 	'form':form,
 	'records':records,
+	'current_user':current_user,
 	'DataCapture':DataCapture,
 	}
 	return render(request,'deskofficer_templates/Monthly_Unbalanced_transactions.html',context)
@@ -3731,18 +4633,18 @@ def Monthly_Unbalanced_transactions(request):
 
 def Monthly_Unbalanced_transactions_Processing(request,pk):
 	record=MonthlyDeductionListGeneratedCertified.objects.get(id=pk)
-	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
+	
 	context={
-	'user_level':user_level.userlevel.title,
+	
 	'record':record,
 	}
 	return render(request,'deskofficer_templates/Monthly_Unbalanced_transactions_Processing.html',context)
 
 
 def Monthly_Unbalanced_transactions_Processing_Savings(request,pk):
-	# tday=now.day
-	# tmonth=now.month
-	# tyear=now.year
+	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
+	DataCapture=DataCaptureManager.objects.first()
+
 
 	tdate=get_current_date(now)
 
@@ -3755,7 +4657,7 @@ def Monthly_Unbalanced_transactions_Processing_Savings(request,pk):
 	accounts=MembersAccountsDomain.objects.filter(member=member.member,transaction__source__title='SAVINGS')
 	status=MembershipStatus.objects.get(title='ACTIVE')
 
-	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
+	
 
 	account_number=''
 	account_number_status=False
@@ -3815,17 +4717,19 @@ def Monthly_Unbalanced_transactions_Processing_Savings(request,pk):
 		return HttpResponse("OK")
 
 	context={
-	'user_level':user_level.userlevel.title,
+	
 	'member':member,
 	'accounts':accounts,
 	'account_number':account_number,
 	'account_number_status':account_number_status,
-	
+	'current_user':current_user,
+	'DataCapture':DataCapture,
 	}
 	return render(request,'deskofficer_templates/Monthly_Unbalanced_transactions_Processing_Savings.html',context)
 
 
 def Monthly_deduction_ledger_posting_preview(request):
+	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
 	DataCapture=DataCaptureManager.objects.first()
 	form=deduction_ledger_posting_form(request.POST or None)
 	# tday=now.day
@@ -3991,6 +4895,7 @@ def Monthly_deduction_ledger_posting_preview(request):
 
 
 	if request.method=="POST" and 'btnview' in request.POST:
+		current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
 		DataCapture=DataCaptureManager.objects.first()
 		
 		transaction_period_id=request.POST.get('transaction_period')
@@ -4005,158 +4910,19 @@ def Monthly_deduction_ledger_posting_preview(request):
 		if records.count()>0:
 			process_status=True
 
-	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
+	
 
 	context={
-	'user_level':user_level.userlevel.title,
+	
 	'form':form,
 	'records':records,
 	'process_status':process_status,
+	'current_user':current_user,
 	'DataCapture':DataCapture,
 	}
 	return render(request,'deskofficer_templates/Monthly_deduction_ledger_posting_preview.html',context)
 
 
-
-# def Monthly_deduction_ledger_posting_preview(request):
-# 	DataCapture=DataCaptureManager.objects.first()
-# 	form=deduction_ledger_posting_form(request.POST or None)
-# 	records=[]
-# 	process_status=False
-
-# 	if request.method=="POST" and 'btnprocess' in request.POST:
-# 		transaction_status=TransactionStatus.objects.get(title="UNTREATED")
-# 		transaction_period_id=request.POST.get('transaction_period')
-# 		transaction_period=TransactionPeriods.objects.get(id=transaction_period_id)
-		
-# 		salary_institution_id=request.POST.get('salary_institution')
-# 		salary_institution=SalaryInstitution.objects.get(id=salary_institution_id)
-
-# 		records=MonthlyDeductionListGenerated.objects.filter(transaction_period=transaction_period,salary_institution=salary_institution,transaction_status=transaction_status)
-# 		transactions=TransactionTypes.objects.filter(~Q(source__title="GENERAL") | ~Q(source__title="UTILITIES")).order_by('rank')
-		
-# 		for record in records:
-# 			total_amount=record.amount_deducted
-			
-# 			for transaction in transactions:
-
-# 				if MonthlyDeductionList.objects.filter(member=record.member,transaction_period=transaction_period,transaction=transaction).exists():
-					
-# 					deduction=MonthlyDeductionList.objects.get(member=record.member,transaction_period=transaction_period,transaction=transaction)
-					
-# 					amount_due=deduction.amount
-
-# 					if float(total_amount) > float(amount_due):
-# 						# record_update_status=TransactionStatus.objects.get(title="TREATED")
-# 						record_update=MonthlyDeductionList.objects.filter(member=record.member,transaction_period=transaction_period,transaction=transaction).update(amount_deducted=amount_due,transaction_status=record_update_status)
-						
-# 						total_amount=float(total_amount)-float(amount_due)
-# 						ledger_amount=amount_due
-
-# 					elif float(total_amount) <= float(amount_due) and float(total_amount) >0:
-# 						# record_update=MonthlyDeductionList.objects.filter(member=record.member,transaction_period=transaction_period,transaction=transaction).update(amount_deducted=total_amount)
-# 						ledger_amount=total_amount
-
-# 					if transaction.source.title == 'LOAN':
-						
-# 						if PersonalLedger.objects.filter(account_number=deduction.account_number).exists():
-# 							ledger=PersonalLedger.objects.filter(account_number=deduction.account_number).last()
-# 							balance=ledger.balance
-# 							new_balance=float(balance) + float(ledger_amount)
-# 							new_ledger=PersonalLedger(member=record.member,
-# 													transaction=transaction,
-# 													account_number=deduction.account_number,
-# 													particulars="Loan Repayment for the Period of " + str(transaction_period.transaction_period),
-# 													debit=0,credit=ledger_amount,
-# 													balance=new_balance,
-# 													transaction_period=transaction_period.transaction_period
-# 								)
-# 							new_ledger.save()
-# 						else:
-							
-# 							new_balance= float(ledger_amount)
-# 							new_ledger=PersonalLedger(member=record.member,
-# 													transaction=transaction,
-# 													account_number=deduction.account_number,
-# 													particulars="Loan Repayment for the Period of " + str(transaction_period.transaction_period),
-# 													debit=0,credit=ledger_amount,
-# 													balance=new_balance,
-# 													transaction_period=transaction_period.transaction_period
-# 								)
-# 							new_ledger.save()
-
-# 						loan_record=LoansRepaymentBase.objects.get(loan_number=deduction.account_number)
-# 						loan_balance=loan_record.balance
-# 						record_update=LoansRepaymentBase.objects.filter(loan_number=deduction.account_number).update(balance=float(abs(loan_balance))-float(ledger_amount))
-						
-# 						if LoansRepaymentBase.objects.filter(loan_number=deduction.account_number).filter(Q(balance__gte=0)):
-# 							loan_status=MembershipStatus.objects.get(title='INACTIVE')
-# 							record_update=LoansRepaymentBase.objects.filter(loan_number=deduction.account_number).update(status=loan_status)
-							
-# 							processed_by=CustomUser.objects	.get(id=request.user.id)
-# 							transaction_status=TransactionStatus.objects.get(title='UNTREATED')
-# 							loan=LoansRepaymentBase.objects.get(loan_number=deduction.account_number)
-# 							record_cleared=LoansCleared(loan=loan,processed_by=processed_by,status=transaction_status)
-# 							record_cleared.save()
-
-
-# 					elif transaction.source.title == 'SAVINGS':
-# 						if PersonalLedger.objects.filter(account_number=deduction.account_number).exists():
-# 							ledger=PersonalLedger.objects.filter(account_number=deduction.account_number).last()
-# 							balance=ledger.balance
-# 							new_balance=float(balance) + float(ledger_amount)
-# 							new_ledger=PersonalLedger(member=record.member,
-# 													transaction=transaction,
-# 													account_number=deduction.account_number,
-# 													particulars="Monthly Contribution for the Period of " +  str(transaction_period.transaction_period),
-# 													debit=0,credit=ledger_amount,
-# 													balance=new_balance,
-# 													transaction_period=transaction_period.transaction_period
-# 								)
-# 							new_ledger.save()
-# 						else:
-							
-# 							new_balance= float(ledger_amount)
-# 							new_ledger=PersonalLedger(member=record.member,
-# 													transaction=transaction,
-# 													account_number=deduction.account_number,
-# 													particulars="Monthly Contribution for the Period of " + str(transaction_period.transaction_period),
-# 													debit=0,credit=ledger_amount,
-# 													balance=new_balance,
-# 													transaction_period=transaction_period.transaction_period
-# 								)
-# 							new_ledger.save()
-
-# 		record_update_status=TransactionStatus.objects.get(title="TREATED")
-# 		record_update=MonthlyDeductionListGenerated.objects.filter(transaction_period=transaction_period,salary_institution=salary_institution).update(transaction_status=record_update_status)		
-		
-# 		return HttpResponseRedirect(reverse('Monthly_deduction_ledger_posting_preview'))
-
-
-
-# 	if request.method=="POST" and 'btnview' in request.POST:
-# 		DataCapture=DataCaptureManager.objects.first()
-# 		transaction_status=TransactionStatus.objects.get(title="UNTREATED")
-		
-# 		transaction_period_id=request.POST.get('transaction_period')
-# 		transaction_period=TransactionPeriods.objects.get(id=transaction_period_id)
-		
-# 		salary_institution_id=request.POST.get('salary_institution')
-# 		salary_institution=SalaryInstitution.objects.get(id=salary_institution_id)
-
-# 		records=MonthlyDeductionListGenerated.objects.filter(transaction_period=transaction_period,salary_institution=salary_institution,transaction_status=transaction_status)
-		
-		
-# 		if records.count()>0:
-# 			process_status=True
-
-# 	context={
-# 	'form':form,
-# 	'records':records,
-# 	'process_status':process_status,
-# 	'DataCapture':DataCapture,
-# 	}
-# 	return render(request,'deskofficer_templates/Monthly_deduction_ledger_posting_preview.html',context)
 
 
 
@@ -4164,14 +4930,17 @@ def Monthly_deduction_ledger_posting_preview(request):
 ############### EXTERNAL FASCILITY MANAGER###############
 #########################################################
 def external_fascility_update_search(request):
+	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
 	DataCapture=DataCaptureManager.objects.first()
 	title="Search Membership External Fascilities"
 	form = searchForm(request.POST or None)
-	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
-	return render(request,'deskofficer_templates/external_fascility_update_search.html',{'form':form,'title':title,'DataCapture':DataCapture,'user_level':user_level.userlevel.title,})
+	
+	return render(request,'deskofficer_templates/external_fascility_update_search.html',{'form':form,'title':title,'current_user':current_user,
+	'DataCapture':DataCapture,})
 
 
 def external_fascility_update_list_load(request):
+	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
 	DataCapture=DataCaptureManager.objects.first()
 	title="Members Exclusiveness"
 	form = searchForm(request.POST)
@@ -4182,105 +4951,18 @@ def external_fascility_update_list_load(request):
 		status=MembershipStatus.objects.get(title="ACTIVE")
 		form = searchForm(request.POST)
 		members=searchMembers(form['title'].value(),status)
-		user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
+		
 
 		context={
-		'user_level':user_level.userlevel.title,
+		
 		'members':members,
 		'title':title,
+		'current_user':current_user,
 		'DataCapture':DataCapture,
 		}
 		return render(request,'deskofficer_templates/external_fascility_update_list_load.html',context)
 
 
-
-
-def external_fascility_update_process(request,pk):
-	DataCapture=DataCaptureManager.objects.first()
-	status=ApprovalStatus.objects.get(title='PENDING')
-	member=Members.objects.get(pk=pk)
-	form=external_fascility_form(request.POST or None)
-
-	items=ExternalFascilitiesTemp.objects.filter(member=member,status=status)
-
-	if request.method=="POST":
-		approval_officer_id=request.POST.get('approval_officers')
-		approval_officer=ApprovalOfficers.objects.get(id=approval_officer_id)
-
-		description=request.POST.get('description')
-		amount=request.POST.get('amount')
-
-		
-		if request.FILES.get('image', False):
-			image = request.FILES['image']
-			fs=FileSystemStorage()
-			filename=fs.save(image.name,image)
-			image_url=fs.url(filename)
-		else:
-			image_url=None
-
-		
-		if ExternalFascilitiesTemp.objects.filter(member=member,description=description,status=status).exists():
-			record_exist=ExternalFascilitiesTemp.objects.get(member=member,description=description,status=status)
-			record_exist.amount=amount
-			record_exist.image=image_url
-			record_exist.approval_officer=approval_officer
-			record_exist.save()
-			messages.success(request,'Record Updated Successfully')
-			return HttpResponseRedirect(reverse('external_fascility_update_process',args=(pk,)))
-
-
-		record=ExternalFascilitiesTemp(member=member,description=description,amount=amount,status=status,image=image_url,approval_officer=approval_officer)
-		record.save()
-		messages.success(request,'Record Added Successfully')
-		return HttpResponseRedirect(reverse('external_fascility_update_process',args=(pk,)))
-	
-	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
-
-	context={
-	'user_level':user_level.userlevel.title,
-	'member':member,
-	'form':form,
-	'items':items,
-	'pk':pk,
-	'DataCapture':DataCapture,
-	}
-	return render(request,'deskofficer_templates/external_fascility_update_process.html',context)
-
-
-def external_fascility_update_process_remove(request,pk, return_pk):
-	item=ExternalFascilitiesTemp.objects.get(id=pk)
-	item.delete()
-	return HttpResponseRedirect(reverse('external_fascility_update_process',args=(return_pk,)))
-
-
-def external_fascility_update_approved_list_load(request):
-	DataCapture=DataCaptureManager.objects.first()
-	status=ApprovalStatus.objects.get(title='APPROVED')
-	transaction_status=TransactionStatus.objects.get(title='UNTREATED')
-	members=ExternalFascilitiesTemp.objects.filter(transaction_status=transaction_status,status=status)
-
-	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
-
-	context={
-	'user_level':user_level.userlevel.title,
-	'members':members,
-	'DataCapture':DataCapture,
-	}
-	return render(request,'deskofficer_templates/external_fascility_update_approved_list_load.html',context)
-
-
-def external_fascility_update_approved_processed(request,pk):
-	
-	status=TransactionStatus.objects.get(title='UNTREATED')
-	status1=TransactionStatus.objects.get(title='TREATED')
-
-	member=ExternalFascilitiesTemp.objects.get(id=pk)
-	member.transaction_status=status1
-	member.save()
-	record=ExternalFascilitiesMain(member=member,status=status)
-	record.save()
-	return HttpResponseRedirect(reverse('external_fascility_update_approved_list_load'))
 
 
 
@@ -4290,14 +4972,17 @@ def external_fascility_update_approved_processed(request,pk):
 #########################################################
 
 def members_exclusiveness_request_search(request):
+	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
 	DataCapture=DataCaptureManager.objects.first()
 	title="Search Membership Exclusive Request"
 	form = searchForm(request.POST or None)
-	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
-	return render(request,'deskofficer_templates/members_exclusiveness_request_search.html',{'form':form,'title':title,'DataCapture':DataCapture,'user_level':user_level.userlevel.title,})
+	
+	return render(request,'deskofficer_templates/members_exclusiveness_request_search.html',{'form':form,'title':title,'current_user':current_user,
+	'DataCapture':DataCapture,})
 
 
 def members_exclusiveness_request_list_load(request):
+	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
 	DataCapture=DataCaptureManager.objects.first()
 	title="Members Exclusiveness"
 	form = searchForm(request.POST)
@@ -4309,18 +4994,20 @@ def members_exclusiveness_request_list_load(request):
 		form = searchForm(request.POST)
 		members=searchMembers(form['title'].value(),status)
 		
-		user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
+		
 
 		context={
-		'user_level':user_level.userlevel.title,
+		
 		'members':members,
 		'title':title,
+		'current_user':current_user,
 		'DataCapture':DataCapture,
 		}
 		return render(request,'deskofficer_templates/members_exclusiveness_request_list_load.html',context)
 
 
 def members_exclusiveness_request_register(request,pk):
+	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
 	DataCapture=DataCaptureManager.objects.first()
 	status=TransactionStatus.objects.get(title='UNTREATED')
 	approval_status=ApprovalStatus.objects.get(title='PENDING')
@@ -4328,11 +5015,10 @@ def members_exclusiveness_request_register(request,pk):
 	member=Members.objects.get(id=pk)
 	items=MembersExclusiveness.objects.filter(member=member,status=status,approval_status=approval_status)
 	if request.method=="POST":
+		tdate=get_current_date(now)
 		transaction_id=request.POST.get('transactions')
 		transaction=TransactionTypes.objects.get(id=transaction_id)
 
-		officer_id=request.POST.get('approval_officers')
-		approval_officer=ApprovalOfficers.objects.get(id=officer_id)
 
 		if MembersExclusiveness.objects.filter(member=member,status=status,approval_status=approval_status,transaction=transaction).exists():
 			record=MembersExclusiveness.objects.filter(member=member,status=status,approval_status=approval_status).first()
@@ -4341,16 +5027,17 @@ def members_exclusiveness_request_register(request,pk):
 			return HttpResponseRedirect(reverse('members_exclusiveness_request_register',args=(pk,)))
 
 
-		record=MembersExclusiveness(member=member,approval_officer=approval_officer,status=status,transaction=transaction)
+		record=MembersExclusiveness(tdate=tdate,member=member,status=status,approval_status=approval_status,transaction=transaction)
 		record.save()
 		return HttpResponseRedirect(reverse('members_exclusiveness_request_register',args=(pk,)))
-	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
+	
 
 	context={
-	'user_level':user_level.userlevel.title,
+	
 	'form':form,
 	'items':items,
 	'return_pk':pk,
+	'current_user':current_user,
 	'DataCapture':DataCapture,
 	}
 	return render(request,'deskofficer_templates/members_exclusiveness_request_register.html',context)
@@ -4363,16 +5050,18 @@ def members_exclusiveness_request_delete(request,pk,return_pk):
 
 
 def members_exclusiveness_approved_list_load(request):
+	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
 	DataCapture=DataCaptureManager.objects.first()
-	approval_status=ApprovalStatus.objects.get(title="APPROVED")
+	approval_status=ApprovalStatus.objects.get(title="PENDING")
 	status=TransactionStatus.objects.get(title='UNTREATED')
 
-	members=MembersExclusiveness.objects.filter(approval_status=approval_status,status=status)
-	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
+	members=MembersExclusiveness.objects.filter(status=status).exclude(approval_status=approval_status)
+	
 
 	context={
-	'user_level':user_level.userlevel.title,
+	
 	'members':members,
+	'current_user':current_user,
 	'DataCapture':DataCapture,
 	}
 	return render(request,'deskofficer_templates/members_exclusiveness_approved_list_load.html',context)
@@ -4398,15 +5087,18 @@ def members_exclusiveness_approved_processed(request,pk):
 #########################################################
 
 def MembersBankAccounts_list_search(request):
+	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
 	DataCapture=DataCaptureManager.objects.first()
 	title="Search Membership Account Creation"
 	form = searchForm(request.POST or None)
-	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
-	return render(request,'deskofficer_templates/MembersBankAccounts_list_search.html',{'form':form,'title':title,'DataCapture':DataCapture,'user_level':user_level.userlevel.title,})
+	
+	return render(request,'deskofficer_templates/MembersBankAccounts_list_search.html',{'form':form,'title':title,'current_user':current_user,
+	'DataCapture':DataCapture,})
 
 
 
 def MembersBankAccounts_list_load(request):
+	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
 	DataCapture=DataCaptureManager.objects.first()
 	title="Bank Accoun Creation"
 	form = searchForm(request.POST)
@@ -4416,12 +5108,13 @@ def MembersBankAccounts_list_load(request):
 
 		status=MembershipStatus.objects.get(title='ACTIVE')
 		members=Members.objects.filter(Q(phone_number__icontains=form['title'].value()) | Q(admin__first_name__icontains=form['title'].value()) | Q(admin__last_name__icontains=form['title'].value()) | Q(middle_name__icontains=form['title'].value())).filter(status=status)
-		user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
+		
 
 		context={
-		'user_level':user_level.userlevel.title,
+		
 		'members':members,
 		'title':title,
+		'current_user':current_user,
 		'DataCapture':DataCapture,
 		}
 		return render(request,'deskofficer_templates/MembersBankAccounts_list_load.html',context)
@@ -4430,6 +5123,7 @@ def MembersBankAccounts_list_load(request):
 
 
 def Members_Bank_Accounts(request,pk):
+	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
 	DataCapture=DataCaptureManager.objects.first()
 	form=MembersBankAccounts_form(request.POST or None)
 	member=Members.objects.get(id=pk)
@@ -4454,19 +5148,23 @@ def Members_Bank_Accounts(request,pk):
 				messages.error(request,"Failed to add Account, Alreasy in Use")
 				return HttpResponseRedirect(reverse('Members_Bank_Accounts',args=(pk,)))
 
-			record=MembersBankAccounts(member_id=member_id,bank=bank,account_type=account_type,account_name=account_name,account_number=account_number)
+			lock_status=LockedStatus.objects.get(title='OPEN')
+			status=MembershipStatus.objects.get(title='ACTIVE')
+
+			record=MembersBankAccounts(status=status,lock_status=lock_status,member_id=member_id,bank=bank,account_type=account_type,account_name=account_name,account_number=account_number)
 			record.save()
 			messages.success(request,"Account Added Successfully")
 			return HttpResponseRedirect(reverse('Members_Bank_Accounts',args=(pk,)))
 
-	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
+	
 
 	context={
-	'user_level':user_level.userlevel.title,
+	
 	'form':form,
 	'member':member,
 	'accounts':accounts,
 	'return_pk':pk,
+	'current_user':current_user,
 	'DataCapture':DataCapture,
 	}
 	return render(request,'deskofficer_templates/MembersBankAccounts.html',context)
@@ -4485,18 +5183,21 @@ def Members_Bank_Accounts_lock(request,pk):
 	record=MembersBankAccounts.objects.filter(member_id=member).update(lock_status=lock_status)
 
 
-	return HttpResponseRedirect(reverse('Members_Bank_Accounts',args=(member.pk,)))
+	return HttpResponseRedirect(reverse('deskofficer_home'))
 
 
 def Members_Bank_Accounts_edit_search(request):
+	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
 	DataCapture=DataCaptureManager.objects.first()
 	title="Search Membership Account Update"
 	form = searchForm(request.POST or None)
-	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
-	return render(request,'deskofficer_templates/Members_Bank_Accounts_edit_search.html',{'form':form,'title':title,'DataCapture':DataCapture,'user_level':user_level.userlevel.title,})
+	
+	return render(request,'deskofficer_templates/Members_Bank_Accounts_edit_search.html',{'form':form,'title':title,'current_user':current_user,
+	'DataCapture':DataCapture,})
 
 
 def Members_Bank_Accounts_edit_list_load(request):
+	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
 	DataCapture=DataCaptureManager.objects.first()
 	title="Bank Accoun update"
 	form = searchForm(request.POST)
@@ -4506,12 +5207,13 @@ def Members_Bank_Accounts_edit_list_load(request):
 
 		status=MembershipStatus.objects.get(title='ACTIVE')
 		members=Members.objects.filter(Q(phone_number__icontains=form['title'].value()) | Q(admin__first_name__icontains=form['title'].value()) | Q(admin__last_name__icontains=form['title'].value()) | Q(middle_name__icontains=form['title'].value())).filter(status=status)
-		user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
+		
 
 		context={
-		'user_level':user_level.userlevel.title,
+		
 		'members':members,
 		'title':title,
+		'current_user':current_user,
 		'DataCapture':DataCapture,
 		}
 		return render(request,'deskofficer_templates/Members_Bank_Accounts_edit_list_load.html',context)
@@ -4519,22 +5221,25 @@ def Members_Bank_Accounts_edit_list_load(request):
 
 
 def Members_Bank_Accounts_edit_details_load(request,pk):
+	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
 	DataCapture=DataCaptureManager.objects.first()
 	member=Members.objects.get(id=pk)
 	accounts = MembersBankAccounts.objects.filter(member_id_id=pk)
-	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
+	
 
 	context={
-	'user_level':user_level.userlevel.title,
+		
 		'member':member,
 		'accounts':accounts,
 		'return_pk':pk,
+		'current_user':current_user,
 		'DataCapture':DataCapture,
 		}
 	return render(request,'deskofficer_templates/Members_Bank_Accounts_edit_details_load.html',context)
 
 
 def Members_Bank_Accounts_update_form(request,pk,return_pk):
+	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
 	DataCapture=DataCaptureManager.objects.first()
 	form=MembersBankAccounts_form(request.POST or None)
 	account = MembersBankAccounts.objects.get(id=pk)
@@ -4563,14 +5268,15 @@ def Members_Bank_Accounts_update_form(request,pk,return_pk):
 			account.save()
 			messages.success(request,"Account updated Successfully")
 			return HttpResponseRedirect(reverse('Members_Bank_Accounts_update_form',args=(pk,return_pk)))
-	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
+	
 
 	context={
-	'user_level':user_level.userlevel.title,
+	
 		'account':account,
 		'return_pk':pk,
 		'form':form,
-		'DataCapture':DataCapture,
+		'current_user':current_user,
+	'DataCapture':DataCapture,
 		}
 	return render(request,'deskofficer_templates/Members_Bank_Accounts_update_form.html',context)
 
@@ -4589,14 +5295,17 @@ def Members_Bank_Accounts_delete(request,pk,return_pk):
 #########################################################
 
 def Members_Next_Of_Kins_search(request):
+	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
 	DataCapture=DataCaptureManager.objects.first()
 	title="Search Membership for Next Of Kins"
 	form = searchForm(request.POST or None)
-	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
-	return render(request,'deskofficer_templates/Members_Next_Of_Kins_search.html',{'form':form,'title':title,'DataCapture':DataCapture,'user_level':user_level.userlevel.title,})
+	
+	return render(request,'deskofficer_templates/Members_Next_Of_Kins_search.html',{'form':form,'title':title,'current_user':current_user,
+	'DataCapture':DataCapture,})
 
 
 def Members_Next_Of_Kins_list_load(request):
+	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
 	DataCapture=DataCaptureManager.objects.first()
 	title="Members Next Of Kins"
 	form = searchForm(request.POST)
@@ -4606,12 +5315,13 @@ def Members_Next_Of_Kins_list_load(request):
 
 		status=MembershipStatus.objects.get(title='ACTIVE')
 		members=Members.objects.filter(Q(phone_number__icontains=form['title'].value()) | Q(admin__first_name__icontains=form['title'].value()) | Q(admin__last_name__icontains=form['title'].value()) | Q(middle_name__icontains=form['title'].value())).filter(status=status)
-		user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
+		
 
 		context={
-		'user_level':user_level.userlevel.title,
+		
 		'members':members,
 		'title':title,
+		'current_user':current_user,
 		'DataCapture':DataCapture,
 		}
 		return render(request,'deskofficer_templates/Members_Next_Of_Kins_list_load.html',context)
@@ -4620,6 +5330,7 @@ def Members_Next_Of_Kins_list_load(request):
 
 
 def addMembersNextOfKins(request,pk):
+	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
 	DataCapture=DataCaptureManager.objects.first()
 	member=Members.objects.get(id=pk)
 	title="Add Next Of Kins"
@@ -4630,6 +5341,10 @@ def addMembersNextOfKins(request,pk):
 		form=MembersNextOfKins_form(request.POST)
 		status=MembershipStatus.objects.get(title='ACTIVE')
 		if form.is_valid():
+			if not NextOfKinsMaximun.objects.all().exists():
+				messages.error(request,'Next of Kin Maximum missing')
+				return HttpResponseRedirect(reverse('addMembersNextOfKins',args=(pk,)))
+			
 			nok_max=NextOfKinsMaximun.objects.first()
 
 			relationships_id=form.cleaned_data['relationships']
@@ -4639,6 +5354,7 @@ def addMembersNextOfKins(request,pk):
 			phone_number=form.cleaned_data['phone_number']
 
 			existing_record_count=MembersNextOfKins.objects.filter(member=member).count()
+			
 			if int(nok_max.maximun) < int(existing_record_count) + 1:
 				messages.error(request,'Total number of allowed Next of Kins exceeded')
 				return HttpResponseRedirect(reverse('addMembersNextOfKins',args=(pk,)))
@@ -4652,18 +5368,20 @@ def addMembersNextOfKins(request,pk):
 				messages.success(request,"Record Updates Successfully")
 				return HttpResponseRedirect(reverse('addMembersNextOfKins',args=(pk,)))
 
-			record=MembersNextOfKins(status=status,member=member,relationships=relationships,name=name,address=address,phone_number=phone_number)
+			lock_status=LockedStatus.objects.get(title='OPEN')
+			record=MembersNextOfKins(lock_status=lock_status,status=status,member=member,relationships=relationships,name=name,address=address,phone_number=phone_number)
 			record.save()
 			messages.success(request,"Record Added Successfully")
 			return HttpResponseRedirect(reverse('addMembersNextOfKins',args=(pk,)))
-	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
+	
 
 	context={
-	'user_level':user_level.userlevel.title,
+	
 	'form':form,
 	'member':member,
 	'title':title,
 	'records':records,
+	'current_user':current_user,
 	'DataCapture':DataCapture,
 	}
 	return render(request,'deskofficer_templates/addMembersNextOfKins.html',context)
@@ -4674,7 +5392,7 @@ def MembersNextOfKins_lock(request,pk):
 	lock_status=LockedStatus.objects.get(title='LOCKED')
 	records=MembersNextOfKins.objects.filter(member=member).update(lock_status=lock_status)
 	messages.success(request,"Record Locked Successfully")
-	return HttpResponseRedirect(reverse('addMembersNextOfKins',args=(member.pk,)))
+	return HttpResponseRedirect(reverse('deskofficer_home'))
 
 
 def MembersNextOfKins_remove(request,pk):
@@ -4685,14 +5403,17 @@ def MembersNextOfKins_remove(request,pk):
 	return HttpResponseRedirect(reverse('addMembersNextOfKins',args=(return_pk,)))
 
 def Members_Next_Of_Kins_Manage_search(request):
+	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
 	DataCapture=DataCaptureManager.objects.first()
 	title="Search Membership for Next Of Kins"
 	form = searchForm(request.POST or None)
-	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
-	return render(request,'deskofficer_templates/Members_Next_Of_Kins_Manage_search.html',{'form':form,'title':title,'DataCapture':DataCapture,'user_level':user_level.userlevel.title,})
+	
+	return render(request,'deskofficer_templates/Members_Next_Of_Kins_Manage_search.html',{'form':form,'title':title,'current_user':current_user,
+	'DataCapture':DataCapture,})
 
 
 def Members_Next_Of_Kins_Manage_list_load(request):
+	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
 	DataCapture=DataCaptureManager.objects.first()
 	title="Members Next Of Kins"
 	form = searchForm(request.POST)
@@ -4702,32 +5423,35 @@ def Members_Next_Of_Kins_Manage_list_load(request):
 
 		status=MembershipStatus.objects.get(title='ACTIVE')
 		members=Members.objects.filter(Q(phone_number__icontains=form['title'].value()) | Q(admin__first_name__icontains=form['title'].value()) | Q(admin__last_name__icontains=form['title'].value()) | Q(middle_name__icontains=form['title'].value())).filter(status=status)
-		user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
+		
 
 		context={
-		'user_level':user_level.userlevel.title,
+		
 		'members':members,
 		'title':title,
+		'current_user':current_user,
 		'DataCapture':DataCapture,
 		}
 		return render(request,'deskofficer_templates/Members_Next_Of_Kins_Manage_list_load.html',context)
 
 
 def Members_Next_Of_Kins_Manage_NOK_Load(request,pk):
+	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
 	DataCapture=DataCaptureManager.objects.first()
 	member=Members.objects.get(id=pk)
 	noks=MembersNextOfKins.objects.filter(member_id=pk)
 	title="List of Next Of Kins"
 
-	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
+	
 
 	context={
-	'user_level':user_level.userlevel.title,
+	
 	
 	'member':member,
 	'title':title,
 	'noks':noks,
 	'member_id':pk,
+	'current_user':current_user,
 	'DataCapture':DataCapture,
 	}
 	return render(request,'deskofficer_templates/Members_Next_Of_Kins_Manage_NOK_Load.html',context)
@@ -4736,6 +5460,7 @@ def Members_Next_Of_Kins_Manage_NOK_Load(request,pk):
 
 
 def Members_Next_Of_Kins_Manage_NOK_Update(request,pk,member_id):
+	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
 	DataCapture=DataCaptureManager.objects.first()
 	form=MembersNextOfKins_form(request.POST or None)
 	member=Members.objects.get(id=member_id)
@@ -4765,14 +5490,15 @@ def Members_Next_Of_Kins_Manage_NOK_Update(request,pk,member_id):
 			nok.save()
 			messages.success(request,"Record Updated Successfully")
 			return HttpResponseRedirect(reverse('Members_Next_Of_Kins_Manage_NOK_Load',args=(member_id,)))
-	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
+	
 
 	context={
-	'user_level':user_level.userlevel.title,
+	
 	'form':form,
 	'member':member,
 	'title':title,
 	'nok':nok,
+	'current_user':current_user,
 	'DataCapture':DataCapture,
 	}
 	return render(request,'deskofficer_templates/Members_Next_Of_Kins_Manage_NOK_Update.html',context)
@@ -4786,14 +5512,17 @@ def Members_Next_Of_Kins_Manage_NOK_Update(request,pk,member_id):
 ###########################################################
 
 def Members_Salary_Update_request_search(request):
+	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
 	DataCapture=DataCaptureManager.objects.first()
 	title="Search Membership for Salary Update"
 	form = searchForm(request.POST or None)
-	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
-	return render(request,'deskofficer_templates/Members_Salary_Update_request_search.html',{'form':form,'title':title,'DataCapture':DataCapture,'user_level':user_level.userlevel.title,})
+	
+	return render(request,'deskofficer_templates/Members_Salary_Update_request_search.html',{'form':form,'title':title,'current_user':current_user,
+	'DataCapture':DataCapture,})
 
 
 def Members_Salary_Update_Request_list_load(request):
+	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
 	DataCapture=DataCaptureManager.objects.first()
 	title="Members Salary Update"
 	form = searchForm(request.POST)
@@ -4803,18 +5532,20 @@ def Members_Salary_Update_Request_list_load(request):
 
 		status=MembershipStatus.objects.get(title='ACTIVE')
 		members=Members.objects.filter(Q(phone_number__icontains=form['title'].value()) | Q(admin__first_name__icontains=form['title'].value()) | Q(admin__last_name__icontains=form['title'].value()) | Q(middle_name__icontains=form['title'].value())).filter(status=status)
-		user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
+		
 
 		context={
-		'user_level':user_level.userlevel.title,
+		
 		'members':members,
 		'title':title,
+		'current_user':current_user,
 		'DataCapture':DataCapture,
 		}
 		return render(request,'deskofficer_templates/Members_Salary_Update_Request_list_load.html',context)
 
 
 def Members_Salary_Update_Request_Load(request,pk):
+	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
 	DataCapture=DataCaptureManager.objects.first()
 	form=Members_Salary_Update_Request_form(request.POST or None)
 	member=Members.objects.get(id=pk)
@@ -4832,28 +5563,31 @@ def Members_Salary_Update_Request_Load(request,pk):
 		record=MembersSalaryUpdateRequest(member=member,description=description,amount=amount,approved_officer=approved_officer,status=status)
 		record.save()
 		return HttpResponseRedirect(reverse('Members_Salary_Update_Request_Load',args=(pk,)))
-	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
+	
 
 	context={
-	'user_level':user_level.userlevel.title,
+	
 	'form':form,
 	'member':member,
 	'member_id':pk,
+	'current_user':current_user,
 	'DataCapture':DataCapture,
 	}
 	return render(request,'deskofficer_templates/Members_Salary_Update_Request_Load.html',context)
 
 
 def Members_Salary_Update_Request_approval_Load(request):
+	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
 	DataCapture=DataCaptureManager.objects.first()
 	status=ApprovalStatus.objects.get(title="APPROVED")
 	processing_status=ProcessingStatus.objects.get(title='PROCESSED')
 	members=MembersSalaryUpdateRequest.objects.filter(status=status).exclude(processing_status=processing_status)
-	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
+	
 
 	context={
-	'user_level':user_level.userlevel.title,
+	
 	'members':members,
+	'current_user':current_user,
 	'DataCapture':DataCapture,
 	}
 	return render(request,'deskofficer_templates/Members_Salary_Update_Request_approval_Load.html',context)
@@ -4892,9 +5626,11 @@ def check_membership_phone_no_exist(request):
 ###########################################################
 
 def upload_norminal_roll(request):
+	status=TransactionStatus.objects.get(title='UNTREATED')
+	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
 	DataCapture=DataCaptureManager.objects.first()
 	if request.method == 'POST':
-	
+		
 		norminal_resource = NorminalRollResource()
 		dataset = Dataset()
 		new_norminal_roll = request.FILES['myfile']
@@ -4905,7 +5641,7 @@ def upload_norminal_roll(request):
 
 		imported_data = dataset.load(new_norminal_roll.read(),format='xlsx')
 		for data in imported_data:
-			name=list((data[1]).split())
+			name=list((data[3]).split())
 			last_name=""
 			first_name=""
 			middle_name=""
@@ -4923,22 +5659,34 @@ def upload_norminal_roll(request):
 				first_name=name[1]
 				middle_name=str(name[2]) + ' ' + str(name[3])
 			
-			value = NorminalRoll(member_id=data[0],
-					file_no=data[0],			
-					ippis_no=data[0],			
+		
+
+
+			value = NorminalRoll(member_id=data[2],
+					file_no=data[1],			
+					ippis_no=data[1],			
 					last_name=last_name,			
 					first_name=first_name,			
 					middle_name=middle_name,			
-					phone_no=data[2],	
-					year=data[3],	
-					salary_institution=data[4],	
+					phone_no=data[6],	
+					month=data[4],	
+					year=data[5],	
+					date_of_first_appointment=data[7],	
+					dob=data[8],	
+					next_of_kin=data[9],	
+					salary_institution=data[10],	
+					transaction_status=status,	
+					# date_joined_status=date_joined_status,	
+					# date_of_first_appointment_status=date_of_first_appointment_status,	
+					# dob_status=dob_status,	
 				)
 			value.save()
-	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
+	
 
 	context={
-	'user_level':user_level.userlevel.title,
 	
+	
+	'current_user':current_user,
 	'DataCapture':DataCapture,
 	}
 	return render(request,'deskofficer_templates/upload_norminal.html',context)	
@@ -4946,6 +5694,7 @@ def upload_norminal_roll(request):
 
 
 def upload_distinct_norminal_roll(request):
+	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
 	DataCapture=DataCaptureManager.objects.first()
 	if request.method == 'POST':
 	
@@ -4971,57 +5720,49 @@ def upload_distinct_norminal_roll(request):
 					salary_institution=data[7],	
 				)
 			value.save()
-	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
+	
 
 	context={
-	'user_level':user_level.userlevel.title,
 	
+	
+	'current_user':current_user,
 	'DataCapture':DataCapture,
 	}
 	return render(request,'deskofficer_templates/upload_norminal.html',context)	
 
 
 def Norminal_Roll_Preview(request):
+	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
 	DataCapture=DataCaptureManager.objects.first()
 	transaction_status=TransactionStatus.objects.get(title="UNTREATED")
 	records=NorminalRoll.objects.filter(transaction_status=transaction_status)
-	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
+	
 
 	context={
-	'user_level':user_level.userlevel.title,
+	
 	'records':records,
+	'current_user':current_user,
 	'DataCapture':DataCapture,
 	}
 	return render(request,'deskofficer_templates/Norminal_Roll_Preview.html',context)
 
 
 def Norminal_Roll_Process(request):
-	# records=NorminalRoll.objects.all()
-	# records.delete()
-
-	# records=MemberShipRequest.objects.filter(Q(id__gt=8))
-	# records.delete()	
-
-	# records=MemberShipFormSales.objects.filter(Q(id__gt=9))
-	# records.delete()
-
-	# return HttpResponse("Done")
-
 	prefix=MembersIdManager.objects.first()
+	tdate=get_current_date(now)
 
-	certification_status=CertificationStatus.objects.get(title='CERTIFIED')
+	# certification_status=CertificationStatus.objects.get(title='CERTIFIED')
 	approval_status=ApprovalStatus.objects.get(title='APPROVED')
 	submission_status=SubmissionStatus.objects.get(title="SUBMITTED")
 	transaction_status=TransactionStatus.objects.get(title="UNTREATED")
 	transaction_status1=TransactionStatus.objects.get(title="TREATED")
-
+	
 
 	records=NorminalRoll.objects.filter(transaction_status=transaction_status)
-	
-	certification_officer=CertificationOfficers.objects.filter(transaction__transaction__name='MEMBERSHIP').first()
-	
-	approval_officer=ApprovalOfficers.objects.filter(transaction__transaction__name='MEMBERSHIP').first()
-	
+
+	approval_officer=CustomUser.objects.get(id=request.user.id)
+	approval_comment="APPROVED"
+
 
 	for record in records:
 		file_no = str(record.file_no).zfill(5)
@@ -5029,32 +5770,47 @@ def Norminal_Roll_Process(request):
 		first_name=record.first_name
 		last_name=record.last_name
 		middle_name=record.middle_name
-	
+		date_of_first_appointment=record.date_of_first_appointment
+		next_of_kin=record.next_of_kin
+		dob=record.dob
 		phone_number = str(record.phone_no).zfill(11)
+		month=record.month
 		year = record.year
+		
 		member_id = prefix.prefix_title + "/" +  str(year) + '/' + str(record.member_id).zfill(5)
 		
 		salary_institution = SalaryInstitution.objects.get(id=record.salary_institution)
 		
+		month_list =['JANUARY','FEBRUARY','MARCH','APRIL','MAY','JUNE','JULY','AUGUST','SEPTEMBER','OCTOBER','NOVEMBER','DECEMBER']
+		approved_date=date(int(year),int(month_list.index(month))+1,1)
+
 		item=MemberShipRequest(submission_status=submission_status,
-			certification_status=certification_status,
+			transaction_status=transaction_status1,
 			first_name=first_name,last_name=last_name,
 			middle_name=middle_name,phone_number=phone_number,
-			certification_officer=certification_officer,
 			approval_officer=approval_officer,
 			approval_status=approval_status,
+			approval_comment=approval_comment,
 			salary_institution=salary_institution,
 			file_no=file_no,
 			ippis_no=ippis_no,
 			member_id=member_id,
+			month=month,
 			year=year,
+			date_of_first_appointment=date_of_first_appointment,
+			dob=dob,
+			next_of_kin=next_of_kin,
+			tdate=tdate,
+			approved_date=approved_date,
+			
 			)
 		item.save()
+
 		record.transaction_status=transaction_status1
 		record.save()
 
-	applicants = MemberShipRequest.objects.filter(transaction_status=transaction_status)
-	
+	applicants = MemberShipRequest.objects.filter(transaction_status=transaction_status1)
+
 	processed_by=CustomUser.objects.get(id=request.user.id)
 	
 	
@@ -5063,7 +5819,7 @@ def Norminal_Roll_Process(request):
 		receipt_obj=AutoReceipt.objects.first()
 		receipt='C-' + str(receipt_obj.receipt.zfill(5))
 
-		record=MemberShipFormSalesRecord(applicant=applicant,receipt=receipt,processed_by=processed_by,status=transaction_status)
+		record=MemberShipFormSalesRecord(tdate=tdate,applicant=applicant,receipt=receipt,processed_by=processed_by,status=transaction_status)
 		record.save()
 
 		applicant.transaction_status=transaction_status1
@@ -5072,7 +5828,10 @@ def Norminal_Roll_Process(request):
 		receipt_obj.receipt=int(receipt_obj.receipt) + 1
 		receipt_obj.save()
 
+
+
 	applicants= MemberShipFormSalesRecord.objects.filter(status=transaction_status)
+
 
 	default_password = DefaultPassword.objects.first()
 	password=default_password.title
@@ -5080,6 +5839,19 @@ def Norminal_Roll_Process(request):
 	user_type=user_type_obj.code
 
 	
+	gross_pay_status=ProcessingStatus.objects.get(title='UNPROCESSED')
+	status=MembershipStatus.objects.get(title='ACTIVE')
+	savings_status=SavingsUploadStatus.objects.get(title='PENDING')
+	loan_status=LoansUploadStatus.objects.get(title='PENDING')
+	shares_status=SharesUploadStatus.objects.get(title='PENDING')
+	welfare_status=WelfareUploadStatus.objects.get(title='PENDING')
+	
+
+	date_joined_status=DateJoinedUploadStatus.objects.get(title='UPLOADED')
+	date_of_first_appointment_status=DateOfFirstAppointment_Status.objects.get(title='UPLOADED')
+	dob_status=Date_of_birth_status.objects.get(title='UPLOADED')
+
+
 	for applicant in applicants:	
 		member_id= applicant.applicant.member_id
 		file_no = applicant.applicant.file_no
@@ -5091,6 +5863,9 @@ def Norminal_Roll_Process(request):
 		username = applicant.applicant.first_name + applicant.applicant.last_name + str(file_no).zfill(5)
 		email = applicant.applicant.first_name + str(file_no).zfill(5) + "@gmail.com"	
 		salary_institution = applicant.applicant.salary_institution
+		date_joined = applicant.applicant.approved_date
+		date_of_first_appointment = applicant.applicant.date_of_first_appointment
+		dob = applicant.applicant.dob
 		
 
 		user = CustomUser.objects.create_user(username=username,password=password,email=email,last_name=last_name,first_name=first_name,user_type=int(user_type))
@@ -5102,6 +5877,25 @@ def Norminal_Roll_Process(request):
 		user.members.salary_institution=salary_institution
 		user.members.file_no=file_no
 		user.members.ippis_no=ippis_no
+
+
+		
+		user.members.date_joined=date_joined
+
+	
+		user.members.gross_pay_status=gross_pay_status
+		user.members.status=status
+		user.members.savings_status=savings_status
+		user.members.loan_status=loan_status
+		user.members.shares_status=shares_status
+		user.members.welfare_status=welfare_status
+		
+		user.members.date_of_first_appointment=date_of_first_appointment
+		user.members.dob=dob
+		
+		user.members.date_joined_status=date_joined_status
+		user.members.date_of_first_appointment_status=date_of_first_appointment_status
+		user.members.dob_status=dob_status
 		user.save()
 
 		applicant.status=transaction_status1
@@ -5115,15 +5909,17 @@ def Norminal_Roll_Process(request):
 ############################################################################
 
 def Uploading_Existing_Savings(request):
+	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
 	DataCapture=DataCaptureManager.objects.first()
 	savings_status=SavingsUploadStatus.objects.get(title='PENDING')
 	records=Members.objects.filter(savings_status=savings_status)
 
-	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
+	
 
 	context={
-	'user_level':user_level.userlevel.title,
+	
 	'records':records,
+	'current_user':current_user,
 	'DataCapture':DataCapture,
 	}
 	return render(request,'deskofficer_templates/Uploading_Existing_Savings.html',context)
@@ -5131,6 +5927,7 @@ def Uploading_Existing_Savings(request):
 
 
 def Uploading_Existing_Savings_Preview(request,pk):
+	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
 	DataCapture=DataCaptureManager.objects.first()
 	form=Uploading_Existing_Savings_form(request.POST or None)
 	member_id=Members.objects.get(id=pk)
@@ -5175,20 +5972,22 @@ def Uploading_Existing_Savings_Preview(request,pk):
 			messages.success(request,"Record Addedd Successfully")
 		
 		return HttpResponseRedirect(reverse('Uploading_Existing_Savings_Preview',args=(pk,)))
-	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
+	
 
 	context={
-	'user_level':user_level.userlevel.title,
+	
 	'member':member_id,
 	'form':form,
 	'records':records,
 	'return_pk':pk,
+	'current_user':current_user,
 	'DataCapture':DataCapture,
 	}
 	return render(request,'deskofficer_templates/Uploading_Existing_Savings_Preview.html',context)
 
 
 def Uploading_Existing_Savings_validate(request,pk):
+	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
 	DataCapture=DataCaptureManager.objects.first()
 	lock_status=LockedStatus.objects.get(title='LOCKED')
 	savings_status=SavingsUploadStatus.objects.get(title='UPLOADED')
@@ -5266,14 +6065,17 @@ def Uploading_Existing_Savings_delete(request,pk,return_pk):
 ###################### Additional Savings Upload #################
 ###################################################################
 def Uploading_Existing_Savings_Additional_search(request):
+	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
 	DataCapture=DataCaptureManager.objects.first()
 	title="Search Members for Savings Upload"
 	form = searchForm(request.POST or None)
-	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
-	return render(request,'deskofficer_templates/Uploading_Existing_Savings_Additional_search.html',{'form':form,'title':title,'DataCapture':DataCapture,'user_level':user_level.userlevel.title,})
+	
+	return render(request,'deskofficer_templates/Uploading_Existing_Savings_Additional_search.html',{'form':form,'title':title,'current_user':current_user,
+	'DataCapture':DataCapture,})
 
 
 def Uploading_Existing_Savings_Additional_list_load(request):
+	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
 	DataCapture=DataCaptureManager.objects.first()
 	title="LIST OF MEMBERS FOR SAVINGS UPLOAD"
 	form = searchForm(request.POST)
@@ -5285,18 +6087,20 @@ def Uploading_Existing_Savings_Additional_list_load(request):
 		savings_status=SavingsUploadStatus.objects.get(title='PENDING')
 		form = searchForm(request.POST)
 		members=Members.objects.filter(Q(file_no__icontains=form['title'].value()) |Q(ippis_no__icontains=form['title'].value()) |Q(phone_number__icontains=form['title'].value()) | Q(admin__first_name__icontains=form['title'].value()) | Q(admin__last_name__icontains=form['title'].value()) | Q(middle_name__icontains=form['title'].value())).filter(status=status).filter(~Q(savings_status=savings_status))
-		user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
+		
 
 		context={
-		'user_level':user_level.userlevel.title,
+		
 		'members':members,
 		'title':title,
+		'current_user':current_user,
 		'DataCapture':DataCapture,
 		}
 		return render(request,'deskofficer_templates/Uploading_Existing_Savings_Additional_list_load.html',context)
 
 
 def Uploading_Existing_Savings_Additional_Preview(request,pk):
+	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
 	DataCapture=DataCaptureManager.objects.first()
 	form=Uploading_Existing_Savings_form(request.POST or None)
 	member=Members.objects.get(id=pk)
@@ -5349,14 +6153,15 @@ def Uploading_Existing_Savings_Additional_Preview(request,pk):
 			messages.success(request,"Record Addedd Successfully")
 		
 		return HttpResponseRedirect(reverse('Uploading_Existing_Savings_Additional_Preview',args=(pk,)))
-	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
+	
 
 	context={
-	'user_level':user_level.userlevel.title,
+	
 	'member':member,
 	'form':form,
 	'records':records,
 	'return_pk':pk,
+	'current_user':current_user,
 	'DataCapture':DataCapture,
 	}
 	return render(request,'deskofficer_templates/Uploading_Existing_Savings_Additional_Preview.html',context)
@@ -5370,7 +6175,7 @@ def Uploading_Existing_Savings_Additional_delete(request,pk,return_pk):
 
 
 def Uploading_Existing_Savings_Additional_validate(request,pk):
-	DataCapture=DataCaptureManager.objects.first()
+
 	lock_status=LockedStatus.objects.get(title='LOCKED')
 	savings_status=SavingsUploadStatus.objects.get(title='UPLOADED')
 	status=TransactionStatus.objects.get(title='UNTREATED')
@@ -5440,21 +6245,24 @@ def Uploading_Existing_Savings_Additional_validate(request,pk):
 ############################# UPLOADING EXISTING ADDITIONAL LOANS ######
 #########################################################################
 def Uploading_Existing_Aditional_Loans(request):
+	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
 	DataCapture=DataCaptureManager.objects.first()
 	loan_status=LoansUploadStatus.objects.get(title='PENDING')
 	records=Members.objects.filter(~Q(loan_status=loan_status))
 
-	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
+	
 
 	context={
-	'user_level':user_level.userlevel.title,
+	
 	'records':records,
+	'current_user':current_user,
 	'DataCapture':DataCapture,
 	}
 	return render(request,'deskofficer_templates/Uploading_Existing_Aditional_Loans.html',context)
 
 
 def Uploading_Existing_Additional_Loans_Preview(request,pk):
+	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
 	DataCapture=DataCaptureManager.objects.first()
 	form=Uploading_Existing_Loans_form(request.POST or None)
 	member=Members.objects.get(id=pk)
@@ -5559,14 +6367,15 @@ def Uploading_Existing_Additional_Loans_Preview(request,pk):
 		
 		return HttpResponseRedirect(reverse('Uploading_Existing_Additional_Loans_Preview',args=(pk,)))
 	form.fields['start_date'].initial=now
-	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
+	
 
 	context={
-	'user_level':user_level.userlevel.title,
+	
 	'member':member,
 	'form':form,
 	'records':records,
 	'return_pk':pk,
+	'current_user':current_user,
 	'DataCapture':DataCapture,
 	}
 	return render(request,'deskofficer_templates/Uploading_Existing_Additional_Loans_Preview.html',context)
@@ -5574,7 +6383,6 @@ def Uploading_Existing_Additional_Loans_Preview(request,pk):
 
 
 def Uploading_Existing_Additional_Loans_validate(request,pk):
-	DataCapture=DataCaptureManager.objects.first()
 	member=Members.objects.get(id=pk)
 
 	loan_status=LoansUploadStatus.objects.get(title='UPLOADED')
@@ -5696,21 +6504,24 @@ def Uploading_Existing_Additional_Loans_delete(request,pk,return_pk):
 
 
 def Uploading_Existing_Loans(request):
+	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
 	DataCapture=DataCaptureManager.objects.first()
 	loan_status=LoansUploadStatus.objects.get(title='PENDING')
 	records=Members.objects.filter(loan_status=loan_status)
 
-	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
+	
 
 	context={
-	'user_level':user_level.userlevel.title,
+	
 	'records':records,
+	'current_user':current_user,
 	'DataCapture':DataCapture,
 	}
 	return render(request,'deskofficer_templates/Uploading_Existing_Loans.html',context)
 
 
 def Uploading_Existing_Loans_Preview(request,pk):
+	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
 	DataCapture=DataCaptureManager.objects.first()
 	form=Uploading_Existing_Loans_form(request.POST or None)
 	member=Members.objects.get(id=pk)
@@ -5815,14 +6626,15 @@ def Uploading_Existing_Loans_Preview(request,pk):
 		
 		return HttpResponseRedirect(reverse('Uploading_Existing_Loans_Preview',args=(pk,)))
 	form.fields['start_date'].initial=now
-	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
+	
 
 	context={
-	'user_level':user_level.userlevel.title,
+	
 	'member':member,
 	'form':form,
 	'records':records,
 	'return_pk':pk,
+	'current_user':current_user,
 	'DataCapture':DataCapture,
 	}
 	return render(request,'deskofficer_templates/Uploading_Existing_Loans_Preview.html',context)
@@ -5830,7 +6642,6 @@ def Uploading_Existing_Loans_Preview(request,pk):
 
 
 def Uploading_Existing_Loans_validate(request,pk):
-	DataCapture=DataCaptureManager.objects.first()
 	member=Members.objects.get(id=pk)
 
 	loan_status=LoansUploadStatus.objects.get(title='UPLOADED')
@@ -5951,281 +6762,23 @@ def Uploading_Existing_Loans_delete(request,pk,return_pk):
 ############################# UPDATING SALARY GROSS PAY##################
 #########################################################################
 def Updating_Salary_Grosspay_list_load(request):
+	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
 	DataCapture=DataCaptureManager.objects.first()
 	status=MembershipStatus.objects.get(title="ACTIVE")
 	salary_status=SavingsUploadStatus.objects.get(title='PENDING')
 	# records=Members.objects.filter(status=status).filter(Q(gender__title__isnull=True) | Q(gender__title=""))
 	records=Members.objects.filter(status=status).filter(Q(salary_status__title__isnull=True) | Q(salary_status__title=""))
 
-	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
+	
 
 	context={
-	'user_level':user_level.userlevel.title,
+	
 	'records':records,
+	'current_user':current_user,
 	'DataCapture':DataCapture,
 	}
 	return render(request,'deskofficer_templates/Updating_Salary_Grosspay_list_load.html',context)
 
-########################################################################
-############################# DATE JOINED  ######################
-#########################################################################
-
-def Updating_Date_Joined(request):
-	DataCapture=DataCaptureManager.objects.first()
-	status=MembershipStatus.objects.get(title="ACTIVE")
-	date_joined_status=DateJoinedUploadStatus.objects.get(title='PENDING')
-	records=Members.objects.filter(date_joined_status=date_joined_status,status=status)
-
-	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
-
-	context={
-	'user_level':user_level.userlevel.title,
-	'records':records,
-	'DataCapture':DataCapture,
-	}
-	return render(request,'deskofficer_templates/Updating_Date_Joined_List_load.html',context)
-
-
-def Updating_Date_Joined_Preview(request,pk):
-	DataCapture=DataCaptureManager.objects.first()
-	form=Updating_Date_Joined__form(request.POST or None)
-	date_joined_status=DateJoinedUploadStatus.objects.get(title='VERIFIED')
-
-	member=Members.objects.get(id=pk)
-
-	if request.method == "POST":
-		date_joined=request.POST.get('date_joined')
-
-		member.date_joined=date_joined
-		member.date_joined_status=date_joined_status
-		member.save()
-		return HttpResponseRedirect(reverse('Updating_Date_Joined'))
-	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
-
-	context={
-	'user_level':user_level.userlevel.title,
-	'member':member,
-	'form':form,
-	'DataCapture':DataCapture,
-	}
-	return render(request,'deskofficer_templates/Updating_Date_Joined_Preview.html',context)
-
-
-
-def Updating_Date_Joined_Manage_List_load(request):
-	DataCapture=DataCaptureManager.objects.first()
-	status=MembershipStatus.objects.get(title="ACTIVE")
-	date_joined_status=DateJoinedUploadStatus.objects.get(title='PENDING')
-	records=Members.objects.filter(~Q(date_joined_status=date_joined_status)).filter(status=status)
-
-	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
-
-	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
-
-	context={
-	'user_level':user_level.userlevel.title,
-	'user_level':user_level.userlevel.title,
-	'records':records,
-	'DataCapture':DataCapture,
-	}
-	return render(request,'deskofficer_templates/Updating_Date_Joined_Manage_List_load.html',context)
-
-def Updating_Date_Joined_Manage_Preview(request,pk):
-	form=Updating_Date_Joined__form(request.POST or None)
-	date_joined_status=DateJoinedUploadStatus.objects.get(title='VERIFIED')
-
-	member=Members.objects.get(id=pk)
-	form.fields['date_joined'].initial= member.date_joined
-
-	if request.method == "POST":
-		date_joined=request.POST.get('date_joined')
-
-
-		member.date_joined=date_joined
-		member.date_joined_status=date_joined_status
-		member.save()
-		return HttpResponseRedirect(reverse('Updating_Date_Joined_Manage_List_load'))
-	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
-
-	context={
-	'user_level':user_level.userlevel.title,
-	'member':member,
-	'form':form,
-	'DataCapture':DataCapture,
-	}
-	return render(request,'deskofficer_templates/Updating_Date_Joined_Manage_Preview.html',context)
-
-
-########################################################################
-############################# UPDATING GROSS PAY ######################
-#########################################################################
-def Updating_Gross_Pay_selected_search(request):
-	DataCapture=DataCaptureManager.objects.first()
-	title="Search Members for Salary Grosspay Upload"
-	form = searchForm(request.POST or None)
-	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
-	return render(request,'deskofficer_templates/Updating_Gross_Pay_selected_search.html',{'form':form,'title':title,'DataCapture':DataCapture,'user_level':user_level.userlevel.title,})
-
-
-def Updating_Gross_Pay_selected_list_load(request):
-	DataCapture=DataCaptureManager.objects.first()
-	title="LIST OF MEMBERS FOR SAVINGS UPLOAD"
-	form = searchForm(request.POST)
-	if request.method == "POST":
-		if request.POST.get("title")=="":
-			return HttpResponseRedirect(reverse('Updating_Gross_Pay_selected_search'))
-
-		status=MembershipStatus.objects.get(title='ACTIVE')
-		savings_status=SavingsUploadStatus.objects.get(title='PENDING')
-		form = searchForm(request.POST)
-		members=Members.objects.filter(Q(file_no__icontains=form['title'].value()) |Q(ippis_no__icontains=form['title'].value()) |Q(phone_number__icontains=form['title'].value()) | Q(admin__first_name__icontains=form['title'].value()) | Q(admin__last_name__icontains=form['title'].value()) | Q(middle_name__icontains=form['title'].value())).filter(status=status)
-		user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
-
-		context={
-		'user_level':user_level.userlevel.title,
-		'members':members,
-		'title':title,
-		'DataCapture':DataCapture,
-		}
-		return render(request,'deskofficer_templates/Updating_Gross_Pay_selected_list_load.html',context)
-
-
-def Updating_Gross_Pay_selected_Preview(request,pk):
-	DataCapture=DataCaptureManager.objects.first()
-	form=Updating_Gross_Pay_Preview_form(request.POST or None)
-	gross_pay_status=ProcessingStatus.objects.get(title='PROCESSED')
-	# status=MembershipStatus.objects.get(title='ACTIVE')
-	# transaction_period=TransactionPeriods.objects.get(status=status)
-	now = datetime.datetime.now()
-
-	formatted_date = defaultfilters.date(now, "SHORT_DATE_FORMAT")
-	# formatted_date = defaultfilters.date(transaction_period.transaction_period, "SHORT_DATE_FORMAT")
-		
-	member=Members.objects.get(id=pk)
-
-	form.fields['description'].initial= "Salary as at " + str(formatted_date)
-	form.fields['gross_pay'].initial= member.gross_pay
-	
-
-	if request.method == "POST":
-		description=request.POST.get('description')
-		gross_pay=request.POST.get('gross_pay')
-
-		member.gross_pay=gross_pay
-		member.gross_pay_as_at=description
-		member.gross_pay_status=gross_pay_status
-		member.save()
-		return HttpResponseRedirect(reverse('Updating_Gross_Pay_selected_search'))
-	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
-
-	context={
-	'user_level':user_level.userlevel.title,
-	'member':member,
-	'form':form,
-	'DataCapture':DataCapture,
-	}
-	return render(request,'deskofficer_templates/Updating_Gross_Pay_selected_Preview.html',context)
-
-
-
-def Updating_Gross_Pay(request):
-	DataCapture=DataCaptureManager.objects.first()
-	status=MembershipStatus.objects.get(title="ACTIVE")
-	gross_pay_status=ProcessingStatus.objects.get(title='UNPROCESSED')
-	records=Members.objects.filter(gross_pay_status=gross_pay_status,status=status)
-
-	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
-
-	context={
-	'user_level':user_level.userlevel.title,
-	'records':records,
-	'DataCapture':DataCapture,
-	}
-	return render(request,'deskofficer_templates/Updating_Gross_Pay.html',context)
-
-
-def Updating_Gross_Pay_Preview(request,pk):
-	DataCapture=DataCaptureManager.objects.first()
-	form=Updating_Gross_Pay_Preview_form(request.POST or None)
-	gross_pay_status=ProcessingStatus.objects.get(title='PROCESSED')
-	# status=MembershipStatus.objects.get(title='ACTIVE')
-	# transaction_period=TransactionPeriods.objects.get(status=status)
-	now = datetime.datetime.now()
-
-	formatted_date = defaultfilters.date(now, "SHORT_DATE_FORMAT")
-	# formatted_date = defaultfilters.date(transaction_period.transaction_period, "SHORT_DATE_FORMAT")
-		
-	member=Members.objects.get(id=pk)
-
-	form.fields['description'].initial= "Salary as at " + str(formatted_date)
-	
-
-	if request.method == "POST":
-		description=request.POST.get('description')
-		gross_pay=request.POST.get('gross_pay')
-
-		member.gross_pay=gross_pay
-		member.gross_pay_as_at=description
-		member.gross_pay_status=gross_pay_status
-		member.save()
-		return HttpResponseRedirect(reverse('Updating_Gross_Pay'))
-	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
-
-	context={
-	'user_level':user_level.userlevel.title,
-	'member':member,
-	'form':form,
-	'DataCapture':DataCapture,
-	}
-	return render(request,'deskofficer_templates/Updating_Gross_Pay_Preview.html',context)
-
-
-
-
-def Updating_Gross_Pay_Manage(request):
-	DataCapture=DataCaptureManager.objects.first()
-	gross_pay_status=ProcessingStatus.objects.get(title='PROCESSED')
-	records=Members.objects.filter(gross_pay_status=gross_pay_status)
-
-	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
-
-	context={
-	'user_level':user_level.userlevel.title,
-	'records':records,
-	'DataCapture':DataCapture,
-	}
-	return render(request,'deskofficer_templates/Updating_Gross_Pay_Manage.html',context)
-
-
-def Updating_Gross_Pay_Manage_Preview(request,pk):
-	DataCapture=DataCaptureManager.objects.first()
-	form=Updating_Gross_Pay_Preview_form(request.POST or None)
-	gross_pay_status=ProcessingStatus.objects.get(title='PROCESSED')
-	
-	member=Members.objects.get(id=pk)
-
-	form.fields['description'].initial= member.gross_pay_as_at
-	form.fields['gross_pay'].initial= member.gross_pay
-	
-
-	if request.method == "POST":
-		description=request.POST.get('description')
-		gross_pay=request.POST.get('gross_pay')
-
-		member.gross_pay=gross_pay
-		member.gross_pay_as_at=description
-		member.gross_pay_status=gross_pay_status
-		member.save()
-		return HttpResponseRedirect(reverse('Updating_Gross_Pay_Manage'))
-	cuser_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
-
-	context={
-	'user_level':user_level.userlevel.title,
-	'member':member,
-	'form':form,
-	'DataCapture':DataCapture,
-	}
-	return render(request,'deskofficer_templates/Updating_Gross_Pay_Manage_Preview.html',context)
 
 
 ########################################################################
@@ -6233,39 +6786,48 @@ def Updating_Gross_Pay_Manage_Preview(request,pk):
 #########################################################################
 
 def Norminal_Roll(request):
+	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
 	DataCapture=DataCaptureManager.objects.first()
 	status=MembershipStatus.objects.get(title="ACTIVE")
 	members=Members.objects.filter(status=status)
 
-	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
+	
 
 	context={
-	'user_level':user_level.userlevel.title,
+	
 	'members':members,
+	'current_user':current_user,
 	'DataCapture':DataCapture,
 	}
 	return render(request,'deskofficer_templates/Norminal_Roll.html',context)
 
+def Member_delete(request,pk):
+	member=Members.objects.get(id=pk)
+	member.delete()
+	return HttpResponseRedirect(reverse('Norminal_Roll'))
 
 def Norminal_Roll_Update(request,pk):
+	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
 	DataCapture=DataCaptureManager.objects.first()
 	form = Norminal_Roll_Update_form(request.POST or None)
 	member=Members.objects.get(pk=pk)
 
 	if request.method=='POST':
-		title_id=request.POST.get('title')
-		member.title=Titles.objects.get(id=title_id)
+		if request.POST.get("chk_title"):
+			title_id=request.POST.get('title')
+			member.title=Titles.objects.get(id=title_id)
 
-		member.last_name=request.POST.get('last_name')
-		member.first_name=request.POST.get('first_name')
+	
 		member.middle_name=request.POST.get('middle_name')
 
-		gender_id=request.POST.get('gender')
-		member.gender=Gender.objects.get(id=gender_id)
+		if request.POST.get("chk_gender"):
+			gender_id=request.POST.get('gender')
+			member.gender=Gender.objects.get(id=gender_id)
 
 		member.phone_number=request.POST.get('phone_number')
-		department_id=request.POST.get('department')
-		member.department=Departments.objects.get(id=department_id)
+		if request.POST.get("chk_department"):
+			department_id=request.POST.get('department')
+			member.department=Departments.objects.get(id=department_id)
 
 		salary_institution_id=request.POST.get('salary_institution')
 		member.salary_institution=SalaryInstitution.objects.get(id=salary_institution_id)
@@ -6276,7 +6838,13 @@ def Norminal_Roll_Update(request,pk):
 		member.file_no=request.POST.get('file_no')
 		member.ippis_no=request.POST.get('ippis_no')
 		member.date_joined=request.POST.get('date_joined')
+		member.date_of_first_appointment=request.POST.get('date_of_first_appointment')
+		member.dob=request.POST.get('dob')
+		
 		member.save()
+		member.admin.last_name=request.POST.get('last_name')
+		member.admin.first_name=request.POST.get('first_name')
+		member.admin.save()
 		return HttpResponseRedirect(reverse('Norminal_Roll'))
 
 	form.fields['title'].initial= member.title_id
@@ -6284,6 +6852,7 @@ def Norminal_Roll_Update(request,pk):
 	form.fields['first_name'].initial= member.admin.first_name
 	form.fields['middle_name'].initial= member.middle_name
 
+	form.fields['dob'].initial= member.dob
 	form.fields['gender'].initial= member.gender_id
 	form.fields['phone_number'].initial= member.phone_number
 	form.fields['department'].initial= member.department_id
@@ -6295,321 +6864,21 @@ def Norminal_Roll_Update(request,pk):
 	form.fields['file_no'].initial= member.file_no
 	form.fields['ippis_no'].initial= member.ippis_no
 	form.fields['date_joined'].initial= member.date_joined
+	form.fields['date_of_first_appointment'].initial= member.date_of_first_appointment
 
-	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
+	
 
 	context={
-	'user_level':user_level.userlevel.title,
+	
 	'form':form,
 	'member':member,
+	'current_user':current_user,
 	'DataCapture':DataCapture,
 	}
 	return render(request,'deskofficer_templates/Norminal_Roll_Update.html',context)
 
 
 
-########################################################################
-############################# UPDATING TITLE ######################
-#########################################################################
-
-def Updating_Title_list_load(request):
-	DataCapture=DataCaptureManager.objects.first()
-	status=MembershipStatus.objects.get(title='ACTIVE')
-	records=Members.objects.filter(status=status)
-
-	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
-
-	context={
-	'user_level':user_level.userlevel.title,
-	'records':records,
-	'DataCapture':DataCapture,
-	}
-	return render(request,'deskofficer_templates/Updating_Title_list_load.html',context)
-
-
-def Updating_Updating_Title_Preview(request,pk):
-	DataCapture=DataCaptureManager.objects.first()
-	form=Updating_Title_Preview_form(request.POST or None)
-	member=Members.objects.get(id=pk)
-	if member.title:
-		form.fields['title'].initial= member.title.id
-
-	if request.method == "POST":
-		title_id=request.POST.get('title')
-		title=Titles.objects.get(id=title_id)
-
-		member.title=title
-		member.save()
-		return HttpResponseRedirect(reverse('Updating_Title_list_load'))
-	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
-
-	context={
-	'user_level':user_level.userlevel.title,
-	'member':member,
-	'form':form,
-	'DataCapture':DataCapture,
-	}
-	return render(request,'deskofficer_templates/Updating_Title_Preview.html',context)
-
-
-def Updating_Updating_Title_Preview1(request,pk):
-	DataCapture=DataCaptureManager.objects.first()
-	form=Updating_Title_Preview_form(request.POST or None)
-	member=Members.objects.get(id=pk)
-	
-	if member.title:
-		form.fields['title'].initial= member.title.id
-
-	if request.method == "POST":
-		title_id=request.POST.get('title')
-		title=Titles.objects.get(id=title_id)
-
-		member.title=title
-		member.save()
-		return HttpResponseRedirect(reverse('Updating_Title_selected_search'))
-	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
-
-	context={
-	'user_level':user_level.userlevel.title,
-	'member':member,
-	'form':form,
-	'DataCapture':DataCapture,
-	}
-	return render(request,'deskofficer_templates/Updating_Title_Preview.html',context)
-
-
-def Updating_Title_selected_search(request):
-	DataCapture=DataCaptureManager.objects.first()
-	title="Search Members for Title Update"
-	form = searchForm(request.POST or None)
-	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
-	return render(request,'deskofficer_templates/Updating_Title_selected_search.html',{'form':form,'title':title,'DataCapture':DataCapture,'user_level':user_level.userlevel.title,})
-
-
-def Updating_Title_selected_list_load(request):
-	DataCapture=DataCaptureManager.objects.first()
-	title="LIST OF MEMBERS"
-	form = searchForm(request.POST)
-	if request.method == "POST":
-		if request.POST.get("title")=="":
-			return HttpResponseRedirect(reverse('Updating_Title_selected_search'))
-
-		status=MembershipStatus.objects.get(title='ACTIVE')
-		form = searchForm(request.POST)
-		members=Members.objects.filter(Q(file_no__icontains=form['title'].value()) |Q(ippis_no__icontains=form['title'].value()) |Q(phone_number__icontains=form['title'].value()) | Q(admin__first_name__icontains=form['title'].value()) | Q(admin__last_name__icontains=form['title'].value()) | Q(middle_name__icontains=form['title'].value())).filter(status=status)
-		user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
-
-		context={
-		'user_level':user_level.userlevel.title,
-		'members':members,
-		'title':title,
-		'DataCapture':DataCapture,
-		}
-		return render(request,'deskofficer_templates/Updating_Title_selected_list_load.html',context)
-
-
-
-########################################################################
-############################# UPDATING DEPARTMENTS ######################
-#########################################################################
-
-def Updating_Department_list_load(request):
-	DataCapture=DataCaptureManager.objects.first()
-	status=MembershipStatus.objects.get(title='ACTIVE')
-	records=Members.objects.filter(status=status)
-
-	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
-
-	context={
-	'user_level':user_level.userlevel.title,
-	'records':records,
-	'DataCapture':DataCapture,
-	}
-	return render(request,'deskofficer_templates/Updating_Department_list_load.html',context)
-
-
-def Updating_Updating_Department_Preview(request,pk):
-	DataCapture=DataCaptureManager.objects.first()
-	form=Updating_Updating_Department_Preview_form(request.POST or None)
-	member=Members.objects.get(id=pk)
-	if member.department:
-		form.fields['department'].initial= member.department.id
-	if request.method == "POST":
-		department_id=request.POST.get('department')
-		department=Departments.objects.get(id=department_id)
-
-		member.department=department
-		member.save()
-		return HttpResponseRedirect(reverse('Updating_Department_list_load'))
-	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
-
-	context={
-	'user_level':user_level.userlevel.title,
-	'member':member,
-	'form':form,
-	'DataCapture':DataCapture,
-	}
-	return render(request,'deskofficer_templates/Updating_Updating_Department_Preview.html',context)
-
-
-def Updating_Updating_Department_Preview1(request,pk):
-	DataCapture=DataCaptureManager.objects.first()
-	form=Updating_Updating_Department_Preview_form(request.POST or None)
-	member=Members.objects.get(id=pk)
-
-	if member.department:
-		form.fields['department'].initial= member.department.id
-
-	if request.method == "POST":
-		department_id=request.POST.get('department')
-		department=Departments.objects.get(id=department_id)
-
-		member.department=department
-		member.save()
-		return HttpResponseRedirect(reverse('Updating_Department_selected_search'))
-	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
-
-	context={
-	'user_level':user_level.userlevel.title,
-	'member':member,
-	'form':form,
-	'DataCapture':DataCapture,
-	}
-	return render(request,'deskofficer_templates/Updating_Updating_Department_Preview.html',context)
-
-
-def Updating_Department_selected_search(request):
-	DataCapture=DataCaptureManager.objects.first()
-	title="Search Members for Department Update"
-	form = searchForm(request.POST or None)
-	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
-	return render(request,'deskofficer_templates/Updating_Department_selected_search.html',{'form':form,'title':title,'DataCapture':DataCapture,'user_level':user_level.userlevel.title,})
-
-
-def Updating_Department_selected_list_load(request):
-	DataCapture=DataCaptureManager.objects.first()
-	title="LIST OF MEMBERS"
-	form = searchForm(request.POST)
-	if request.method == "POST":
-		if request.POST.get("title")=="":
-			return HttpResponseRedirect(reverse('Updating_Department_selected_search'))
-
-		status=MembershipStatus.objects.get(title='ACTIVE')
-		form = searchForm(request.POST)
-		members=Members.objects.filter(Q(file_no__icontains=form['title'].value()) |Q(ippis_no__icontains=form['title'].value()) |Q(phone_number__icontains=form['title'].value()) | Q(admin__first_name__icontains=form['title'].value()) | Q(admin__last_name__icontains=form['title'].value()) | Q(middle_name__icontains=form['title'].value())).filter(status=status)
-		user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
-
-		context={
-		'user_level':user_level.userlevel.title,
-		'members':members,
-		'title':title,
-		'DataCapture':DataCapture,
-		}
-		return render(request,'deskofficer_templates/Updating_Department_selected_list_load.html',context)
-
-
-
-
-########################################################################
-############################# UPDATING GENDER ######################
-#########################################################################
-
-def Updating_Gender_list_load(request):
-	DataCapture=DataCaptureManager.objects.first()
-	status=MembershipStatus.objects.get(title='ACTIVE')
-	# records=Members.objects.filter(status=status).filter(Q(gender__title__isnull=True) | Q(gender__title=""))
-	records=Members.objects.filter(status=status) #.filter(Q(gender__title__isnull=True) | Q(gender__title=""))
-
-	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
-
-	context={
-	'user_level':user_level.userlevel.title,
-	'records':records,
-	'DataCapture':DataCapture,
-	}
-	return render(request,'deskofficer_templates/Updating_Gender_list_load.html',context)
-
-
-def Updating_Gender_Preview(request,pk):
-	DataCapture=DataCaptureManager.objects.first()
-	form=Updating_Gender_Preview_form(request.POST or None)
-	member=Members.objects.get(id=pk)
-	
-	if member.gender:
-		form.fields['gender'].initial= member.gender.id
-
-	if request.method == "POST":
-		gender_id=request.POST.get('gender')
-		gender=Gender.objects.get(id=gender_id)
-
-		member.gender=gender
-		member.save()
-		return HttpResponseRedirect(reverse('Updating_Gender_list_load'))
-	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
-
-	context={
-	'user_level':user_level.userlevel.title,
-	'member':member,
-	'form':form,
-	'DataCapture':DataCapture,
-	}
-	return render(request,'deskofficer_templates/Updating_Gender_Preview.html',context)
-
-
-def Updating_Gender_Preview1(request,pk):
-	DataCapture=DataCaptureManager.objects.first()
-	form=Updating_Gender_Preview_form(request.POST or None)
-	member=Members.objects.get(id=pk)
-	
-	if member.gender:
-		form.fields['gender'].initial= member.gender.id
-
-	if request.method == "POST":
-		gender_id=request.POST.get('gender')
-		gender=Gender.objects.get(id=gender_id)
-
-		member.gender=gender
-		member.save()
-		return HttpResponseRedirect(reverse('Updating_Gender_selected_search'))
-	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
-
-	context={
-	'user_level':user_level.userlevel.title,
-	'member':member,
-	'form':form,
-	'DataCapture':DataCapture,
-	}
-	return render(request,'deskofficer_templates/Updating_Gender_Preview.html',context)
-
-
-def Updating_Gender_selected_search(request):
-	DataCapture=DataCaptureManager.objects.first()
-	title="Search Members for Gender Update"
-	form = searchForm(request.POST or None)
-	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
-	return render(request,'deskofficer_templates/Updating_Gender_selected_search.html',{'form':form,'title':title,'DataCapture':DataCapture,'user_level':user_level.userlevel.title,})
-
-
-def Updating_Gender_selected_list_load(request):
-	DataCapture=DataCaptureManager.objects.first()
-	title="LIST OF MEMBERS"
-	form = searchForm(request.POST)
-	if request.method == "POST":
-		if request.POST.get("title")=="":
-			return HttpResponseRedirect(reverse('Updating_Gender_selected_search'))
-
-		status=MembershipStatus.objects.get(title='ACTIVE')
-		form = searchForm(request.POST)
-		members=Members.objects.filter(Q(file_no__icontains=form['title'].value()) |Q(ippis_no__icontains=form['title'].value()) |Q(phone_number__icontains=form['title'].value()) | Q(admin__first_name__icontains=form['title'].value()) | Q(admin__last_name__icontains=form['title'].value()) | Q(middle_name__icontains=form['title'].value())).filter(status=status)
-		user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
-
-		context={
-		'user_level':user_level.userlevel.title,
-		'members':members,
-		'title':title,
-		'DataCapture':DataCapture,
-		}
-		return render(request,'deskofficer_templates/Updating_Gender_selected_list_load.html',context)
 
 
 
@@ -6617,16 +6886,18 @@ def Updating_Gender_selected_list_load(request):
 ##################### MEMBERS SHARE ########################
 ############################################################
 def Members_Shares_Upload_list_load(request):
+	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
 	DataCapture=DataCaptureManager.objects.first()
 	status=MembershipStatus.objects.get(title='ACTIVE')
 	shares_status = SharesUploadStatus.objects.get(title='PENDING')
 	records=Members.objects.filter(status=status,shares_status=shares_status) #.filter(Q(gender__title__isnull=True) | Q(gender__title=""))
 
-	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
+	
 
 	context={
-	'user_level':user_level.userlevel.title,
+	
 	'records':records,
+	'current_user':current_user,
 	'DataCapture':DataCapture,
 	}
 	return render(request,'deskofficer_templates/Members_Shares_Upload_list_load.html',context)
@@ -6634,6 +6905,7 @@ def Members_Shares_Upload_list_load(request):
 
 
 def Members_Shares_Upload_Preview(request,pk):
+	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
 	DataCapture=DataCaptureManager.objects.first()
 	form=Existing_Shares_Upload_form(request.POST or None)
 	member1=Members.objects.get(id=pk) 
@@ -6684,13 +6956,14 @@ def Members_Shares_Upload_Preview(request,pk):
 		member1.save()
 
 		return HttpResponseRedirect(reverse('Members_Shares_Upload_list_load'))
-	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
+	
 
 	context={
-	'user_level':user_level.userlevel.title,
+	
 	'member':member,
 	'member1':member1,
 	'form':form,
+	'current_user':current_user,
 	'DataCapture':DataCapture,
 	}
 	return render(request,'deskofficer_templates/Members_Shares_Upload_Preview.html',context)
@@ -6698,14 +6971,17 @@ def Members_Shares_Upload_Preview(request,pk):
 
 
 def Members_Initial_Shares_update_Search(request):
+	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
 	DataCapture=DataCaptureManager.objects.first()
 	title="Search Members for Initial Share Update"
 	form = searchForm(request.POST or None)
-	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
-	return render(request,'deskofficer_templates/Members_Initial_Shares_update_Search.html',{'form':form,'title':title,'DataCapture':DataCapture,'user_level':user_level.userlevel.title,})
+	
+	return render(request,'deskofficer_templates/Members_Initial_Shares_update_Search.html',{'form':form,'title':title,'current_user':current_user,
+	'DataCapture':DataCapture,})
 
 
 def Members_Initial_Shares_update_list_load(request):
+	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
 	DataCapture=DataCaptureManager.objects.first()
 	title="LIST OF MEMBERS"
 	form = searchForm(request.POST)
@@ -6723,18 +6999,21 @@ def Members_Initial_Shares_update_list_load(request):
 													|Q(member__member__admin__first_name__icontains=form['title'].value()) 
 													|Q(member__member__admin__last_name__icontains=form['title'].value()) 
 													|Q(member__member__middle_name__icontains=form['title'].value())).filter(Q(shares__lt=2))
-		user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
+		
 
 		context={
-		'user_level':user_level.userlevel.title,
+		
 		'members':members,
 		'title':title,
+		'current_user':current_user,
 		'DataCapture':DataCapture,
 		}
 		return render(request,'deskofficer_templates/Members_Initial_Shares_update_list_load.html',context)
 
 
 def Members_Initial_Shares_update_preview(request,pk):
+	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
+	DataCapture=DataCaptureManager.objects.first()
 	form=MembersInitialShare_update_form(request.POST or None)
 
 	if MembersShareConfigurations.objects.all().count()>0:
@@ -6765,30 +7044,40 @@ def Members_Initial_Shares_update_preview(request,pk):
 		return HttpResponseRedirect(reverse('Members_Initial_Shares_update_Search'))
 
 	
-	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
+	
 
 	context={
-	'user_level':user_level.userlevel.title,
+	'current_user':current_user,
+	'DataCapture':DataCapture,
+	
 	'form':form,
 	}
 	return render(request,'deskofficer_templates/Members_Initial_Shares_update_preview.html',context)
 
 
 def Members_Initial_Shares_update_approved_list_load(request):
+	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
+	DataCapture=DataCaptureManager.objects.first()
+
 	status=TransactionStatus.objects.get(title='UNTREATED')
 	approval_status=ApprovalStatus.objects.get(title='APPROVED')
 	members=MembersShareInitialUpdateRequest.objects.filter(status=status,approval_status=approval_status)
 
-	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
+	
 
 	context={
-	'user_level':user_level.userlevel.title,
+	'current_user':current_user,
+	'DataCapture':DataCapture,
+	
 	'members':members,
 	}
 	return render(request,'deskofficer_templates/Members_Initial_Shares_update_approved_list_load.html',context)
 
 
 def Members_Initial_Shares_update_approved_processed(request,pk):
+	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
+	DataCapture=DataCaptureManager.objects.first()
+
 	transaction_period=TransactionPeriods.objects.get(status__title='ACTIVE')
 	status1=MembershipStatus.objects.get(title='ACTIVE')
 	status=TransactionStatus.objects.get(title='TREATED')
@@ -6815,10 +7104,12 @@ def Members_Initial_Shares_update_approved_processed(request,pk):
 		return HttpResponseRedirect(reverse('Members_Initial_Shares_update_approved_list_load'))
 
 
-	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
+	
 
 	context={
-	'user_level':user_level.userlevel.title,
+	'current_user':current_user,
+	'DataCapture':DataCapture,
+	
 	'member':member,
 	'ledger_balance':ledger_balance.balance,
 	}
@@ -6826,15 +7117,18 @@ def Members_Initial_Shares_update_approved_processed(request,pk):
 
 
 def Members_Share_Purchase_Request_Search(request):
+	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
 	DataCapture=DataCaptureManager.objects.first()
 	title="Search Members for Share Purchase"
 	form = searchForm(request.POST or None)
-	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
-	return render(request,'deskofficer_templates/Members_Share_Purchase_Request_Search.html',{'form':form,'title':title,'DataCapture':DataCapture,'user_level':user_level.userlevel.title,})
+	
+	return render(request,'deskofficer_templates/Members_Share_Purchase_Request_Search.html',{'form':form,'title':title,'current_user':current_user,
+	'DataCapture':DataCapture,})
 
 
 
 def Members_Share_Purchase_Request_list_load(request):
+	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
 	DataCapture=DataCaptureManager.objects.first()
 	title="LIST OF MEMBERS"
 	form = searchForm(request.POST)
@@ -6845,18 +7139,20 @@ def Members_Share_Purchase_Request_list_load(request):
 		status=MembershipStatus.objects.get(title='ACTIVE')
 		form = searchForm(request.POST)
 		members=MembersShareAccounts.objects.filter(Q(member__member__file_no__icontains=form['title'].value()) |Q(member__member__ippis_no__icontains=form['title'].value()) |Q(member__member__phone_number__icontains=form['title'].value()) | Q(member__member__admin__first_name__icontains=form['title'].value()) | Q(member__member__admin__last_name__icontains=form['title'].value()) | Q(member__member__middle_name__icontains=form['title'].value())).filter(member__member__status=status)
-		user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
+		
 
 		context={
-		'user_level':user_level.userlevel.title,
+		
 		'members':members,
 		'title':title,
+		'current_user':current_user,
 		'DataCapture':DataCapture,
 		}
 		return render(request,'deskofficer_templates/Members_Share_Purchase_Request_list_load.html',context)
 
 
 def Members_Share_Purchase_Request_View(request,pk):
+	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
 	DataCapture=DataCaptureManager.objects.first()
 	form = Members_Share_Purchase_Request_form(request.POST or None)
 	member1=MembersShareAccounts.objects.get(id=pk)
@@ -6864,46 +7160,164 @@ def Members_Share_Purchase_Request_View(request,pk):
 	member=MembersAccountsDomain.objects.get(account_number=account_number)
 	
 	if request.method=="POST":
+		tdate=get_current_date(now)
 		status=TransactionStatus.objects.get(title="UNTREATED")
 		max_unit = SharesUnits.objects.all().order_by('unit').last()
 
 		existing_share = member1.shares
 		approval_status=ApprovalStatus.objects.get(title='PENDING')
-		approval_officer_id=request.POST.get('approval_officers')
-		approval_officer=ApprovalOfficers.objects.get(id=approval_officer_id)
-		units=request.POST.get('units')
 	
+		units=request.POST.get('units')
+		if not units:
+			messages.info(request,'Unit is missing')
+			return HttpResponseRedirect(reverse('Members_Share_Purchase_Request_View',args=(pk,)))
+
+
 		if int(max_unit.unit) < (int(units) + int(existing_share)):
 			messages.error(request,"You have exceed the Maximum Units")
 			return HttpResponseRedirect(reverse('Members_Share_Purchase_Request_View',args=(pk,)))
+
 
 		if MembersSharePurchaseRequest.objects.filter(member=member,status=status).exists():
 			messages.error(request,"You Still Have an Open Transaction")
 			return HttpResponseRedirect(reverse('Members_Share_Purchase_Request_View',args=(pk,)))
 
-		record=MembersSharePurchaseRequest(member=member,approval_officer=approval_officer,approval_status=approval_status,units=units,status=status)
+		record=MembersSharePurchaseRequest(tdate=tdate,member=member,approval_status=approval_status,units=units,status=status)
 		record.save()
 		return HttpResponseRedirect(reverse('Members_Share_Purchase_Request_Search'))
-	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
-
+	
+	# form.fields['units'].initial=
 	context={
-	'user_level':user_level.userlevel.title,
+	
 	"form":form,
 	"member":member,
+	'current_user':current_user,
 	'DataCapture':DataCapture,
 	'account_number':account_number,
 	}
 	return render(request,'deskofficer_templates/Members_Share_Purchase_Request_View.html',context)
 
 
+
+def Members_Share_Purchase_Request_Manage_Search(request):
+	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
+	DataCapture=DataCaptureManager.objects.first()
+	title="Search Members for Share Purchase"
+	form = searchForm(request.POST or None)
+	
+	return render(request,'deskofficer_templates/Members_Share_Purchase_Request_Manage_Search.html',{'form':form,'title':title,'current_user':current_user,
+	'DataCapture':DataCapture,})
+
+
+
+def Members_Share_Purchase_Request_Manage_list_load(request):
+	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
+	DataCapture=DataCaptureManager.objects.first()
+	title="LIST OF MEMBERS"
+	form = searchForm(request.POST)
+	if request.method == "POST":
+		if request.POST.get("title")=="":
+			return HttpResponseRedirect(reverse('Members_Share_Purchase_Request_Search'))
+
+		status=MembershipStatus.objects.get(title='ACTIVE')
+		form = searchForm(request.POST)
+		members=MembersSharePurchaseRequest.objects.filter(Q(member__member__file_no__icontains=form['title'].value()) |Q(member__member__ippis_no__icontains=form['title'].value()) |Q(member__member__phone_number__icontains=form['title'].value()) | Q(member__member__admin__first_name__icontains=form['title'].value()) | Q(member__member__admin__last_name__icontains=form['title'].value()) | Q(member__member__middle_name__icontains=form['title'].value())).filter(member__member__status=status)
+		
+
+		context={
+		
+		'members':members,
+		'title':title,
+		'current_user':current_user,
+		'DataCapture':DataCapture,
+		}
+		return render(request,'deskofficer_templates/Members_Share_Purchase_Request_Manage_list_load.html',context)
+
+
+def Members_Share_Purchase_Request_Manage_Details(request,pk):
+	form=Members_Share_Purchase_Request_form(request.POST or None)
+	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
+	DataCapture=DataCaptureManager.objects.first()
+	
+	member=MembersSharePurchaseRequest.objects.get(id=pk)
+
+	member1=MembersShareAccounts.objects.get(member__account_number=member.member.account_number)
+	title="LIST OF MEMBERS"
+	
+	form.fields['units'].initial=member.units
+
+	if request.method=="POST":
+		tdate=get_current_date(now)
+		status=TransactionStatus.objects.get(title="UNTREATED")
+		max_unit = SharesUnits.objects.all().order_by('unit').last()
+
+		existing_share = member1.shares
+		
+	
+		units=request.POST.get('units')
+		if not units:
+			messages.info(request,'Unit is missing')
+			return HttpResponseRedirect(reverse('Members_Share_Purchase_Request_Manage_Details',args=(pk,)))
+
+
+		if int(max_unit.unit) < (int(units) + int(existing_share)):
+			messages.error(request,"You have exceed the Maximum Units")
+			return HttpResponseRedirect(reverse('Members_Share_Purchase_Request_Manage_Details',args=(pk,)))
+
+		member.units=units
+		member.save()
+		return HttpResponseRedirect(reverse('Members_Share_Purchase_Request_Manage_Search'))
+
+
+	context={
+	
+	'form':form,
+	'member':member,
+	'current_user':current_user,
+	'DataCapture':DataCapture,
+	}
+	return render(request,'deskofficer_templates/Members_Share_Purchase_Request_Manage_Details.html',context)
+
+
+
+def Members_Share_Purchase_Request_Manage_Details_delete_Confirmation(request,pk):
+	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
+	DataCapture=DataCaptureManager.objects.first()
+	
+
+	title = "Are you sure you want to drop this Request"
+	record=MembersSharePurchaseRequest.objects.get(id=pk)
+	context={
+	'current_user':current_user,
+	'DataCapture':DataCapture,
+	
+	'record':record,
+	'title':title,
+	}
+	return render(request,'deskofficer_templates/Members_Share_Purchase_Request_Manage_Details_delete_Confirmation.html',context)
+
+
+def Members_Share_Purchase_Request_Manage_Details_delete(request,pk):
+	record=MembersSharePurchaseRequest.objects.get(id=pk)
+	record.delete()
+	return HttpResponseRedirect(reverse('Members_Share_Purchase_Request_Manage_Search'))
+	
+
+
+
+
 def Members_Share_Purchase_Request_Process(request):
+	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
+	DataCapture=DataCaptureManager.objects.first()
 	approval_status=ApprovalStatus.objects.get(title='APPROVED')
 	status=TransactionStatus.objects.get(title='UNTREATED')
 	records=MembersSharePurchaseRequest.objects.filter(approval_status=approval_status,status=status)
-	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
+	
 
 	context={
-	'user_level':user_level.userlevel.title,
+	'current_user':current_user,
+	'DataCapture':DataCapture,
+	
 	'records':records,
 	}
 	return render(request,'deskofficer_templates/Members_Share_Purchase_Request_Process.html',context)
@@ -7011,10 +7425,12 @@ def Members_Share_Purchase_Request_Process_View(request,pk):
 		form.fields['units'].initial=record.units
 		form.fields['total_cost'].initial= float(share_cost.unit_cost) * float(record.units)
 
-	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
+	
 
 	context={
-	'user_level':user_level.userlevel.title,
+	'current_user':current_user,
+	'DataCapture':DataCapture,
+	
 	'record':record,
 	'form':form,
 	'transaction_receipt_category':transaction_receipt_category,
@@ -7026,16 +7442,18 @@ def Members_Share_Purchase_Request_Process_View(request,pk):
 ##################### MEMBERS WELFARE ######################
 ############################################################
 def Members_salary_Upload_list_load(request):
+	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
 	DataCapture=DataCaptureManager.objects.first()
 	status=MembershipStatus.objects.get(title='ACTIVE')
 	welfare_status = WelfareUploadStatus.objects.get(title='PENDING')
 	records=Members.objects.filter(status=status,welfare_status=welfare_status) 
 
-	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
+	
 
 	context={
-	'user_level':user_level.userlevel.title,
+	
 	'records':records,
+	'current_user':current_user,
 	'DataCapture':DataCapture,
 	}
 	return render(request,'deskofficer_templates/Members_Welfare_Upload_list_load.html',context)
@@ -7046,16 +7464,18 @@ def Members_salary_Upload_list_load(request):
 ##################### MEMBERS WELFARE ######################
 ############################################################
 def Members_Welfare_Upload_list_load(request):
+	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
 	DataCapture=DataCaptureManager.objects.first()
 	status=MembershipStatus.objects.get(title='ACTIVE')
 	welfare_status = WelfareUploadStatus.objects.get(title='PENDING')
 	records=Members.objects.filter(status=status,welfare_status=welfare_status) 
 
-	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
+	
 
 	context={
-	'user_level':user_level.userlevel.title,
+	
 	'records':records,
+	'current_user':current_user,
 	'DataCapture':DataCapture,
 	}
 	return render(request,'deskofficer_templates/Members_Welfare_Upload_list_load.html',context)
@@ -7063,6 +7483,7 @@ def Members_Welfare_Upload_list_load(request):
 
 
 def Members_Welfare_Upload_Preview(request,pk):
+	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
 	DataCapture=DataCaptureManager.objects.first()
 	form=Existing_Welfare_Upload_form(request.POST or None)
 
@@ -7102,12 +7523,13 @@ def Members_Welfare_Upload_Preview(request,pk):
 		member1.save()
 
 		return HttpResponseRedirect(reverse('Members_Welfare_Upload_list_load'))
-	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
+	
 
 	context={
-	'user_level':user_level.userlevel.title,
+	
 	'member':member,
 	'form':form,
+	'current_user':current_user,
 	'DataCapture':DataCapture,
 	}
 	return render(request,'deskofficer_templates/Members_Welfare_Upload_Preview.html',context)
@@ -7118,14 +7540,17 @@ def Members_Welfare_Upload_Preview(request,pk):
 ##################### CASH DEPOSIT    ######################
 ############################################################
 def Cash_Deposit_Shares_Search(request):
+	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
 	DataCapture=DataCaptureManager.objects.first()
 	title="Search Members for Cash Deposit for Shares"
 	form = searchForm(request.POST or None)
-	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
-	return render(request,'deskofficer_templates/Cash_Deposit_Shares_Search.html',{'form':form,'title':title,'DataCapture':DataCapture,'user_level':user_level.userlevel.title,})
+	
+	return render(request,'deskofficer_templates/Cash_Deposit_Shares_Search.html',{'form':form,'title':title,'current_user':current_user,
+	'DataCapture':DataCapture,})
 
 
 def Cash_Deposit_Shares_list_load(request):
+	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
 	DataCapture=DataCaptureManager.objects.first()
 	title="LIST OF MEMBERS"
 	form = searchForm(request.POST)
@@ -7137,18 +7562,21 @@ def Cash_Deposit_Shares_list_load(request):
 		status=MembershipStatus.objects.get(title='ACTIVE')
 		form = searchForm(request.POST)
 		members=MembersAccountsDomain.objects.filter(Q(member__file_no__icontains=form['title'].value()) |Q(member__ippis_no__icontains=form['title'].value()) |Q(member__phone_number__icontains=form['title'].value()) | Q(member__admin__first_name__icontains=form['title'].value()) | Q(member__admin__last_name__icontains=form['title'].value()) | Q(member__middle_name__icontains=form['title'].value())).filter(transaction=transaction)
-		user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
+		
 
 		context={
-		'user_level':user_level.userlevel.title,
+		
 		'members':members,
 		'title':title,
+		'current_user':current_user,
 		'DataCapture':DataCapture,
 		}
 		return render(request,'deskofficer_templates/Cash_Deposit_Shares_list_load.html',context)
 
 
 def Cash_Deposit_Shares_Preview(request,pk):
+	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
+	DataCapture=DataCaptureManager.objects.first()
 	form=Cash_Deposit_Shares_Preview_Form(request.POST or None)
 	member=MembersAccountsDomain.objects.get(id=pk)
 	transaction=TransactionTypes.objects.get(code='700')
@@ -7163,6 +7591,8 @@ def Cash_Deposit_Shares_Preview(request,pk):
 		unit_cost_selected=unit_cost_obj.unit_cost
 
 	if request.method=="POST":
+		tdate=get_current_date(now)
+		status=TransactionStatus.objects.get(title='UNTREATED')
 		receipt_status=ReceiptStatus.objects.get(title='UNUSED')
 		receipt_status1=ReceiptStatus.objects.get(title='USED')
 		receipt_id=request.POST.get('receipt_no')
@@ -7186,11 +7616,6 @@ def Cash_Deposit_Shares_Preview(request,pk):
 		units = request.POST.get('units')
 		unit_cost = request.POST.get('unit_cost')
 		total_amount = request.POST.get('total_amount')
-		
-		if float(total_amount) != float(unit_cost) * float(units):
-			messages.info(request,'Invalid Amount Specification')
-			return HttpResponseRedirect(reverse('Cash_Deposit_Shares_Preview', args=(pk,)))
-
 		purpose = request.POST.get('narration')
 		payment_date = request.POST.get('payment_date')
 		payment_reference = request.POST.get('payment_reference')
@@ -7198,6 +7623,32 @@ def Cash_Deposit_Shares_Preview(request,pk):
 		bank_accounts=CooperativeBankAccounts.objects.get(id=account_id)
 		processed_by=CustomUser.objects.get(id=request.user.id)
 
+		if not units or units=='0':
+			messages.info(request,'Unit is Missing')
+			return HttpResponseRedirect(reverse('Cash_Deposit_Shares_Preview',args=(pk,)))
+		
+		if not unit_cost or unit_cost=='0':
+			messages.info(request,'Unit cost is Missing')
+			return HttpResponseRedirect(reverse('Cash_Deposit_Shares_Preview',args=(pk,)))
+		
+		if not total_amount or total_amount=='0':
+			messages.info(request,'Amount Paid is Missing')
+			return HttpResponseRedirect(reverse('Cash_Deposit_Shares_Preview',args=(pk,)))
+		
+		if not purpose:
+			messages.info(request,'Purpose is Missing')
+			return HttpResponseRedirect(reverse('Cash_Deposit_Shares_Preview',args=(pk,)))
+		
+		if not payment_reference:
+			messages.info(request,'Payment Reference is Missing')
+			return HttpResponseRedirect(reverse('Cash_Deposit_Shares_Preview',args=(pk,)))
+		
+
+		if float(total_amount) != float(unit_cost) * float(units):
+			messages.info(request,'Invalid Amount Specification')
+			return HttpResponseRedirect(reverse('Cash_Deposit_Shares_Preview', args=(pk,)))
+
+		
 		if request.FILES.get('image', False):
 			image = request.FILES['image']
 			fs=FileSystemStorage()
@@ -7207,10 +7658,10 @@ def Cash_Deposit_Shares_Preview(request,pk):
 			image_url=None
 
 
-		
 		if MembersShareAccounts.objects.filter(member=member).exists():
 			record=MembersShareAccounts.objects.filter(member=member).first()
-			if (int(record.shares) + int(units)) > int(max_share):
+
+			if (int(record.shares) + int(units)) > int(record.member.member.shares):
 				messages.info(request,'You have exceeded maximum shares allowed')
 				return HttpResponseRedirect(reverse('Cash_Deposit_Shares_Preview', args=(pk,)))
 			
@@ -7223,7 +7674,7 @@ def Cash_Deposit_Shares_Preview(request,pk):
 			messages.info(request,'Account Does not exist')
 			return HttpResponseRedirect(reverse('Cash_Deposit_Shares_Preview', args=(pk,)))
 
-		cash_record=MembersCashDeposits(receipt=receipt,payment_evidience=image_url,bank_accounts=bank_accounts,member=member.member,transaction=transaction,account_number=account_number,amount=total_amount,payment_reference=payment_reference,payment_date=payment_date,purpose=purpose,processed_by=processed_by)
+		cash_record=MembersCashDeposits(status=status,tdate=tdate,receipt=receipt,payment_evidience=image_url,bank_accounts=bank_accounts,member=member.member,transaction=transaction,account_number=account_number,amount=total_amount,payment_reference=payment_reference,payment_date=payment_date,purpose=purpose,processed_by=processed_by)
 		cash_record.save()	
 
 		ledger=PersonalLedger.objects.filter(account_number=account_number).order_by('id').last()
@@ -7235,7 +7686,7 @@ def Cash_Deposit_Shares_Preview(request,pk):
 		particulars= str(units) + " Unit(s) Share Payment, at unit cost of " + str(unit_cost) +  " as at " + str(now)
 
 		
-		ledger_record=PersonalLedger(member=member.member,transaction=transaction,account_number=account_number,particulars=particulars,debit=debit,credit=credit,balance=balance,transaction_period=now,status=status1)
+		ledger_record=PersonalLedger(tdate=tdate,member=member.member,transaction=transaction,account_number=account_number,particulars=particulars,debit=debit,credit=credit,balance=balance,transaction_period=now,status=status1)
 		ledger_record.save()
 
 
@@ -7244,10 +7695,12 @@ def Cash_Deposit_Shares_Preview(request,pk):
 
 	form.fields['unit_cost'].initial=unit_cost_selected
 	form.fields['payment_date'].initial=now
-	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
+	
 
 	context={
-	'user_level':user_level.userlevel.title,
+	'current_user':current_user,
+	'DataCapture':DataCapture,
+	
 	'member':member,
 	'form':form,
 	}
@@ -7256,14 +7709,17 @@ def Cash_Deposit_Shares_Preview(request,pk):
 
 
 def Cash_Deposit_Welfare_Search(request):
+	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
 	DataCapture=DataCaptureManager.objects.first()
 	title="Search Members for Cash Deposit for Welfare"
 	form = searchForm(request.POST or None)
-	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
-	return render(request,'deskofficer_templates/Cash_Deposit_Welfare_Search.html',{'form':form,'title':title,'DataCapture':DataCapture,'user_level':user_level.userlevel.title,})
+	
+	return render(request,'deskofficer_templates/Cash_Deposit_Welfare_Search.html',{'form':form,'title':title,'current_user':current_user,
+	'DataCapture':DataCapture,})
 
 	
 def Cash_Deposit_Welfare_list_load(request):
+	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
 	DataCapture=DataCaptureManager.objects.first()
 	title="LIST OF MEMBERS"
 	form = searchForm(request.POST)
@@ -7275,24 +7731,30 @@ def Cash_Deposit_Welfare_list_load(request):
 		status=MembershipStatus.objects.get(title='ACTIVE')
 		form = searchForm(request.POST)
 		members=MembersAccountsDomain.objects.filter(Q(member__file_no__icontains=form['title'].value()) |Q(member__ippis_no__icontains=form['title'].value()) |Q(member__phone_number__icontains=form['title'].value()) | Q(member__admin__first_name__icontains=form['title'].value()) | Q(member__admin__last_name__icontains=form['title'].value()) | Q(member__middle_name__icontains=form['title'].value())).filter(transaction=transaction)
-		user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
+		
 
 		context={
-		'user_level':user_level.userlevel.title,
+		
 		'members':members,
 		'title':title,
+		'current_user':current_user,
 		'DataCapture':DataCapture,
 		}
 		return render(request,'deskofficer_templates/Cash_Deposit_Welfare_list_load.html',context)
 
 
 def Cash_Deposit_Welfare_Preview(request,pk):
+	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
+	DataCapture=DataCaptureManager.objects.first()
 	form=Cash_Deposit_Welfare_Preview_Form(request.POST or None)
 	member=MembersAccountsDomain.objects.get(id=pk)
 	transaction=TransactionTypes.objects.get(code='800')
-
+	status = TransactionStatus.objects.get(title='UNTREATED')
+	tdate=get_current_date(now)
 
 	if request.method=="POST":
+		enforce_payment=request.POST.get('enforce_payment')
+
 		receipt_status=ReceiptStatus.objects.get(title='UNUSED')
 		receipt_status1=ReceiptStatus.objects.get(title='USED')
 		receipt_id=request.POST.get('receipt_no')
@@ -7312,12 +7774,30 @@ def Cash_Deposit_Welfare_Preview(request,pk):
 			receipt_obj.receipt=int(receipt_obj.receipt)+1
 			receipt_obj.save()
 
-
-		year = request.POST.get('year')
-		purpose = request.POST.get('narration')
-		payment_date = request.POST.get('payment_date')
 		amount = request.POST.get('amount')
+		if not amount or amount =='0':
+			messages.error(request,'Paid Amount is Missing')
+			return HttpResponseRedirect(reverse('Cash_Deposit_Welfare_Preview',args=(pk,)))
+		
 		payment_reference = request.POST.get('payment_reference')
+		if not payment_reference:
+			messages.error(request,'Payment reference is Missing')
+			return HttpResponseRedirect(reverse('Cash_Deposit_Welfare_Preview',args=(pk,)))
+		
+		purpose = request.POST.get('narration')
+		if not purpose:
+			messages.error(request,'Narration is Missing')
+			return HttpResponseRedirect(reverse('Cash_Deposit_Welfare_Preview',args=(pk,)))
+		
+		year = request.POST.get('year')
+		if not year:
+			messages.error(request,'Year is Missing')
+			return HttpResponseRedirect(reverse('Cash_Deposit_Welfare_Preview',args=(pk,)))
+	
+		payment_date = request.POST.get('payment_date')
+
+		
+	
 		account_id = request.POST.get('account')
 		bank_accounts=CooperativeBankAccounts.objects.get(id=account_id)
 		processed_by=CustomUser.objects.get(id=request.user.id)
@@ -7329,21 +7809,38 @@ def Cash_Deposit_Welfare_Preview(request,pk):
 			image_url=fs.url(filename)
 		else:
 			image_url=None
+		
+		if not enforce_payment:
+			if MembersWelfareAccounts.objects.filter(member=member,year=year).exists():
+				messages.info(request,'Record Already Exist for this Member for Year Entered')
+				return HttpResponseRedirect(reverse('Cash_Deposit_Welfare_Preview',args=(pk,)))
+		
+		
 
-		cash_record=MembersCashDeposits(receipt=receipt,payment_evidience=image_url,bank_accounts=bank_accounts,member=member.member,transaction=transaction,account_number=member.account_number,amount=amount,payment_reference=payment_reference,payment_date=payment_date,purpose=purpose,processed_by=processed_by)
+		cash_record=MembersCashDeposits(status=status,tdate=tdate,receipt=receipt,payment_evidience=image_url,bank_accounts=bank_accounts,member=member.member,transaction=transaction,account_number=member.account_number,amount=amount,payment_reference=payment_reference,payment_date=payment_date,purpose=purpose,processed_by=processed_by)
 		cash_record.save()
 
-		record=MembersWelfareAccounts(member=member,amount=amount,year=year,processed_by=processed_by)
-		record.save()
+		
+		if MembersWelfareAccounts.objects.filter(member=member,year=year).exists():
+			record_exist=MembersWelfareAccounts.objects.filter(member=member,year=year).first()
+			amount_exist=record_exist.amount
 
-		messages.success(request,'Record Saved Successfully')
-		return HttpResponseRedirect(reverse('Cash_Deposit_Welfare_Preview', args=(pk,)))
+			record_exist.amount=float(amount) + float(amount_exist)
+			record_exist.save()
+			messages.success(request,'Record Updated Successfully')
+		else:	
+			record=MembersWelfareAccounts(member=member,amount=amount,year=year,processed_by=processed_by)
+			record.save()
+			messages.success(request,'Record Saved Successfully')
+		return HttpResponseRedirect(reverse('Cash_Deposit_Welfare_Search'))
 
 	form.fields['payment_date'].initial=now
-	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
+	
 
 	context={
-	'user_level':user_level.userlevel.title,
+	'current_user':current_user,
+	'DataCapture':DataCapture,
+	
 	'member':member,
 	'form':form,
 	}
@@ -7351,15 +7848,18 @@ def Cash_Deposit_Welfare_Preview(request,pk):
 
 
 def Cash_Deposit_Savings_Search(request):
+	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
 	DataCapture=DataCaptureManager.objects.first()
 	title="Search Members for Cash Deposit"
 	form = searchForm(request.POST or None)
-	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
-	return render(request,'deskofficer_templates/Cash_Deposit_Savings_Search.html',{'form':form,'title':title,'DataCapture':DataCapture,'user_level':user_level.userlevel.title,})
+	
+	return render(request,'deskofficer_templates/Cash_Deposit_Savings_Search.html',{'form':form,'title':title,'current_user':current_user,
+	'DataCapture':DataCapture,})
 
 
 	
 def Cash_Deposit_Savings_list_load(request):
+	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
 	DataCapture=DataCaptureManager.objects.first()
 	title="LIST OF MEMBERS"
 	form = searchForm(request.POST)
@@ -7370,24 +7870,29 @@ def Cash_Deposit_Savings_list_load(request):
 		status=MembershipStatus.objects.get(title='ACTIVE')
 		form = searchForm(request.POST)
 		members=Members.objects.filter(Q(file_no__icontains=form['title'].value()) |Q(ippis_no__icontains=form['title'].value()) |Q(phone_number__icontains=form['title'].value()) | Q(admin__first_name__icontains=form['title'].value()) | Q(admin__last_name__icontains=form['title'].value()) | Q(middle_name__icontains=form['title'].value())).filter(status=status)
-		user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
+		
 
 		context={
-		'user_level':user_level.userlevel.title,
+		
 		'members':members,
 		'title':title,
+		'current_user':current_user,
 		'DataCapture':DataCapture,
 		}
 		return render(request,'deskofficer_templates/Cash_Deposit_Savings_list_load.html',context)
 
 
 def Cash_Deposit_Savings_Load(request,pk):
+	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
+	DataCapture=DataCaptureManager.objects.first()
 	member=Members.objects.get(id=pk)
 	records=MembersAccountsDomain.objects.filter(member=member,transaction__source__title="SAVINGS")
-	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
+	
 
 	context={
-	'user_level':user_level.userlevel.title,
+	'current_user':current_user,
+	'DataCapture':DataCapture,
+	
 	'records':records,
 	'member':member,
 	}
@@ -7396,10 +7901,11 @@ def Cash_Deposit_Savings_Load(request,pk):
 
 def Cash_Deposit_Savings_Preview(request,pk):
 	form=Cash_Deposit_Savings_form(request.POST or None)
+	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
 	DataCapture=DataCaptureManager.objects.first() 
 	member=MembersAccountsDomain.objects.get(id=pk)
 	
-	# member=Members.objects.get(id=pk)
+	
 	
 	if request.method=="POST":
 		receipt_status=ReceiptStatus.objects.get(title='UNUSED')
@@ -7453,47 +7959,62 @@ def Cash_Deposit_Savings_Preview(request,pk):
 		if MembersCashDeposits.objects.filter(member=member.member,transaction=transaction,account_number=account_number,amount=amount,payment_reference=payment_reference).exists():
 			messages.info(request,'This transaction has already been posted')
 			return HttpResponseRedirect(reverse('Cash_Deposit_Savings_Preview',args=(pk,)))
+		
+		if not amount  or amount=='0':
+			messages.info(request,'Paid Amount is Missing')
+			return HttpResponseRedirect(reverse('Cash_Deposit_Savings_Preview',args=(pk,)))
+			
+		if not purpose:
+			messages.info(request,'Purpose is Missing')
+			return HttpResponseRedirect(reverse('Cash_Deposit_Savings_Preview',args=(pk,)))
 
-
+		if not payment_reference:
+			messages.info(request,'Payment Reference is Missing')
+			return HttpResponseRedirect(reverse('Cash_Deposit_Savings_Preview',args=(pk,)))
+		
 		particulars=purpose
 		transaction_period=now
 		debit=0
 		credit=amount
 		balance=credit
 
+		status=TransactionStatus.objects.get(title='UNTREATED')
+		tdate=get_current_date(now)
+		
 		if PersonalLedger.objects.filter(member=member.member,transaction=transaction,account_number=account_number).exists():
 			
 			ledger=PersonalLedger.objects.filter(member=member.member,transaction=transaction,account_number=account_number).last()
 			ledger_balance=ledger.balance
 			balance=float(ledger_balance)+float(amount)
 
-			cash_record=MembersCashDeposits(receipt=receipt,payment_evidience=payment_evidience_url,bank_accounts=bank_accounts,member=member.member,transaction=transaction,account_number=account_number,amount=amount,payment_reference=payment_reference,payment_date=payment_date,purpose=purpose,processed_by=processed_by)
+			cash_record=MembersCashDeposits(tdate=tdate,status=status,receipt=receipt,payment_evidience=payment_evidience_url,bank_accounts=bank_accounts,member=member.member,transaction=transaction,account_number=account_number,amount=amount,payment_reference=payment_reference,payment_date=payment_date,purpose=purpose,processed_by=processed_by)
 			cash_record.save()
 
 
-			record=PersonalLedger(member=member.member,transaction=transaction,account_number=account_number,particulars=particulars,debit=debit,credit=credit,balance=balance,transaction_period=transaction_period,status=status1)
+			record=PersonalLedger(tdate=tdate,member=member.member,transaction=transaction,account_number=account_number,particulars=particulars,debit=debit,credit=credit,balance=balance,transaction_period=transaction_period,status=status1)
 			record.save()
 			messages.success(request,'Payment Posted Successfully')
 			return HttpResponseRedirect(reverse('Cash_Deposit_Savings_Load',args=(member.member.pk,)))
 		else:		
 			
-			cash_record=MembersCashDeposits(receipt=receipt,payment_evidience=payment_evidience_url,bank_accounts=bank_accounts,member=member.member,transaction=transaction,account_number=account_number,amount=amount,payment_reference=payment_reference,payment_date=payment_date,purpose=purpose,processed_by=processed_by)
+			cash_record=MembersCashDeposits(tdate=tdate,status=status,receipt=receipt,payment_evidience=payment_evidience_url,bank_accounts=bank_accounts,member=member.member,transaction=transaction,account_number=account_number,amount=amount,payment_reference=payment_reference,payment_date=payment_date,purpose=purpose,processed_by=processed_by)
 			cash_record.save()
 
 
-			record=PersonalLedger(member=member.member,transaction=transaction,account_number=account_number,particulars=particulars,debit=debit,credit=credit,balance=balance,transaction_period=transaction_period,status=status1)
+			record=PersonalLedger(tdate=tdate,member=member.member,transaction=transaction,account_number=account_number,particulars=particulars,debit=debit,credit=credit,balance=balance,transaction_period=transaction_period,status=status1)
 			record.save()
 
 			messages.success(request,'Payment Posted Successfully')
 			return HttpResponseRedirect(reverse('Cash_Deposit_Savings_Load',args=(member.member.pk,)))
 
 	form.fields['payment_date'].initial= now
-	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
+	
 
 	context={
-	'user_level':user_level.userlevel.title,
+	
 	'member':member,
 	'form':form,
+	'current_user':current_user,
 	'DataCapture':DataCapture,
 	# 'transaction':transaction,
 	}
@@ -7501,14 +8022,17 @@ def Cash_Deposit_Savings_Preview(request,pk):
 
 
 def Cash_Deposit_Loans_Search(request):
+	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
 	DataCapture=DataCaptureManager.objects.first()
 	title="Search Members for Cash Deposit"
 	form = searchForm(request.POST or None)
-	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
-	return render(request,'deskofficer_templates/Cash_Deposit_Loans_Search.html',{'form':form,'title':title,'DataCapture':DataCapture,'user_level':user_level.userlevel.title,})
+	
+	return render(request,'deskofficer_templates/Cash_Deposit_Loans_Search.html',{'form':form,'title':title,'current_user':current_user,
+	'DataCapture':DataCapture,})
 
 	
 def Cash_Deposit_Loan_list_load(request):
+	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
 	DataCapture=DataCaptureManager.objects.first()
 	title="LIST OF MEMBERS"
 	form = searchForm(request.POST)
@@ -7519,18 +8043,20 @@ def Cash_Deposit_Loan_list_load(request):
 		status=MembershipStatus.objects.get(title='ACTIVE')
 		form = searchForm(request.POST)
 		members=Members.objects.filter(Q(file_no__icontains=form['title'].value()) |Q(ippis_no__icontains=form['title'].value()) |Q(phone_number__icontains=form['title'].value()) | Q(admin__first_name__icontains=form['title'].value()) | Q(admin__last_name__icontains=form['title'].value()) | Q(middle_name__icontains=form['title'].value())).filter(status=status)
-		user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
+		
 
 		context={
-		'user_level':user_level.userlevel.title,
+		
 		'members':members,
 		'title':title,
+		'current_user':current_user,
 		'DataCapture':DataCapture,
 		}
 		return render(request,'deskofficer_templates/Cash_Deposit_Loan_list_load.html',context)
 
 
 def Cash_Deposit_Loans_Preview(request,pk):
+	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
 	DataCapture=DataCaptureManager.objects.first()
 	form=Cash_Deposit_Loans_form(request.POST or None)
 	member=Members.objects.get(id=pk)
@@ -7684,13 +8210,14 @@ def Cash_Deposit_Loans_Preview(request,pk):
 			return HttpResponseRedirect(reverse('Cash_Deposit_Loans_Preview',args=(pk,)))
 
 	form.fields['payment_date'].initial=now
-	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
+	
 
 	context={
-	'user_level':user_level.userlevel.title,
+	
 	'member':member,
 	'form':form,
 	'loans':loans,
+	'current_user':current_user,
 	'DataCapture':DataCapture,
 	}
 	return render(request,'deskofficer_templates/Cash_Deposit_Loans_Preview.html',context)
@@ -7702,14 +8229,17 @@ def Cash_Deposit_Loans_Preview(request,pk):
 ############################################################
 
 def Cash_Withdrawal_Search(request):
+	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
 	DataCapture=DataCaptureManager.objects.first()
 	title="Search Members for Cash Withdrawal"
 	form = searchForm(request.POST or None)
-	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
-	return render(request,'deskofficer_templates/Cash_Withdrawal_Search.html',{'form':form,'title':title,'DataCapture':DataCapture,'user_level':user_level.userlevel.title,})
+	
+	return render(request,'deskofficer_templates/Cash_Withdrawal_Search.html',{'form':form,'title':title,'current_user':current_user,
+	'DataCapture':DataCapture,})
 
 	
 def Cash_Withdrawal_list_load(request):
+	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
 	DataCapture=DataCaptureManager.objects.first()
 	title="LIST OF MEMBERS FOR CASH WITHDRAWALS"
 	form = searchForm(request.POST)
@@ -7720,18 +8250,20 @@ def Cash_Withdrawal_list_load(request):
 		status=MembershipStatus.objects.get(title='ACTIVE')
 		form = searchForm(request.POST)
 		members=Members.objects.filter(Q(file_no__icontains=form['title'].value()) |Q(ippis_no__icontains=form['title'].value()) |Q(phone_number__icontains=form['title'].value()) | Q(admin__first_name__icontains=form['title'].value()) | Q(admin__last_name__icontains=form['title'].value()) | Q(middle_name__icontains=form['title'].value())).filter(status=status)
-		user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
+		
 
 		context={
-		'user_level':user_level.userlevel.title,
+		
 		'members':members,
 		'title':title,
+		'current_user':current_user,
 		'DataCapture':DataCapture,
 		}
 		return render(request,'deskofficer_templates/Cash_Withdrawal_list_load.html',context)
 
 
 def Cash_Withdrawal_Transactions_load(request,pk):
+	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
 	DataCapture=DataCaptureManager.objects.first()
 	form=Cash_Withdrawal_form(request.POST or None)
 	member=Members.objects.get(id=pk)
@@ -7744,16 +8276,21 @@ def Cash_Withdrawal_Transactions_load(request,pk):
 
 		member_selected=MembersAccountsDomain.objects.get(member=member,transaction=transaction.transaction)
 
-		current_date = datetime.date.today()
+		# current_date = datetime.date.today()
+		current_date = get_current_date(now)
 		maturity_date=current_date + relativedelta(months=transaction.maturity)
 
 	
 	
 		if StandingOrderAccounts.objects.filter(transaction=member_selected).exists():
 			record = StandingOrderAccounts.objects.filter(transaction=member_selected).first()
-			ledger=PersonalLedger.objects.filter(member=member,account_number=member_selected.account_number).last()
-			ledger_blance=ledger.balance
-			account_number=member_selected.account_number
+			if PersonalLedger.objects.filter(member=member,account_number=member_selected.account_number).exists():
+				ledger=PersonalLedger.objects.filter(member=member,account_number=member_selected.account_number).last()
+				ledger_blance=ledger.balance
+				account_number=member_selected.account_number
+			else:
+				messages.info(request,'You do not have any Balance in this Transaction')
+				return HttpResponseRedirect(reverse('Cash_Withdrawal_Transactions_load',args=(pk,)))
 	
 
 
@@ -7766,10 +8303,10 @@ def Cash_Withdrawal_Transactions_load(request,pk):
 		current_date = datetime.date.today()
 		maturity_date=current_date + relativedelta(months=transaction.maturity)
 
-
-
-		approval_officer_id=request.POST.get('approval_officers')
-		approval_officer=ApprovalOfficers.objects.get(id=approval_officer_id)
+		certification_status=CertificationStatus.objects.get(title='PENDING')
+		approval_status=ApprovalStatus.objects.get(title='PENDING')
+		# approval_officer_id=request.POST.get('approval_officers')
+		# approval_officer=ApprovalOfficers.objects.get(id=approval_officer_id)
 
 		if StandingOrderAccounts.objects.filter(transaction=member_selected).exists():
 			record = StandingOrderAccounts.objects.filter(transaction=member_selected).first()
@@ -7795,26 +8332,27 @@ def Cash_Withdrawal_Transactions_load(request,pk):
 
 
 
-			record=MembersCashWithdrawalsApplication(member=member_selected,
+			record=MembersCashWithdrawalsApplication(approval_status=approval_status,tdate=current_date,member=member_selected,
 				amount=withdrawal_amount,
 				narration=narration,
 				processed_by=processed_by,
 				ledger_balance=ledger_balance,
-				approval_officer=approval_officer,
+				certification_status=certification_status,
 				maturity_date=maturity_date,
 				status=status
 				)
 			record.save()
-			messages.success(request,'Transaction Completed Successfully')
-			return HttpResponseRedirect(reverse('Cash_Withdrawal_Transactions_load',args=(pk,)))
-	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
+			# messages.success(request,'Transaction Completed Successfully')
+			return HttpResponseRedirect(reverse('deskofficer_home'))
+	
 
 	context={
-	'user_level':user_level.userlevel.title,
+	
 	'form':form,
 	'member':member,
 	'ledger_blance':ledger_blance,
 	'account_number':account_number,
+	'current_user':current_user,
 	'DataCapture':DataCapture,
 	}
 	return render(request,'deskofficer_templates/Cash_Withdrawal_Transactions_load.html',context)
@@ -7822,18 +8360,21 @@ def Cash_Withdrawal_Transactions_load(request,pk):
 
 
 def Cash_Withdrawal_Transactions_Approved_list_Search(request):
-	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
+	
+	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
 	DataCapture=DataCaptureManager.objects.first()
 	title="Search Members for Cash Withdrawal Status"
 	form = search_with_date_Form(request.POST or None)
 	form.fields['start_date'].initial=now
 	form.fields['stop_date'].initial=now
-	return render(request,'deskofficer_templates/Cash_Withdrawal_Transactions_Approved_list_Search.html',{'form':form,'title':title,'DataCapture':DataCapture,'user_level':user_level.userlevel.title,})
+	return render(request,'deskofficer_templates/Cash_Withdrawal_Transactions_Approved_list_Search.html',{'form':form,'title':title,'current_user':current_user,
+	'DataCapture':DataCapture,})
 
 
 
 
 def Cash_Withdrawal_Transactions_Approved_list_Load(request):
+	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
 	DataCapture=DataCaptureManager.objects.first()
 	title="LIST OF MEMBERS FOR CASH WITHDRAWALS"
 	form = search_with_date_Form(request.POST)
@@ -7845,12 +8386,13 @@ def Cash_Withdrawal_Transactions_Approved_list_Load(request):
 		status=MembershipStatus.objects.get(title='ACTIVE')
 		form = search_with_date_Form(request.POST)
 		members=MembersCashWithdrawalsApplication.objects.filter(Q(member__member__file_no__icontains=form['title'].value()) |Q(member__member__ippis_no__icontains=form['title'].value()) |Q(member__member__phone_number__icontains=form['title'].value()) | Q(member__member__admin__first_name__icontains=form['title'].value()) | Q(member__member__admin__last_name__icontains=form['title'].value()) | Q(member__member__middle_name__icontains=form['title'].value())).filter(Q(created_at__gte=form['start_date'].value()) & Q(created_at__lte=form['stop_date'].value()))
-		user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
+		
 
 		context={
-		'user_level':user_level.userlevel.title,
+		
 		'members':members,
 		'title':title,
+		'current_user':current_user,
 		'DataCapture':DataCapture,
 		}
 		return render(request,'deskofficer_templates/Cash_Withdrawal_Transactions_Approved_list_Load.html',context)
@@ -7858,14 +8400,16 @@ def Cash_Withdrawal_Transactions_Approved_list_Load(request):
 	
 
 def membership_termination_search(request):
+	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
 	DataCapture=DataCaptureManager.objects.first()
 	title="Search Membership Request Termination"
 	form = searchForm(request.POST or None)
-	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
-	return render(request,'deskofficer_templates/membership_termination_search.html',{'form':form,'title':title,'user_level':user_level.userlevel.title,})
+	
+	return render(request,'deskofficer_templates/membership_termination_search.html',{'form':form,'title':title,})
 
 
 def membership_termination_list_load(request):
+	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
 	DataCapture=DataCaptureManager.objects.first()
 	title="Membership Termination Request"
 	form = searchForm(request.POST)
@@ -7879,12 +8423,13 @@ def membership_termination_list_load(request):
 		members=searchMembers(form['title'].value(),status)
 
 	
-	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
+	
 
 	context={
-	'user_level':user_level.userlevel.title,
+	
 	'members':members,
 	'title':title,
+	'current_user':current_user,
 	'DataCapture':DataCapture,
 	}
 	return render(request,'deskofficer_templates/membership_termination_list_load.html',context)
@@ -7892,6 +8437,8 @@ def membership_termination_list_load(request):
 
 
 def membership_termination_transactions_load(request,pk):
+	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
+	DataCapture=DataCaptureManager.objects.first()
 	form=Termination_Sources_upload_form(request.POST or None)
 	member=Members.objects.get(id=pk)
 
@@ -7946,6 +8493,8 @@ def membership_termination_transactions_load(request,pk):
 	form.fields['loan_amount'].initial = abs(total_loan)
 	form.fields['comments'].initial = "Please for your Consideration"
 	context={
+	'current_user':current_user,
+	'DataCapture':DataCapture,
 	'form':form,
 	'loans':loans,
 	'member':member,
@@ -7955,14 +8504,16 @@ def membership_termination_transactions_load(request,pk):
 
 
 def membership_commodity_loan_search(request):
+	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
 	DataCapture=DataCaptureManager.objects.first()
 	title="Search Membership Request Commodity"
 	form = searchForm(request.POST or None)
-	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
-	return render(request,'deskofficer_templates/membership_commodity_loan_search.html',{'form':form,'title':title,'user_level':user_level.userlevel.title,})
+	
+	return render(request,'deskofficer_templates/membership_commodity_loan_search.html',{'current_user':current_user,'form':form,'title':title,})
 
 
 def membership_commodity_loan_list_load(request):
+	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
 	DataCapture=DataCaptureManager.objects.first()
 	title="Commodity Loan"
 	form = searchForm(request.POST)
@@ -7974,45 +8525,134 @@ def membership_commodity_loan_list_load(request):
 		status=MembershipStatus.objects.get(title="ACTIVE")
 		form = searchForm(request.POST)
 		members=searchMembers(form['title'].value(),status)
-
 	
-	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
-
 	context={
-	'user_level':user_level.userlevel.title,
+	
 	'members':members,
 	'title':title,
+	'current_user':current_user,
 	'DataCapture':DataCapture,
 	}
 	return render(request,'deskofficer_templates/membership_commodity_loan_list_load.html',context)
 
 
-def membership_commodity_loan_Company_load(request,pk):
+
+def membership_commodity_loan_Period_Transactions_load(request,pk):
+	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
+	DataCapture=DataCaptureManager.objects.first()
+	title="Commodity Loan"
 	member=Members.objects.get(id=pk)
-	records=Companies.objects.all()
+
+	if request.method == "POST":
+		transaction_id=request.POST.get('transaction')
+		transaction=TransactionTypes.objects.get(id=transaction_id)
+
+		period_id=request.POST.get('period')
+		period=Commodity_Period.objects.get(id=period_id)
+		batch_id=request.POST.get('batch')
+		batch=Commodity_Period_Batch.objects.get(id=batch_id)
+		return HttpResponseRedirect(reverse('membership_commodity_loan_Company_load',args=(member.pk,
+																						period_id,batch_id,transaction_id,
+																						)))
+
+		# records=Company_Products.objects.filter(batch=batch,period=period,product__category__transaction=transaction).order_by('company_id').values_list('company_id','company__title').distinct()
+
+		
+	
+		# company_array = []
+		# for index, d in enumerate(records):
+		# 	company_array.append(d)
+
+		# context={
+		# 'member':member,
+		# 'title':title,
+		# 'current_user':current_user,
+		# 'DataCapture':DataCapture,
+		# 'period':period,
+		# 'batch':batch,
+		# 'transaction':transaction,
+		# 'records':records,
+		# 'combo_period': str(period.title) + " " + str(batch.title),
+		# 'company_array':company_array,
+		# }
+		# return render(request,'deskofficer_templates/membership_commodity_loan_Company_load.html',context)
+
+
+	form=Product_Linking_Period_Load_form(request.POST or None)
+
+	context={
+	'form':form,
+	'member':member,
+	'title':title,
+	'current_user':current_user,
+	'DataCapture':DataCapture,
+	}
+	return render(request,'deskofficer_templates/membership_commodity_loan_Period_Transactions_load.html',context)
+
+
+
+def membership_commodity_loan_Company_load(request,pk,period_pk,batch_pk,transaction_pk):
+	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
+	DataCapture=DataCaptureManager.objects.first()
+	title="Commodity Loan"
+
+	member=Members.objects.get(id=pk)
+	transaction=TransactionTypes.objects.get(id=transaction_pk)
+	period=Commodity_Period.objects.get(id=period_pk)
+	batch=Commodity_Period_Batch.objects.get(id=batch_pk)
+
+
+	records=Company_Products.objects.filter(batch=batch,period=period,product__category__transaction=transaction).order_by('company_id').values_list('company_id','company__title').distinct()
+
+
+
+	company_array = []
+	for index, d in enumerate(records):
+		company_array.append(d)
+
 	context={
 	'member':member,
+	'title':title,
+	'current_user':current_user,
+	'DataCapture':DataCapture,
+	'period':period,
+	'batch':batch,
+	'transaction':transaction,
 	'records':records,
+	'combo_period': str(period.title) + " " + str(batch.title),
+	'company_array':company_array,
 	}
 	return render(request,'deskofficer_templates/membership_commodity_loan_Company_load.html',context)
 
-def membership_commodity_loan_Company_products(request,return_pk,pk):
+
+
+
+
+def membership_commodity_loan_Company_products(request,return_pk,period_pk,batch_pk,transaction_pk,pk):
+	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
+	DataCapture=DataCaptureManager.objects.first()
+	
+
 	form=membership_commodity_loan_Company_products_process_Form(request.POST or None)
 	status=TransactionStatus.objects.get(title='UNTREATED')
+	stock_status=MembershipStatus.objects.get(title='ACTIVE')
 	member=Members.objects.get(id=return_pk)
-	
-	company=Companies.objects.get(id=pk)
-	print(company)
-	
-	if not Company_Products.objects.filter(company=company).exists():
-		messages.error(request,'Missing Records')
-		return HttpResponseRedirect(reverse('membership_commodity_loan_Company_load', args=(return_pk,)))
+	transaction=TransactionTypes.objects.get(id=transaction_pk)
+	period=Commodity_Period.objects.get(id=period_pk)
+	batch=Commodity_Period_Batch.objects.get(id=batch_pk)
 
-	records=Company_Products.objects.filter(company=company)
+	company=Companies.objects.get(id=pk)
+
 	
-	queryset=Members_Commodity_Loam_Products_Selection.objects.filter(product__company=company, member=member,status=status).order_by("-duration")
+	if not Company_Products.objects.filter(company=company,period=period,batch=batch,product__category__transaction=transaction,status=stock_status).exists():
+		messages.error(request,'No Available Records')
+		return HttpResponseRedirect(reverse('membership_commodity_loan_Company_load', args=(return_pk,period.pk, batch.pk, transaction.pk)))
+
+	records=Company_Products.objects.filter(company=company,period=period,batch=batch,product__category__transaction=transaction,status=stock_status)
 	
-	querysum=Members_Commodity_Loam_Products_Selection.objects.filter(product__company=company, member=member,status=status).aggregate(total_coop=Sum('coop_price'),total_comp=Sum('company_price'),total_interest=Sum('interest'),total_admin_charge=Sum('admin_charge'))
+	queryset=Members_Commodity_Loan_Products_Selection.objects.filter(product__batch=batch,product__period=period,product__company=company, member=member,status=status).order_by("-product__product__category__duration")
+	
+	querysum=Members_Commodity_Loan_Products_Selection.objects.filter(product__batch=batch,product__period=period,product__company=company, member=member,status=status).aggregate(total_coop=Sum('coop_price'),total_comp=Sum('company_price'),total_interest=Sum('interest'),total_admin_charge=Sum('admin_charges'))
 	
 	button_enabled=False
 	if queryset:
@@ -8027,6 +8667,11 @@ def membership_commodity_loan_Company_products(request,return_pk,pk):
 
 	
 	context={
+	'current_user':current_user,
+	'DataCapture':DataCapture,
+	'period':period,
+	'batch':batch,
+	'transaction':transaction,
 	'company':company,
 	'records':records,
 	'return_pk':return_pk,
@@ -8042,59 +8687,73 @@ def membership_commodity_loan_Company_products(request,return_pk,pk):
 	return render(request,'deskofficer_templates/membership_commodity_loan_Company_products.html',context)
 
 
-def membership_commodity_loan_Company_products_details(request,comp_pk,pk, member_pk):
+
+def membership_commodity_loan_Company_products_details(request,comp_pk,pk, member_pk,period_pk,batch_pk,transaction_pk):
+	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
+	DataCapture=DataCaptureManager.objects.first()
+	
+
 	form=membership_commodity_loan_Company_products_details_Form(request.POST or None)
 	member=Members.objects.get(id=member_pk)
 	processed_by=CustomUser.objects.get(id=request.user.id)
+
+	transaction=TransactionTypes.objects.get(id=transaction_pk)
+	period=Commodity_Period.objects.get(id=period_pk)
+	batch=Commodity_Period_Batch.objects.get(id=batch_pk)
+
 	company=Companies.objects.get(id=comp_pk)
 	product=Company_Products.objects.get(id=pk)
 	
 	record=Commodity_Categories.objects.get(id=product.product.category_id)
-	interest=float(product.amount) *  (float(record.interest_rate)/100)
-	coop_price=float(interest) + float(product.amount)
 	
-	admin_charge_rate=AdminCharges.objects.get(title='PERCENTAGE')
-	if record.admin_charges_rating==admin_charge_rate:
-		admin_charge= (float(record.admin_charges)/100) * float(product.amount) 
-	else:
-		admin_charge=record.admin_charges
+	interest=0
+	coop_price=0
+	admin_charges=0
 
-	if not record.interest_rate:
-		messages.error(request,'Interest Rate is Missing')
-		return HttpResponseRedirect(reverse('membership_commodity_loan_Company_products',args=(member.pk,company.pk)))
+	if record.interest_rate_required == '1':
+		interest=float(product.amount) *  (float(record.interest_rate)/100)
+		coop_price=float(interest) + float(product.amount)
+	else:
+		coop_price=float(interest) + float(product.amount)
+
+	if record.admin_charges_required == '1':
+		if record.admin_charges_rating.title == 'CASH':
+			admin_charges=float(record.admin_charges)  #*  (float(record.interest_rate)/100)
+		else:
+			admin_charges=(float(record.admin_charges)/100)*float(product.amount)
+
 	
-	if not record.duration:
-		messages.error(request,'Duration is Missing')
-		return HttpResponseRedirect(reverse('membership_commodity_loan_Company_products',args=(member.pk,company.pk)))
+	if record.price_status == "UNFIXED":
+		if not record.interest_rate:
+			messages.error(request,'Interest Rate is Missing')
+			return HttpResponseRedirect(reverse('membership_commodity_loan_Company_products',args=(member.pk,period.pk,batch.pk,transaction.pk,company.pk)))
 	
-	if not record.guarantors:
-		messages.error(request,'Guarantor is Missing')
-		return HttpResponseRedirect(reverse('membership_commodity_loan_Company_products',args=(member.pk,company.pk)))
-	
-	if not record.loan_age:
-		messages.error(request,'Loan Age is Missing')
-		return HttpResponseRedirect(reverse('membership_commodity_loan_Company_products',args=(member.pk,company.pk)))
-	
-	if not admin_charge:
-		messages.error(request,'Admin Charge is Missing')
-		return HttpResponseRedirect(reverse('membership_commodity_loan_Company_products',args=(member.pk,company.pk)))
+	if record.price_status == "UNFIXED":
+		if not record.guarantors:
+			messages.error(request,'Guarantor is Missing')
+			return HttpResponseRedirect(reverse('membership_commodity_loan_Company_products',args=(member.pk,period.pk,batch.pk,transaction.pk,company.pk)))
 	
 	if not product.amount:
 		messages.error(request,'Product Cost is Missing')
-		return HttpResponseRedirect(reverse('membership_commodity_loan_Company_products',args=(member.pk,company.pk)))
+		return HttpResponseRedirect(reverse('membership_commodity_loan_Company_products',args=(member.pk,period.pk,batch.pk,transaction.pk,company.pk)))
 
 	if request.method =='POST':
+		status = TransactionStatus.objects.get(title='UNTREATED')
 		tdate=get_current_date(now)
 		quantity=request.POST.get('quantity')
 		
 		if quantity:
-			Members_Commodity_Loam_Products_Selection(tdate=tdate,member=member,product=product,quantity=quantity,company_price=float(product.amount) *float(quantity),
-								coop_price=float(coop_price)*float(quantity),interest=float(interest)*float(quantity),admin_charge=admin_charge,
-								duration=record.duration,processed_by=processed_by).save()
-			return HttpResponseRedirect(reverse('membership_commodity_loan_Company_products',args=(member.pk,comp_pk,)))
+			Members_Commodity_Loan_Products_Selection(status=status,tdate=tdate,member=member,
+								product=product,quantity=quantity,admin_charges=float(admin_charges)*float(quantity),duration=record.duration,
+								company_price=float(product.amount) *float(quantity),
+								coop_price=float(coop_price)*float(quantity),
+								interest=float(interest)*float(quantity),
+								processed_by=processed_by).save()
+
+			return HttpResponseRedirect(reverse('membership_commodity_loan_Company_products',args=(member.pk,period.pk,batch.pk,transaction.pk,comp_pk,)))
 		else:
 			messages.error(request,'Quantity Missing')
-			return HttpResponseRedirect(reverse('membership_commodity_loan_Company_products_details',args=(comp_pk,pk,member_pk)))
+			return HttpResponseRedirect(reverse('membership_commodity_loan_Company_products_details',args=(comp_pk,pk,member_pk,period.pk,batch.pk,transaction.pk)))
 	
 	product_data={
 	'loan_type':record.transaction.name,
@@ -8105,13 +8764,16 @@ def membership_commodity_loan_Company_products_details(request,comp_pk,pk, membe
 	'interest_amount':interest,
 	'duration':record.duration,
 	'interest_rate':record.interest_rate,
-	'admin_charge':admin_charge,
+	'admin_charges':admin_charges,
 	'gaurantors':record.guarantors,
-	'loan_age':record.loan_age,
+	# 'loan_age':record.loan_age,
 	}
 
 	form.fields['quantity'].initial='1'
 	context={
+	'current_user':current_user,
+	'DataCapture':DataCapture,
+	
 	'form':form,
 	'member':member,
 	'company':company,
@@ -8123,33 +8785,47 @@ def membership_commodity_loan_Company_products_details(request,comp_pk,pk, membe
 	return render(request,'deskofficer_templates/membership_commodity_loan_Company_products_details.html',context)
 
 
-def membership_commodity_loan_Company_products_delete(request,pk,mem_pk,comp_pk):
-	record=Members_Commodity_Loam_Products_Selection.objects.get(id=pk)
+def membership_commodity_loan_Company_products_delete(request,pk,mem_pk,period_pk,batch_pk,transaction_pk,comp_pk):
+	record=Members_Commodity_Loan_Products_Selection.objects.get(id=pk)
 	record.delete()
-	return HttpResponseRedirect(reverse('membership_commodity_loan_Company_products',args=(mem_pk,comp_pk)))
+
+	return HttpResponseRedirect(reverse('membership_commodity_loan_Company_products',args=(mem_pk,period_pk,batch_pk,transaction_pk,comp_pk)))
 
 
 
-def membership_commodity_loan_Company_products_proceed(request,mem_pk,comp_pk):
+def membership_commodity_loan_Company_products_proceed(request,mem_pk,comp_pk,period_pk,batch_pk,transaction_pk):
+	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
+	DataCapture=DataCaptureManager.objects.first()
+	
+
 	form=membership_commodity_loan_Company_products_process_Form(request.POST or None)
 	processed_by=CustomUser.objects.get(id=request.user.id)
 	status=TransactionStatus.objects.get(title='UNTREATED')
 	status1=TransactionStatus.objects.get(title='TREATED')
-	
+	stock_status=MembershipStatus.objects.get(title='ACTIVE')
+
+	transaction=TransactionTypes.objects.get(id=transaction_pk)
+	period=Commodity_Period.objects.get(id=period_pk)
+	batch=Commodity_Period_Batch.objects.get(id=batch_pk)
+
 	member=Members.objects.get(id=mem_pk)
 	company=Companies.objects.get(id=comp_pk)
-	records=Company_Products.objects.filter(company=company)
+
 	
-	queryset=Members_Commodity_Loam_Products_Selection.objects.filter(product__company=company, member=member,status=status).order_by("-duration")
+	records=Company_Products.objects.filter(company=company,period=period,batch=batch,product__category__transaction=transaction,status=stock_status)
 	
-	querysum=Members_Commodity_Loam_Products_Selection.objects.filter(product__company=company, member=member,status=status).aggregate(total_coop=Sum('coop_price'),total_comp=Sum('company_price'),total_interest=Sum('interest'),total_admin_charge=Sum('admin_charge'))
+	queryset=Members_Commodity_Loan_Products_Selection.objects.filter(product__batch=batch,product__period=period,product__company=company, member=member,status=status).order_by("-product__product__category__duration")
 	
-	transaction_type=queryset[0].product.product.category.transaction.name
+	querysum=Members_Commodity_Loan_Products_Selection.objects.filter(product__batch=batch,product__period=period,product__company=company, member=member,status=status).aggregate(total_coop=Sum('coop_price'),total_comp=Sum('company_price'),total_interest=Sum('interest'),total_admin_charge=Sum('admin_charges'))
+	
+
+	
+	transaction_type=transaction.name #queryset[0].product.product.category.transaction.name
 
 	standing_order_total=0
-	standing_orders =StandingOrderAccounts.objects.filter(transaction__member=member,transaction__transaction__source__title="SAVINGS")
+	standing_orders =StandingOrderAccounts.objects.filter(transaction__member=member)
 	if standing_orders:
-		standing_order_sum=StandingOrderAccounts.objects.filter(transaction__member=member,transaction__transaction__source__title="SAVINGS").aggregate(total_amount=Sum('amount'))
+		standing_order_sum=StandingOrderAccounts.objects.filter(transaction__member=member).aggregate(total_amount=Sum('amount'))
 		standing_order_total=standing_order_sum['total_amount']
 	
 	loan_total=0
@@ -8158,14 +8834,8 @@ def membership_commodity_loan_Company_products_proceed(request,mem_pk,comp_pk):
 		loan_sum=LoansDisbursed.objects.filter(member=member).filter(Q(balance__lt=0)).aggregate(total_amount=Sum('repayment'))
 		loan_total=loan_sum['total_amount']
 
-	external_fascility_total=0
-	external_fascilities=ExternalFascilitiesMain.objects.filter(member__member=member,status=status)
-	if external_fascilities:
-		external_fascility_sum=ExternalFascilitiesMain.objects.filter(member__member=member,status=status).aggregate(total_amount=Sum('member__amount'))
-		external_fascility_total=external_fascility_sum['total_amount']
-	
 
-	total_debit=float(standing_order_total) + float(loan_total) + float(external_fascility_total)
+	# total_debit=float(standing_order_total) + float(loan_total) 
 	
 	total_coop=querysum['total_coop']
 	total_comp=querysum['total_comp']
@@ -8175,65 +8845,56 @@ def membership_commodity_loan_Company_products_proceed(request,mem_pk,comp_pk):
 	selected_Duration=queryset[0].duration
 	monthly_repayment=math.ceil(float(total_coop)/float(selected_Duration))
 
-	expected_salary_balance=float(member.gross_pay)-float(total_debit)-float(monthly_repayment)
 
-	button_enabled=False
-	if not standing_order_total:
-		messages.error(request,"Members Standing Order Not set")
-
-	if not member.gross_pay:
-		messages.error(request,"Members Gross Pay Not set")
-	
-	if standing_order_total or member.gross_pay:
-		button_enabled=True
-	
-
-	if request.method == "POST":
+	button_enabled=True
+	if request.method == 'POST':
+		
 		tdate=get_current_date(now)
 		ticket=get_ticket()
-	
-		
-		certification_officer_id=request.POST.get('certification_officers')
-		certification_officer=CertificationOfficers.objects.get(id=certification_officer_id)	
-		comments=request.POST.get("comments")
-		if not comments:
-			messages.error(request,"Comment is Missing")
-			return HttpResponseRedirect(reverse('membership_commodity_loan_Company_products_proceed',args=(mem_pk,comp_pk)))
-		applicant=Members_Commodity_Loam_Application(ticket=ticket,member=queryset[0],
+		approval_status=ApprovalStatus.objects.get(title='PENDING')
+		certification_status=CertificationStatus.objects.get(title='PENDING')
+		submission_status=SubmissionStatus.objects.get(title='PENDING')
+
+		applicant=Members_Commodity_Loan_Application(ticket=ticket,member=queryset[0],
 											company_price=total_comp,
 											coop_price=total_coop,
 											interest=total_interest,
 											admin_charge=total_admin_charge,
 											duration=selected_Duration,
-											repayment=expected_salary_balance,
-											comments=comments,
-											certification_officer=certification_officer,
+											repayment=monthly_repayment,
 											processed_by=processed_by,
 											status=status,
 											tdate=tdate,
-										)
+											period=period,
+											loans=loan_total,
+											savings=standing_order_total,
+											batch=batch,
+											certification_status=certification_status,
+											approval_status=approval_status,
+											submission_status=submission_status,
+											)
 		applicant.save()
-	
-		for item in standing_orders:
-			description=item.transaction.transaction.name
-			value=item.amount
-			Members_Commodity_Loam_Application_Settings(ticket=ticket,applicant=applicant,description=description,value=value).save()
-		
-		for item in loans:
-			description=item.transaction.name
-			value=item.repayment
-			Members_Commodity_Loam_Application_Settings(ticket=ticket,applicant=applicant,description=description,value=value).save()
-		
-		for item in external_fascilities:
-			description=item.member.description
-			value=item.member.amount
-			Members_Commodity_Loam_Application_Settings(ticket=ticket,applicant=applicant,description=description,value=value).save()
-		
-		Members_Commodity_Loam_Products_Selection.objects.filter(product__company=company, member=member,status=status).update(ticket=ticket,status=status1)
 
-		return HttpResponseRedirect(reverse('deskofficer_home')) 
-	form.fields['comments'].initial='For your Consideration'
+		# for item in standing_orders:
+		# 	description=item.transaction.transaction.name
+		# 	value=item.amount
+		# 	Members_Commodity_Loan_Application_Settings(status=status,ticket=ticket,applicant=applicant,description=description,value=value).save()
+		
+		# for item in loans:
+		# 	description=item.transaction.name
+		# 	value=item.repayment
+		# 	Members_Commodity_Loan_Application_Settings(status=status,ticket=ticket,applicant=applicant,description=description,value=value).save()
+		
+		
+		# Members_Commodity_Loan_Products_Selection.objects.filter(product__company=company, member=member,status=status).update(ticket=ticket,status=status1)
+		return HttpResponseRedirect(reverse('membership_commodity_loan_Company_products_Criteria_Dashboard',args=(member.pk,period.pk,batch.pk,transaction.pk,)))
+
+
+
 	context={
+	'current_user':current_user,
+	'DataCapture':DataCapture,
+	
 	'button_enabled':button_enabled,
 	'company':company,
 	'records':records,
@@ -8247,23 +8908,146 @@ def membership_commodity_loan_Company_products_proceed(request,mem_pk,comp_pk):
 	'selected_Duration':selected_Duration,
 	'monthly_repayment':monthly_repayment,
 	'total_admin_charge':total_admin_charge,
-	'standing_orders':standing_orders,
-	'loans':loans,
-	'salary':member.gross_pay,
-	'total_debit':total_debit,
-	'expected_salary_balance':expected_salary_balance,
-	'external_fascilities':external_fascilities,
+	# 'standing_orders':standing_orders,
+	# 'loans':loans,
 	'transaction_type':transaction_type,
+	'period':period,
+	'batch':batch,
+	'transaction':transaction,
 	}
 	return render(request,'deskofficer_templates/membership_commodity_loan_Company_products_proceed.html',context)
 
 
 
+
+
+def membership_commodity_loan_Company_products_Criteria_Dashboard(request,member_pk,period_pk,batch_pk,transaction_pk):
+	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
+	DataCapture=DataCaptureManager.objects.first()
+
+	transaction=TransactionTypes.objects.get(id=transaction_pk)
+	period=Commodity_Period.objects.get(id=period_pk)
+	batch=Commodity_Period_Batch.objects.get(id=batch_pk)
+
+	member=Members.objects.get(id=member_pk)
+
+	record=Commodity_Categories.objects.get(transaction=transaction)
+
+	context={
+	'current_user':current_user,
+	'DataCapture':DataCapture,
+	'transaction':transaction,
+	'period':period,
+	'batch':batch,
+	'member':member,
+	'record':record,
+	}
+	return render(request,'deskofficer_templates/membership_commodity_loan_Company_products_Criteria_Dashboard.html',context)
+
+
+def membership_commodity_loan_Company_products_net_pay_Settings(request,member_pk,period_pk,batch_pk,transaction_pk):
+	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
+	DataCapture=DataCaptureManager.objects.first()
+	form=membership_commodity_loan_Company_products_Criteria_Settings_form(request.POST or None)
+	member=Members.objects.get(id=member_pk)
+
+	period = Commodity_Period.objects.get(id=period_pk)
+	batch = Commodity_Period_Batch.objects.get(id=batch_pk)
+	transaction=TransactionTypes.objects.get(id=transaction_pk)
+
+	submission_status=SubmissionStatus.objects.get(title='PENDING')
+	certification_status=CertificationStatus.objects.get(title='PENDING')
+	approval_status=ApprovalStatus.objects.get(title='PENDING')
+	status=TransactionStatus.objects.get(title='UNTREATED')
+
+
+	if Members_Commodity_Loan_Application.objects.filter(batch=batch,period=period,member__member=member,status=status,approval_status=approval_status,certification_status=certification_status,submission_status=submission_status).exists():
+		transaction=Members_Commodity_Loan_Application.objects.get(batch=batch,period=period,member__member=member,status=status,approval_status=approval_status,certification_status=certification_status,submission_status=submission_status)
+	else:
+		messages.info(request,'No record found')	
+		return HttpResponseRedirect(reverse('membership_commodity_loan_Company_products_Criteria_Dashboard',args=(member_pk,period_pk,batch_pk,transaction_pk)))
+
+
+	if request.method == 'POST':
+		net_pay =float(request.POST.get('net_pay'))
+		gross_pay =float(request.POST.get('gross_pay'))
+
+		period = request.POST.get('period')
+
+		date_format = '%Y-%m-%d'
+		dtObj = datetime.datetime.strptime(period, date_format)
+		period=get_current_date(dtObj)
+
+		if net_pay <= 0:
+			messages.info(request,"Please Net Pay Cannot be Zero(0)")
+			return HttpResponseRedirect(reverse('membership_commodity_loan_Company_products_net_pay_Settings',args=(member_pk,period_pk,batch_pk,transaction_pk)))
+
+		if gross_pay <= 0:
+			messages.info(request,"Pls upload Gross Pay")
+			return HttpResponseRedirect(reverse('membership_commodity_loan_Company_products_net_pay_Settings',args=(member_pk,period_pk,batch_pk,transaction_pk)))
+			
+		transaction.net_pay = net_pay
+		transaction.gross_pay = gross_pay
+		transaction.save()
+		messages.success(request,'Net Pay Updated Successfully')
+		return HttpResponseRedirect(reverse('membership_commodity_loan_Company_products_Criteria_Dashboard',args=(member_pk,period_pk,batch_pk,transaction_pk)))
+
+
+	form.fields['period'].initial=now
+	form.fields['gross_pay'].initial=member.gross_pay
+	form.fields['net_pay'].initial=transaction.net_pay
+	context={
+	'current_user':current_user,
+	'DataCapture':DataCapture,
+
+	# 'records':records,
+	'member':member,
+	'form':form,
+
+	}
+	return render(request,'deskofficer_templates/membership_commodity_loan_Company_products_net_pay_Settings.html',context)
+
+
+def membership_commodity_loan_Company_products_Guarantor_Settings(request,member_pk,period_pk,batch_pk,transaction_pk):
+	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
+	DataCapture=DataCaptureManager.objects.first()
+	# form=membership_commodity_loan_Company_products_Guarantor__form(request.POST or None)
+	members=Members.objects.exclude(id=member_pk)
+	applicant=Members.objects.get(id=member_pk)
+
+
+	if request.method == 'POST':
+		member_id=request.POST.get('member')
+		member=Members.objects.get(id=member_id)
+
+		if float(applicant.gross_pay) > float(member.gross_pay):
+			messages.info(request,"Guarantor's Gross Pay cannot be less than Applicant's")
+			return HttpResponseRedirect(reverse('membership_commodity_loan_Company_products_Guarantor_Settings',args=(member_pk,period_pk,batch_pk,transaction_pk)))
+		
+		return HttpResponse('Allowed')
+	context={
+	'current_user':current_user,
+	'DataCapture':DataCapture,
+	# 'form':form,
+	
+	'members':members,
+	}
+	return render(request,'deskofficer_templates/membership_commodity_loan_Company_products_Guarantor_Settings.html',context)
+
+
+
 def membership_commodity_loan_manage(request):
+	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
+	DataCapture=DataCaptureManager.objects.first()
+	
+
 	status=TransactionStatus.objects.get(title='UNTREATED')
 	certification_status=CertificationStatus.objects.get(title='PENDING')
-	records=Members_Commodity_Loam_Application.objects.filter(status=status,certification_status=certification_status)
+	records=Members_Commodity_Loan_Application.objects.filter(status=status,certification_status=certification_status)
 	context={
+	'current_user':current_user,
+	'DataCapture':DataCapture,
+	
 	'records':records,
 	}
 	return render(request,'deskofficer_templates/membership_commodity_loan_manage.html',context)
@@ -8272,18 +9056,25 @@ def membership_commodity_loan_manage(request):
 
 
 def membership_commodity_loan_manage_delete(request,pk):
-	record=Members_Commodity_Loam_Application.objects.get(id=pk)
-	item=Members_Commodity_Loam_Products_Selection.objects.filter(ticket=record.ticket)
+	record=Members_Commodity_Loan_Application.objects.get(id=pk)
+	item=Members_Commodity_Loan_Products_Selection.objects.filter(ticket=record.ticket)
 	item.delete()
 	return HttpResponseRedirect(reverse('membership_commodity_loan_manage'))
 
 
 def membership_commodity_loan_manage_details(request,pk):
-	record=Members_Commodity_Loam_Application.objects.get(id=pk)
+	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
+	DataCapture=DataCaptureManager.objects.first()
+	
 
-	records=Members_Commodity_Loam_Products_Selection.objects.filter(ticket=record.ticket)
+	record=Members_Commodity_Loan_Application.objects.get(id=pk)
+
+	records=Members_Commodity_Loan_Products_Selection.objects.filter(ticket=record.ticket)
 	
 	context={
+	'current_user':current_user,
+	'DataCapture':DataCapture,
+	
 	'full_name':records[0].member.get_full_name,
 	'records':records,
 	}
@@ -8292,13 +9083,21 @@ def membership_commodity_loan_manage_details(request,pk):
 
 
 def membership_commodity_loan_manage_details_reset_Confirmation(request,pk):
+	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
+	DataCapture=DataCaptureManager.objects.first()
+	
+
 	title = "Are you sure you want to reset this Product"
-	record=Members_Commodity_Loam_Products_Selection.objects.get(id=pk)
+	record=Members_Commodity_Loan_Products_Selection.objects.get(id=pk)
 	context={
+	'current_user':current_user,
+	'DataCapture':DataCapture,
+	
 	'record':record,
 	'title':title,
 	}
 	return render(request,'deskofficer_templates/membership_commodity_loan_manage_details_reset_Confirmation.html',context)
+
 
 
 def membership_commodity_loan_manage_details_delete(request,pk):
@@ -8306,23 +9105,23 @@ def membership_commodity_loan_manage_details_delete(request,pk):
 	status=TransactionStatus.objects.get(title='UNTREATED')
 	status1=TransactionStatus.objects.get(title='TREATED')
 
-	record=Members_Commodity_Loam_Products_Selection.objects.get(id=pk)
+	record=Members_Commodity_Loan_Products_Selection.objects.get(id=pk)
 	ticket=record.ticket
 	tdate=record.tdate
 	member=record.member
 
-	query_item=Members_Commodity_Loam_Application.objects.get(ticket=ticket)
+	query_item=Members_Commodity_Loan_Application.objects.get(ticket=ticket)
 	certification_officer=query_item.certification_officer
 	comments=query_item.comments
 
 	record.delete()
 
-	if not Members_Commodity_Loam_Products_Selection.objects.filter(ticket=ticket).exists():
+	if not Members_Commodity_Loan_Products_Selection.objects.filter(ticket=ticket).exists():
 		return HttpResponseRedirect(reverse('membership_commodity_loan_manage'))
 
-	queryset=Members_Commodity_Loam_Products_Selection.objects.filter(ticket=ticket).order_by("-duration")
+	queryset=Members_Commodity_Loan_Products_Selection.objects.filter(ticket=ticket).order_by("-duration")
 	
-	querysum=Members_Commodity_Loam_Products_Selection.objects.filter(ticket=ticket).aggregate(total_coop=Sum('coop_price'),total_comp=Sum('company_price'),total_interest=Sum('interest'),total_admin_charge=Sum('admin_charge'))
+	querysum=Members_Commodity_Loan_Products_Selection.objects.filter(ticket=ticket).aggregate(total_coop=Sum('coop_price'),total_comp=Sum('company_price'),total_interest=Sum('interest'),total_admin_charge=Sum('admin_charge'))
 	
 	transaction_type=queryset[0].product.product.category.transaction.name
 
@@ -8358,7 +9157,7 @@ def membership_commodity_loan_manage_details_delete(request,pk):
 	expected_salary_balance=float(member.gross_pay)-float(total_debit)-float(monthly_repayment)
 
 
-	applicant=Members_Commodity_Loam_Application(ticket=ticket,member=queryset[0],
+	applicant=Members_Commodity_Loan_Application(ticket=ticket,member=queryset[0],
 											company_price=total_comp,
 											coop_price=total_coop,
 											interest=total_interest,
@@ -8376,17 +9175,17 @@ def membership_commodity_loan_manage_details_delete(request,pk):
 	for item in standing_orders:
 		description=item.transaction.transaction.name
 		value=item.amount
-		Members_Commodity_Loam_Application_Settings(ticket=ticket,applicant=applicant,description=description,value=value).save()
+		Members_Commodity_Loan_Application_Settings(ticket=ticket,applicant=applicant,description=description,value=value).save()
 	
 	for item in loans:
 		description=item.transaction.name
 		value=item.repayment
-		Members_Commodity_Loam_Application_Settings(ticket=ticket,applicant=applicant,description=description,value=value).save()
+		Members_Commodity_Loan_Application_Settings(ticket=ticket,applicant=applicant,description=description,value=value).save()
 	
 	for item in external_fascilities:
 		description=item.member.description
 		value=item.member.amount
-		Members_Commodity_Loam_Application_Settings(ticket=ticket,applicant=applicant,description=description,value=value).save()
+		Members_Commodity_Loan_Application_Settings(ticket=ticket,applicant=applicant,description=description,value=value).save()
 	
 	return HttpResponseRedirect(reverse('membership_commodity_loan_manage_details',args=(applicant.pk,)))
 
@@ -8394,11 +9193,11 @@ def membership_commodity_loan_manage_details_delete(request,pk):
 def membership_commodity_loan_manage_details_edit(request,pk):
 	status=TransactionStatus.objects.get(title='UNTREATED')
 	form=membership_commodity_loan_Company_products_details_Form(request.POST or None)
-	record=Members_Commodity_Loam_Products_Selection.objects.get(id=pk)
+	record=Members_Commodity_Loan_Products_Selection.objects.get(id=pk)
 	
-	Members_Commodity_Loam_Products_Selection.objects.filter(ticket=record.ticket).update(status=status)
+	Members_Commodity_Loan_Products_Selection.objects.filter(ticket=record.ticket).update(status=status)
 	
-	item=Members_Commodity_Loam_Application.objects.get(ticket=record.ticket)
+	item=Members_Commodity_Loan_Application.objects.get(ticket=record.ticket)
 	member=item.member.member.pk
 	company=item.member.product.company.pk
 	
@@ -8409,47 +9208,24 @@ def membership_commodity_loan_manage_details_edit(request,pk):
 
 
 def membership_commodity_loan_form_sales(request):
-	context={
+	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
+	DataCapture=DataCaptureManager.objects.first()
+	
 
+	context={
+	'current_user':current_user,
+	'DataCapture':DataCapture,
+	
 	}
 	return render(request,'deskofficer_templates/membership_commodity_loan_form_sales.html',context)
 
 
-def ProformaInvoicedCommodityLoanSearch(request):
-	DataCapture=DataCaptureManager.objects.first()
-	title="Proforma Invoiced Commodity"
-	form = searchForm(request.POST or None)
-	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
-	return render(request,'deskofficer_templates/ProformaInvoicedCommodityLoanSearch.html',{'form':form,'title':title,'user_level':user_level.userlevel.title,})
-
-
-def ProformaInvoicedCommodityLoan_list_load(request):
-	DataCapture=DataCaptureManager.objects.first()
-	title="Proforma Commodity Loan"
-	form = searchForm(request.POST)
-	members=[]
-	if request.method == "POST":
-		if request.POST.get("title")=="":
-			return HttpResponseRedirect(reverse('ProformaInvoicedCommodityLoanSearch'))
-
-		status=MembershipStatus.objects.get(title="ACTIVE")
-		form = searchForm(request.POST)
-		members=searchMembers(form['title'].value(),status)
-
-	
-	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
-
-	context={
-	'user_level':user_level.userlevel.title,
-	'members':members,
-	'title':title.upper(),
-	'DataCapture':DataCapture,
-	}
-	return render(request,'deskofficer_templates/ProformaInvoicedCommodityLoan_list_load.html',context)
-
 
 
 def Company_add(request,pk):
+	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
+	DataCapture=DataCaptureManager.objects.first()
+	
 	if request.method =='POST':
 		company=request.POST.get('company')
 		if not company:
@@ -8460,671 +9236,13 @@ def Company_add(request,pk):
 		return HttpResponseRedirect(reverse('ProformaInvoicedCommodityLoan_Invoice',args=(pk,))) 
 
 	context={
-
+	'current_user':current_user,
+	'DataCapture':DataCapture,
+	
 	}
 	return render(request,'deskofficer_templates/Company_add.html',context)
 
 
-def ProformaInvoicedCommodityLoan_Invoice(request,pk):
-	form=ProformaInvoicedCommodityLoan_details_Form(request.POST or None)
-	status=TransactionStatus.objects.get(title="UNTREATED")
-	member=Members.objects.get(id=pk)
-	records=Customized_Commodity_Loan_Application_Summary.objects.filter(status=status,member=member)
-	
-	
-
-	if request.method == 'POST':
-		company_id=request.POST.get('company')
-		company=Companies.objects.get(id=company_id)
-		processed_by=CustomUser.objects.get(id=request.user.id)
-		transaction=TransactionTypes.objects.get(code='206')
-		invoice=request.POST.get('invoice')
-		invoice_date=request.POST.get('invoice_date')
-
-		date_format = '%Y-%m-%d'
-		dtObj = datetime.datetime.strptime(invoice_date, date_format)
-		invoice_date=get_current_date(dtObj)
-
-
-		tdate=get_current_date(now)
-		if not ProformaInvoice.objects.all().exists():
-			_invoice=ProformaInvoice(invoice=1)
-			_invoice.save()
-		else:
-			_invoice=ProformaInvoice.objects.first()
-		invoice=str(invoice) + "-" + str(_invoice.invoice).zfill(5)
-		_invoice.invoice=int(_invoice.invoice)+1
-		_invoice.save()
-		
-		queryset=Customized_Commodity_Loan_Application_Summary(member=member,
-																company=company,
-																invoice=invoice,
-																transaction=transaction,
-																tdate=tdate,processed_by=processed_by,
-																invoice_date=invoice_date,status=status,
-																)
-		queryset.save()	
-		return HttpResponseRedirect(reverse('ProformaInvoicedCommodityLoan_Invoice',args=(pk,)))
-	form.fields['invoice_date'].initial=now
-	context={
-	'form':form,
-	'records':records,
-
-	'member':member,
-	}
-	return render(request,'deskofficer_templates/ProformaInvoicedCommodityLoan_Invoice.html',context)
-
-
-
-def ProformaInvoicedCommodityLoan_details(request,pk):
-	form=ProformaInvoicedCommodityLoan_details_Form(request.POST or None)
-	record=Customized_Commodity_Loan_Application_Summary.objects.get(id=pk)
-	queryset=Customized_Commodity_Loan_Application_Details.objects.filter(applicant=record)
-	query_sum=Customized_Commodity_Loan_Application_Details.objects.filter(applicant=record).aggregate(total=Sum('total'),total_item=Sum('quantity'))
-	total_amount=query_sum['total']
-	total_item=query_sum['total_item']
-
-
-	applicant=Customized_Commodity_Loan_Application_Payslip.objects.filter(applicant=record).first()
-
-
-	if request.method == "POST":
-		invoice=record.invoice
-		processed_by=CustomUser.objects.get(id=request.user.id)
-		unit_price=request.POST.get('unit_price')
-		product_name=request.POST.get('product_name')
-		details=request.POST.get('details')
-		quantity=request.POST.get('quantity')
-		total=float(quantity)*float(unit_price)
-		tdate=get_current_date(now)
-		status=TransactionStatus.objects.get(title='UNTREATED')
-		Customized_Commodity_Loan_Application_Details(invoice=invoice,applicant=record,
-													product_name=product_name,unit_price=unit_price,
-													details=details,quantity=quantity,processed_by=processed_by,
-													total=total,tdate=tdate,status=status,
-													).save()
-		return HttpResponseRedirect(reverse('ProformaInvoicedCommodityLoan_details', args=(pk,)))
-	context={
-	'form':form,
-	'total_amount':total_amount,
-	'total_item':total_item,
-	'record':record,
-	'applicant':applicant,
-	'queryset':queryset,
-	}
-	return render(request,'deskofficer_templates/ProformaInvoicedCommodityLoan_details.html',context)
-
-
-def ProformaInvoicedCommodityLoan_details_delete(request,pk):
-	record=Customized_Commodity_Loan_Application_Details.objects.get(id=pk)
-	return_pk=record.applicant.id
-	record.delete()
-	return HttpResponseRedirect(reverse('ProformaInvoicedCommodityLoan_details',args=(return_pk,)))
-
-
-def ProformaInvoicedCommodityLoan_details_payslip_analysis(request,pk):
-	form=ProformaInvoicedCommodityLoan_details_payslip_analysis_form(request.POST or None)
-	applicant=Customized_Commodity_Loan_Application_Summary.objects.get(id=pk)
-
-	
-	status = TransactionStatus.objects.get(title='UNTREATED')
-	
-	record=[]
-	if Customized_Commodity_Loan_Application_Payslip.objects.filter(applicant=applicant).exists():
-		record=Customized_Commodity_Loan_Application_Payslip.objects.filter(applicant=applicant).first()
-
-	if request.method == 'POST':
-
-		tdate=get_current_date(now)
-		invoice=applicant.invoice
-		processed_by=CustomUser.objects.get(id=request.user.id)
-		period = request.POST.get('period')
-		date_format = '%Y-%m-%d'
-		dtObj = datetime.datetime.strptime(period, date_format)
-		period=get_current_date(dtObj)
-
-		gross_pay=float(request.POST.get('gross_pay'))
-		net_pay=float(request.POST.get('net_pay'))
-
-		if not gross_pay and not net_pay:
-			messages.error(request,'Grosspay and net_pay Missing')
-		elif not gross_pay:
-			messages.error(request,'Grosspay is Missing')
-		elif not net_pay:
-			messages.error(request,'Net pay Missing')
-
-		elif gross_pay and net_pay:
-			if record:
-				record.gross_pay=gross_pay
-				record.net_pay=net_pay
-				record.period=period
-				record.tdate=tdate
-				record.processed_by=processed_by
-				record.save()
-				messages.success(request,'Record Successfully Update')
-			else:
-				Customized_Commodity_Loan_Application_Payslip(applicant=applicant,period=period,
-															gross_pay=gross_pay,net_pay=net_pay,
-															processed_by=processed_by,invoice=invoice,
-															tdate=tdate,status=status,
-															).save()
-				messages.success(request,'Record Successfully Added')
-		return HttpResponseRedirect(reverse('ProformaInvoicedCommodityLoan_details',args=(pk,)))
-		
-	form.fields['period'].initial=now
-	if record:
-		form.fields['gross_pay'].initial=record.gross_pay
-		form.fields['net_pay'].initial=record.net_pay
-		form.fields['period'].initial=record.period
-	context={
-	'form':form,
-	'record':record,
-	}
-	return render(request,'deskofficer_templates/ProformaInvoicedCommodityLoan_details_payslip_analysis.html',context)
-
-
-def ProformaInvoicedCommodityLoan_details_preview(request,pk):
-	form=ProformaInvoicedCommodityLoan_details_preview_Form(request.POST or None)
-	record=Customized_Commodity_Loan_Application_Summary.objects.get(id=pk)
-
-	queryset=Customized_Commodity_Loan_Application_Details.objects.filter(applicant=record)
-	query_sum=Customized_Commodity_Loan_Application_Details.objects.filter(applicant=record).aggregate(total=Sum('total'),total_item=Sum('quantity'))
-	total_amount=query_sum['total']
-	total_item=query_sum['total_item']
-
-	contributions=0
-	if StandingOrderAccounts.objects.filter(transaction__member=record.member,transaction__transaction__source__title="SAVINGS").exists():
-		query_sum=StandingOrderAccounts.objects.filter(transaction__member=record.member,transaction__transaction__source__title="SAVINGS").aggregate(total=Sum('amount'))
-		contributions=query_sum['total']
-
-	if not Customized_Commodity_Loan_Application_Payslip.objects.filter(applicant=record).exists():
-		messages.error(request, "Current Payslip Details missing")
-		return HttpResponseRedirect(reverse('ProformaInvoicedCommodityLoan_details',args=(pk,)))
-	salary_record=Customized_Commodity_Loan_Application_Payslip.objects.filter(applicant=record).first()
-	duration=record.transaction.duration
-	interest=(float(record.transaction.interest_rate)/100)* float(total_amount)
-	monthly_repayment=math.ceil(float(total_amount)/float(duration))
-	
-	balance = float(salary_record.net_pay) -float(contributions)+ float(monthly_repayment)
-	
-	if request.method == 'POST':
-		status1=TransactionStatus.objects.get(title="TREATED")
-		certification_officer_id=request.POST.get('certification_officers')
-		certification_officer=CertificationOfficers.objects.get(id=certification_officer_id)
-		comments=request.POST.get('comments')
-		
-		record.quantity=total_item
-		record.total_amount=total_amount
-		record.total_amount=total_amount
-		record.comments=comments
-		record.repayment=monthly_repayment
-		record.duration=duration
-		record.certification_officer=certification_officer
-		record.interest=interest
-		record.status=status1
-		record.save()
-		return HttpResponseRedirect(reverse('deskofficer_home'))
-
-	context={
-	'form':form,
-	'salary_record':salary_record,
-	'record':record,
-	'queryset':queryset,
-	'total_amount':total_amount,
-	'total_item':total_item,
-	'contributions':contributions,
-	'monthly_repayment':monthly_repayment,
-	'balance':balance,
-	}
-	return render(request,'deskofficer_templates/ProformaInvoicedCommodityLoan_details_preview.html',context)
-
-
-#################################################################
-################ membership_essential_commodity #################
-#################################################################
-
-def membership_essential_commodity_loan_search(request):
-	DataCapture=DataCaptureManager.objects.first()
-	title="Search Membership Request Commodity"
-	form = searchForm(request.POST or None)
-	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
-	return render(request,'deskofficer_templates/membership_essential_commodity_loan_search.html',{'form':form,'title':title,'user_level':user_level.userlevel.title,})
-
-
-def membership_essential_commodity_loan_list_load(request):
-	DataCapture=DataCaptureManager.objects.first()
-	title="Essential Commodity Loan"
-	form = searchForm(request.POST)
-	members=[]
-	if request.method == "POST":
-		if request.POST.get("title")=="":
-			return HttpResponseRedirect(reverse('membership_essential_commodity_loan_search'))
-
-		status=MembershipStatus.objects.get(title="ACTIVE")
-		form = searchForm(request.POST)
-		members=searchMembers(form['title'].value(),status)
-
-	
-	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
-
-	context={
-	'user_level':user_level.userlevel.title,
-	'members':members,
-	'title':title,
-	'DataCapture':DataCapture,
-	}
-	return render(request,'deskofficer_templates/membership_essential_commodity_loan_list_load.html',context)
-
-
-def membership_essential_commodity_loan_products_load(request,pk):
-	DataCapture=DataCaptureManager.objects.first()
-	title="Essential Commodity Loan"
-	member=Members.objects.get(id=pk)
-	status=MembershipStatus.objects.get(title="ACTIVE")
-	item_status=TransactionStatus.objects.get(title="UNTREATED")
-	period=[]
-	if Dedicated_Commodity_Period.objects.filter(status=status).exists():
-		period=Dedicated_Commodity_Period.objects.get(status=status)
-	
-	selected_items=[]
-	button_enabled=False
-	if period:
-		selected_items=Essential_Commodity_Product_Select.objects.filter(member=member,product__period=period,status=item_status)
-	
-	if selected_items:
-		button_enabled=True
-		
-	records=[]
-	if period:
-		records=Dedicated_Commodity_Price_List.objects.filter(period=period,status=status)
-	
-
-	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
-
-	context={
-	'user_level':user_level.userlevel.title,
-	'records':records,
-	'title':title,
-	'member':member,
-	'period':period,
-	'selected_items':selected_items,
-	'button_enabled':button_enabled,
-	'DataCapture':DataCapture,
-	}
-	return render(request,'deskofficer_templates/membership_essential_commodity_loan_products_load.html',context)
-
-
-def membership_essential_commodity_loan_products_select(request,pk, mem_pk):
-	form=Essential_Commodity_Product_Select_Form(request.POST or None)
-	DataCapture=DataCaptureManager.objects.first()
-	title="Essential Commodity Loan"
-	member=Members.objects.get(id=mem_pk)
-	status=MembershipStatus.objects.get(title="ACTIVE")
-	
-	
-	record=Dedicated_Commodity_Price_List.objects.get(id=pk)
-	
-
-	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
-	tdate=get_current_date(now)
-	processed_by=CustomUser.objects.get(id=request.user.id)
-	status=TransactionStatus.objects.get(title="UNTREATED")
-
-	if request.method == 'POST':
-		quantity=request.POST.get("quantity")
-		if not quantity or quantity == '0':
-			messages.error(request,"Quantity is Missing")
-			return HttpResponseRedirect(reverse('membership_essential_commodity_loan_products_select',args=(pk, mem_pk)))
-		
-		total=float(record.selling_price) * float(quantity)
-		interest=float(record.get_interest)* float(quantity)
-		if Essential_Commodity_Product_Select.objects.filter(member=member,product=record).exists():
-			record_exist=Essential_Commodity_Product_Select(member=member,product=record)
-			record_exist.quantity=quantity
-			record_exist.total=total
-			record_exist.save()
-			return HttpResponseRedirect(reverse('membership_essential_commodity_loan_products_load',args=(mem_pk,)))
-
-		Essential_Commodity_Product_Select(interest=interest,member=member,product=record,quantity=quantity,total=total,processed_by=processed_by,tdate=tdate,status=status).save()
-		return HttpResponseRedirect(reverse('membership_essential_commodity_loan_products_load',args=(mem_pk,)))
-
-	form.fields['product_name'].initial=record.product.product_name
-	form.fields['details'].initial=record.product.details
-	form.fields['unit_price'].initial=record.selling_price
-	context={
-	'user_level':user_level.userlevel.title,
-	'member':member,
-	'form':form,
-	'record':record,
-	'title':title,
-	'DataCapture':DataCapture,
-	}
-	return render(request,'deskofficer_templates/membership_essential_commodity_loan_products_select.html',context)
-
-
-def membership_essential_commodity_loan_products_remove(request,pk, mem_pk):
-	record=Essential_Commodity_Product_Select.objects.get(id=pk)
-	record.delete()
-	return HttpResponseRedirect(reverse('membership_essential_commodity_loan_products_load',args=(mem_pk,)))
-
-def membership_essential_commodity_loan_products_update(request,pk, mem_pk):
-	form=Essential_Commodity_Product_Select_Form(request.POST or None)
-	DataCapture=DataCaptureManager.objects.first()
-	title="Essential Commodity Loan"
-	member=Members.objects.get(id=mem_pk)
-	
-	record=Essential_Commodity_Product_Select.objects.get(id=pk)
-
-	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
-	
-	if request.method == 'POST':
-		quantity=request.POST.get("quantity")
-		if not quantity or quantity == '0':
-			messages.error(request,"Quantity is Missing")
-			return HttpResponseRedirect(reverse('membership_essential_commodity_loan_products_select',args=(pk, mem_pk)))
-		
-		total=float(record.product.selling_price) * float(quantity)
-	
-		record.quantity=quantity
-		record.total=total
-		record.save()
-		return HttpResponseRedirect(reverse('membership_essential_commodity_loan_products_load',args=(mem_pk,)))
-
-	
-	form.fields['product_name'].initial=record.product.product.product_name
-	form.fields['details'].initial=record.product.product.details
-	form.fields['unit_price'].initial=record.product.selling_price
-	form.fields['quantity'].initial=record.quantity
-	context={
-	'user_level':user_level.userlevel.title,
-	'member':member,
-	'form':form,
-	'record':record,
-	'title':title,
-	'DataCapture':DataCapture,
-	}
-	return render(request,'deskofficer_templates/membership_essential_commodity_loan_products_select.html',context)
-
-
-def membership_essential_commodity_loan_products_selection_preview(request,pk):
-	form=Essential_Commodity_Product_Selection_Summary_Form(request.POST or None)
-	DataCapture=DataCaptureManager.objects.first()
-	title="Essential Commodity Loan"
-	member=Members.objects.get(id=pk)
-	transaction=TransactionTypes.objects.get(code='205')
-	duration=transaction.duration
-	status=MembershipStatus.objects.get(title="ACTIVE")
-	
-	period=[]
-	if Dedicated_Commodity_Period.objects.filter(status=status).exists():
-		period=Dedicated_Commodity_Period.objects.get(status=status)
-	
-	selected_items=[]
-	total_amount=0
-	total_interest=0
-	if period:
-		records=Essential_Commodity_Product_Select.objects.filter(member=member,product__period=period)
-		queryset=Essential_Commodity_Product_Select.objects.filter(member=member,product__period=period).aggregate(total=Sum('total'),total_item=Sum('quantity'),total_interest=Sum('interest'))
-		total_amount=queryset['total']
-		total_item=queryset['total_item']
-		total_interest=queryset['total_interest']
-	
-	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
-	
-
-	repayment=math.ceil(float(total_amount)/float(duration))
-
-	if request.method == 'POST':
-		ticket=get_ticket()
-		approval_status=ApprovalStatus.objects.get(title='PENDING')
-		tdate=get_current_date(now)
-		if Essential_Commodity_Product_Select.objects.filter(member=member,product__period=period,quantity=0).exists():
-			messages.error(request,"Please complete product selection as some has invalid amount specification")
-			return HttpResponseRedirect(reverse('membership_essential_commodity_loan_products_selection_preview', args=(pk,)))
-		
-		officer_id=request.POST.get('approval_officers')
-		approval_officer=ApprovalOfficers.objects.get(id=officer_id)
-		comments=request.POST.get('comments')
-		processed_by=CustomUser.objects.get(id=request.user.id)
-		status=TransactionStatus.objects.get(title='UNTREATED')
-		status1=TransactionStatus.objects.get(title='TREATED')
-		
-
-		Essential_Commodity_Product_Selection_Summary(interest=total_interest,ticket=ticket,transaction=transaction,
-														product=records[0],
-														quantity=total_item,
-														total=total_amount,
-														repayment=repayment,
-														tdate=tdate,status=status,
-														approval_officer=approval_officer,
-														comments=comments,
-														processed_by=processed_by,
-														duration=duration,
-														approval_status=approval_status,
-														).save()
-		
-		Essential_Commodity_Product_Select.objects.filter(member=member,product__period=period).update(ticket=ticket,status=status1)
-		return HttpResponseRedirect(reverse('membership_essential_commodity_loan_products_load',args=(pk,)))
-	
-	form.fields['comments'].initial='For your Consideration'
-	context={
-	'user_level':user_level.userlevel.title,
-	'member':member,
-	'form':form,
-	'records':records,
-	'title':title,
-	'period':period,
-	'total_item':total_item,
-	'total_amount':total_amount,
-	'total_interest':total_interest,
-	'transaction':transaction,
-	'repayment':repayment,
-	'DataCapture':DataCapture,
-	}
-	return render(request,'deskofficer_templates/membership_essential_commodity_loan_products_selection_preview.html',context)
-
-
-
-
-def Essential_Commodity_Product_Selection_Active(request):
-	status=TransactionStatus.objects.get(title="UNTREATED")
-	approval_status=ApprovalStatus.objects.get(title='PENDING')
-	records=[]
-	queryset=Dedicated_Commodity_Period.objects.all()
-	if request.method == 'POST':
-		period_id=request.POST.get('periods')
-		periods=Dedicated_Commodity_Period.objects.get(id=period_id)
-		records=Essential_Commodity_Product_Selection_Summary.objects.filter(
-									product__product__period=periods,
-									status=status,approval_status=approval_status)
-	
-	context={
-	'records':records,
-	'queryset':queryset,
-	}
-	return render(request,'deskofficer_templates/Essential_Commodity_Product_Selection_Active.html',context)
-
-
-def Essential_Commodity_Product_Selection_Active_Preview(request,pk):
-	queryset=Essential_Commodity_Product_Selection_Summary.objects.get(id=pk)
-	records=Essential_Commodity_Product_Select.objects.filter(member=queryset.product.member,product__period=queryset.product.product.period)
-	
-	total_query=Essential_Commodity_Product_Select.objects.filter(member=queryset.product.member,product__period=queryset.product.product.period).aggregate(total=Sum('total'),total_item=Sum('quantity'))
-	total_amount=total_query['total']
-	total_item=total_query['total_item']
-
-	context={
-	'records':records,
-	'queryset':queryset,
-	'total_amount':total_amount,
-	'total_item':total_item,
-	}
-	return render(request,'deskofficer_templates/Essential_Commodity_Product_Selection_Active_Preview.html',context)
-
-
-
-def Essential_Commodity_Product_Selection_Active_Edit(request,pk,update_pk):
-	form=Essential_Commodity_Product_Select_Form(request.POST or None)	
-	record=Essential_Commodity_Product_Select.objects.get(id=pk)
-
-	form.fields['product_name'].initial=record.product.product.product_name
-	form.fields['details'].initial=record.product.product.details
-	form.fields['unit_price'].initial=record.product.selling_price
-	form.fields['quantity'].initial=record.quantity
-
-	if request.method == 'POST':
-		queryset=Essential_Commodity_Product_Selection_Summary.objects.get(id=update_pk)
-		
-		quantity=request.POST.get('quantity')
-		total=float(record.product.selling_price) * float(quantity)
-		record.quantity=quantity
-		record.total=total
-		record.save()
-		
-		total_query=Essential_Commodity_Product_Select.objects.filter(member=queryset.product.member,product__period=queryset.product.product.period).aggregate(total=Sum('total'),total_item=Sum('quantity'))
-		total_amount=total_query['total']
-		total_item=total_query['total_item']
-
-		queryset.product=record
-		queryset.quantity=total_item
-		queryset.save()
-	
-		return HttpResponseRedirect(reverse('Essential_Commodity_Product_Selection_Active_Preview',args=(update_pk,)))
-	context={
-	'form':form,
-	}
-	return render(request,'deskofficer_templates/Essential_Commodity_Product_Selection_Active_Edit.html',context)
-
-
-def Essential_Commodity_Product_Selection_Active_Delete(request,pk,update_pk):
-	transaction=TransactionTypes.objects.get(code='205')
-	duration=transaction.duration
-	status=TransactionStatus.objects.get(title="UNTREATED")
-	processed_by=CustomUser.objects.get(id=request.user.id)
-	approval_status=ApprovalStatus.objects.get(title='PENDING')
-
-
-	record_exist=Essential_Commodity_Product_Selection_Summary.objects.get(id=update_pk)
-	approval_officer=record_exist.approval_officer
-	comments=record_exist.comments
-	tdate=record_exist.tdate
-	
-	record=Essential_Commodity_Product_Select.objects.get(id=pk)
-	member=record.member
-	period=record.product.period
-	
-	record.delete()
-
-	
-	if Essential_Commodity_Product_Select.objects.filter(member=member,product__period=period).exists():
-		record=Essential_Commodity_Product_Select.objects.filter(member=member,product__period=period).first()
-		
-		total_query=Essential_Commodity_Product_Select.objects.filter(member=member,product__period=period).aggregate(total=Sum('total'),total_item=Sum('quantity'))
-		total_amount=total_query['total']
-		total_item=total_query['total_item']
-
-		return_q=Essential_Commodity_Product_Selection_Summary(transaction=transaction,
-														product=record,
-														quantity=total_item,
-														tdate=tdate,status=status,
-														approval_officer=approval_officer,
-														comments=comments,
-														processed_by=processed_by,
-														duration=duration,
-														approval_status=approval_status,
-														)
-		return_q.save()
-	
-	
-		return HttpResponseRedirect(reverse('Essential_Commodity_Product_Selection_Active_Preview',args=(return_q.pk,)))
-	return HttpResponseRedirect(reverse('Essential_Commodity_Product_Selection_Active'))
-	context={
-	'form':form,
-	}
-	return render(request,'deskofficer_templates/Essential_Commodity_Product_Selection_Active_Edit.html',context)
-
-
-def Essential_Commodity_Loan_Request_Approved_List_Load(request):
-	status=TransactionStatus.objects.get(title='UNTREATED')
-	approval_status=ApprovalStatus.objects.get(title='PENDING')
-	records=Essential_Commodity_Product_Selection_Summary.objects.filter(~Q(approval_status=approval_status)).filter(status=status)
-	context={
-	'records':records,
-	}
-	return render(request,'deskofficer_templates/Essential_Commodity_Loan_Request_Approved_List_Load.html',context)
-
-
-def Essential_Commodity_Loan_Request_Approved_Details(request,pk):
-	form =Essential_Commodity_Loan_Request_Approved_Process_Form(request.POST or None)
-	record=Essential_Commodity_Product_Selection_Summary.objects.get(id=pk)
-	tdate=get_current_date(now)
-	transaction=TransactionTypes.objects.get(code='205')
-	
-	status=TransactionStatus.objects.get(title='TREATED')
-	processed_by=CustomUser.objects.get(id=request.user.id)
-
-
-	button_enabled=False
-	if record.approval_status.title=='APPROVED':
-		button_enabled=True
-
-	if request.method == 'POST':
-	
-		my_id=record.product.member.get_member_Id
-		
-		member=record.product.member
-		
-		loan_code=transaction.code
-		loan_number_selector_id=LoanNumber.objects.first()
-		loan_number_selector=loan_number_selector_id.code
-
-		loan_date= str(now.year)[:1] + str(now.month)[:1]   
-		loan_number=str(loan_code) + str(my_id) + str(loan_date) + str(loan_number_selector).zfill(5)
-		loan_number_selector_id.code=int(loan_number_selector)+1
-		loan_number_selector_id.save()
-
-	
-		start_date_id=request.POST.get('start_date')
-		start_date=datetime.datetime.strptime(start_date_id, '%Y-%m-%d')	
-		stop_date = start_date+ relativedelta(months=int(record.duration))
-
-
-		if not start_date:
-			return HttpResponseRedirect(reverse('Essential_Commodity_Loan_Request_Approved_Process',args=(pk,)))
-		
-		particulars=transaction.name + " ITEMS COLLECTION" 
-		debit=record.total
-		credit=0
-		balance=-debit
-		repayment=record.repayment
-		duration=record.duration
-		interest=record.interest
-
-		
-		ledger_status=MembershipStatus.objects.get(title='ACTIVE')
-		queryset=PersonalLedger(tdate=tdate,member=member,transaction=transaction,account_number=loan_number,particulars=particulars,debit=debit,credit=credit,balance=balance,transaction_period=tdate,status=ledger_status)
-		queryset.save()
-
-
-		loan_record=LoansRepaymentBase(tdate=tdate,start_date=start_date,member=member,transaction=transaction,loan_number=loan_number,loan_amount=abs(balance),repayment=float(repayment),balance=balance,processed_by=processed_by,status=ledger_status)
-		loan_record.save()
-		
-		loan_record=LoansDisbursed(tdate=tdate,start_date=start_date,stop_date=stop_date,member=member,transaction=transaction,duration=duration,loan_number=loan_number,loan_amount=abs(balance),repayment=float(repayment),balance=balance,processed_by=processed_by,status=ledger_status)
-		loan_record.save()
-
-		# return HttpResponse("Ok")
-		record.status=status
-		record.save()
-
-		return HttpResponseRedirect(reverse('Essential_Commodity_Loan_Request_Approved_List_Load'))
-
-	form.fields['start_date'].initial= now + relativedelta(months=1)
-	context={
-	'form':form,
-	'record':record,
-	'button_enabled':button_enabled,
-	}
-	return render(request,'deskofficer_templates/Essential_Commodity_Loan_Request_Approved_Details.html',context)
 
 
 	
@@ -9153,12 +9271,18 @@ def Members_General_Search(request):
 ############################################################
 
 def Load_Active_loans(request):
+	DataCapture=DataCaptureManager.objects.first()
+	
+
 	status=MembershipStatus.objects.get(title='ACTIVE')
 	records=LoansDisbursed.objects.filter(status=status)
-	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
+	
 
 	context={
-	'user_level':user_level.userlevel.title,
+	
+	'current_user':current_user,
+	'DataCapture':DataCapture,
+	
 	'records':records,
 	}
 	return render(request,'deskofficer_templates/Load_Active_loans.html',context)
@@ -9169,15 +9293,18 @@ def Load_Active_loans(request):
 ############################################################
 
 def PersonalLedger_Selected_Search(request):
+	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
 	DataCapture=DataCaptureManager.objects.first()
 	title="Search Members for Ledger Information"
 	form = searchForm(request.POST or None)
-	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
-	return render(request,'deskofficer_templates/PersonalLedger_Selected_Search.html',{'form':form,'title':title,'DataCapture':DataCapture,'user_level':user_level.userlevel.title,})
+	
+	return render(request,'deskofficer_templates/PersonalLedger_Selected_Search.html',{'form':form,'title':title,'current_user':current_user,
+	'DataCapture':DataCapture,})
 
 	
 
 def PersonalLedger_Selected_list_load(request):
+	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
 	DataCapture=DataCaptureManager.objects.first()
 	title="LIST OF MEMBERS"
 	form = searchForm(request.POST)
@@ -9193,18 +9320,20 @@ def PersonalLedger_Selected_list_load(request):
 		if members.count() <= 0:
 			messages.info(request,"No Record Found")
 			return HttpResponseRedirect(reverse('PersonalLedger_Selected_Search'))
-		user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
+		
 
 		context={
-		'user_level':user_level.userlevel.title,
+		
 		'members':members,
 		'title':title,
+		'current_user':current_user,
 		'DataCapture':DataCapture,
 		}
 		return render(request,'deskofficer_templates/PersonalLedger_Selected_list_load.html',context)
 
 
 def PersonalLedger_Transaction_Load(request,pk):
+	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
 	DataCapture=DataCaptureManager.objects.first()
 	form=PersonalLedger_Transaction_Load_form(request.POST or None)
 	member=Members.objects.get(id=pk)
@@ -9215,18 +9344,20 @@ def PersonalLedger_Transaction_Load(request,pk):
 		transaction_id=request.POST.get('transactions')
 		transaction=TransactionTypes.objects.get(id=transaction_id)
 		return HttpResponseRedirect(reverse('PersonalLedger_Transaction_Account_Load',args=(member.pk,transaction.pk,)))
-	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
+	
 
 	context={
-	'user_level':user_level.userlevel.title,
+	
 	'form':form,
 	'member':member,
+	'current_user':current_user,
 	'DataCapture':DataCapture,
 	}
 	return render(request,'deskofficer_templates/PersonalLedger_Transaction_Load.html',context)
 
 
 def PersonalLedger_Transaction_Account_Load(request,pk,trans_id):
+	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
 	DataCapture=DataCaptureManager.objects.first()
 	form=PersonalLedger_Transaction_Account_Load_form(request.POST or None)
 	member=Members.objects.get(id=pk)
@@ -9257,16 +9388,17 @@ def PersonalLedger_Transaction_Account_Load(request,pk,trans_id):
 	
 	form.fields['start_date'].initial= now - relativedelta(months=int(3))
 	form.fields['stop_date'].initial= now
-	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
+	
 
-	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
+
 
 	context={
-	'user_level':user_level.userlevel.title,
+	
 	'form':form,
 	'transaction_list':p,
 	'records':records,
 	'member':member,
+	'current_user':current_user,
 	'DataCapture':DataCapture,
 	'status':status,
 	'transaction':transaction,
@@ -9277,10 +9409,14 @@ def PersonalLedger_Transaction_Account_Load(request,pk,trans_id):
 
 def PersonalLedger_Display(request,account_number,start_date,stop_date):
 	items=Display_PersonalLedger(account_number,start_date,stop_date)
-	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
 	
+	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
+	DataCapture=DataCaptureManager.objects.first()
+
 	context={
-	'user_level':user_level.userlevel.title,
+	'current_user':current_user,
+	'DataCapture':DataCapture,
+	
 	'records':items,
 	'title':items[0].transaction.name
 	}
@@ -9290,6 +9426,9 @@ def PersonalLedger_Display(request,account_number,start_date,stop_date):
 
 
 def MemberShipFormSalesReport(request):
+	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
+	DataCapture=DataCaptureManager.objects.first()
+
 	form=Purchase_Summary_form(request.POST or None)
 
 	form.fields['stop_date'].initial=now
@@ -9309,10 +9448,12 @@ def MemberShipFormSalesReport(request):
 
 
 
-	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
+	
 
 	context={
-	'user_level':user_level.userlevel.title,'form':form,
+	'current_user':current_user,
+	'DataCapture':DataCapture,
+	'form':form,
 	'records':records,
 	}
 	return render(request,'deskofficer_templates/MemberShipFormSalesReport.html',context)
@@ -9322,6 +9463,9 @@ def MemberShipFormSalesReport(request):
 #############################################################
 
 def MemberShipFormSalesSummary(request):
+	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
+	DataCapture=DataCaptureManager.objects.first()
+
 	form=Purchase_Summary_form(request.POST or None)
 	processed_by=CustomUser.objects.get(id=request.user.id)
 	status=TransactionStatus.objects.get(title="UNTREATED")
@@ -9367,10 +9511,12 @@ def MemberShipFormSalesSummary(request):
 		return HttpResponseRedirect(reverse('deskofficer_home'))
 
 
-	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
+	
 
 	context={
-	'user_level':user_level.userlevel.title,
+	'current_user':current_user,
+	'DataCapture':DataCapture,
+	
 	'form':form,
 	'records':records,
 	'button_show':button_show,
@@ -9378,11 +9524,16 @@ def MemberShipFormSalesSummary(request):
 	return render(request,'deskofficer_templates/MemberShipFormSalesSummary.html',context)
 
 def MemberShip_Form_Sales_Summary_Details(request,pk):
+	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
+	DataCapture=DataCaptureManager.objects.first()
+
 	record=MemberShipFormSalesRecord.objects.get(id=pk)
-	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
+	
 
 	context={
-	'user_level':user_level.userlevel.title,
+	'current_user':current_user,
+	'DataCapture':DataCapture,
+	
 	'record':record,
 	}
 	return render(request,'deskofficer_templates/MemberShip_Form_Sales_Summary_Details.html',context)
@@ -9398,17 +9549,23 @@ def members_credit_purchase_approval(request):
 	approval_status=ApprovalStatus.objects.get(title='PENDING')
 	status=TransactionStatus.objects.get(title="UNTREATED")
 	records=members_credit_purchase_summary.objects.filter(approval_officer__officer_id=request.user.id,status=status,approval_status=approval_status)
-	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
+	
+	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
+	DataCapture=DataCaptureManager.objects.first()
 
 	context={
-	'user_level':user_level.userlevel.title,
+	
 	'records':records,
-
+	'current_user':current_user,
+	'DataCapture':DataCapture,
 	}
 	return render(request,'deskofficer_templates/SEO/members_credit_purchase_approval.html',context)
 
 
 def members_credit_purchase_approval_preview(request,ticket):
+	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
+	DataCapture=DataCaptureManager.objects.first()
+
 	form=approval_form(request.POST or None)
 	records=members_credit_purchase_analysis.objects.filter(trans_code__ticket=ticket)
 	sum_debit = members_credit_purchase_analysis.objects.filter(trans_code__ticket=ticket).aggregate(total_debit=Sum('debit'))
@@ -9458,10 +9615,12 @@ def members_credit_purchase_approval_preview(request,ticket):
 		record.save()
 		return HttpResponseRedirect(reverse('members_credit_purchase_approval'))
 	form.fields['comment'].initial='APPROVED'
-	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
+	
 
 	context={
-	'user_level':user_level.userlevel.title,
+	'current_user':current_user,
+	'DataCapture':DataCapture,
+	
 	'records':records,
 	'form':form,
 	'full_name':selected_items[0].member.get_full_name,
@@ -9477,94 +9636,29 @@ def members_credit_purchase_approval_preview(request,ticket):
 	return render(request,'deskofficer_templates/SEO/members_credit_purchase_approval_preview.html',context)
 
 
-def members_salary_update_request_approval_load_list(request):
-	status=ApprovalStatus.objects.get(title="PENDING")
-	members=MembersSalaryUpdateRequest.objects.filter(status=status)
-	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
-
-	context={
-	'user_level':user_level.userlevel.title,
-	'members':members,
-	}
-	return render(request,'deskofficer_templates/SEO/members_salary_update_request_approval_load_list.html',context)
-
-def members_salary_update_request_approval(request,pk):
-	member=MembersSalaryUpdateRequest.objects.get(id=pk)
-	form=members_salary_update_request_approval_form(request.POST or None)
-	form.fields['member_id'].initial=member.member.member_id
-	form.fields['name'].initial=member.member.admin.first_name + ' ' + member.member.admin.last_name + ' ' + member.member.middle_name
-	form.fields['description'].initial=member.description
-	form.fields['current_amount'].initial=member.amount
-	form.fields['prev_amount'].initial=member.member.gross_pay
-	form.fields['approval_status'].initial=member.status
-	form.fields['approval_date'].initial=now
-	if request.method=="POST":
-		status_id=request.POST.get('approval_status')
-		status=ApprovalStatus.objects.get(id=status_id)
-
-		comment=request.POST.get('comment')
-		approval_date=request.POST.get('approval_date')
-
-		record=MembersSalaryUpdateRequest.objects.filter(id=pk).update(status=status,approval_comment=comment,approved_at=approval_date)
-		# messages.success(request,'Record Successfully Updated')
-		return HttpResponseRedirect(reverse('members_salary_update_request_approval_load_list'))
-	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
-
-	context={
-	'user_level':user_level.userlevel.title,
-	'form':form,
-	}
-	return render(request,'deskofficer_templates/SEO/members_salary_update_request_approval.html',context)
-
-
-def external_fascilities_update_request_approval_load_list(request):
-	status=ApprovalStatus.objects.get(title="PENDING")
-	members=ExternalFascilitiesTemp.objects.filter(status=status,approval_officer__officer_id=request.user.id)
-	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
-
-	context={
-	'user_level':user_level.userlevel.title,
-	'members':members,
-	}
-	return render(request,'deskofficer_templates/SEO/external_fascilities_update_request_approval_load_list.html',context)
-
-
-def external_fascilities_update_request_approval(request,pk):
-	member=ExternalFascilitiesTemp.objects.get(id=pk)
-	form=ExternalFascilitiesTemp_form(request.POST or None)
-	if request.method=="POST":
-		status_id=request.POST.get('approval_status')
-		status=ApprovalStatus.objects.get(id=status_id)
-
-		comment=request.POST.get('comment')
-		approval_date=request.POST.get('approval_date')
-
-		record=ExternalFascilitiesTemp.objects.filter(id=pk).update(status=status,approval_comment=comment,approved_at=approval_date)
-		# messages.success(request,'Record Successfully Updated')
-		return HttpResponseRedirect(reverse('external_fascilities_update_request_approval_load_list'))
-	form.fields['approval_date'].initial=now
-	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
-
-	context={
-	'user_level':user_level.userlevel.title,
-	'form':form,
-	}
-	return render(request,'deskofficer_templates/SEO/external_fascilities_update_request_approval.html',context)
 
 
 def members_exclusiveness_request_approval_list_load(request):
+	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
+	DataCapture=DataCaptureManager.objects.first()
+
 	approval_status=ApprovalStatus.objects.get(title="PENDING")
 	members=MembersExclusiveness.objects.filter(approval_status=approval_status,approval_officer__officer_id=request.user.id)
-	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
+	
 
 	context={
-	'user_level':user_level.userlevel.title,
+	'current_user':current_user,
+	'DataCapture':DataCapture,
+	
 	'members':members,
 	}
 	return render(request,'deskofficer_templates/SEO/members_exclusiveness_request_approval_list_load.html',context)
 
 
 def members_exclusiveness_request_approval_process(request,pk):
+	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
+	DataCapture=DataCaptureManager.objects.first()
+
 	form=members_exclusiveness_request_approval_process_form(request.POST or None)
 	member=MembersExclusiveness.objects.get(id=pk)
 
@@ -9579,10 +9673,12 @@ def members_exclusiveness_request_approval_process(request,pk):
 		member.approved_at=approved_at
 		member.save()
 		return HttpResponseRedirect(reverse('members_exclusiveness_request_approval_list_load'))
-	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
+	
 
 	context={
-	'user_level':user_level.userlevel.title,
+	'current_user':current_user,
+	'DataCapture':DataCapture,
+	
 	'member':member,
 	'form':form,
 	}
@@ -9590,13 +9686,18 @@ def members_exclusiveness_request_approval_process(request,pk):
 
 
 def Shop_Cheque_Sales_List_Load(request):
+	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
+	DataCapture=DataCaptureManager.objects.first()
+
 	approval_status=ApprovalStatus.objects.get(title='PENDING')
 	status=TransactionStatus.objects.get(title='UNTREATED')
 	records=Cheque_Table.objects.filter(status=status,approval_status=approval_status)
-	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
+	
 
 	context={
-	'user_level':user_level.userlevel.title,
+	'current_user':current_user,
+	'DataCapture':DataCapture,
+	
 	'records':records,
 	}
 	return render(request,'deskofficer_templates/SEO/Shop_Cheque_Sales_List_Load.html',context)
@@ -9611,19 +9712,27 @@ def Shop_Cheque_Sales_process(request,pk):
 
 
 def Initial_Shares_Update_List_Load(request):
+	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
+	DataCapture=DataCaptureManager.objects.first()
+
 	approval_status=ApprovalStatus.objects.get(title='PENDING')
 	status=TransactionStatus.objects.get(title='UNTREATED')
 	members=MembersShareInitialUpdateRequest.objects.filter(status=status,approval_status=approval_status)
-	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
+	
 
 	context={
-	'user_level':user_level.userlevel.title,
+	'current_user':current_user,
+	'DataCapture':DataCapture,
+	
 	'members':members,
 	'now':now,
 	}
 	return render(request,'deskofficer_templates/SEO/Initial_Shares_Update_List_Load.html',context)
 
 def Initial_Shares_Update_preview(request,pk):
+	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
+	DataCapture=DataCaptureManager.objects.first()
+
 	form=Initial_Shares_Update_preview_form(request.POST or None)
 	member=MembersShareInitialUpdateRequest.objects.get(id=pk)
 	form.fields['amount'].initial=member.amount
@@ -9638,10 +9747,12 @@ def Initial_Shares_Update_preview(request,pk):
 		member.approved_at=now
 		member.save()
 		return HttpResponseRedirect(reverse('Initial_Shares_Update_List_Load'))
-	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
+	
 
 	context={
-	'user_level':user_level.userlevel.title,
+	'current_user':current_user,
+	'DataCapture':DataCapture,
+	
 	'form':form,
 	'member':member,
 	}
@@ -9649,35 +9760,48 @@ def Initial_Shares_Update_preview(request,pk):
 
 
 def Transaction_Adjustment_Approval_list_Load(request):
+	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
+	DataCapture=DataCaptureManager.objects.first()
+
 	approval_status=ApprovalStatus.objects.get(title='PENDING')
 	records=TransactionAjustmentRequest.objects.filter(approval_status=approval_status)
 
-	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
+	
 
 	context={
-	'user_level':user_level.userlevel.title,
+	'current_user':current_user,
+	'DataCapture':DataCapture,
+	
 	'records':records,
 	}
 	return render(request,'deskofficer_templates/SEO/Transaction_Adjustment_Approval_list_Load.html',context)
 
 
 def Transaction_Adjustment_Approval_Process(request,pk):
+	approval_officer=CustomUser.objects.get(id=request.user.id)
+	tdate=get_current_date(now)
 	approval_status=ApprovalStatus.objects.get(title='APPROVED')
 	record=TransactionAjustmentRequest.objects.get(id=pk)
 	record.approval_status=approval_status
-	record.approved_at=now
+	record.approval_officer=approval_officer
+	record.approved_at=tdate
 	record.save()
 	return HttpResponseRedirect(reverse('Transaction_Adjustment_Approval_list_Load'))
 
 	
 def Transaction_Loan_Adjustment_Approval_list_Load(request):
+	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
+	DataCapture=DataCaptureManager.objects.first()
+
 	approval_status=ApprovalStatus.objects.get(title='PENDING')
 	records=TransactionLoanAjustmentRequest.objects.filter(approval_status=approval_status)
 
-	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
+	
 
 	context={
-	'user_level':user_level.userlevel.title,
+	'current_user':current_user,
+	'DataCapture':DataCapture,
+	
 	'records':records,
 	}
 	return render(request,'deskofficer_templates/SEO/Transaction_Loan_Adjustment_Approval_list_Load.html',context)
@@ -9695,15 +9819,23 @@ def Transaction_Loan_Adjustment_Approval_list_Process(request,pk):
 
 
 def Essential_Commodity_Loan_Request_Approval(request):
+	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
+	DataCapture=DataCaptureManager.objects.first()
+
 	approval_status=ApprovalStatus.objects.get(title='PENDING')
 	records=Essential_Commodity_Product_Selection_Summary.objects.filter(approval_status=approval_status)
 	context={
+	'current_user':current_user,
+	'DataCapture':DataCapture,
 	'records':records,
 	}
 	return render(request,'deskofficer_templates/SEO/Essential_Commodity_Loan_Request_Approval.html',context)
 
 
 def Essential_Commodity_Loan_Request_Approval_Details(request,pk):
+	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
+	DataCapture=DataCaptureManager.objects.first()
+
 	form=Essential_Commodity_Loan_Request_Approval_Details_form(request.POST or None)
 	
 	record=Essential_Commodity_Product_Selection_Summary.objects.get(id=pk)
@@ -9725,6 +9857,8 @@ def Essential_Commodity_Loan_Request_Approval_Details(request,pk):
 		return HttpResponseRedirect(reverse('Essential_Commodity_Loan_Request_Approval'))
 	form.fields['comment'].initial="APPROVED"
 	context={
+	'current_user':current_user,
+	'DataCapture':DataCapture,
 	'form':form,
 	'record':record,
 	'records':records,
@@ -9736,6 +9870,9 @@ def Essential_Commodity_Loan_Request_Approval_Details(request,pk):
 ############################################################
 
 def Cash_Deposit_Report_Date_Load(request):
+	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
+	DataCapture=DataCaptureManager.objects.first()
+
 	form=Cash_Deposit_Report_Date_Load_form(request.POST or None)
 
 	form.fields['start_date'].initial=now
@@ -9746,10 +9883,12 @@ def Cash_Deposit_Report_Date_Load(request):
 		stop_date=request.POST.get('stop_date')
 		records=MembersCashDeposits.objects.filter(Q(created_at__gte=start_date) & Q(created_at__lte=stop_date))
 	
-	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
+	
 
 	context={
-	'user_level':user_level.userlevel.title,
+	'current_user':current_user,
+	'DataCapture':DataCapture,
+	
 	'form':form,
 	'records':records,
 	}
@@ -9757,31 +9896,101 @@ def Cash_Deposit_Report_Date_Load(request):
 
 
 def Norminal_Roll_List_Load(request):
+	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
+	DataCapture=DataCaptureManager.objects.first()
+
+	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
 	DataCapture=DataCaptureManager.objects.first()
 	records=Members.objects.all()
-	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
+	
 
 	context={
-	'user_level':user_level.userlevel.title,
+	'current_user':current_user,
+	'DataCapture':DataCapture,
+	
 	'records':records,
+	'current_user':current_user,
 	'DataCapture':DataCapture,
 	}
 	return render(request,'deskofficer_templates/Norminal_Roll_List_Load.html',context)
 
 
 def Norminal_Roll_Personel_Detail(request,pk):
+	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
+	DataCapture=DataCaptureManager.objects.first()
+
 	member=Members.objects.get(id=pk)
-	user_level=Staff.objects.get(admin=CustomUser.objects.get(id=request.user.id))
+	
 
 	context={
-	'user_level':user_level.userlevel.title,
+	'current_user':current_user,
+	'DataCapture':DataCapture,
+	
 	'member':member,
 	}
 	return render(request,'deskofficer_templates/Norminal_Roll_Personel_Detail.html',context)
 
 
 def Over_Deductions_report(request):
-	context={
+	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
+	DataCapture=DataCaptureManager.objects.first()
+	
 
+	context={
+	'current_user':current_user,
+	'DataCapture':DataCapture,
+	
 	}
 	return render(request,'deskofficer_templates/Over_Deductions_report.html',context)
+
+def Transaction_adjustment_Search(request):
+	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
+	DataCapture=DataCaptureManager.objects.first()
+	title="Search Members for Ledger Information"
+	form = searchForm(request.POST or None)
+	
+	return render(request,'deskofficer_templates/Transaction_adjustment_Search.html',{'form':form,'title':title,'current_user':current_user,
+	'DataCapture':DataCapture,})
+
+	
+
+def Transaction_adjustment_List_load(request):
+	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
+	DataCapture=DataCaptureManager.objects.first()
+	title="LIST OF MEMBERS"
+	form = searchForm(request.POST)
+	if request.method == "POST":
+		if request.POST.get("title")=="":
+			messages.info(request,"Please Enter a search data")
+			return HttpResponseRedirect(reverse('Transaction_adjustment_Search'))
+
+		status=MembershipStatus.objects.get(title='ACTIVE')
+		form = searchForm(request.POST)
+
+		members=Members.objects.filter(Q(file_no__icontains=form['title'].value()) |Q(ippis_no__icontains=form['title'].value()) |Q(phone_number__icontains=form['title'].value()) | Q(admin__first_name__icontains=form['title'].value()) | Q(admin__last_name__icontains=form['title'].value()) | Q(middle_name__icontains=form['title'].value())).filter(status=status)
+		if members.count() <= 0:
+			messages.info(request,"No Record Found")
+			return HttpResponseRedirect(reverse('Transaction_adjustment_Search'))
+		
+
+		context={
+		'members':members,
+		'title':title,
+		
+		'current_user':current_user,
+		'DataCapture':DataCapture,
+		}
+		return render(request,'deskofficer_templates/Transaction_adjustment_List_load.html',context)
+
+def TransactionAjustmentHistory_details(request,pk):
+	current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
+	DataCapture=DataCaptureManager.objects.first()
+	member=Members.objects.get(id=pk)
+	records=TransactionAjustmentHistory.objects.filter(member__member=member)
+	context={
+	
+	'current_user':current_user,
+	'DataCapture':DataCapture,
+	'records':records,
+	}
+	return render(request,'deskofficer_templates/TransactionAjustmentHistory_details.html',context)

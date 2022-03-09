@@ -47,7 +47,8 @@
                                     <td>{{member.department.title}}</td>
                                     <td>
                                         
-                                        <a href="{% url 'membership_request_manage_list_update' member.pk %}" class="btn btn-default btn-xs"><i class="fa fa-book font-14"></i></a>
+                                        <a href="{% url 'membership_request_manage_details' member.pk %}" class="btn btn-primary">Details</a>
+                                        <a href="{% url 'membership_request_delete_confirmation' member.pk %}" class="btn btn-danger">Drop</a>
                                     </td>
                                     
                                 </tr>

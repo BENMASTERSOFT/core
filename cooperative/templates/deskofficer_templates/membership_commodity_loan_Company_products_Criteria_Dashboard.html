@@ -1,0 +1,70 @@
+{% extends 'deskofficer_templates/base_template.html' %}
+{% load static %}
+
+{% block content %}
+            <div class="page-content fade-in-up">
+                <div class="row">
+                    <div class="col-xl-6">
+                        <div class="ibox">
+                            <div class="ibox-head">
+                                <div class="ibox-title">Commodity Loan Dashboard</div>
+                            </div>
+                            <div class="form-group">
+                              {% if messages %}
+                                
+                                  {% for message in messages %}
+                                  {% if message.tags == "info" %}
+                                   <div class="alert alert-warning alert-dismissable fade show"  style="margin-top:10px">
+                                    <button class="close" data-dismiss="alert" aria-label="Close">×</button><strong>Warning!</strong> {{message}}</div>
+                                  
+                                  {% endif %}
+                                    {% if message.tags == "success" %}
+                                      <div class="alert alert-success" style="margin-top:10px">{{message}}</div>
+                                      
+                                      {% endif %}
+                                  
+                                  {% endfor %}
+                              
+                              {% endif %}
+                        </div>
+                            <div class="ibox-body">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Description</th>
+                                            <th>Settings</th>
+                                           
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>1</td>
+                                            <td>Net Salary Details</td>
+                                            <td><a href="{% url 'membership_commodity_loan_Company_products_net_pay_Settings' member.pk period.pk batch.pk transaction.pk %}" class="btn btn-primary">Update</a></td>
+                                        
+                                        </tr>
+                                    {% if record.guarantor_required == '1' %}
+                                        <tr>
+                                            <td>2</td>
+                                            <td>Guarantor Details</td>
+                                            <td> <a href="{% url 'membership_commodity_loan_Company_products_Guarantor_Settings' member.pk period.pk batch.pk transaction.pk %}" class="btn btn-primary">Update</a></td>
+                                    
+                                        </tr>
+                                    {% endif %}
+                                        
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                  
+                </div>
+               
+           
+            </div>
+  <div class="sidenav-backdrop backdrop"></div>
+    <div class="preloader-backdrop">
+        <div class="page-preloader">Loading</div>
+    </div>
+{% endblock %}

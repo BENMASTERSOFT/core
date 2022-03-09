@@ -43,7 +43,7 @@
                                     </div> 
                                      {% if receipt_types_status == True %}
                                     <div class="form-group row">
-                                        <label class="col-sm-4 col-form-label">Receipt Number</label>
+                                        <label class="col-sm-3 col-form-label">Receipt Number</label>
                                         <div class="col-sm-8">
                                              {{form.receipt}}
                                         </div>
@@ -119,4 +119,46 @@
         <div class="page-preloader">Loading</div>
     </div>
     {% include 'cooperative/includes/emptyspace.html' %}
+{% endblock %}
+
+{% block custom_js %}
+ <script>
+    $(document).ready(function(){
+        $("#id_receipt").keyup(function(){
+            var receipt=$(this).val();
+
+        if(receipt!=""){
+            $.ajax({
+              url:'{% url "check_receipt_no_already_used" %}',
+              type:'POST',
+              data:{receipt:receipt}
+            })
+            .done(function(response){
+                console.log(response);
+                if(response == "True"){
+                  $(".receipt_error").remove();
+                  
+                      $("<span class='receipt_error' style='padding: 5px; color: red;font-weight: bold;'>Receipt Not Available</span>").insertAfter("#id_receipt");
+                }
+                else{
+                $(".receipt_error").remove();
+                 // $("<span class='alert alert-success email_error'>Email Available</span>").insertAfter("#id_email");
+                  $("<span class='receipt_error' style='padding: 5px;color: green;font-weight: bold;'>Receipt Available</span>").insertAfter("#id_receipt");
+                    
+                }
+            })
+            .fail(function(){
+                console.log("Failed");
+            })
+          }
+          else{
+            $(".receipt_error").remove();
+          }
+        });
+
+
+  
+     
+    })
+ </script>
 {% endblock %}

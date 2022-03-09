@@ -18,7 +18,7 @@
                                 <table class="table table-hover">
                                     <thead>
                                         <tr>
-                                            <th>#</th>
+                                       
                                             <th>Description</th>
                                             <th>Value</th>
                                             
@@ -26,60 +26,67 @@
                                     </thead>
                                     <tbody>
                                         <tr>
-                                            <td>1</td>
+                                          
                                             <td>Loan Type</td>
                                             <td>{{product_data.loan_type}}</td>
                                         </tr>
                                         <tr>
-                                            <td>2</td>
+                                            
                                             <td>Category</td>
                                             <td>{{product_data.title}}</td>
                                         </tr>
                                         <tr>
-                                            <td>3</td>
+                                          
                                             <td>Product Name</td>
                                             <td>{{product_data.product_name}}</td>
                                         </tr>
                                         <tr>
-                                            <td>3</td>
+                                          
                                             <td>Product Model</td>
                                             <td>{{product_data.product_model}}</td>
                                         </tr>
                                         <tr>
-                                            <td>3</td>
+                                           
                                             <td>Company Price</td>
                                             <td>#{{product_data.company_price}}</td>
                                         </tr>
+                                    {% if record.interest_rate_required == '1' %}
+                                     
                                         <tr>
-                                            <td>3</td>
+                                           
+                                            <td>Interest Rate</td>
+                                            <td>{{product_data.interest_rate}}%</td>
+                                        </tr>
+                                        <tr>
+                                           
                                             <td>Interest Amount</td>
                                             <td>#{{product_data.interest_amount}}</td>
                                         </tr>
+                                   
+                                        
+                                    {% endif %} 
+
+                                    {% if record.admin_charges_required == '1' %}
                                         <tr>
-                                            <td>4</td>
-                                            <td>Duration</td>
-                                            <td>{{product_data.duration}}</td>
+                                           
+                                            <td>Admin Charge Rating</td>
+                                            <td>{{record.admin_charges_rating.title}}</td>
+                                        </tr>
+                                           <tr>
+                                           
+                                            <td>Admin Charge Rate</td>
+                                            <td>{{record.admin_charges}}%</td>
                                         </tr>
                                         <tr>
-                                            <td>5</td>
-                                            <td>Interest Rate</td>
-                                            <td>{{product_data.interest_rate}}</td>
+                                           
+                                            <td>Admin Charge</td>
+                                            <td>#{{product_data.admin_charges}}</td>
                                         </tr>
-                                        <tr>
-                                            <td>6</td>
-                                            <td>Admin Charges</td>
-                                            <td>{{product_data.admin_charge}}</td>
-                                        </tr> 
-                                        <tr>
-                                            <td>7</td>
-                                            <td>Guarantors</td>
-                                            <td>{{product_data.gaurantors}}</td>
-                                        </tr>
-                                        <tr>
-                                            <td>8</td>
-                                            <td>Loan Age</td>
-                                            <td>{{product_data.loan_age}}</td>
-                                        </tr>
+                                   
+                                        
+                                    {% endif %}
+
+                                       
                                     </tbody>
                                 </table>
                             </div>

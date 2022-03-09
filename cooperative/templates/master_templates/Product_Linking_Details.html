@@ -10,7 +10,7 @@
             <div class="page-content fade-in-up">
                 <div class="ibox">
                     <div class="ibox-head">
-                        <div class="ibox-title">LIST OF PRODUCTS | {{company.title}} | <a href="{% url 'Product_Linking_Load' %}" class="btn btn-secondary">Back</a></div>
+                        <div class="ibox-title">LIST OF PRODUCTS | {{company.title}} | {% comment %}<a href="{% url 'Product_Linking_Load' %}" class="btn btn-secondary">Back</a>{% endcomment %}</div>
                     </div>
                      <div class="form-group">
                               {% if messages %}
@@ -64,7 +64,7 @@
                                     <td>{{record.product_model}}</td>
                                     <td>{{record.details}}</td>
                                     <td>{{record.status.title}}</td>
-                                    <td><a href="{% url 'Product_Linking_Details_Process' company.pk record.pk %}" class="btn btn-primary">Link</a></td>
+                                    <td><a href="{% url 'Product_Linking_Details_Preview' company.pk record.pk period.pk batch.pk transaction.pk %}" class="btn btn-primary">Link</a></td>
                                    
                                 </tr>
                             {% endfor %} 
@@ -88,6 +88,9 @@
                                             <th>Product Name</th>
                                             <th>Model</th>
                                             <th>Details</th>
+                                            <th>Amount</th>
+                                            <th>Period</th>
+                                            <th>Batch</th>
                                             <th>Action</th>
                                         </tr>
                                     </thead>
@@ -98,7 +101,10 @@
                                             <td>{{item.product.product_name}}</td>
                                             <td>{{item.product.product_model}}</td>
                                             <td>{{item.product.details}}</td>
-                                            <td><a href="{% url 'Product_UnLinking_Process' company.pk item.pk %}" class="btn btn-primary">Unlink</a></td>
+                                            <td>{{item.amount}}</td>
+                                            <td>{{item.period.title}}</td>
+                                            <td>{{item.batch.title}}</td>
+                                            <td><a href="{% url 'Product_UnLinking_Process' company.pk item.pk period.pk batch.pk transaction.pk %}" class="btn btn-primary">Unlink</a></td>
                                         </tr>
                                     {% endfor %}
                                     </tbody>

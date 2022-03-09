@@ -24,15 +24,6 @@
                         </div>
 
 
-
-
-                     
-                              
-    
-
-
-
-
                 <div class="row">
                   
 
@@ -57,7 +48,7 @@
                                     
                                     <div class="form-group row">
                                         <div class="col-sm-10 ml-sm-auto">
-                                            <button class="btn btn-info" type="submit">Submit</button>
+                                            <button class="btn btn-info" type="submit">Add</button>
                                         </div>
                                     </div>
                                 </form>
@@ -74,7 +65,7 @@
                                 <table class="table">
                                     <thead>
                                         <tr>
-                                            <th>#</th>
+                                          
                                             <th>Comment</th>
                                             <th>Action</th>
                                             
@@ -83,10 +74,13 @@
                                     <tbody>
                                         {% for record in records %}
                                         <tr>
-                                            <td>1</td>
-                                            <td>{{record.comment}}</td>
+                                           
+                                            <td>{{record.comment|linebreaks}}</td>
                                             
-                                            <td><a href="{% url 'membership_request_additional_info_delete_confirm' record.id pk %}">Remove</a> </td>
+                                            <td>
+                                                <a href="{% url 'membership_request_additional_info_update' record.pk %}" class="btn btn-secondary">Edit</a>
+                                                <a href="{% url 'membership_request_additional_info_delete_confirm' record.id pk %}" class="btn btn-danger">Remove</a>
+                                                 </td>
                                         </tr>
                                        {% endfor %}
                                     </tbody>
@@ -126,7 +120,7 @@
                                     
                                     <div class="form-group row">
                                         <div class="col-sm-10 ml-sm-auto">
-                                            <button class="btn btn-info" type="submit">Submit</button>
+                                            <button class="btn btn-info" type="submit">Add</button>
                                         </div>
                                     </div>
                                 </form>
