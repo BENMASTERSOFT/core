@@ -6,7 +6,7 @@
                         <img src="{% static '/cooperative/assets/img/admin-avatar.png' %}" width="45px" />
                     </div>
                     <div class="admin-info">
-                        <div class="font-strong">{{request.user}}</div><small>Desk Office</small></div>
+                        <div class="font-strong"> {{request.user}}</div><small>Desk Office</small></div>
                 </div>
                 <ul class="side-menu metismenu">
                     <li>
@@ -14,63 +14,56 @@
                             <span class="nav-label">Dashboard</span>
                         </a>
                     </li>
-                    <li class="heading">FEATURES</li>
-                {% if  current_user.membership_registration or current_user.termination %}
+                   
+                 
+
+                    <li class="heading">  FEATURES</li>
+
+
+                       {% if  'MEMBERSHIP REGISTRATION' in task_array %}
                     <li>
-                        <a href="javascript:;"><i class="sidebar-item-icon fa fa-sitemap"></i>
-                            <span class="nav-label">Membership</span><i class="fa fa-angle-left arrow"></i></a>
+                        <a href="javascript:;"><i class="sidebar-item-icon fa fa-edit"></i>
+                            <span class="nav-label">Enrollment</span><i class="fa fa-angle-left arrow"></i></a>
                         <ul class="nav-2-level collapse">
-                            {% if  current_user.membership_registration  %}
-                            <li>
-                                <a href="javascript:;">
-                                    <span class="nav-label"> New Members</span><i class="fa fa-angle-left arrow"></i></a>
-                                <ul class="nav-3-level collapse">
-                                    <li>
-                                        <a href="{% url 'membership_request' %}">New Member Request</a>
-                                    </li>
-                                    <li>
-                                        <a href="{% url 'membership_request_complete_search' %}">Complete Request</a>
-                                    </li>
-                                      <li>
-                                        <a href="{% url 'membership_request_manage_search' %}">Manage Request</a>
-                                    </li>
-                                    <li>
-                                        <a href="{% url 'membership_form_sales_list_load' %}">Membership Form Sales</a>
-                                    </li>
-                                    <li>
-                                        <a href="{% url 'membership_registration_applicant_search' %}">Membership Registration</a>
-                                    </li>  
-                                   
-                                    <li>
-                                        <a href="{% url 'Members_Account_Creation_Search' %}">Single Account Creations</a>
-                                    </li> 
-                                    <li>
-                                        <a href="{% url 'Members_Multiple_Account_Creation_preview' %}">Multiple Account Creations</a>
-                                    </li>
                            
-                                </ul>
-                            </li>
-                            {% endif %}
-                         {% if  current_user.termination %}
                             <li>
-                                <a href="javascript:;">
-                                    <span class="nav-label">Members Termination</span><i class="fa fa-angle-left arrow"></i></a>
-                                <ul class="nav-3-level collapse">
-                                    <li>
-                                        <a href="{% url 'membership_termination_search' %}">Termination Request</a>
-                                    </li>
-                                    <li>
-                                        <a href="">Termination Processing</a>
-                                    </li>
-                                    
-                                </ul>
+                                {% url 'membership_request' as membership_request %}
+                                <a href="{{ membership_request }}" class="nav-link {% if request.path == membership_request %} active {% endif %}">New Member Request</a>
                             </li>
-                        {% endif %}
+                            <li>
+                                <a href="{% url 'membership_request_complete_search' %}">Complete Request</a>
+                            </li>
+                              <li>
+                                <a href="{% url 'membership_request_manage_search' %}">Manage Request</a>
+                            </li>
+                            <li>
+                                <a href="{% url 'membership_form_sales_Search' %}">Membership Form Sales</a>
+                            </li>
+                            <li>
+                                <a href="{% url 'membership_registration_applicant_search' %}">Membership Registration</a>
+                            </li>  
                         </ul>
                     </li>
-            {% endif %}
+               
+                
+                    <li>
+                        <a href="javascript:;"><i class="sidebar-item-icon fa fa-edit"></i>
+                            <span class="nav-label">Account Creation</span><i class="fa fa-angle-left arrow"></i></a>
+                        <ul class="nav-2-level collapse">
+                           
+                            <li>
+                                <a href="{% url 'Members_Account_Creation_Search' %}">Single Account Creations</a>
+                            </li> 
+                            <li>
+                                <a href="{% url 'Members_Multiple_Account_Creation_preview' %}">Multiple Account Creations</a>
+                            </li>
+                        </ul>
+                    </li>
+                    {% endif %}
+                 
+            
          
-            {% if current_user.standing_order_placement %}
+                {% if 'STANDING ORDER PLACEMENT' in task_array %}
                     <li>
                         <a href="javascript:;"><i class="sidebar-item-icon fa fa-edit"></i>
                             <span class="nav-label">Standing Order</span><i class="fa fa-angle-left arrow"></i></a>
@@ -82,19 +75,22 @@
                             <li>
                                 <a href="{% url 'standing_order_selected_search' %}">Selected Standing Order</a>
                             </li>
+                            <li>
+                                <a href="{% url 'standing_order_reactivate_account_search' %}">Reactivate Standing Order</a>
+                            </li>
 
                         </ul>
                     </li>
                 {% endif %}
 
-                {% if current_user.transaction_adjustment  %}
-                     <li>
+                {% if 'TRANSACTION ADJUSTMENT'  in task_array %}
+                    <li>
                         <a href="javascript:;"><i class="sidebar-item-icon fa fa-sitemap"></i>
                             <span class="nav-label">Transaction Adjustment</span><i class="fa fa-angle-left arrow"></i></a>
                         <ul class="nav-2-level collapse">
                            <li>
                                 <a href="javascript:;">
-                                    <span class="nav-label">Savings</span><i class="fa fa-angle-left arrow"></i></a>
+                                    <span class="nav-label">Savings Adjustment</span><i class="fa fa-angle-left arrow"></i></a>
                                 <ul class="nav-3-level collapse">
                                     <li>
                                         <a href="{% url 'Transaction_adjustment_search' %}">Place Request</a>
@@ -103,10 +99,11 @@
                                         <a href="{% url 'Transaction_Adjustment_Approved_List_Load' %}">Process Request</a>
                                     </li>
                                 </ul>
-                            </li>
+                            </li> 
+                           
                             <li>
                                 <a href="javascript:;">
-                                    <span class="nav-label">Loan</span><i class="fa fa-angle-left arrow"></i></a>
+                                    <span class="nav-label">Loan Adjustment</span><i class="fa fa-angle-left arrow"></i></a>
                                 <ul class="nav-3-level collapse">
                                     <li>
                                         <a href="{% url 'Transaction_Loan_adjustment_search' %}">Place Request</a>
@@ -117,27 +114,52 @@
                                 </ul>
                             </li>
                             <li>
-                                <a href="javascript:;">
-                                    <span class="nav-label">Gross Salary Update</span><i class="fa fa-angle-left arrow"></i></a>
-                                <ul class="nav-3-level collapse">
-                                    <li>
-                                        <a href="{% url 'Transaction_Salary_adjustment_Request_search' %}">Place Request</a>
-                                    </li>
-                                    <li>
-                                        <a href="{% url 'Transaction_Salary_adjustment_Request_Manage_List_Load' %}">Manage Request</a>
-                                    </li> 
-                                    <li>
-                                        <a href="{% url 'Transaction_Salary_adjustment_Request_Manage_Process_List_Load' %}">Process Request</a>
-                                    </li>
-                                </ul>
+                                <a href="{% url 'Savings_Lockup_search' %}">Unlocking Savings</a>
                             </li>
                         </ul>
                     </li>
 
+                {% endif %}                
+              
+            {% if 'SAVINGS SUSPENSE'  in task_array %}
+                <li>
+                    <a href="javascript:;"><i class="sidebar-item-icon fa fa-edit"></i>
+                        <span class="nav-label">Savings Suspense</span><i class="fa fa-angle-left arrow"></i></a>
+                    <ul class="nav-2-level collapse">
+                       
+                        <li>
+                            <a href="{% url 'Standing_Order_Suspension_search' %}">Suspense Request</a>
+                        </li>
+                        <li>
+                            <a href="{% url 'Standing_Order_Suspension_Transaction_Approval_Processing_Load' %}">Process Suspense</a>
+                        </li>
+                        <li>
+                            <a href="{% url 'Standing_Order_Suspension_Transaction_Releasing_search' %}">Suspense Release Request</a>
+                        </li>
+                        <li>
+                            <a href="{% url 'Standing_Order_Suspension_Transaction_Activation_Approval_Processing_Load' %}">Process Suspense Release</a>
+                        </li>
 
-                {% endif %} 
+                    </ul>
+                </li>
+            {% endif %} 
+            {% if 'LOAN SCHEDULE' in task_array %}
+            <li>
+                    <a href="javascript:;"><i class="sidebar-item-icon fa fa-edit"></i>
+                        <span class="nav-label">Manage Loan Scedule</span><i class="fa fa-angle-left arrow"></i></a>
+                    <ul class="nav-2-level collapse">
+                       
+                        <li>
+                            <a href="{% url 'loan_unscheduling_request_search' %}">Unschedule Request</a>
+                        </li>
+                        <li>
+                            <a href="{% url 'loan_unscheduling_request_transaction_processing' %}">Process Unschedule Request</a>
+                        </li>
 
-                {% if current_user.cash_deposit %}
+                    </ul>
+                </li>
+            {% endif %} 
+                {% if 'CASH DEPOSIT' in task_array %}
                     <li>
                         <a href="javascript:;"><i class="sidebar-item-icon fa fa-edit"></i>
                             <span class="nav-label">Cash Deposit</span><i class="fa fa-angle-left arrow"></i></a>
@@ -159,36 +181,69 @@
                         </ul>
                     </li>
                 {% endif %}
-                {% if current_user.cash_withdrawal %}
+                {% if 'CASH WITHDRAWAL' in task_array %}
                     <li>
-                        <a href="javascript:;"><i class="sidebar-item-icon fa fa-edit"></i>
+                        <a href="javascript:;"><i class="sidebar-item-icon fa fa-sitemap"></i>
                             <span class="nav-label">Cash Withdrawal</span><i class="fa fa-angle-left arrow"></i></a>
                         <ul class="nav-2-level collapse">
-                           
                             <li>
                                 <a href="{% url 'Cash_Withdrawal_Search' %}">Withdrawal Request</a>
                             </li>
                            
                             <li>
-                                <a href="{% url 'Cash_Withdrawal_Transactions_Approved_list_Search' %}">Request Status</a>
+                                <a href="{% url 'Cash_Withdrawal_Transactions_Request_Status_list_Search' %}">Request Status</a>
+                            </li> 
+                            <li>
+                                <a href="{% url 'Cash_Withdrawal_Transactions_All_Uncleared_list_Load' %}">All Uncleared Request</a>
                             </li>
-                           
+                           <li>
+                                <a href="{% url 'Cash_Withdrawal_Transactions_Approved_list_Search' %}">Approved Withrawal Request</a>
+                            </li>
 
                         </ul>
                     </li>
                 {% endif %}
-                {% if current_user.personnel_info %}
+                 {% if 'XMAS SAVINGS TRANSACTIONS' in task_array and 'XMAS SAVINGS OPERATION' in task_enabler_array %}
+                    <li>
+                        <a href="javascript:;"><i class="sidebar-item-icon fa fa-sitemap"></i>
+                            <span class="nav-label">XMAS Savings Transactions</span><i class="fa fa-angle-left arrow"></i></a>
+                        <ul class="nav-2-level collapse">
+                            <li>
+                                <a href="{% url 'Xmas_Savings_Shortlisting_list_Load' %}">Xmas Savings Shortlisting</a>
+                            </li>
+                            <li>
+                                <a href="{% url 'Xmas_Savings_Shortlisting_Filter_Batch_Load' %}">Filter XMAS Records </a>
+                            </li>                                            
+                            <li>
+                                <a href="{% url 'Xmas_Savings_Shortlisting_Account_Linkage_Batch_Load' %}">XMAS Account Linkage </a>
+                            </li>
+                            <li>
+                                <a href="{% url 'Xmas_Savings_Shortlisting_Export_Batch_Load' %}">Export XMAS Records </a>
+                                
+                            </li> 
+                            <li>
+                                <a href="{% url 'Xmas_Savings_Shortlisting_Processing_Batch_Load' %}">Process XMAS Records </a>
+                            </li>  
+                            <li>
+                                <a href="{% url 'Xmas_Savings_Shortlisting_Ledger_Posting_Batch_Load' %}">XMAS Ledger Posting </a>
+                            </li>         
+                        </ul>
+                    </li>
+                {% endif %}
+               
+
+                {% if 'PERSONNEL INFO' in task_array  %}
                     <li>
                         <a href="javascript:;"><i class="sidebar-item-icon fa fa-sitemap"></i>
                             <span class="nav-label">Personnel Info</span><i class="fa fa-angle-left arrow"></i></a>
                         <ul class="nav-2-level collapse">
                            <li>
-                                <a href="{% url 'Norminal_Roll' %}">Norminal Roll</a>
+                                <a href="{% url 'Norminal_Roll_Search' %}">Norminal Roll</a>
                             </li>                              
                         </ul>
                     </li>
                 {% endif %}  
-                {% if current_user.share_management %} 
+                {% if 'SHARE MANAGEMENT'  in task_array and 'INITIAL SHARES MANAGER' in task_enabler_array %} 
                     <li>
                         <a href="javascript:;"><i class="sidebar-item-icon fa fa-sitemap"></i>
                             <span class="nav-label">Shares Manager</span><i class="fa fa-angle-left arrow"></i></a>
@@ -230,7 +285,7 @@
                 {% endif %}
 
 
-                  {% if current_user.next_of_kin %}
+                  {% if 'NEXT OF KIN'  in task_array %}
                     <li>
                         <a href="javascript:;"><i class="sidebar-item-icon fa fa-edit"></i>
                             <span class="nav-label">Next of Kin</span><i class="fa fa-angle-left arrow"></i></a>
@@ -242,32 +297,37 @@
                             <li>
                                 <a href="{% url 'Members_Next_Of_Kins_Manage_search' %}">Manage Next of Kin</a>
                             </li>
+                            <li>
+                                <a href="{% url 'Members_Without_Next_of_Kin_list_load' %}">Members Without NOK</a>
+                            </li>
 
                         </ul>
                     </li>
                  {% endif %}
                 
-                {% if current_user.exclusiveness_request %}
-                   <li>
-                            <a href="javascript:;"><i class="sidebar-item-icon fa fa-sitemap"></i>
-                                <span class="nav-label">Exclusiveness</span><i class="fa fa-angle-left arrow"></i></a>
-                            <ul class="nav-3-level collapse">
-                                <li>
-                                    <a href="{% url 'members_exclusiveness_request_search' %}">Exclusive Request</a>
-                                </li>
-                                <li>
-                                    <a href="{% url 'members_exclusiveness_approved_list_load' %}">Approved Exclusiveness</a>
-                                </li>      
-                                 <li>
-                                    <a href="javascript:;">Deactivate Exclusiveness</a>
-                                </li>                                        
+
+                {% if 'MEMBERS WAVERS'  in task_array and 'MEMBERS WAVERS' in task_enabler_array  %}
+                
+                    
+                    <li>
+                        <a href="javascript:;"><i class="sidebar-item-icon fa fa-sitemap"></i>
+                            <span class="nav-label">Members Wavers</span><i class="fa fa-angle-left arrow"></i></a>
+                        <ul class="nav-2-level collapse">
+                           <li>
+                                <a href="{% url 'members_wavers_request_search' %}">Place Request</a>
+                            </li>
+                            <li>
+                                <a href="javascript:;">Manage Request</a>
+                            </li>
                             </ul>
                     </li>
+
+                   
                 {% endif %}
                 
                     
 
-                  {% if current_user.loan_management %}
+                {% if 'LOAN MANAGEMENT'  in task_array %}
                     <li>
                         <a href="javascript:;"><i class="sidebar-item-icon fa fa-sitemap"></i>
                             <span class="nav-label">Loan Manager</span><i class="fa fa-angle-left arrow"></i></a>
@@ -280,17 +340,22 @@
                                         <a href="{% url 'loan_request_search' %}">Loan Request</a>
                                     </li>
                                     <li>
-                                        <a href="javascript:;">Manage Request</a>
+                                        <a href="{% url 'loan_request_manage_period_load' %}">Manage Request</a>
                                     </li>
                                     <li>
-                                        <a href="{% url 'loan_request_approved_list_load' %}">Loan Form Sales</a>
+                                        <a href="{% url 'loan_request_approved_Issue_form_period_load' %}">Loan Form Sales</a>
                                     </li>
                                     <li>
-                                        <a href="{% url 'loan_application_list_load' %}">Loan Application</a>
+                                        <a href="{% url 'loan_application_approved_period_load' %}">Loan Application</a>
                                     </li> 
                                     <li>
-                                        <a href="{% url 'loan_application_approved_list_load' %}">Loan Processing</a>
+                                        <a href="{% url 'Loan_application_processing_period_load' %}">Loan Processing</a>
                                     </li>
+                                    <li>
+                                        <a href="{% url 'loan_request_order_discard' %}">Discard Incomplete Applications</a>
+                                    </li>
+                                   
+                                   
                                 </ul>
                             </li>
                                
@@ -303,26 +368,28 @@
                                         <a href="{% url 'membership_commodity_loan_search' %}">Commodity Request</a>
                                     </li>
                                     <li>
-                                        <a href="{% url 'membership_commodity_loan_manage' %}">Manage Request</a>
+                                        <a href="{% url 'membership_commodity_loan_Period__manage_transaction_load' %}">Manage Request</a>
                                     </li>
                                     <li>
-                                        <a href="{% url 'membership_commodity_loan_form_sales' %}">Request Form Sales</a>
+                                        <a href="{% url 'membership_commodity_loan_form_sales_transaction_period_load' %}">Form Issuance</a>
                                     </li>
                                     <li>
-                                        <a href="javascript:;">Commodity Applications</a>
+                                        <a href="{% url 'membership_commodity_loan_Final_Applications' %}">Process Applications</a>
                                     </li>
-                                    <li>
-                                        <a href="javascript:;">Process Applications</a>
+                                   <li>
+                                        <a href="{% url 'commodity_loan_trending_products' %}">Trending Commodity</a>
                                     </li>
+                                   
                                 </ul>
                             </li>
-                           
-                            </ul>
-                </li>
-            {% endif %}
+                            
+                    
+                        </ul>
+                    </li>
+                {% endif %}
                
                 
-                {% if current_user.monthly_deductions %}
+                {% if 'MONTHLY DEDUCTIONS'  in task_array %} 
                     <li>
                         <a href="javascript:;"><i class="sidebar-item-icon fa fa-table"></i>
                             <span class="nav-label">Monthly Deductions</span><i class="fa fa-angle-left arrow"></i></a>
@@ -338,6 +405,10 @@
                             <a href="{% url 'Monthly_Group_transaction_Institution_Load' %}">Group Transactions</a>
                         </li> 
                         <li>
+                            <a href="{% url 'Monthly_Deduction_Main_and_Shop_Merger_Institution_load' %}">Main and Shop Merger</a>
+                        </li>    
+                       
+                        <li>
                             <a href="{% url 'Monthly_Deduction_excel_Export_Institution_Load' %}">Exporting To Excel</a>
                         </li> 
                         <li>
@@ -348,25 +419,29 @@
                         <li>
                             <a href="{% url 'Monthly_Account_deduction_Processing_Institution_Load' %}">Process Account Deductions</a>
                         </li>
-                          <li>
-                            <a href="{% url 'Monthly_Account_deductions_Separations' %}">Monthly Deductions Separations</a>
+                        <li>
+                            <a href="{% url 'Monthly_Account_Main_and_Shop_Deductions_Separations' %}">Main and Shop Separations</a>
+                        </li> 
+                        <li>
+                            <a href="{% url 'Monthly_Main_Account_deductions_Separations' %}">Main Deductions Separations</a>
+                        </li>
+                         <li>
+                            <a href="{% url 'Monthly_deduction_ledger_posting_preview' %}">Deductions Ledger Posting</a>
                         </li>
                         <li>
-                            <a href="{% url 'monthly_wrongful_deduction_transaction_period_load' %}">Monthly Wringful Deductions</a>
+                            <a href="{% url 'monthly_wrongful_deduction_transaction_period_load' %}">Monthly Wrongful Deductions</a>
                         </li> 
                       
                         <li>
                             <a href="{% url 'Monthly_Unbalanced_transactions' %}">Non Balanced Deductions</a>
                         </li>
-                        <li>
-                            <a href="{% url 'Monthly_deduction_ledger_posting_preview' %}">Deductions Ledger Posting</a>
-                        </li>
+                       
                            
                         </ul>
                     </li>
                 {% endif %}
 
-                {% if current_user.bank_accounts %}
+                {% if 'BANK ACCOUNTS'  in task_array %}
                     <li>
                         <a href="javascript:;"><i class="sidebar-item-icon fa fa-bar-chart"></i>
                             <span class="nav-label">Bank Accounts</span><i class="fa fa-angle-left arrow"></i></a>
@@ -381,8 +456,45 @@
                         </ul>
                     </li>
                 {% endif %}
+                {% if 'RENTAL SERVICES'  in task_array %}
+                 <li>
+                        <a href="javascript:;"><i class="sidebar-item-icon fa fa-bar-chart"></i>
+                            <span class="nav-label">Rental Services</span><i class="fa fa-angle-left arrow"></i></a>
+                        <ul class="nav-2-level collapse">
+                            <li>
+                                <a href="{% url 'Rental_Services_Category_List_Load' %}">Service Booking</a>
+                            </li>
+                            <li>
+                                <a href="{% url 'Rental_Services_Unpaid_Bill' %}">Unpaid Bills</a>
+                            </li>
+                            <li>
+                                <a href="{% url 'Rental_Services_Management' %}">Manage Booking</a>
+                            </li>
 
-                {% if current_user.day_end_transaction %}
+                            
+                        </ul>
+                    </li>
+                {% endif %}
+                 {% if 'DAILY TRANSACTION SUMMARY'  in task_array %}
+                 <li>
+                    <a href="javascript:;"><i class="sidebar-item-icon fa fa-sitemap"></i>
+                        <span class="nav-label">Daily Transactions Summary</span><i class="fa fa-angle-left arrow"></i></a>
+                    <ul class="nav-2-level collapse">
+                         <li>
+                            <a href="javascript:;">Membership Form Sales</a>
+                        </li>
+
+                         <li>
+                            <a href="javascript:;">Loan Form Sales</a>
+                        </li>
+                        <li>
+                            <a href="javascript:;">Cash Deposit</a>
+                        </li>
+
+                    </ul>
+                </li>   
+                 {% endif %}
+                {% if 'DAY END TRANSACTION'  in task_array %}
                       <li>
                         <a href="javascript:;"><i class="sidebar-item-icon fa fa-sitemap"></i>
                             <span class="nav-label">Day End Transactions</span><i class="fa fa-angle-left arrow"></i></a>
@@ -403,104 +515,191 @@
                    
                 {% endif %}
 
-               {% if current_user.essential_commodity or current_user.share_update_approval or current_user.exclusiveness_approval or current_user.shop_credit_sales or current_user.share_update_approval or current_user.transaction_adjustment_approval  %}
+            {% if 'MONTH END TRANSACTION'  in task_array %}
+                <li>
+                    <a href="javascript:;"><i class="sidebar-item-icon fa fa-sitemap"></i>
+                        <span class="nav-label">Month End Transactions</span><i class="fa fa-angle-left arrow"></i></a>
+                    <ul class="nav-2-level collapse">
+                         <li>
+                            <a href="javascript:;">Membership Form Sales</a>
+                        </li>
+
+                         <li>
+                            <a href="javascript:;">Loan Form Sales</a>
+                        </li>
+                        <li>
+                            <a href="javascript:;">Cash Deposit</a>
+                        </li>
+
+                    </ul>
+                </li> 
+             {% endif %}  
+             {% if 'YEAR END TRANSACTION'  in task_array %} 
+                <li>
+                    <a href="javascript:;"><i class="sidebar-item-icon fa fa-sitemap"></i>
+                        <span class="nav-label">Year End Transactions</span><i class="fa fa-angle-left arrow"></i></a>
+                    <ul class="nav-2-level collapse">
+                         <li>
+                            <a href="javascript:;">Membership Form Sales</a>
+                        </li>
+
+                         <li>
+                            <a href="javascript:;">Loan Form Sales</a>
+                        </li>
+                        <li>
+                            <a href="javascript:;">Cash Deposit</a>
+                        </li>
+
+                    </ul>
+                </li>   
+             {% endif %} 
+
+
+                {% if   'MEMBERSHIP TERMINATION' in task_array %}
+                    <li>
+                        <a href="javascript:;"><i class="sidebar-item-icon fa fa-edit"></i>
+                            <span class="nav-label">Members Termination</span><i class="fa fa-angle-left arrow"></i></a>
+                        <ul class="nav-2-level collapse">
+                           
+                            <li>
+                                <a href="{% url 'membership_termination_search' %}">Termination Request</a>
+                            </li>
+                             <li>
+                                <a href="{% url 'membership_termination_approved_list_processing_list_load' %}">Termination Processing</a>
+                            </li>
+                            <li>
+                                <a href="{% url 'membership_termination_maturity_date_exception_search' %}">Maturity Date Exception</a>
+                            </li> 
+                            <li>
+                                <a href="{% url 'membership_termination_maturity_date_exception_approved_list_load' %}">Maturity Exception Processing</a>
+                            </li>
+                            <li>
+                                <a href="{% url 'membership_termination_Disbursement_Processing_list_Load' %}">Termination Fund Disbursement</a>
+                            </li>
+                        </ul>
+                    </li>
+                    {% endif %}
+               {% if 'SHARE UPDATE APPROVAL'  in task_array or 'SHOP CREDIT SALES APPROVALS'  in task_array or 'TRANSACTION ADJUSTMENT APPROVAL'  in task_array or 'STANDING ORDER SUSPENSION APPROVAL'  in task_array  %}
+         
                 <li class="heading">APPROVALS</li>
                     <li>
                         <a href="javascript:;"><i class="sidebar-item-icon fa fa-sitemap"></i>
-                            <span class="nav-label">ADJUSTMENT APPROVAL</span><i class="fa fa-angle-left arrow"></i></a>
+                            <span class="nav-label">TRANSACTIONS APPROVAL</span><i class="fa fa-angle-left arrow"></i></a>
                         <ul class="nav-2-level collapse">
-                        {% if current_user.shop_credit_sales %}
+                        {% if 'SHOP CREDIT SALES APPROVALS'  in task_array  %}
                             <li>
-                                <a href="javascript:;">
-                                    <span class="nav-label">Shop Credit Sales</span><i class="fa fa-angle-left arrow"></i></a>
-                                <ul class="nav-3-level collapse">
-                                    <li>
-                                        <a href="{% url 'members_credit_purchase_approval' %}">Sales Request </a>
-                                    </li>
-                                    <li>
-                                        <a href="{% url 'Shop_Cheque_Sales_List_Load' %}">Cheque Sales Approval</a>
-                                    </li> 
-                                   
-                                </ul>
-                            </li>
+                               <a href="{% url 'members_credit_purchase_approval' %}">Shop Credit Sales</a>
+                            </li> 
+
                         {% endif %}
                         
 
                         
-                        {% if current_user.exclusiveness_approval %}
-                            <li>
-                                <a href="javascript:;">
-                                    <span class="nav-label">Members Exclusiveness </span><i class="fa fa-angle-left arrow"></i></a>
-                                <ul class="nav-3-level collapse">
-                                    <li>
-                                        <a href="{% url 'members_exclusiveness_request_approval_list_load' %}">Approve Exclusiveness</a>
-                                    </li>
-                                    <li>
-                                        <a href="">Approve Non Exclusiveness</a>
-                                    </li>
-                                </ul>
-                            </li>
-                        {% endif %}
-                        {% if current_user.share_update_approval %}
+                      
+                        {% if 'SHARE UPDATE APPROVAL'  in task_array %}
                             <li>
                                <a href="{% url 'Initial_Shares_Update_List_Load' %}">Initial Share Update</a>
                             </li> 
                         {% endif %} 
-                        {% if current_user.essential_commodity %}
-                            <li>
-                               <a href="{% url 'Essential_Commodity_Loan_Request_Approval' %}">Essential Commodity</a>
-                            </li>
-                        {% endif %}
-                        {% if current_user.transaction_adjustment_approval %}
-                            <li>
-                                <a href="javascript:;">
-                                    <span class="nav-label">Transaction Adjustment </span><i class="fa fa-angle-left arrow"></i></a>
-                                <ul class="nav-3-level collapse">
+                      
+                        
+                        {% if 'TRANSACTION ADJUSTMENT APPROVAL'  in task_array or 'STANDING ORDER SUSPENSION APPROVAL'  in task_array %}
+                            
+
+                              {% if 'TRANSACTION ADJUSTMENT APPROVAL'  in task_array %}
+                              
                                    <li>
-                                        <a href="{% url 'Transaction_Adjustment_Approval_list_Load' %}">Savings</a>
+                                       <a href="{% url 'Transaction_Adjustment_Approval_list_Load' %}">Standing Order Adjustment</a>
                                     </li>
                                     <li>
-                                        <a href="{% url 'Transaction_Loan_Adjustment_Approval_list_Load' %}">Loans</a>
+                                        <a href="{% url 'Transaction_Loan_Adjustment_Approval_list_Load' %}">Loans Repayment Adjustment</a>
                                     </li>
-                                     <li>
-                                        <a href="{% url 'Transaction_Salary_adjustment_Request_Approval_List_Load' %}">Salary Update</a>
+                                    
+                                
+                                {% endif %} 
+                                {% if 'STANDING ORDER SUSPENSION APPROVAL'  in task_array %}
+                                    <li>
+                                        <a href="{% url 'Standing_Order_Suspension_Transaction_Approval_Load' %}">Standing Order Suspension</a>
                                     </li>
-                                </ul>
-                            </li>
+                                    <li>
+                                        <a href="{% url 'Standing_Order_Suspension_Transaction_Releasing_Approval_Load' %}">Standing Order Activation</a>
+                                    </li>
+                                {% endif %}
+                             
                         {% endif %}
                         </ul>
                     </li>
                 {% endif %}
              
                 
-            {% if current_user.general_report %}
+            {% if 'GENERAL REPORT'  in task_array %}
                 <li class="heading">REPORTS</li>
                     <li>
                             <a href="javascript:;"><i class="sidebar-item-icon fa fa-sitemap"></i>
                                 <span class="nav-label">General Reports</span><i class="fa fa-angle-left arrow"></i></a>
                             <ul class="nav-2-level collapse">
                                  <li>
-                                    <a href="{% url 'Transaction_adjustment_Search' %}">Transaction Adjustment History</a>
-                                </li>
+                                    <a href="{% url 'Members_Dashboard_Search' %}">Members Dashboard</a>
+                                </li> 
                                 <li>
-                                    <a href="{% url 'MemberShipFormSalesReport' %}">Membership Form Sales</a>
+                                    <a href="{% url 'Transaction_adjustment_history_Search' %}">Transaction Adjustment History</a>
                                 </li>
+
+
+
+                                   <li>
+                                    <a href="javascript:;">
+                                        <span class="nav-label">Application Forms</span><i class="fa fa-angle-left arrow"></i></a>
+                                    <ul class="nav-3-level collapse">
+                                        <li>
+                                            <a href="{% url 'MemberShipFormSales_Report_individual_Search' %}">Individual Records</a>
+                                        </li>
+                                        <li>
+                                            <a href="{% url 'MemberShipFormSalesReport' %}">General Records</a>
+                                        </li>
+                                        
+                                    </ul>
+                                </li>
+
+
+                               
 
                                  <li>
                                     <a href="{% url 'Cash_Deposit_Report_Date_Load' %}">Cash Deposit</a>
                                 </li>
                                 <li>
                                     <a href="{% url 'Norminal_Roll_List_Load' %}">Norminal Roll</a>
+                                </li>   
+                                <li>
+                                    <a href="{% url 'PersonalLedger_Selected_Search' %}">Personal Ledger</a>
+                                </li>  
+                                                          
+                                
+                                <li>
+                                    <a href="javascript:;">
+                                        <span class="nav-label">Welfare Package</span><i class="fa fa-angle-left arrow"></i></a>
+                                    <ul class="nav-3-level collapse">
+                                        <li>
+                                            <a href="{% url 'Members_Welfare_Report_Search' %}">Individual Records</a>
+                                        </li>
+                                        <li>
+                                            <a href="{% url 'Members_Welfare_Report_General_Records' %}">General Records</a>
+                                        </li>
+                                        
+                                    </ul>
                                 </li>
                                 <li>
                                     <a href="javascript:;">
-                                        <span class="nav-label">Ledger</span><i class="fa fa-angle-left arrow"></i></a>
+                                        <span class="nav-label">Shares Package</span><i class="fa fa-angle-left arrow"></i></a>
                                     <ul class="nav-3-level collapse">
                                         <li>
-                                            <a href="{% url 'PersonalLedger_Selected_Search' %}">Personal Ledger</a>
+                                            <a href="{% url 'Members_Initial_Shares_Reports_Load' %}">Initial Share Records</a>
+                                        </li>
+                                         <li>
+                                            <a href="{% url 'Members_Individual_Shares_Report_Search' %}">Individual Share Records</a>
                                         </li>
                                         <li>
-                                            <a href="javascript:;">Level 3</a>
+                                            <a href="{% url 'Members_General_Shares_Report_List_Load' %}">General Records</a>
                                         </li>
                                     </ul>
                                 </li>
@@ -510,40 +709,39 @@
                                         <span class="nav-label">Loan</span><i class="fa fa-angle-left arrow"></i></a>
                                     <ul class="nav-3-level collapse">
                                         <li>
-                                            <a href="{% url 'Load_Active_loans' %}">Loans Applcations</a>
+                                            <a href="javascript:;">Loans Applcations</a>
                                         </li>
                                         <li>
                                             <a href="{% url 'Load_Active_loans' %}">Active Loans</a>
                                         </li>
                                         <li>
-                                            <a href="javascript:;">Currently Cleared Loans</a>
+                                            <a href="{% url 'Members_Cleared_Loans_Records' %}">Cleared Loans</a>
                                         </li>
-                                    </ul>
-                                </li>
-                                 <li class="heading">MONTHLY DEDUCTIONS</li>
-                                <li>
-                                    <a href="javascript:;">
-                                        <span class="nav-label">Cooperative Generated</span><i class="fa fa-angle-left arrow"></i></a>
-                                    <ul class="nav-3-level collapse">
-                                        <li>
-                                            <a href="javascript">Group Records</a>
-                                        </li>
-                                        <li>
-                                            <a href="javascript">Selected Records</a>
-                                        </li>
-                                        
                                     </ul>
                                 </li>
 
                                 <li>
                                     <a href="javascript:;">
-                                        <span class="nav-label">Account Generated</span><i class="fa fa-angle-left arrow"></i></a>
+                                        <span class="nav-label">Covering Notes</span><i class="fa fa-angle-left arrow"></i></a>
                                     <ul class="nav-3-level collapse">
                                         <li>
-                                            <a href="javascript">Group Records</a>
+                                            <a href="{% url 'Monthly_Deduction_Covering_Note' %}">Monthly Deductions</a>
+                                        </li>
+                                        
+                                    </ul>
+                                </li>
+                                 <li class="heading">MONTHLY DEDUCTIONS</li>
+                                
+
+                                <li>
+                                    <a href="javascript:;">
+                                        <span class="nav-label">Monthly Deduction</span><i class="fa fa-angle-left arrow"></i></a>
+                                    <ul class="nav-3-level collapse">
+                                        <li>
+                                            <a href="{% url 'Monthly_Deductions_All_Records_Report_Period' %}">Grouped Records</a>
                                         </li>
                                         <li>
-                                            <a href="javascript">Selected Records</a>
+                                            <a href="{% url 'Monthly_Deductions_Report_Search' %}">Selected Records</a>
                                         </li>
                                         
                                     </ul>
@@ -556,10 +754,10 @@
                                             <a href="{% url 'Over_Deductions_report' %}">Over Deductions</a>
                                         </li>
                                         <li>
-                                            <a href="javascript">Under Deductions</a>
+                                            <a href="{% url 'Under_Deductions_report' %}">Under Deductions</a>
                                         </li>
                                         <li>
-                                           <a href="javascript:;">Non Member Deductions</a>
+                                           <a href="{% url 'Non_Members_Deductions_report' %}">Non Member Deductions</a>
                                         </li>
                                         
                                     </ul>
@@ -568,8 +766,9 @@
                             </ul>
                     </li>
             {% endif %}
-            {% if current_user.data_capture %}
-                <li class="heading">INITIAL DATA</li>
+            
+            {% if 'DATA CAPTURE'  in task_array and 'DATA CAPTURE'  in task_enabler_array %}
+                <li class="heading">INITIAL DATA </li>
                     <li>
                         <a href="javascript:;"><i class="sidebar-item-icon fa fa-sitemap"></i>
                             <span class="nav-label">Data Capture</span><i class="fa fa-angle-left arrow"></i></a>
@@ -588,6 +787,12 @@
                                    <li>
                                         <a href="{% url 'Norminal_Roll_Preview' %}">Process Norminal Roll</a>
                                      </li>  
+                                     <li>
+                                        <a href="{% url 'Individual_Capture' %}">Individual Record Capture</a>
+                                     </li>  
+                                     <li>
+                                        <a href="{% url 'Individual_Capture_Delete_Search' %}">Delete Registered Member</a>
+                                     </li>  
                                      
                                      
                                 </ul>
@@ -600,7 +805,7 @@
                                     <span class="nav-label">Savings</span><i class="fa fa-angle-left arrow"></i></a>
                                 <ul class="nav-3-level collapse">
                                     <li>
-                                        <a href="{% url 'Uploading_Existing_Savings' %}">Savings Upload</a>
+                                        <a href="{% url 'Uploading_Existing_Savings_Search' %}">Savings Upload</a>
                                     </li> 
                                     <li>
                                         <a href="{% url 'Uploading_Existing_Savings_Additional_search' %}">Additional Savings</a>
@@ -614,7 +819,7 @@
                                     <span class="nav-label">Loan</span><i class="fa fa-angle-left arrow"></i></a>
                                 <ul class="nav-3-level collapse">
                                     <li>
-                                       <a href="{% url 'Uploading_Existing_Loans' %}">Uploading Loans</a>
+                                       <a href="{% url 'Uploading_Existing_Loans_Search' %}">Uploading Loans</a>
                                     </li>
                                     <li>
                                        <a href="{% url 'Uploading_Existing_Aditional_Loans' %}">Additional Loan</a>
@@ -624,32 +829,14 @@
                                 </ul>
                             </li>
                             
-                           
+                           <li>
+                               <a href="{% url 'Members_Shares_Upload_Search' %}">Uploading Shares</a>
+                            </li>
                         
                             <li>
-                                <a href="javascript:;">
-                                    <span class="nav-label">Shares</span><i class="fa fa-angle-left arrow"></i></a>
-                                <ul class="nav-3-level collapse">
-                                    <li>
-                                       <a href="{% url 'Members_Shares_Upload_list_load' %}">Uploading Shares</a>
-                                    </li>
-                                   
-                                </ul>
-                            </li>
-
-                            <li>
-                                <a href="javascript:;">
-                                    <span class="nav-label">Annual Welfare</span><i class="fa fa-angle-left arrow"></i></a>
-                                <ul class="nav-3-level collapse">
-                                    <li>
-                                       <a href="{% url 'Members_Welfare_Upload_list_load' %}">Uploading Welfare</a>
-                                    </li>
-                                  
-
-                                </ul>
-                            </li>
-
-
+                               <a href="{% url 'Members_Welfare_Upload_Search' %}">Uploading Welfare</a>
+                            </li> 
+                            
                         </ul>
                     </li>
             {% endif %}

@@ -1,0 +1,49 @@
+{% extends 'deskofficer_templates/base_template.html' %}
+{% load static %}
+
+{% block content %}
+            <div class="page-content fade-in-up">
+                <div class="row">
+                    <div class="col-xl-6">
+                        <div class="ibox">
+                            <div class="ibox-head">
+                                <div class="ibox-title">LOAN SCHEDULING DASHBOARD</div>
+                            </div>
+                            <div class="ibox-body">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Description</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>1</td>
+                                            <td>All Unscheduled</td>
+                                            <td><a href="{% url 'Loan_processing_scheduling_all_unscheduled' %}" class="btn btn-primary">Load</a></td>
+                                           
+                                        </tr>
+                                     
+                                        <tr>
+                                            <td>2</td>
+                                            <td>Based on Date</td>
+                                            <td><a href="{% url 'Loan_processing_scheduling_based_on_date' %}" class="btn btn-primary">Load</a></td>
+                                           
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    
+                </div>
+           
+           
+            </div>
+  <div class="sidenav-backdrop backdrop"></div>
+    <div class="preloader-backdrop">
+        <div class="page-preloader">Loading</div>
+    </div>
+{% endblock %}

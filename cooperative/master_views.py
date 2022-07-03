@@ -25,50 +25,258 @@ now = datetime.datetime.now()
 ###################### HOME PAGE ###################################
 ####################################################################
 
+TRANSACTION_STATUS=(
+    ('UNTREATED','UNTREATED'),
+    ("TREATED","TREATED")
+    )
 
+PROCESSING_STATUS=(
+    ("UNPROCESSED",'UNPROCESSED'),
+    ("PROCESSED","PROCESSED")
+    )
+
+CHANNELS=(
+        ("CASH","CASH"),
+        ("POS","POS"),
+        ("TRANSFER","TRANSFER"),
+        )
+
+SUBMISSION_STATUS=(
+        ('SUBMITTED','SUBMITTED'),
+        ('NOT SUBMITTED','NOT SUBMITTED')
+        )
+
+MEMBERSHIP_STATUS=(
+        ("ACTIVE","ACTIVE"),
+        ("INACTIVE","INACTIVE")
+        )
+SALES_CATEGORIES=(
+        ("CASH","CASH"),
+        ("CREDIT","CREDIT"),
+        ("ITEMS RETURN","ITEMS RETURN"),
+        )
+CASHBOOK_STATUS=(
+        ("UNPOSTED","UNPOSTED"),
+        ("POSTED","POSTED")
+        )
+CERTIFICATION_STATUS=(
+        ("PENDING",'PENDING'),
+        ("CERTIFIED",'CERTIFIED'),
+        ("NOT CERTIFIED",'NOT CERTIFIED'),
+        )
+LOAN_SCHEDULE_STATUS=(
+        ("UNSCHEDULED","UNSCHEDULED"),
+        ("SCHEDULED","SCHEDULED")
+        )
+APPROVAL_STATUS=(
+        ('PENDING',"PENDING"),
+        ('APPROVED',"APPROVED")
+        )
+
+
+TICKET_STATUS=(
+        ("OPEN","OPEN"),
+        ("CLOSED","CLOSED")
+        )
+RECEIPT_TYPES=(
+        ('AUTO','AUTO'),
+        ('MANUAL','MANUAL')
+        )
+RECEIPT_STATUS=(
+        ('UNUSED','UNUSED'),
+        ('USED','USED')
+        )
+LOCK_STATUS=(
+            ("OPEN",'OPEN'),
+            ("LOCKED",'LOCKED'),
+            )
+UPLOAD_STATUS=(
+            ("PENDING","PENDING"),
+            ("UPLOADED","UPLOADED"),
+            ("VERIFIED","VERIFIED")
+            )
+MULTIPLE_LOAN_STATUS=(
+            ("NOT ALLOWED",'NOT ALLOWED'),
+            ("ALLOWED",'ALLOWED'),
+            )
+YESNO=(
+    ("NO","NO"),
+    ("YES","YES")
+    )
+ADMIN_CHARGES=(
+    ("CASH","CASH"),
+    ("PERCENTAGE","PERCENTAGE")
+    )
+
+INTEREST_DEDUCTION=(
+                    ("SOURCE","SOURCE"),
+                    ("SPREAD","SPREAD")
+                    )
+
+ACCOUNT_TYPES=(
+            ("SAVINGS","SAVINGS"),
+            ("CURRENT","CURRENT")
+            )
+
+PAYMENT_CHANNEL=(
+                ("CASH","CASH"),
+                ("CHEQUE","CHEQUE"),
+                ("TRANSFEWR","TRANSFEWR")
+                )
+
+WITHDRAWAL_STATUS=(
+        ("LOCKED","LOCKED"),
+        ("UNLOCKED","UNLOCKED")
+        )
+LOAN_CATEGORY=(
+            ("MONETARY","MONETARY"),
+            ("NON-MONETARY","NON-MONETARY")
+            )
 def admin_home(request):
-    # print(request.user__executives_tasks_model.membership_approval)
-   
-    current_user=[]
+    task_array=[]
+
     if not request.user.user_type == '1':
-        current_user=Executives_Tasks_Model.objects.get(user=request.user.id)
-   
+
+
+        tasks=System_Users_Tasks_Model.objects.filter(user_id=request.user.id)
+
+        for task in tasks:
+            # print(task.task.title)
+            task_array.append(task.task.title)
+
     members=[]
     transactions = TransactionTypes.objects.all().count()
-    if MembershipStatus.objects.all().exists():
-        members = Members.objects.filter(status=MembershipStatus.objects.get(title="ACTIVE")).count()
-  
-    record=DataCaptureManager.objects.first()
+
+    members = Members.objects.filter(status="ACTIVE").count()
     title="System Admin"
-    # staff=Staff.objects.get(admin=request.user)
- 
+
     context={
-    'current_user':current_user,
+    'task_array':task_array,
     "members":members,
     "transactions":transactions,
     'title':title,
-    'record':record,
+    # 'record':record,
     }
     return render(request, "master_templates/dashboard.html",context)
 
 
-def system_reset(request):
-    status=ReceiptStatus.objects.get(title='UNUSED')
-    Receipts.objects.all().update(status=status)
-    
+def User_Profile(request):
 
-    record=CustomUser.objects.filter(user_type=5)
-    record.delete()
-    record=MemberShipRequest.objects.all()
-    record.delete()
+    user_id=CustomUser.objects.get(id=request.user.id)
+    task_array=[]
+    if not request.user.user_type == '1':
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
 
-    record=NorminalRoll.objects.all()
-    record.delete()
-   
-    MembersIdManager.objects.filter().update(member_id=1)
-    AutoReceipt.objects.filter().update(receipt=1)
 
-    return HttpResponseRedirect(reverse('admin_home'))
+    form=add_staff_manage_form(request.POST or None)
+
+    user=Staff.objects.get(admin_id=user_id)
+    user_type=UserType.objects.get(code=user.admin.user_type)
+    form.fields['title'].initial=user.title.id
+    form.fields['last_name'].initial=user.admin.last_name
+    form.fields['first_name'].initial=user.admin.first_name
+    form.fields['middle_name'].initial=user.middle_name
+    form.fields['address'].initial=user.address
+    form.fields['phone_no'].initial=user.phone_number
+    form.fields['gender'].initial=user.gender.id
+
+    form.fields['username'].initial=user.admin.username
+    form.fields['user_type'].initial=user_type.id
+    form.fields['email'].initial=user.admin.email
+
+    if request.method == "POST":
+        title_id=request.POST.get("title")
+        title=Titles.objects.get(id=title_id)
+
+        username=request.POST.get("username")
+        first_name=request.POST.get("first_name")
+        last_name=request.POST.get("last_name")
+        middle_name=request.POST.get("middle_name")
+        password1=request.POST.get("password1")
+        password2=request.POST.get("password2")
+        email=request.POST.get("email")
+        phone_number=request.POST.get("phone_no")
+        address=request.POST.get("address")
+        gender_id=request.POST.get("gender")
+        gender= Gender.objects.get(id=gender_id)
+        user_type_obj=request.POST.get("user_type")
+        user_type = UserType.objects.get(id=user_type_obj)
+
+        changepassword=request.POST.get("changepassword")
+        if changepassword:
+            if password1 != password2:
+                messages.info(request,"Password Mismatch")
+                return HttpResponseRedirect(reverse('User_Profile'))
+            password=password1
+            user.admin.set_password(password)  # replace with your real password
+        user.admin.username=username
+        user.admin.first_name=first_name
+        user.admin.last_name=last_name
+        user.admin.email=email
+        user.admin.user_type=user_type.code
+        user.middle_name=middle_name
+        user.phone_number=phone_number
+        user.address=address
+        user.gender=gender
+
+        user.title=title
+
+        user.save()
+        user.admin.save()
+        return HttpResponseRedirect(reverse('admin_home'))
+    context={
+    'task_array':task_array,
+    'form':form,
+    }
+    return render(request, "master_templates/User_Profile.html",context)
+
+
+# def system_reset(request):
+#     Receipts.objects.all().update(status='UNUSED')
+
+
+#     record=CustomUser.objects.filter(user_type=5)
+#     record.delete()
+#     record=MemberShipRequest.objects.all()
+#     record.delete()
+
+#     record=NorminalRoll.objects.all()
+#     record.delete()
+
+#     MembersIdManager.objects.filter().update(member_id=1)
+#     AutoReceipt.objects.filter().update(receipt=1)
+#     LoanNumber.objects.filter().update(code=1)
+
+
+#     Members_Credit_Sales_Selected.objects.all().delete()
+#     CooperativeShopLedger.objects.all().delete()
+#     Daily_Sales.objects.all().delete()
+#     Daily_Sales_Cash_Flow_Summary.objects.all().delete()
+#     Cooperative_Shop_Cash_Deposit.objects.all().delete()
+#     General_Cash_Sales_Selected.objects.all().delete()
+#     Day_End_Sales_Transactions.objects.all().delete()
+#     Daily_Cash_Deposit_Summary.objects.all().delete()
+#     members_shop_credit_loans.objects.all().delete()
+
+#     MonthlyShopdeductionListGenerated.objects.all().delete()
+#     MonthlyShopdeductionList.objects.all().delete()
+#     MonthlyShopGroupGeneratedTransactions.objects.all().delete()
+#     MonthlyJointDeductionList.objects.all().delete()
+#     MonthlyJointDeductionGeneratedTransactions.objects.all().delete()
+#     MonthlyJointDeductionGenerated.objects.all().delete()
+#     MonthlyDeductionList.objects.all().delete()
+#     MonthlyGeneratedTransactions.objects.all().delete()
+#     MonthlyDeductionListGenerated.objects.all().delete()
+#     MonthlyGroupGeneratedTransactions.objects.all().delete()
+#     MonthlyDeductionGenerationHeading.objects.all().delete()
+#     AccountDeductions.objects.all().delete()
+#     NonMemberAccountDeductions.objects.all().delete()
+#     MonthlyOverdeductionsRefund.objects.all().delete()
+
+
+#     return HttpResponseRedirect(reverse('admin_home'))
 
 
 
@@ -179,557 +387,228 @@ def User_Task_Manager_Update_desk_office(request,pk):
 
 
 def General_Tasks_Manager(request):
-  
-    current_user=[]
+    task_array=[]
     if not request.user.user_type == '1':
-        current_user=Executives_Tasks_Model.objects.get(user=request.user.id)
-
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
     context={
-    'current_user':current_user,
+    'task_array':task_array,
 
     }
     return render(request,'master_templates/General_Tasks_Manager.html',context)
 
 
 def Executive_Users(request):
-    current_user=[]
+    task_array=[]
     if not request.user.user_type == '1':
-        current_user=Executives_Tasks_Model.objects.get(user=request.user.id)
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
+
 
     records=CustomUser.objects.filter(user_type='2')
- 
+
     context={
-    'current_user':current_user,
+    'task_array':task_array,
     'records':records,
     }
     return render(request,'master_templates/Executive_Users.html',context)
 
 
-def Executive_Tasks(request,pk):
-    current_user=[]
+def Executive_Users_Tasks_Preview(request,pk):
+    task_array=[]
+
     if not request.user.user_type == '1':
-        current_user=Executives_Tasks_Model.objects.get(user=request.user.id)
 
-    form=Executive_Tasks_Model_form(request.POST or None)
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
 
-    record=[]
-    if Executives_Tasks_Model.objects.filter(user_id=pk).exists():
-        record=Executives_Tasks_Model.objects.get(user_id=pk)
-  
-    if request.method == 'POST':
-        user_manager=request.POST.get('user_manager')
-        commodity_loan_products=request.POST.get('commodity_loan_products')
-        loan_criteria_settings=request.POST.get('loan_criteria_settings')
-        service_charges=request.POST.get('service_charges')
-        utilities=request.POST.get('utilities')
-        invoice_management=request.POST.get('invoice_management')
-        components=request.POST.get('components')   
-        data_imports=request.POST.get('data_imports')        
-        membership_approval=request.POST.get('membership_approval')
-        loan_request_approval=request.POST.get('loan_request_approval')
-        loan_application_certification=request.POST.get('loan_application_certification')
-        loan_application_approval=request.POST.get('loan_application_approval')
-        membership_exclusiveness_approval=request.POST.get('membership_exclusiveness_approval')
-        commodity_loan_approval=request.POST.get('commodity_loan_approval')
-        share_purchase_approval=request.POST.get('share_purchase_approval')
-        commodity_loan_certification=request.POST.get('commodity_loan_certification')
-        cash_withdrawal_certification=request.POST.get('cash_withdrawal_certification')
-        cash_withdrawal_approval=request.POST.get('cash_withdrawal_approval')
-        system_admin=request.POST.get('system_admin')
-        
-       
-        if record:
-            record.user_manager=user_manager
-            record.commodity_loan_products=commodity_loan_products
-            record.loan_criteria_settings=loan_criteria_settings
-            record.service_charges=service_charges
-            record.utilities=utilities
-            record.invoice_management=invoice_management
-            record.components=components
-            record.data_imports=data_imports
-            record.membership_approval=membership_approval
-            record.loan_request_approval=loan_request_approval
-            record.loan_application_certification=loan_application_certification
-            record.loan_application_approval=loan_application_approval
-            record.membership_exclusiveness_approval=membership_exclusiveness_approval
-            record.commodity_loan_approval=commodity_loan_approval
-            record.share_purchase_approval=share_purchase_approval
-            record.commodity_loan_certification=commodity_loan_certification
-            record.cash_withdrawal_certification=cash_withdrawal_certification
-            record.cash_withdrawal_approval=cash_withdrawal_approval
-            record.system_admin=system_admin
-           
-            record.save()
-        else:
-            user=CustomUser.objects.get(id=pk)
-            record=Executives_Tasks_Model(user=user,
-                            user_manager=0,
-                            commodity_loan_products=0,
-                            loan_criteria_settings=0,
-                            service_charges=0,
-                            utilities=0,
-                            invoice_management=0,
-                            components=0,
-                            data_imports=0,
-                            membership_approval=0,
-                            loan_request_approval=0,
-                            loan_application_certification=0,
-                            loan_application_approval=0,
-                            membership_exclusiveness_approval=0,
-                            commodity_loan_approval=0,
-                            share_purchase_approval=0,
-                            commodity_loan_certification=0,
-                            cash_withdrawal_certification=0,
-                            cash_withdrawal_approval=0,
-                            system_admin=0,
-                            
-                            )
-            record.save()
-     
-            if user_manager:
-                record.user_manager=user_manager
+    tasks=System_Users_Tasks.objects.filter(usertype__code='2')
+    user=CustomUser.objects.get(id=pk)
+    records=System_Users_Tasks_Model.objects.filter(user=user).order_by('task__rank')
+
+
+
+    if request.method =="POST" and 'btn-all' in request.POST:
+        for task in tasks:
+            if System_Users_Tasks_Model.objects.filter(task=task,user=user).exists():
+                pass
             else:
-                record.user_manager=0
-            
+                System_Users_Tasks_Model(task=task,user=user).save()
 
-            if commodity_loan_products:
-                record.commodity_loan_products=commodity_loan_products
-            else:
-                record.commodity_loan_products=0
-            
-            if loan_criteria_settings:
-                record.loan_criteria_settings=loan_criteria_settings
-            else:
-                record.loan_criteria_settings=0
+        return HttpResponseRedirect(reverse('Executive_Users_Tasks_Preview',args=(pk,)))
 
-            if service_charges:
-                record.service_charges=service_charges
-            else:
-                record.service_charges=0
-            
+    if request.method =="POST" and 'btn-selected' in request.POST:
+        task_id=request.POST.get('task')
+        task=System_Users_Tasks.objects.get(id=task_id)
 
-            if utilities:
-                record.utilities=utilities
-            else:
-                record.utilities=0
+        if System_Users_Tasks_Model.objects.filter(task=task,user=user).exists():
+            messages.info(request,'Record already Exist')
+            return HttpResponseRedirect(reverse('Executive_Users_Tasks_Preview',args=(pk,)))
 
-            if invoice_management:
-                record.invoice_management=invoice_management
-            else:
-                record.invoice_management=0
-            
-            if components:
-                record.components=components
-            else:
-                record.components=0
+        System_Users_Tasks_Model(task=task,user=user).save()
+        return HttpResponseRedirect(reverse('Executive_Users_Tasks_Preview',args=(pk,)))
 
 
-            if data_imports:
-                record.data_imports=data_imports
-            else:
-                record.data_imports=0
-
-
-            if membership_approval:
-                record.membership_approval=membership_approval
-            else:
-                record.membership_approval=0
-            
-
-            if loan_request_approval:
-                record.loan_request_approval=loan_request_approval
-            else:
-                record.loan_request_approval=0
-
-            if loan_application_certification:
-                record.loan_application_certification=loan_application_certification
-            else:
-                record.loan_application_certification=0
-            
-
-            if loan_application_approval:
-                record.loan_application_approval=loan_application_approval
-            else:
-                record.loan_application_approval=0
-
-            if membership_exclusiveness_approval:
-                record.membership_exclusiveness_approval=membership_exclusiveness_approval
-            else:
-                record.membership_exclusiveness_approval=0
-            
-
-            if commodity_loan_approval:
-                record.commodity_loan_approval=commodity_loan_approval
-            else:
-                record.commodity_loan_approval=0            
-            
-
-            if share_purchase_approval:
-                record.share_purchase_approval=share_purchase_approval
-            else:
-                record.share_purchase_approval=0
-
-            if commodity_loan_certification:
-                record.commodity_loan_certification=commodity_loan_certification
-            else:
-                record.commodity_loan_certification=0
-
-            
-            if cash_withdrawal_certification:
-                record.cash_withdrawal_certification=cash_withdrawal_certification
-            else:
-                record.cash_withdrawal_certification=0
-            
-            if cash_withdrawal_approval:
-                record.cash_withdrawal_approval=cash_withdrawal_approval
-            else:
-                record.cash_withdrawal_approval=0
-
-            if system_admin:
-                record.system_admin=system_admin
-            else:
-                record.system_admin=0
-
-
-            record.save()
-        return HttpResponseRedirect(reverse('Executive_Tasks',args=(pk,)))
-    if record:
-
-        form.fields['user_manager'].initial=record.user_manager
-        form.fields['commodity_loan_products'].initial=record.commodity_loan_products
-        form.fields['loan_criteria_settings'].initial=record.loan_criteria_settings
-        form.fields['service_charges'].initial=record.service_charges
-        form.fields['utilities'].initial=record.utilities
-        form.fields['invoice_management'].initial=record.invoice_management
-        form.fields['components'].initial=record.components
-        form.fields['data_imports'].initial=record.data_imports
-        form.fields['membership_approval'].initial=record.membership_approval
-        form.fields['loan_request_approval'].initial=record.loan_request_approval
-        form.fields['loan_application_certification'].initial=record.loan_application_certification
-        form.fields['loan_application_approval'].initial=record.loan_application_approval
-        form.fields['membership_exclusiveness_approval'].initial=record.membership_exclusiveness_approval
-        form.fields['commodity_loan_approval'].initial=record.commodity_loan_approval
-        form.fields['share_purchase_approval'].initial=record.share_purchase_approval
-        form.fields['commodity_loan_certification'].initial=record.commodity_loan_certification
-        form.fields['cash_withdrawal_certification'].initial=record.cash_withdrawal_certification
-        form.fields['cash_withdrawal_approval'].initial=record.cash_withdrawal_approval
-        form.fields['system_admin'].initial=record.system_admin
-      
     context={
-    'current_user':current_user,
-    'form':form,
-    'record':record,
+    'tasks':tasks,
+    'task_array':task_array,
+    'records':records,
+    'user':user,
     }
-    return render(request,'master_templates/Executive_Tasks.html',context)
+    return render(request,'master_templates/Executive_Users_Tasks_Preview.html',context)
+
+
+def Executive_Users_Tasks_Remove(request,pk):
+    record=System_Users_Tasks_Model.objects.get(id=pk)
+    return_pk=record.user_id
+    record.delete()
+    return HttpResponseRedirect(reverse('Executive_Users_Tasks_Preview',args=(return_pk,)))
 
 
 def Desk_Office_Users(request):
-    current_user=[]
+    task_array=[]
     if not request.user.user_type == '1':
-        current_user=Executives_Tasks_Model.objects.get(user=request.user.id)
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
 
     records=CustomUser.objects.filter(user_type='3')
- 
+
     context={
-    'current_user':current_user,
+    'task_array':task_array,
     'records':records,
     }
     return render(request,'master_templates/Desk_Office_Users.html',context)
 
 
-def Desk_Office_Tasks(request,pk):
-    current_user=[]
+def Desk_Office_Tasks_Preview(request,pk):
+    task_array=[]
     if not request.user.user_type == '1':
-        current_user=Executives_Tasks_Model.objects.get(user=request.user.id)
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
 
-    form=Desk_Office_Tasks_form(request.POST or None)
+    tasks=System_Users_Tasks.objects.filter(usertype__code='3')
+    user=CustomUser.objects.get(id=pk)
+    records=System_Users_Tasks_Model.objects.filter(user=user).order_by('task__rank')
 
-    record=[]
-    if Desk_Office_Tasks_Model.objects.filter(user_id=pk).exists():
-        record=Desk_Office_Tasks_Model.objects.get(user_id=pk)
-    # else:
-    #     messages.error(request,'Invalid Transaction, Consult the Administrator')
-    #     return HttpResponseRedirect(reverse('Desk_Office_Tasks',args=(pk,)))
+    if request.method =="POST" and 'btn-all' in request.POST:
 
-    if request.method == 'POST':
-        general_report=request.POST.get('general_report')
-        day_end_transaction=request.POST.get('day_end_transaction')
-        bank_accounts=request.POST.get('bank_accounts')
-        monthly_deductions=request.POST.get('monthly_deductions')
-        external_fascilities=request.POST.get('external_fascilities')
-        loan_management=request.POST.get('loan_management')
-        exclusiveness_request=request.POST.get('exclusiveness_request')
-        salary_update=request.POST.get('salary_update')
-        next_of_kin=request.POST.get('next_of_kin')
-        share_management=request.POST.get('share_management')
-        cash_withdrawal=request.POST.get('cash_withdrawal')
-        cash_deposit=request.POST.get('cash_deposit')
-        transaction_adjustment=request.POST.get('transaction_adjustment')
-        standing_order_placement=request.POST.get('standing_order_placement')
-        membership_registration=request.POST.get('membership_registration')
-        data_capture=request.POST.get('data_capture')
-        personnel_info=request.POST.get('personnel_info')
-        termination=request.POST.get('termination')
-        shop_credit_sales=request.POST.get('shop_credit_sales')
-        salary_update_approval=request.POST.get('salary_update_approval')
-        external_fascilities_approval=request.POST.get('external_fascilities_approval')
-        exclusiveness_approval=request.POST.get('exclusiveness_approval')
-        essential_commodity=request.POST.get('essential_commodity')
-        share_update_approval=request.POST.get('share_update_approval')
-        transaction_adjustment_approval=request.POST.get('transaction_adjustment_approval')
-       
-        if record:
-            record.general_report=general_report
-            record.day_end_transaction=day_end_transaction
-            record.bank_accounts=bank_accounts
-            record.monthly_deductions=monthly_deductions
-            record.external_fascilities=external_fascilities
-            record.loan_management=loan_management
-            record.exclusiveness_request=exclusiveness_request
-            record.salary_update=salary_update
-            record.next_of_kin=next_of_kin
-            record.share_management=share_management
-            record.cash_withdrawal=cash_withdrawal
-            record.cash_deposit=cash_deposit
-            record.transaction_adjustment=transaction_adjustment
-            record.standing_order_placement=standing_order_placement
-            record.membership_registration=membership_registration
-            record.data_capture=data_capture
-            record.personnel_info=personnel_info
-            record.termination=termination
-            record.shop_credit_sales=shop_credit_sales
-            record.salary_update_approval=salary_update_approval
-            record.external_fascilities_approval=external_fascilities_approval
-            record.exclusiveness_approval=exclusiveness_approval
-            record.essential_commodity=essential_commodity
-            record.share_update_approval=share_update_approval
-            record.transaction_adjustment_approval=transaction_adjustment_approval
-            record.save()
-        else:
-            user=CustomUser.objects.get(id=pk)
-            record=Desk_Office_Tasks_Model(user=user,
-                            general_report=0,
-                            day_end_transaction=0,
-                            bank_accounts=0,
-                            monthly_deductions=0,
-                            external_fascilities=0,
-                            loan_management=0,
-                            exclusiveness_request=0,
-                            salary_update=0,
-                            next_of_kin=0,
-                            share_management=0,
-                            cash_withdrawal=0,
-                            cash_deposit=0,
-                            transaction_adjustment=0,
-                            standing_order_placement=0,
-                            membership_registration=0,
-                            personnel_info=0,
-                            data_capture=0,
-                            termination=0,
-                            shop_credit_sales=0,
-                            salary_update_approval=0,
-                            external_fascilities_approval=0,
-                            exclusiveness_approval=0,
-                            essential_commodity=0,
-                            share_update_approval=0,
-                            transaction_adjustment_approval=0,
-                            )
-            record.save()
-     
-            if general_report:
-                record.general_report=general_report
+        for task in tasks:
+            if System_Users_Tasks_Model.objects.filter(task=task,user=user).exists():
+                pass
             else:
-                record.general_report=0
+                System_Users_Tasks_Model(task=task,user=user).save()
 
-            if day_end_transaction:
-                record.day_end_transaction=day_end_transaction
-            else:
-                record.day_end_transaction=0
+        return HttpResponseRedirect(reverse('Desk_Office_Tasks_Preview',args=(pk,)))
 
-            if bank_accounts:
-                record.bank_accounts=bank_accounts
-            else:
-                record.bank_accounts=0
+    if request.method =="POST" and 'btn-selected' in request.POST:
 
-            if monthly_deductions:
-                record.monthly_deductions=monthly_deductions
-            else:
-                record.monthly_deductions=0
+        task_id=request.POST.get('task')
+        task=System_Users_Tasks.objects.get(id=task_id)
 
-            if external_fascilities:
-                record.external_fascilities=external_fascilities
-            else:
-                record.external_fascilities=0
+        if System_Users_Tasks_Model.objects.filter(task=task,user=user).exists():
+            messages.info(request,'Record already Exist')
+            return HttpResponseRedirect(reverse('Desk_Office_Tasks_Preview',args=(pk,)))
 
-            if loan_management:
-                record.loan_management=loan_management
-            else:
-                record.loan_management=0
-
-            if exclusiveness_request:
-                record.exclusiveness_request=exclusiveness_request
-            else:
-                record.exclusiveness_request=0
-
-            if salary_update:
-                record.salary_update=salary_update
-            else:
-                record.salary_update=0
-
-            if next_of_kin:
-                record.next_of_kin=next_of_kin
-            else:
-                record.next_of_kin=0
-
-            if share_management:
-                record.share_management=share_management
-            else:
-                record.share_management=0            
-
-
-            if cash_withdrawal:
-                record.cash_withdrawal=cash_withdrawal
-            else:
-                record.cash_withdrawal=0
-
-
-            if cash_deposit:
-                record.cash_deposit=cash_deposit
-            else:
-                record.cash_deposit=0
-
-
-            if transaction_adjustment:
-                record.transaction_adjustment=transaction_adjustment
-            else:
-                record.transaction_adjustment=0
-
-
-            if standing_order_placement:
-                record.standing_order_placement=standing_order_placement
-            else:
-                record.standing_order_placement=0
-
-
-            if membership_registration:
-                record.membership_registration=membership_registration
-            else:
-                record.membership_registration=0
-
-
-            if personnel_info:
-                record.personnel_info=personnel_info
-            else:
-                record.personnel_info=0
-
-
-            if data_capture:
-                record.data_capture=data_capture
-            else:
-                record.data_capture=0
-
-            if termination:
-                record.termination=termination
-            else:
-                record.termination=0
-
-
-            if shop_credit_sales:
-                record.shop_credit_sales=shop_credit_sales
-            else:
-                record.shop_credit_sales=0
-
-            if salary_update_approval:
-                record.salary_update_approval=salary_update_approval
-            else:
-                record.salary_update_approval=0
-
-            if external_fascilities_approval:
-                record.external_fascilities_approval=external_fascilities_approval
-            else:
-                record.external_fascilities_approval=0
-
-            if exclusiveness_approval:
-                record.exclusiveness_approval=exclusiveness_approval
-            else:
-                record.exclusiveness_approval=0
-            
-            if essential_commodity:
-                record.essential_commodity=essential_commodity
-            else:
-                record.essential_commodity=0
- 
-            if share_update_approval:
-                record.share_update_approval=share_update_approval
-            else:
-                record.share_update_approval=0
-
-            if transaction_adjustment_approval:
-                record.transaction_adjustment_approval=transaction_adjustment_approval
-            else:
-                record.transaction_adjustment_approval=0
+        System_Users_Tasks_Model(task=task,user=user).save()
+        return HttpResponseRedirect(reverse('Desk_Office_Tasks_Preview',args=(pk,)))
 
 
 
-            record.save()
-        return HttpResponseRedirect(reverse('Desk_Office_Tasks',args=(pk,)))
-    if record:
-
-        form.fields['general_report'].initial=record.general_report
-        form.fields['day_end_transaction'].initial=record.day_end_transaction
-        form.fields['bank_accounts'].initial=record.bank_accounts
-        form.fields['monthly_deductions'].initial=record.monthly_deductions
-        form.fields['external_fascilities'].initial=record.external_fascilities
-        form.fields['loan_management'].initial=record.loan_management
-        form.fields['exclusiveness_request'].initial=record.exclusiveness_request
-        form.fields['salary_update'].initial=record.salary_update
-        form.fields['next_of_kin'].initial=record.next_of_kin
-        form.fields['share_management'].initial=record.share_management
-        form.fields['cash_withdrawal'].initial=record.cash_withdrawal
-        form.fields['cash_deposit'].initial=record.cash_deposit
-        form.fields['standing_order_placement'].initial=record.standing_order_placement
-        form.fields['transaction_adjustment'].initial=record.transaction_adjustment
-        form.fields['membership_registration'].initial=record.membership_registration
-        form.fields['personnel_info'].initial=record.personnel_info
-        form.fields['data_capture'].initial=record.data_capture
-        form.fields['termination'].initial=record.termination
-        form.fields['shop_credit_sales'].initial=record.shop_credit_sales
-        form.fields['salary_update_approval'].initial=record.salary_update_approval
-        form.fields['external_fascilities_approval'].initial=record.external_fascilities_approval
-        form.fields['exclusiveness_approval'].initial=record.exclusiveness_approval
-        form.fields['essential_commodity'].initial=record.essential_commodity
-        form.fields['share_update_approval'].initial=record.share_update_approval
-        form.fields['transaction_adjustment_approval'].initial=record.transaction_adjustment_approval
     context={
-    'current_user':current_user,
-    'form':form,
-    'record':record,
+    'tasks':tasks,
+    'task_array':task_array,
+    'records':records,
+    'user':user,
     }
-    return render(request,'master_templates/Desk_Office_Tasks.html',context)
+    return render(request,'master_templates/Desk_Office_Tasks_Preview.html',context)
+
+
+def Desk_Office_Tasks_Remove(request,pk):
+    record=System_Users_Tasks_Model.objects.get(id=pk)
+    return_pk=record.user_id
+    record.delete()
+    return HttpResponseRedirect(reverse('Desk_Office_Tasks_Preview',args=(return_pk,)))
 
 
 def Shop_Users(request):
-    current_user=[]
+    task_array=[]
     if not request.user.user_type == '1':
-        current_user=Executives_Tasks_Model.objects.get(user=request.user.id)
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
 
     records=CustomUser.objects.filter(user_type='4')
- 
+
     context={
-    'current_user':current_user,
+    'task_array':task_array,
     'records':records,
     }
     return render(request,'master_templates/Shop_Users.html',context)
 
 
+def Shop_Users_Tasks_Preview(request,pk):
+    task_array=[]
+    if not request.user.user_type == '1':
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
+
+    tasks=System_Users_Tasks.objects.filter(usertype__code='4')
+
+    user=CustomUser.objects.get(id=pk)
+    records=System_Users_Tasks_Model.objects.filter(user=user).order_by('task__rank')
+
+
+
+    if request.method =="POST" and 'btn-all' in request.POST:
+        for task in tasks:
+            if System_Users_Tasks_Model.objects.filter(task=task,user=user).exists():
+                pass
+            else:
+                System_Users_Tasks_Model(task=task,user=user).save()
+        return HttpResponseRedirect(reverse('Shop_Users_Tasks_Preview',args=(pk,)))
+
+
+    if request.method =="POST" and 'btn-selected' in request.POST:
+        task_id=request.POST.get('task')
+        task=System_Users_Tasks.objects.get(id=task_id)
+
+        if System_Users_Tasks_Model.objects.filter(task=task,user=user).exists():
+            messages.info(request,'Record already Exist')
+            return HttpResponseRedirect(reverse('Shop_Users_Tasks_Preview',args=(pk,)))
+
+        System_Users_Tasks_Model(task=task,user=user).save()
+        return HttpResponseRedirect(reverse('Shop_Users_Tasks_Preview',args=(pk,)))
+
+
+    context={
+    'tasks':tasks,
+    'task_array':task_array,
+    'records':records,
+    'user':user,
+    }
+    return render(request,'master_templates/Shop_Users_Tasks_Preview.html',context)
+
+
+def Shop_Users_Tasks_Remove(request,pk):
+    record=System_Users_Tasks_Model.objects.get(id=pk)
+    return_pk=record.user_id
+    record.delete()
+    return HttpResponseRedirect(reverse('Shop_Users_Tasks_Preview',args=(return_pk,)))
 
 
 
 def Shop_Tasks(request,pk):
-    current_user=[]
+    task_array=[]
     if not request.user.user_type == '1':
-        current_user=Executives_Tasks_Model.objects.get(user=request.user.id)
-
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
     form=Shop_Tasks_form(request.POST or None)
 
     record=[]
@@ -738,25 +617,28 @@ def Shop_Tasks(request,pk):
 
     if request.method == 'POST':
         form = Shop_Tasks_form(request.POST)
-        
+
         sales=request.POST.get('sales')
         debt_recovery=request.POST.get('debt_recovery')
         purchases=request.POST.get('purchases')
+        purchases_tracking=request.POST.get('purchases_tracking')
         item_write_off=request.POST.get('item_write_off')
-        item_write_off=request.POST.get('item_write_off')
+        item_write_off_approval=request.POST.get('item_write_off_approval')
         personal_ledger=request.POST.get('personal_ledger')
         general_report=request.POST.get('general_report')
         day_end_transaction=request.POST.get('day_end_transaction')
         monthly_deduction=request.POST.get('monthly_deduction')
         product_manager=request.POST.get('product_manager')
         suppliers_manager=request.POST.get('suppliers_manager')
-     
+
         # return HttpResponseRedirect(reverse('Shop_Tasks',args=(pk,)))
         if record:
             # return HttpResponse("Ok")
             record.sales=sales
             record.debt_recovery=debt_recovery
+            record.purchases_tracking=purchases_tracking
             record.purchases=purchases
+            record.item_write_off_approval=item_write_off_approval
             record.item_write_off=item_write_off
             record.personal_ledger=personal_ledger
             record.general_report=general_report
@@ -770,7 +652,9 @@ def Shop_Tasks(request,pk):
             record=Shop_Tasks_Models(user=user,
                             sales=0,
                             debt_recovery=0,
+                            purchases_tracking=0,
                             purchases=0,
+                            item_write_off_approval=0,
                             item_write_off=0,
                             personal_ledger=0,
                             general_report=0,
@@ -779,7 +663,7 @@ def Shop_Tasks(request,pk):
                             product_manager=0,
                             suppliers_manager=0,)
             record.save()
-     
+
             if sales:
                 record.sales=sales
             else:
@@ -789,14 +673,28 @@ def Shop_Tasks(request,pk):
                 record.debt_recovery=debt_recovery
             else:
                 record.debt_recovery=0
+
+            if purchases_tracking:
+                record.purchases_tracking=purchases_tracking
+            else:
+                record.purchases_tracking=0
+
             if purchases:
                 record.purchases=purchases
             else:
                 record.purchases=0
+
             if item_write_off:
                 record.item_write_off=item_write_off
             else:
                 record.item_write_off=0
+
+            if item_write_off_approval:
+                record.item_write_off_approval=item_write_off_approval
+            else:
+                record.item_write_off_approval=0
+
+
             if personal_ledger:
                 record.personal_ledger=personal_ledger
             else:
@@ -827,7 +725,9 @@ def Shop_Tasks(request,pk):
 
         form.fields['sales'].initial=record.sales
         form.fields['debt_recovery'].initial=record.debt_recovery
+        form.fields['purchases_tracking'].initial=record.purchases_tracking
         form.fields['purchases'].initial=record.purchases
+        form.fields['item_write_off_approval'].initial=record.item_write_off_approval
         form.fields['item_write_off'].initial=record.item_write_off
         form.fields['personal_ledger'].initial=record.personal_ledger
         form.fields['general_report'].initial=record.general_report
@@ -836,13 +736,44 @@ def Shop_Tasks(request,pk):
         form.fields['product_manager'].initial=record.product_manager
         form.fields['suppliers_manager'].initial=record.suppliers_manager
     context={
-    'current_user':current_user,
+    'task_array':task_array,
     'form':form,
     'record':record,
     }
     return render(request,'master_templates/Shop_Tasks.html',context)
 
 
+def Termination_Loan_Allowed_load(request):
+    task_array=[]
+    if not request.user.user_type == '1':
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
+
+    processed_by=CustomUser.objects.get(id=request.user.id)
+    tdate=get_current_date(now)
+    title="Termination Control"
+    form = Termination_Loan_Allowed_load_Form(request.POST or None)
+
+    records=Termination_Loan_Allowed.objects.all()
+    if request.method == "POST":
+        termination_type_id=request.POST.get('termination_type')
+        termination_type=Termination_Types.objects.get(id=termination_type_id)
+        Termination_Loan_Allowed(termination=termination_type,processed_by=processed_by,tdate=tdate).save()
+
+        return HttpResponseRedirect(reverse('Termination_Loan_Allowed_load'))
+    context={
+    'records':records,
+    'form':form,
+    'title':title,
+    'task_array':task_array,
+    }
+    return render(request,'master_templates/Termination_Loan_Allowed_load.html',context)
+
+
+def Termination_Loan_Allowed_Remove(request,pk):
+    Termination_Loan_Allowed.objects.filter(id=pk).delete()
+    return HttpResponseRedirect(reverse('Termination_Loan_Allowed_load'))
 
 
 
@@ -900,1727 +831,790 @@ def datatable_table(request):
 ####################################################################
 ###################### IMPORTS SECTION##############################
 ####################################################################
+
 @permission_required('admin.can_add_log_entry')
-def Termination_Sources_upload(request):
-    current_user=[]
+def ExceptableCriterias_upload(request):
+    task_array=[]
     if not request.user.user_type == '1':
-        current_user=Executives_Tasks_Model.objects.get(user=request.user.id)
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
 
     template = "master_templates/file_upload.html"
-    
-    
+
+
     prompt = {
-        'order': "Upload Termination Types, Order of the CSV should be Code, Title"
+        'order': "Upload Members Waver Types, Order of the CSV should be Code, Title"
     }
-    
+
     if request.method == "GET":
         return render(request, template, prompt)
-    
+
     csv_file = request.FILES['file']
-    
+
     if not csv_file.name.endswith('.csv'):
         messages.error(request, "This id not a csv file")
-        
+
     data_set = csv_file.read().decode('UTF-8')
     io_string = io.StringIO(data_set)
     next(io_string)
-    
+
+    for column in csv.reader(io_string, delimiter=',',  quotechar='|', quoting =csv.QUOTE_NONE):
+        _, created = ExceptableCriterias.objects.update_or_create(
+            title=column[1],
+        )
+
+    context = {'task_array':task_array,}
+    return render(request, template, context)
+
+
+@permission_required('admin.can_add_log_entry')
+def Termination_Sources_upload(request):
+    task_array=[]
+    if not request.user.user_type == '1':
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
+
+    template = "master_templates/file_upload.html"
+
+
+    prompt = {
+        'order': "Upload Termination Types, Order of the CSV should be Code, Title"
+    }
+
+    if request.method == "GET":
+        return render(request, template, prompt)
+
+    csv_file = request.FILES['file']
+
+    if not csv_file.name.endswith('.csv'):
+        messages.error(request, "This id not a csv file")
+
+    data_set = csv_file.read().decode('UTF-8')
+    io_string = io.StringIO(data_set)
+    next(io_string)
+
     for column in csv.reader(io_string, delimiter=',',  quotechar='|', quoting =csv.QUOTE_NONE):
         _, created = Termination_Types.objects.update_or_create(
-            title=column[1],    
+            title=column[1],
         )
-        
-    context = {'current_user':current_user,}
+
+    context = {'task_array':task_array,}
     return render(request, template, context)
 
 
 
 @permission_required('admin.can_add_log_entry')
 def MonthlyDeductionGenerationHeaders_upload(request):
-    current_user=[]
+    task_array=[]
     if not request.user.user_type == '1':
-        current_user=Executives_Tasks_Model.objects.get(user=request.user.id)
-
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
     template = "master_templates/file_upload.html"
-    
-    
+
+
     prompt = {
         'order': "Upload Monthly Deduction Generation Headers Status, Order of the CSV should be Code, Title"
     }
-    
+
     if request.method == "GET":
         return render(request, template, prompt)
-    
+
     csv_file = request.FILES['file']
-    
+
     if not csv_file.name.endswith('.csv'):
         messages.error(request, "This id not a csv file")
-        
+
     data_set = csv_file.read().decode('UTF-8')
     io_string = io.StringIO(data_set)
     next(io_string)
-    
+
     for column in csv.reader(io_string, delimiter=',',  quotechar='|', quoting =csv.QUOTE_NONE):
         _, created = MonthlyDeductionGenerationHeaders.objects.update_or_create(
-            title=column[1],    
+            title=column[1],
         )
-        
-    context = {'current_user':current_user,}
-    return render(request, template, context)
 
-
-@permission_required('admin.can_add_log_entry')
-def YesNo_upload(request):
-    current_user=[]
-    if not request.user.user_type == '1':
-        current_user=Executives_Tasks_Model.objects.get(user=request.user.id)
-
-    template = "master_templates/file_upload.html"
-    
-    
-    prompt = {
-        'order': "Upload Yes/No Status, Order of the CSV should be Code, Title"
-    }
-    
-    if request.method == "GET":
-        return render(request, template, prompt)
-    
-    csv_file = request.FILES['file']
-    
-    if not csv_file.name.endswith('.csv'):
-        messages.error(request, "This id not a csv file")
-        
-    data_set = csv_file.read().decode('UTF-8')
-    io_string = io.StringIO(data_set)
-    next(io_string)
-    
-    for column in csv.reader(io_string, delimiter=',',  quotechar='|', quoting =csv.QUOTE_NONE):
-        _, created = YesNo.objects.update_or_create(
-            title=column[1],    
-        )
-        
-    context = {'current_user':current_user,}
-    return render(request, template, context)
-
-
-@permission_required('admin.can_add_log_entry')
-def LoanMergeStatus_upload(request):
-    current_user=[]
-    if not request.user.user_type == '1':
-        current_user=Executives_Tasks_Model.objects.get(user=request.user.id)
-
-    template = "master_templates/file_upload.html"
-    
-    
-    prompt = {
-        'order': "Upload Loan Merge Status, Order of the CSV should be Code, Title"
-    }
-    
-    if request.method == "GET":
-        return render(request, template, prompt)
-    
-    csv_file = request.FILES['file']
-    
-    if not csv_file.name.endswith('.csv'):
-        messages.error(request, "This id not a csv file")
-        
-    data_set = csv_file.read().decode('UTF-8')
-    io_string = io.StringIO(data_set)
-    next(io_string)
-    
-    for column in csv.reader(io_string, delimiter=',',  quotechar='|', quoting =csv.QUOTE_NONE):
-        _, created = LoanMergeStatus.objects.update_or_create(
-            title=column[1],    
-        )
-        
-    context = {'current_user':current_user,}
-    return render(request, template, context)
-
-
-
-@permission_required('admin.can_add_log_entry')
-def MultipleLoanStatus_upload(request):
-    current_user=[]
-    if not request.user.user_type == '1':
-        current_user=Executives_Tasks_Model.objects.get(user=request.user.id)
-
-    template = "master_templates/file_upload.html"
-    
-    
-    prompt = {
-        'order': "Upload Multiple Loan Status, Order of the CSV should be Code, Title"
-    }
-    
-    if request.method == "GET":
-        return render(request, template, prompt)
-    
-    csv_file = request.FILES['file']
-    
-    if not csv_file.name.endswith('.csv'):
-        messages.error(request, "This id not a csv file")
-        
-    data_set = csv_file.read().decode('UTF-8')
-    io_string = io.StringIO(data_set)
-    next(io_string)
-    
-    for column in csv.reader(io_string, delimiter=',',  quotechar='|', quoting =csv.QUOTE_NONE):
-        _, created = MultipleLoanStatus.objects.update_or_create(
-            title=column[1],    
-        )
-        
-    context = {'current_user':current_user,}
-    return render(request, template, context)
-
-
-@permission_required('admin.can_add_log_entry')
-def WithdrawalStatus_upload(request):
-    current_user=[]
-    if not request.user.user_type == '1':
-        current_user=Executives_Tasks_Model.objects.get(user=request.user.id)
-
-    template = "master_templates/file_upload.html"
-    
-    
-    prompt = {
-        'order': "Upload Withdrawal Status, Order of the CSV should be Code, Title"
-    }
-    
-    if request.method == "GET":
-        return render(request, template, prompt)
-    
-    csv_file = request.FILES['file']
-    
-    if not csv_file.name.endswith('.csv'):
-        messages.error(request, "This id not a csv file")
-        
-    data_set = csv_file.read().decode('UTF-8')
-    io_string = io.StringIO(data_set)
-    next(io_string)
-    
-    for column in csv.reader(io_string, delimiter=',',  quotechar='|', quoting =csv.QUOTE_NONE):
-        _, created = WithdrawalStatus.objects.update_or_create(
-            title=column[1],    
-        )
-        
-    context = {'current_user':current_user,}
-    return render(request, template, context)
-
-
-
-@permission_required('admin.can_add_log_entry')
-def Date_of_birth_status_upload(request):
-    current_user=[]
-    if not request.user.user_type == '1':
-        current_user=Executives_Tasks_Model.objects.get(user=request.user.id)
-
-    template = "master_templates/file_upload.html"
-    
-    
-    prompt = {
-        'order': "Upload Date of Birth Upload Status, Order of the CSV should be Code, Title"
-    }
-    
-    if request.method == "GET":
-        return render(request, template, prompt)
-    
-    csv_file = request.FILES['file']
-    
-    if not csv_file.name.endswith('.csv'):
-        messages.error(request, "This id not a csv file")
-        
-    data_set = csv_file.read().decode('UTF-8')
-    io_string = io.StringIO(data_set)
-    next(io_string)
-    
-    for column in csv.reader(io_string, delimiter=',',  quotechar='|', quoting =csv.QUOTE_NONE):
-        _, created = Date_of_birth_status.objects.update_or_create(
-            title=column[1],    
-        )
-        
-    context = {'current_user':current_user,}
-    return render(request, template, context)
-
-
-@permission_required('admin.can_add_log_entry')
-def DateJoinedUploadStatus_upload(request):
-    current_user=[]
-    if not request.user.user_type == '1':
-        current_user=Executives_Tasks_Model.objects.get(user=request.user.id)
-
-    template = "master_templates/file_upload.html"
-    
-    
-    prompt = {
-        'order': "Upload Date Joined Upload Status, Order of the CSV should be Code, Title"
-    }
-    
-    if request.method == "GET":
-        return render(request, template, prompt)
-    
-    csv_file = request.FILES['file']
-    
-    if not csv_file.name.endswith('.csv'):
-        messages.error(request, "This id not a csv file")
-        
-    data_set = csv_file.read().decode('UTF-8')
-    io_string = io.StringIO(data_set)
-    next(io_string)
-    
-    for column in csv.reader(io_string, delimiter=',',  quotechar='|', quoting =csv.QUOTE_NONE):
-        _, created = DateJoinedUploadStatus.objects.update_or_create(
-            title=column[1],    
-        )
-        
-    context = {'current_user':current_user,}
-    return render(request, template, context)
-
-
-
-@permission_required('admin.can_add_log_entry')
-def DateOfFirstAppointment_Status_upload(request):
-    current_user=[]
-    if not request.user.user_type == '1':
-        current_user=Executives_Tasks_Model.objects.get(user=request.user.id)
-
-    template = "master_templates/file_upload.html"
-    
-    
-    prompt = {
-        'order': "Upload Date of First Appoint Status, Order of the CSV should be Code, Title"
-    }
-    
-    if request.method == "GET":
-        return render(request, template, prompt)
-    
-    csv_file = request.FILES['file']
-    
-    if not csv_file.name.endswith('.csv'):
-        messages.error(request, "This id not a csv file")
-        
-    data_set = csv_file.read().decode('UTF-8')
-    io_string = io.StringIO(data_set)
-    next(io_string)
-    
-    for column in csv.reader(io_string, delimiter=',',  quotechar='|', quoting =csv.QUOTE_NONE):
-        _, created = DateOfFirstAppointment_Status.objects.update_or_create(
-            title=column[1],    
-        )
-        
-    context = {'current_user':current_user,}
-    return render(request, template, context)
-
-
-@permission_required('admin.can_add_log_entry')
-def WelfareUploadStatus_upload(request):
-    current_user=[]
-    if not request.user.user_type == '1':
-        current_user=Executives_Tasks_Model.objects.get(user=request.user.id)
-
-    template = "master_templates/file_upload.html"
-    
-    
-    prompt = {
-        'order': "Upload Welfare Upload Status, Order of the CSV should be Code, Title"
-    }
-    
-    if request.method == "GET":
-        return render(request, template, prompt)
-    
-    csv_file = request.FILES['file']
-    
-    if not csv_file.name.endswith('.csv'):
-        messages.error(request, "This id not a csv file")
-        
-    data_set = csv_file.read().decode('UTF-8')
-    io_string = io.StringIO(data_set)
-    next(io_string)
-    
-    for column in csv.reader(io_string, delimiter=',',  quotechar='|', quoting =csv.QUOTE_NONE):
-        _, created = WelfareUploadStatus.objects.update_or_create(
-            title=column[1],    
-        )
-        
-    context = {'current_user':current_user,}
-    return render(request, template, context)
-
-
-@permission_required('admin.can_add_log_entry')
-def SharesUploadStatus_upload(request):
-    current_user=[]
-    if not request.user.user_type == '1':
-        current_user=Executives_Tasks_Model.objects.get(user=request.user.id)
-
-    template = "master_templates/file_upload.html"
-    
-    
-    prompt = {
-        'order': "Upload Share Status, Order of the CSV should be Code, Title"
-    }
-    
-    if request.method == "GET":
-        return render(request, template, prompt)
-    
-    csv_file = request.FILES['file']
-    
-    if not csv_file.name.endswith('.csv'):
-        messages.error(request, "This id not a csv file")
-        
-    data_set = csv_file.read().decode('UTF-8')
-    io_string = io.StringIO(data_set)
-    next(io_string)
-    
-    for column in csv.reader(io_string, delimiter=',',  quotechar='|', quoting =csv.QUOTE_NONE):
-        _, created = SharesUploadStatus.objects.update_or_create(
-            title=column[1],    
-        )
-        
-    context = {'current_user':current_user,}
-    return render(request, template, context)
-
-
-@permission_required('admin.can_add_log_entry')
-def UsersLevel_upload(request):
-    current_user=[]
-    if not request.user.user_type == '1':
-        current_user=Executives_Tasks_Model.objects.get(user=request.user.id)
-
-    template = "master_templates/file_upload.html"
-    
-    
-    prompt = {
-        'order': "Upload Users Level, Order of the CSV should be Code, Title"
-    }
-    
-    if request.method == "GET":
-        return render(request, template, prompt)
-    
-    csv_file = request.FILES['file']
-    
-    if not csv_file.name.endswith('.csv'):
-        messages.error(request, "This id not a csv file")
-        
-    data_set = csv_file.read().decode('UTF-8')
-    io_string = io.StringIO(data_set)
-    next(io_string)
-    
-    for column in csv.reader(io_string, delimiter=',',  quotechar='|', quoting =csv.QUOTE_NONE):
-        _, created = UsersLevel.objects.update_or_create(
-            title=column[0],    
-        )
-        
-    context = {'current_user':current_user,}
+    context = {'task_array':task_array,}
     return render(request, template, context)
 
 
 @permission_required('admin.can_add_log_entry')
 def SharesUnits_upload(request):
-    current_user=[]
+    task_array=[]
     if not request.user.user_type == '1':
-        current_user=Executives_Tasks_Model.objects.get(user=request.user.id)
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
 
     template = "master_templates/file_upload.html"
-    
-    
+
+
     prompt = {
         'order': "Upload Shares Units, Order of the CSV should be Code, Title"
     }
-    
+
     if request.method == "GET":
         return render(request, template, prompt)
-    
+
     csv_file = request.FILES['file']
-    
+
     if not csv_file.name.endswith('.csv'):
         messages.error(request, "This id not a csv file")
-        
+
     data_set = csv_file.read().decode('UTF-8')
     io_string = io.StringIO(data_set)
     next(io_string)
-    
+
     for column in csv.reader(io_string, delimiter=',',  quotechar='|', quoting =csv.QUOTE_NONE):
         _, created = SharesUnits.objects.update_or_create(
-            unit=column[0],    
+            unit=column[0],
         )
-        
-    context = {'current_user':current_user,}
+
+    context = {'task_array':task_array,}
     return render(request, template, context)
-
-
-@permission_required('admin.can_add_log_entry')
-def LoansUploadStatus_upload(request):
-    current_user=[]
-    if not request.user.user_type == '1':
-        current_user=Executives_Tasks_Model.objects.get(user=request.user.id)
-
-    template = "master_templates/file_upload.html"
-    
-    
-    prompt = {
-        'order': "Upload Loan Status, Order of the CSV should be Code, Title"
-    }
-    
-    if request.method == "GET":
-        return render(request, template, prompt)
-    
-    csv_file = request.FILES['file']
-    
-    if not csv_file.name.endswith('.csv'):
-        messages.error(request, "This id not a csv file")
-        
-    data_set = csv_file.read().decode('UTF-8')
-    io_string = io.StringIO(data_set)
-    next(io_string)
-    
-    for column in csv.reader(io_string, delimiter=',',  quotechar='|', quoting =csv.QUOTE_NONE):
-        _, created = LoansUploadStatus.objects.update_or_create(
-            title=column[1],    
-        )
-        
-    context = {'current_user':current_user,}
-    return render(request, template, context)
-
-
-@permission_required('admin.can_add_log_entry')
-def LoanCategory_upload(request):
-    current_user=[]
-    if not request.user.user_type == '1':
-        current_user=Executives_Tasks_Model.objects.get(user=request.user.id)
-
-    template = "master_templates/file_upload.html"
-    
-    
-    prompt = {
-        'order': "Upload Loan Category, Order of the CSV should be Code, Title"
-    }
-    
-    if request.method == "GET":
-        return render(request, template, prompt)
-    
-    csv_file = request.FILES['file']
-    
-    if not csv_file.name.endswith('.csv'):
-        messages.error(request, "This id not a csv file")
-        
-    data_set = csv_file.read().decode('UTF-8')
-    io_string = io.StringIO(data_set)
-    next(io_string)
-    
-    for column in csv.reader(io_string, delimiter=',',  quotechar='|', quoting =csv.QUOTE_NONE):
-        _, created = LoanCategory.objects.update_or_create(
-            title=column[1],    
-        )
-        
-    context = {'current_user':current_user,}
-    return render(request, template, context)
-
-
-@permission_required('admin.can_add_log_entry')
-def SavingsUploadStatus_upload(request):
-    current_user=[]
-    if not request.user.user_type == '1':
-        current_user=Executives_Tasks_Model.objects.get(user=request.user.id)
-
-    template = "master_templates/file_upload.html"
-    
-    
-    prompt = {
-        'order': "Upload Savings Status, Order of the CSV should be Code, Title"
-    }
-    
-    if request.method == "GET":
-        return render(request, template, prompt)
-    
-    csv_file = request.FILES['file']
-    
-    if not csv_file.name.endswith('.csv'):
-        messages.error(request, "This id not a csv file")
-        
-    data_set = csv_file.read().decode('UTF-8')
-    io_string = io.StringIO(data_set)
-    next(io_string)
-    
-    for column in csv.reader(io_string, delimiter=',',  quotechar='|', quoting =csv.QUOTE_NONE):
-        _, created = SavingsUploadStatus.objects.update_or_create(
-            title=column[1],    
-        )
-        
-    context = {'current_user':current_user,}
-    return render(request, template, context)
-
-
-@permission_required('admin.can_add_log_entry')
-def LoanScheduleStatus_upload(request):
-    current_user=[]
-    if not request.user.user_type == '1':
-        current_user=Executives_Tasks_Model.objects.get(user=request.user.id)
-
-    template = "master_templates/file_upload.html"
-    
-    
-    prompt = {
-        'order': "Order of the CSV should be Code, Title"
-    }
-    
-    if request.method == "GET":
-        return render(request, template, prompt)
-    
-    csv_file = request.FILES['file']
-    
-    if not csv_file.name.endswith('.csv'):
-        messages.error(request, "This id not a csv file")
-        
-    data_set = csv_file.read().decode('UTF-8')
-    io_string = io.StringIO(data_set)
-    next(io_string)
-    
-    for column in csv.reader(io_string, delimiter=',',  quotechar='|', quoting =csv.QUOTE_NONE):
-        _, created = LoanScheduleStatus.objects.update_or_create(
-            title=column[1],    
-        )
-        
-    context = {'current_user':current_user,}
-    return render(request, template, context)
-
-    
-
-@permission_required('admin.can_add_log_entry')
-def ExlusiveStatus_upload(request):
-    current_user=[]
-    if not request.user.user_type == '1':
-        current_user=Executives_Tasks_Model.objects.get(user=request.user.id)
-
-    template = "master_templates/file_upload.html"
-    
-    
-    prompt = {
-        'order': "Order of the CSV should be Code, Title"
-    }
-    
-    if request.method == "GET":
-        return render(request, template, prompt)
-    
-    csv_file = request.FILES['file']
-    
-    if not csv_file.name.endswith('.csv'):
-        messages.error(request, "This id not a csv file")
-        
-    data_set = csv_file.read().decode('UTF-8')
-    io_string = io.StringIO(data_set)
-    next(io_string)
-    
-    for column in csv.reader(io_string, delimiter=',',  quotechar='|', quoting =csv.QUOTE_NONE):
-        _, created = ExclusiveStatus.objects.update_or_create(
-            title=column[1],    
-        )
-        
-    context = {'current_user':current_user,}
-    return render(request, template, context)
-
-
-
-@permission_required('admin.can_add_log_entry')
-def LockedStatus_upload(request):
-    current_user=[]
-    if not request.user.user_type == '1':
-        current_user=Executives_Tasks_Model.objects.get(user=request.user.id)
-
-    template = "master_templates/file_upload.html"
-    
-    
-    prompt = {
-        'order': "Order of the CSV should be Code, Title"
-    }
-    
-    if request.method == "GET":
-        return render(request, template, prompt)
-    
-    csv_file = request.FILES['file']
-    
-    if not csv_file.name.endswith('.csv'):
-        messages.error(request, "This id not a csv file")
-        
-    data_set = csv_file.read().decode('UTF-8')
-    io_string = io.StringIO(data_set)
-    next(io_string)
-    
-    for column in csv.reader(io_string, delimiter=',',  quotechar='|', quoting =csv.QUOTE_NONE):
-        _, created = LockedStatus.objects.update_or_create(
-            title=column[1],    
-        )
-        
-    context = {'current_user':current_user,}
-    return render(request, template, context)
-
-
-
-@permission_required('admin.can_add_log_entry')
-def ReceiptTypes_upload(request):
-    current_user=[]
-    if not request.user.user_type == '1':
-        current_user=Executives_Tasks_Model.objects.get(user=request.user.id)
-
-    template = "master_templates/file_upload.html"
-    
-    
-    prompt = {
-        'order': "Order of the CSV should be Code, Title"
-    }
-    
-    if request.method == "GET":
-        return render(request, template, prompt)
-    
-    csv_file = request.FILES['file']
-    
-    if not csv_file.name.endswith('.csv'):
-        messages.error(request, "This id not a csv file")
-        
-    data_set = csv_file.read().decode('UTF-8')
-    io_string = io.StringIO(data_set)
-    next(io_string)
-    
-    for column in csv.reader(io_string, delimiter=',',  quotechar='|', quoting =csv.QUOTE_NONE):
-        _, created = ReceiptTypes.objects.update_or_create(
-            title=column[1],    
-        )
-        
-    context = {'current_user':current_user,}
-    return render(request, template, context)
-
-
-    
-@permission_required('admin.can_add_log_entry')
-def PaymentChannels_upload(request):
-    current_user=[]
-    if not request.user.user_type == '1':
-        current_user=Executives_Tasks_Model.objects.get(user=request.user.id)
-
-    template = "master_templates/file_upload.html"
-    
-    
-    prompt = {
-        'order': "Order of the CSV should be Code, Title"
-    }
-    
-    if request.method == "GET":
-        return render(request, template, prompt)
-    
-    csv_file = request.FILES['file']
-    
-    if not csv_file.name.endswith('.csv'):
-        messages.error(request, "This id not a csv file")
-        
-    data_set = csv_file.read().decode('UTF-8')
-    io_string = io.StringIO(data_set)
-    next(io_string)
-    
-    for column in csv.reader(io_string, delimiter=',',  quotechar='|', quoting =csv.QUOTE_NONE):
-        _, created = PaymentChannels.objects.update_or_create(
-            title=column[1],    
-        )
-        
-    context = {'current_user':current_user,}
-    return render(request, template, context)
-
-
-    
-@permission_required('admin.can_add_log_entry')
-def TicketStatus_upload(request):
-    current_user=[]
-    if not request.user.user_type == '1':
-        current_user=Executives_Tasks_Model.objects.get(user=request.user.id)
-
-    template = "master_templates/file_upload.html"
-    
-    
-    prompt = {
-        'order': "Order of the CSV should be Code, Title"
-    }
-    
-    if request.method == "GET":
-        return render(request, template, prompt)
-    
-    csv_file = request.FILES['file']
-    
-    if not csv_file.name.endswith('.csv'):
-        messages.error(request, "This id not a csv file")
-        
-    data_set = csv_file.read().decode('UTF-8')
-    io_string = io.StringIO(data_set)
-    next(io_string)
-    
-    for column in csv.reader(io_string, delimiter=',',  quotechar='|', quoting =csv.QUOTE_NONE):
-        _, created = TicketStatus.objects.update_or_create(
-            title=column[1],    
-        )
-        
-    context = {'current_user':current_user,}
-    return render(request, template, context)
-
-
-
-
-
-@permission_required('admin.can_add_log_entry')
-def SalesCategory_upload(request):
-    current_user=[]
-    if not request.user.user_type == '1':
-        current_user=Executives_Tasks_Model.objects.get(user=request.user.id)
-
-    template = "master_templates/file_upload.html"
-    
-    
-    prompt = {
-		'order': "Order of the CSV should be Code, Title"
-	}
-    
-    if request.method == "GET":
-        return render(request, template, prompt)
-    
-    csv_file = request.FILES['file']
-    
-    if not csv_file.name.endswith('.csv'):
-        messages.error(request, "This id not a csv file")
-        
-    data_set = csv_file.read().decode('UTF-8')
-    io_string = io.StringIO(data_set)
-    next(io_string)
-	
-    for column in csv.reader(io_string, delimiter=',',  quotechar='|', quoting =csv.QUOTE_NONE):
-        _, created = SalesCategory.objects.update_or_create(
-			title=column[1],	
-		)
-        
-    context = {'current_user':current_user,}
-    return render(request, template, context)
-
 
 
 @permission_required('admin.can_add_log_entry')
 def ProductCategory_upload(request):
-    current_user=[]
+    task_array=[]
     if not request.user.user_type == '1':
-        current_user=Executives_Tasks_Model.objects.get(user=request.user.id)
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
+
 
     template = "master_templates/file_upload.html"
-    
-    
+
+
     prompt = {
         'order': "Order of the CSV should be Code, Title"
     }
-    
+
     if request.method == "GET":
         return render(request, template, prompt)
-    
+
     csv_file = request.FILES['file']
-    
+
     if not csv_file.name.endswith('.csv'):
         messages.error(request, "This id not a csv file")
-        
+
     data_set = csv_file.read().decode('UTF-8')
     io_string = io.StringIO(data_set)
     next(io_string)
-    
+
     for column in csv.reader(io_string, delimiter=',',  quotechar='|', quoting =csv.QUOTE_NONE):
         _, created = ProductCategory.objects.update_or_create(
-            code=column[0],    
-            title=column[1],    
+            code=column[0],
+            title=column[1],
         )
-        
-    context = {'current_user':current_user,}
+
+    context = {'task_array':task_array,}
     return render(request, template, context)
 
-  
+
 @permission_required('admin.can_add_log_entry')
 def Product_Write_off_Reasons_upload(request):
-    current_user=[]
+    task_array=[]
     if not request.user.user_type == '1':
-        current_user=Executives_Tasks_Model.objects.get(user=request.user.id)
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
 
     template = "master_templates/file_upload.html"
-    
-    
+
+
     prompt = {
         'order': "Order of the CSV should be  Title"
     }
-    
+
     if request.method == "GET":
         return render(request, template, prompt)
-    
+
     csv_file = request.FILES['file']
-    
+
     if not csv_file.name.endswith('.csv'):
         messages.error(request, "This id not a csv file")
-        
+
     data_set = csv_file.read().decode('UTF-8')
     io_string = io.StringIO(data_set)
     next(io_string)
-    
+
     for column in csv.reader(io_string, delimiter=',',  quotechar='|', quoting =csv.QUOTE_NONE):
-        _, created = ItemWriteOffReasons.objects.update_or_create(    
-            title=column[1],    
+        _, created = ItemWriteOffReasons.objects.update_or_create(
+            title=column[1],
         )
-        
-    context = {'current_user':current_user,}
+
+    context = {'task_array':task_array,}
     return render(request, template, context)
 
-  
+
 @permission_required('admin.can_add_log_entry')
 def Stock_upload(request):
-    current_user=[]
+    task_array=[]
     if not request.user.user_type == '1':
-        current_user=Executives_Tasks_Model.objects.get(user=request.user.id)
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
 
     template = "master_templates/file_upload.html"
-    
-    
+
+
     prompt = {
         'order': "Order of the CSV should be Code, Title"
     }
-    
+
     if request.method == "GET":
         return render(request, template, prompt)
-    
+
     csv_file = request.FILES['file']
-    
+
     if not csv_file.name.endswith('.csv'):
         messages.error(request, "This id not a csv file")
-        
+
     data_set = csv_file.read().decode('UTF-8')
     io_string = io.StringIO(data_set)
     next(io_string)
-    
+
+    lock_status = LockedStatus.objects.get(title='LOCKED')
     for column in csv.reader(io_string, delimiter=',',  quotechar='|', quoting =csv.QUOTE_NONE):
            _, created = Stock.objects.update_or_create(
-            code=str(column[0]).zfill(5),    
-            item_name=column[1],    
-            category=ProductCategory.objects.get(code=column[2]),    
-            quantity=0,    
-            no_in_pack=column[4],    
-            re_order_level=column[5],    
-            unit_selling_price=column[6],   
+            code=str(column[0]).zfill(5),
+            item_name=column[1],
+            category=ProductCategory.objects.get(code=column[2]),
+            quantity=0,
+            no_in_pack=column[4],
+            re_order_level=column[5],
+            unit_selling_price=column[6],
+            lock_status=lock_status,
         )
-        
-    context = {'current_user':current_user,}
+
+    context = {'task_array':task_array,}
     return render(request, template, context)
 
 
 
-def upload_stock_roll(request):  
-    current_user=[]
+def upload_stock_roll(request):
+    task_array=[]
     if not request.user.user_type == '1':
-        current_user=Executives_Tasks_Model.objects.get(user=request.user.id)
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
 
-    DataCapture=DataCaptureManager.objects.first() 
+
     if request.method == 'POST':
-    
+        lock_status='LOCKED'
         stock_resource = StockListResource()
         dataset = Dataset()
         new_stock_list = request.FILES['myfile']
 
         if not new_stock_list.name.endswith('xlsx'):
             messages.error(request,'Wrong format')
-            return HttpResponseRedirect(reverse('upload_stock_roll',args=(pk,))) 
+            return HttpResponseRedirect(reverse('upload_stock_roll',args=(pk,)))
 
         imported_data = dataset.load(new_stock_list.read(),format='xlsx')
-        for data in imported_data: 
+        for data in imported_data:
 
             category=ProductCategory.objects.get(code=data[2])
             value = Stock(code=str(data[0]).zfill(5),
-                    item_name=data[1],            
-                    category=category,           
-                    details=data[3],            
-                    quantity=0,            
-                    no_in_pack=data[4],          
-                    re_order_level=data[5],            
-                    unit_selling_price=data[6],   
-             
+                    item_name=data[1],
+                    category=category,
+                    details=data[3],
+                    quantity=0,
+                    no_in_pack=data[4],
+                    re_order_level=data[5],
+                    unit_selling_price=data[6],
+                    lock_status=lock_status,
                 )
             value.save()
     context={
-    'current_user':current_user,
-    
-    'DataCapture':DataCapture,
+    'task_array':task_array,
+
     }
-    return render(request,'master_templates/upload_stock.html',context) 
+    return render(request,'master_templates/upload_stock.html',context)
 
-
-  
-  
-@permission_required('admin.can_add_log_entry')
-def AdminCharges_upload(request):
-    current_user=[]
-    if not request.user.user_type == '1':
-        current_user=Executives_Tasks_Model.objects.get(user=request.user.id)
-
-    template = "master_templates/file_upload.html"
-    
-    
-    prompt = {
-        'order': "Order of the CSV should be Code, Title"
-    }
-    
-    if request.method == "GET":
-        return render(request, template, prompt)
-    
-    csv_file = request.FILES['file']
-    
-    if not csv_file.name.endswith('.csv'):
-        messages.error(request, "This id not a csv file")
-        
-    data_set = csv_file.read().decode('UTF-8')
-    io_string = io.StringIO(data_set)
-    next(io_string)
-    
-    for column in csv.reader(io_string, delimiter=',',  quotechar='|', quoting =csv.QUOTE_NONE):
-        _, created = AdminCharges.objects.update_or_create(
-            title=column[1],    
-        )
-        
-    context = {'current_user':current_user,}
-    return render(request, template, context)
-
-    
 
 @permission_required('admin.can_add_log_entry')
 def title_upload(request):
-    current_user=[]
+    task_array=[]
     if not request.user.user_type == '1':
-        current_user=Executives_Tasks_Model.objects.get(user=request.user.id)
-
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
     template = "master_templates/file_upload.html"
-    
-    
+
+
     prompt = {
         'order': "Order of the CSV should be Code, Title"
     }
-    
+
     if request.method == "GET":
         return render(request, template, prompt)
-    
+
     csv_file = request.FILES['file']
-    
+
     if not csv_file.name.endswith('.csv'):
         messages.error(request, "This id not a csv file")
-        
+
     data_set = csv_file.read().decode('UTF-8')
     io_string = io.StringIO(data_set)
     next(io_string)
-    
+
     for column in csv.reader(io_string, delimiter=',',  quotechar='|', quoting =csv.QUOTE_NONE):
         _, created = Titles.objects.update_or_create(
-            title=column[1],    
+            title=column[1],
         )
-        
-    context = {'current_user':current_user,}
+
+    context = {'task_array':task_array,}
     return render(request, template, context)
 
 
 @permission_required('admin.can_add_log_entry')
 def states_upload(request):
-    current_user=[]
+    task_array=[]
     if not request.user.user_type == '1':
-        current_user=Executives_Tasks_Model.objects.get(user=request.user.id)
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
 
     template = "master_templates/file_upload.html"
-    
-    
+
+
     prompt = {
         'order': "Order of the CSV should be Title"
     }
-    
+
     if request.method == "GET":
         return render(request, template, prompt)
-    
+
     csv_file = request.FILES['file']
-    
+
     if not csv_file.name.endswith('.csv'):
         messages.error(request, "This id not a csv file")
-        
+
     data_set = csv_file.read().decode('UTF-8')
     io_string = io.StringIO(data_set)
     next(io_string)
-    
+
     for column in csv.reader(io_string, delimiter=',',  quotechar='|', quoting =csv.QUOTE_NONE):
         _, created = States.objects.update_or_create(
-            title=column[1],    
+            title=column[1],
         )
-        
-    context = {'current_user':current_user,}
+
+    context = {'task_array':task_array,}
     return render(request, template, context)
 
 
 
 @permission_required('admin.can_add_log_entry')
 def NOKRelationships_upload(request):
-    current_user=[]
+    task_array=[]
     if not request.user.user_type == '1':
-        current_user=Executives_Tasks_Model.objects.get(user=request.user.id)
-
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
     template = "master_templates/file_upload.html"
-    
-    
+
+
     prompt = {
         'order': "Order of the CSV should be Title"
     }
-    
+
     if request.method == "GET":
         return render(request, template, prompt)
-    
+
     csv_file = request.FILES['file']
-    
+
     if not csv_file.name.endswith('.csv'):
         messages.error(request, "This id not a csv file")
-        
+
     data_set = csv_file.read().decode('UTF-8')
     io_string = io.StringIO(data_set)
     next(io_string)
-    
+
     for column in csv.reader(io_string, delimiter=',',  quotechar='|', quoting =csv.QUOTE_NONE):
         _, created = NOKRelationships.objects.update_or_create(
-            title=column[1],    
+            title=column[1],
         )
-        
-    context = {'current_user':current_user,}
+
+    context = {'task_array':task_array,}
     return render(request, template, context)
 
 
 @permission_required('admin.can_add_log_entry')
 def lga_upload(request):
-    current_user=[]
+    task_array=[]
     if not request.user.user_type == '1':
-        current_user=Executives_Tasks_Model.objects.get(user=request.user.id)
-
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
     template = "master_templates/file_upload.html"
-    
-    
+
+
     prompt = {
         'order': "Order of the CSV should be Title"
     }
-    
+
     if request.method == "GET":
         return render(request, template, prompt)
-    
+
     csv_file = request.FILES['file']
-    
+
     if not csv_file.name.endswith('.csv'):
         messages.error(request, "This id not a csv file")
-        
+
     data_set = csv_file.read().decode('UTF-8')
     io_string = io.StringIO(data_set)
     next(io_string)
-    
+
     for column in csv.reader(io_string, delimiter=',',  quotechar='|', quoting =csv.QUOTE_NONE):
         _, created = Lga.objects.update_or_create(
-            title=column[0], 
-            state=States.objects.get(id=column[1])   
+            title=column[0],
+            state=States.objects.get(id=column[1])
         )
-        
-    context = {'current_user':current_user,}
+
+    context = {'task_array':task_array,}
     return render(request, template, context)
 
 
-
-@permission_required('admin.can_add_log_entry')
-def SubmissionStatus_upload(request):
-    current_user=[]
-    if not request.user.user_type == '1':
-        current_user=Executives_Tasks_Model.objects.get(user=request.user.id)
-
-    template = "master_templates/file_upload.html"
-    
-    
-    prompt = {
-        'order': "Order of the CSV should be Title"
-    }
-    
-    if request.method == "GET":
-        return render(request, template, prompt)
-    
-    csv_file = request.FILES['file']
-    
-    if not csv_file.name.endswith('.csv'):
-        messages.error(request, "This id not a csv file")
-        
-    data_set = csv_file.read().decode('UTF-8')
-    io_string = io.StringIO(data_set)
-    next(io_string)
-    
-    for column in csv.reader(io_string, delimiter=',',  quotechar='|', quoting =csv.QUOTE_NONE):
-        _, created = SubmissionStatus.objects.update_or_create(
-            title=column[1],    
-        )
-        
-    context = {'current_user':current_user,}
-    return render(request, template, context)
-
-
-@permission_required('admin.can_add_log_entry')
-def MembershipStatus_upload(request):
-    current_user=[]
-    if not request.user.user_type == '1':
-        current_user=Executives_Tasks_Model.objects.get(user=request.user.id)
-
-    template = "master_templates/file_upload.html"
-    
-    
-    prompt = {
-        'order': "Order of the CSV should be Title"
-    }
-    
-    if request.method == "GET":
-        return render(request, template, prompt)
-    
-    csv_file = request.FILES['file']
-    
-    if not csv_file.name.endswith('.csv'):
-        messages.error(request, "This id not a csv file")
-        
-    data_set = csv_file.read().decode('UTF-8')
-    io_string = io.StringIO(data_set)
-    next(io_string)
-    
-    for column in csv.reader(io_string, delimiter=',',  quotechar='|', quoting =csv.QUOTE_NONE):
-        _, created = MembershipStatus.objects.update_or_create(
-            title=column[1],    
-        )
-        
-    context = {'current_user':current_user,}
-    return render(request, template, context)
-
-
-@permission_required('admin.can_add_log_entry')
-def ProcessingStatus_upload(request):
-    current_user=[]
-    if not request.user.user_type == '1':
-        current_user=Executives_Tasks_Model.objects.get(user=request.user.id)
-
-    template = "master_templates/file_upload.html"
-    
-    
-    prompt = {
-        'order': "Order of the CSV should be Title"
-    }
-    
-    if request.method == "GET":
-        return render(request, template, prompt)
-    
-    csv_file = request.FILES['file']
-    
-    if not csv_file.name.endswith('.csv'):
-        messages.error(request, "This id not a csv file")
-        
-    data_set = csv_file.read().decode('UTF-8')
-    io_string = io.StringIO(data_set)
-    next(io_string)
-    
-    for column in csv.reader(io_string, delimiter=',',  quotechar='|', quoting =csv.QUOTE_NONE):
-        _, created = ProcessingStatus.objects.update_or_create(
-            title=column[1],    
-        )
-        
-    context = {'current_user':current_user,}
-    return render(request, template, context)
-
-
-@permission_required('admin.can_add_log_entry')
-def CertificationStatus_upload(request):
-    current_user=[]
-    if not request.user.user_type == '1':
-        current_user=Executives_Tasks_Model.objects.get(user=request.user.id)
-
-    template = "master_templates/file_upload.html"
-    
-    
-    prompt = {
-        'order': "Order of the CSV should be Title"
-    }
-    
-    if request.method == "GET":
-        return render(request, template, prompt)
-    
-    csv_file = request.FILES['file']
-    
-    if not csv_file.name.endswith('.csv'):
-        messages.error(request, "This id not a csv file")
-        
-    data_set = csv_file.read().decode('UTF-8')
-    io_string = io.StringIO(data_set)
-    next(io_string)
-    
-    for column in csv.reader(io_string, delimiter=',',  quotechar='|', quoting =csv.QUOTE_NONE):
-        _, created = CertificationStatus.objects.update_or_create(
-            title=column[1],    
-        )
-        
-    context = {'current_user':current_user,}
-    return render(request, template, context)
-
-
-@permission_required('admin.can_add_log_entry')
-def ApprovalStatus_upload(request):
-    current_user=[]
-    if not request.user.user_type == '1':
-        current_user=Executives_Tasks_Model.objects.get(user=request.user.id)
-
-    template = "master_templates/file_upload.html"
-    
-    
-    prompt = {
-        'order': "Order of the CSV should be Title"
-    }
-    
-    if request.method == "GET":
-        return render(request, template, prompt)
-    
-    csv_file = request.FILES['file']
-    
-    if not csv_file.name.endswith('.csv'):
-        messages.error(request, "This id not a csv file")
-        
-    data_set = csv_file.read().decode('UTF-8')
-    io_string = io.StringIO(data_set)
-    next(io_string)
-    
-    for column in csv.reader(io_string, delimiter=',',  quotechar='|', quoting =csv.QUOTE_NONE):
-        _, created = ApprovalStatus.objects.update_or_create(
-            title=column[1],    
-        )
-        
-    context = {'current_user':current_user,}
-    return render(request, template, context)
-
-
-
-@permission_required('admin.can_add_log_entry')
-def TransactionStatus_upload(request):
-    current_user=[]
-    if not request.user.user_type == '1':
-        current_user=Executives_Tasks_Model.objects.get(user=request.user.id)
-
-    template = "master_templates/file_upload.html"
-    
-    
-    prompt = {
-        'order': "Order of the CSV should be Title"
-    }
-    
-    if request.method == "GET":
-        return render(request, template, prompt)
-    
-    csv_file = request.FILES['file']
-    
-    if not csv_file.name.endswith('.csv'):
-        messages.error(request, "This id not a csv file")
-        
-    data_set = csv_file.read().decode('UTF-8')
-    io_string = io.StringIO(data_set)
-    next(io_string)
-    
-    for column in csv.reader(io_string, delimiter=',',  quotechar='|', quoting =csv.QUOTE_NONE):
-        _, created = TransactionStatus.objects.update_or_create(
-            title=column[1],    
-        )
-        
-    context = {'current_user':current_user,}
-    return render(request, template, context)
-
-
-    
-@permission_required('admin.can_add_log_entry')
-def ReceiptStatus_upload(request):
-    current_user=[]
-    if not request.user.user_type == '1':
-        current_user=Executives_Tasks_Model.objects.get(user=request.user.id)
-
-    template = "master_templates/file_upload.html"
-    
-    
-    prompt = {
-        'order': "Order of the CSV should be Title"
-    }
-    
-    if request.method == "GET":
-        return render(request, template, prompt)
-    
-    csv_file = request.FILES['file']
-    
-    if not csv_file.name.endswith('.csv'):
-        messages.error(request, "This id not a csv file")
-        
-    data_set = csv_file.read().decode('UTF-8')
-    io_string = io.StringIO(data_set)
-    next(io_string)
-    
-    for column in csv.reader(io_string, delimiter=',',  quotechar='|', quoting =csv.QUOTE_NONE):
-        _, created = ReceiptStatus.objects.update_or_create(
-            title=column[1],    
-        )
-        
-    context = {'current_user':current_user,}
-    return render(request, template, context)    
-
-
-    
 @permission_required('admin.can_add_log_entry')
 def Gender_upload(request):
-    current_user=[]
+    task_array=[]
     if not request.user.user_type == '1':
-        current_user=Executives_Tasks_Model.objects.get(user=request.user.id)
-
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
     template = "master_templates/file_upload.html"
-    
-    
+
+
     prompt = {
         'order': "Order of the CSV should be Title"
     }
-    
+
     if request.method == "GET":
         return render(request, template, prompt)
-    
+
     csv_file = request.FILES['file']
-    
+
     if not csv_file.name.endswith('.csv'):
         messages.error(request, "This id not a csv file")
-        
+
     data_set = csv_file.read().decode('UTF-8')
     io_string = io.StringIO(data_set)
     next(io_string)
-    
+
     for column in csv.reader(io_string, delimiter=',',  quotechar='|', quoting =csv.QUOTE_NONE):
         _, created = Gender.objects.update_or_create(
-            title=column[1],    
+            title=column[1],
         )
-        
-    context = {'current_user':current_user,}
-    return render(request, template, context)    
+
+    context = {'task_array':task_array,}
+    return render(request, template, context)
 
 
 @permission_required('admin.can_add_log_entry')
 def Banks_upload(request):
-    current_user=[]
+    task_array=[]
     if not request.user.user_type == '1':
-        current_user=Executives_Tasks_Model.objects.get(user=request.user.id)
-
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
     template = "master_templates/file_upload.html"
-    
-    
+
+
     prompt = {
         'order': "Order of the CSV should be Title"
     }
-    
+
     if request.method == "GET":
         return render(request, template, prompt)
-    
+
     csv_file = request.FILES['file']
-    
+
     if not csv_file.name.endswith('.csv'):
         messages.error(request, "This id not a csv file")
-        
+
     data_set = csv_file.read().decode('UTF-8')
     io_string = io.StringIO(data_set)
     next(io_string)
-    
+
     for column in csv.reader(io_string, delimiter=',',  quotechar='|', quoting =csv.QUOTE_NONE):
         _, created = Banks.objects.update_or_create(
-            title=column[1],    
+            title=column[1],
         )
-        
-    context = {'current_user':current_user,}
-    return render(request, template, context)    
+
+    context = {'task_array':task_array,}
+    return render(request, template, context)
 
 
 
 
 
-    
+
 @permission_required('admin.can_add_log_entry')
 def Locations_upload(request):
-    current_user=[]
+    task_array=[]
     if not request.user.user_type == '1':
-        current_user=Executives_Tasks_Model.objects.get(user=request.user.id)
-
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
     template = "master_templates/file_upload.html"
-    
-    
+
+
     prompt = {
         'order': "Order of the CSV should be Title"
     }
-    
+
     if request.method == "GET":
         return render(request, template, prompt)
-    
+
     csv_file = request.FILES['file']
-    
+
     if not csv_file.name.endswith('.csv'):
         messages.error(request, "This id not a csv file")
-        
+
     data_set = csv_file.read().decode('UTF-8')
     io_string = io.StringIO(data_set)
     next(io_string)
-    
+
     for column in csv.reader(io_string, delimiter=',',  quotechar='|', quoting =csv.QUOTE_NONE):
         _, created = Locations.objects.update_or_create(
-            title=column[1],    
+            title=column[1],
         )
-        
-    context = {'current_user':current_user,}
-    return render(request, template, context)    
 
-
-
-@permission_required('admin.can_add_log_entry')
-def AccountTypes_upload(request):
-    current_user=[]
-    if not request.user.user_type == '1':
-        current_user=Executives_Tasks_Model.objects.get(user=request.user.id)
-
-    template = "master_templates/file_upload.html"
-    
-    
-    prompt = {
-        'order': "Order of the CSV should be Title"
-    }
-    
-    if request.method == "GET":
-        return render(request, template, prompt)
-    
-    csv_file = request.FILES['file']
-    
-    if not csv_file.name.endswith('.csv'):
-        messages.error(request, "This id not a csv file")
-        
-    data_set = csv_file.read().decode('UTF-8')
-    io_string = io.StringIO(data_set)
-    next(io_string)
-    
-    for column in csv.reader(io_string, delimiter=',',  quotechar='|', quoting =csv.QUOTE_NONE):
-        _, created = AccountTypes.objects.update_or_create(
-            title=column[1],    
-        )
-        
-    context = {'current_user':current_user,}
+    context = {'task_array':task_array,}
     return render(request, template, context)
 
-    
+
 @permission_required('admin.can_add_log_entry')
 def Departments_upload(request):
-    current_user=[]
+    task_array=[]
     if not request.user.user_type == '1':
-        current_user=Executives_Tasks_Model.objects.get(user=request.user.id)
-
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
     template = "master_templates/file_upload.html"
-    
-    
+
+
     prompt = {
         'order': "Order of the CSV should be Title"
     }
-    
+
     if request.method == "GET":
         return render(request, template, prompt)
-    
+
     csv_file = request.FILES['file']
-    
+
     if not csv_file.name.endswith('.csv'):
         messages.error(request, "This id not a csv file")
-        
+
     data_set = csv_file.read().decode('UTF-8')
     io_string = io.StringIO(data_set)
     next(io_string)
-    
+
     for column in csv.reader(io_string, delimiter=',',  quotechar='|', quoting =csv.QUOTE_NONE):
         _, created = Departments.objects.update_or_create(
-            title=column[1],    
+            title=column[1],
         )
-        
-    context = {'current_user':current_user,}
+
+    context = {'task_array':task_array,}
     return render(request, template, context)
 
-    
+
 @permission_required('admin.can_add_log_entry')
 def SalaryInstitution_upload(request):
-    current_user=[]
+    task_array=[]
     if not request.user.user_type == '1':
-        current_user=Executives_Tasks_Model.objects.get(user=request.user.id)
-
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
     template = "master_templates/file_upload.html"
-    
-    
+
+
     prompt = {
         'order': "Order of the CSV should be Title"
     }
-    
+
     if request.method == "GET":
         return render(request, template, prompt)
-    
+
     csv_file = request.FILES['file']
-    
+
     if not csv_file.name.endswith('.csv'):
         messages.error(request, "This id not a csv file")
-        
+
     data_set = csv_file.read().decode('UTF-8')
     io_string = io.StringIO(data_set)
     next(io_string)
-    
+
     for column in csv.reader(io_string, delimiter=',',  quotechar='|', quoting =csv.QUOTE_NONE):
         _, created = SalaryInstitution.objects.update_or_create(
-            title=column[1],    
+            title=column[1],
         )
-        
-    context = {'current_user':current_user,}
-    return render(request, template, context)   
 
-    
-@permission_required('admin.can_add_log_entry')
-def InterestDeductionSource_upload(request):
-    current_user=[]
-    if not request.user.user_type == '1':
-        current_user=Executives_Tasks_Model.objects.get(user=request.user.id)
+    context = {'task_array':task_array,}
+    return render(request, template, context)
 
-    template = "master_templates/file_upload.html"
-    
-    
-    prompt = {
-        'order': "Order of the CSV should be Title"
-    }
-    
-    if request.method == "GET":
-        return render(request, template, prompt)
-    
-    csv_file = request.FILES['file']
-    
-    if not csv_file.name.endswith('.csv'):
-        messages.error(request, "This id not a csv file")
-        
-    data_set = csv_file.read().decode('UTF-8')
-    io_string = io.StringIO(data_set)
-    next(io_string)
-    
-    for column in csv.reader(io_string, delimiter=',',  quotechar='|', quoting =csv.QUOTE_NONE):
-        _, created = InterestDeductionSource.objects.update_or_create(
-            title=column[1],    
-        )
-        
-    context = {'current_user':current_user,}
-    return render(request, template, context)   
 
-    
-    
 @permission_required('admin.can_add_log_entry')
 def TransactionSources_upload(request):
-    current_user=[]
+    task_array=[]
     if not request.user.user_type == '1':
-        current_user=Executives_Tasks_Model.objects.get(user=request.user.id)
-
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
     template = "master_templates/file_upload.html"
-    
-    
+
+
     prompt = {
         'order': "Order of the CSV should be Title"
     }
-    
+
     if request.method == "GET":
         return render(request, template, prompt)
-    
+
     csv_file = request.FILES['file']
-    
+
     if not csv_file.name.endswith('.csv'):
         messages.error(request, "This id not a csv file")
-        
+
     data_set = csv_file.read().decode('UTF-8')
     io_string = io.StringIO(data_set)
     next(io_string)
-    
+
     for column in csv.reader(io_string, delimiter=',',  quotechar='|', quoting =csv.QUOTE_NONE):
         _, created = TransactionSources.objects.update_or_create(
-            title=column[1],    
+            title=column[1],
         )
-        
-    context = {'current_user':current_user,}
+
+    context = {'task_array':task_array,}
     return render(request, template, context)
 
 
 @permission_required('admin.can_add_log_entry')
-def UserType_upload(request):
-    current_user=[]
+def UserTypes_upload(request):
+    task_array=[]
     if not request.user.user_type == '1':
-        current_user=Executives_Tasks_Model.objects.get(user=request.user.id)
-
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
     template = "master_templates/file_upload.html"
-    
-    
+
+
     prompt = {
-        'order': "Order of the CSV should be Title"
+        'order': "User Types Order of the CSV should be Code Title"
     }
-    
+
     if request.method == "GET":
         return render(request, template, prompt)
-    
+
     csv_file = request.FILES['file']
-    
+
     if not csv_file.name.endswith('.csv'):
         messages.error(request, "This id not a csv file")
-        
+
     data_set = csv_file.read().decode('UTF-8')
     io_string = io.StringIO(data_set)
     next(io_string)
-    
+
     for column in csv.reader(io_string, delimiter=',',  quotechar='|', quoting =csv.QUOTE_NONE):
         _, created = UserType.objects.update_or_create(
-            code=column[1],    
-            title=column[2],    
+            code=column[1],
+            title=column[2],
         )
-        
-    context = {'current_user':current_user,}
-    return render(request, template, context)
 
+    context = {'task_array':task_array,}
+    return render(request, template, context)
 
 
 @permission_required('admin.can_add_log_entry')
-def loan_criteria_base_upload(request):
-    current_user=[]
+def System_Users_Tasks_upload(request):
+    task_array=[]
     if not request.user.user_type == '1':
-        current_user=Executives_Tasks_Model.objects.get(user=request.user.id)
-
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
     template = "master_templates/file_upload.html"
-    
-    
+
+
     prompt = {
-        'order': "Order of the CSV should be Sources,Description"
+        'order': "User Task Order of the CSV should be UserType, Title"
     }
-    
+
     if request.method == "GET":
         return render(request, template, prompt)
-    
+
     csv_file = request.FILES['file']
-    
+
     if not csv_file.name.endswith('.csv'):
         messages.error(request, "This id not a csv file")
-        
+
     data_set = csv_file.read().decode('UTF-8')
     io_string = io.StringIO(data_set)
     next(io_string)
-    
+
     for column in csv.reader(io_string, delimiter=',',  quotechar='|', quoting =csv.QUOTE_NONE):
-        _, created = LoanCriteriaBase.objects.update_or_create(
-            source=column[1],    
-            description=column[2],    
+       _, created = System_Users_Tasks.objects.update_or_create(
+            usertype=UserType.objects.get(code=column[0]),
+            title=column[1],
+            rank=column[2],
         )
-        
-    context = {'current_user':current_user,}
+
+    context = {'task_array':task_array,}
     return render(request, template, context)
+
+
+@permission_required('admin.can_add_log_entry')
+def Transaction_Types_upload(request):
+    task_array=[]
+    if not request.user.user_type == '1':
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
+    template = "master_templates/file_upload.html"
+
+
+    prompt = {
+        'order': "UsTransaction Types Order of the CSV should be Code,Name, Source"
+    }
+
+    if request.method == "GET":
+        return render(request, template, prompt)
+
+    csv_file = request.FILES['file']
+
+    if not csv_file.name.endswith('.csv'):
+        messages.error(request, "This id not a csv file")
+
+    data_set = csv_file.read().decode('UTF-8')
+    io_string = io.StringIO(data_set)
+    next(io_string)
+
+    for column in csv.reader(io_string, delimiter=',',  quotechar='|', quoting =csv.QUOTE_NONE):
+       _, created = TransactionTypes.objects.update_or_create(
+            source=TransactionSources.objects.get(id=column[2]),
+            code=column[0],
+            name=column[1],
+        )
+
+    context = {'task_array':task_array,}
+    return render(request, template, context)
+
 
 
 ####################################################################
 ###################### COMMODITY MANAGER ######################
 ####################################################################
 def Commodity_Products_Add_Transactions_Load(request):
-    current_user=[]
+    task_array=[]
     if not request.user.user_type == '1':
-        current_user=Executives_Tasks_Model.objects.get(user=request.user.id)
-
-    records =TransactionTypes.objects.filter(category__title='NON-MONETARY')
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
+    records =TransactionTypes.objects.filter(category='NON-MONETARY')
     context={
-    'current_user':current_user,
+    'task_array':task_array,
     'records':records,
     }
     return render(request,'master_templates/Commodity_Products_Add_Transactions_Load.html',context)
@@ -2628,37 +1622,40 @@ def Commodity_Products_Add_Transactions_Load(request):
 
 
 def Commodity_Products_Add_Transactions_Categories_Load(request,pk):
-    current_user=[]
+    task_array=[]
     if not request.user.user_type == '1':
-        current_user=Executives_Tasks_Model.objects.get(user=request.user.id)
-
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
     records =Commodity_Categories.objects.filter(transaction_id=pk)
     context={
-    'current_user':current_user,
+    'task_array':task_array,
     'records':records,
     }
     return render(request,'master_templates/Commodity_Products_Add_Transactions_Categories_Load.html',context)
 
-def Commodity_Products_add(request,pk):
-    current_user=[]
-    if not request.user.user_type == '1':
-        current_user=Executives_Tasks_Model.objects.get(user=request.user.id)
 
+
+def Commodity_Products_add(request,pk):
+    task_array=[]
+    if not request.user.user_type == '1':
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
     form = Commodity_Products_add_Form(request.POST or None)
     record =Commodity_Categories.objects.get(id=pk)
-    status=MembershipStatus.objects.get(title='ACTIVE')
     records=Commodity_Product_List.objects.filter(category=record)
-    
+
     if request.method=="POST":
         product_name = request.POST.get('product_name')
         product_model = request.POST.get('product_model')
         details = request.POST.get('details')
-        queryset=Commodity_Product_List(category=record,product_name=product_name,product_model=product_model,details=details,status=status)
+        queryset=Commodity_Product_List(category=record,product_name=product_name.upper(),product_model=product_model.upper(),details=details.title(),status="ACTIVE")
         queryset.save()
         messages.success(request,'Record Submitted Successfully')
         return HttpResponseRedirect(reverse('Commodity_Products_add',args=(pk,)))
     context={
-    'current_user':current_user,
+    'task_array':task_array,
     'form':form,
     'record':record,
     'records':records,
@@ -2669,13 +1666,14 @@ def Commodity_Products_add(request,pk):
 
 
 def Commodity_Products_Manage_Transactions_Load(request):
-    current_user=[]
+    task_array=[]
     if not request.user.user_type == '1':
-        current_user=Executives_Tasks_Model.objects.get(user=request.user.id)
-
-    records =TransactionTypes.objects.filter(category__title='NON-MONETARY')
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
+    records =TransactionTypes.objects.filter(category='NON-MONETARY')
     context={
-    'current_user':current_user,
+    'task_array':task_array,
     'records':records,
     }
     return render(request,'master_templates/Commodity_Products_Manage_Transactions_Load.html',context)
@@ -2683,49 +1681,53 @@ def Commodity_Products_Manage_Transactions_Load(request):
 
 
 def Commodity_Products_Manage_Load(request,pk):
-    current_user=[]
+    task_array=[]
     if not request.user.user_type == '1':
-        current_user=Executives_Tasks_Model.objects.get(user=request.user.id)
-
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
     transaction =TransactionTypes.objects.get(id=pk)
     records=Commodity_Product_List.objects.filter(category__transaction=transaction)
 
     context={
-    'current_user':current_user,
+    'task_array':task_array,
     'records':records,
     }
     return render(request,'master_templates/Commodity_Products_Manage_Load.html',context)
 
 
 def Commodity_Products_Manage_Update(request,pk):
-    current_user=[]
+    task_array=[]
     if not request.user.user_type == '1':
-        current_user=Executives_Tasks_Model.objects.get(user=request.user.id)
-
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
     form = Commodity_Products_Update_Form(request.POST or None)
     record=Commodity_Product_List.objects.get(id=pk)
-    
-    form.fields['product_name'].initial = record.product_name
-    form.fields['product_model'].initial = record.product_model
-    form.fields['details'].initial = record.details
-    form.fields['status'].initial = record.status.id
+
 
     if request.method == 'POST':
         product_name=request.POST.get('product_name')
         product_model=request.POST.get('product_model')
         details=request.POST.get('details')
-        status_id = request.POST.get('status')
-        status=MembershipStatus.objects.get(id=status_id)
-        
-        record.product_name=product_name
-        record.product_model=product_model
-        record.details=details
+        status = request.POST.get('status')
+
+
+        record.product_name=product_name.upper()
+        record.product_model=product_model.upper()
+        record.details=details.title()
         record.status=status
         record.save()
         messages.success(request,'Record Updated Successfully')
         return HttpResponseRedirect(reverse('Commodity_Products_Manage_Load',args=(record.category.transaction_id,)))
+
+    form.fields['product_name'].initial = record.product_name
+    form.fields['product_model'].initial = record.product_model
+    form.fields['details'].initial = record.details
+    form.fields['status'].initial = record.status
+
     context={
-    'current_user':current_user,
+    'task_array':task_array,
     'form':form,
     'record':record,
     }
@@ -2734,7 +1736,7 @@ def Commodity_Products_Manage_Update(request,pk):
 
 def Commodity_Products_Manage_Remove(request,pk):
     record=Commodity_Product_List.objects.get(id=pk)
-   
+
     if Members_Commodity_Loan_Products_Selection.objects.filter(product__product=record).exists():
         messages.error(request,'Record Already in Use')
         return HttpResponseRedirect(reverse('Commodity_Products_Manage_Load',args=(record.category.transaction_id,)))
@@ -2745,10 +1747,11 @@ def Commodity_Products_Manage_Remove(request,pk):
 
 
 def addCompanies(request):
-    current_user=[]
+    task_array=[]
     if not request.user.user_type == '1':
-        current_user=Executives_Tasks_Model.objects.get(user=request.user.id)
-
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
     items= Companies.objects.all()
     title="Add Companies"
     form = addCompaniesForm(request.POST or None)
@@ -2756,37 +1759,39 @@ def addCompanies(request):
         form = addCompaniesForm(request.POST)
         if form.is_valid():
             title=form.cleaned_data["title"]
-            record = Companies(title=title)
+            record = Companies(title=title.upper())
             record.save()
             messages.success(request,"Record Added Successfully")
             return  HttpResponseRedirect(reverse('addCompanies'))
     context={
-    'current_user':current_user,
+    'task_array':task_array,
     'form':form,
     'items':items,
     'url':'addCompanies',
-    'button_text':"Add Companies",
+    'button_text':"Add Company",
     'title':title,
     }
     return render(request,'master_templates/add_single_item.html', context)
 
 def Manage_Companies(request):
-    current_user=[]
+    task_array=[]
     if not request.user.user_type == '1':
-        current_user=Executives_Tasks_Model.objects.get(user=request.user.id)
-
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
     companies=Companies.objects.all()
     context={
-    'current_user':current_user,
+    'task_array':task_array,
     'companies':companies,
     }
     return render(request,'master_templates/manage_companies.html', context)
 
 def Manage_Companies_update(request,pk):
-    current_user=[]
+    task_array=[]
     if not request.user.user_type == '1':
-        current_user=Executives_Tasks_Model.objects.get(user=request.user.id)
-
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
     form = addCompaniesForm(request.POST or None)
     company=Companies.objects.get(id=pk)
 
@@ -2794,11 +1799,11 @@ def Manage_Companies_update(request,pk):
 
     if request.method == "POST":
         title=request.POST.get('title')
-        company.title=title
+        company.title=title.upper()
         company.save()
         return HttpResponseRedirect(reverse('Manage_Companies'))
     context={
-    'current_user':current_user,
+    'task_array':task_array,
     'form':form,
     'company':company,
     }
@@ -2813,10 +1818,11 @@ def Delete_Companies(request,pk):
 
 
 def Product_Linking_Period_Load(request):
-    current_user=[]
+    task_array=[]
     if not request.user.user_type == '1':
-        current_user=Executives_Tasks_Model.objects.get(user=request.user.id)
-
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
 
     if request.method == "POST":
         period_obj=request.POST.get('period')
@@ -2831,7 +1837,7 @@ def Product_Linking_Period_Load(request):
         return HttpResponseRedirect(reverse('Product_Linking_Company_Load',args=(period_obj, batch_obj,transaction_obj)))
     form=Product_Linking_Period_Load_form(request.POST or None)
     context={
-    'current_user':current_user,
+    'task_array':task_array,
     'form':form,
     # 'period':period,
     # 'batch':batch,
@@ -2840,18 +1846,19 @@ def Product_Linking_Period_Load(request):
 
 
 def Product_Linking_Company_Load(request,period_obj,batch_obj,transaction_obj):
-    current_user=[]
+    task_array=[]
     if not request.user.user_type == '1':
-        current_user=Executives_Tasks_Model.objects.get(user=request.user.id)
-
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
     companies=Companies.objects.all()
 
-    period=Commodity_Period.objects.get(id=period_obj)        
+    period=Commodity_Period.objects.get(id=period_obj)
     batch=Commodity_Period_Batch.objects.get(id=batch_obj)
     transaction=TransactionTypes.objects.get(id=transaction_obj)
 
     context={
-    'current_user':current_user,
+    'task_array':task_array,
     'companies':companies,
     'period':period,
     'batch':batch,
@@ -2862,23 +1869,23 @@ def Product_Linking_Company_Load(request,period_obj,batch_obj,transaction_obj):
 
 
 def Product_Linking_Details(request,pk,period_pk,batch_pk,transaction_pk):
-    current_user=[]
+    task_array=[]
     if not request.user.user_type == '1':
-        current_user=Executives_Tasks_Model.objects.get(user=request.user.id)
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
 
-
-    period=Commodity_Period.objects.get(id=period_pk)        
+    period=Commodity_Period.objects.get(id=period_pk)
     batch=Commodity_Period_Batch.objects.get(id=batch_pk)
     transaction=TransactionTypes.objects.get(id=transaction_pk)
-
+    # return HttpResponse(transaction.name)
     company=Companies.objects.get(id=pk)
-    status=MembershipStatus.objects.get(title='ACTIVE')
-    
-    records=Commodity_Product_List.objects.filter(category__transaction=transaction,status=status)
+
+    records=Commodity_Product_List.objects.filter(category__transaction=transaction,status='ACTIVE')
     linked_records = Company_Products.objects.filter(company=company,period=period,batch=batch,product__category__transaction=transaction)
 
     context={
-    'current_user':current_user,
+    'task_array':task_array,
     'company':company,
     'records':records,
     'linked_records':linked_records,
@@ -2890,53 +1897,72 @@ def Product_Linking_Details(request,pk,period_pk,batch_pk,transaction_pk):
 
 
 def Product_Linking_Details_Preview(request,comp_pk,pk,period_pk,batch_pk,transaction_pk):
-    current_user=[]
+    task_array=[]
     if not request.user.user_type == '1':
-        current_user=Executives_Tasks_Model.objects.get(user=request.user.id)
-
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
     form=Product_Linking_Details_Preview_form(request.POST or None)
     company=Companies.objects.get(id=comp_pk)
     product=Commodity_Product_List.objects.get(id=pk)
 
+    coop_price_enabled=False
+    if product.category.interest_rate_required != '1':
+        coop_price_enabled=True
 
     if request.method == "POST":
-        period=Commodity_Period.objects.get(id=period_pk)        
+        period=Commodity_Period.objects.get(id=period_pk)
         batch=Commodity_Period_Batch.objects.get(id=batch_pk)
 
-        status=MembershipStatus.objects.get(title='ACTIVE')
         amount=request.POST.get('amount')
-        
+
+        coop_amount=0
+        if product.category.interest_rate_required != '1':
+            coop_amount=request.POST.get('coop_amount')
+
+            if not coop_amount:
+                messages.error(request,'Company Price Missing')
+                return HttpResponseRedirect(reverse('Product_Linking_Details',args=(comp_pk,period_pk,batch_pk,transaction_pk)))
+
+
+        if not amount:
+            messages.error(request,'Company Price Missing')
+            return HttpResponseRedirect(reverse('Product_Linking_Details',args=(comp_pk,period_pk,batch_pk,transaction_pk)))
+
         if Company_Products.objects.filter(company=company,product=product,period=period,batch=batch).exists():
-            Company_Products.objects.filter(company=company,product=product,period=period,batch=batch).update(amount=amount)
+            Company_Products.objects.filter(company=company,product=product,period=period,batch=batch).update(amount=amount,coop_amount=coop_amount)
         else:
-            Company_Products(company=company,product=product,period=period,batch=batch,amount=amount,status=status).save()
+            Company_Products(company=company,product=product,period=period,batch=batch,amount=amount,coop_amount=coop_amount,status='ACTIVE').save()
+
         return HttpResponseRedirect(reverse('Product_Linking_Details',args=(comp_pk,period_pk,batch_pk,transaction_pk)))
-    
+
     form.fields['product_name'].initial=product.product_name
     form.fields['product_model'].initial=product.product_model
     form.fields['details'].initial=product.details
     context={
-    'current_user':current_user,
+    'task_array':task_array,
     'company':company,
     'form':form,
     'product':product,
+    'coop_price_enabled':coop_price_enabled,
     }
     return render(request,'master_templates/Product_Linking_Details_Preview.html',context)
 
 
 
 def Product_UnLinking_Process(request,comp_pk,pk,period_pk, batch_pk, transaction_pk):
-    current_user=[]
+    task_array=[]
     if not request.user.user_type == '1':
-        current_user=Executives_Tasks_Model.objects.get(user=request.user.id)
-
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
     product=Company_Products.objects.get(id=pk)
     product.delete()
 
     messages.success(request,"Record Deleted Successfully")
     return  HttpResponseRedirect(reverse('Product_Linking_Details',args=(comp_pk,period_pk,batch_pk,transaction_pk,)))
     context={
-    'current_user':current_user,
+    'task_array':task_array,
     'company':company,
     'records':records,
     }
@@ -2944,11 +1970,103 @@ def Product_UnLinking_Process(request,comp_pk,pk,period_pk, batch_pk, transactio
 
 
 
-def Product_Settings_Period_Load(request):
-    current_user=[]
+def Product_Duration_Settings_Period_Load(request):
+    task_array=[]
     if not request.user.user_type == '1':
-        current_user=Executives_Tasks_Model.objects.get(user=request.user.id)
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
 
+    if request.method == "POST":
+        period_obj=request.POST.get('period')
+        period=Commodity_Period.objects.get(id=period_obj)
+
+        batch_obj=request.POST.get('batch')
+        batch=Commodity_Period_Batch.objects.get(id=batch_obj)
+
+        transaction_obj=request.POST.get('transaction')
+        transaction=TransactionTypes.objects.get(id=transaction_obj)
+
+        return HttpResponseRedirect(reverse('Product_Duration_Settings_Service_Load',args=(period_obj, batch_obj,transaction_obj)))
+    form=Product_Linking_Period_Load_form(request.POST or None)
+    context={
+    'task_array':task_array,
+    'form':form,
+    # 'period':period,
+    # 'batch':batch,
+    }
+    return render(request,'master_templates/Product_Duration_Settings_Period_Load.html',context)
+
+
+def Product_Duration_Settings_Service_Load(request,period_obj,batch_obj,transaction_obj):
+    task_array=[]
+    if not request.user.user_type == '1':
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
+
+    period=Commodity_Period.objects.get(id=period_obj)
+    batch=Commodity_Period_Batch.objects.get(id=batch_obj)
+    transaction=TransactionTypes.objects.get(id=transaction_obj)
+
+    if request.method == 'POST':
+        trans_package_id=request.POST.get('transaction')
+
+        trans_package=Commodity_Categories.objects.get(id=trans_package_id)
+        duration=trans_package.duration
+
+        start_date_id=request.POST.get("start_date")
+        date_format = '%Y-%m-%d'
+        dtObj = datetime.datetime.strptime(start_date_id, date_format)
+        start_date=get_current_date(dtObj)
+
+
+        stop_date = start_date+ relativedelta(months=int(duration))
+
+
+        if  Company_Products_Duration.objects.filter(product=trans_package,period=period,batch=batch).exists():
+            messages.error(request,'Record Already Exist')
+            return HttpResponseRedirect(reverse('Product_Duration_Settings_Service_Load',args=(period_obj,batch_obj,transaction_obj)))
+
+
+        Company_Products_Duration(product=trans_package,period=period,batch=batch,start_date=start_date,stop_date=stop_date).save()
+        messages.success(request,'Record Added Successfully')
+        return HttpResponseRedirect(reverse('Product_Duration_Settings_Service_Load',args=(period_obj,batch_obj,transaction_obj)))
+
+
+    form=Cash_Deposit_Report_Date_Load_form(request.POST or None)
+    records=Commodity_Categories.objects.filter(transaction=transaction).order_by('id').values_list('id','title').distinct()
+
+    durations=Company_Products_Duration.objects.filter(period=period,batch=batch)
+
+    form.fields['start_date'].initial=now
+    form.fields['stop_date'].initial=now
+    context={
+    'task_array':task_array,
+    'durations':durations,
+    'period':period,
+    'batch':batch,
+    'transaction':transaction,
+    'form':form,
+    'records':records,
+    }
+    return render(request,'master_templates/Product_Duration_Settings_Service_Load.html',context)
+
+
+def Product_Duration_Settings_Service_Delete(request,pk,period_obj,batch_obj,transaction_obj):
+    Company_Products_Duration.objects.get(id=pk).delete()
+    messages.success(request,'Record Deleted Successfully')
+    return HttpResponseRedirect(reverse('Product_Duration_Settings_Service_Load',args=(period_obj,batch_obj,transaction_obj)))
+
+
+
+
+def Product_Settings_Period_Load(request):
+    task_array=[]
+    if not request.user.user_type == '1':
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
 
     if request.method == "POST":
         period_obj=request.POST.get('period')
@@ -2963,7 +2081,7 @@ def Product_Settings_Period_Load(request):
         return HttpResponseRedirect(reverse('Product_Price_Settings_Company_Load',args=(period_obj, batch_obj,transaction_obj)))
     form=Product_Linking_Period_Load_form(request.POST or None)
     context={
-    'current_user':current_user,
+    'task_array':task_array,
     'form':form,
     # 'period':period,
     # 'batch':batch,
@@ -2973,17 +2091,18 @@ def Product_Settings_Period_Load(request):
 
 
 def Product_Price_Settings_Company_Load(request,period_obj,batch_obj,transaction_obj):
-    current_user=[]
+    task_array=[]
     if not request.user.user_type == '1':
-        current_user=Executives_Tasks_Model.objects.get(user=request.user.id)
-
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
     companies=Companies.objects.all()
     period=Commodity_Period.objects.get(id=period_obj)
     batch=Commodity_Period_Batch.objects.get(id=batch_obj)
     transaction=TransactionTypes.objects.get(id=transaction_obj)
 
     context={
-    'current_user':current_user,
+    'task_array':task_array,
     'companies':companies,
     'period':period,
     'batch':batch,
@@ -2993,10 +2112,11 @@ def Product_Price_Settings_Company_Load(request,period_obj,batch_obj,transaction
 
 
 def Product_Price_Settings_details(request,pk,period_obj,batch_obj,transaction_obj):
-    current_user=[]
+    task_array=[]
     if not request.user.user_type == '1':
-        current_user=Executives_Tasks_Model.objects.get(user=request.user.id)
-
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
     company=Companies.objects.get(id=pk)
     period=Commodity_Period.objects.get(id=period_obj)
     batch=Commodity_Period_Batch.objects.get(id=batch_obj)
@@ -3007,7 +2127,7 @@ def Product_Price_Settings_details(request,pk,period_obj,batch_obj,transaction_o
     records=Company_Products.objects.filter(company=company,period=period,batch=batch,product__category__transaction=transaction)
 
     context={
-    'current_user':current_user,
+    'task_array':task_array,
     'records':records,
     'company':company,
     'period':period,
@@ -3018,36 +2138,50 @@ def Product_Price_Settings_details(request,pk,period_obj,batch_obj,transaction_o
 
 
 def Product_Price_Settings_Update(request,comp_pk,pk):
-    current_user=[]
+    task_array=[]
     if not request.user.user_type == '1':
-        current_user=Executives_Tasks_Model.objects.get(user=request.user.id)
-
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
     form=Commodity_Products_Price_Update_Form(request.POST or None)
     company=Companies.objects.get(id=comp_pk)
     record=Company_Products.objects.get(id=pk)
+
+    coop_price_enabled=False
+    if record.product.category.interest_rate_required != '1':
+        coop_price_enabled=True
+
+
+
+    if request.method == 'POST':
+        unit_cost_price=request.POST.get('unit_cost_price')
+        coop_price=0
+        if coop_price_enabled:
+            coop_price=request.POST.get('coop_price')
+        else:
+            coop_price=float(unit_cost_price) + (float(record.product.category.interest_rate)/100)*float(unit_cost_price)
+
+        status=request.POST.get('status')
+        record.amount=unit_cost_price
+        record.coop_amount=coop_price
+        record.status=status
+        record.save()
+        return HttpResponseRedirect(reverse('Product_Price_Settings_details',args=(comp_pk,record.period_id,record.batch_id,record.product.category.transaction_id)))
 
 
     form.fields['product_name'].initial=record.product.product_name
     form.fields['product_model'].initial=record.product.product_model
     form.fields['details'].initial=record.product.details
     form.fields['unit_cost_price'].initial=record.amount
-    form.fields['status'].initial=record.status_id
+    form.fields['coop_price'].initial=record.coop_amount
+    form.fields['status'].initial=record.status
 
-
-    if request.method == 'POST':
-        unit_cost_price=request.POST.get('unit_cost_price')
-        status_id=request.POST.get('status')
-        status=MembershipStatus.objects.get(id=status_id)
-        record.amount=unit_cost_price
-        record.status=status
-        record.save()
-        return HttpResponseRedirect(reverse('Product_Price_Settings_details',args=(comp_pk,record.period_id,record.batch_id,record.product.category.transaction_id)))
-     
     context={
-    'current_user':current_user,
+    'task_array':task_array,
     'record':record,
     'company':company,
     'form':form,
+    'coop_price_enabled':coop_price_enabled,
     }
     return render(request,'master_templates/Product_Price_Settings_Update.html',context)
 
@@ -3056,17 +2190,110 @@ def Product_Price_Settings_Update(request,comp_pk,pk):
 ###################### USER ACCOUNT MANAGERS ######################
 ####################################################################
 
+def Users_Task_Add_Category_load(request):
+    task_array=[]
+    if not request.user.user_type == '1':
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
+    records=UserType.objects.all()
+
+    context={
+    'task_array':task_array,
+
+    'records':records,
+    }
+    return render(request,'master_templates/Users_Task_Add_Category_load.html',context)
+
+
+def Users_Task_Add(request,pk):
+    task_array=[]
+    if not request.user.user_type == '1':
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
+    form=Users_Task_Add_form(request.POST or None)
+    usertype = UserType.objects.get(id=pk)
+    records = System_Users_Tasks.objects.filter(usertype=usertype).order_by('rank')
+
+    if request.method == "POST" and 'btn-process' in request.POST:
+        title=request.POST.get("title")
+        rank=request.POST.get("rank")
+
+        if System_Users_Tasks.objects.filter(title=title,usertype=usertype).exists():
+            messages.info(request,'This record already exist')
+            return HttpResponseRedirect(reverse('Users_Task_Add',args=(pk,)))
+
+        System_Users_Tasks(title=title.upper(),usertype=usertype,rank=rank).save()
+
+        messages.success(request,'Record Added Successfully')
+        return HttpResponseRedirect(reverse('Users_Task_Add',args=(pk,)))
+    context={
+    'task_array':task_array,
+    'form':form,
+    'records':records,
+    'usertype':usertype,
+    }
+    return render(request,'master_templates/Users_Task_Add.html',context)
+
+def Users_Task_Edit(request,pk):
+    task_array=[]
+    if not request.user.user_type == '1':
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
+
+    form=Users_Task_Add_form(request.POST or None)
+    record = System_Users_Tasks.objects.get(id=pk)
+    usertype=record.usertype
+
+    if request.method == "POST" and 'btn-process' in request.POST:
+        title=request.POST.get("title")
+        rank=request.POST.get("rank")
+        edit_title=request.POST.get("edit-title")
+
+        if edit_title:
+            if System_Users_Tasks.objects.filter(title=title,usertype=usertype).exists():
+                messages.info(request,'This record already exist')
+                return HttpResponseRedirect(reverse('Users_Task_Add',args=(usertype.pk,)))
+
+            record.title=title.upper()
+
+        record.rank=rank
+        record.save()
+
+        messages.success(request,'Record Updated Successfully')
+        return HttpResponseRedirect(reverse('Users_Task_Add',args=(usertype.pk,)))
+    form.fields['title'].initial=record.title
+    form.fields['rank'].initial=record.rank
+    context={
+    'task_array':task_array,
+    'form':form,
+
+    'usertype':usertype,
+    }
+    return render(request,'master_templates/Users_Task_Edit.html',context)
+
+
+
+def Users_Task_Delete(request,pk):
+    record=System_Users_Tasks.objects.get(id=pk)
+    usertype=UserType.objects.get(id=record.usertype_id)
+    record.delete()
+    return HttpResponseRedirect(reverse('Users_Task_Add',args=(usertype.pk,)))
 
 def Invoice_Title(request):
-    current_user=[]
+    users = CustomUser.objects.exclude(Q(user_type__iexact='1') | Q(user_type__iexact='5'))
+    task_array=[]
     if not request.user.user_type == '1':
-        current_user=Executives_Tasks_Model.objects.get(user=request.user.id)
-
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
     form=Invoice_Title_form(request.POST or None)
-   
+
     if InvoiceHeader.objects.all().count()>0:
         record=InvoiceHeader.objects.first()
-      
+
         form.fields['title'].initial = record.title
         form.fields['address1'].initial = record.address1
         form.fields['address2'].initial = record.address2
@@ -3081,7 +2308,7 @@ def Invoice_Title(request):
 
         if InvoiceHeader.objects.all().count()>0:
             record=InvoiceHeader.objects.first()
-      
+
             record.title=title
             record.address1=address1
             record.address2=address2
@@ -3093,63 +2320,296 @@ def Invoice_Title(request):
             record.save()
             messages.success(request,'Record Added Successfully')
         return HttpResponseRedirect(reverse('Invoice_Title'))
-    
- 
+
+
 
     context={
-    'current_user':current_user,
+    'users':users,
+    'task_array':task_array,
     'form':form,
     }
     return render(request,'master_templates/Invoice_Title.html',context)
 
-def DataCapture_Manager(request):
-    current_user=[]
+def Executive_Positions_add(request):
+    users = CustomUser.objects.exclude(Q(user_type__iexact='1') | Q(user_type__iexact='5'))
+    task_array=[]
     if not request.user.user_type == '1':
-        current_user=Executives_Tasks_Model.objects.get(user=request.user.id)
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
+    title="Add Staff"
+    form = Executive_Positions_Form(request.POST or None)
 
-    form=DataCapture_Manager_form(request.POST or None)
-    item=[]
-    if DataCaptureManager.objects.all().exists():
-        item=DataCaptureManager.objects.first()
+    records = ExecutivePositions.objects.all()
+    if request.method == 'POST':
+        title=request.POST.get('title')
+        if title:
+            ExecutivePositions(title=title).save()
+            messages.success(request,'Record added Successfully')
+            return HttpResponseRedirect(reverse('Executive_Positions_add'))
 
-    item=DataCaptureManager.objects.first()
-    if request.method=='POST':
-        status_id=request.POST.get('status')
-        status=MembershipStatus.objects.get(id=status_id)
-
-        if DataCaptureManager.objects.all().exists():
-            record=DataCaptureManager.objects.first()
-            record.status=status
         else:
-            record=DataCaptureManager(status=status)
-        record.save()
-        return HttpResponseRedirect(reverse('DataCapture_Manager'))
-    if item:
-        form.fields['status'].initial=item.status.id
+            messages.error(request,'Description missing')
+            return HttpResponseRedirect(reverse('Executive_Positions_add'))
+
     context={
-    'current_user':current_user,
+    'records':records,
+    'users':users,
+    'task_array':task_array,
+    'form':form,
+    }
+    return render(request,'master_templates/Executive_Positions_add.html',context)
+
+
+def Executive_Positions_Delete(request,pk):
+    ExecutivePositions.objects.filter(id=pk).delete()
+    messages.success(request,'Record Deleted Successfully')
+    return HttpResponseRedirect(reverse('Executive_Positions_add'))
+
+
+
+def Executive_add(request):
+    users = CustomUser.objects.exclude(Q(user_type__iexact='1') | Q(user_type__iexact='5'))
+    task_array=[]
+    if not request.user.user_type == '1':
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
+    title="Select member to add as Executive"
+
+    records = Members.objects.filter(status='ACTIVE')
+
+    context={
+    'users':users,
+    'task_array':task_array,
+    'records':records,
+    'title':title,
+    }
+    return render(request,'master_templates/Executive_add.html',context)
+
+
+def Executive_Member_Select(request,pk):
+    users = CustomUser.objects.exclude(Q(user_type__iexact='1') | Q(user_type__iexact='5'))
+    task_array=[]
+    if not request.user.user_type == '1':
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
+
+
+    form = Executive_Member_Select_Form(request.POST or None)
+    record = Members.objects.get(id=pk)
+
+    if request.method == 'POST':
+        name = request.POST.get("elias")
+        position_id = request.POST.get("position")
+        position = ExecutivePositions.objects.get(id=position_id)
+        start_date_id = request.POST.get("start_date")
+
+        date_format = '%Y-%m-%d'
+        dtObj = datetime.datetime.strptime(start_date_id, date_format)
+        start_date=get_current_date(dtObj)
+
+
+        if Executives.objects.filter(position=position,status='ACTIVE').exists():
+            messages.error(request,'There is still an active member for this Position')
+            return HttpResponseRedirect(reverse('Executive_Member_Select', args=(pk,)))
+
+        Executives(member=record,name=name,position=position,start_date=start_date,status='ACTIVE').save()
+        return HttpResponseRedirect(reverse('Executive_add'))
+
+
+
+    records=Executives.objects.filter(status='ACTIVE')
+    if record.title:
+        form.fields['name'].initial = "{} {}".format(record.title.title,record.get_full_name)
+        form.fields['elias'].initial = "{} {}".format(record.title.title,record.get_full_name)
+    else:
+        form.fields['name'].initial = "{}".format(record.get_full_name)
+        form.fields['elias'].initial = "{}".format(record.get_full_name)
+
+    form.fields['start_date'].initial = now
+    context={
+    'users':users,
+    'task_array':task_array,
+    'record':record,
+    'records':records,
     'form':form,
 
     }
-    return render(request,'master_templates/DataCapture_Manager.html',context)
+    return render(request,'master_templates/Executive_Member_Select.html',context)
 
+
+
+def Executive_Member_Remove(request,pk):
+    item=Executives.objects.get(id=pk)
+    return_pk = item.member.pk
+    item.delete()
+    return HttpResponseRedirect(reverse('Executive_Member_Select', args=(return_pk,)))
+
+
+def Executive_add_Existing(request):
+    users = CustomUser.objects.exclude(Q(user_type__iexact='1') | Q(user_type__iexact='5'))
+    task_array=[]
+    if not request.user.user_type == '1':
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
+    title="Select member to add as Executive"
+
+    records = Executives.objects.filter(status='INACTIVE')
+
+    context={
+    'users':users,
+    'task_array':task_array,
+    'records':records,
+    'title':title,
+    }
+    return render(request,'master_templates/Executive_add_Existing.html',context)
+
+
+def Executive_add_Existing_Update(request,pk):
+    users = CustomUser.objects.exclude(Q(user_type__iexact='1') | Q(user_type__iexact='5'))
+    task_array=[]
+    if not request.user.user_type == '1':
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
+
+    form = Executive_Member_Select_Form(request.POST or None)
+    record = Executives.objects.get(id=pk)
+    if request.method == 'POST':
+        name = request.POST.get("elias")
+
+        position_id = request.POST.get("position")
+        position = ExecutivePositions.objects.get(id=position_id)
+        start_date_id = request.POST.get("start_date")
+
+        date_format = '%Y-%m-%d'
+        dtObj = datetime.datetime.strptime(start_date_id, date_format)
+        start_date=get_current_date(dtObj)
+
+
+        if Executives.objects.filter(position=position,status='ACTIVE').exists():
+            messages.error(request,'There is still an active member for this Position')
+            return HttpResponseRedirect(reverse('Executive_add_Existing_Update', args=(pk,)))
+
+
+
+        Executives(member=record.member,name=name,position=position,start_date=start_date,status='ACTIVE').save()
+        return HttpResponseRedirect(reverse('Executive_add_Existing'))
+
+    records=Executives.objects.filter(status='ACTIVE')
+    form.fields['elias'].initial = record.name
+    form.fields['position'].initial = record.position.id
+    form.fields['start_date'].initial = now
+    context={
+    'users':users,
+    'task_array':task_array,
+    'record':record,
+    'records':records,
+    'form':form,
+    }
+    return render(request,'master_templates/Executive_add_Existing_Update.html',context)
+
+
+
+def Executive_Member_Manage(request):
+    users = CustomUser.objects.exclude(Q(user_type__iexact='1') | Q(user_type__iexact='5'))
+    task_array=[]
+    if not request.user.user_type == '1':
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
+
+    records=Executives.objects.filter(status='ACTIVE')
+
+
+    context={
+    'users':users,
+    'task_array':task_array,
+    'records':records,
+    }
+    return render(request,'master_templates/Executive_Member_Manage.html',context)
+
+
+
+def Executive_Member_Manage_Update(request,pk):
+    users = CustomUser.objects.exclude(Q(user_type__iexact='1') | Q(user_type__iexact='5'))
+    task_array=[]
+    if not request.user.user_type == '1':
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
+    form = Executive_Member_Select_Form(request.POST or None)
+    record=Executives.objects.get(id=pk)
+
+
+    if request.method == 'POST' and 'btn-update' in request.POST:
+        name = request.POST.get('elias')
+        position_id = request.POST.get("position")
+        position = ExecutivePositions.objects.get(id=position_id)
+        start_date_id = request.POST.get("start_date")
+
+        date_format = '%Y-%m-%d'
+        dtObj = datetime.datetime.strptime(start_date_id, date_format)
+        start_date=get_current_date(dtObj)
+
+        if Executives.objects.filter(position=position,status='ACTIVE').filter(~Q(id=pk)).exists():
+            messages.error(request,'There is still an active Member in this Postion')
+            return HttpResponseRedirect(reverse('Executive_Member_Manage_Update', args=(pk,)))
+
+        record.position=position
+        record.name=name
+        record.start_date=start_date
+        record.save()
+
+        return HttpResponseRedirect(reverse('Executive_Member_Manage'))
+
+
+    if request.method == 'POST' and 'btn-terminate' in request.POST:
+        stop_date_id = request.POST.get("stop_date")
+
+        date_format = '%Y-%m-%d'
+        dtObj = datetime.datetime.strptime(stop_date_id, date_format)
+        stop_date=get_current_date(dtObj)
+
+
+        record.status='INACTIVE'
+        record.stop_date=stop_date
+        record.save()
+
+        return HttpResponseRedirect(reverse('Executive_Member_Manage'))
+
+
+
+    form.fields['elias'].initial = record.name
+    form.fields['position'].initial = record.position.id
+    form.fields['start_date'].initial = record.start_date
+    form.fields['stop_date'].initial = now
+    context={
+    'users':users,
+    'task_array':task_array,
+    'record':record,
+    'form':form,
+    }
+    return render(request,'master_templates/Executive_Member_Manage_Update.html',context)
 
 
 def add_staff(request):
-    current_user=[]
+    task_array=[]
     if not request.user.user_type == '1':
-        current_user=Executives_Tasks_Model.objects.get(user=request.user.id)
-
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
     title="Add Staff"
     form = addUsersForm(request.POST or None)
     items=UserType.objects.all()
     users = CustomUser.objects.exclude(Q(user_type__iexact='1') | Q(user_type__iexact='5'))
-    
+
     if request.method == "POST":
         title_id=request.POST.get("title")
         title=Titles.objects.get(id=title_id)
-
-    
 
         username=request.POST.get("username")
         first_name=request.POST.get("first_name")
@@ -3170,32 +2630,40 @@ def add_staff(request):
             password=password_obj.title
         else:
             messages.error(request,'Default Password not Set')
-            return HttpResponseRedirect(reverse("add_staff")) 
-        try:
-            if user_type.code == '2':
-                user = CustomUser.objects.create_user(username=username,password=password,email=email,last_name=last_name,first_name=first_name,user_type=2)
-                record=Executives_Tasks_Model(user=user).save()
-            if user_type.code == '3':
-                user = CustomUser.objects.create_user(username=username,password=password,email=email,last_name=last_name,first_name=first_name,user_type=3)
-                record=Desk_Office_Tasks_Model(user=user).save()
-            if user_type.code == '4':
-                user = CustomUser.objects.create_user(username=username,password=password,email=email,last_name=last_name,first_name=first_name,user_type=4)
-                record=Shop_Tasks_Models(user=user).save()
-
-            user.staff.middle_name=middle_name
-            user.staff.address=address
-            user.staff.phone_number=phone_number
-            user.staff.gender=gender
-            user.staff.title=title
-            user.save()
-            messages.success(request,"User Added Successfully")
             return HttpResponseRedirect(reverse("add_staff"))
-        except:
-            messages.error(request,"Failed to add System User")
-            return HttpResponseRedirect(reverse("add_staff")) 
+        # try:
+        if user_type.code == '2':
+            usertype_code = '2'
+            user = CustomUser.objects.create_user(username=username,password=password,email=email,last_name=last_name,first_name=first_name,user_type=2)
+
+        if user_type.code == '3':
+            usertype_code = '3'
+            user = CustomUser.objects.create_user(username=username,password=password,email=email,last_name=last_name,first_name=first_name,user_type=3)
+
+        if user_type.code == '4':
+            usertype_code = '4'
+            user = CustomUser.objects.create_user(username=username,password=password,email=email,last_name=last_name,first_name=first_name,user_type=4)
+
+
+        user.staff.middle_name=middle_name
+        user.staff.address=address
+        user.staff.phone_number=phone_number
+        user.staff.gender=gender
+        user.staff.title=title
+        user.save()
+
+        # tasks=System_Users_Tasks.objects.filter(usertype=usertype_code)
+        # for task in tasks:
+        #     System_Users_Tasks_Model(task=task,user=user).save()
+
+        messages.success(request,"User Added Successfully")
+        return HttpResponseRedirect(reverse("add_staff"))
+        # except:
+        #     messages.error(request,"Failed to add System User")
+        #     return HttpResponseRedirect(reverse("add_staff"))
 
     context={
-    'current_user':current_user,
+    'task_array':task_array,
     'title':title,
     'form':form,
     'users':users,
@@ -3205,28 +2673,41 @@ def add_staff(request):
     }
     return render(request, "master_templates/add_staff.html",context)
 
-
+def add_staff_delete(request,pk):
+    CustomUser.objects.filter(id=pk).delete()
+    return HttpResponseRedirect(reverse("add_staff"))
 
 def add_staff_manage(request):
-    current_user=[]
+    task_array=[]
     if not request.user.user_type == '1':
-        current_user=Executives_Tasks_Model.objects.get(user=request.user.id)
-
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
     users = CustomUser.objects.exclude(Q(user_type__iexact='1') | Q(user_type__iexact='5'))
     context={
-    'current_user':current_user,
+    'task_array':task_array,
     'users':users,
     }
     return render(request,'master_templates/addStaff_manage.html',context)
 
-def add_staff_manage_view(request,pk):
-    current_user=[]
-    if not request.user.user_type == '1':
-        current_user=Executives_Tasks_Model.objects.get(user=request.user.id)
+def add_staff_delete_1(request,pk):
+    CustomUser.objects.filter(id=pk).delete()
+    return HttpResponseRedirect(reverse("add_staff_manage"))
 
+
+def add_staff_manage_view(request,pk):
+    task_array=[]
+    if not request.user.user_type == '1':
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
     form=add_staff_manage_form(request.POST or None)
     user=Staff.objects.get(admin_id=pk)
+
+    existing_user_type=UserType.objects.get(code=user.admin.user_type)
+
     user_type=UserType.objects.get(code=user.admin.user_type)
+
     form.fields['title'].initial=user.title.id
     form.fields['last_name'].initial=user.admin.last_name
     form.fields['first_name'].initial=user.admin.first_name
@@ -3234,15 +2715,15 @@ def add_staff_manage_view(request,pk):
     form.fields['address'].initial=user.address
     form.fields['phone_no'].initial=user.phone_number
     form.fields['gender'].initial=user.gender.id
- 
+
     form.fields['username'].initial=user.admin.username
     form.fields['user_type'].initial=user_type.id
     form.fields['email'].initial=user.admin.email
-    
+
     if request.method == "POST":
         title_id=request.POST.get("title")
         title=Titles.objects.get(id=title_id)
- 
+
         username=request.POST.get("username")
         first_name=request.POST.get("first_name")
         last_name=request.POST.get("last_name")
@@ -3257,30 +2738,39 @@ def add_staff_manage_view(request,pk):
         user_type_obj=request.POST.get("user_type")
         user_type = UserType.objects.get(id=user_type_obj)
 
+
+
         changepassword=request.POST.get("changepassword")
         if changepassword:
             if password1 != password2:
                 messages.info(request,"Password Mismatch")
                 return HttpResponseRedirect(reverse('add_staff_manage_view',args=(pk,)))
-            password=password1        
+            password=password1
             user.admin.set_password(password)  # replace with your real password
         user.admin.username=username
         user.admin.first_name=first_name
         user.admin.last_name=last_name
         user.admin.email=email
-        user.admin.user_type=user_type.code
+
+
+        if existing_user_type ==  user_type:
+            pass
+        else:
+            System_Users_Tasks_Model.objects.filter(user=user.admin).delete()
+            user.admin.user_type=user_type.code
+
         user.middle_name=middle_name
         user.phone_number=phone_number
         user.address=address
         user.gender=gender
-    
+
         user.title=title
 
         user.save()
         user.admin.save()
         return HttpResponseRedirect(reverse('add_staff_manage'))
     context={
-    'current_user':current_user,
+    'task_array':task_array,
     'form':form,
     }
     return render(request,'master_templates/add_staff_manage_view.html',context)
@@ -3289,10 +2779,11 @@ def add_staff_manage_view(request,pk):
 
 def super_user_add(request):
     form=super_user_manage_form(request.POST or None)
-    current_user=[]
+    task_array=[]
     if not request.user.user_type == '1':
-        current_user=Executives_Tasks_Model.objects.get(user=request.user.id)
-
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
     if request.method == 'POST':
         username=request.POST.get("username")
         first_name=request.POST.get("first_name")
@@ -3304,7 +2795,7 @@ def super_user_add(request):
         return HttpResponseRedirect(reverse('super_user_add'))
     context={
     'form':form,
-    'current_user':current_user,
+    'task_array':task_array,
     }
     return render(request,'master_templates/super_user_add.html',context)
 
@@ -3312,58 +2803,60 @@ def super_user_add(request):
 
 
 def super_user_manage(request):
-    current_user=[]
+    task_array=[]
     if not request.user.user_type == '1':
-        current_user=Executives_Tasks_Model.objects.get(user=request.user.id)
-
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
     users = CustomUser.objects.filter(Q(user_type__iexact='1'))
     context={
-    'current_user':current_user,
+    'task_array':task_array,
     'users':users,
     }
     return render(request,'master_templates/super_user_manage.html',context)
 
 
 def super_user_manage_view(request,pk):
-    current_user=[]
+    task_array=[]
     if not request.user.user_type == '1':
-        current_user=Executives_Tasks_Model.objects.get(user=request.user.id)
-
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
     form=super_user_manage_form(request.POST or None)
-    user=CustomUser.objects.get(id=pk) 
+    user=CustomUser.objects.get(id=pk)
     form.fields['last_name'].initial=user.last_name
     form.fields['first_name'].initial=user.first_name
     form.fields['username'].initial=user.username
     form.fields['email'].initial=user.email
-    
-    if request.method == "POST": 
+
+    if request.method == "POST":
         username=request.POST.get("username")
         first_name=request.POST.get("first_name")
         last_name=request.POST.get("last_name")
         password1=request.POST.get("password1")
         password2=request.POST.get("password2")
         email=request.POST.get("email")
-        
+
         if CustomUser.objects.filter(email=email).exclude(id=pk).exists():
             messages.info(request,'Email already in Use')
             return HttpResponseRedirect(reverse('super_user_manage_view',args=(pk,)))
-       
+
         changepassword=request.POST.get("changepassword")
         if changepassword:
             if password1 != password2:
                 messages.info(request,"Password Mismatch")
                 return HttpResponseRedirect(reverse('super_user_manage_view',args=(pk,)))
-            password=password1        
+            password=password1
             user.admin.set_password(password)  # replace with your real password
         user.username=username
         user.first_name=first_name
         user.last_name=last_name
         user.email=email
-    
+
         user.save()
-    
+
     context={
-    'current_user':current_user,
+    'task_array':task_array,
     'form':form,
     }
     return render(request,'master_templates/super_user_manage_view.html',context)
@@ -3372,28 +2865,29 @@ def super_user_manage_view(request,pk):
 ###################### MEMBERS SHARES AND WELFARE ##################
 ####################################################################
 def Shares_Deduction_savings(request):
-    current_user=[]
+    task_array=[]
     if not request.user.user_type == '1':
-        current_user=Executives_Tasks_Model.objects.get(user=request.user.id)
-
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
     form=Shares_Deductions_savings_form(request.POST or None)
     records=SharesDeductionSavings.objects.all()
 
     if request.method == 'POST':
-       
+
         savings_id=request.POST.get('transactions')
         savings=TransactionTypes.objects.get(id=savings_id)
 
-        if SharesDeductionSavings.objects.filter(savings=savings).exists(): 
+        if SharesDeductionSavings.objects.filter(savings=savings).exists():
             messages.info(request,'Record Already already Exist')
-           
+
         else:
-            record=SharesDeductionSavings(savings=savings)    
+            record=SharesDeductionSavings(savings=savings)
             record.save()
             messages.success(request,'Record Saved Successfully')
         return HttpResponseRedirect(reverse('Shares_Deduction_savings'))
     context={
-    'current_user':current_user,
+    'task_array':task_array,
     'form':form,
     'records':records,
     }
@@ -3407,10 +2901,11 @@ def Shares_Deduction_savings_remove(request,pk):
 
 
 def AddShares_Configurations(request):
-    current_user=[]
+    task_array=[]
     if not request.user.user_type == '1':
-        current_user=Executives_Tasks_Model.objects.get(user=request.user.id)
-
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
     form=MembersShareConfigurations_form(request.POST or None)
     form_update=MembersInitialShare_update_form(request.POST or None)
 
@@ -3420,20 +2915,20 @@ def AddShares_Configurations(request):
         form.fields['unit_cost'].initial=record.unit_cost
 
     if request.method == 'POST':
-       
+
         unit_cost=request.POST.get('unit_cost')
 
-        if MembersShareConfigurations.objects.all().exists(): 
-            record=MembersShareConfigurations.objects.first()           
-           
+        if MembersShareConfigurations.objects.all().exists():
+            record=MembersShareConfigurations.objects.first()
+
             record.unit_cost=unit_cost
         else:
-            record=MembersShareConfigurations(unit_cost=unit_cost)    
+            record=MembersShareConfigurations(unit_cost=unit_cost)
 
         record.save()
         return HttpResponseRedirect(reverse('AddShares_Configurations'))
     context={
-    'current_user':current_user,
+    'task_array':task_array,
     'form':form,
     'record':record,
     }
@@ -3441,10 +2936,11 @@ def AddShares_Configurations(request):
 
 
 def addWelfare_Configurations(request):
-    current_user=[]
+    task_array=[]
     if not request.user.user_type == '1':
-        current_user=Executives_Tasks_Model.objects.get(user=request.user.id)
-
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
     form=MembersWelfare_form(request.POST or None)
     record=[]
     if MembersWelfare.objects.all().exists():
@@ -3454,16 +2950,16 @@ def addWelfare_Configurations(request):
     if request.method == 'POST':
         amount=request.POST.get('amount')
 
-        if MembersWelfare.objects.all().exists(): 
-            record=MembersShareConfigurations.objects.first()           
+        if MembersWelfare.objects.all().exists():
+            record=MembersShareConfigurations.objects.first()
             record.amount=amount
         else:
-            record=MembersWelfare(amount=amount)    
+            record=MembersWelfare(amount=amount)
 
         record.save()
         return HttpResponseRedirect(reverse('addWelfare_Configurations'))
     context={
-    'current_user':current_user,
+    'task_array':task_array,
     'form':form,
     'record':record,
     }
@@ -3474,10 +2970,11 @@ def addWelfare_Configurations(request):
 ###################### COMPONENNTS PAGE ############################
 ####################################################################
 def MembersCompulsorySavings(request):
-    current_user=[]
+    task_array=[]
     if not request.user.user_type == '1':
-        current_user=Executives_Tasks_Model.objects.get(user=request.user.id)
-
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
     form = CompulsorySavings_form(request.POST or None)
     records = CompulsorySavings.objects.all()
     if request.method == "POST":
@@ -3492,7 +2989,7 @@ def MembersCompulsorySavings(request):
 
         return HttpResponseRedirect(reverse('MembersCompulsorySavings'))
     context={
-    'current_user':current_user,
+    'task_array':task_array,
         'form':form,
         'records':records,
     }
@@ -3506,10 +3003,11 @@ def MembersCompulsorySavings_delete(request,pk):
 
 
 def addState(request):
-    current_user=[]
+    task_array=[]
     if not request.user.user_type == '1':
-        current_user=Executives_Tasks_Model.objects.get(user=request.user.id)
-
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
     items= States.objects.all()
     title="Add State"
     form = addStateForm(request.POST or None)
@@ -3517,12 +3015,12 @@ def addState(request):
         form = addStateForm(request.POST)
         if form.is_valid():
             title=form.cleaned_data["title"]
-            record = States(title=title)
+            record = States(title=title.upper())
             record.save()
             messages.success(request,"Record Added Successfully")
         return	HttpResponseRedirect(reverse('addState'))
     context={
-    'current_user':current_user,
+    'task_array':task_array,
     'form':form,
     'items':items,
     'url':'addState',
@@ -3533,14 +3031,99 @@ def addState(request):
 
 
 
-def Manage_state(request):
-    current_user=[]
-    if not request.user.user_type == '1':
-        current_user=Executives_Tasks_Model.objects.get(user=request.user.id)
 
+def addExpiringDateInterval(request):
+
+    task_array=[]
+    if not request.user.user_type == '1':
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
+    item=[]
+    if ExpiringDateInterval.objects.all().exists():
+        item= ExpiringDateInterval.objects.first()
+
+    title="Add Expiring Date Interval"
+    form = addExpiringDateIntervalForm(request.POST or None)
+    if request.method ==  "POST":
+
+        if form.is_valid():
+            title=form.cleaned_data["title"]
+            if ExpiringDateInterval.objects.all().exists():
+                ExpiringDateInterval.objects.all().update(title=title)
+            else:
+                record = ExpiringDateInterval(title=title)
+                record.save()
+            messages.success(request,"Record Added Successfully")
+        return  HttpResponseRedirect(reverse('addExpiringDateInterval'))
+    if item:
+        form.fields['title'].initial=item.title
+    context={
+    'task_array':task_array,
+    'form':form,
+    'item':item,
+
+    'title':title,
+    }
+    return render(request,'master_templates/addExpiringDateInterval.html', context)
+
+
+
+
+def BankAccounts_Designation_List_Load(request):
+    task_array=[]
+    if not request.user.user_type == '1':
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
+    banks=CooperativeBankAccounts.objects.all()
+
+    context={
+    'task_array':task_array,
+    'banks':banks,
+    }
+    return render(request,'master_templates/BankAccounts_Designation_List_Load.html',context)
+
+
+def BankAccounts_Designation_Process(request,pk):
+    task_array=[]
+    if not request.user.user_type == '1':
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
+
+    form=BankAccounts_Designation_Process_form(request.POST or None)
+    bank=CooperativeBankAccounts.objects.get(id=pk)
+
+
+    records=CooperativeBankAccountsOperationalDesignations.objects.filter(account=bank)
+    if request.method == "POST":
+        transaction_id=request.POST.get('transactions')
+        transaction=TransactionTypes.objects.get(id=transaction_id)
+
+        CooperativeBankAccountsOperationalDesignations(account=bank,transaction=transaction,status='ACTIVE').save()
+        return HttpResponseRedirect(reverse('BankAccounts_Designation_Process',args=(pk,)))
+
+    context={
+    'task_array':task_array,
+    'bank':bank,
+    'form':form,
+    'records':records,
+    }
+    return render(request,'master_templates/BankAccounts_Designation_Process.html',context)
+
+
+
+
+def Manage_state(request):
+    task_array=[]
+    if not request.user.user_type == '1':
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
     states=States.objects.all()
     context={
-    'current_user':current_user,
+    'task_array':task_array,
     'states':states,
     }
     return render(request,'master_templates/manage_state.html', context)
@@ -3554,10 +3137,11 @@ def delete_state(request,pk):
 
 
 def addNOKRelationships(request):
-    current_user=[]
+    task_array=[]
     if not request.user.user_type == '1':
-        current_user=Executives_Tasks_Model.objects.get(user=request.user.id)
-
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
     items= States.objects.all()
     title="Add State"
     form = addNOKRelationshipsForm(request.POST or None)
@@ -3570,7 +3154,7 @@ def addNOKRelationships(request):
             messages.success(request,"Record Added Successfully")
             return  HttpResponseRedirect(reverse('addNOKRelationships'))
     context={
-    'current_user':current_user,
+    'task_array':task_array,
     'form':form,
     'items':items,
     'url':'NOKRelationships',
@@ -3582,13 +3166,14 @@ def addNOKRelationships(request):
 
 
 def Manage_NOKRelationships(request):
-    current_user=[]
+    task_array=[]
     if not request.user.user_type == '1':
-        current_user=Executives_Tasks_Model.objects.get(user=request.user.id)
-
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
     Relationships=NOKRelationships.objects.all()
     context={
-    'current_user':current_user,
+    'task_array':task_array,
     'Relationships':Relationships,
     }
     return render(request,'master_templates/manage_NOKRelationships.html', context)
@@ -3601,14 +3186,15 @@ def Manage_NOKRelationships_Remove(request,pk):
 
 
 def Manage_NOKRelationships_Max_No(request):
-    current_user=[]
+    task_array=[]
     if not request.user.user_type == '1':
-        current_user=Executives_Tasks_Model.objects.get(user=request.user.id)
-
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
     record=[]
     if NextOfKinsMaximun.objects.all().exists:
         record = NextOfKinsMaximun.objects.first()
-    
+
     if request.method ==  'POST':
         max_no = request.POST.get('max_no')
         if record:
@@ -3618,24 +3204,102 @@ def Manage_NOKRelationships_Max_No(request):
             item=NextOfKinsMaximun(maximun=max_no)
             item.save()
         return HttpResponseRedirect(reverse('admin_home'))
-    
+
     context={
-    'current_user':current_user,
+    'task_array':task_array,
     'record':record,
     }
     return render(request,'master_templates/Manage_NOKRelationships_Max_No.html',context)
 
 
+def Manage_Product_Code(request):
+    task_array=[]
+    if not request.user.user_type == '1':
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
+    form=Manage_Product_CodeForm(request.POST or None)
+
+    record=[]
+    if Product_Code.objects.all().exists():
+        record=Product_Code.objects.first()
+
+    if request.method == 'POST':
+        code = request.POST.get('code')
+        if code:
+            if record:
+                record.code=code
+                record.save()
+                return HttpResponseRedirect(reverse('admin_home'))
+            Product_Code(code=code).save()
+            return HttpResponseRedirect(reverse('admin_home'))
+
+        messages.error(request,'Please Enter Code')
+        return HttpResponseRedirect(reverse('Manage_Product_Code'))
+
+    if record:
+        form.fields['code'].initial=record.code
+    context={
+    'task_array':task_array,
+    'record':record,
+    'form':form,
+    }
+    return render(request,'master_templates/Manage_Product_Code.html',context)
+
+
+
+def Xmas_Savings_Default_Transfer_Account(request):
+    task_array=[]
+    if not request.user.user_type == '1':
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
+
+    form=Xmas_Savings_Default_Transfer_Account_form(request.POST or None)
+    record=[]
+    if XmasTransferDefaultSaving.objects.all().exists:
+        record = XmasTransferDefaultSaving.objects.first()
+
+    if request.method ==  'POST':
+        transaction_id = request.POST.get('transaction')
+        transaction=TransactionTypes.objects.get(id=transaction_id)
+
+        if XmasTransferDefaultSaving.objects.all().exists():
+            XmasTransferDefaultSaving.objects.all().update(transaction=transaction)
+
+        else:
+            XmasTransferDefaultSaving(transaction=transaction).save()
+
+        return HttpResponseRedirect(reverse('Xmas_Savings_Default_Transfer_Account'))
+    if record:
+        form.fields['transaction'].initial=record.transaction.id
+    context={
+    'task_array':task_array,
+    'record':record,
+    'form':form,
+    }
+    return render(request,'master_templates/Xmas_Savings_Default_Transfer_Account.html',context)
+
+
 def Commodity_Transaction_Period(request):
+    task_array=[]
+    if not request.user.user_type == '1':
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
     form=Commodity_Transaction_Period_form(request.POST or None)
     records=Commodity_Period.objects.all()
     if request.method == 'POST':
         title=request.POST.get('period')
+        if Commodity_Period.objects.filter(title=title).exists():
+            return HttpResponseRedirect(reverse('Commodity_Transaction_Period'))
+
         Commodity_Period(title=title).save()
         messages.success(request,'Record Added Successfully')
         return HttpResponseRedirect(reverse('Commodity_Transaction_Period'))
     context={
     'form':form,
+    'task_array':task_array,
     'records':records,
     }
     return render(request,'master_templates/Commodity_Transaction_Period.html',context)
@@ -3653,22 +3317,32 @@ def Commodity_Transaction_Period_Delete(request,pk):
 
 
 def Commodity_Transaction_Period_Batch(request):
+    task_array=[]
+    if not request.user.user_type == '1':
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
     form=Commodity_Transaction_Period_Batch_form(request.POST or None)
     records=Commodity_Period_Batch.objects.all()
     if request.method == 'POST':
         title=request.POST.get('batch')
+        if Commodity_Period_Batch.objects.filter(title=title).exists():
+            return HttpResponseRedirect(reverse('Commodity_Transaction_Period_Batch'))
+
         Commodity_Period_Batch(title=title).save()
         messages.success(request,'Record Added Successfully')
         return HttpResponseRedirect(reverse('Commodity_Transaction_Period_Batch'))
     context={
     'form':form,
     'records':records,
+    'task_array':task_array,
     }
     return render(request,'master_templates/Commodity_Transaction_Period_Batch.html',context)
 
 
 
 def Commodity_Transaction_Period_Batch_Delete(request,pk):
+
     record=Commodity_Period_Batch.objects.get(id=pk)
     if Company_Products.objects.filter(batch=record).exists():
         messages.error(request,'This Batch is already in Use')
@@ -3679,34 +3353,31 @@ def Commodity_Transaction_Period_Batch_Delete(request,pk):
 
 
 def addCommodityCategory(request):
-    current_user=[]
+    task_array=[]
     if not request.user.user_type == '1':
-        current_user=Executives_Tasks_Model.objects.get(user=request.user.id)
-
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
     title="Add Commodity Category"
     items= Commodity_Categories.objects.all()
     form = addCommodityCategoryForm(request.POST or None)
-    receipt_type=ReceiptTypes.objects.get(title='NONE')
-    status=MembershipStatus.objects.get(title='ACTIVE')
-    multiple_loan_status=MultipleLoanStatus.objects.get(title='NOT ALLOWED')
-    form_print=YesNo.objects.get(title='NO')
+
     if request.method ==  "POST":
-        
+
         title=request.POST.get("title")
-        price_status=request.POST.get("price_status")
         transaction_id=request.POST.get('transactions')
         transaction=TransactionTypes.objects.get(id=transaction_id)
         if Commodity_Categories.objects.filter(title=title).exists():
             messages.error(request,'Record with this name already exist')
             return  HttpResponseRedirect(reverse('addCommodityCategory'))
-        record = Commodity_Categories(price_status=price_status,transaction=transaction,title=title,receipt_type=receipt_type,status=status,multiple_loan_status=multiple_loan_status,form_print=form_print)
+        record = Commodity_Categories(transaction=transaction,title=title,receipt_type="NONE",status="ACTIVE",multiple_loan_status='NOT ALLOWED',form_print="NO")
         record.save()
         messages.success(request,"Record Added Successfully")
         return  HttpResponseRedirect(reverse('addCommodityCategory'))
-    
+
     records=Commodity_Categories.objects.all()
     context={
-    'current_user':current_user,
+    'task_array':task_array,
     'form':form,
     'records':records,
     'items':items,
@@ -3716,6 +3387,7 @@ def addCommodityCategory(request):
     }
     return render(request,'master_templates/addCommodityCategory.html', context)
 
+
 def Manage_Commodity_Categories_Delete(request,pk):
     record=Commodity_Categories.objects.get(id=pk)
     record.delete()
@@ -3723,15 +3395,84 @@ def Manage_Commodity_Categories_Delete(request,pk):
     return  HttpResponseRedirect(reverse('addCommodityCategory'))
 
 
+def addCommodityCategorySub(request,pk):
+    task_array=[]
+    if not request.user.user_type == '1':
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
+    title="Add Commodity Sub Categories"
+    category= Commodity_Categories.objects.get(id=pk)
+    records= Commodity_Category_Sub.objects.filter(category=category)
+    form = addCommodityCategoryForm(request.POST or None)
+
+    if request.method ==  "POST":
+
+        title=request.POST.get("title")
+
+        if Commodity_Category_Sub.objects.filter(title=title).exists():
+            messages.error(request,'Record with this name already exist')
+            return  HttpResponseRedirect(reverse('addCommodityCategorySub',args=(pk,)))
+        record = Commodity_Category_Sub(category=category,title=title.upper())
+        record.save()
+        messages.success(request,"Record Added Successfully")
+        return  HttpResponseRedirect(reverse('addCommodityCategorySub',args=(pk,)))
+
+
+    context={
+    'task_array':task_array,
+    'form':form,
+    'records':records,
+    'category':category,
+    'url':'addCommodityCategorySub',
+    'button_text':"Add Record",
+    'title':title,
+    }
+    return render(request,'master_templates/addCommodityCategorySub.html', context)
+
+
+
+def Manage_Commodity_Sub_Categories_Delete(request,pk):
+    record=Commodity_Category_Sub.objects.get(id=pk)
+    return_pk = record.category.pk
+    record.delete()
+    messages.success(request,'Record Deleted Successfully')
+    return  HttpResponseRedirect(reverse('addCommodityCategorySub',args=(return_pk,)))
+
+def Manage_Commodity_Categories_Title_Update(request,pk):
+    task_array=[]
+    if not request.user.user_type == '1':
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
+    record=Commodity_Categories.objects.get(id=pk)
+    form = Manage_Commodity_Categories_Title_Update_form(request.POST or None)
+
+    if request.method == 'POST':
+        title = request.POST.get('title')
+        record.title=title
+        record.save()
+        return HttpResponseRedirect(reverse('addCommodityCategory'))
+    form.fields['title'].initial= record.title
+    context={
+    'task_array':task_array,
+    'record':record,
+    'form':form,
+    }
+    return render(request,'master_templates/Manage_Commodity_Categories_Title_Update.html',context)
+
+
+
 
 def Manage_Commodity_Categories_Core_properties_Transactions_Load(request):
-    current_user=[]
+    task_array=[]
     if not request.user.user_type == '1':
-        current_user=Executives_Tasks_Model.objects.get(user=request.user.id)
-
-    records =TransactionTypes.objects.filter(category__title='NON-MONETARY')
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
+    records =TransactionTypes.objects.filter(category='NON-MONETARY')
     context={
-    'current_user':current_user,
+    'task_array':task_array,
     'records':records,
     }
     return render(request,'master_templates/Manage_Commodity_Categories_Core_properties_Transactions_Load.html',context)
@@ -3739,14 +3480,17 @@ def Manage_Commodity_Categories_Core_properties_Transactions_Load(request):
 
 
 def Manage_Commodity_Categories_Core_Values(request,pk):
-    current_user=[]
+    task_array=[]
     if not request.user.user_type == '1':
-        current_user=Executives_Tasks_Model.objects.get(user=request.user.id)
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
+
     transaction =TransactionTypes.objects.get(id=pk)
     records=Commodity_Categories.objects.filter(transaction=transaction)
-    
+
     context={
-    'current_user':current_user,
+    'task_array':task_array,
     'records':records,
     }
     return render(request,'master_templates/Manage_Commodity_Categories_Core_Values.html', context)
@@ -3757,57 +3501,80 @@ def Manage_Commodity_Categories_Core_Values(request,pk):
 
 
 def Manage_Commodity_Categories_Core_properties(request,pk):
-    current_user=[]
+    task_array=[]
     if not request.user.user_type == '1':
-        current_user=Executives_Tasks_Model.objects.get(user=request.user.id)
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
 
-    form = Manage_Commodity_Categories_Optional_properties_Form(request.POST or None)
+
+    interest_rate_form = Manage_Commodity_Categories_Optional_properties_Form(request.POST or None)
+    admin_charges_form = Manage_Commodity_Categories_Optional_properties_Form(request.POST or None)
+    guarantor_form = Manage_Commodity_Categories_Optional_properties_Form(request.POST or None)
+
     record=Commodity_Categories.objects.get(id=pk)
-    if request.method == 'POST':
+    if request.method == 'POST' and 'btn-interest' in request.POST:
         interest_rate_required = request.POST.get('interest_rate_required')
-        admin_charges_required = request.POST.get('admin_charges_required')
-        guarantor_required = request.POST.get('guarantor_required')
-        
         record.interest_rate_required=interest_rate_required
-        record.admin_charges_required=admin_charges_required
-        record.guarantor_required=guarantor_required
-
+        record.interest_rate=0
         record.save()
-        return HttpResponseRedirect(reverse('Manage_Commodity_Categories_Core_Values',args=(record.transaction_id,)))
-    form.fields['interest_rate_required'].initial=record.interest_rate_required
-    form.fields['admin_charges_required'].initial=record.admin_charges_required
-    form.fields['guarantor_required'].initial=record.guarantor_required
+        return HttpResponseRedirect(reverse('Manage_Commodity_Categories_Core_properties',args=(pk,)))
+
+    if request.method == 'POST' and 'btn-admin' in request.POST:
+        admin_charges_required = request.POST.get('admin_charges_required')
+        record.admin_charges_required=admin_charges_required
+        record.admin_charges=0
+        record.save()
+        return HttpResponseRedirect(reverse('Manage_Commodity_Categories_Core_properties',args=(pk,)))
+
+    if request.method == 'POST' and 'btn-guarantor' in request.POST:
+        guarantor_required = request.POST.get('guarantor_required')
+        record.guarantor_required=guarantor_required
+        record.guarantors=0
+        record.save()
+
+        return HttpResponseRedirect(reverse('Manage_Commodity_Categories_Core_properties',args=(pk,)))
+
+    interest_rate_form.fields['interest_rate_required'].initial=record.interest_rate_required
+    admin_charges_form.fields['admin_charges_required'].initial=record.admin_charges_required
+    guarantor_form.fields['guarantor_required'].initial=record.guarantor_required
     context={
-    'current_user':current_user,
-    'form':form,
+    'task_array':task_array,
+    'interest_rate_form':interest_rate_form,
+    'admin_charges_form':admin_charges_form,
+    'guarantor_form':guarantor_form,
     'record':record,
     }
     return render(request,'master_templates/Manage_Commodity_Categories_Optional_properties.html', context)
 
 
 def Manage_Commodity_Categories_Peripherals_Transactions_Load(request):
-    current_user=[]
+    task_array=[]
     if not request.user.user_type == '1':
-        current_user=Executives_Tasks_Model.objects.get(user=request.user.id)
-
-    records =TransactionTypes.objects.filter(category__title='NON-MONETARY')
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
+    records =TransactionTypes.objects.filter(category='NON-MONETARY')
     context={
-    'current_user':current_user,
+    'task_array':task_array,
     'records':records,
     }
     return render(request,'master_templates/Manage_Commodity_Categories_Peripherals_Transactions_Load.html',context)
 
 
 def Manage_Commodity_Categories_Peripherals(request,pk):
-    current_user=[]
+    task_array=[]
     if not request.user.user_type == '1':
-        current_user=Executives_Tasks_Model.objects.get(user=request.user.id)
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
+
     transaction =TransactionTypes.objects.get(id=pk)
     records=Commodity_Categories.objects.filter(transaction=transaction)
-    
-    
+
+
     context={
-    'current_user':current_user,
+    'task_array':task_array,
     'records':records,
     }
     return render(request,'master_templates/Manage_Commodity_Categories_Peripherals.html', context)
@@ -3815,38 +3582,39 @@ def Manage_Commodity_Categories_Peripherals(request,pk):
 
 
 def Manage_Commodity_Categories_Update(request,pk):
-    current_user=[]
+    task_array=[]
     if not request.user.user_type == '1':
-        current_user=Executives_Tasks_Model.objects.get(user=request.user.id)
-
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
     form = addCommodityCategoryForm(request.POST or None)
     record=Commodity_Categories.objects.get(id=pk)
+
     if request.method == 'POST':
+
+        title = request.POST.get('title')
         if record.interest_rate_required == '1':
             interest_deduction_id = request.POST.get('interest_deductions')
-           
+
             interest_rate = request.POST.get('interest_rate')
-            
+
             if interest_rate <= "0":
                 messages.error(request,'Interest Rate is Missing')
                 return HttpResponseRedirect(reverse('Manage_Commodity_Categories_Update',args=(pk,)))
-        
+
         if record.admin_charges_required == '1':
-            admin_charges_rating_id = request.POST.get('admin_charges_rating')
-            admin_charges_rating=AdminCharges.objects.get(id=admin_charges_rating_id)
+            admin_charges_rating = request.POST.get('admin_charges_rating')
+
 
             admin_charges = request.POST.get('admin_charges')
             if admin_charges <= "0":
                 messages.error(request,'Admin Charge is Missing')
                 return HttpResponseRedirect(reverse('Manage_Commodity_Categories_Update',args=(pk,)))
 
-         
-
-          
 
         if record.guarantor_required == '1':
             guarantors = request.POST.get('guarantors')
-            
+
             if guarantors <= "0":
                 messages.error(request,'Guarantor is Missing')
                 return HttpResponseRedirect(reverse('Manage_Commodity_Categories_Update',args=(pk,)))
@@ -3864,42 +3632,40 @@ def Manage_Commodity_Categories_Update(request,pk):
 
 
 
-        receipt_type_id = request.POST.get('receipt_type')
-        receipt_type=ReceiptTypes.objects.get(id=receipt_type_id)
-        
-        price_status = request.POST.get('price_status')
+        receipt_type = request.POST.get('receipt_type')
+
 
         if record.interest_rate_required == '1':
             record.interest_rate=interest_rate
-        
+
         if record.admin_charges_required == '1':
             record.admin_charges_rating=admin_charges_rating
             record.admin_charges=admin_charges
-         
-        
+
+
         if record.guarantor_required == '1':
             record.guarantors=guarantors
-        
+
+        record.title=title
         record.duration=duration
         record.loan_age=loan_age
         record.receipt_type=receipt_type
-
-        record.price_status=price_status
-
         record.save()
+
+
         return HttpResponseRedirect(reverse('Manage_Commodity_Categories_Peripherals',args=(record.transaction_id,)))
     form.fields['title'].initial=record.title
-    form.fields['price_status'].initial=record.price_status
+
     form.fields['interest_rate'].initial=record.interest_rate
     form.fields['duration'].initial=record.duration
     form.fields['loan_age'].initial=record.loan_age
     form.fields['guarantors'].initial=record.guarantors
-    form.fields['receipt_type'].initial=record.receipt_type_id
-    form.fields['admin_charges_rating'].initial=record.admin_charges_rating_id
+    form.fields['receipt_type'].initial=record.receipt_type
+    form.fields['admin_charges_rating'].initial=record.admin_charges_rating
     form.fields['admin_charges'].initial=record.admin_charges
-    
+
     context={
-    'current_user':current_user,
+    'task_array':task_array,
     'form':form,
     'record':record,
     }
@@ -3907,10 +3673,11 @@ def Manage_Commodity_Categories_Update(request,pk):
 
 
 def addGender(request):
-    current_user=[]
+    task_array=[]
     if not request.user.user_type == '1':
-        current_user=Executives_Tasks_Model.objects.get(user=request.user.id)
-
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
     title="Add Gender"
     items= Gender.objects.all()
     form = addGenderForm(request.POST or None)
@@ -3923,7 +3690,7 @@ def addGender(request):
             messages.success(request,"Record Added Successfully")
         return	HttpResponseRedirect(reverse('addGender'))
     context={
-    'current_user':current_user,
+    'task_array':task_array,
     'form':form,
     'items':items,
     'url':'addGender',
@@ -3932,13 +3699,58 @@ def addGender(request):
     }
     return render(request,'master_templates/add_single_item.html', context)
 
+def Manage_Gender(request):
+    task_array=[]
+    if not request.user.user_type == '1':
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
+    title="Manage Gender"
+    items= Gender.objects.all()
+
+
+    context={
+    'task_array':task_array,
+    'items':items,
+    'title':title,
+    }
+    return render(request,'master_templates/Manage_Gender.html', context)
+
+
+def Manage_Gender_Processing(request,pk):
+    task_array=[]
+    if not request.user.user_type == '1':
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
+
+    form=Manage_Departments_Processing_form(request.POST or None)
+    title="Manage Departments"
+    item= Gender.objects.get(id=pk)
+
+    if request.method == 'POST':
+        title=request.POST.get('title')
+
+        item.title=title
+        item.save()
+        return HttpResponseRedirect(reverse('Manage_Gender'))
+    form.fields['title'].initial=item.title
+    context={
+    'form':form,
+    'task_array':task_array,
+    'item':item,
+    'title':title,
+    }
+    return render(request,'master_templates/Manage_Gender_Processing.html', context)
+
 
 
 def addSalaryInstitution(request):
-    current_user=[]
+    task_array=[]
     if not request.user.user_type == '1':
-        current_user=Executives_Tasks_Model.objects.get(user=request.user.id)
-
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
     title="Add Salary Institution"
     items= SalaryInstitution.objects.all()
     form = addSalaryInstitutionForm(request.POST or None)
@@ -3951,7 +3763,7 @@ def addSalaryInstitution(request):
             messages.success(request,"Record Added Successfully")
         return	HttpResponseRedirect(reverse('addSalaryInstitution'))
     context={
-    'current_user':current_user,
+    'task_array':task_array,
     'form':form,
     'items':items,
     'url':'addSalaryInstitution',
@@ -3961,11 +3773,58 @@ def addSalaryInstitution(request):
     return render(request,'master_templates/add_single_item.html', context)
 
 
-def addTitles(request):
-    current_user=[]
-    if not request.user.user_type == '1':
-        current_user=Executives_Tasks_Model.objects.get(user=request.user.id)
 
+def Manage_Salary_Institution(request):
+    task_array=[]
+    if not request.user.user_type == '1':
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
+    title="Manage Departments"
+    items= SalaryInstitution.objects.all()
+
+
+    context={
+    'task_array':task_array,
+    'items':items,
+    'title':title,
+    }
+    return render(request,'master_templates/Manage_Salary_Institution.html', context)
+
+
+def Manage_Salary_Institution_Processing(request,pk):
+    task_array=[]
+    if not request.user.user_type == '1':
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
+
+    form=Manage_Departments_Processing_form(request.POST or None)
+    title="Manage Departments"
+    item= SalaryInstitution.objects.get(id=pk)
+
+    if request.method == 'POST':
+        title=request.POST.get('title')
+
+        item.title=title
+        item.save()
+        return HttpResponseRedirect(reverse('Manage_Salary_Institution'))
+    form.fields['title'].initial=item.title
+    context={
+    'form':form,
+    'task_array':task_array,
+    'item':item,
+    'title':title,
+    }
+    return render(request,'master_templates/Manage_Salary_Institution_Processing.html', context)
+
+
+def addTitles(request):
+    task_array=[]
+    if not request.user.user_type == '1':
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
     title="Add Titles"
     items= Titles.objects.all()
     form = addTitlesForm(request.POST or None)
@@ -3978,7 +3837,7 @@ def addTitles(request):
             messages.success(request,"Record Added Successfully")
         return	HttpResponseRedirect(reverse('addTitles'))
     context={
-    'current_user':current_user,
+    'task_array':task_array,
     'form':form,
     'items':items,
     'url':'addTitles',
@@ -3988,11 +3847,58 @@ def addTitles(request):
     return render(request,'master_templates/add_single_item.html', context)
 
 
-def addDepartments(request):
-    current_user=[]
+def Manage_Titles(request):
+    task_array=[]
     if not request.user.user_type == '1':
-        current_user=Executives_Tasks_Model.objects.get(user=request.user.id)
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
+    title="Manage Titles"
+    items= Titles.objects.all()
 
+
+    context={
+    'task_array':task_array,
+    'items':items,
+    'title':title,
+    }
+    return render(request,'master_templates/Manage_Titles.html', context)
+
+
+def Manage_Titles_Processing(request,pk):
+    task_array=[]
+    if not request.user.user_type == '1':
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
+
+    form=Manage_Departments_Processing_form(request.POST or None)
+    title="Manage Titles"
+    item= Titles.objects.get(id=pk)
+
+    if request.method == 'POST':
+        title=request.POST.get('title')
+
+        item.title=title
+        item.save()
+        return HttpResponseRedirect(reverse('Manage_Titles'))
+    form.fields['title'].initial=item.title
+    context={
+    'form':form,
+    'task_array':task_array,
+    'item':item,
+    'title':title,
+    }
+    return render(request,'master_templates/Manage_Titles_Processing.html', context)
+
+
+
+def addDepartments(request):
+    task_array=[]
+    if not request.user.user_type == '1':
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
     title="Add Departments"
     items= Departments.objects.all()
     form = addDepartmentsForm(request.POST or None)
@@ -4005,7 +3911,7 @@ def addDepartments(request):
             messages.success(request,"Record Added Successfully")
         return	HttpResponseRedirect(reverse('addDepartments'))
     context={
-    'current_user':current_user,
+    'task_array':task_array,
     'form':form,
     'items':items,
     'url':'addDepartments',
@@ -4014,11 +3920,60 @@ def addDepartments(request):
     }
     return render(request,'master_templates/add_single_item.html', context)
 
-def addBanks(request):
-    current_user=[]
-    if not request.user.user_type == '1':
-        current_user=Executives_Tasks_Model.objects.get(user=request.user.id)
 
+
+
+def Manage_Departments(request):
+    task_array=[]
+    if not request.user.user_type == '1':
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
+    title="Manage Departments"
+    items= Departments.objects.all()
+
+
+    context={
+    'task_array':task_array,
+    'items':items,
+    'title':title,
+    }
+    return render(request,'master_templates/Manage_Departments.html', context)
+
+
+def Manage_Departments_Processing(request,pk):
+    task_array=[]
+    if not request.user.user_type == '1':
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
+
+    form=Manage_Departments_Processing_form(request.POST or None)
+    title="Manage Departments"
+    item= Departments.objects.get(id=pk)
+
+    if request.method == 'POST':
+        title=request.POST.get('title')
+
+        item.title=title
+        item.save()
+        return HttpResponseRedirect(reverse('Manage_Departments'))
+    form.fields['title'].initial=item.title
+    context={
+    'form':form,
+    'task_array':task_array,
+    'item':item,
+    'title':title,
+    }
+    return render(request,'master_templates/Manage_Departments_Processing.html', context)
+
+
+def addBanks(request):
+    task_array=[]
+    if not request.user.user_type == '1':
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
     title="Add Banks"
     items= Banks.objects.all()
     form = addBanksForm(request.POST or None)
@@ -4029,9 +3984,9 @@ def addBanks(request):
             record = Banks(title=title)
             record.save()
             messages.success(request,"Record Added Successfully")
-        return	HttpResponseRedirect(reverse('addBanks'))
+        return  HttpResponseRedirect(reverse('addBanks'))
     context={
-    'current_user':current_user,
+    'task_array':task_array,
     'form':form,
     'items':items,
     'url':'addBanks',
@@ -4040,12 +3995,61 @@ def addBanks(request):
     }
     return render(request,'master_templates/add_single_item.html', context)
 
-	
-def addLocations(request):
-    current_user=[]
-    if not request.user.user_type == '1':
-        current_user=Executives_Tasks_Model.objects.get(user=request.user.id)
 
+
+def Manage_Banks(request):
+    task_array=[]
+    if not request.user.user_type == '1':
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
+    title="Manage Departments"
+    items= Banks.objects.all()
+
+
+    context={
+    'task_array':task_array,
+    'items':items,
+    'title':title,
+    }
+    return render(request,'master_templates/Manage_Banks.html', context)
+
+
+def Manage_Banks_Processing(request,pk):
+    task_array=[]
+    if not request.user.user_type == '1':
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
+
+    form=Manage_Departments_Processing_form(request.POST or None)
+    title="Manage Departments"
+    item= Banks.objects.get(id=pk)
+
+    if request.method == 'POST':
+        title=request.POST.get('title')
+
+        item.title=title
+        item.save()
+        return HttpResponseRedirect(reverse('Manage_Banks'))
+    form.fields['title'].initial=item.title
+    context={
+    'form':form,
+    'task_array':task_array,
+    'item':item,
+    'title':title,
+    }
+    return render(request,'master_templates/Manage_Banks_Processing.html', context)
+
+
+
+
+def addLocations(request):
+    task_array=[]
+    if not request.user.user_type == '1':
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
     title="Add Locations"
     items= Locations.objects.all()
     form = addLocationsForm(request.POST or None)
@@ -4058,7 +4062,7 @@ def addLocations(request):
             messages.success(request,"Record Added Successfully")
         return	HttpResponseRedirect(reverse('addLocations'))
     context={
-    'current_user':current_user,
+    'task_array':task_array,
     'form':form,
     'items':items,
     'url':'addLocations',
@@ -4067,13 +4071,57 @@ def addLocations(request):
     }
     return render(request,'master_templates/add_single_item.html', context)
 
+def Manage_Locations(request):
+    task_array=[]
+    if not request.user.user_type == '1':
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
+    title="Manage Departments"
+    items= Locations.objects.all()
+
+
+    context={
+    'task_array':task_array,
+    'items':items,
+    'title':title,
+    }
+    return render(request,'master_templates/Manage_Locations.html', context)
+
+
+def Manage_Locations_Processing(request,pk):
+    task_array=[]
+    if not request.user.user_type == '1':
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
+
+    form=Manage_Departments_Processing_form(request.POST or None)
+    title="Manage Departments"
+    item= Locations.objects.get(id=pk)
+
+    if request.method == 'POST':
+        title=request.POST.get('title')
+
+        item.title=title
+        item.save()
+        return HttpResponseRedirect(reverse('Manage_Locations'))
+    form.fields['title'].initial=item.title
+    context={
+    'form':form,
+    'task_array':task_array,
+    'item':item,
+    'title':title,
+    }
+    return render(request,'master_templates/Manage_Locations_Processing.html', context)
 
 
 def addDefaultPassword(request):
-    current_user=[]
+    task_array=[]
     if not request.user.user_type == '1':
-        current_user=Executives_Tasks_Model.objects.get(user=request.user.id)
-
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
     title="Add Membership Status"
     item=[]
     if DefaultPassword.objects.all().exists():
@@ -4099,7 +4147,7 @@ def addDefaultPassword(request):
     if item:
         form.fields['title'].initial=item.title
     context={
-    'current_user':current_user,
+    'task_array':task_array,
     'form':form,
     'item':item,
     'url':'addDefaultPassword',
@@ -4109,127 +4157,251 @@ def addDefaultPassword(request):
     return render(request,'master_templates/add_single_item.html', context)
 
 
+def TransactionTypes_Sources_Manage(request):
+    task_array=[]
+    if not request.user.user_type == '1':
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
+    records = TransactionSources.objects.all()
+
+    context={
+    'task_array':task_array,
+    'records':records,
+    }
+    return render(request,'master_templates/TransactionTypes_Sources_Manage.html',context)
+
+def TransactionTypes_Sources_Manage_Process(request,pk):
+    task_array=[]
+    if not request.user.user_type == '1':
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
+
+    form=TransactionTypes_Sources_Manage_Process_form(request.POST or None)
+    record = TransactionSources.objects.get(id=pk)
+
+    if request.method == 'POST':
+        maximum_amount=request.POST.get('maximum_amount')
+        salary_rate=request.POST.get('salary_rate')
+        loan_based_saving=request.POST.get('loan_based_saving')
+
+        if not maximum_amount:
+            maximum_amount=0
+
+        if not salary_rate:
+            salary_rate=0
+
+        if not loan_based_saving:
+            loan_based_saving=0
+
+
+        record.maximum_amount=maximum_amount
+        record.salary_loan_relationship=salary_rate
+        record.loan_based_saving=loan_based_saving
+        record.save()
+        return HttpResponseRedirect(reverse('TransactionTypes_Sources_Manage_Process',args=(pk,)))
+
+    form.fields['maximum_amount'].initial=record.maximum_amount
+    form.fields['salary_rate'].initial=record.salary_loan_relationship
+    form.fields['loan_based_saving'].initial=record.loan_based_saving
+    context={
+    'task_array':task_array,
+    'record':record,
+    'form':form,
+    }
+    return render(request,'master_templates/TransactionTypes_Sources_Manage_Process.html',context)
+
 
 def addTransactionTypes(request):
-    current_user=[]
+    task_array=[]
     if not request.user.user_type == '1':
-        current_user=Executives_Tasks_Model.objects.get(user=request.user.id)
-
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
     transaction_types = TransactionTypes.objects.all().order_by("code")
     form=addTransactionTypesForm(request.POST or None)
-    
+
     if request.method=="POST":
         form = addTransactionTypesForm(request.POST)
 
         source_id=request.POST.get("source")
         source = TransactionSources.objects.get(id=source_id)
-
-        share_unit_min=request.POST.get("share_unit_min")
-        share_unit_max=request.POST.get("share_unit_max")
-        
-
         code=request.POST.get("code")
         name=request.POST.get("name")
-        maximum_amount=request.POST.get("maximum_amount")
-        minimum_amount=request.POST.get("minimum_amount")
 
-        receipts_obj=request.POST.get("receipts")
-        receipts=ReceiptTypes.objects.get(id=receipts_obj)
+        # share_unit_min=request.POST.get("share_unit_min")
+        # share_unit_max=request.POST.get("share_unit_max")
+        # maximum_amount=request.POST.get("maximum_amount")
+        # minimum_amount=request.POST.get("minimum_amount")
+        # receipts=request.POST.get("receipts")
+        # rank=request.POST.get("rank")
 
-        rank=request.POST.get("rank")
-        form_print=YesNo.objects.get(title='NO')
-        status=MembershipStatus.objects.get(title='ACTIVE')
-        multiple_loan_status=MultipleLoanStatus.objects.get(title='NOT ALLOWED')
+
+
+
+
+        form_print='NO'
+        multiple_loan_status='NOT ALLOWED'
         if TransactionTypes.objects.filter(code=code).exists():
             messages.error(request,"Record with this code already exist")
             return HttpResponseRedirect(reverse('addTransactionTypes'))
 
-        record = TransactionTypes(multiple_loan_status=multiple_loan_status,status=status,receipt_type=receipts,form_print=form_print,source=source,code=code,name=name,maximum_amount=maximum_amount,minimum_amount=minimum_amount,rank=rank,share_unit_min=share_unit_min,share_unit_max=share_unit_max)
+        # record = TransactionTypes(multiple_loan_status=multiple_loan_status,status='ACTIVE',receipt_type=receipts,form_print=form_print,source=source,code=code,name=name,maximum_amount=maximum_amount,minimum_amount=minimum_amount,rank=rank,share_unit_min=share_unit_min,share_unit_max=share_unit_max)
+        record = TransactionTypes(multiple_loan_status=multiple_loan_status,status='ACTIVE',form_print=form_print,source=source,code=code,name=name)
         record.save()
         return HttpResponseRedirect(reverse('addTransactionTypes'))
     context={
-    'current_user':current_user,
+    'task_array':task_array,
     'form':form,
     'transaction_types':transaction_types,
     }
     return render(request, 'master_templates/addTransactionTypes.html',context)
 
+def addTransactionTypes_Remove(request,pk):
+    TransactionTypes.objects.filter(id=pk).delete()
+    return HttpResponseRedirect(reverse('addTransactionTypes'))
 
 def TransactionTypes_Manage_Load(request):
-    current_user=[]
+    task_array=[]
     if not request.user.user_type == '1':
-        current_user=Executives_Tasks_Model.objects.get(user=request.user.id)
-
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
     transaction_types = TransactionTypes.objects.all().order_by("code")
-    
+
     context={
-    'current_user':current_user,
- 
+    'task_array':task_array,
+
     'transaction_types':transaction_types,
     }
     return render(request,'master_templates/TransactionTypes_Manage_Load.html',context)
 
 
-def TransactionTypes_Update(request,pk):
-    current_user=[]
-    if not request.user.user_type == '1':
-        current_user=Executives_Tasks_Model.objects.get(user=request.user.id)
 
+def TransactionTypes_Ranking_Load(request):
+    task_array=[]
+    if not request.user.user_type == '1':
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
+    records = TransactionTypes.objects.filter(Q(source__title='SAVINGS') | Q(source__title='LOAN')).order_by("rank")
+
+    context={
+    'task_array':task_array,
+
+    'records':records,
+    }
+    return render(request,'master_templates/TransactionTypes_Ranking_Load.html',context)
+
+
+def TransactionTypes_Ranking_Update(request,pk):
+    task_array=[]
+    if not request.user.user_type == '1':
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
+    record = TransactionTypes.objects.get(id=pk)
+    form = loan_rank_update_form(request.POST or None)
+
+    if request.method == 'POST':
+        rank = request.POST.get('rank')
+
+        record.rank = rank
+        record.save()
+        return HttpResponseRedirect(reverse('TransactionTypes_Ranking_Load'))
+    form.fields['rank'].initial= record.rank
+    context={
+    'task_array':task_array,
+    'record':record,
+    'form':form,
+    }
+    return render(request,'master_templates/TransactionTypes_Ranking_Update.html',context)
+
+
+
+
+def TransactionTypes_Update(request,pk):
+    task_array=[]
+    if not request.user.user_type == '1':
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
     form=addTransactionTypes_update_Form(request.POST or None)
     transaction = TransactionTypes.objects.get(id=pk)
     form.fields['code'].initial=transaction.code
     form.fields['name'].initial=transaction.name
-    form.fields['rank'].initial=transaction.rank
-    form.fields['receipts'].initial=transaction.receipt_type.id
-    form.fields['maximum_amount'].initial=transaction.maximum_amount
-    form.fields['minimum_amount'].initial=transaction.minimum_amount
-    form.fields['share_unit_min'].initial=transaction.share_unit_min
-    form.fields['share_unit_max'].initial=transaction.share_unit_max
+    form.fields['source'].initial=transaction.source.id
+
+    # form.fields['rank'].initial=transaction.rank
+    # form.fields['receipts'].initial=transaction.receipt_type
+    # if transaction.maximum_amount:
+    #     form.fields['maximum_amount'].initial=transaction.maximum_amount
+    # else:
+    #     form.fields['maximum_amount'].initial=0
+
+    # if transaction.minimum_amount:
+    #     form.fields['minimum_amount'].initial=transaction.minimum_amount
+    # else:
+    #     form.fields['minimum_amount'].initial=0
+    # form.fields['share_unit_min'].initial=transaction.share_unit_min
+    # form.fields['share_unit_max'].initial=transaction.share_unit_max
+    # form.fields['form_print'].initial=transaction.form_print
 
     if request.method == "POST":
-        receipts_obj=request.POST.get('receipts')
-        receipts=ReceiptTypes.objects.get(id=receipts_obj)
+        receipts=request.POST.get('receipts')
+        source_id = request.POST.get('source')
+        source = TransactionSources.objects.get(id=source_id)
+
+        # form_print = request.POST.get('form_print')
+
         code=request.POST.get('code')
         name=request.POST.get('name')
-        rank=request.POST.get('rank')
-        maximum_amount=request.POST.get('maximum_amount')
-        minimum_amount=request.POST.get('minimum_amount')
-        share_unit_min=request.POST.get('share_unit_min')
-        share_unit_max=request.POST.get('share_unit_max')
-        
+        # rank=request.POST.get('rank')
+        # maximum_amount=request.POST.get('maximum_amount')
+        # minimum_amount=request.POST.get('minimum_amount')
+        # share_unit_min=request.POST.get('share_unit_min')
+        # share_unit_max=request.POST.get('share_unit_max')
+
         transaction.code=code
         transaction.name=name
-        transaction.receipt_type=receipts
-        transaction.rank=rank
-        transaction.maximum_amount=maximum_amount
-        transaction.minimum_amount=minimum_amount
-        transaction.share_unit_min=share_unit_min
-        transaction.share_unit_max=share_unit_max
+        transaction.source=source
+        # transaction.receipt_type=receipts
+        # transaction.rank=rank
+        # transaction.maximum_amount=maximum_amount
+        # transaction.minimum_amount=minimum_amount
+        # transaction.share_unit_min=share_unit_min
+        # transaction.share_unit_max=share_unit_max
+        # transaction.form_print=form_print
 
         transaction.save()
         return HttpResponseRedirect(reverse('TransactionTypes_Manage_Load'))
 
     context={
-    'current_user':current_user,
+    'task_array':task_array,
     'form':form,
     'transaction':transaction,
     }
     return render(request,'master_templates/TransactionTypes_Update.html',context)
 
-def FormAutoPrint_Settings(request):
-    current_user=[]
-    if not request.user.user_type == '1':
-        current_user=Executives_Tasks_Model.objects.get(user=request.user.id)
 
+def FormAutoPrint_Settings(request):
+    task_array=[]
+    if not request.user.user_type == '1':
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
     form = FormAutoPrint_Settings_Form(request.POST or None)
     items = FormAutoPrints.objects.all()
     if request.method == 'POST':
-        form== FormAutoPrint_Settings_Form(request.POST)
-        if form.is_valid():
-            form.save()
-            return HttpResponseRedirect(reverse('FormAutoPrint_Settings'))
+        title=request.POST.get("title")
+        status = request.POST.get("status")
+
+
+        FormAutoPrints(title=title,status=status).save()
+        return HttpResponseRedirect(reverse('FormAutoPrint_Settings'))
     context={
-    'current_user':current_user,
+    'task_array':task_array,
     'form':form,
     'items':items,
     }
@@ -4238,19 +4410,20 @@ def FormAutoPrint_Settings(request):
 
 
 def FormAutoPrint_SettingsUpdate(request,pk):
-    current_user=[]
+    task_array=[]
     if not request.user.user_type == '1':
-        current_user=Executives_Tasks_Model.objects.get(user=request.user.id)
-
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
     form = FormAutoPrint_Settings_Update_Form(request.POST or None)
     item = FormAutoPrints.objects.get(id=pk)
- 
+
     if request.method == 'POST':
         title=request.POST.get('title')
-        status_id=request.POST.get('status')
-        status=YesNo.objects.get(title=status_id)
-      
-       
+        status=request.POST.get('status')
+
+
+
         item.title=title
         item.status=status
         item.save()
@@ -4258,7 +4431,7 @@ def FormAutoPrint_SettingsUpdate(request,pk):
     form.fields['title'].initial=item.title
     form.fields['status'].initial=item.status
     context={
-    'current_user':current_user,
+    'task_array':task_array,
     'form':form,
     'items':item,
     }
@@ -4274,10 +4447,11 @@ def FormAutoPrint_SettingsUpdate(request,pk):
 ####################################################################
 
 def loan_based_savings_update(request):
-    current_user=[]
+    task_array=[]
     if not request.user.user_type == '1':
-        current_user=Executives_Tasks_Model.objects.get(user=request.user.id)
-
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
     saving=LoanBasedSavings.objects.first()
     form =LoanBasedSavingsForm(request.POST or None)
     if request.method=="POST":
@@ -4293,17 +4467,18 @@ def loan_based_savings_update(request):
             record.save()
         return HttpResponseRedirect(reverse('loan_based_savings_update'))
     context={
-    'current_user':current_user,
+    'task_array':task_array,
     'form':form,
     'saving':saving,
     }
     return render(request, 'master_templates/loan_based_savings.html',context)
 
 def loan_category_settings(request):
-    current_user=[]
+    task_array=[]
     if not request.user.user_type == '1':
-        current_user=Executives_Tasks_Model.objects.get(user=request.user.id)
-
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
     form=loan_category_settings_form(request.POST or None)
     records = TransactionTypes.objects.filter(source__title="LOAN")
 
@@ -4311,14 +4486,14 @@ def loan_category_settings(request):
         loan_id=request.POST.get('loan')
         loan=TransactionTypes.objects.get(id=loan_id)
 
-        category_id=request.POST.get('category')
-        category=LoanCategory.objects.get(id=category_id)
+        category=request.POST.get('category')
+
 
         loan.category=category
         loan.save()
         return HttpResponseRedirect(reverse('loan_category_settings'))
     context={
-    'current_user':current_user,
+    'task_array':task_array,
     'records':records,
     'form':form,
     }
@@ -4326,27 +4501,69 @@ def loan_category_settings(request):
 
 
 def loan_settings_load(request):
-    current_user=[]
+    task_array=[]
     if not request.user.user_type == '1':
-        current_user=Executives_Tasks_Model.objects.get(user=request.user.id)
-
-    records = TransactionTypes.objects.filter(source__title="LOAN",category__title='MONETARY')
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
+    records = TransactionTypes.objects.filter(source__title="LOAN",category='MONETARY')
     context={
-    'current_user':current_user,
+    'task_array':task_array,
     'records':records,
     }
     return render(request, 'master_templates/loan_settings_load.html',context)
 
+def Savings_Manager_load(request):
+    task_array=[]
+    if not request.user.user_type == '1':
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
+    records = TransactionTypes.objects.filter(source__title="SAVINGS")
+
+    context={
+    'task_array':task_array,
+    'records':records,
+
+    }
+    return render(request, 'master_templates/Savings_Manager_load.html',context)
+
+
+def Savings_Manager_Update(request,pk):
+    task_array=[]
+    if not request.user.user_type == '1':
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
+    record = TransactionTypes.objects.get(id=pk)
+    form = Savings_Manager_Update_form(request.POST or None)
+
+
+    if request.method == 'POST':
+        amount = request.POST.get('amount')
+        record.minimum_amount=amount
+        record.save()
+        return HttpResponseRedirect(reverse('Savings_Manager_load'))
+
+    form.fields['amount'].initial = record.minimum_amount
+    context={
+    'task_array':task_array,
+    'record':record,
+    'form':form,
+    }
+    return render(request, 'master_templates/Savings_Manager_Update.html',context)
+
 
 def loan_settings_details_load(request,pk):
-    current_user=[]
+    task_array=[]
     if not request.user.user_type == '1':
-        current_user=Executives_Tasks_Model.objects.get(user=request.user.id)
-
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
     record = TransactionTypes.objects.get(id=pk)
     saving= LoanBasedSavings.objects.first()
     context={
-    'current_user':current_user,
+    'task_array':task_array,
     'record':record,
     'saving':saving,
     'pk':pk,
@@ -4354,18 +4571,55 @@ def loan_settings_details_load(request,pk):
     return render(request, 'master_templates/loan_settings_details_load.html',context)
 
 
+def loan_guarantors_gross_pay_update(request,pk):
+    task_array=[]
+    if not request.user.user_type == '1':
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
+    item= TransactionTypes.objects.get(id=pk)
+    title="Update Loan Guarantors Gross Pay Rate for " +  item.name
+    instructions='''
+    This page enable you to set the Gaurantors Gross Pay Rating
+    needed to access this loan.
+    '''
+    form = loan_guarantors_gross_pay_update_form(request.POST or None)
+
+    if request.method ==  "POST":
+        form = loan_guarantors_gross_pay_update_form(request.POST)
+        if form.is_valid():
+            guarantors_gross_pay_rating=form.cleaned_data["guarantors_gross_pay_rating"]
+
+            item.guarantors_gross_pay_rating=guarantors_gross_pay_rating
+            item.save()
+            messages.success(request,"Record Updated Successfully")
+            return  HttpResponseRedirect(reverse('loan_settings_details_load',args=(pk,)))
+
+    form.fields['guarantors_gross_pay_rating'].initial=item.guarantors_gross_pay_rating
+    context={
+    'task_array':task_array,
+    'form':form,
+    'instructions':instructions,
+    'url':'loan_guarantors_update',
+    'button_text':"Update Record",
+    'title':title,
+    }
+    return render(request,'master_templates/loan_criteria_update.html', context)
+
+
 
 
 def loan_guarantors_update(request,pk):
-    current_user=[]
+    task_array=[]
     if not request.user.user_type == '1':
-        current_user=Executives_Tasks_Model.objects.get(user=request.user.id)
-
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
     item= TransactionTypes.objects.get(id=pk)
     title="Update Loan Guarantors for " +  item.name
     instructions='''
-    This page enable you to set the total number of Gaurantors 
-    needed to access this loan. 
+    This page enable you to set the total number of Gaurantors
+    needed to access this loan.
     '''
     form = loan_guarantors_update_form(request.POST or None)
 
@@ -4381,7 +4635,7 @@ def loan_guarantors_update(request,pk):
 
     form.fields['guarantors'].initial=item.guarantors
     context={
-    'current_user':current_user,
+    'task_array':task_array,
     'form':form,
     'instructions':instructions,
     'url':'loan_guarantors_update',
@@ -4392,15 +4646,16 @@ def loan_guarantors_update(request,pk):
 
 
 def default_admin_charges_update(request,pk):
-    current_user=[]
+    task_array=[]
     if not request.user.user_type == '1':
-        current_user=Executives_Tasks_Model.objects.get(user=request.user.id)
-
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
     item= TransactionTypes.objects.get(id=pk)
     title="Update Default Admin Charges for " +  item.name
     instructions='''
     This page enable you to set the default admin Charge, this will apply if the the laon amount
-    is not greater to Minimum Loan Admin Charge for this loan. 
+    is not greater to Minimum Loan Admin Charge for this loan.
     '''
     form = default_admin_charges_update_form(request.POST or None)
 
@@ -4416,7 +4671,7 @@ def default_admin_charges_update(request,pk):
 
     form.fields['default_admin_charges'].initial=item.default_admin_charges
     context={
-    'current_user':current_user,
+    'task_array':task_array,
     'form':form,
     'instructions':instructions,
     'url':'default_admin_charges_update',
@@ -4425,25 +4680,25 @@ def default_admin_charges_update(request,pk):
     }
     return render(request,'master_templates/loan_criteria_update.html', context)
 
-    
-def MultipleLoanStatus_update(request,pk):
-    current_user=[]
-    if not request.user.user_type == '1':
-        current_user=Executives_Tasks_Model.objects.get(user=request.user.id)
 
+def MultipleLoanStatus_update(request,pk):
+    task_array=[]
+    if not request.user.user_type == '1':
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
     item= TransactionTypes.objects.get(id=pk)
     title="Update Default Admin Charges for " +  item.name
     instructions='''
-    This page enable you to set if members are allowed to access multiple 
-    fascilities for for this loan. 
+    This page enable you to set if members are allowed to access multiple
+    fascilities for for this loan.
     '''
     form = MultipleLoanStatus_update_form(request.POST or None)
 
     if request.method ==  "POST":
         form = MultipleLoanStatus_update_form(request.POST)
         if form.is_valid():
-            multiple_loan_status_id=form.cleaned_data["multiple_loan_status"]
-            multiple_loan_status=MultipleLoanStatus.objects.get(id=multiple_loan_status_id)
+            multiple_loan_status=form.cleaned_data["multiple_loan_status"]
             record = TransactionTypes.objects.get(id=pk)
             record.multiple_loan_status=multiple_loan_status
             record.save()
@@ -4452,7 +4707,7 @@ def MultipleLoanStatus_update(request,pk):
 
     form.fields['multiple_loan_status'].initial=item.multiple_loan_status
     context={
-    'current_user':current_user,
+    'task_array':task_array,
     'form':form,
     'instructions':instructions,
     'url':'MultipleLoanStatus_update',
@@ -4462,16 +4717,85 @@ def MultipleLoanStatus_update(request,pk):
     return render(request,'master_templates/loan_criteria_update.html', context)
 
 
-def loan_savings_based_update(request,pk):
-    current_user=[]
+def auto_stop_savings_update(request,pk):
+    task_array=[]
     if not request.user.user_type == '1':
-        current_user=Executives_Tasks_Model.objects.get(user=request.user.id)
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
+    item= TransactionTypes.objects.get(id=pk)
+    title="Update Auto Stop Savings for " +  item.name
+    instructions='''
+    This page enable you to Manage Auto Stop Saving Anchored for for this loan.
+    '''
+    form = auto_stop_savings_update_form(request.POST or None)
 
+    if request.method ==  "POST":
+        if form.is_valid():
+            auto_stop_savings=form.cleaned_data["auto_stop_savings"]
+
+            item.auto_stop_savings=auto_stop_savings
+            item.save()
+            messages.success(request,"Record Updated Successfully")
+            return  HttpResponseRedirect(reverse('loan_settings_details_load',args=(pk,)))
+
+    form.fields['auto_stop_savings'].initial=item.auto_stop_savings
+    context={
+    'task_array':task_array,
+    'form':form,
+    'instructions':instructions,
+    'url':'auto_stop_savings_update',
+    'button_text':"Update Record",
+    'title':title,
+    }
+    return render(request,'master_templates/loan_criteria_update.html', context)
+
+
+
+def receipt_types_settings(request,pk):
+    task_array=[]
+    if not request.user.user_type == '1':
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
+    item= TransactionTypes.objects.get(id=pk)
+    title="Update Receipt Type for " +  item.name
+    instructions='''
+    This page enable you to Manage Receipt Type for for this loan.
+    '''
+    form = receipt_types_settings_form(request.POST or None)
+
+    if request.method ==  "POST":
+        if form.is_valid():
+            receipt_type=form.cleaned_data["receipt_type"]
+
+            item.receipt_type=receipt_type
+            item.save()
+            messages.success(request,"Record Updated Successfully")
+            return  HttpResponseRedirect(reverse('loan_settings_details_load',args=(pk,)))
+
+    form.fields['receipt_type'].initial=item.receipt_type
+    context={
+    'task_array':task_array,
+    'form':form,
+    'instructions':instructions,
+    'url':'receipt_types_settings',
+    'button_text':"Update Record",
+    'title':title,
+    }
+    return render(request,'master_templates/loan_criteria_update.html', context)
+
+
+def loan_savings_based_update(request,pk):
+    task_array=[]
+    if not request.user.user_type == '1':
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
     item= TransactionTypes.objects.get(id=pk)
     title="Update Loan Savings Based for " +  item.name
     instructions='''
-    This page enable you to set the percentage amout to be saved in 
-    order to access a given loan.
+    This page enable you to set whether this transaction is based on a certain savings.
     '''
     form = loan_savings_based_update_form(request.POST or None)
 
@@ -4487,7 +4811,7 @@ def loan_savings_based_update(request,pk):
 
     form.fields['loan_savings_based'].initial=item.savings_rate
     context={
-    'current_user':current_user,
+    'task_array':task_array,
     'form':form,
     'instructions':instructions,
     'url':'loan_savings_based_update',
@@ -4497,12 +4821,49 @@ def loan_savings_based_update(request,pk):
     return render(request,'master_templates/loan_criteria_update.html', context)
 
 
+def loan_savings_based_Rate_update(request,pk):
+    task_array=[]
+    if not request.user.user_type == '1':
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
+    item= TransactionTypes.objects.get(id=pk)
+    title="Update Loan Savings Based Rate for " +  item.name
+    instructions='''
+    This page enable you to set the percentage amout to be saved in
+    order to access a given loan.
+    '''
+    form = loan_savings_based_Rate_update_form(request.POST or None)
+
+    if request.method ==  "POST":
+
+        if form.is_valid():
+            saving_rating=form.cleaned_data["loan_savings_based_rate"]
+            record = TransactionTypes.objects.get(id=pk)
+            record.saving_rating=saving_rating
+            record.save()
+            messages.success(request,"Record Updated Successfully")
+            return  HttpResponseRedirect(reverse('loan_settings_details_load',args=(pk,)))
+
+    form.fields['loan_savings_based_rate'].initial=item.saving_rating
+    context={
+    'task_array':task_array,
+    'form':form,
+    'instructions':instructions,
+    'url':'loan_savings_based_Rate_update',
+    'button_text':"Update Record",
+    'title':title,
+    }
+    return render(request,'master_templates/loan_criteria_update.html', context)
+
+
 
 def loan_category_update(request,pk):
-    current_user=[]
+    task_array=[]
     if not request.user.user_type == '1':
-        current_user=Executives_Tasks_Model.objects.get(user=request.user.id)
-
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
     item= TransactionTypes.objects.get(id=pk)
     title="Update Loan Category for " +  item.name
     instructions='''
@@ -4513,8 +4874,8 @@ def loan_category_update(request,pk):
     if request.method ==  "POST":
         form = loan_category_update_form(request.POST)
         if form.is_valid():
-            category_id=form.cleaned_data["category"]
-            category=LoanCategory.objects.get(id=category_id)
+            category=form.cleaned_data["category"]
+
             record = TransactionTypes.objects.get(id=pk)
             record.category=category
             record.save()
@@ -4523,7 +4884,7 @@ def loan_category_update(request,pk):
 
     form.fields['category'].initial=item.category
     context={
-    'current_user':current_user,
+    'task_array':task_array,
     'form':form,
     'instructions':instructions,
     'url':'loan_category_update',
@@ -4534,10 +4895,11 @@ def loan_category_update(request,pk):
 
 
 def loan_duration_update(request,pk):
-    current_user=[]
+    task_array=[]
     if not request.user.user_type == '1':
-        current_user=Executives_Tasks_Model.objects.get(user=request.user.id)
-
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
     item= TransactionTypes.objects.get(id=pk)
     title="Update Loan Duration for " +  item.name
     instructions='''
@@ -4557,7 +4919,7 @@ def loan_duration_update(request,pk):
 
     form.fields['duration'].initial=item.duration
     context={
-    'current_user':current_user,
+    'task_array':task_array,
     'form':form,
     'instructions':instructions,
     'url':'loan_duration_update',
@@ -4568,10 +4930,11 @@ def loan_duration_update(request,pk):
 
 
 def loan_name_update(request,pk):
-    current_user=[]
+    task_array=[]
     if not request.user.user_type == '1':
-        current_user=Executives_Tasks_Model.objects.get(user=request.user.id)
-
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
     item= TransactionTypes.objects.get(id=pk)
     title="Update Loan Description for " +  item.name
     instructions='''
@@ -4591,7 +4954,7 @@ def loan_name_update(request,pk):
 
     form.fields['name'].initial=item.name
     context={
-    'current_user':current_user,
+    'task_array':task_array,
     'form':form,
     'instructions':instructions,
     'url':'loan_name_update',
@@ -4602,10 +4965,11 @@ def loan_name_update(request,pk):
 
 
 def loan_interest_rate_update(request,pk):
-    current_user=[]
+    task_array=[]
     if not request.user.user_type == '1':
-        current_user=Executives_Tasks_Model.objects.get(user=request.user.id)
-
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
     item= TransactionTypes.objects.get(id=pk)
     title="Update Loan Interest Rate  for " +  item.name
     instructions='''
@@ -4625,7 +4989,7 @@ def loan_interest_rate_update(request,pk):
             return	HttpResponseRedirect(reverse('loan_settings_details_load',args=(pk,)))
     form.fields['interest_rate'].initial=item.interest_rate
     context={
-    'current_user':current_user,
+    'task_array':task_array,
     'form':form,
     'instructions':instructions,
     'url':'loan_interest_rate_update',
@@ -4636,14 +5000,15 @@ def loan_interest_rate_update(request,pk):
 
 
 def loan_interest_deduction_soucrces_update(request,pk):
-    current_user=[]
+    task_array=[]
     if not request.user.user_type == '1':
-        current_user=Executives_Tasks_Model.objects.get(user=request.user.id)
-
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
     item= TransactionTypes.objects.get(id=pk)
     title="Update Loan Interest Deduction Sources  for " +  item.name
     instructions='''
-    This page enable you to set whether the interest will be deducted at source or 
+    This page enable you to set whether the interest will be deducted at source or
     be spread out with the monthly deduction of the Loans.
     '''
     form = loan_interest_deduction_soucrces_Form(request.POST or None)
@@ -4651,9 +5016,7 @@ def loan_interest_deduction_soucrces_update(request,pk):
     if request.method ==  "POST":
         form = loan_interest_deduction_soucrces_Form(request.POST)
         if form.is_valid():
-            source=form.cleaned_data["source"]
-            interest_deduction=InterestDeductionSource.objects.get(id=source)
-
+            interest_deduction=form.cleaned_data["source"]
             record = TransactionTypes.objects.get(id=pk)
             record.interest_deduction=interest_deduction
             record.save()
@@ -4662,7 +5025,7 @@ def loan_interest_deduction_soucrces_update(request,pk):
 
     form.fields['source'].initial=item.interest_deduction
     context={
-    'current_user':current_user,
+    'task_array':task_array,
     'form':form,
     'instructions':instructions,
     'url':'loan_interest_deduction_soucrces_update',
@@ -4673,10 +5036,11 @@ def loan_interest_deduction_soucrces_update(request,pk):
 
 
 def loan_maximum_amount_update(request,pk):
-    current_user=[]
+    task_array=[]
     if not request.user.user_type == '1':
-        current_user=Executives_Tasks_Model.objects.get(user=request.user.id)
-
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
     item= TransactionTypes.objects.get(id=pk)
     title="Update Loan Maximum Amount  for " +  item.name
     instructions='''
@@ -4696,7 +5060,7 @@ def loan_maximum_amount_update(request,pk):
 
     form.fields['maximum_amount'].initial=item.maximum_amount
     context={
-    'current_user':current_user,
+    'task_array':task_array,
     'form':form,
     'instructions':instructions,
     'url':'loan_maximum_amount_update',
@@ -4706,51 +5070,53 @@ def loan_maximum_amount_update(request,pk):
     return render(request,'master_templates/loan_criteria_update.html', context)
 
 
-def loan_rank_update_update(request,pk):
-    current_user=[]
-    if not request.user.user_type == '1':
-        current_user=Executives_Tasks_Model.objects.get(user=request.user.id)
+# def loan_rank_update_update(request,pk):
+#     task_array=[]
+#     if not request.user.user_type == '1':
+#         tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+#         for task in tasks:
+#             task_array.append(task.task.title)
+#     item= TransactionTypes.objects.get(id=pk)
+#     title="Update Loan Rank  for " +  item.name
+#     instructions='''
+#     This page enable you to set the order in which
+#     monthly deduction shall flow fro the bulk deduction.
+#     '''
 
-    item= TransactionTypes.objects.get(id=pk)
-    title="Update Loan Rank  for " +  item.name
-    instructions='''
-    This page enable you to set the order in which 
-    monthly deduction shall flow fro the bulk deduction.
-    '''
+#     form = loan_rank_update_form(request.POST or None)
 
-    form = loan_rank_update_form(request.POST or None)
+#     if request.method ==  "POST":
+#         form = loan_rank_update_form(request.POST)
+#         if form.is_valid():
+#             rank=form.cleaned_data["rank"]
+#             record = TransactionTypes.objects.get(id=pk)
+#             record.rank=rank
+#             record.save()
+#             messages.success(request,"Record Updated Successfully")
+#             return	HttpResponseRedirect(reverse('loan_settings_details_load',args=(pk,)))
 
-    if request.method ==  "POST":
-        form = loan_rank_update_form(request.POST)
-        if form.is_valid():
-            rank=form.cleaned_data["rank"]
-            record = TransactionTypes.objects.get(id=pk)
-            record.rank=rank
-            record.save()
-            messages.success(request,"Record Updated Successfully")
-            return	HttpResponseRedirect(reverse('loan_settings_details_load',args=(pk,)))
-
-    form.fields['rank'].initial=item.rank
-    context={
-    'current_user':current_user,
-    'form':form,
-    'instructions':instructions,
-    'url':'loan_rank_update_update',
-    'button_text':"Update Record",
-    'title':title,
-    }
-    return render(request,'master_templates/loan_criteria_update.html', context)
+#     form.fields['rank'].initial=item.rank
+#     context={
+#     'task_array':task_array,
+#     'form':form,
+#     'instructions':instructions,
+#     'url':'loan_rank_update_update',
+#     'button_text':"Update Record",
+#     'title':title,
+#     }
+#     return render(request,'master_templates/loan_criteria_update.html', context)
 
 
 def loan_admin_charges_rate_update(request,pk):
-    current_user=[]
+    task_array=[]
     if not request.user.user_type == '1':
-        current_user=Executives_Tasks_Model.objects.get(user=request.user.id)
-
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
     item= TransactionTypes.objects.get(id=pk)
     title="Update Loan Rank  for " +  item.name
     instructions='''
-    This page enable you to set whether admin charge is Cash or a 
+    This page enable you to set whether admin charge is Cash or a
     percentage of amount requested for loan.
     '''
     form = loan_admin_charges_rate_update_form(request.POST or None)
@@ -4758,8 +5124,8 @@ def loan_admin_charges_rate_update(request,pk):
     if request.method ==  "POST":
         form = loan_admin_charges_rate_update_form(request.POST)
         if form.is_valid():
-            admin_charge_id=form.cleaned_data["admin_charges_rating"]
-            admin_charges_rating=AdminCharges.objects.get(id=admin_charge_id)
+            admin_charges_rating=form.cleaned_data["admin_charges_rating"]
+
             record = TransactionTypes.objects.get(id=pk)
             record.admin_charges_rating=admin_charges_rating
             record.save()
@@ -4768,7 +5134,7 @@ def loan_admin_charges_rate_update(request,pk):
 
     form.fields['admin_charges_rating'].initial=item.admin_charges_rating
     context={
-    'current_user':current_user,
+    'task_array':task_array,
     'form':form,
     'instructions':instructions,
     'url':'loan_admin_charges_rate_update',
@@ -4779,14 +5145,15 @@ def loan_admin_charges_rate_update(request,pk):
 
 
 def loan_admin_charges_update(request,pk):
-    current_user=[]
+    task_array=[]
     if not request.user.user_type == '1':
-        current_user=Executives_Tasks_Model.objects.get(user=request.user.id)
-
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
     item= TransactionTypes.objects.get(id=pk)
     title="Update Loan Admin Charges  for " +  item.name
     instructions='''
-    This page enable you to set the percentage rating of 
+    This page enable you to set the percentage rating of
     the Admin charge if it percentage based.
     '''
     form = loan_admin_charges_update_form(request.POST or None)
@@ -4803,7 +5170,7 @@ def loan_admin_charges_update(request,pk):
 
     form.fields['admin_charges'].initial=item.admin_charges
     context={
-    'current_user':current_user,
+    'task_array':task_array,
     'form':form,
     'instructions':instructions,
     'url':'loan_admin_charges_update',
@@ -4812,18 +5179,19 @@ def loan_admin_charges_update(request,pk):
     }
     return render(request,'master_templates/loan_criteria_update.html', context)
 
-	
+
 
 def loan_admin_charges_minimum_update(request,pk):
-    current_user=[]
+    task_array=[]
     if not request.user.user_type == '1':
-        current_user=Executives_Tasks_Model.objects.get(user=request.user.id)
-
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
     item= TransactionTypes.objects.get(id=pk)
     title="Update Loan Admin Charges Minimum  for " +  item.name
     instructions='''
-    This page enable you to set the minimum loan amount 
-    upon which there would be flat rate in cash of Admin Charges. 
+    This page enable you to set the minimum loan amount
+    upon which there would be flat rate in cash of Admin Charges.
     '''
     form = loan_admin_charges_minimum_update_form(request.POST or None)
 
@@ -4839,7 +5207,7 @@ def loan_admin_charges_minimum_update(request,pk):
 
     form.fields['admin_charges_minimum'].initial=item.admin_charges_minimum
     context={
-    'current_user':current_user,
+    'task_array':task_array,
     'form':form,
     'instructions':instructions,
     'url':'loan_admin_charges_minimum_update',
@@ -4848,18 +5216,19 @@ def loan_admin_charges_minimum_update(request,pk):
     }
     return render(request,'master_templates/loan_criteria_update.html', context)
 
-	
-def loan_salary_relationship_update(request,pk):
-    current_user=[]
-    if not request.user.user_type == '1':
-        current_user=Executives_Tasks_Model.objects.get(user=request.user.id)
 
+def loan_salary_relationship_update(request,pk):
+    task_array=[]
+    if not request.user.user_type == '1':
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
     item= TransactionTypes.objects.get(id=pk)
     title="Update Loan Salary Loan Relationship  for " +  item.name
 
     instructions='''
-    This page enable you to set the percentage which loans is allowed to be 
-    given from the members Net Salary. 
+    This page enable you to set the percentage which loans is allowed to be
+    given from the members Net Salary.
     '''
     form = loan_salary_relationship_update_form(request.POST or None)
 
@@ -4875,7 +5244,7 @@ def loan_salary_relationship_update(request,pk):
 
     form.fields['salary_loan_relationship'].initial=item.salary_loan_relationship
     context={
-    'current_user':current_user,
+    'task_array':task_array,
     'form':form,
     'instructions':instructions,
     'url':'loan_salary_relationship_update',
@@ -4886,15 +5255,16 @@ def loan_salary_relationship_update(request,pk):
 
 
 def loan_loan_age_update(request,pk):
-    current_user=[]
+    task_array=[]
     if not request.user.user_type == '1':
-        current_user=Executives_Tasks_Model.objects.get(user=request.user.id)
-
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
     item= TransactionTypes.objects.get(id=pk)
     title="Update Loan Age  for " +  item.name
     instructions='''
-    This page enable you to set the number of months one has to a member before 
-    Such person can access this loan. 
+    This page enable you to set the number of months one has to a member before
+    Such person can access this loan.
     '''
     form = loan_loan_age_update_form(request.POST or None)
 
@@ -4910,7 +5280,7 @@ def loan_loan_age_update(request,pk):
 
     form.fields['loan_age'].initial=item.loan_age
     context={
-    'current_user':current_user,
+    'task_array':task_array,
     'form':form,
     'instructions':instructions,
     'url':'loan_loan_age_update',
@@ -4925,14 +5295,112 @@ def loan_loan_age_update(request,pk):
 ####################################################################
 ###################### NON-MONETARY LOAN SETTINGS ###################
 ####################################################################
-def loan_settings_non_monetary_list_load(request):
-    current_user=[]
+def trending_commodity_signatories(request):
+    task_array=[]
     if not request.user.user_type == '1':
-        current_user=Executives_Tasks_Model.objects.get(user=request.user.id)
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
+    records = Treanding_Commodity_Signatory.objects.all()
+    form = trending_commodity_signatories_form(request.POST or None )
+    if request.method == 'POST':
+        name = request.POST.get('name')
+        designation = request.POST.get('designation')
+        phone_no = request.POST.get('phone_no')
 
-    records = TransactionTypes.objects.filter(category__title='NON-MONETARY')
+        if not name:
+            messages.error(request, "Name is missing")
+            return HttpResponseRedirect(reverse('trending_commodity_signatories'))
+        if not designation:
+            messages.error(request, "Designation is missing")
+            return HttpResponseRedirect(reverse('trending_commodity_signatories'))
+        if not phone_no:
+            messages.error(request, "Phone Number is missing")
+            return HttpResponseRedirect(reverse('trending_commodity_signatories'))
+
+
+        Treanding_Commodity_Signatory(name=name.upper(),designation=designation.upper(),phone_no=phone_no).save()
+        return HttpResponseRedirect(reverse('trending_commodity_signatories'))
+
     context={
-    'current_user':current_user,
+    'task_array':task_array,
+    'form':form,
+    'records':records,
+    }
+    return render(request, 'master_templates/trending_commodity_signatories.html',context)
+
+
+def trending_commodity_signatories_delete(request,pk):
+    Treanding_Commodity_Signatory.objects.filter(id=pk).delete()
+    return HttpResponseRedirect(reverse('trending_commodity_signatories'))
+
+
+
+def Commodity_SubCategeory_list_load(request):
+    task_array=[]
+    if not request.user.user_type == '1':
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
+    records = TransactionTypes.objects.filter(category='NON-MONETARY')
+    context={
+    'task_array':task_array,
+    'records':records,
+    }
+    return render(request, 'master_templates/Commodity_SubCategeory_list_load.html',context)
+
+
+def loan_settings_non_monetary_Sub_Categories_load(request,pk):
+    task_array=[]
+    if not request.user.user_type == '1':
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
+    records = Commodity_Categories.objects.filter(transaction_id=pk)
+    context={
+    'task_array':task_array,
+    'records':records,
+    }
+    return render(request, 'master_templates/loan_settings_non_monetary_Sub_Categories_load.html',context)
+
+
+
+def loan_settings_non_monetary_Sub_Categories_Preview(request,pk):
+    task_array=[]
+    if not request.user.user_type == '1':
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
+    records = Commodity_Category_Sub.objects.filter(category_id=pk)
+    category = Commodity_Categories.objects.get(id=pk)
+    context={
+    'task_array':task_array,
+    'category':category,
+    'records':records,
+    }
+    return render(request, 'master_templates/loan_settings_non_monetary_Sub_Categories_Preview.html',context)
+
+
+def loan_settings_non_monetary_Sub_Categories_Update(request,pk):
+
+    record = Commodity_Category_Sub.objects.get(id=pk)
+    return_pk=record.category.pk
+    if record.status == 'ACTIVE':
+        record.status = 'INACTIVE'
+    elif record.status == 'INACTIVE':
+        record.status = 'ACTIVE'
+    record.save()
+    return HttpResponseRedirect(reverse('loan_settings_non_monetary_Sub_Categories_Preview',args=(return_pk,)))
+
+def loan_settings_non_monetary_list_load(request):
+    task_array=[]
+    if not request.user.user_type == '1':
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
+    records = TransactionTypes.objects.filter(category='NON-MONETARY')
+    context={
+    'task_array':task_array,
     'records':records,
     }
     return render(request, 'master_templates/loan_settings_non_monetary_list_load.html',context)
@@ -4940,13 +5408,14 @@ def loan_settings_non_monetary_list_load(request):
 
 
 def loan_settings_non_monetary_Categories_load(request,pk):
-    current_user=[]
+    task_array=[]
     if not request.user.user_type == '1':
-        current_user=Executives_Tasks_Model.objects.get(user=request.user.id)
-
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
     records = Commodity_Categories.objects.filter(transaction_id=pk)
     context={
-    'current_user':current_user,
+    'task_array':task_array,
     'records':records,
     }
     return render(request, 'master_templates/loan_settings_non_monetary_Categories_load.html',context)
@@ -4956,13 +5425,14 @@ def loan_settings_non_monetary_Categories_load(request,pk):
 
 def loan_settings_non_monetary_settings(request,pk):
     record = Commodity_Categories.objects.get(id=pk)
-    current_user=[]
+    task_array=[]
     if not request.user.user_type == '1':
-        current_user=Executives_Tasks_Model.objects.get(user=request.user.id)
-
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
     context={
-    'current_user':current_user,
-  
+    'task_array':task_array,
+
     'record':record,
     }
     return render(request,'master_templates/loan_settings_non_monetary_settings.html',context)
@@ -4970,16 +5440,18 @@ def loan_settings_non_monetary_settings(request,pk):
 
 
 
-def non_monetary_oan_guarantors_update(request,pk):
-    current_user=[]
-    if not request.user.user_type == '1':
-        current_user=Executives_Tasks_Model.objects.get(user=request.user.id)
 
+def non_monetary_oan_guarantors_update(request,pk):
+    task_array=[]
+    if not request.user.user_type == '1':
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
     item=  Commodity_Categories.objects.get(id=pk)
     title="Update Loan Guarnators for " +  item.title
     instructions='''
-    This page enable you to set the total number of Gaurantors 
-    needed to access this loan. 
+    This page enable you to set the total number of Gaurantors
+    needed to access this loan.
     '''
     form = loan_guarantors_update_form(request.POST or None)
 
@@ -4995,35 +5467,75 @@ def non_monetary_oan_guarantors_update(request,pk):
 
     form.fields['guarantors'].initial=item.guarantors
     context={
-    'current_user':current_user,
+    'task_array':task_array,
     'form':form,
     'instructions':instructions,
     'url':'non_monetary_oan_guarantors_update',
     'button_text':"Update Record",
     'title':title,
+     'item':item,
     }
     return render(request,'master_templates/loan_criteria_update.html', context)
 
 
-    
-def Non_Monetary_MultipleLoanStatus_update(request,pk):
-    current_user=[]
+def non_monetary_oan_guarantors_gross_pay_rating_update(request,pk):
+    task_array=[]
     if not request.user.user_type == '1':
-        current_user=Executives_Tasks_Model.objects.get(user=request.user.id)
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
+    item=  Commodity_Categories.objects.get(id=pk)
+    title="Update Loan Guarnators for " +  item.title
+    instructions='''
+    This page enable you to set Gaurantors
+    Gross Pay Ratinf
+    needed to access this loan.
+    '''
+    form = loan_guarantors_gross_pay_update_form(request.POST or None)
 
+    if request.method ==  "POST":
+        form = loan_guarantors_gross_pay_update_form(request.POST)
+        if form.is_valid():
+            guarantors_gross_pay_rating=form.cleaned_data["guarantors_gross_pay_rating"]
+
+            item.guarantors_gross_pay_rating=guarantors_gross_pay_rating
+            item.save()
+            messages.success(request,"Record Updated Successfully")
+            return  HttpResponseRedirect(reverse('loan_settings_non_monetary_settings',args=(pk,)))
+
+    form.fields['guarantors_gross_pay_rating'].initial=item.guarantors_gross_pay_rating
+    context={
+    'task_array':task_array,
+    'form':form,
+    'instructions':instructions,
+    'url':'non_monetary_oan_guarantors_update',
+    'button_text':"Update Record",
+    'title':title,
+    'item':item,
+    }
+    return render(request,'master_templates/loan_criteria_update.html', context)
+
+
+
+def Non_Monetary_MultipleLoanStatus_update(request,pk):
+    task_array=[]
+    if not request.user.user_type == '1':
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
     item= Commodity_Categories.objects.get(id=pk)
     title="Update Default Admin Charges for " +  item.title
     instructions='''
-    This page enable you to set if members are allowed to access multiple 
-    fascilities for for this loan. 
+    This page enable you to set if members are allowed to access multiple
+    fascilities for for this loan.
     '''
     form = MultipleLoanStatus_update_form(request.POST or None)
 
     if request.method ==  "POST":
         form = MultipleLoanStatus_update_form(request.POST)
         if form.is_valid():
-            multiple_loan_status_id=form.cleaned_data["multiple_loan_status"]
-            multiple_loan_status=MultipleLoanStatus.objects.get(id=multiple_loan_status_id)
+            multiple_loan_status=form.cleaned_data["multiple_loan_status"]
+
             record = Commodity_Categories.objects.get(id=pk)
             record.multiple_loan_status=multiple_loan_status
             record.save()
@@ -5032,22 +5544,24 @@ def Non_Monetary_MultipleLoanStatus_update(request,pk):
 
     form.fields['multiple_loan_status'].initial=item.multiple_loan_status
     context={
-    'current_user':current_user,
+    'task_array':task_array,
     'form':form,
     'instructions':instructions,
     'url':'Non_Monetary_MultipleLoanStatus_update',
     'button_text':"Update Record",
     'title':title,
+     'item':item,
     }
     return render(request,'master_templates/loan_criteria_update.html', context)
 
 
 
 def non_monetary_loan_duration_update(request,pk):
-    current_user=[]
+    task_array=[]
     if not request.user.user_type == '1':
-        current_user=Executives_Tasks_Model.objects.get(user=request.user.id)
-
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
     item= Commodity_Categories.objects.get(id=pk)
     title="Update Loan Duration for " +  item.title
     instructions='''
@@ -5067,21 +5581,23 @@ def non_monetary_loan_duration_update(request,pk):
 
     form.fields['duration'].initial=item.duration
     context={
-    'current_user':current_user,
+    'task_array':task_array,
     'form':form,
     'instructions':instructions,
     'url':'non_monetary_loan_duration_update',
     'button_text':"Update Record",
     'title':title,
+     'item':item,
     }
     return render(request,'master_templates/loan_criteria_update.html', context)
 
 
 def non_monetary_loan_name_update(request,pk):
-    current_user=[]
+    task_array=[]
     if not request.user.user_type == '1':
-        current_user=Executives_Tasks_Model.objects.get(user=request.user.id)
-
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
     item= Commodity_Categories.objects.get(id=pk)
     title="Update Loan Description for " +  item.title
     instructions='''
@@ -5101,21 +5617,23 @@ def non_monetary_loan_name_update(request,pk):
 
     form.fields['name'].initial=item.title
     context={
-    'current_user':current_user,
+    'task_array':task_array,
     'form':form,
     'instructions':instructions,
     'url':'non_monetary_loan_name_update',
     'button_text':"Update Record",
     'title':title,
+     'item':item,
     }
     return render(request,'master_templates/loan_criteria_update.html', context)
 
 
 def non_monetary_loan_interest_rate_update(request,pk):
-    current_user=[]
+    task_array=[]
     if not request.user.user_type == '1':
-        current_user=Executives_Tasks_Model.objects.get(user=request.user.id)
-
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
     item= Commodity_Categories.objects.get(id=pk)
     title="Update Loan Interest Rate  for " +  item.title
     instructions='''
@@ -5135,12 +5653,13 @@ def non_monetary_loan_interest_rate_update(request,pk):
             return  HttpResponseRedirect(reverse('loan_settings_non_monetary_settings',args=(pk,)))
     form.fields['interest_rate'].initial=item.interest_rate
     context={
-    'current_user':current_user,
+    'task_array':task_array,
     'form':form,
     'instructions':instructions,
     'url':'non_monetary_loan_interest_rate_update',
     'button_text':"Update Record",
     'title':title,
+     'item':item,
     }
     return render(request,'master_templates/loan_criteria_update.html', context)
 
@@ -5148,14 +5667,15 @@ def non_monetary_loan_interest_rate_update(request,pk):
 
 
 def non_monetary_loan_admin_charges_rate_update(request,pk):
-    current_user=[]
+    task_array=[]
     if not request.user.user_type == '1':
-        current_user=Executives_Tasks_Model.objects.get(user=request.user.id)
-
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
     item= Commodity_Categories.objects.get(id=pk)
     title="Update Loan AdminCharge Rate for " +  item.title
     instructions='''
-    This page enable you to set whether admin charge is Cash or a 
+    This page enable you to set whether admin charge is Cash or a
     percentage of amount requested for loan.
     '''
     form = loan_admin_charges_rate_update_form(request.POST or None)
@@ -5163,23 +5683,24 @@ def non_monetary_loan_admin_charges_rate_update(request,pk):
     if request.method ==  "POST":
         form = loan_admin_charges_rate_update_form(request.POST)
         if form.is_valid():
-            admin_charge_id=form.cleaned_data["admin_charges_rating"]
-            admin_charges_rating=AdminCharges.objects.get(id=admin_charge_id)
+            admin_charges_rating=form.cleaned_data["admin_charges_rating"]
+
             record = Commodity_Categories.objects.get(id=pk)
             record.admin_charges_rating=admin_charges_rating
             record.save()
             messages.success(request,"Record Updated Successfully")
             return  HttpResponseRedirect(reverse('loan_settings_non_monetary_settings',args=(pk,)))
     if item.admin_charges_rating:
-        form.fields['admin_charges_rating'].initial=item.admin_charges_rating.id
-    
+        form.fields['admin_charges_rating'].initial=item.admin_charges_rating
+
     context={
-    'current_user':current_user,
+    'task_array':task_array,
     'form':form,
     'instructions':instructions,
     'url':'non_monetary_loan_admin_charges_rate_update',
     'button_text':"Update Record",
     'title':title,
+     'item':item,
     }
     return render(request,'master_templates/loan_criteria_update.html', context)
 
@@ -5187,14 +5708,15 @@ def non_monetary_loan_admin_charges_rate_update(request,pk):
 
 
 def non_monetary_loan_admin_charges_update(request,pk):
-    current_user=[]
+    task_array=[]
     if not request.user.user_type == '1':
-        current_user=Executives_Tasks_Model.objects.get(user=request.user.id)
-
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
     item= Commodity_Categories.objects.get(id=pk)
     title="Update Loan Admin Charges  for " +  item.title
     instructions='''
-    This page enable you to set the percentage rating of 
+    This page enable you to set the percentage rating of
     the Admin charge if it percentage based.
     '''
     form = loan_admin_charges_update_form(request.POST or None)
@@ -5211,99 +5733,105 @@ def non_monetary_loan_admin_charges_update(request,pk):
 
     form.fields['admin_charges'].initial=item.admin_charges
     context={
-    'current_user':current_user,
+    'task_array':task_array,
     'form':form,
     'instructions':instructions,
     'url':'non_monetary_loan_admin_charges_update',
     'button_text':"Update Record",
     'title':title,
+     'item':item,
     }
     return render(request,'master_templates/loan_criteria_update.html', context)
 
-    
 
-def non_monetary_loan_form_print_update(request,pk):
-    current_user=[]
-    if not request.user.user_type == '1':
-        current_user=Executives_Tasks_Model.objects.get(user=request.user.id)
 
-    item= Commodity_Categories.objects.get(id=pk)
-    title="Update Loan Form Print  for " +  item.title
-    instructions='''
-    This page enable you to set the minimum loan amount 
-    upon which there would be flat rate in cash of Admin Charges. 
-    '''
-    form = loan_form_print_form(request.POST or None)
+# def non_monetary_loan_form_print_update(request,pk):
+#     task_array=[]
+#     if not request.user.user_type == '1':
+#         tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+#         for task in tasks:
+#             task_array.append(task.task.title)
+#     item= Commodity_Categories.objects.get(id=pk)
+#     title="Update Loan Form Print  for " +  item.title
+#     instructions='''
+#     This page enable you to set the minimum loan amount
+#     upon which there would be flat rate in cash of Admin Charges.
+#     '''
+#     form = loan_form_print_form(request.POST or None)
 
-    if request.method ==  "POST":
-        form = loan_form_print_form(request.POST)
-        if form.is_valid():
-            form_print_id=form.cleaned_data["form_print"]
-            form_print=YesNo.objects.get(id=form_print_id)
-            record = Commodity_Categories.objects.get(id=pk)
-            record.form_print=form_print
-            record.save()
-            messages.success(request,"Record Updated Successfully")
-            return  HttpResponseRedirect(reverse('loan_settings_non_monetary_settings',args=(pk,)))
+#     if request.method ==  "POST":
+#         form = loan_form_print_form(request.POST)
+#         if form.is_valid():
+#             form_print=form.cleaned_data["form_print"]
 
-    form.fields['form_print'].initial=item.form_print.id
-    context={
-    'current_user':current_user,
-    'form':form,
-    'instructions':instructions,
-    'url':'non_monetary_loan_form_print_update',
-    'button_text':"Update Record",
-    'title':title,
-    }
-    return render(request,'master_templates/loan_criteria_update.html', context)
+#             record = Commodity_Categories.objects.get(id=pk)
+#             record.form_print=form_print
+#             record.save()
+#             messages.success(request,"Record Updated Successfully")
+#             return  HttpResponseRedirect(reverse('loan_settings_non_monetary_settings',args=(pk,)))
 
-    
+#     form.fields['form_print'].initial=item.form_print
+#     context={
+#     'task_array':task_array,
+#     'form':form,
+#     'instructions':instructions,
+#     'url':'non_monetary_loan_form_print_update',
+#     'button_text':"Update Record",
+#     'title':title,
+#      'item':item,
+#     }
+#     return render(request,'master_templates/loan_criteria_update.html', context)
+
+
 def non_monetary_loan_receipt_type_update(request,pk):
-    current_user=[]
+    task_array=[]
     if not request.user.user_type == '1':
-        current_user=Executives_Tasks_Model.objects.get(user=request.user.id)
-
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
     item= Commodity_Categories.objects.get(id=pk)
     title="Update Loan Salary Loan Relationship  for " +  item.title
 
     instructions='''
-    This page enable you to set the Receipt Type for Issuance. 
+    This page enable you to set the Receipt Type for Issuance.
     '''
     form = loan_Receipt_type_update_form(request.POST or None)
 
     if request.method ==  "POST":
         form = loan_Receipt_type_update_form(request.POST)
         if form.is_valid():
-            receipt_type_id=form.cleaned_data["receipt_type"]
-            receipt_type=ReceiptTypes.objects.get(id=receipt_type_id)
+            receipt_type=form.cleaned_data["receipt_type"]
+
             record = Commodity_Categories.objects.get(id=pk)
             record.receipt_type=receipt_type
             record.save()
             messages.success(request,"Record Updated Successfully")
             return  HttpResponseRedirect(reverse('loan_settings_non_monetary_settings',args=(pk,)))
 
-    form.fields['receipt_type'].initial=item.receipt_type.id
+    form.fields['receipt_type'].initial=item.receipt_type
     context={
-    'current_user':current_user,
+    'task_array':task_array,
     'form':form,
     'instructions':instructions,
     'url':'non_monetary_loan_receipt_type_update',
     'button_text':"Update Record",
     'title':title,
+     'item':item,
     }
     return render(request,'master_templates/loan_criteria_update.html', context)
 
 
 def non_monetary_loan_loan_age_update(request,pk):
-    current_user=[]
+    task_array=[]
     if not request.user.user_type == '1':
-        current_user=Executives_Tasks_Model.objects.get(user=request.user.id)
-
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
     item= Commodity_Categories.objects.get(id=pk)
     title="Update Loan Age  for " +  item.title
     instructions='''
-    This page enable you to set the number of months one has to a member before 
-    Such person can access this loan. 
+    This page enable you to set the number of months one has to a member before
+    Such person can access this loan.
     '''
     form = loan_loan_age_update_form(request.POST or None)
 
@@ -5319,12 +5847,13 @@ def non_monetary_loan_loan_age_update(request,pk):
 
     form.fields['loan_age'].initial=item.loan_age
     context={
-    'current_user':current_user,
+    'task_array':task_array,
     'form':form,
     'instructions':instructions,
     'url':'non_monetary_loan_loan_age_update',
     'button_text':"Update Record",
     'title':title,
+     'item':item,
     }
     return render(request,'master_templates/loan_criteria_update.html', context)
 
@@ -5332,403 +5861,426 @@ def non_monetary_loan_loan_age_update(request,pk):
 ####################################################################
 ###################### CUSTOMIZED COMMODITY LOAN SETTINGS ##########
 ####################################################################
-def Customized_Commodity_Loan_Settings(request):
-    current_user=[]
-    if not request.user.user_type == '1':
-        current_user=Executives_Tasks_Model.objects.get(user=request.user.id)
-
-    transaction=TransactionTypes.objects.get(code='206')
-    context={
-    'current_user':current_user,
-    'transaction':transaction,
-    }
-    return render(request,'master_templates/Customized_Commodity_Loan_Settings.html',context)
-
-
-def Customized_loan_guarantors_update(request,pk):
-    current_user=[]
-    if not request.user.user_type == '1':
-        current_user=Executives_Tasks_Model.objects.get(user=request.user.id)
-
-    item= TransactionTypes.objects.get(id=pk)
-    title="Update Loan Guarnators for " +  item.name
-    instructions='''
-    This page enable you to set the total number of Gaurantors 
-    needed to access this loan. 
-    '''
-    form = loan_guarantors_update_form(request.POST or None)
-
-    if request.method ==  "POST":
-        form = loan_guarantors_update_form(request.POST)
-        if form.is_valid():
-            guarantors=form.cleaned_data["guarantors"]
-            record = TransactionTypes.objects.get(id=pk)
-            record.guarantors=guarantors
-            record.save()
-            messages.success(request,"Record Updated Successfully")
-            return  HttpResponseRedirect(reverse('Customized_Commodity_Loan_Settings'))
-
-    form.fields['guarantors'].initial=item.guarantors
-    context={
-    'current_user':current_user,
-    'form':form,
-    'instructions':instructions,
-    'url':'loan_guarantors_update',
-    'button_text':"Update Record",
-    'title':title,
-    }
-    return render(request,'master_templates/loan_criteria_update.html', context)
+# def Customized_Commodity_Loan_Settings(request):
+#     task_array=[]
+#     if not request.user.user_type == '1':
+#         tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+#         for task in tasks:
+#             task_array.append(task.task.title)
+#     transaction=TransactionTypes.objects.get(code='206')
+#     context={
+#     'task_array':task_array,
+#     'transaction':transaction,
+#     }
+#     return render(request,'master_templates/Customized_Commodity_Loan_Settings.html',context)
 
 
-def Customized_loan_form_print_update(request,pk):
-    current_user=[]
-    if not request.user.user_type == '1':
-        current_user=Executives_Tasks_Model.objects.get(user=request.user.id)
+# def Customized_loan_guarantors_update(request,pk):
+#     task_array=[]
+#     if not request.user.user_type == '1':
+#         tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+#         for task in tasks:
+#             task_array.append(task.task.title)
+#     item= TransactionTypes.objects.get(id=pk)
+#     title="Update Loan Guarnators for " +  item.name
+#     instructions='''
+#     This page enable you to set the total number of Gaurantors
+#     needed to access this loan.
+#     '''
+#     form = loan_guarantors_update_form(request.POST or None)
 
-    item= TransactionTypes.objects.get(id=pk)
-    title="Update Loan Form Print  for " +  item.name
-    instructions='''
-    This page enable you to set if Form should be Printed out Automatically. 
-    '''
-    form = loan_form_print_form(request.POST or None)
+#     if request.method ==  "POST":
+#         form = loan_guarantors_update_form(request.POST)
+#         if form.is_valid():
+#             guarantors=form.cleaned_data["guarantors"]
+#             record = TransactionTypes.objects.get(id=pk)
+#             record.guarantors=guarantors
+#             record.save()
+#             messages.success(request,"Record Updated Successfully")
+#             return  HttpResponseRedirect(reverse('Customized_Commodity_Loan_Settings'))
 
-    if request.method ==  "POST":
-        form = loan_form_print_form(request.POST)
-        if form.is_valid():
-            form_print_id=form.cleaned_data["form_print"]
-            form_print=YesNo.objects.get(id=form_print_id)
-            record = TransactionTypes.objects.get(id=pk)
-            record.form_print=form_print
-            record.save()
-            messages.success(request,"Record Updated Successfully")
-            return  HttpResponseRedirect(reverse('Customized_Commodity_Loan_Settings'))
-
-    form.fields['form_print'].initial=item.form_print.id
-    context={
-    'current_user':current_user,
-    'form':form,
-    'instructions':instructions,
-    'url':'Customized__loan_form_print_update',
-    'button_text':"Update Record",
-    'title':title,
-    }
-    return render(request,'master_templates/loan_criteria_update.html', context)
-
-def Customized_receipt_type_update(request,pk):
-    current_user=[]
-    if not request.user.user_type == '1':
-        current_user=Executives_Tasks_Model.objects.get(user=request.user.id)
-
-    item= TransactionTypes.objects.get(id=pk)
-    title="Update Receipt Type for " +  item.name
-    instructions='''
-    This page enable you to set the Receipt Type. 
-    '''
-    form = loan_Receipt_type_update_form(request.POST or None)
-
-    if request.method ==  "POST":
-        form = loan_Receipt_type_update_form(request.POST)
-        if form.is_valid():
-            receipt_type_id=form.cleaned_data["receipt_type"]
-            receipt_type=ReceiptTypes.objects.get(id=receipt_type_id)
-            record = TransactionTypes.objects.get(id=pk)
-            record.receipt_type=receipt_type
-            record.save()
-            messages.success(request,"Record Updated Successfully")
-            return  HttpResponseRedirect(reverse('Customized_Commodity_Loan_Settings'))
-
-    form.fields['receipt_type'].initial=item.receipt_type
-    context={
-    'current_user':current_user,
-    'form':form,
-    'instructions':instructions,
-    'url':'Customized_receipt_type_update',
-    'button_text':"Update Record",
-    'title':title,
-    }
-    return render(request,'master_templates/loan_criteria_update.html', context)
-
-  
+#     form.fields['guarantors'].initial=item.guarantors
+#     context={
+#     'task_array':task_array,
+#     'form':form,
+#     'instructions':instructions,
+#     'url':'loan_guarantors_update',
+#     'button_text':"Update Record",
+#     'title':title,
+#      'item':item,
+#     }
+#     return render(request,'master_templates/loan_criteria_update.html', context)
 
 
-def Customized_loan_category_update(request,pk):
-    current_user=[]
-    if not request.user.user_type == '1':
-        current_user=Executives_Tasks_Model.objects.get(user=request.user.id)
+# def Customized_loan_form_print_update(request,pk):
+#     task_array=[]
+#     if not request.user.user_type == '1':
+#         tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+#         for task in tasks:
+#             task_array.append(task.task.title)
+#     item= TransactionTypes.objects.get(id=pk)
+#     title="Update Loan Form Print  for " +  item.name
+#     instructions='''
+#     This page enable you to set if Form should be Printed out Automatically.
+#     '''
+#     form = loan_form_print_form(request.POST or None)
 
-    item= TransactionTypes.objects.get(id=pk)
-    title="Update Loan Category for " +  item.name
-    instructions='''
-    This page enable you to set whether a loan is monetary or Not.
-    '''
-    form = loan_category_update_form(request.POST or None)
+#     if request.method ==  "POST":
+#         form = loan_form_print_form(request.POST)
+#         if form.is_valid():
+#             form_print=form.cleaned_data["form_print"]
 
-    if request.method ==  "POST":
-        form = loan_category_update_form(request.POST)
-        if form.is_valid():
-            category_id=form.cleaned_data["category"]
-            category=LoanCategory.objects.get(id=category_id)
-            record = TransactionTypes.objects.get(id=pk)
-            record.category=category
-            record.save()
-            messages.success(request,"Record Updated Successfully")
-            return  HttpResponseRedirect(reverse('Customized_Commodity_Loan_Settings'))
+#             record = TransactionTypes.objects.get(id=pk)
+#             record.form_print=form_print
+#             record.save()
+#             messages.success(request,"Record Updated Successfully")
+#             return  HttpResponseRedirect(reverse('Customized_Commodity_Loan_Settings'))
 
-    form.fields['category'].initial=item.category
-    context={
-    'current_user':current_user,
-    'form':form,
-    'instructions':instructions,
-    'url':'loan_category_update',
-    'button_text':"Update Record",
-    'title':title,
-    }
-    return render(request,'master_templates/loan_criteria_update.html', context)
+#     form.fields['form_print'].initial=item.form_print.id
+#     context={
+#     'task_array':task_array,
+#     'form':form,
+#     'instructions':instructions,
+#     'url':'Customized__loan_form_print_update',
+#     'button_text':"Update Record",
+#     'title':title,
+#      'item':item,
+#     }
+#     return render(request,'master_templates/loan_criteria_update.html', context)
 
+# def Customized_receipt_type_update(request,pk):
+#     task_array=[]
+#     if not request.user.user_type == '1':
+#         tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+#         for task in tasks:
+#             task_array.append(task.task.title)
+#     item= TransactionTypes.objects.get(id=pk)
+#     title="Update Receipt Type for " +  item.name
+#     instructions='''
+#     This page enable you to set the Receipt Type.
+#     '''
+#     form = loan_Receipt_type_update_form(request.POST or None)
 
-def Customized_loan_duration_update(request,pk):
-    current_user=[]
-    if not request.user.user_type == '1':
-        current_user=Executives_Tasks_Model.objects.get(user=request.user.id)
+#     if request.method ==  "POST":
+#         form = loan_Receipt_type_update_form(request.POST)
+#         if form.is_valid():
+#             receipt_type_id=form.cleaned_data["receipt_type"]
+#             receipt_type=ReceiptTypes.objects.get(id=receipt_type_id)
+#             record = TransactionTypes.objects.get(id=pk)
+#             record.receipt_type=receipt_type
+#             record.save()
+#             messages.success(request,"Record Updated Successfully")
+#             return  HttpResponseRedirect(reverse('Customized_Commodity_Loan_Settings'))
 
-    item= TransactionTypes.objects.get(id=pk)
-    title="Update Loan Duration for " +  item.name
-    instructions='''
-    This page enable you to set the duration of Loans.
-    '''
-    form = loan_duration_update_form(request.POST or None)
-
-    if request.method ==  "POST":
-        form = loan_duration_update_form(request.POST)
-        if form.is_valid():
-            duration=form.cleaned_data["duration"]
-            record = TransactionTypes.objects.get(id=pk)
-            record.duration=duration
-            record.save()
-            messages.success(request,"Record Updated Successfully")
-            return  HttpResponseRedirect(reverse('Customized_Commodity_Loan_Settings'))
-
-    form.fields['duration'].initial=item.duration
-    context={
-    'current_user':current_user,
-    'form':form,
-    'instructions':instructions,
-    'url':'loan_duration_update',
-    'button_text':"Update Record",
-    'title':title,
-    }
-    return render(request,'master_templates/loan_criteria_update.html', context)
-
-
-def Customized_loan_name_update(request,pk):
-    current_user=[]
-    if not request.user.user_type == '1':
-        current_user=Executives_Tasks_Model.objects.get(user=request.user.id)
-
-    item= TransactionTypes.objects.get(id=pk)
-    title="Update Loan Description for " +  item.name
-    instructions='''
-    This page enable you to modify the Title of Loans.
-    '''
-    form = loan_name_update_form(request.POST or None)
-
-    if request.method ==  "POST":
-        form = loan_name_update_form(request.POST)
-        if form.is_valid():
-            name=form.cleaned_data["name"]
-            record = TransactionTypes.objects.get(id=pk)
-            record.name=name
-            record.save()
-            messages.success(request,"Record Updated Successfully")
-            return  HttpResponseRedirect(reverse('Customized_Commodity_Loan_Settings'))
-
-    form.fields['name'].initial=item.name
-    context={
-    'current_user':current_user,
-    'form':form,
-    'instructions':instructions,
-    'url':'loan_name_update',
-    'button_text':"Update Record",
-    'title':title,
-    }
-    return render(request,'master_templates/loan_criteria_update.html', context)
-
-
-def Customized_loan_interest_rate_update(request,pk):
-    current_user=[]
-    if not request.user.user_type == '1':
-        current_user=Executives_Tasks_Model.objects.get(user=request.user.id)
-
-    item= TransactionTypes.objects.get(id=pk)
-    title="Update Loan Interest Rate  for " +  item.name
-    instructions='''
-    This page enable you to set the interest rate of Loans.
-    '''
-
-    form = loan_interest_rate_update_form(request.POST or None)
-
-    if request.method ==  "POST":
-        form = loan_interest_rate_update_form(request.POST)
-        if form.is_valid():
-            interest_rate=form.cleaned_data["interest_rate"]
-            record = TransactionTypes.objects.get(id=pk)
-            record.interest_rate=interest_rate
-            record.save()
-            messages.success(request,"Record Updated Successfully")
-            return  HttpResponseRedirect(reverse('Customized_Commodity_Loan_Settings'))
-    form.fields['interest_rate'].initial=item.interest_rate
-    context={
-    'current_user':current_user,
-    'form':form,
-    'instructions':instructions,
-    'url':'loan_interest_rate_update',
-    'button_text':"Update Record",
-    'title':title,
-    }
-    return render(request,'master_templates/loan_criteria_update.html', context)
+#     form.fields['receipt_type'].initial=item.receipt_type
+#     context={
+#     'task_array':task_array,
+#     'form':form,
+#     'instructions':instructions,
+#     'url':'Customized_receipt_type_update',
+#     'button_text':"Update Record",
+#     'title':title,
+#      'item':item,
+#     }
+#     return render(request,'master_templates/loan_criteria_update.html', context)
 
 
 
-def Customized_loan_rank_update_update(request,pk):
-    current_user=[]
-    if not request.user.user_type == '1':
-        current_user=Executives_Tasks_Model.objects.get(user=request.user.id)
 
-    item= TransactionTypes.objects.get(id=pk)
-    title="Update Loan Rank  for " +  item.name
-    instructions='''
-    This page enable you to set the order in which 
-    monthly deduction shall flow fro the bulk deduction.
-    '''
+# def Customized_loan_category_update(request,pk):
+#     task_array=[]
+#     if not request.user.user_type == '1':
+#         tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+#         for task in tasks:
+#             task_array.append(task.task.title)
+#     item= TransactionTypes.objects.get(id=pk)
+#     title="Update Loan Category for " +  item.name
+#     instructions='''
+#     This page enable you to set whether a loan is monetary or Not.
+#     '''
+#     form = loan_category_update_form(request.POST or None)
 
-    form = loan_rank_update_form(request.POST or None)
+#     if request.method ==  "POST":
+#         form = loan_category_update_form(request.POST)
+#         if form.is_valid():
+#             category_id=form.cleaned_data["category"]
+#             category=LoanCategory.objects.get(id=category_id)
+#             record = TransactionTypes.objects.get(id=pk)
+#             record.category=category
+#             record.save()
+#             messages.success(request,"Record Updated Successfully")
+#             return  HttpResponseRedirect(reverse('Customized_Commodity_Loan_Settings'))
 
-    if request.method ==  "POST":
-        form = loan_rank_update_form(request.POST)
-        if form.is_valid():
-            rank=form.cleaned_data["rank"]
-            record = TransactionTypes.objects.get(id=pk)
-            record.rank=rank
-            record.save()
-            messages.success(request,"Record Updated Successfully")
-            return  HttpResponseRedirect(reverse('Customized_Commodity_Loan_Settings'))
-
-    form.fields['rank'].initial=item.rank
-    context={
-    'current_user':current_user,
-    'form':form,
-    'instructions':instructions,
-    'url':'loan_rank_update_update',
-    'button_text':"Update Record",
-    'title':title,
-    }
-    return render(request,'master_templates/loan_criteria_update.html', context)
-
-
-def Customized_loan_admin_charges_rate_update(request,pk):
-    current_user=[]
-    if not request.user.user_type == '1':
-        current_user=Executives_Tasks_Model.objects.get(user=request.user.id)
-
-    item= TransactionTypes.objects.get(id=pk)
-    title="Update Loan Rank  for " +  item.name
-    instructions='''
-    This page enable you to set whether admin charge is Cash or a 
-    percentage of amount requested for loan.
-    '''
-    form = loan_admin_charges_rate_update_form(request.POST or None)
-
-    if request.method ==  "POST":
-        form = loan_admin_charges_rate_update_form(request.POST)
-        if form.is_valid():
-            admin_charge_id=form.cleaned_data["admin_charges_rating"]
-            admin_charges_rating=AdminCharges.objects.get(id=admin_charge_id)
-            record = TransactionTypes.objects.get(id=pk)
-            record.admin_charges_rating=admin_charges_rating
-            record.save()
-            messages.success(request,"Record Updated Successfully")
-            return  HttpResponseRedirect(reverse('Customized_Commodity_Loan_Settings'))
-
-    form.fields['admin_charges_rating'].initial=item.admin_charges_rating
-    context={
-    'current_user':current_user,
-    'form':form,
-    'instructions':instructions,
-    'url':'loan_admin_charges_rate_update',
-    'button_text':"Update Record",
-    'title':title,
-    }
-    return render(request,'master_templates/loan_criteria_update.html', context)
+#     form.fields['category'].initial=item.category
+#     context={
+#     'task_array':task_array,
+#     'form':form,
+#     'instructions':instructions,
+#     'url':'loan_category_update',
+#     'button_text':"Update Record",
+#     'title':title,
+#      'item':item,
+#     }
+#     return render(request,'master_templates/loan_criteria_update.html', context)
 
 
-def Customized_loan_admin_charges_update(request,pk):
-    current_user=[]
-    if not request.user.user_type == '1':
-        current_user=Executives_Tasks_Model.objects.get(user=request.user.id)
+# def Customized_loan_duration_update(request,pk):
+#     task_array=[]
+#     if not request.user.user_type == '1':
+#         tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+#         for task in tasks:
+#             task_array.append(task.task.title)
+#     item= TransactionTypes.objects.get(id=pk)
+#     title="Update Loan Duration for " +  item.name
+#     instructions='''
+#     This page enable you to set the duration of Loans.
+#     '''
+#     form = loan_duration_update_form(request.POST or None)
 
-    item= TransactionTypes.objects.get(id=pk)
-    title="Update Loan Admin Charges  for " +  item.name
-    instructions='''
-    This page enable you to set the percentage rating of 
-    the Admin charge if it percentage based.
-    '''
-    form = loan_admin_charges_update_form(request.POST or None)
+#     if request.method ==  "POST":
+#         form = loan_duration_update_form(request.POST)
+#         if form.is_valid():
+#             duration=form.cleaned_data["duration"]
+#             record = TransactionTypes.objects.get(id=pk)
+#             record.duration=duration
+#             record.save()
+#             messages.success(request,"Record Updated Successfully")
+#             return  HttpResponseRedirect(reverse('Customized_Commodity_Loan_Settings'))
 
-    if request.method ==  "POST":
-        form = loan_admin_charges_update_form(request.POST)
-        if form.is_valid():
-            admin_charges=form.cleaned_data["admin_charges"]
-            record = TransactionTypes.objects.get(id=pk)
-            record.admin_charges=admin_charges
-            record.save()
-            messages.success(request,"Record Updated Successfully")
-            return  HttpResponseRedirect(reverse('Customized_Commodity_Loan_Settings'))
+#     form.fields['duration'].initial=item.duration
+#     context={
+#     'task_array':task_array,
+#     'form':form,
+#     'instructions':instructions,
+#     'url':'loan_duration_update',
+#     'button_text':"Update Record",
+#     'title':title,
+#      'item':item,
+#     }
+#     return render(request,'master_templates/loan_criteria_update.html', context)
 
-    form.fields['admin_charges'].initial=item.admin_charges
-    context={
-    'current_user':current_user,
-    'form':form,
-    'instructions':instructions,
-    'url':'loan_admin_charges_update',
-    'button_text':"Update Record",
-    'title':title,
-    }
-    return render(request,'master_templates/loan_criteria_update.html', context)
 
-    
-def Customized_loan_loan_age_update(request,pk):
-    current_user=[]
-    if not request.user.user_type == '1':
-        current_user=Executives_Tasks_Model.objects.get(user=request.user.id)
+# def Customized_loan_name_update(request,pk):
+#     task_array=[]
+#     if not request.user.user_type == '1':
+#         tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+#         for task in tasks:
+#             task_array.append(task.task.title)
+#     item= TransactionTypes.objects.get(id=pk)
+#     title="Update Loan Description for " +  item.name
+#     instructions='''
+#     This page enable you to modify the Title of Loans.
+#     '''
+#     form = loan_name_update_form(request.POST or None)
 
-    item= TransactionTypes.objects.get(id=pk)
-    title="Update Loan Age  for " +  item.name
-    instructions='''
-    This page enable you to set the number of months one has to a member before 
-    Such person can access this loan. 
-    '''
-    form = loan_loan_age_update_form(request.POST or None)
+#     if request.method ==  "POST":
+#         form = loan_name_update_form(request.POST)
+#         if form.is_valid():
+#             name=form.cleaned_data["name"]
+#             record = TransactionTypes.objects.get(id=pk)
+#             record.name=name
+#             record.save()
+#             messages.success(request,"Record Updated Successfully")
+#             return  HttpResponseRedirect(reverse('Customized_Commodity_Loan_Settings'))
 
-    if request.method ==  "POST":
-        form = loan_loan_age_update_form(request.POST)
-        if form.is_valid():
-            loan_age=form.cleaned_data["loan_age"]
-            record = TransactionTypes.objects.get(id=pk)
-            record.loan_age=loan_age
-            record.save()
-            messages.success(request,"Record Updated Successfully")
-            return  HttpResponseRedirect(reverse('Customized_Commodity_Loan_Settings'))
+#     form.fields['name'].initial=item.name
+#     context={
+#     'task_array':task_array,
+#     'form':form,
+#     'instructions':instructions,
+#     'url':'loan_name_update',
+#     'button_text':"Update Record",
+#     'title':title,
+#     'item':item,
+#     }
+#     return render(request,'master_templates/loan_criteria_update.html', context)
 
-    form.fields['loan_age'].initial=item.loan_age
-    context={
-    'current_user':current_user,
-    'form':form,
-    'instructions':instructions,
-    'url':'loan_loan_age_update',
-    'button_text':"Update Record",
-    'title':title,
-    }
-    return render(request,'master_templates/loan_criteria_update.html', context)
+
+# def Customized_loan_interest_rate_update(request,pk):
+#     task_array=[]
+#     if not request.user.user_type == '1':
+#         tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+#         for task in tasks:
+#             task_array.append(task.task.title)
+#     item= TransactionTypes.objects.get(id=pk)
+#     title="Update Loan Interest Rate  for " +  item.name
+#     instructions='''
+#     This page enable you to set the interest rate of Loans.
+#     '''
+
+#     form = loan_interest_rate_update_form(request.POST or None)
+
+#     if request.method ==  "POST":
+#         form = loan_interest_rate_update_form(request.POST)
+#         if form.is_valid():
+#             interest_rate=form.cleaned_data["interest_rate"]
+#             record = TransactionTypes.objects.get(id=pk)
+#             record.interest_rate=interest_rate
+#             record.save()
+#             messages.success(request,"Record Updated Successfully")
+#             return  HttpResponseRedirect(reverse('Customized_Commodity_Loan_Settings'))
+#     form.fields['interest_rate'].initial=item.interest_rate
+#     context={
+#     'task_array':task_array,
+#     'form':form,
+#     'instructions':instructions,
+#     'url':'loan_interest_rate_update',
+#     'button_text':"Update Record",
+#     'title':title,
+#     'item':item,
+#     }
+#     return render(request,'master_templates/loan_criteria_update.html', context)
+
+
+
+# def Customized_loan_rank_update_update(request,pk):
+#     task_array=[]
+#     if not request.user.user_type == '1':
+#         tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+#         for task in tasks:
+#             task_array.append(task.task.title)
+#     item= TransactionTypes.objects.get(id=pk)
+#     title="Update Loan Rank  for " +  item.name
+#     instructions='''
+#     This page enable you to set the order in which
+#     monthly deduction shall flow fro the bulk deduction.
+#     '''
+
+#     form = loan_rank_update_form(request.POST or None)
+
+#     if request.method ==  "POST":
+#         form = loan_rank_update_form(request.POST)
+#         if form.is_valid():
+#             rank=form.cleaned_data["rank"]
+#             record = TransactionTypes.objects.get(id=pk)
+#             record.rank=rank
+#             record.save()
+#             messages.success(request,"Record Updated Successfully")
+#             return  HttpResponseRedirect(reverse('Customized_Commodity_Loan_Settings'))
+
+#     form.fields['rank'].initial=item.rank
+#     context={
+#     'task_array':task_array,
+#     'form':form,
+#     'instructions':instructions,
+#     'url':'loan_rank_update_update',
+#     'button_text':"Update Record",
+#     'title':title,
+#     'item':item,
+#     }
+#     return render(request,'master_templates/loan_criteria_update.html', context)
+
+
+# def Customized_loan_admin_charges_rate_update(request,pk):
+#     task_array=[]
+#     if not request.user.user_type == '1':
+#         tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+#         for task in tasks:
+#             task_array.append(task.task.title)
+#     item= TransactionTypes.objects.get(id=pk)
+#     title="Update Loan Rank  for " +  item.name
+#     instructions='''
+#     This page enable you to set whether admin charge is Cash or a
+#     percentage of amount requested for loan.
+#     '''
+#     form = loan_admin_charges_rate_update_form(request.POST or None)
+
+#     if request.method ==  "POST":
+#         form = loan_admin_charges_rate_update_form(request.POST)
+#         if form.is_valid():
+#             admin_charge_id=form.cleaned_data["admin_charges_rating"]
+#             admin_charges_rating=AdminCharges.objects.get(id=admin_charge_id)
+#             record = TransactionTypes.objects.get(id=pk)
+#             record.admin_charges_rating=admin_charges_rating
+#             record.save()
+#             messages.success(request,"Record Updated Successfully")
+#             return  HttpResponseRedirect(reverse('Customized_Commodity_Loan_Settings'))
+
+#     form.fields['admin_charges_rating'].initial=item.admin_charges_rating
+#     context={
+#     'task_array':task_array,
+#     'form':form,
+#     'instructions':instructions,
+#     'url':'loan_admin_charges_rate_update',
+#     'button_text':"Update Record",
+#     'title':title,
+#     'item':item,
+#     }
+#     return render(request,'master_templates/loan_criteria_update.html', context)
+
+
+# def Customized_loan_admin_charges_update(request,pk):
+#     task_array=[]
+#     if not request.user.user_type == '1':
+#         tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+#         for task in tasks:
+#             task_array.append(task.task.title)
+#     item= TransactionTypes.objects.get(id=pk)
+#     title="Update Loan Admin Charges  for " +  item.name
+#     instructions='''
+#     This page enable you to set the percentage rating of
+#     the Admin charge if it percentage based.
+#     '''
+#     form = loan_admin_charges_update_form(request.POST or None)
+
+#     if request.method ==  "POST":
+#         form = loan_admin_charges_update_form(request.POST)
+#         if form.is_valid():
+#             admin_charges=form.cleaned_data["admin_charges"]
+#             record = TransactionTypes.objects.get(id=pk)
+#             record.admin_charges=admin_charges
+#             record.save()
+#             messages.success(request,"Record Updated Successfully")
+#             return  HttpResponseRedirect(reverse('Customized_Commodity_Loan_Settings'))
+
+#     form.fields['admin_charges'].initial=item.admin_charges
+#     context={
+#     'task_array':task_array,
+#     'form':form,
+#     'instructions':instructions,
+#     'url':'loan_admin_charges_update',
+#     'button_text':"Update Record",
+#     'title':title,
+#      'item':item,
+#     }
+#     return render(request,'master_templates/loan_criteria_update.html', context)
+
+
+# def Customized_loan_loan_age_update(request,pk):
+#     task_array=[]
+#     if not request.user.user_type == '1':
+#         tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+#         for task in tasks:
+#             task_array.append(task.task.title)
+#     item= TransactionTypes.objects.get(id=pk)
+#     title="Update Loan Age  for " +  item.name
+#     instructions='''
+#     This page enable you to set the number of months one has to a member before
+#     Such person can access this loan.
+#     '''
+#     form = loan_loan_age_update_form(request.POST or None)
+
+#     if request.method ==  "POST":
+#         form = loan_loan_age_update_form(request.POST)
+#         if form.is_valid():
+#             loan_age=form.cleaned_data["loan_age"]
+#             record = TransactionTypes.objects.get(id=pk)
+#             record.loan_age=loan_age
+#             record.save()
+#             messages.success(request,"Record Updated Successfully")
+#             return  HttpResponseRedirect(reverse('Customized_Commodity_Loan_Settings'))
+
+#     form.fields['loan_age'].initial=item.loan_age
+#     context={
+#     'task_array':task_array,
+#     'form':form,
+#     'instructions':instructions,
+#     'url':'loan_loan_age_update',
+#     'button_text':"Update Record",
+#     'title':title,
+#      'item':item,
+#     }
+#     return render(request,'master_templates/loan_criteria_update.html', context)
 
 
 ####################################################################
@@ -5736,12 +6288,13 @@ def Customized_loan_loan_age_update(request,pk):
 ####################################################################
 
 
-	
-def membership_price_settings_load(request):
-    current_user=[]
-    if not request.user.user_type == '1':
-        current_user=Executives_Tasks_Model.objects.get(user=request.user.id)
 
+def membership_price_settings_load(request):
+    task_array=[]
+    if not request.user.user_type == '1':
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
     transaction=TransactionTypes.objects.get(code='100')
     title="Membership Registration"
     title1="Membership Registration Charges"
@@ -5759,7 +6312,7 @@ def membership_price_settings_load(request):
         return	HttpResponseRedirect(reverse('membership_price_settings_load'))
 
     context={
-    'current_user':current_user,
+    'task_array':task_array,
     'form':form,
     # 'pk':pk,
     'transaction':transaction,
@@ -5776,10 +6329,11 @@ def membership_price_settings_load(request):
 ####################################################################
 
 def AutoReceipt_Setup(request):
-    current_user=[]
+    task_array=[]
     if not request.user.user_type == '1':
-        current_user=Executives_Tasks_Model.objects.get(user=request.user.id)
-
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
     record=[]
     if AutoReceipt.objects.all().exists():
         record=AutoReceipt.objects.first()
@@ -5795,7 +6349,7 @@ def AutoReceipt_Setup(request):
             record.save()
         return HttpResponseRedirect(reverse('AutoReceipt_Setup'))
     context={
-    'current_user':current_user,
+    'task_array':task_array,
     'record':record,
     }
     return render(request,'master_templates/AutoReceipt_Setup.html',context)
@@ -5803,23 +6357,23 @@ def AutoReceipt_Setup(request):
 
 
 def receipt_manager(request):
-    current_user=[]
+    task_array=[]
     if not request.user.user_type == '1':
-        current_user=Executives_Tasks_Model.objects.get(user=request.user.id)
-
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
     form = receipt_manager_form(request.POST or None)
     receipts=Receipts.objects.all()
     if request.method=="POST":
-        status=ReceiptStatus.objects.get(title='UNUSED')
         start_point = request.POST.get('start_point')
         stop_point = request.POST.get('stop_point')
 
-        for i in  range(int(start_point),int(stop_point)+1): 
-            record=Receipts(status=status,receipt=str(i).zfill(5))
+        for i in  range(int(start_point),int(stop_point)+1):
+            record=Receipts(status='UNUSED',receipt=str(i).zfill(5))
             record.save()
         return HttpResponseRedirect(reverse('receipt_manager'))
     context={
-    'current_user':current_user,
+    'task_array':task_array,
     'form':form,
     'receipts':receipts,
     }
@@ -5827,34 +6381,95 @@ def receipt_manager(request):
 
 
 def receipt_manager_shop(request):
-    current_user=[]
+    task_array=[]
     if not request.user.user_type == '1':
-        current_user=Executives_Tasks_Model.objects.get(user=request.user.id)
-
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
     form = receipt_manager_form(request.POST or None)
     receipts=Receipts_Shop.objects.all()
     if request.method=="POST":
-        status=ReceiptStatus.objects.get(title='UNUSED')
         start_point = request.POST.get('start_point')
         stop_point = request.POST.get('stop_point')
-        
-        for i in  range(int(start_point),int(stop_point)+1): 
-            record=Receipts_Shop(status=status,receipt=str(i).zfill(5))
+
+        for i in  range(int(start_point),int(stop_point)+1):
+            record=Receipts_Shop(status='UNUSED',receipt=str(i).zfill(5))
             record.save()
         return HttpResponseRedirect(reverse('receipt_manager_shop'))
     context={
-    'current_user':current_user,
+    'task_array':task_array,
     'form':form,
     'receipts':receipts,
     }
     return render(request,'master_templates/receipt_manager_shop.html',context)
 
+def TransactionEnabler_Add(request):
+    task_array=[]
+    if not request.user.user_type == '1':
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
+    form=TransactionEnabler_Form(request.POST or None)
+    records = TransactionEnabler.objects.all()
+
+    if request.method=="POST":
+        status='NO'
+        title=request.POST.get('title')
+        if TransactionEnabler.objects.filter(title=title).exists():
+            messages.info(request,'Record already Exist')
+
+        else:
+            TransactionEnabler(title=title.upper(),status=status).save()
+            messages.success(request,"Record Updated Successfully")
+        return HttpResponseRedirect(reverse('TransactionEnabler_Add'))
+
+    context={
+    'task_array':task_array,
+    'form':form,
+    'records':records,
+    }
+    return render(request,'master_templates/TransactionEnabler_Add.html',context)
+
+def TransactionEnabler_Manage(request):
+    task_array=[]
+    if not request.user.user_type == '1':
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
+    records = TransactionEnabler.objects.all()
+
+
+    context={
+    'task_array':task_array,
+    'records':records,
+    }
+    return render(request,'master_templates/TransactionEnabler_Manage.html',context)
+
+
+def TransactionEnabler_enabler(request,pk):
+    record=TransactionEnabler.objects.get(id=pk)
+    if record.status == "YES":
+        record.status="NO"
+    else:
+        record.status="YES"
+    record.save()
+
+    messages.success(request,"Record Updated Successfully")
+    return HttpResponseRedirect(reverse('TransactionEnabler_Manage'))
+
+
+def TransactionEnabler_delete(request,pk):
+    TransactionEnabler.objects.filter(id=pk).delete()
+    messages.info(request,"Record Deleted Successfully")
+    return HttpResponseRedirect(reverse('TransactionEnabler_Add'))
+
 
 def Members_IdManager(request):
-    current_user=[]
+    task_array=[]
     if not request.user.user_type == '1':
-        current_user=Executives_Tasks_Model.objects.get(user=request.user.id)
-
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
     form=MembersIdManager_form(request.POST or None)
     if MembersIdManager.objects.all().exists():
         record_exist = MembersIdManager.objects.first()
@@ -5882,17 +6497,18 @@ def Members_IdManager(request):
         return HttpResponseRedirect(reverse('Members_IdManager'))
 
     context={
-    'current_user':current_user,
+    'task_array':task_array,
     'form':form,
     }
     return render(request,'master_templates/MembersIdManager.html',context)
 
 
 def SharesUnits_add(request):
-    current_user=[]
+    task_array=[]
     if not request.user.user_type == '1':
-        current_user=Executives_Tasks_Model.objects.get(user=request.user.id)
-
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
     items=SharesUnits.objects.all()
     if request.method=="POST":
 
@@ -5905,17 +6521,52 @@ def SharesUnits_add(request):
             messages.success(request,"Record Added Successfully")
         return HttpResponseRedirect(reverse('SharesUnits_add'))
     context={
-    'current_user':current_user,
+    'task_array':task_array,
     'items':items,
     }
     return render(request,'master_templates/SharesUnits_add.html',context)
 
+def SharesUnits_Max_Min_Values(request):
+    task_array=[]
+    if not request.user.user_type == '1':
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
+
+    form = SharesUnits_Max_Min_Values_form(request.POST or None)
+
+    item=TransactionTypes.objects.get(code='700')
+    if request.method=="POST":
+
+        share_unit_max = request.POST.get('share_unit_max')
+        share_unit_min = request.POST.get('share_unit_min')
+
+        if float(share_unit_min) > float(share_unit_max):
+            messages.error(request,"Invalid Input")
+            return HttpResponseRedirect(reverse('SharesUnits_Max_Min_Values'))
+
+        item.share_unit_max=share_unit_max
+        item.share_unit_min=share_unit_min
+        item.save()
+        messages.success(request,"Record Updated Successfully")
+        return HttpResponseRedirect(reverse('SharesUnits_Max_Min_Values'))
+
+    form.fields['share_unit_max'].initial=item.share_unit_max
+    form.fields['share_unit_min'].initial=item.share_unit_min
+    context={
+    'task_array':task_array,
+    'item':item,
+    'form':form,
+    }
+    return render(request,'master_templates/SharesUnits_Max_Min_Values.html',context)
+
 
 def Loan_Number_Manager(request):
-    current_user=[]
+    task_array=[]
     if not request.user.user_type == '1':
-        current_user=Executives_Tasks_Model.objects.get(user=request.user.id)
-
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
     form=Loan_Number_Manager_form(request.POST or None)
     if LoanNumber.objects.all().count()>0:
         item=LoanNumber.objects.first()
@@ -5936,27 +6587,62 @@ def Loan_Number_Manager(request):
         return HttpResponseRedirect(reverse('Loan_Number_Manager'))
 
     context={
-    'current_user':current_user,
+    'task_array':task_array,
     'form':form,
     }
     return render(request,'master_templates/Loan_Number_Manager.html',context)
 
+
+def FailedLoanPenalty_Manager(request):
+    task_array=[]
+    if not request.user.user_type == '1':
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
+    form=FailedLoanPenalty_Manager_form(request.POST or None)
+    if FailedLoanPenalty.objects.all().count()>0:
+        item=FailedLoanPenalty.objects.first()
+        form.fields['code'].initial=item.code
+
+
+    if request.method=="POST":
+        code=request.POST.get('code')
+
+        if FailedLoanPenalty.objects.all().count()>0:
+            record=FailedLoanPenalty.objects.first()
+            record.code=code
+            record.save()
+
+        else:
+            record=FailedLoanPenalty(code=code)
+            record.save()
+        return HttpResponseRedirect(reverse('FailedLoanPenalty_Manager'))
+
+    context={
+    'task_array':task_array,
+    'form':form,
+    }
+    return render(request,'master_templates/FailedLoanPenalty_Manager.html',context)
+
 #######################################################################
 ################## COOPERATIVE ACCOUNTS ################################
 #######################################################################
-def CooperativeBankAccounts_add(request):
-    current_user=[]
-    if not request.user.user_type == '1':
-        current_user=Executives_Tasks_Model.objects.get(user=request.user.id)
 
+def CooperativeBankAccounts_Operational_Designation(request):
+    task_array=[]
+    if not request.user.user_type == '1':
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
     form=CooperativeBankAccounts_form(request.POST or None)
     banks=CooperativeBankAccounts.objects.all()
+
     if request.method == 'POST':
         bank_id=request.POST.get('bank')
         bank=Banks.objects.get(id=bank_id)
 
-        account_type_id=request.POST.get('account_type')
-        account_type=AccountTypes.objects.get(id=account_type_id)
+        account_type=request.POST.get('account_type')
+
 
         account_name=request.POST.get('account_name')
         account_number=request.POST.get('account_number')
@@ -5972,7 +6658,42 @@ def CooperativeBankAccounts_add(request):
         return HttpResponseRedirect(reverse('CooperativeBankAccounts_add'))
 
     context={
-    'current_user':current_user,
+    'task_array':task_array,
+    'form':form,
+    'banks':banks,
+    }
+    return render(request,'master_templates/CooperativeBankAccounts_add.html',context)
+
+def CooperativeBankAccounts_add(request):
+    task_array=[]
+    if not request.user.user_type == '1':
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
+    form=CooperativeBankAccounts_form(request.POST or None)
+    banks=CooperativeBankAccounts.objects.all()
+    if request.method == 'POST':
+        bank_id=request.POST.get('bank')
+        bank=Banks.objects.get(id=bank_id)
+
+        account_type=request.POST.get('account_type')
+
+        account_name=request.POST.get('account_name')
+        account_number=request.POST.get('account_number')
+        sort_code=request.POST.get('sort_code')
+
+        if CooperativeBankAccounts.objects.filter(bank=bank,account_number=account_number).exists():
+            messages.error(request,'This account Number is already in Use')
+            return HttpResponseRedirect(reverse('CooperativeBankAccounts_add'))
+
+        record=CooperativeBankAccounts(bank=bank,account_type=account_type,account_name=account_name,account_number=account_number,sort_code=sort_code)
+        record.save()
+
+        messages.success(request,"Record Added Successfully")
+        return HttpResponseRedirect(reverse('CooperativeBankAccounts_add'))
+
+    context={
+    'task_array':task_array,
     'form':form,
     'banks':banks,
     }
@@ -5986,35 +6707,39 @@ def CooperativeBankAccounts_Remove(request,pk):
 
 
 def CooperativeBankAccounts_Update(request,pk):
-    current_user=[]
+    task_array=[]
     if not request.user.user_type == '1':
-        current_user=Executives_Tasks_Model.objects.get(user=request.user.id)
-
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
     form=CooperativeBankAccounts_form(request.POST or None)
     record=CooperativeBankAccounts.objects.get(id=pk)
 
     form.fields['account_name'].initial=record.account_name
     form.fields['account_number'].initial=record.account_number
     form.fields['bank'].initial=record.bank.id
-    form.fields['account_type'].initial=record.account_type.id
+    form.fields['account_type'].initial=record.account_type
+    form.fields['sort_code'].initial=record.sort_code
     if request.method=="POST":
         bank_id=request.POST.get('bank')
         bank=Banks.objects.get(id=bank_id)
 
-        account_type_id = request.POST.get('account_type')
-        account_type=AccountTypes.objects.get(id=account_type_id)
+        account_type= request.POST.get('account_type')
+
 
         account_name=request.POST.get('account_name')
         account_number=request.POST.get('account_number')
+        sort_code=request.POST.get('sort_code')
 
         record.bank=bank
         record.account_type=account_type
         record.account_name=account_name
         record.account_number=account_number
+        record.sort_code=sort_code
         record.save()
         return HttpResponseRedirect(reverse('CooperativeBankAccounts_add'))
     context={
-    'current_user':current_user,
+    'task_array':task_array,
     'form':form,
     }
     return render(request,'master_templates/CooperativeBankAccounts_Update.html',context)
@@ -6026,52 +6751,53 @@ def CooperativeBankAccounts_Update(request,pk):
 
 
 def WithdrawalController_add(request):
-    current_user=[]
+    task_array=[]
     if not request.user.user_type == '1':
-        current_user=Executives_Tasks_Model.objects.get(user=request.user.id)
-
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
     form=WithdrawalController_form(request.POST or None)
     if request.method=="POST":
-        status=WithdrawalStatus.objects.get(title='LOCKED')
         transaction_id=request.POST.get('transactions')
         transaction=TransactionTypes.objects.get(id=transaction_id)
 
         maturity=request.POST.get('maturity')
-        record=WithdrawableTransactions(status=status,transaction=transaction,maturity=maturity)
+        record=WithdrawableTransactions(status='LOCKED',transaction=transaction,maturity=maturity)
         record.save()
         messages.success(request,'Tranaction Successfully Completed')
         return HttpResponseRedirect(reverse('WithdrawalController_add'))
     context={
-    'current_user':current_user,
+    'task_array':task_array,
     'form':form,
     }
     return render(request,'master_templates/WithdrawalController_add.html',context)
 
 
 def WithdrawalController(request):
-    current_user=[]
+    task_array=[]
     if not request.user.user_type == '1':
-        current_user=Executives_Tasks_Model.objects.get(user=request.user.id)
-
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
     transactions=WithdrawableTransactions.objects.all()
     context={
-    'current_user':current_user,
+    'task_array':task_array,
     'transactions':transactions,
     }
     return render(request,'master_templates/WithdrawalController.html',context)
 
 
 def WithdrawalController_View(request,pk):
-    current_user=[]
+    task_array=[]
     if not request.user.user_type == '1':
-        current_user=Executives_Tasks_Model.objects.get(user=request.user.id)
-
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
     form=WithdrawalController_update_form(request.POST or None)
     transaction=WithdrawableTransactions.objects.get(id=pk)
 
     if request.method=="POST":
-        status_id=request.POST.get('status')
-        status=WithdrawalStatus.objects.get(id=status_id)
+        status=request.POST.get('status')
         maturity=request.POST.get('maturity')
 
         transaction.maturity=maturity
@@ -6080,9 +6806,9 @@ def WithdrawalController_View(request,pk):
         return HttpResponseRedirect(reverse('WithdrawalController'))
 
     form.fields['maturity'].initial=transaction.maturity
-    form.fields['status'].initial=transaction.status.id
+    form.fields['status'].initial=transaction.status
     context={
-    'current_user':current_user,
+    'task_array':task_array,
     'transaction':transaction,
     'form':form,
     }
@@ -6094,13 +6820,11 @@ def WithdrawalController_View(request,pk):
 
 
 def WithdrawalController_Process(request,pk):
-    status1=WithdrawalStatus.objects.get(title='LOCKED')
-    status2=WithdrawalStatus.objects.get(title='UNLOCKED')
     transaction=TransactionTypes.objects.get(id=pk)
-    if transaction.withdrawal_status.title =='LOCKED':
-        transaction.withdrawal_status=status2
+    if transaction.withdrawal_status =='LOCKED':
+        transaction.withdrawal_status='UNLOCKED'
     else:
-        transaction.withdrawal_status=status1
+        transaction.withdrawal_status='LOCKED'
     transaction.save()
     return HttpResponseRedirect(reverse('WithdrawalController'))
 
@@ -6108,28 +6832,29 @@ def WithdrawalController_Process(request,pk):
 ############################ SHOP #####################################
 #######################################################################
 def CustomerID_Manager(request):
-    current_user=[]
+    task_array=[]
     if not request.user.user_type == '1':
-        current_user=Executives_Tasks_Model.objects.get(user=request.user.id)
-
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
     form=CustomerID_Manager_form(request.POST or None)
     item=[]
     if CustomerID.objects.all().exists():
         item=CustomerID.objects.first()
         form.fields['code'].initial=item.title
-        
+
     if request.method=="POST":
         code=request.POST.get('code')
         if CustomerID.objects.all().exists():
             record=CustomerID.objects.first()
             record.title=code
-           
+
         else:
             record=CustomerID(title=code)
         record.save()
         return HttpResponseRedirect(reverse('CustomerID_Manager'))
     context={
-    'current_user':current_user,
+    'task_array':task_array,
     'form':form,
     }
     return render(request,'master_templates/CustomerID_Manager.html',context)
@@ -6140,25 +6865,26 @@ def CustomerID_Manager(request):
 ################## PRESIDENT VIEWS  ##################################
 #######################################################################
 def membership_request_approvals_list_load(request):
-    current_user=[]
+    task_array=[]
     if not request.user.user_type == '1':
-        current_user=Executives_Tasks_Model.objects.get(user=request.user.id)
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
 
-    submission_status=SubmissionStatus.objects.get(title='SUBMITTED')
-    approval_status=ApprovalStatus.objects.get(title='PENDING')
-    applicants=MemberShipRequest.objects.filter(submission_status=submission_status,approval_status=approval_status)
+    applicants=MemberShipRequest.objects.filter(submission_status='SUBMITTED',approval_status='PENDING')
     context={
-    'current_user':current_user,
+    'task_array':task_array,
     'applicants':applicants,
     }
     return render(request,'master_templates/membership_request_approvals_list_load.html',context)
 
 
 def membership_request_approval_info(request,pk):
-    current_user=[]
+    task_array=[]
     if not request.user.user_type == '1':
-        current_user=Executives_Tasks_Model.objects.get(user=request.user.id)
-
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
     form_comment=MemberShipRequest_approval_comment_form(request.POST or None)
     form_attachment=MemberShipRequest_approval_attachment_form(request.POST or None)
     applicant=MemberShipRequest.objects.get(id=pk)
@@ -6169,10 +6895,10 @@ def membership_request_approval_info(request,pk):
     approval_comments = MemberShipRequestAdditionalInfo.objects.filter(applicant_id=pk,officer=officer)
     approval_attachments = MemberShipRequestAdditionalAttachment.objects.filter(applicant_id=pk,officer=officer)
 
-    
+
     context={
     'applicant':applicant,
-    'current_user':current_user,
+    'task_array':task_array,
     'form_comment':form_comment,
     'form_attachment':form_attachment,
     'pk':pk,
@@ -6196,7 +6922,7 @@ def membership_request_approval_comment_save(request,pk):
     officer=CustomUser.objects.get(id=request.user.id)
     if request.method=="POST" and 'btn_info' in request.POST:
         comment=request.POST.get('comment')
-    
+
         record=MemberShipRequestAdditionalInfo(applicant=applicant,comment=comment,officer=officer)
         record.save()
         return HttpResponseRedirect(reverse('membership_request_approval_info',args=(pk,)))
@@ -6210,14 +6936,14 @@ def membership_request_approval_attachment_save(request,pk):
     if request.method=="POST" and 'btn_attachment' in request.POST:
         attachment_form=MemberShipRequest_approval_attachment_form(request.POST)
         caption=request.POST.get('caption')
-        
-        
+
+
         if request.FILES.get('image', False):
             image = request.FILES['image']
             fs=FileSystemStorage()
             filename=fs.save(image.name,image)
             image_url=fs.url(filename)
-    
+
         else:
             image_url=None
 
@@ -6235,59 +6961,79 @@ def membership_request_approval_attachment_delete(request,pk):
 
 
 def MemberShipRequest_approval_submit(request,pk):
-    current_user=[]
+    task_array=[]
     if not request.user.user_type == '1':
-        current_user=Executives_Tasks_Model.objects.get(user=request.user.id)
-
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
     form=MemberShipRequest_approval_submit_form(request.POST or None)
-    
+
     if request.method=="POST":
-        approval_status_id=request.POST.get('approval_status')
-        approval_status=ApprovalStatus.objects.get(id=approval_status_id)
+        approval_status=request.POST.get('approval_status')
+
 
         record = MemberShipRequest.objects.get(id=pk)
-        
+
         record.approval_status=approval_status
         record.approved_date=datetime.date.today()
         record.save()
         return HttpResponseRedirect(reverse('membership_request_approvals_list_load'))
     context={
-    'current_user':current_user,
+    'task_array':task_array,
     'form':form,
     }
     return render(request,'master_templates/MemberShipRequest_approval_submit.html',context)
 
 
-def loan_request_approval_list_load(request):
-    current_user=[]
+
+
+
+
+def loan_request_approval_period_load(request):
+    task_array=[]
     if not request.user.user_type == '1':
-        current_user=Executives_Tasks_Model.objects.get(user=request.user.id)
-    # return HttpResponse(current_user.cash_withdrawal_approval)
-    
-    approval_status=ApprovalStatus.objects.get(title='PENDING')
-    transaction_status=TransactionStatus.objects.get(title='UNTREATED')
-    
-    applicants=LoanRequest.objects.filter(approval_status=approval_status,transaction_status=transaction_status)
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)    # return HttpResponse(current_user.cash_withdrawal_approval)
+
+
+
+    form=loan_request_order_form(request.POST or None)
+
+    applicants=[]
+    if request.method == 'POST':
+        period_id=request.POST.get("period")
+        period = Commodity_Period.objects.get(id=period_id)
+
+        batch_id=request.POST.get('batch')
+        batch=Commodity_Period_Batch.objects.get(id=batch_id)
+
+        loan_id = request.POST.get('loans')
+        loan = TransactionTypes.objects.get(id=loan_id)
+
+        applicants = LoanRequest.objects.filter(loan=loan,period=period,batch=batch,approval_status='PENDING',transaction_status='UNTREATED').filter(~Q(submission_status='PENDING'))
 
     context={
-    'current_user':current_user,
+    'task_array':task_array,
     'applicants':applicants,
+    'form':form,
     }
-    return render(request,'master_templates/loan_request_approval_list_load.html',context)
+    return render(request,'master_templates/loan_request_approval_period_load.html',context)
+
 
 
 def Loan_request_approval_details(request,pk):
-    current_user=[]
+
+    task_array=[]
     if not request.user.user_type == '1':
-        current_user=Executives_Tasks_Model.objects.get(user=request.user.id)
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
 
     loan_comment=LoanRequest.objects.get(id=pk)
     loan_analysis=LoanRequestSettings.objects.filter(applicant_id=pk,category='ANALYSIS')
     loan_summary=LoanRequestSettings.objects.filter(applicant_id=pk,category='SUMMARY')
-    
 
-    approval_status=ApprovalStatus.objects.all()
-    
 
 
     if request.method=='POST':
@@ -6298,13 +7044,13 @@ def Loan_request_approval_details(request,pk):
         if float(approved_amount)<=0:
             messages.info(request,"Amount approved cannot be less than or equal to Zero(0)")
             return HttpResponseRedirect(reverse('Loan_request_approval_details', args=(pk,)))
-        
+
         if float(loan_comment.loan_amount) < float(approved_amount):
             messages.info(request,"Amount approved cannot be more than applied Amount")
             return HttpResponseRedirect(reverse('Loan_request_approval_details', args=(pk,)))
 
-        status_id=request.POST.get('status')
-        status=ApprovalStatus.objects.get(id=status_id)
+        status=request.POST.get('approval_status')
+
 
         approved_date= get_current_date(now)
 
@@ -6312,142 +7058,287 @@ def Loan_request_approval_details(request,pk):
         loan_comment.approval_status=status
         loan_comment.approval_comment=comment
         loan_comment.approval_date=approved_date
-        loan_comment.approval_officer=approval_officer
+        loan_comment.approval_officer=approval_officer.username
         loan_comment.approved_amount=approved_amount
         loan_comment.save()
-    
-        return HttpResponseRedirect(reverse('loan_request_approval_list_load'))
-        
+
+        return HttpResponseRedirect(reverse('loan_request_approval_period_load'))
+
     form=MemberShipRequestAdditionalInfo_form(request.POST or None)
+    form.fields['comment'].initial="Approved"
     context={
-    'current_user':current_user,
+    'task_array':task_array,
     'loan_analysis':loan_analysis,
     'loan_summary':loan_summary,
     'pk':pk,
     'form':form,
     'loan_comment':loan_comment,
-    'approval_status':approval_status,
     }
     return render(request,'master_templates/Loan_request_approval_details.html',context)
 
 
-def loan_application_approval_list_load(request):
-    current_user=[]
+def Loan_application_approval_period_load(request):
+    task_array=[]
     if not request.user.user_type == '1':
-        current_user=Executives_Tasks_Model.objects.get(user=request.user.id)
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
 
-    certification_status=CertificationStatus.objects.get(title='CERTIFIED')
-    approval_status=ApprovalStatus.objects.get(title='PENDING')
-    
-    applicants=LoanApplication.objects.filter(approval_status=approval_status,certification_status=certification_status,approval_officer__officer_id=current_user)
+
+    form=loan_request_order_form(request.POST or None)
+    exist_loans=[]
+    if request.method == 'POST':
+        period_id=request.POST.get("period")
+        period = Commodity_Period.objects.get(id=period_id)
+
+        batch_id=request.POST.get('batch')
+        batch=Commodity_Period_Batch.objects.get(id=batch_id)
+
+        loan_id = request.POST.get('loans')
+        loan = TransactionTypes.objects.get(id=loan_id)
+
+        exist_loans = LoanApplication.objects.filter(applicant__applicant__loan=loan,applicant__applicant__period=period,applicant__applicant__batch=batch,transaction_status='UNTREATED',submission_status='SUBMITTED',applicant__processing_status='PROCESSED',approval_status='PENDING')
 
     context={
-    'current_user':current_user,
-    'applicants':applicants,
+    'exist_loans':exist_loans,
+    'form':form,
+    'task_array':task_array,
+
     }
-    return render(request,'master_templates/loan_application_approval_list_load.html',context)
+    return render(request,'master_templates/Loan_application_approval_period_load.html',context)
+
+
 
 
 def Loan_application_approval_details(request,pk):
-    current_user=[]
+    form = Loan_application_approval_form(request.POST or None)
+    task_array=[]
     if not request.user.user_type == '1':
-        current_user=Executives_Tasks_Model.objects.get(user=request.user.id)
-
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
     loan_comment=LoanApplication.objects.get(id=pk)
     loan_analysis=LoanApplicationSettings.objects.filter(applicant_id=pk,category='ANALYSIS')
     loan_summary=LoanApplicationSettings.objects.filter(applicant_id=pk,category='SUMMARY')
-    approval_status=ApprovalStatus.objects.all()
-    
 
 
     if request.method=='POST':
-
+        approval_officer=CustomUser.objects.get(id=request.user.id).username
         comment=request.POST.get('comment')
         approved_amount=request.POST.get('amount')
+
         if float(loan_comment.loan_amount) < float(approved_amount):
             messages.success(request,"Amount approved cannot be more than applied Amount")
             return HttpResponseRedirect(reverse('Loan_request_approval_details', args=(pk,)))
 
-        status_id=request.POST.get('status')
-        status=ApprovalStatus.objects.get(id=status_id)
+        status=request.POST.get('approval_status')
 
-        approved_date= datetime.datetime.now()
 
+        approved_date= get_current_date(now)
 
         loan_comment.approval_status=status
         loan_comment.approval_comment=comment
         loan_comment.approval_date=approved_date
         loan_comment.approved_amount=approved_amount
+        loan_comment.approval_officer=approval_officer
         loan_comment.save()
-    
-        return HttpResponseRedirect(reverse('loan_application_approval_list_load'))
 
+        return HttpResponseRedirect(reverse('Loan_application_approval_period_load'))
+
+    form.fields['amount'].initial=loan_comment.loan_amount
+    form.fields['comment'].initial="Please Process"
     context={
-    'current_user':current_user,
+    'task_array':task_array,
     'loan_analysis':loan_analysis,
     'loan_summary':loan_summary,
     'pk':pk,
     'loan_comment':loan_comment,
-    'approval_status':approval_status,
+    'form':form,
+    'approval_status':APPROVAL_STATUS,
     }
     return render(request,'master_templates/Loan_application_approval_details.html',context)
 
 
-def savings_cash_withdrawal_Certitication_list_load(request):
-    current_user=[]
+def Loan_unscheduling_approval_load(request):
+    task_array=[]
     if not request.user.user_type == '1':
-        current_user=Executives_Tasks_Model.objects.get(user=request.user.id)
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
 
- 
-    status=TransactionStatus.objects.get(title='UNTREATED')
-    approval_status=ApprovalStatus.objects.get(title='PENDING')
-  
-    applicants=MembersCashWithdrawalsApplication.objects.filter(approval_status=approval_status,status=status)
+
+    records = LoanUnschedulingRequest.objects.filter(status='UNTREATED',approval_status='PENDING')
 
     context={
-    'current_user':current_user,
+    'task_array':task_array,
+    'records':records,
+    }
+    return render(request,'master_templates/Loan_unscheduling_approval_load.html',context)
+
+
+
+def Loan_unscheduling_approval_preview(request,pk):
+    form=Loan_unscheduling_approval_preview_form(request.POST or None)
+    task_array=[]
+    if not request.user.user_type == '1':
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
+
+    record=LoanUnschedulingRequest.objects.get(id=pk)
+
+    if request.method == "POST":
+        approval_date=get_current_date(now)
+        approval_officer=CustomUser.objects.get(id=request.user.id).username
+        approval_status = request.POST.get('approval_status')
+
+
+        comment=request.POST.get('comment')
+        record.approval_comment=comment
+        record.approval_status=approval_status
+        record.approval_officer=approval_officer
+        record.approval_date=approval_date
+        record.save()
+        return HttpResponseRedirect(reverse('Loan_unscheduling_approval_load'))
+
+    form.fields['comment_exist'].initial=record.comment
+    context={
+    'form':form,
+    'task_array':task_array,
+    'record':record,
+    }
+    return render(request,'master_templates/Loan_unscheduling_approval_preview.html',context)
+
+
+
+
+
+def membership_commodity_loan_Period_approval_transaction_load(request):
+    task_array=[]
+    if not request.user.user_type == '1':
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
+    submission_status='SUBMITTED'
+    approval_status='PENDING'
+
+    form=Product_Linking_Period_Load_form(request.POST or None)
+
+    applicants=[]
+    if request.method == 'POST':
+        transaction_id = request.POST.get('transaction')
+        transaction = TransactionTypes.objects.get(id=transaction_id)
+
+        period_id =request.POST.get('period')
+        period=Commodity_Period.objects.get(id=period_id)
+
+        batch_id =request.POST.get('batch')
+        batch= Commodity_Period_Batch.objects.get(id=batch_id)
+
+        applicants=Members_Commodity_Loan_Application.objects.filter(approval_status="PENDING",period=period,batch=batch,member__product__product__category__transaction=transaction,submission_status='SUBMITTED',status='UNTREATED')
+
+    context={
+    'task_array':task_array,
+    'applicants':applicants,
+    'form':form,
+    }
+    return render(request,'master_templates/membership_commodity_loan_Period_approval_transaction_load.html',context)
+
+
+
+
+
+def membership_commodity_loan_Period_approval_transaction_details(request,pk):
+    form =membership_commodity_loan_Period_approval_transaction_details_form(request.POST or None)
+    task_array=[]
+    if not request.user.user_type == '1':
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
+    applicant=Members_Commodity_Loan_Application.objects.get(id=pk)
+    processed_by=CustomUser.objects.get(id=request.user.id)
+
+    if request.method == 'POST':
+        approval_date=get_current_date(now)
+        approval_comment=request.POST.get("comment")
+        approval_status=request.POST.get("approval_status")
+
+
+
+        applicant.approval_officer=processed_by.username
+        applicant.approval_status=approval_status
+        applicant.approval_date=approval_date
+        applicant.approval_comment=approval_comment
+        applicant.save()
+        return HttpResponseRedirect(reverse('membership_commodity_loan_Period_approval_transaction_load'))
+
+    form.fields['comment'].initial = "Approved"
+    context={
+    'task_array':task_array,
+
+    'applicant':applicant,
+    'form':form,
+    }
+    return render(request,'master_templates/membership_commodity_loan_Period_approval_transaction_details.html',context)
+
+
+
+
+def savings_cash_withdrawal_Certitication_list_load(request):
+    task_array=[]
+    if not request.user.user_type == '1':
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
+
+
+
+    applicants=MembersCashWithdrawalsApplication.objects.filter(approval_status="PENDING",status='UNTREATED')
+
+    context={
+    'task_array':task_array,
     'applicants':applicants,
     }
     return render(request,'master_templates/savings_cash_withdrawal_Certitication_list_load.html',context)
 
 
 def savings_cash_withdrawal_list_load(request):
-    current_user=[]
+    task_array=[]
     if not request.user.user_type == '1':
-        current_user=Executives_Tasks_Model.objects.get(user=request.user.id)
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
 
 
-    status=TransactionStatus.objects.get(title='UNTREATED')
-    approval_status=ApprovalStatus.objects.get(title='PENDING')
-    
-    applicants=MembersCashWithdrawalsApplication.objects.filter(approval_status=approval_status,status=status)
+    applicants=MembersCashWithdrawalsApplication.objects.filter(approval_status='PENDING',status='UNTREATED')
 
     context={
-    'current_user':current_user,
+    'task_array':task_array,
     'applicants':applicants,
     }
     return render(request,'master_templates/savings_cash_withdrawal_list_load.html',context)
 
 
 def savings_cash_withdrawal_preview(request,pk):
-    current_user=[]
+    task_array=[]
     if not request.user.user_type == '1':
-        current_user=Executives_Tasks_Model.objects.get(user=request.user.id)
-
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
     form=savings_cash_withdrawal_preview_form(request.POST or None)
     applicant=MembersCashWithdrawalsApplication.objects.get(id=pk)
     applied_date =applicant.created_at
-    
+
     maturity_date=applicant.maturity_date
     exclusive_status=ExclusiveStatus.objects.get(title="EXCLUSIVE")
-    
+
     if applicant.member.member.exclusive_status==exclusive_status:
         submission_status=True
     else:
         submission_status=False
         if maturity_date <= current_date:
             submission_status=True
-    approval_status=ApprovalStatus.objects.get(title='APPROVED')
+    approval_status='APPROVED'
     form.fields['ledger_balance'].initial= applicant.ledger_balance
     form.fields['amount_applied'].initial= applicant.amount
     form.fields['amount_approved'].initial= applicant.amount
@@ -6462,10 +7353,10 @@ def savings_cash_withdrawal_preview(request,pk):
         amount_applied=request.POST.get('amount_applied')
         comment=request.POST.get('comment')
         certification_officer_id=request.POST.get('certification_officers')
-    
+
         certification_officer=CertificationOfficers.objects.get(id=certification_officer_id)
-        
-        if status.title == 'APPROVED':          
+
+        if status.title == 'APPROVED':
             if float(amount_approved) > float(amount_applied):
                 messages.error(request,'Amount Approved Cannot be More than Applied Amount')
                 return HttpResponseRedirect(reverse('savings_cash_withdrawal_preview',args=(pk,)))
@@ -6479,7 +7370,7 @@ def savings_cash_withdrawal_preview(request,pk):
         else:
             pass
     context={
-    'current_user':current_user,
+    'task_array':task_array,
     'applicant':applicant,
     'form':form,
     'submission_status':submission_status,
@@ -6489,45 +7380,45 @@ def savings_cash_withdrawal_preview(request,pk):
 
 
 def members_exclusiveness_list_load(request):
-    current_user=[]
+    task_array=[]
     if not request.user.user_type == '1':
-        current_user=Executives_Tasks_Model.objects.get(user=request.user.id)
-        # return HttpResponse(current_user)
-    status=TransactionStatus.objects.get(title='UNTREATED')
-    approval_status=ApprovalStatus.objects.get(title='PENDING')
-    
-    applicants=MembersExclusiveness.objects.filter(approval_status=approval_status,status=status)
-    
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)        # return HttpResponse(current_user)
+
+
+    applicants=MembersExclusiveness.objects.filter(approval_status='PENDING',status='UNTREATED')
+
     context={
-    'current_user':current_user,
+    'task_array':task_array,
     'applicants':applicants,
     }
     return render(request,'master_templates/members_exclusiveness_list_load.html',context)
 
 
 def members_exclusiveness_process(request,pk):
-    current_user=[]
+    task_array=[]
     if not request.user.user_type == '1':
-        current_user=Executives_Tasks_Model.objects.get(user=request.user.id)
-
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
     form=members_exclusiveness_request_approval_process_form(request.POST or None)
     applicant=MembersExclusiveness.objects.get(id=pk)
     if request.method=="POST":
-        processing_status=ProcessingStatus.objects.get(title='UNPROCESSED')
-        approval_officer=CustomUser.objects.get(id=request.user.id)
+        approval_officer=CustomUser.objects.get(id=request.user.id).username
         comment=request.POST.get('comment')
-        status_id=request.POST.get('approval_status')
-        status=ApprovalStatus.objects.get(id=status_id)
+        status=request.POST.get('approval_status')
+
         applicant.approval_status=status
         applicant.approval_comment=comment
         applicant.approval_officer=approval_officer
-        applicant.processing_status=processing_status
+        applicant.processing_status='UNPROCESSED'
         applicant.approved_at=now
         applicant.save()
         return HttpResponseRedirect(reverse('members_exclusiveness_list_load'))
 
     context={
-    'current_user':current_user,
+    'task_array':task_array,
     'form':form,
     'applicant':applicant,
     }
@@ -6535,26 +7426,27 @@ def members_exclusiveness_process(request,pk):
 
 
 def Shares_Purchase_Request_Approval_List_Load(request):
-    current_user=[]
+    task_array=[]
     if not request.user.user_type == '1':
-        current_user=Executives_Tasks_Model.objects.get(user=request.user.id)
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
 
-    status=TransactionStatus.objects.get(title='UNTREATED')
-    approval_status=ApprovalStatus.objects.get(title='PENDING')
-    records=MembersSharePurchaseRequest.objects.filter(approval_status=approval_status,status=status)
-    
+    records=MembersSharePurchaseRequest.objects.filter(approval_status='PENDING',status='UNTREATED')
+
     context={
-    'current_user':current_user,
+    'task_array':task_array,
     'records':records,
     }
     return render(request,'master_templates/Shares_Purchase_Request_Approval_List_Load.html',context)
 
 
 def Shares_Purchase_Request_Approval_Processed(request,pk):
-    current_user=[]
+    task_array=[]
     if not request.user.user_type == '1':
-        current_user=Executives_Tasks_Model.objects.get(user=request.user.id)
-
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
     form=Shares_Purchase_Request_Approval_Processed_form(request.POST or None)
     record=MembersSharePurchaseRequest.objects.get(id=pk)
 
@@ -6562,8 +7454,8 @@ def Shares_Purchase_Request_Approval_Processed(request,pk):
         units = request.POST.get("units")
         comment=request.POST.get('comment')
 
-        approval_status_id=request.POST.get('approval_status')
-        approval_status=ApprovalStatus.objects.get(id=approval_status_id)
+        approval_status=request.POST.get('approval_status')
+
 
         record.units=units
         record.approval_status=approval_status
@@ -6573,7 +7465,7 @@ def Shares_Purchase_Request_Approval_Processed(request,pk):
         return HttpResponseRedirect(reverse('Shares_Purchase_Request_Approval_List_Load'))
     form.fields['units'].initial=record.units
     context={
-    'current_user':current_user,
+    'task_array':task_array,
     'form':form,
     'record':record,
     }
@@ -6581,537 +7473,450 @@ def Shares_Purchase_Request_Approval_Processed(request,pk):
 
 
 def Cash_Withdrawal_Request_Approval_List_Load(request):
-    current_user=[]
+    task_array=[]
     if not request.user.user_type == '1':
-        current_user=Executives_Tasks_Model.objects.get(user=request.user.id)
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
+
+
+
+    records=MembersCashWithdrawalsApplication.objects.filter(approval_status='PENDING',status='UNTREATED')
 
     context={
-     'current_user':current_user,
+     'records':records,
+     'task_array':task_array,
     }
     return render(request,'master_templates/Cash_Withdrawal_Request_Approval_List_Load.html',context)
-#######################################################################
-################## SECRETARY SECTION #####################################
-#######################################################################
 
-def Loan_request_certification_list_load(request):
-    current_user=[]
+def Cash_Withdrawal_Request_Approval_Processing(request,pk):
+    task_array=[]
     if not request.user.user_type == '1':
-        current_user=Executives_Tasks_Model.objects.get(user=request.user.id)
-
-    
-    submission_status=SubmissionStatus.objects.get(title="SUBMITTED")
-    certification_status=CertificationStatus.objects.get(title="PENDING")
-    applicants=LoanRequest.objects.filter(certification_officer__officer_id=current_user,submission_status=submission_status,certification_status=certification_status)
-    
-    context={
-    'current_user':current_user,
-    'applicants':applicants
-
-    }
-    return render(request,'master_templates/SECRETARY/Loan_request_certification_list_load.html',context)
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
 
 
-def Loan_request_certification_details(request,pk):
-    current_user=[]
-    if not request.user.user_type == '1':
-        current_user=Executives_Tasks_Model.objects.get(user=request.user.id)
-
-    loan_comment=LoanRequest.objects.get(id=pk)
-    loan_analysis=LoanRequestSettings.objects.filter(applicant_id=pk,category='ANALYSIS')
-    loan_summary=LoanRequestSettings.objects.filter(applicant_id=pk,category='SUMMARY')
-    
-
-    certification_status=CertificationStatus.objects.all()
-    approval_officers=ApprovalOfficers.objects.filter(transaction__transaction_id=loan_comment.loan.id)
-
-
-    if request.method=='POST':
-
-        comment=request.POST.get('comment')
-        officer_id=request.POST.get('officer')
-        officer=ApprovalOfficers.objects.get(id=officer_id)
-
-        status_id=request.POST.get('status')
-        status=CertificationStatus.objects.get(id=status_id)
-
-        certified_date= datetime.datetime.now()
-
-
-        loan_comment.certification_status=status
-        loan_comment.certification_comment=comment
-        loan_comment.certification_date=certified_date
-        loan_comment.approval_officer=officer
-        loan_comment.save()
-    
-        return HttpResponseRedirect(reverse('Loan_request_certification_list_load'))
+    record=MembersCashWithdrawalsApplication.objects.get(id=pk)
 
     context={
-    'current_user':current_user,
-    'loan_analysis':loan_analysis,
-    'loan_summary':loan_summary,
-    'pk':pk,
-    'loan_comment':loan_comment,
-    'approval_officers':approval_officers,
-    'certification_status':certification_status,
+     'record':record,
+     'task_array':task_array,
     }
-    return render(request,'master_templates/SECRETARY/Loan_request_certification_details.html',context)
+    return render(request,'master_templates/Cash_Withdrawal_Request_Approval_Processing.html',context)
 
 
+def membership_termination_Duration_Manager_Transaction_Load(request):
 
-def Loan_application_certification_list_load(request):
-    current_user=[]
+    task_array=[]
     if not request.user.user_type == '1':
-        current_user=Executives_Tasks_Model.objects.get(user=request.user.id)
-
-    
-    submission_status=SubmissionStatus.objects.get(title="SUBMITTED")
-    certification_status=CertificationStatus.objects.get(title="PENDING")
-    applicants=LoanApplication.objects.filter(certification_officer__officer_id=current_user,submission_status=submission_status,certification_status=certification_status)
-    
-    context={
-    'current_user':current_user,
-    'applicants':applicants
-
-    }
-    return render(request,'master_templates/SECRETARY/Loan_application_certification_list_load.html',context)
-
-
-def Loan_application_certification_details(request,pk):
-    current_user=[]
-    if not request.user.user_type == '1':
-        current_user=Executives_Tasks_Model.objects.get(user=request.user.id)
-
-    loan_comment=LoanApplication.objects.get(id=pk)
-    loan_analysis=LoanApplicationSettings.objects.filter(applicant_id=pk,category='ANALYSIS')
-    loan_summary=LoanApplicationSettings.objects.filter(applicant_id=pk,category='SUMMARY')
-    
-
-    certification_status=CertificationStatus.objects.all()
-    approval_officers=ApprovalOfficers.objects.filter(transaction__transaction_id=loan_comment.applicant.applicant.loan.id)
-
-
-    if request.method=='POST':
-
-        comment=request.POST.get('comment')
-        officer_id=request.POST.get('officer')
-        officer=ApprovalOfficers.objects.get(id=officer_id)
-
-        status_id=request.POST.get('status')
-        status=CertificationStatus.objects.get(id=status_id)
-
-        certified_date= datetime.datetime.now()
-
-
-        loan_comment.certification_status=status
-        loan_comment.certification_comment=comment
-        loan_comment.certification_date=certified_date
-        loan_comment.approval_officer=officer
-        loan_comment.save()
-    
-        return HttpResponseRedirect(reverse('Loan_application_certification_list_load'))
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
+    transactions=Termination_Types.objects.all()
 
     context={
-    'current_user':current_user,
-    'loan_analysis':loan_analysis,
-    'loan_summary':loan_summary,
-    'pk':pk,
-    'loan_comment':loan_comment,
-    'approval_officers':approval_officers,
-    'certification_status':certification_status,
+     'transactions':transactions,
+     'task_array':task_array,
     }
-    return render(request,'master_templates/SECRETARY/Loan_application_certification_details.html',context)
+    return render(request,'master_templates/membership_termination_Duration_Manager_Transaction_Load.html',context)
 
 
-def Non_Monetary_Loan_Request_certification_Load(request):
-    current_user=[]
+def membership_termination_Duration_Manager(request,pk):
+    form=membership_termination_Duration_form(request.POST or None)
+    task_array=[]
     if not request.user.user_type == '1':
-        current_user=Executives_Tasks_Model.objects.get(user=request.user.id)
-
-    status=TransactionStatus.objects.get(title='UNTREATED')
-    transaction=TransactionTypes.objects.get(code='204')
-   
-    user=CustomUser.objects.get(id=request.user.id)
-   
-    certification_officer=CertificationOfficers.objects.get(officer=user,transaction__transaction=transaction)
-  
-    certification_status=CertificationStatus.objects.get(title='PENDING')
-
-    records=Members_Commodity_Loan_Application.objects.filter(status=status,certification_officer=certification_officer,certification_status=certification_status)
-    
-   
-    context={
-    'current_user':current_user,
-    'records':records,
-    
-    }
-    return render(request,'master_templates/SECRETARY/Non_Monetary_Loan_Request_certification_Load.html',context)
-
-def Non_Monetary_Loan_Request_certification_Load_details(request,pk):
-    current_user=[]
-    if not request.user.user_type == '1':
-        current_user=Executives_Tasks_Model.objects.get(user=request.user.id)
-
-    form=Non_Monetary_Loan_Request_certification_Load_details_form(request.POST or None)
-    record=Members_Commodity_Loan_Application.objects.get(id=pk)
-    ticket=record.ticket
-    queryset=Members_Commodity_Loan_Products_Selection.objects.filter(ticket=ticket)
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
+    transaction=Termination_Types.objects.get(id=pk)
 
     if request.method == 'POST':
-        certification_status=CertificationStatus.objects.get(title="CERTIFIED")
-        certification_comment=request.POST.get('comment')
-        approval_officer_id=request.POST.get('approval_officers')
-        approval_officer=ApprovalOfficers.objects.get(id=approval_officer_id)
-        certification_date=get_current_date(now)
-        
-        record.certification_date=certification_date
-        record.certification_comment=certification_comment
-        record.approval_officer=approval_officer
-        record.certification_status=certification_status
-        record.save()
-        return HttpResponseRedirect(reverse('Non_Monetary_Loan_Request_certification_Load'))
+        duration=request.POST.get('duration')
 
-    form.fields['comment'].initial="For your Consideration"
+        transaction.duration=duration
+        transaction.save()
+
+        return HttpResponseRedirect(reverse('membership_termination_Duration_Manager_Transaction_Load'))
+
+    form.fields['duration'].initial=transaction.duration
     context={
-    'current_user':current_user,
-    'queryset':queryset,
-    'ticket':ticket,
-    'record':record,
-    'form':form,
+     'form':form,
+     'transaction':transaction,
+     'task_array':task_array,
     }
-    return render(request,'master_templates/SECRETARY/Non_Monetary_Loan_Request_certification_Load_details.html',context)
+    return render(request,'master_templates/membership_termination_Duration_Manager.html',context)
 
 
-
-#######################################################################
-################## TREASURER     ################################
-#######################################################################
-
-def withdrawal_confirmation_list_load(request):
-    current_user=[]
+def membership_termination_Request_Approval_List_Load(request):
+    task_array=[]
     if not request.user.user_type == '1':
-        current_user=Executives_Tasks_Model.objects.get(user=request.user.id)
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
 
-    status=TransactionStatus.objects.get(title='UNTREATED')
-    disbursement_status=ApprovalStatus.objects.get(title='PENDING')
-    records=MembersCashWithdrawalsMain.objects.filter(status=status,disbursement_status=disbursement_status)
-    
+
+    members=MemberShipTerminationRequest.objects.filter(approval_status='PENDING',status='UNTREATED')
+
     context={
-    'current_user':current_user,
-    'records':records,
+     'members':members,
+     'task_array':task_array,
     }
-    return render(request,'master_templates/TREASURER/withdrawal_confirmation_list_load.html',context)
+    return render(request,'master_templates/membership_termination_Request_Approval_List_Load.html',context)
 
 
-def withdrawal_confirmation_details(request,pk):
-    status1=MembershipStatus.objects.get(title='ACTIVE')
 
-    
-    disbursement_officer=DisbursementOfficers.objects.get(officer_id=request.user.id)
-    disbursement_status=ApprovalStatus.objects.get(title='APPROVED')
-
-    record=MembersCashWithdrawalsMain.objects.get(id=pk)
-    
-    account_number=record.member.member.account_number
-    ledger=PersonalLedger.objects.filter(account_number=account_number).last()
-    
-    debit=record.member.approved_amount
-    credit=0
-    balance= float(ledger.balance) - float(debit)
-
-
-    transaction_period=now
-
-    if record.channel.title == 'CHEQUE':
-        particulars="Withdrawal through CHEQUE, with No "  + str(record.cheque_number) + ', ' + str(record.coop_account.account_name) + '(' + record.coop_account.bank.title + ')'      
-    elif record.channel.title == 'CASH':
-        particulars="Withdrawal through CASH" 
-    elif record.channel.title == 'TRANSFER':
-        particulars="Withdrawal through TRANSFER from " + str(record.coop_account.account_name) + '(' + record.coop_account.bank.title + ') into ' + record.member_account.account_name + '(' + str(record.member_account.account_number)  + ')'
-        # particulars="Withdrawal through TRANSFER from " + str(record.coop_account.account_name) + '(' + record.coop_account.bank.title + ') into ' + str(record.member_account.account_number) 
-
-    transaction=record.member.member.transaction
-    member=record.member.member.member
-
-    ledger_record=PersonalLedger(member=member,transaction=transaction,account_number=account_number,particulars=particulars,debit=debit,credit=credit,balance=balance,transaction_period=transaction_period,status=status1)
-    ledger_record.save()
-
-
-    
-    record.disbursement_status=disbursement_status
-    record.disbursement_officer=disbursement_officer
-    record.disbursement_date=now
-    record.save()
-
-    return HttpResponseRedirect(reverse('withdrawal_confirmation_list_load'))
-
-####################################################################
-###################### RECEIPT AND ID MANAGER ######################
-####################################################################
-
-def tre_AutoReceipt_Setup(request):
-    current_user=[]
+def membership_termination_Request_Approval_Process(request,pk):
+    task_array=[]
     if not request.user.user_type == '1':
-        current_user=Executives_Tasks_Model.objects.get(user=request.user.id)
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
+    form=membership_termination_Request_Approval_Process_form(request.POST or None)
+    current_date=get_current_date(now)
 
-    record=[]
-    if AutoReceipt.objects.all().exists():
-        record=AutoReceipt.objects.first()
+    member=MemberShipTerminationRequest.objects.get(id=pk)
+    maturity_date=member.maturity_date
 
-    if request.method=="POST":
-        receipt=request.POST.get("receipt")
-        if AutoReceipt.objects.all().exists():
-            record=AutoReceipt.objects.first()
-            record.receipt=receipt
-            record.save()
-        else:
-            record=AutoReceipt(receipt=receipt)
-            record.save()
-        return HttpResponseRedirect(reverse('tre_AutoReceipt_Setup'))
-    context={
-    'current_user':current_user,
-    'record':record,
-    }
-    return render(request,'master_templates/TREASURER/AutoReceipt_Setup.html',context)
+    approved_date = get_current_date(now)
+    approval_officer=CustomUser.objects.get(id=request.user.id).username
 
-
-
-def tre_receipt_manager(request):
-    current_user=[]
-    if not request.user.user_type == '1':
-        current_user=Executives_Tasks_Model.objects.get(user=request.user.id)
-
-    form = receipt_manager_form(request.POST or None)
-    receipts=Receipts.objects.all()
-    if request.method=="POST":
-        start_point = request.POST.get('start_point')
-        stop_point = request.POST.get('stop_point')
-        
-        for i in  range(int(start_point),int(stop_point)+1): 
-            record=Receipts(receipt=str(i).zfill(5))
-            record.save()
-        return HttpResponseRedirect(reverse('tre_receipt_manager'))
-    context={
-    'current_user':current_user,
-    'form':form,
-    'receipts':receipts,
-    }
-    return render(request,'master_templates/TREASURER/receipt_manager.html',context)
-
-
-#######################################################################
-################## COOPERATIVE ACCOUNTS ################################
-#######################################################################
-
-def tre_CooperativeBankAccounts_add(request):
-    current_user=[]
-    if not request.user.user_type == '1':
-        current_user=Executives_Tasks_Model.objects.get(user=request.user.id)
-
-    form=CooperativeBankAccounts_form(request.POST or None)
-    banks=CooperativeBankAccounts.objects.all()
     if request.method == 'POST':
-        bank_id=request.POST.get('bank')
-        bank=Banks.objects.get(id=bank_id)
 
-        account_type_id=request.POST.get('account_type')
-        account_type=AccountTypes.objects.get(id=account_type_id)
+        comment = request.POST.get("comment")
+        approval_status = request.POST.get("approval_status")
 
-        account_name=request.POST.get('account_name')
-        account_number=request.POST.get('account_number')
 
-        if CooperativeBankAccounts.objects.filter(bank=bank,account_number=account_number).exists():
-            messages.error(request,'This account Number is already in Use')
-            return HttpResponseRedirect(reverse('tre_CooperativeBankAccounts_add'))
+        member.approval_status=approval_status
+        member.approval_comment=comment
+        member.approved_at=approved_date
+        member.approval_officer=approval_officer
+        member.save()
+        return HttpResponseRedirect(reverse('membership_termination_Request_Approval_List_Load'))
 
-        record=CooperativeBankAccounts(bank=bank,account_type=account_type,account_name=account_name,account_number=account_number)
-        record.save()
-
-        messages.success(request,"Record Added Successfully")
-        return HttpResponseRedirect(reverse('tre_CooperativeBankAccounts_add'))
 
     context={
-    'current_user':current_user,
     'form':form,
-    'banks':banks,
+     # 'button_enabled':button_enabled,
+     'member':member,
+     'task_array':task_array,
     }
-    return render(request,'master_templates/TREASURER/CooperativeBankAccounts_add.html',context)
+    return render(request,'master_templates/membership_termination_Request_Approval_Process.html',context)
 
 
-def tre_CooperativeBankAccounts_Remove(request,pk):
-    record=CooperativeBankAccounts.objects.get(id=pk)
-    record.delete()
-    return HttpResponseRedirect(reverse('tre_CooperativeBankAccounts_add'))
-
-
-def tre_CooperativeBankAccounts_Update(request,pk):
-    current_user=[]
+def membership_termination_maturity_date_exception_Approval_List_Load(request):
+    task_array=[]
     if not request.user.user_type == '1':
-        current_user=Executives_Tasks_Model.objects.get(user=request.user.id)
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
 
-    form=CooperativeBankAccounts_form(request.POST or None)
-    record=CooperativeBankAccounts.objects.get(id=pk)
 
-    form.fields['account_name'].initial=record.account_name
-    form.fields['account_number'].initial=record.account_number
-    form.fields['bank'].initial=record.bank.id
-    form.fields['account_type'].initial=record.account_type.id
-    if request.method=="POST":
-        bank_id=request.POST.get('bank')
-        bank=Banks.objects.get(id=bank_id)
+    members=MemberShipTerminationRequestException.objects.filter(approval_status='PENDING',status='UNTREATED')
 
-        account_type_id = request.POST.get('account_type')
-        account_type=AccountTypes.objects.get(id=account_type_id)
-
-        account_name=request.POST.get('account_name')
-        account_number=request.POST.get('account_number')
-
-        record.bank=bank
-        record.account_type=account_type
-        record.account_name=account_name
-        record.account_number=account_number
-        record.save()
-        return HttpResponseRedirect(reverse('tre_CooperativeBankAccounts_add'))
-        
     context={
-    'current_user':current_user,
-    'form':form,
+     'members':members,
+     'task_array':task_array,
     }
-    return render(request,'master_templates/TREASURER/CooperativeBankAccounts_Update.html',context)
+    return render(request,'master_templates/membership_termination_maturity_date_exception_Approval_List_Load.html',context)
 
 
+def membership_termination_maturity_date_exception_Approval_Preview(request,pk):
+    task_array=[]
+    if not request.user.user_type == '1':
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
+    form=Standing_Order_Suspension_Transaction_Approvals_Load_Details_form(request.POST or None)
+
+    member=MemberShipTerminationRequestException.objects.get(id=pk)
+    approval_officer=CustomUser.objects.get(id=request.user.id)
+
+    approved_date = get_current_date (now)
+    if request.method == "POST":
+        # return HttpResponse("OKKKKKk")
+        comment=request.POST.get('comment')
+
+
+        approval_status=request.POST.get('approval_status')
+
+
+        member.approved_at=approved_date
+        member.approval_status=approval_status
+        member.approval_comment=comment
+        member.approval_officer=approval_officer.username
+        member.save()
+
+        return HttpResponseRedirect(reverse('membership_termination_maturity_date_exception_Approval_List_Load'))
+
+    form.fields ['purpose'].initial =member.reasons
+    context={
+     'member':member,
+     'form':form,
+     'task_array':task_array,
+    }
+    return render(request,'master_templates/membership_termination_maturity_date_exception_Approval_Preview.html',context)
+
+
+
+def membership_termination_maturity_date_exception_Approval_Process1(request,pk):
+    task_array=[]
+    if not request.user.user_type == '1':
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
+    form=Standing_Order_Suspension_Transaction_Approvals_Load_Details_form(request.POST or None)
+
+    member=MemberShipTerminationRequestException.objects.get(id=pk)
+    approval_officer=CustomUser.objects.get(id=request.user.id)
+
+    approved_date = get_current_date (now)
+    if request.method == "POST":
+        # return HttpResponse("OKKKKKk")
+        comment=request.POST.get('comment')
+
+
+        approval_status=request.POST.get('approval_status')
+
+
+        member.approved_at=approved_date
+        member.approval_status=approval_status
+        member.approval_comment=comment
+        member.approval_officer=approval_officer.username
+        member.save()
+
+        return HttpResponseRedirect(reverse('membership_termination_maturity_date_exception_Approval_List_Load'))
+
+    form.fields ['purpose'].initial =member.reasons
+    context={
+     'member':member,
+     'form':form,
+     'task_array':task_array,
+    }
+    return render(request,'master_templates/membership_termination_maturity_date_exception_Approval_Process.html',context)
+
+
+def membership_termination_Disbursement_Approval_List_Load(request):
+    task_array=[]
+    if not request.user.user_type == '1':
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
+
+    members=MemberShipTermination.objects.filter(approval_status='PENDING',processing_status='UNPROCESSED',status='UNTREATED')
+
+    context={
+     'members':members,
+     'task_array':task_array,
+    }
+    return render(request,'master_templates/membership_termination_Disbursement_Approval_List_Load.html',context)
+
+
+def membership_termination_Disbursement_Approval_Preview(request,pk):
+    task_array=[]
+    if not request.user.user_type == '1':
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
+
+    form=membership_termination_Request_Approval_Process_form(request.POST or None)
+
+    approval_officer=CustomUser.objects.get(id=request.user.id)
+    approved_date=get_current_date(now)
+
+
+    member=MemberShipTermination.objects.get(id=pk)
+
+    current_date=member.applicant.applied_date
+    maturity_date=member.applicant.maturity_date
+
+    if request.method == 'POST':
+
+        approval_status=request.POST.get("approval_status")
+
+
+        comment=request.POST.get('comment')
+
+        member.approval_officer=approval_officer.username
+        member.approval_comment=comment
+        member.approval_status=approval_status
+        member.approved_at=approved_date
+        member.status='TREATED'
+        member.save()
+        return HttpResponseRedirect(reverse("membership_termination_Disbursement_Approval_List_Load"))
+
+    button_enabled=False
+    if maturity_date <= current_date:
+        button_enabled=True
+    else:
+        if member.lock_status == 'OPEN':
+            button_enabled=True
+
+
+    context={
+     'button_enabled':button_enabled,
+     'form':form,
+     'member':member,
+     'task_array':task_array,
+    }
+    return render(request,'master_templates/membership_termination_Disbursement_Approval_Preview.html',context)
+
+
+
+
+####################################################################
+###################### RENTALS        ######################
+####################################################################
+def RentalMainCategories_add(request):
+    task_array=[]
+    if not request.user.user_type == '1':
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
+    form=RentalProducts_add_Form(request.POST or None)
+
+    records=RentalMainCategories.objects.all()
+    if request.method == "POST":
+        processed_by=CustomUser.objects.get(id=request.user.id)
+        description=request.POST.get("description")
+
+        if not description:
+            messages.error(request,'Description is Missing')
+            return HttpResponseRedirect(reverse('RentalMainCategories_add'))
+
+        if RentalMainCategories.objects.filter(description=description).exists():
+            messages.info(request,'Record already Exist')
+            return HttpResponseRedirect(reverse('RentalMainCategories_add'))
+
+        RentalMainCategories(description=description.upper(),processed_by=processed_by).save()
+        return HttpResponseRedirect(reverse('RentalMainCategories_add'))
+
+    context={
+
+     'form':form,
+     'records':records,
+     'task_array':task_array,
+    }
+    return render(request,'master_templates/RentalMainCategories_add.html',context)
+
+
+def RentalMainCategories_delete(request,pk):
+    RentalMainCategories.objects.filter(id=pk).delete()
+    messages.info(request,'Record Deleted')
+    return HttpResponseRedirect(reverse('RentalMainCategories_add'))
+
+
+
+def RentalProducts_add(request):
+    task_array=[]
+    if not request.user.user_type == '1':
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
+
+
+    form=RentalProducts_add_Form(request.POST or None)
+
+    records=RentalProducts.objects.all()
+
+    if request.method == "POST":
+        processed_by=CustomUser.objects.get(id=request.user.id)
+
+        description=request.POST.get("description")
+
+        if not description:
+            messages.error(request,'Description is Missing')
+            return HttpResponseRedirect(reverse('RentalProducts_add'))
+
+        if RentalProducts.objects.filter(description=description).exists():
+            messages.info(request,'Record already Exist')
+            return HttpResponseRedirect(reverse('RentalProducts_add'))
+
+        RentalProducts(description=description.upper(),processed_by=processed_by).save()
+        return HttpResponseRedirect(reverse('RentalProducts_add'))
+    context={
+
+     'form':form,
+     'records':records,
+     'task_array':task_array,
+    }
+    return render(request,'master_templates/RentalProducts_add.html',context)
+
+
+def RentalProducts_delete(request,pk):
+    RentalProducts.objects.filter(id=pk).delete()
+    messages.info(request,'Record Deleted')
+    return HttpResponseRedirect(reverse('RentalProducts_add'))
+
+
+
+def Rental_Price_Settings(request):
+    task_array=[]
+    if not request.user.user_type == '1':
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
+    form=Rental_Price_Settings_Form(request.POST or None)
+
+    records=RentalPriceSettings.objects.all()
+
+    if request.method == 'POST':
+        processed_by=CustomUser.objects.get(id=request.user.id)
+        amount = request.POST.get('amount')
+
+        if not amount or float(amount) < 0:
+            messages.error(request,'Amount cannot be less zero')
+            return HttpResponseRedirect(reverse('Rental_Price_Settings'))
+
+        main_category_id=request.POST.get('category')
+        main_category=RentalMainCategories.objects.get(id=main_category_id)
+
+        product_id=request.POST.get('product')
+        product=RentalProducts.objects.get(id=product_id)
+
+        if  RentalPriceSettings.objects.filter(main_category=main_category,products=product).exists():
+            record=RentalPriceSettings.objects.get(main_category=main_category,products=product)
+            record.amount=amount
+            record.status='ACTIVE'
+            record.save()
+            messages.success(request,'Record Updated Successfully')
+            return HttpResponseRedirect(reverse('Rental_Price_Settings'))
+
+        RentalPriceSettings(main_category=main_category,products=product,amount=amount,status='ACTIVE',processed_by=processed_by).save()
+        messages.success(request,'Record Added Successfully')
+        return HttpResponseRedirect(reverse('Rental_Price_Settings'))
+
+    context={
+     'form':form,
+     'records':records,
+     'task_array':task_array,
+    }
+    return render(request,'master_templates/Rental_Price_Settings.html',context)
+
+
+def Rental_Price_Settings_delete(request,pk):
+    RentalPriceSettings.objects.filter(id=pk).delete()
+    messages.info(request,'Record Deleted')
+    return HttpResponseRedirect(reverse('Rental_Price_Settings'))
 
 ####################################################################
 ###################### FIN. SECRETARY ######################
 ####################################################################
 
 def Cash_Withdrawal_Approved_list_load(request):
-    current_user=[]
+    task_array=[]
     if not request.user.user_type == '1':
-        current_user=Executives_Tasks_Model.objects.get(user=request.user.id)
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
 
-    status=TransactionStatus.objects.get(title="UNTREATED")
-    approval_status=ApprovalStatus.objects.get(title='APPROVED')
-    applicants=MembersCashWithdrawalsApplication.objects.filter(status=status,approval_status=approval_status)
-    
+    applicants=MembersCashWithdrawalsApplication.objects.filter(status='UNTREATED',approval_status='APPROVED')
+
     context={
-    'current_user':current_user,
+    'task_array':task_array,
     'applicants':applicants,
     }
     return render(request,'master_templates/FINSEC/Cash_Withdrawal_Approved_list_load.html',context)
-
-
-def Cash_Withdrawal_Approved_Details(request,pk):
-    current_user=[]
-    if not request.user.user_type == '1':
-        current_user=Executives_Tasks_Model.objects.get(user=request.user.id)
-
-    form=Cash_Withdrawal_Approved_Details_form(request.POST or None)
-    applicant=MembersCashWithdrawalsApplication.objects.get(id=pk)
-    member_accounts=MembersBankAccounts.objects.filter(member_id=applicant.member.member)
-
-    form.fields['amount'].initial=applicant.approved_amount
-    form.fields['payment_date'].initial=now
-
-    cheque=False
-    cash=False
-    transfer=False
-    if request.method=="POST" and 'btn_fetch' in request.POST:
-        
-        channel_id=request.POST.get('channels')
-        channel = PaymentChannels.objects.get(id=channel_id)
-
-        cheque=False
-        if channel.title=="CHEQUE":
-            cheque=True
-        elif channel.title=="CASH":
-            cash=True
-        elif channel.title=="TRANSFER":
-            transfer=True
-        
-    if request.method=="POST" and 'btn_submit' in request.POST:
-        status=TransactionStatus.objects.get(title="UNTREATED")
-        processed_by=CustomUser.objects.get(id=request.user.id)
-
-        channel_id=request.POST.get('channels')
-        channel = PaymentChannels.objects.get(id=channel_id)
-        
-        amount =request.POST.get('amount')
-        payment_date =request.POST.get('payment_date')
-        
-        officer_id =request.POST.get('officers')
-        disbursement_officer=DisbursementOfficers.objects.get(id=officer_id)
-        
-        channels_id =request.POST.get('channels')
-        channels=PaymentChannels.objects.get(id=channels_id)
-
-        if channel.title=="CHEQUE":
-            coop_account_id =request.POST.get('account')
-            coop_account=CooperativeBankAccounts.objects.get(id=coop_account_id)
-            cheque_number=request.POST.get('cheque_number')
-            
-            if cheque_number=="":
-                messages.error(request,'Cheque Number Missing')
-                return HttpResponseRedirect(reverse('Cash_Withdrawal_Approved_Details',args=(pk,)))
-            
-            record=MembersCashWithdrawalsMain(member=applicant,
-                channel=channel,
-                payment_date=payment_date,
-                coop_account=coop_account,
-                cheque_number=cheque_number,
-                processed_by=processed_by,
-                disbursement_officer=disbursement_officer,
-                status=status,
-                )
-            record.save()
-        elif channel.title=="CASH":
-            
-            record=MembersCashWithdrawalsMain(member=applicant,
-                channel=channel,
-                payment_date=payment_date,
-                processed_by=processed_by,
-                disbursement_officer=disbursement_officer,
-                status=status,
-                )
-            record.save()
-        elif channel.title=="TRANSFER":
-            coop_account_id =request.POST.get('account')
-            coop_account=CooperativeBankAccounts.objects.get(id=coop_account_id)
-
-            member_account_id=request.POST.get('member_account')
-            member_account=MembersBankAccounts.objects.get(id=member_account_id)
-            record=MembersCashWithdrawalsMain(member=applicant,
-                channel=channel,
-                payment_date=payment_date,
-                coop_account=coop_account,
-                member_account=member_account,
-                processed_by=processed_by,
-                disbursement_officer=disbursement_officer,
-                status=status,
-                )
-            record.save()
-            
-        certification_date=now      
-        status=TransactionStatus.objects.get(title="TREATED")
-        certification_status=CertificationStatus.objects.get(title='CERTIFIED')
-        
-        applicant.status=status
-        applicant.certification_status=certification_status
-        applicant.certification_date=certification_date
-        applicant.save()
-        return HttpResponseRedirect(reverse('Cash_Withdrawal_Approved_list_load'))
-            
-    context={
-    'current_user':current_user,
-    'member_accounts':member_accounts,
-    'applicant':applicant,
-    'form':form,
-    'cheque':cheque,
-    'cash':cash,
-    'transfer':transfer,
-    }
-    return render(request,'master_templates/FINSEC/Cash_Withdrawal_Approved_Details.html',context)
-
-
 
 
 
@@ -7121,13 +7926,14 @@ def Cash_Withdrawal_Approved_Details(request,pk):
 #######################################################################
 
 def transaction_views_ranked(request):
-    current_user=[]
+    task_array=[]
     if not request.user.user_type == '1':
-        current_user=Executives_Tasks_Model.objects.get(user=request.user.id)
-
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
     transactions=TransactionTypes.objects.filter(~Q(source__title='GENERAl')).order_by('rank')
     context={
-    'current_user':current_user,
+    'task_array':task_array,
     'transactions':transactions,
 
     }
@@ -7135,16 +7941,17 @@ def transaction_views_ranked(request):
 
 
 def List_of_Users(request):
-    current_user=[]
+    task_array=[]
     if not request.user.user_type == '1':
-        current_user=Executives_Tasks_Model.objects.get(user=request.user.id)
-
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
     users=Staff.objects.all()
     records=UserType.objects.all().order_by('code')
     # users=Staff.objects.annotate(full_name=Concat("admin__first_name", Value(" "), "admin__last_name")).all().values_lst("full_name")
 
     context={
-    'current_user':current_user,
+    'task_array':task_array,
     'users':users,
     'records':records,
     }

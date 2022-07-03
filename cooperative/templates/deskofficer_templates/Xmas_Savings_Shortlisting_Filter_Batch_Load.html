@@ -1,0 +1,71 @@
+{% extends 'deskofficer_templates/base_template.html' %}
+{% load static %}
+{% block custom_css %}
+    <!-- PLUGINS STYLES-->
+    <link href="{% static '/cooperative/assets/vendors/DataTables/datatables.min.css' %}" rel="stylesheet" />
+   {% endblock custom_css %}
+{% block content %}
+
+      
+        <div class="page-content fade-in-up">
+            <div class="col-md-6">
+                <div class="ibox">
+                    <div class="ibox-head">
+                        <div class="ibox-title">XMAS SHORTLIST BATCHES </div>
+                        
+                    </div>
+                    <div class="ibox-body">
+                       <form class="form-horizontal" method="POST" action="" enctype="multipart/form-data" novalidate>
+                                    {% csrf_token %}
+                            <div class="form-group row">
+                                <label class="col-sm-2 col-form-label">Batch</label>
+                                <div class="col-sm-10">
+                                    {{form.batch}}
+                                </div>
+                            </div>
+                           
+                            
+                            <div class="form-group row">
+                                <div class="col-sm-10 ml-sm-auto">
+
+                                    <button class="btn btn-success" type="submit">Proceed</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            
+        </div>
+  
+    
+    <!-- BEGIN PAGA BACKDROPS-->
+    <div class="sidenav-backdrop backdrop"></div>
+    <div class="preloader-backdrop">
+        <div class="page-preloader">Loading</div>
+    </div>
+    <!-- END PAGA BACKDROPS-->
+{% endblock content %}
+
+{% block custom_js %}
+    <!-- PAGE LEVEL PLUGINS-->
+    <script src="{% static '/cooperative//assets/vendors/DataTables/datatables.min.js' %}" type="text/javascript"></script>
+   
+    <!-- PAGE LEVEL SCRIPTS-->
+    <script type="text/javascript">
+        $(function() {
+            $('#example-table').DataTable({
+                pageLength: 10,
+                //"ajax": './assets/demo/data/table_data.json',
+                /*"columns": [
+                    { "data": "name" },
+                    { "data": "office" },
+                    { "data": "extn" },
+                    { "data": "start_date" },
+                    { "data": "salary" }
+                ]*/
+            });
+        })
+    </script>
+{% endblock custom_js %}

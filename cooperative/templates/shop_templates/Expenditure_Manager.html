@@ -1,0 +1,121 @@
+{% extends 'shop_templates/base_template.html' %}
+{% load static %}
+
+
+
+{% block content %}
+            <div class="page-content fade-in-up">
+                <div class="row">            
+
+                    <div class="col-md-6">
+                        <div class="ibox">
+                            <div class="ibox-head">
+                                <div class="ibox-title">Miscellaneous Expenditure</div>
+                                
+                            </div>
+                            <div class="form-group">
+                                  {% if messages %}
+                                    
+                                      {% for message in messages %}
+                                      {% if message.tags == "error" %}
+                                      <div class="alert alert-danger" style="margin-top:10px">{{message}}</div>
+                                      
+                                      {% endif %}
+
+                                      {% if message.tags == "success" %}
+                                      <div class="alert alert-success" style="margin-top:10px">{{message}}</div>
+                                      
+                                      {% endif %}
+                                      {% endfor %}
+                                  
+                                  {% endif %}
+                            </div>
+                            <div class="ibox-body">
+                                 <form class="form-horizontal" method="POST" action="">
+                                      {% csrf_token %}
+                                    <div class="form-group row">
+                                        <label class="col-sm-4 col-form-label">Details</label>
+                                        <div class="col-sm-8">
+                                           {{form.details}}
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-sm-4 col-form-label">Amount</label>
+                                        <div class="col-sm-8">
+                                            {{form.amount}}
+                                        </div>
+                                    </div>
+                                     <div class="form-group row">
+                                        <label class="col-sm-4 col-form-label">Ref. Code</label>
+                                        <div class="col-sm-8">
+                                           {{form.reference}}
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <div class="col-sm-8 ml-sm-auto">
+                                            <button class="btn btn-info" type="submit">Submit</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+               <div class="row">
+                  
+                    <div class="col-xl-10">
+                        <div class="ibox">
+                            <div class="ibox-head">
+                                <div class="ibox-title">Expenditure Details</div>
+                            </div>
+                            <div class="ibox-body">
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Details</th>
+                                            <th>Amount</th>
+                                            <th>Reference</th>
+                                            <th>Date</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+
+                                        {% for item in records %}
+                                        <tr>
+                                            <td>{{forloop.counter}}</td>
+                                            <td>{{item.details | safe}}</td>
+                                            <td>{{item.amount}}</td>
+                                            <td>{{item.reference}}</td>
+                                            <td>{{item.tdate}}</td>
+                                            <td><a href="{% url 'Expenditure_Discard' item.pk %}" class="btn btn-danger">Discard</a></td>
+                                         
+                                        </tr>
+                                       {% endfor %}
+                                        <tr>
+                                            <td colspan="2">SUMMARY</td>
+                                            <td>{{total_amount}}</td>
+                                            <td colspan="3"></td>
+                                           
+                                         
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+        
+
+
+    <div class="sidenav-backdrop backdrop"></div>
+    <div class="preloader-backdrop">
+        <div class="page-preloader">Loading</div>
+    </div>
+     {% include 'cooperative/includes/emptyspace.html' %} 
+{% endblock %}

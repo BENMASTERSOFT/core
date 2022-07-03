@@ -1,0 +1,65 @@
+{% extends 'shop_templates/base_template.html' %}
+{% load static %}
+
+{% block content %}
+
+            <div class="page-content fade-in-up">
+              
+                <div class="row">
+                  
+                    <div class="col-xl-12">
+                        <div class="ibox">
+                            <div class="ibox-head">
+                                <div class="ibox-title">List of Approved Credit Sales Request</div>
+                            </div>
+                            <div class="ibox-body">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Member ID</th>
+                                            <th>Name</th>
+                                            <th>Ticket</th>
+                                            <th>Amount</th>
+                                            
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for item in items %}
+                                        <tr>
+                                            <td>{{forloop.counter}}</td>
+                                            <td>{{item.trans_code.member.get_member_Id}}</td>
+                                            <td>{{item.trans_code.member.get_full_name}}</td>
+                                            <td>{{item.trans_code.ticket}}</td>
+                                            <td>{{item.amount}}</td>
+                                            
+                                            <td>
+                                            {% if approval_status1.title == 'APPROVED' %}
+                                                <a href="{% url 'members_credit_sales_approved_item_details' item.trans_code.ticket %}" class='btn btn-success'>Process</a> 
+
+                                            {% else %}
+
+                                                  <a href="" class='btn btn-success'>View Comments</a>
+                                            {% endif %}
+                                            
+                                            
+                                            </td>
+                                           
+                                        </tr>
+                                {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+              
+           
+            </div>
+  <div class="sidenav-backdrop backdrop"></div>
+    <div class="preloader-backdrop">
+        <div class="page-preloader">Loading</div>
+    </div>
+     {% include 'cooperative/includes/emptyspace.html' %} 
+{% endblock %}

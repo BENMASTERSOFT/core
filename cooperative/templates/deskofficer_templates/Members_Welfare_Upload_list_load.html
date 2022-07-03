@@ -7,7 +7,9 @@
 {% block content %}
 
       
-            <div class="page-content fade-in-up">
+    <div class="page-content fade-in-up">
+        <div class="row">
+            <div class="col-md-8">
                 <div class="ibox">
                     <div class="ibox-head">
                         <div class="ibox-title">LIST OF MEMBERS | WELFARE UPLOAD |  <input type="button" class="btn btn-secondary" value="Back" onclick="history.back()"/></div>
@@ -35,9 +37,7 @@
                                 <tr>
                                     <th>#</th>
                                     <th>Member ID</th> 
-                                    <th>Last Name</th>
-                                    <th>First Name</th>
-                                    <th>Middle Name</th>
+                                    <th>Name</th>
                                     <th>Action</th>
                                  
                                 </tr>
@@ -46,9 +46,7 @@
                                 <tr>
                                     <th>#</th>
                                      <th>Member ID</th> 
-                                    <th>Last Name</th>
-                                    <th>First Name</th>
-                                    <th>Middle Name</th>
+                                    <th>Name</th>
                                     <th>Action</th>
                                 </tr>
                             </tfoot>
@@ -57,9 +55,8 @@
                                 <tr>
                                     <td>{{forloop.counter}}</td>
                                     <td>{{record.get_member_Id}}</td>
-                                    <td>{{record.admin.last_name}}</td>
-                                    <td>{{record.admin.first_name}}</td>
-                                    <td>{{record.get_middle_name}}</td>
+                                    <td>{{record.get_full_name}}</td>
+                              
                                                                                                       
                                     <td>
                                         <a href="{% url 'Members_Welfare_Upload_Preview' record.pk %}" class="btn btn-success">Process</a>
@@ -75,8 +72,9 @@
                         </table>
                     </div>
                 </div>
-               
             </div>
+        </div>
+    </div>
   
     
     <!-- BEGIN PAGA BACKDROPS-->

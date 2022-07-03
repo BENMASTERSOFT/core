@@ -69,8 +69,9 @@
                     </div>
                 </div>
 
+                  
                  <div class="row">
-                        <div class="col-xl-8">
+                        <div class="col-xl-10">
                         <div class="ibox">
                             <div class="ibox-head">
                                 <div class="ibox-title">Active Account Details | <a href="{% url 'Members_Bank_Accounts_lock' member.pk %}" class="btn btn-secondary">LOCK</a> </div>
@@ -84,6 +85,7 @@
                                             <th>Account Numbere</th>
                                             <th>Account Type</th>
                                             <th>Bank</th>
+                                            <th>Priority</th>
                                             <th>Action</th>
                                            
                                         </tr>
@@ -94,12 +96,22 @@
                                             <td>{{forloop.counter}}</td>
                                             <td>{{account.account_name}}</td>
                                             <td>{{account.account_number}}</td>
-                                            <td>{{account.account_type.title}}</td>
+                                            <td>{{account.account_type}}</td>
                                             <td>{{account.bank.title}}</td>
+                                          
+                                            {% if account.account_priority == 0 %}
+                                          
+                                               
+                                               <td> <a href="{% url 'Members_Bank_Accounts_prioritization' account.pk %}"> <i class="fa fa-check text-success"></a></td>
+                                            {% else %}
+                                                <td> <a href="{% url 'Members_Bank_Accounts_prioritization' account.pk %}"> <i class="fa fa-warning text-warning"></i></a></td>
+                                                
+                                            {% endif %}
+                                            
                                             <td>
-                                                {% if account.lock_status.title == 'OPEN' %}
+                                            {% if account.lock_status == 'OPEN' %}
                                                 <a href="{% url 'Members_Bank_Accounts_remove' account.pk %}" class="btn btn-danger">Remove</a>
-                                               {% endif %}
+                                            {% endif %}
 
                                             </td>
                                         </tr>
@@ -111,6 +123,8 @@
                     </div>
                 </div>
             </div>
+
+
     <div class="sidenav-backdrop backdrop"></div>
     <div class="preloader-backdrop">
         <div class="page-preloader">Loading</div>

@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-413udjpgc7=de#9j!v7x4yibz#z*h*-df4#bb+zy%f-+ls7*x3
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -44,8 +44,14 @@ INSTALLED_APPS = [
     'import_export',
     'django.contrib.humanize',
     'mathfilters',
+    'dbbackup',  # django-dbbackup
   
 ]
+
+
+DBBACKUP_STORAGE = 'django.core.files.storage.FileSystemStorage'
+DBBACKUP_STORAGE_OPTIONS = {'location': BASE_DIR / 'backup'}
+
 
 MIDDLEWARE = [
     'livesync.core.middleware.DjangoLiveSyncMiddleware',
@@ -67,7 +73,9 @@ TEMPLATES = [
         'DIRS': [os.path.join(BASE_DIR / 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
+           
             'context_processors': [
+
                 'django.template.context_processors.debug',
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
@@ -93,7 +101,7 @@ WSGI_APPLICATION = 'core.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'cooperative',
+        'NAME': 'coop_databank',
         'USER': 'root',
         'PASSWORD':'',
         'HOST': 'localhost',
@@ -139,10 +147,10 @@ USE_TZ = False
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
 MEDIA_URL="/media/"
-MEDIA_ROOT=os.path.join(BASE_DIR,"media")
-
 STATIC_URL="/static/"
+
 STATIC_ROOT=os.path.join(BASE_DIR,"static")
+MEDIA_ROOT=os.path.join(BASE_DIR,"media")
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field

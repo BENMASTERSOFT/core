@@ -18,9 +18,8 @@
                                 <tr>
                                     <th>#</th>
                                     <th>Member ID</th>
-                                    <th>First NAme</th>
-                                    <th>Last Name</th>
-                                    <th>Middle Name</th>
+                                    <th>Name</th>
+                                    
                                     <th>Action</th>
                                 </tr>
                             </thead>
@@ -28,9 +27,8 @@
                                 <tr>
                                     <th>#</th>
                                     <th>Member ID</th>
-                                    <th>First NAme</th>
-                                    <th>Last Name</th>
-                                    <th>Middle Name</th>
+                                    <th>Name</th>
+                                    
                                     <th>Action</th>
                                 </tr>
                             </tfoot>
@@ -39,10 +37,8 @@
                                 <tr>
                                     <td>{{forloop.counter}}</td>
                                     <td>{{member.get_member_Id}}</td>
-                                    <td>{{member.admin.first_name}}</td>
-                                    <td>{{member.admin.last_name}}</td>
-                                    <td>{{member.middle_name}}</td>
-                                    <td><a href="{% url 'members_cash_sales_product_load' member.id %}">Process</a></td>
+                                    <td>{{member.get_full_name}}</td>
+                                    <td><a href="{% url 'members_cash_sales_product_load' member.id 0 %}">Process</a></td>
                                     
                                 </tr>
                                 
@@ -63,6 +59,7 @@
         <div class="page-preloader">Loading</div>
     </div>
     <!-- END PAGA BACKDROPS-->
+     {% include 'cooperative/includes/emptyspace.html' %} 
 {% endblock content %}
 
 {% block custom_js %}

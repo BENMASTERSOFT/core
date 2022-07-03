@@ -2,49 +2,76 @@
 {% load static %}
 
 {% block content %}
-            <div class="page-content fade-in-up">
-                <div class="row">
+    <div class="page-content fade-in-up">
+      <div class="row">
+            <div class="col-md-4">
+                
+                <div class="ibox">
+                    <div class="ibox-head">
+                        <div class="ibox-title"> {{record.title}}</div>
+                    </div>
                    
-                    <div class="col-md-5">
-                        <div class="ibox">
-                            <div class="ibox-head">
-                                <div class="ibox-title">Optional Properties</div>
-                                
-                            </div>
-                            <div class="ibox-body">
-                                <form class="form-horizontal" method="POST" action="">
-                                    {% csrf_token %}
-                                    <div class="form-group row">
-                                        <label class="col-sm-7 col-form-label">Interest Rate Required</label>
-                                        <div class="col-sm-5">
-                                            {{form.interest_rate_required}}
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <label class="col-sm-7 col-form-label">Admin Charges Required</label>
-                                        <div class="col-sm-5">
-                                           {{form.admin_charges_required}}
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <label class="col-sm-7 col-form-label">Guarantor Required</label>
-                                        <div class="col-sm-5">
-                                           {{form.guarantor_required}}
-                                        </div>
-                                    </div>
-                                    
-                                    <div class="form-group row">
-                                        <div class="col-sm-5 ml-sm-auto">
-                                            <button class="btn btn-info" type="submit">Submit</button>
-                                        </div>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="row">
+            <div class="col-md-4">
+
+                <div class="ibox">
+                    <div class="ibox-head">
+                        <div class="ibox-title">Interest Rate Required </div>
+                    </div>
+                    <div class="ibox-body">
+                        <form class="form-inline" method="POST" action="">
+                            {% csrf_token %}
+                            <label class="sr-only">Interest Rate Required</label>
+                            {{interest_rate_form.interest_rate_required}}
+                            
+                            <button class="btn btn-success" type="submit" name='btn-interest'>Update</button>
+                        </form>
                     </div>
                 </div>
+            </div>
+        </div>
 
-
+        <div class="row">
+            <div class="col-md-4">
+                <div class="ibox">
+                    <div class="ibox-head">
+                        <div class="ibox-title">Admin Charges Required</div>
+                    </div>
+                    <div class="ibox-body">
+                        <form class="form-inline" method="POST" action="">
+                            {% csrf_token %}
+                            <label class="sr-only">Admin Charges Required</label>
+                           {{admin_charges_form.admin_charges_required}}
+                            
+                            <button class="btn btn-success" type="submit" name='btn-admin'>Update</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+                <div class="ibox">
+                    <div class="ibox-head">
+                        <div class="ibox-title">Guarantor Required</div>
+                    </div>
+                    <div class="ibox-body">
+                        <form class="form-inline" method="POST" action="">
+                            {% csrf_token %}
+                            <label class="sr-only">Guarantor Required</label>
+                            {{guarantor_form.guarantor_required}}
+                            
+                            <button class="btn btn-success" type="submit" name='btn-guarantor'>Update</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <div class="sidenav-backdrop backdrop"></div>

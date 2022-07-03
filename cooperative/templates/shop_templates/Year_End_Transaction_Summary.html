@@ -1,0 +1,198 @@
+{% extends 'shop_templates/base_template.html' %}
+{% load static %}
+
+{% block content %}
+            <div class="page-content fade-in-up">
+                <form class="form-horizontal" method="POST" action="" enctype="multipart/form-data" novalidate>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="ibox">
+                                <div class="ibox-head">
+                                    <div class="ibox-title">Year End Transaction Summary</div>
+                                    
+                                </div>
+                                <div class="ibox-body">
+                                
+                                        {% csrf_token %}
+                                        <div class="form-group row">
+                                            <label class="col-sm-2 col-form-label">Date</label>
+                                            <div class="col-sm-10">
+                                                {{form.sales_date}}
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="form-group row">
+                                            <div class="col-sm-10 ml-sm-auto">
+                                                <button class="btn btn-info" name="btn_fetch" type="submit">Fetch</button>
+                                                {% if button_show %}
+                                                <button class="btn btn-success" name="btn_submit" type="submit">Submit</button>
+                                            {% endif %}
+                                            </div>
+                                        </div>
+                                   
+                                </div>
+                            </div>
+                        </div>
+                     
+                    </div>
+               
+                
+
+                <div class="row">
+              
+                    <div class="col-xl-6">
+                        <div class="ibox">
+                            <div class="ibox-head">
+                                <div class="ibox-title">YEARLY CASH SALES DETAILS</div>
+                            </div>
+                            <div class="ibox-body">
+                                <table class="table table-bordered">
+                                    <thead class="thead-default">
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Description</th>
+                                            <th>Amount</th>
+                                            <th>Username</th>
+                                           
+                                            
+                                         
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for item in cash %}
+                                        <tr>
+                                            <td>{{forloop.counter}}</td>
+                                            <td>{{item.description}}</td>
+                                            <td>{{item.amount}}</td>
+                                            <td>{{item.processed_by.username}}</td>
+                                            
+                                           
+                                        </tr>
+                                    {% endfor %}
+                                    <tr>
+                                        <td colspan="2">Total Amount</td>
+                                        <td>{{total_cash_amount|default_if_none:"0.00" }}</td>
+                                        <td></td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+              
+                    <div class="col-xl-6">
+                        <div class="ibox">
+                            <div class="ibox-head">
+                                <div class="ibox-title">YEARLY CREDIT SALES DETAILS</div>
+                            </div>
+                            <div class="ibox-body">
+                                <table class="table table-bordered">
+                                    <thead class="thead-default">
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Description</th>
+                                            <th>Amount</th>
+                                            <th>Username</th>
+                                   
+                                            
+                                         
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for item in credits %}
+                                        <tr>
+                                            <td>{{forloop.counter}}</td>
+                                            <td>{{item.description}}</td>
+                                            <td>{{item.amount}}</td>
+                                            <td>{{item.processed_by.username}}</td>
+                                          
+                                            
+                                        </tr>
+                                    {% endfor %}
+                                    <tr>
+                                        <td colspan="2">Total Amount</td>
+                                        <td>{{total_credit_amount|default_if_none:"0.00" }}</td>
+                                        <td></td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+           
+                <div class="row">
+                   <div class="col-xl-6">
+                            <div class="ibox">
+                                <div class="ibox-head">
+                                    <div class="ibox-title">LEGEND </div>
+                                </div>
+                                <div class="ibox-body">
+                                    <table class="table table-bordered">
+                                        <thead>
+                                            <tr>
+                                              
+                                                <th>DESCRIPTION</th>
+                                                <th>AMOUNT</th>
+                                                <th>ACTION</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                        {% if total_cash_amount %}
+                                            <tr>
+                                            
+                                                <td>TOTAL CASH SALES</td>
+                                                <td>{{total_cash_amount}}</td>
+                                                <td>
+                                                     {% comment %}
+                                                 <a href="{% url 'Day_End_Transaction_Summary_Details' 'CASH' tday tmonth tyear %}" class="btn btn-secondary">View</a>
+                                                 {% endcomment %}
+                                             </td>
+                                            </tr>
+                                        {% endif %}
+                                        {% if total_credit_amount %}
+                                            <tr>
+                                               
+                                                <td>TOTAL CREDIT SALES</td>
+                                                <td>{{total_credit_amount}}</td>
+                                                <td>
+                                                    {% comment %}
+                                                <a href="{% url 'Day_End_Transaction_Summary_Details' 'CREDIT' tday tmonth tyear %}" class="btn btn-secondary">View</a>
+                                                {% endcomment %}
+                                                </td>
+                                            </tr>
+                                        {% endif %}
+                                        {% if total_amount %}   
+                                             <tr>
+                                              
+                                                <td>TOTAL SALES</td>
+                                                <td>{{total_amount}}</td>
+                                                <td>
+                                                    
+                                                    {% if button_show %}
+                                                <button class="btn btn-success" name="btn_submit" type="submit">Submit</button>
+                                            {% endif %}
+                                                </td>
+                                            </tr>
+                                        {% endif %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                </div>
+             </form>
+            </div>
+
+
+        
+
+
+    <div class="sidenav-backdrop backdrop"></div>
+    <div class="preloader-backdrop">
+        <div class="page-preloader">Loading</div>
+    </div>
+     {% include 'cooperative/includes/emptyspace.html' %} 
+{% endblock %}

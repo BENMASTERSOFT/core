@@ -38,21 +38,39 @@
                                 <form class="form-horizontal" method="POST" action="" enctype="multipart/form-data" novalidate>
                                     {% csrf_token %}
                                     <div class="form-group row">
-                                        <label class="col-sm-2 col-form-label">Loan Types</label>
-                                        <div class="col-sm-10">
+                                        <label class="col-sm-4 col-form-label">Period</label>
+                                        <div class="col-sm-8">
+                                            {{form.period}}
+                                        </div>
+                                    </div>   
+                                    <div class="form-group row">
+                                        <label class="col-sm-4 col-form-label">Batch</label>
+                                        <div class="col-sm-8">
+                                            {{form.batch}}
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-sm-4 col-form-label">Loan Types</label>
+                                        <div class="col-sm-8">
                                             {{form.loans}}
                                         </div>
                                     </div>
                                     <div class="form-group row">
-                                        <label class="col-sm-2 col-form-label">Amount</label>
-                                        <div class="col-sm-10">
+                                        <label class="col-sm-4 col-form-label">Amount</label>
+                                        <div class="col-sm-8">
                                             {{form.amount}}
+                                        </div>
+                                    </div>
+                                   <div class="form-group row">
+                                        <label class="col-sm-4 col-form-label">Desired Duration (Zero for Default)</label>
+                                        <div class="col-sm-8">
+                                            {{form.duration}}
                                         </div>
                                     </div>
                                    
                                     
                                     <div class="form-group row">
-                                        <div class="col-sm-10 ml-sm-auto">
+                                        <div class="col-sm-8 ml-sm-auto">
                                             <button class="btn btn-info" type="submit">Submit</button>
                                         </div>
                                     </div>
@@ -60,11 +78,30 @@
                             </div>
                         </div>
                     </div>
+
+                       <div class="col-md-6">
+                        <div class="ibox">
+                            <div class="ibox-head">
+                                <div class="ibox-title">INSTRUCTION</div>
+                                
+                            </div>
+                            <div class="ibox-body">
+                               
+                                    <div class="form-group row">
+                                        <label class="col-sm-12 col-form-label">This page is used to make a loan request</label>
+                                        <label class="col-sm-12 col-form-label">Select the Loan type as required</label>
+                                        <label class="col-sm-12 col-form-label">On the Table Below Click on Criteria to continue loan application</label>
+                                       
+                                    </div>
+                                   
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="row">
                    
-                    <div class="col-xl-8">
+                    <div class="col-xl-10">
                         <div class="ibox">
                             <div class="ibox-head">
                                 <div class="ibox-title">List Of Applied Loans</div>
@@ -76,7 +113,9 @@
                                             <th>#</th>
                                             <th>Description</th>
                                             <th>Amount</th>
+                                            <th>Duration</th>
                                             <th>Date Applied</th>
+                                            <th>Batch</th>
                                             <th>Action</th>
                                         </tr>
                                     </thead>
@@ -86,10 +125,12 @@
                                             <td>{{forloop.counter}}</td>
                                             <td>{{loan.loan.name}}</td>
                                             <td>{{loan.loan_amount}}</td>
-                                            <td>{{loan.created_at}}</td>
+                                            <td>{{loan.duration}}</td>
+                                            <td>{{loan.created_at|date:"D, d M, Y"}}</td>
+                                            <td>{{loan.period}} {{loan.batch}}</td>
                                             <td>
                                                 <a href="{% url 'loan_request_order_delete' loan.pk pk %}" class="btn btn-danger">Remove</a>
-                                                <a href="{% url 'loan_request_criteria_Load'  loan.pk %}" class="btn btn-success">Criterias </a>
+                                                <a href="{% url 'loan_request_criteria_Loading'  loan.pk %}" class="btn btn-success">Criteria </a>
                                             </td>
                                         </tr>
                                         {% endfor %}

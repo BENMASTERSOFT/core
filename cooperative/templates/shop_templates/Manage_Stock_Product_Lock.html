@@ -25,7 +25,10 @@
                                     <th>Re-Order Qty</th>
                                     <th>Unit Selling Price</th>
                                 
-                                    <th><a href="{% url 'Manage_Stock_Product_Lock_Multiple' %}" class="btn btn-primary">Lock All</a></th>
+                                    <th>
+                                        <a href="{% url 'Manage_Stock_Product_Lock_Multiple' %}" >Lock All</a>
+                                        <a href="{% url 'Manage_Stock_Product_UNLock_Multiple' %}" >Unlock All</a>
+                                    </th>
                                 </tr>
                             </thead>
                             <tfoot>
@@ -37,7 +40,10 @@
                                     <th>Re-Order Qty</th>
                                     <th>Unit Selling Price</th>
                                  
-                                    <th><a href="{% url 'Manage_Stock_Product_Lock_Multiple' %}" class="btn btn-primary">Lock All</a></th>
+                                    <th>
+                                        <a href="{% url 'Manage_Stock_Product_Lock_Multiple' %}">Lock All</a>
+                                        <a href="{% url 'Manage_Stock_Product_UNLock_Multiple' %}" >Unlock All</a>
+                                    </th>
                                 </tr>
                             </tfoot>
                             <tbody>
@@ -51,7 +57,7 @@
                                     <td>{{stock.unit_selling_price}}</td>
                                    
                                     <td>
-                                        {% if stock.lock_status.title == 'OPEN' %}
+                                        {% if stock.lock_status == 'OPEN' %}
                                             <a href="{% url 'Manage_Stock_Product_Lock_Individuals' stock.id %}" class="btn btn-success"> Lock</a> 
                                         {% else %}
                                             <a href="{% url 'Manage_Stock_Product_UnLock_Individuals' stock.id %}" class="btn btn-danger"> UnLock</a> 
@@ -77,6 +83,7 @@
         <div class="page-preloader">Loading</div>
     </div>
     <!-- END PAGA BACKDROPS-->
+     {% include 'cooperative/includes/emptyspace.html' %} 
 {% endblock content %}
 
 {% block custom_js %}

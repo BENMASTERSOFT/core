@@ -40,7 +40,14 @@
                                             {{form.amount}}
                                         </div>
                                     </div>
-                               
+                                    {% if coop_price_enabled %}
+                                        <div class="form-group row">
+                                            <label class="col-sm-4 col-form-label">Coop Amount</label>
+                                            <div class="col-sm-8">
+                                                {{form.coop_amount}}
+                                            </div>
+                                        </div>
+                                    {% endif %}
                                     <div class="form-group row">
                                         <div class="col-sm-8 ml-sm-auto">
                                             <button class="btn btn-info" type="submit">Submit</button>

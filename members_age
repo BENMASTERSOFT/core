@@ -1,0 +1,9 @@
+members_age = (now.year - date_joined.year) * 12 + (now.month - date_joined.month)
+
+
+
+
+  {% if stock.expiring_date is not None %}
+   
+        {{stock.expiring_date}}
+    {% endif %}

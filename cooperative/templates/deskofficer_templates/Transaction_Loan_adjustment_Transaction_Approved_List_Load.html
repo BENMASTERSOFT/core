@@ -48,7 +48,7 @@
                                     <td>{{record.member.loan_number}}</td>
                                     <td>{{record.member.repayment}}</td>
                                     <td>{{record.amount}}</td>
-                                    <td><a href="{% url 'Transaction_Loan_Adjustment_Approval_list_Process' record.pk  %}" class="btn btn-primary">Process</a></td>
+                                    <td><a href="{% url 'Transaction_Loan_adjustment_Transaction_Approved_details_Processed' record.pk  %}" class="btn btn-primary">Process</a></td>
                                 </tr>
                             {% endfor %}
                                 

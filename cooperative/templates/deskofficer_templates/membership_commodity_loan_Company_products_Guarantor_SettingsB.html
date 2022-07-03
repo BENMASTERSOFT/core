@@ -1,0 +1,97 @@
+{% extends 'deskofficer_templates/base_template.html' %}
+{% load static %}
+
+{% block content %}
+            <div class="page-content fade-in-up">
+                
+                <div class="row">                 
+                    <div class="col-md-8">
+                        <div class="ibox">
+                            <div class="ibox-head">
+                                <div class="ibox-title">Commodity Loan Salary Status Settings | <a href="{% url 'membership_commodity_loan_Dashboard_load' transaction.pk member.pk  %}" class="btn btn-secondary">Back</a></div>
+                                
+                            </div>
+                            <div class="form-group">
+                              {% if messages %}
+                                
+                                  {% for message in messages %}
+                                  {% if message.tags == "info" %}
+                                   <div class="alert alert-warning alert-dismissable fade show"  style="margin-top:10px">
+                                    <button class="close" data-dismiss="alert" aria-label="Close">×</button><strong>Warning!</strong> {{message}}</div>
+                                  
+                                  {% endif %}
+
+                                  
+                                  {% endfor %}
+                              
+                              {% endif %}
+                        </div>
+                            <div class="ibox-body">
+                                 <form class="form-horizontal" method="POST" action="" enctype="multipart/form-data" novalidate>
+                                             {% csrf_token %}
+                                    <div class="form-group row">
+                                        <label class="col-sm-4 col-form-label">Member List</label>
+                                        <div class="col-sm-8">
+                                            <select class="form-control" name="member">
+                                                  {% for member in members %}
+                                                    <option value={{member.id }}> {{member.get_full_name}} - {{member.gross_pay}} </option>
+
+                                                    {% endfor %}
+                                            </select>
+                                           
+                                        </div>
+
+                                    </div>
+                                  
+                                    <div class="form-group row">
+                                        <div class="col-sm-8 ml-sm-auto">
+                                            <button class="btn btn-info" type="submit">Add</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                 <div class="row">
+                    <div class="col-xl-8">
+                        <div class="ibox">
+                            <div class="ibox-head">
+                                <div class="ibox-title">List of Guarantors</div>
+                            </div>
+                            <div class="ibox-body">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Member ID</th>
+                                            <th>Name</th>
+                                            <th>Gross Pay</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for record in guarantors %}
+                                        <tr>
+                                            <td>{{forloop.counter}}</td>
+                                            <td>{{record.guarantor.get_member_Id}}</td>
+                                            <td>{{record.guarantor.get_full_name}}</td>
+                                            <td>{{record.gross_pay}}</td>
+                                            <td><a href="{% url 'membership_commodity_loan_Company_products_Guarantor_SettingsB_Delete' record.pk member.pk transaction.pk %}" class="btn btn-danger">Discard</a></td>
+                                           
+                                           
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                
+                </div>
+            </div>
+    <div class="sidenav-backdrop backdrop"></div>
+    <div class="preloader-backdrop">
+        <div class="page-preloader">Loading</div>
+    </div>
+{% endblock %}

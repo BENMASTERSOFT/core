@@ -1,0 +1,126 @@
+{% extends 'deskofficer_templates/base_template.html' %}
+{% load static %}
+
+{% block content %}
+            <div class="page-content fade-in-up">
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="ibox">
+                                    <div class="ibox-head">
+                                        <div class="ibox-title">Members Waver Request Register | {{member.get_full_name}}</div>
+                                        
+                                    </div>
+                                    <div class="form-group">
+                                        {% if messages %}
+                                        {% for message in messages %}
+                                        {% if message.tags == 'error' %}
+                                        <div class="alert alert-danger" style="margin-top:10px">{{ message }}</div>
+                                        {% endif %}
+                                        {% if message.tags == 'success' %}
+                                        <div class="alert alert-success" style="margin-top:10px">{{ message }}</div>
+                                        {% endif %}
+                                        {% endfor %}
+                                        {% endif %}
+                                    </div>
+                                    <div class="ibox-body">
+                                         <form class="form-horizontal" method="POST" action="" enctype="multipart/form-data" novalidate>
+                                            {% csrf_token %}
+                                            <div class="form-group row">
+                                                <label class="col-sm-2 col-form-label">Purpose</label>
+                                                <div class="col-sm-10">
+                                                    {{form.transactions}}
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label class="col-sm-2 col-form-label">Period</label>
+                                                <div class="col-sm-10">
+                                                    {{form.period}}
+                                                </div>
+                                            </div>                                    
+                                            <div class="form-group row">
+                                                <label class="col-sm-2 col-form-label">Batch</label>
+                                                <div class="col-sm-10">
+                                                    {{form.batch}}
+                                                </div>
+                                            </div>   
+                                            <div class="form-group row">
+                                                <label class="col-sm-2 col-form-label">Task</label>
+                                                <div class="col-sm-10">
+                                                    {{form.exceptables}}
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label class="col-sm-2 col-form-label">State Reasons</label>
+                                                <div class="col-sm-10">
+                                                    {{form.purpose}}
+                                                </div>
+                                            </div>
+                                            
+                                            
+                                            <div class="form-group row">
+                                                <div class="col-sm-10 ml-sm-auto">
+                                                    <button class="btn btn-info" name='btn-submit' type="submit">Submit</button>
+                                                   
+
+                                                </div>
+                                               
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-10">
+                        <div class="row">  
+                       <div class="col-xl-12">
+                        <div class="ibox">
+                            <div class="ibox-head">
+                                <div class="ibox-title">Uncleared Request</div>
+                            </div>
+                            <div class="ibox-body">
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Transaction</th>
+                                            <th>Purpose</th>
+                                            <th>Batch</th>
+                                            <th>Task</th>
+                                            <th>Action</th>
+                                           
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for item in items %}
+                                        <tr>
+                                            <td>{{forloop.counter}}</td>
+                                            <td>{{item.transaction.name}}</td>
+                                            <td>{{item.purpose}}</td>
+                                            <td>{{item.period.title}} {{item.batch.title}}</td>
+                                            <td>{{item.task.title}}</td>
+                                            <td><a href="{% url 'members_wavers_request_delete' item.pk return_pk %}" class="btn btn-danger">Remove</a></td>
+                                           
+                                        </tr>
+                                    {% endfor %} 
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                    </div>
+                </div>
+            </div>
+            
+
+
+    <div class="sidenav-backdrop backdrop"></div>
+    <div class="preloader-backdrop">
+        <div class="page-preloader">Loading</div>
+    </div>
+    {% include 'cooperative/includes/emptyspace.html' %}
+{% endblock %}

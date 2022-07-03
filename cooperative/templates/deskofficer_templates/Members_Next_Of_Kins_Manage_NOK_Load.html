@@ -35,7 +35,7 @@
                                             <td>{{nok.phone_number}}</td>
                                             <td>{{nok.relationships}}</td>
                                             <td>
-                                            {% if nok.lock_status.title == 'OPEN' %}
+                                            {% if nok.lock_status == 'OPEN' %}
                                                 <a href="{% url 'Members_Next_Of_Kins_Manage_NOK_Update' nok.pk member_id %}" class="btn btn-success">Update</a>
                                             {% endif %}
                                     

@@ -8,7 +8,7 @@
                     <div class="col-md-6">
                         <div class="ibox">
                             <div class="ibox-head">
-                                <div class="ibox-title">Commodity Loan Salary Status Settings</div>
+                                <div class="ibox-title">Commodity Loan Salary Status Settings | <a href="{% url 'membership_commodity_loan_Company_products_Criteria_Dashboard' member.pk period.pk batch.pk transaction.pk %}" class="btn btn-secondary">Back</a></div>
                                 
                             </div>
                             <div class="form-group">
@@ -54,40 +54,34 @@
                     </div>
                 </div>
                  <div class="row">
-                    <div class="col-xl-6">
+                    <div class="col-xl-8">
                         <div class="ibox">
                             <div class="ibox-head">
-                                <div class="ibox-title">Basic Table</div>
+                                <div class="ibox-title">List of Guarantors</div>
                             </div>
                             <div class="ibox-body">
                                 <table class="table">
                                     <thead>
                                         <tr>
                                             <th>#</th>
-                                            <th>First Name</th>
-                                            <th>Last Name</th>
-                                            <th>Username</th>
+                                            <th>Member ID</th>
+                                            <th>Name</th>
+                                            <th>Gross Pay</th>
+                                            <th></th>
                                         </tr>
                                     </thead>
                                     <tbody>
+                                    {% for record in records %}
                                         <tr>
-                                            <td>1</td>
-                                            <td>Mark</td>
-                                            <td>Otto</td>
-                                            <td>@mdo</td>
+                                            <td>{{forloop.counter}}</td>
+                                            <td>{{record.guarantor.get_member_Id}}</td>
+                                            <td>{{record.guarantor.get_full_name}}</td>
+                                            <td>{{record.gross_pay}}</td>
+                                            <td><a href="{% url 'membership_commodity_loan_Company_products_Guarantor_Delete' record.pk member.pk period.pk batch.pk transaction.pk %}" class="btn btn-danger">Discard</a></td>
+                                           
+                                           
                                         </tr>
-                                        <tr>
-                                            <td>2</td>
-                                            <td>Jacob</td>
-                                            <td>Thornton</td>
-                                            <td>@fat</td>
-                                        </tr>
-                                        <tr>
-                                            <td>3</td>
-                                            <td>Larry</td>
-                                            <td>the Bird</td>
-                                            <td>@twitter</td>
-                                        </tr>
+                                    {% endfor %}
                                     </tbody>
                                 </table>
                             </div>

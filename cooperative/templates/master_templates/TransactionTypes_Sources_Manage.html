@@ -1,0 +1,51 @@
+{% extends 'master_templates/base_template.html' %}
+{% load static %}
+
+{% block content %}
+            <div class="page-content fade-in-up">
+               
+                <div class="row">
+                    <div class="col-xl-8">
+                        <div class="ibox">
+                            <div class="ibox-head">
+                                <div class="ibox-title">Transaction Sources</div>
+                            </div>
+                            <div class="ibox-body">
+                                <table class="table">
+                                    <thead class="thead-default">
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Description</th>
+                                            <th>Maximum Amount</th>
+                                            <th>Salary Relationship</th>
+                                            <th>Loan Based Savings</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for record in records %}
+                                        <tr>
+                                            <td>{{forloop.counter}}</td>
+                                            <td>{{record.title}}</td>
+                                            <td>{{record.maximum_amount}}</td>
+                                            <td>{{record.salary_loan_relationship}}</td>
+                                            <td>{{record.loan_based_saving}}</td>
+                                            <td><a href="{% url 'TransactionTypes_Sources_Manage_Process' record.pk %}" class="btn btn-primary">Update</a></td>
+                                        
+                                        </tr>
+                                   {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                 
+                </div>
+              
+           
+            </div>
+  <div class="sidenav-backdrop backdrop"></div>
+    <div class="preloader-backdrop">
+        <div class="page-preloader">Loading</div>
+    </div>
+{% endblock %}

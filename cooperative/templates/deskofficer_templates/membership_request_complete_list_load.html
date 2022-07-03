@@ -7,7 +7,9 @@
 {% block content %}
 
       
-            <div class="page-content fade-in-up">
+    <div class="page-content fade-in-up">
+        <div class="row">
+            <div class="col-md-10">
                 <div class="ibox">
                     <div class="ibox-head">
                         <div class="ibox-title">Applicants List |  <input type="button" class="btn btn-secondary" value="Back" onclick="history.back()"/></div>
@@ -17,9 +19,7 @@
                             <thead>
                                 <tr>
                                     <th>#</th>
-                                    <th>Last Name</th>
-                                    <th>First Name</th>
-                                    <th>Middle Name</th>
+                                    <th>Name</th>
                                     <th>Phone Number</th>
                                     <th>Department</th>
                                     <th>Action</th>
@@ -28,9 +28,7 @@
                             <tfoot>
                                 <tr>
                                     <th>#</th>
-                                    <th>Last Name</th>
-                                    <th>First Name</th>
-                                    <th>Middle Name</th>
+                                    <th>Name</th>
                                     <th>Phone Number</th>
                                     <th>Department</th>
                                     <th>Action</th>
@@ -40,19 +38,16 @@
                                 {% for member in members %}
                                 <tr>
                                     <td>{{forloop.counter}}</td>
-                                    <td>{{member.last_name}}</td>
-                                    <td>{{member.first_name}}</td>
-                                    <td>{{member.middle_name}}</td>
+                                    <td>{{member.get_full_name}}</td>
+                                    
                                     <td>{{member.phone_number}}</td>
                                     <td>{{member.department.title}}</td>
                                     <td>
-                                        <a href="{% url 'MemberShipRequest_Delete_confirmation' member.id %}" class="btn btn-default btn-xs m-r-5">
-                                        <i class="fa fa-trash-o font-14" aria-hidden="true"></i>
-                                    </a> 
-                                        <a href="{% url 'membership_request_additional_info' member.id %}" class="btn btn-default btn-xs m-r-5"><i class="fa fa-pencil font-14"></i></a> 
+                                        <a href="{% url 'MemberShipRequest_Delete_confirmation' member.id %}" class="btn btn-danger">Discard</a> 
+                                        <a href="{% url 'membership_request_additional_info' member.id %}" class="btn btn-primary">Update</a> 
 
                                        
-                                        <a href="{% url 'MemberShipRequest_submit' member.pk %}" class="btn btn-default btn-xs"><i class="fa fa-book font-14"></i></a>
+                                        <a href="{% url 'MemberShipRequest_submit' member.pk %}" class="btn btn-success">Submit</a>
                                     </td>
                                     
                                 </tr>
@@ -63,8 +58,9 @@
                         </table>
                     </div>
                 </div>
-               
             </div>
+        </div>
+    </div>
   
     
     <!-- BEGIN PAGA BACKDROPS-->

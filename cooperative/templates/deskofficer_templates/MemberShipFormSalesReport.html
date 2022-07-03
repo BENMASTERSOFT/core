@@ -51,6 +51,7 @@
                                     <th>Shares</th>
                                     <th>Welfare</th>
                                     <th>Total</th>
+                                    <th>Receipt No</th>
                                     <th></th>
                                 </tr>
                             </thead>
@@ -62,6 +63,7 @@
                                     <th>Shares</th>
                                     <th>Welfare</th>
                                     <th>Total</th>
+                                    <th>Receipt No</th>
                                     <th></th>
                                 </tr>
                             </tfoot>
@@ -74,7 +76,8 @@
                                     <td>{{record.share_amount}}</td>
                                     <td>{{record.welfare_amount}}</td>
                                     <td>{{record.admin_charge|add:record.share_amount|add:record.welfare_amount}}</td>
-                                    <td><a href="" class="btn btn-primary">Details</a></td>
+                                    <td>{{record.receipt}}</td>
+                                    <td><a href="{% url 'membership_form_sales_validation' record.receipt %}" class="btn btn-primary">Print</a></td>
                                 </tr>
                             {% endfor %}
                                

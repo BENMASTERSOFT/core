@@ -20,6 +20,7 @@
                                             <th>Receipt No</th>
                                             <th>Amount</th>
                                             <th>Category</th>
+                                            <th>Date</th>
                                             <th></th>
                                         </tr>
                                     </thead>
@@ -31,9 +32,15 @@
                                             <td>{{item.receipt}}</td>
                                             <td>{{item.amount}}</td>
                                             <td>{{item.sale.sales_category.title}}</td>
+                                            <td>{{item.tdate}}</td>
                                             <td><a href="{% url 'Daily_Sales_Report_Receipt_Details' item.receipt %}" class="btn btn-primary">Detail</a></td>
                                         </tr>
                                         {% endfor %}
+                                        <td>
+                                            <td colspan="3">SUMMARY</td>
+                                            <td>{{total_amount}}</td>
+                                            <td colspan="2"></td>
+                                        </td>
                                     </tbody>
                                 </table>
                             </div>
@@ -48,4 +55,5 @@
     <div class="preloader-backdrop">
         <div class="page-preloader">Loading</div>
     </div>
+     {% include 'cooperative/includes/emptyspace.html' %} 
 {% endblock %}

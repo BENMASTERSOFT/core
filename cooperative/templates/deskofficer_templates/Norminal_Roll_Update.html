@@ -8,84 +8,115 @@
                     <div class="col-md-6">
                         <div class="ibox">
                             <div class="ibox-head">
-                                <div class="ibox-title">Personnel Data |  <input type="button" class="btn btn-secondary" value="Back" onclick="history.back()"/>
+                                <div class="ibox-title">Personnel Data | {{member.get_member_Id}} | {{member.get_full_name}} <input type="button" class="btn btn-secondary" value="Back" onclick="history.back()"/>
                             </div>
                                 
-                            </div>
-                            <div class="ibox-body">
-                                 <form class="form-horizontal" method="POST" action="" enctype="multipart/form-data" novalidate>
-                                    {% csrf_token %}
-                                    <div class="form-group">
-                                       <label>Title <span style="color: blue;">(Click the Check Box to Edit)</span></label>
-                                        <input type="checkbox" name="chk_title">
-                                        {{form.title}}
-                                    </div>
-                                     <div class="form-group">
-                                       <label>Last Name</label>
-                                            {{form.last_name}}
-                                    </div>
-                                    <div class="form-group">
-                                       <label>First Name</label>
-                                            {{form.first_name}}
-                                    </div>
-                                    <div class="form-group">
-                                      <label>Middle Name</label>
-                                            {{form.middle_name}}
-                                    </div>
+                        </div>
+                        <div class="form-group">
+                                  {% if messages %}
+                                    
+                                      {% for message in messages %}
+                                      {% if message.tags == "error" %}
+                                      <div class="alert alert-danger" style="margin-top:10px">{{message}}</div>
+                                      
+                                      {% endif %}
 
-                                        <div class="form-group">
-                                        <label>Date of Birth</label>
-                                        {{form.dob}}
-                                    </div>
+                                      {% if message.tags == "success" %}
+                                      <div class="alert alert-success" style="margin-top:10px">{{message}}</div>
+                                      
+                                      {% endif %}
+                                      {% endfor %}
+                                  
+                                  {% endif %}
+                              </div>
+                        <div class="ibox-body">
+                             <form class="form-horizontal" method="POST" action="" enctype="multipart/form-data" novalidate>
+                                {% csrf_token %}
+                                <div class="form-group">
+                                   <label>Title <span style="color: blue;">(Click the Check Box to Edit)</span></label>
+                                    <input type="checkbox" name="chk_title">
+                                    {{form.title}}
+                                </div>
+                                 <div class="form-group">
+                                   <label>Last Name</label>
+                                        {{form.last_name}}
+                                </div>
+                                <div class="form-group">
+                                   <label>First Name</label>
+                                        {{form.first_name}}
+                                </div>
+                                <div class="form-group">
+                                  <label>Middle Name</label>
+                                        {{form.middle_name}}
+                                </div>
+
                                     <div class="form-group">
-                                        <label>Gender <span style="color: blue;">(Click the Check Box to Edit)</span></label>
-                                         <input type="checkbox" name="chk_gender">
-                                        {{form.gender}}
-                                    </div>
-                                    <div class="form-group">
-                                        <label>Phone Number</label>
-                                        {{form.phone_number}}
-                                    </div>
                                    
-                                    <div class="form-group">
-                                        <label>Department <span style="color: blue;">(Click the Check Box to Edit)</span></label>
-                                         <input type="checkbox" name="chk_department">
-                                        {{form.department}}
-                                    </div>
-                                    <div class="form-group">
-                                        <label>Salary Institution</label>
-                                        {{form.salary_institution}}
-                                    </div>
-                                     <div class="form-group">
-                                        <label>Residential Address</label>
-                                        {{form.residential_address}}
-                                    </div>
+                                    <label>Date of Birth <span style="color: blue;">(Click the Check Box to Edit)</span></label>
+                                     <input type="checkbox" name="chk_dob">
+                                    {{form.dob}}
+                                </div>
+                                <div class="form-group">
+                                    <label>Gender <span style="color: blue;">(Click the Check Box to Edit)</span></label>
+                                     <input type="checkbox" name="chk_gender">
+                                    {{form.gender}}
+                                </div>
+                                <div class="form-group">
+                                    <label>Phone Number</label>
+                                    {{form.phone_number}}
+                                </div>
+                               
+                                <div class="form-group">
+                                    <label>Department <span style="color: blue;">(Click the Check Box to Edit)</span></label>
+                                     <input type="checkbox" name="chk_department">
+                                    {{form.department}}
+                                </div>
+                                <div class="form-group">
+                                    <label>Salary Institution</label>
+                                    {{form.salary_institution}}
+                                </div>
+                               
+                                <div class="form-group">
+                                    <label>Net Pay</label>
+                                     {{form.last_used_net_pay}}
+                                </div> 
+                                <div class="form-group">
+                                    <label>Net Pay As At</label>
+                                     {{form.net_pay_as_at}}
+                                </div>
 
-                                    <div class="form-group">
-                                        <label>Permanent Home Address</label>
-                                        {{form.permanent_home_address}}
-                                    </div> 
-                                    <div class="form-group">
-                                        <label>File No</label>
-                                        {{form.file_no}}
-                                    </div> 
-                                    <div class="form-group">
-                                        <label>IPPIS/ Non-IPPIS</label>
-                                        {{form.ippis_no}}
-                                    </div>
-                                    <div class="form-group">
-                                        <label>Date Joined</label>
-                                        {{form.date_joined}}
-                                    </div>
-                                     <div class="form-group">
-                                        <label>Date of First Appointment</label>
-                                        {{form.date_of_first_appointment}}
-                                    </div>
-                                    <div class="form-group">
-                                        <button class="btn btn-primary" type="submit">Submit</button>
-                                    </div>
-                                </form>
-                            </div>
+                                 <div class="form-group">
+                                    <label>Residential Address</label>
+                                    {{form.residential_address}}
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Permanent Home Address</label>
+                                    {{form.permanent_home_address}}
+                                </div> 
+                                <div class="form-group">
+                                    <label>File No</label>
+                                    {{form.file_no}}
+                                </div> 
+                                <div class="form-group">
+                                    <label>IPPIS/ Non-IPPIS</label>
+                                    {{form.ippis_no}}
+                                </div>
+                                <div class="form-group">
+                                    <label>Date Joined</label>
+                                    {{form.date_joined}}
+                                </div>
+                                 <div class="form-group">
+                                   
+                                    <label>Date of First Appointment <span style="color: blue;">(Click the Check Box to Edit)</span></label>
+                                     <input type="checkbox" name="chk_appointment">
+                                    {{form.date_of_first_appointment}}
+                                </div>
+                                <div class="form-group">
+                                    <button class="btn btn-primary" type="submit">Submit</button>
+                                </div>
+                            </form>
+                        </div>
                         </div>
                     </div>
 

@@ -1,0 +1,115 @@
+{% extends 'shop_templates/base_template.html' %}
+{% load static %}
+
+
+
+{% block content %}
+    <div class="page-content fade-in-up">
+        <form class="form-horizontal" method="POST" action="">
+            {% csrf_token %}
+            <div class="row">            
+                <div class="col-md-6">
+                    <div class="ibox">
+                        <div class="ibox-head">
+                            <div class="ibox-title">Sales Records</div>
+                            
+                        </div>
+                            <div class="form-group">
+                              {% if messages %}
+                                
+                                  {% for message in messages %}
+                                  {% if message.tags == "error" %}
+                                  <div class="alert alert-danger" style="margin-top:10px">{{message}}</div>
+                                  
+                                  {% endif %}
+
+                                  {% if message.tags == "success" %}
+                                  <div class="alert alert-success" style="margin-top:10px">{{message}}</div>
+                                  
+                                  {% endif %}
+                                  {% endfor %}
+                              
+                              {% endif %}
+                        </div>
+                        <div class="ibox-body">                          
+                            <div class="row">
+                                <div class="col-sm-3 form-group">
+                                    <label>Code</label>
+                                    {{form.code}}
+                                </div>
+                                <div class="col-sm-9 form-group">
+                                    <label>Item Name</label>
+                                    {{form.item_name}}
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>Details</label>
+                                {{form.details}}
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-4 form-group">
+                                    <label>Quantity</label>
+                                    {{form.quantity}}
+                                </div>
+                                <div class="col-sm-4 form-group">
+                                    <label>Unit Price</label>
+                                    {{form.unit_selling_price}}
+                                </div>
+                                <div class="col-sm-4 form-group">
+                                    <label>Total</label>
+                                    {{form.total}}
+                                </div>
+                            </div>
+
+                             <div class="form-group">
+                                <label>Quantity Returned</label>
+                                {{form.quantity_returned}}
+                            </div>
+
+                             <div class="form-group">
+                                <label>Reasons</label>
+                                {{form.reasons}}
+                            </div>
+
+                            <div class="form-group">
+                                <button class="btn btn-success" type="submit">Submit</button>
+                            </div>
+                          
+                        </div>
+                    </div>
+                </div> 
+                {% if profile_show %} 
+                <div class="col-md-6">
+                    <div class="ibox">
+                        <div class="ibox-head">
+                            <div class="ibox-title">Customer Profile</div>
+                            
+                        </div>
+                        <div class="ibox-body">                           
+                                
+                            <div class="form-group">
+                                <label>Name</label>
+                                {{form.name}}
+                            </div>  
+                            <div class="form-group">
+                                <label>Phone Number</label>
+                                {{form.phone_no}}
+                            </div>
+                            <div class="form-group">
+                                <label>Address</label>
+                                {{form.address}}
+                            </div>                            
+                        
+                        </div>
+                    </div>
+                </div> 
+                {% endif %}           
+            </div>
+        </form>
+    </div>
+    <div class="sidenav-backdrop backdrop"></div>
+    <div class="preloader-backdrop">
+        <div class="page-preloader">Loading</div>
+    </div>
+     {% include 'cooperative/includes/emptyspace.html' %} 
+{% endblock %}

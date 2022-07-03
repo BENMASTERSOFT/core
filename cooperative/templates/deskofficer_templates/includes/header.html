@@ -2,7 +2,7 @@
         <header class="header">
             <div class="page-brand">
                 <a class="link" href="{% url 'deskofficer_home' %}">
-                    <span class="brand">FETH II 
+                    <span class="brand">FETHA II 
                         <span class="brand-tip"> CTCS</span>
                     </span>
                     <span class="brand-mini">AC</span>
@@ -35,9 +35,9 @@
                             <li class="dropdown-menu-header">
                                 <div>
                                     <span><strong>9 New</strong> Messages</span>
-                                    <a class="pull-right" href="mailbox.html">view all</a>
+                                    <a class="pull-right" href="#">view all</a>
                                 </div>
-                            </li>
+                            </li>{% comment %}
                             <li class="list-group list-group-divider scroller" data-height="240px" data-color="#71808f">
                                 <div>
                                     <a class="list-group-item">
@@ -46,7 +46,7 @@
                                                 <img src="{% static '/cooperative/assets/img/users/u1.jpg' %}" />
                                             </div>
                                             <div class="media-body">
-                                                <div class="font-strong"> </div>Jeanne Gonzalez<small class="text-muted float-right">Just now</small>
+                                                <div class="font-strong"> </div>Coming Soon<small class="text-muted float-right">Just now</small>
                                                 <div class="font-13">Your proposal interested me.</div>
                                             </div>
                                         </div>
@@ -57,8 +57,8 @@
                                                 <img src="{% static '/cooperative/assets/img/users/u2.jpg' %}" />
                                             </div>
                                             <div class="media-body">
-                                                <div class="font-strong"></div>Becky Brooks<small class="text-muted float-right">18 mins</small>
-                                                <div class="font-13">Lorem Ipsum is simply.</div>
+                                                <div class="font-strong"></div>Coming Soon<small class="text-muted float-right">18 mins</small>
+                                                <div class="font-13">simply.</div>
                                             </div>
                                         </div>
                                     </a>
@@ -68,8 +68,8 @@
                                                 <img src="{% static '/cooperative/assets/img/users/u3.jpg' %}" />
                                             </div>
                                             <div class="media-body">
-                                                <div class="font-strong"></div>Frank Cruz<small class="text-muted float-right">18 mins</small>
-                                                <div class="font-13">Lorem Ipsum is simply.</div>
+                                                <div class="font-strong"></div>Coming Soon<small class="text-muted float-right">18 mins</small>
+                                                <div class="font-13">Simply.</div>
                                             </div>
                                         </div>
                                     </a>
@@ -85,7 +85,7 @@
                                         </div>
                                     </a>
                                 </div>
-                            </li>
+                            </li>{% endcomment %}
                         </ul>
                     </li>
                     
@@ -98,7 +98,7 @@
                                     <span><strong>5 New</strong> Notifications</span>
                                     <a class="pull-right" href="javascript:;">view all</a>
                                 </div>
-                            </li>
+                            </li>{% comment %}
                             <li class="list-group list-group-divider scroller" data-height="240px" data-color="#71808f">
                                 <div>
                                     <a class="list-group-item">
@@ -138,7 +138,7 @@
                                         </div>
                                     </a>
                                 </div>
-                            </li>
+                            </li>{% endcomment %}
                         </ul>
                     </li>
                     <li class="dropdown dropdown-user">
@@ -147,8 +147,8 @@
                             <span></span>{{request.user}}<i class="fa fa-angle-down m-l-5"></i></a>
                         <ul class="dropdown-menu dropdown-menu-right">
                             <a class="dropdown-item" href="{% url 'Useraccount_manager' %}"><i class="fa fa-user"></i>Profile</a>
-                            <a class="dropdown-item" href=""><i class="fa fa-cog"></i>Settings</a>
-                            <a class="dropdown-item" href=""><i class="fa fa-support"></i>Support</a>
+                            <a class="dropdown-item" href="{% url 'Useraccount_manager' %}"><i class="fa fa-cog"></i>Settings</a>
+                            
                             <li class="dropdown-divider"></li>
                             <a class="dropdown-item" href="{% url 'logout_user' %}"><i class="fa fa-power-off"></i>Logout</a>
                         </ul>

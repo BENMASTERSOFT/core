@@ -5,7 +5,7 @@
             <div class="page-content fade-in-up">
                 <div class="row">
                   
-                    <div class="col-md-6">
+                    <div class="col-md-8">
                         <div class="ibox">
                             <div class="ibox-head">
                                 <div class="ibox-title">Cooperative Shop User</div>
@@ -27,7 +27,13 @@
                                         </div>
                                     </div>
                                     <div class="form-group row">
-                                        <label class="col-sm-4 col-form-label">Purchases</label>
+                                        <label class="col-sm-4 col-form-label">Purchase Tracking</label>
+                                        <div class="col-sm-3">
+                                            {{form.purchases_tracking}}
+                                        </div>
+                                    </div>  
+                                    <div class="form-group row">
+                                        <label class="col-sm-4 col-form-label">Purchases Corfirmation</label>
                                         <div class="col-sm-3">
                                             {{form.purchases}}
                                         </div>
@@ -36,6 +42,12 @@
                                         <label class="col-sm-4 col-form-label">Item Write Off</label>
                                         <div class="col-sm-3">
                                             {{form.item_write_off}}
+                                        </div>
+                                    </div>   
+                                    <div class="form-group row">
+                                        <label class="col-sm-4 col-form-label">Item Write_Off Approval</label>
+                                        <div class="col-sm-3">
+                                            {{form.item_write_off_approval}}
                                         </div>
                                     </div> 
                                     <div class="form-group row">

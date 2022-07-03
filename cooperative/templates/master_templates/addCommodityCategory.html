@@ -43,12 +43,6 @@
                                             {{form.title}}
                                         </div>
                                     </div>
-                                    <div class="form-group row">
-                                        <label class="col-sm-4 col-form-label">Price Status</label>
-                                        <div class="col-sm-8">
-                                            {{form.price_status}}
-                                        </div>
-                                    </div>
                                     
                                     
                                     <div class="form-group row">
@@ -78,7 +72,7 @@
                                             <th>#</th>
                                             <th>Title</th>
                                             <th>Transaction Type</th>
-                                            <th>Price Status</th>
+                                       
                                             <th>Action</th>
                                       
                                         </tr>
@@ -89,14 +83,11 @@
                                             <td>{{forloop.counter}}</td>
                                             <td>{{record.title}}</td>
                                             <td>{{record.transaction.name}}</td>
-                                            {% if record.price_status == '1' %}
-                                                <td>UNFIXED</td>
-                                            {% elif record.price_status == '0' %}
-                                                <td>FIXED</td>
-                                            {% endif %}
+                                           
                                             <td>
-                                                <a href="{% url 'Manage_Commodity_Categories_Update' record.pk %}" class="btn btn-success">Update</a> 
+                                                <a href="{% url 'Manage_Commodity_Categories_Title_Update' record.pk %}" class="btn btn-success">Update</a> 
                                                 <a href="{% url 'Manage_Commodity_Categories_Delete' record.pk %}" class="btn btn-danger">Remove</a> 
+                                                <a href="{% url 'addCommodityCategorySub' record.pk %}" class="btn btn-primary">Add Sub</a> 
                                             </td>
                                         </tr>
                                     {% endfor %}

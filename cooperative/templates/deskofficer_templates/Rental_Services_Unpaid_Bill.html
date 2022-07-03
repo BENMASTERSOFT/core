@@ -1,0 +1,55 @@
+{% extends 'deskofficer_templates/base_template.html' %}
+{% load static %}
+
+{% block content %}
+    <div class="page-content fade-in-up">
+        <div class="row">
+            <div class="col-xl-12">
+                <div class="ibox">
+                    <div class="ibox-head">
+                        <div class="ibox-title">RENTAL UNPAID BILLS</div>
+                    </div>
+                    <div class="ibox-body">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Name</th>
+                                    <th>Category</th>
+                                    <th>Amount</th>
+                                    <th>Discount</th>
+                                    <th>Net Pay</th>
+                                    <th>Amount Paid</th>
+                                    <th>Balance</th>
+                                    <th>Date</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            {% for record in records %}
+                                <tr>
+                                    <td>{{forloop.counter}}</td>
+                                    <td>{{record.contact.name}}</td>
+                                    <td>{{record.contact.category.description}}</td>
+                                    <td>{{record.amount}}</td>
+                                    <td>{{record.discount}}</td>
+                                    <td>{{record.net_pay}}</td>
+                                    <td>{{record.amount_paid}}</td>
+                                    <td>{{record.balance}}</td>
+                                    <td>{{record.tdate}}</td>
+                                    <td><a href="{% url 'Rental_Services_Unpaid_Bill_Preview' record.pk %}" class="btn btn-primary">Detials</a></td>
+                                
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+  <div class="sidenav-backdrop backdrop"></div>
+    <div class="preloader-backdrop">
+        <div class="page-preloader">Loading</div>
+    </div>
+{% endblock %}

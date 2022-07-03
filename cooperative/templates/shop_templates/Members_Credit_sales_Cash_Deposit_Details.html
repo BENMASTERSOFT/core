@@ -9,7 +9,7 @@
                     <div class="col-md-8">
                         <div class="ibox">
                             <div class="ibox-head">
-                                <div class="ibox-title">CASH DEPOSIT DETAILS | {{member.member.member.get_full_name}} |  <input type="button" class="btn btn-primary" value="Back" onclick="history.back()"/></div>
+                                <div class="ibox-title">CASH DEPOSIT DETAILS | {{member.get_full_name}} |  <input type="button" class="btn btn-primary" value="Back" onclick="history.back()"/></div>
                                
                             </div>
                               <div class="form-group">
@@ -50,30 +50,21 @@
                                             {{form.account}}
                                         </div>
                                     </div>
-                                 <div class="form-group row">
-                                        <label class="col-sm-4 col-form-label">Account Due</label>
-                                        <div class="col-sm-8">
-                                            {{form.amount_due}}
-                                        </div>
-                                    </div>
+                             
                                  <div class="form-group row">
                                         <label class="col-sm-4 col-form-label">Account Paid</label>
                                         <div class="col-sm-8">
                                             {{form.amount_paid}}
                                         </div>
                                     </div>
-                                    <div class="form-group row">
-                                        <label class="col-sm-4 col-form-label">Receipt Type</label>
-                                        <div class="col-sm-8">
-                                            {{form.receipt_types}}
-                                        </div>
-                                    </div>   
+                                   {% if transaction.receipt_type.title == "MANUAL" %}
                                      <div class="form-group row">
                                         <label class="col-sm-4 col-form-label">Receipt No</label>
                                         <div class="col-sm-8">
                                             {{form.receipt}}
                                         </div>
                                     </div> 
+                                {% endif %}
                                     <div class="form-group row">
                                         <label class="col-sm-4 col-form-label">Payment Date</label>
                                         <div class="col-sm-8">
@@ -101,4 +92,5 @@
     <div class="preloader-backdrop">
         <div class="page-preloader">Loading</div>
     </div>
+     {% include 'cooperative/includes/emptyspace.html' %} 
 {% endblock %}

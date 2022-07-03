@@ -47,7 +47,9 @@
                                             <td>{{user.staff.middle_name}}</td>
                                             <td>{{user.username}}</td>
                                             <td>{{user.user_type}}</td>
-                                            <td><a href="{% url 'add_staff_manage_view' user.pk %}" class="btn btn-primary">Update</a> </td>
+                                            <td><a href="{% url 'add_staff_manage_view' user.pk %}" class="btn btn-primary">Update</a> 
+                                        <a href="{% url 'add_staff_delete_1' user.pk %}" class="btn btn-danger">Delete</a>
+                                            </td>
                                         
                                         </tr>
                                     {% endfor %}

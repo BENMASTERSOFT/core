@@ -1,0 +1,49 @@
+{% extends 'deskofficer_templates/base_template.html' %}
+{% load static %}
+
+{% block content %}
+            <div class="page-content fade-in-up">
+                <div class="row">
+                    <div class="col-xl-12">
+                        <div class="ibox">
+                            <div class="ibox-head">
+                                <div class="ibox-title">Rental Services Management </div>
+                            </div>
+                            <div class="ibox-body">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Name</th>
+                                            <th>Category</th>
+                                            <th>Address</th>
+                                            <th>Phone No</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for record in records %}
+                                        <tr>
+                                            <td>{{forloop.counter}}</td>
+                                            <td>{{record.name}}</td>
+                                            <td>{{record.category.description}}</td>
+                                            <td>{{record.address}}</td>
+                                            <td>{{record.phone_no}}</td>
+                                            <td><a href="{% url 'Rental_Services_Management_Process' record.pk %}" class="btn btn-primary">Details</a></td>
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    
+                </div>
+           
+           
+            </div>
+  <div class="sidenav-backdrop backdrop"></div>
+    <div class="preloader-backdrop">
+        <div class="page-preloader">Loading</div>
+    </div>
+{% endblock %}

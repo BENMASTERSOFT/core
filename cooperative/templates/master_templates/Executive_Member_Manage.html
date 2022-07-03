@@ -1,0 +1,44 @@
+{% extends 'master_templates/base_template.html' %}
+{% load static %}
+
+{% block content %}
+<div class="page-content fade-in-up">
+    <div class="row">
+        <div class="col-xl-12">
+            <div class="ibox">
+                <div class="ibox-head">
+                    <div class="ibox-title">Active Executives</div>
+                </div>
+                <div class="ibox-body">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Name</th>
+                                <th>Position</th>
+                                <th>Start Date</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                         {% for record in records %}
+                            <tr>
+                                <td>{{forloop.counter}}</td>
+                                <td>{{record.name}}</td>
+                                <td>{{record.position.title}}</td>
+                                <td>{{record.start_date}}</td>
+                                <td><a href="{% url 'Executive_Member_Manage_Update' record.pk %}" class="btn btn-danger">Update</a></td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+  <div class="sidenav-backdrop backdrop"></div>
+    <div class="preloader-backdrop">
+        <div class="page-preloader">Loading</div>
+    </div>
+{% endblock %}

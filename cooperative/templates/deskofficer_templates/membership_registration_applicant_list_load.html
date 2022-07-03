@@ -17,9 +17,8 @@
                             <thead>
                                 <tr>
                                     <th>#</th>
-                                    <th>Last Name</th>
-                                    <th>First Name</th>
-                                    <th>Middle Name</th>
+                                    <th>Name</th>
+                                    
                                     <th>Date Approved</th>
                                     <th>Receipt No</th>
                                     <th>Action</th>
@@ -28,9 +27,8 @@
                             <tfoot>
                                 <tr>
                                     <th>#</th>
-                                    <th>Last Name</th>
-                                    <th>First Name</th>
-                                    <th>Middle Name</th>
+                                    <th>Name</th>
+                                   
                                     <th>Date Approved</th>
                                     <th>Receipt No</th>
                                     <th>Action</th>
@@ -40,9 +38,8 @@
                             {% for applicant in applicants %}
                                 <tr>
                                     <td>{{forloop.counter}}</td>
-                                    <td>{{applicant.applicant.last_name}}</td>
-                                    <td>{{applicant.applicant.first_name}}</td>
-                                    <td>{{applicant.applicant.middle_name}}</td>
+                                    <td>{{applicant.applicant.get_full_name}}</td>
+                                 
                                     <td>{{applicant.applicant.approved_date}}</td>
                                     <td>{{applicant.receipt}}</td>
                                     <td>

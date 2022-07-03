@@ -1,0 +1,156 @@
+{% extends 'shop_templates/base_template.html' %}
+{% load static %}
+{% load mathfilters %}
+{% block content %}
+<div class="page-content fade-in-up">
+    <div class="row">
+       <div class="col-md-6">
+            <div class="ibox">
+                <div class="ibox-head">
+                    <div class="ibox-title">Transaction Accounts |  {{member.get_full_name}}</div>
+                   
+                </div>
+                <div class="form-group">
+                  {% if messages %}
+                    
+                      {% for message in messages %}
+                      {% if message.tags == "info" %}
+                      <div class="alert alert-danger" style="margin-top:10px">{{message}}</div>
+                      
+                      {% endif %}
+
+                      {% if message.tags == "success" %}
+                      <div class="alert alert-success" style="margin-top:10px">{{message}}</div>
+                      
+                      {% endif %}
+                      {% endfor %}
+                  
+                  {% endif %}
+                </div>
+                <div class="ibox-body">
+                    <form class="form-horizontal" method="POST" action="">
+                        {% csrf_token %}
+                        <div class="form-group row">
+                            <label class="col-sm-4 col-form-label">Accounts</label>
+                            <div class="col-sm-8">
+                            <select class="form-control" name="transaction">
+                              {% for record in records %}
+                                <option value={{record.id }}> {{record.loan_number}}=> ({{record.balance |mul:-1}})  </option>
+
+                                {% endfor %}
+                            </select>
+                            </div>
+                        </div>
+                        
+                      <div class="form-group row">
+                        <label class="col-sm-4 col-form-label">Amount Paid</label>
+                        <div class="col-sm-8">
+                           {{form.amount_paid}}
+                        </div>
+                    </div>
+                        <div class="form-group row">
+                            <div class="col-sm-8 ml-sm-auto">
+                                {% if button_enabled %}
+                                <button class="btn btn-info" type="submit" name='submit'>Submit</button>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+       <div class="col-md-6">
+                        <div class="ibox">
+                            <div class="ibox-head">
+                                <div class="ibox-title">Final Processing</div>
+                              
+                            </div>
+                            <div class="ibox-body">
+                                <form class="form-horizontal" method="POST" action="">
+                                    {% csrf_token %}
+                                    <div class="form-group row">
+                                        <label class="col-sm-4 col-form-label">Receipt Type</label>
+                                        <div class="col-sm-8">
+                                            {{form.receipt_type}}
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-sm-4 col-form-label">Receipt No</label>
+                                        <div class="col-sm-8">
+                                            {{form.receipt_no}}
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-sm-4 col-form-label">Receipt Print</label>
+                                        <div class="col-sm-8">
+                                            {{form.receipt_print}}
+                                        </div>
+                                    </div>
+                                
+                                    <div class="form-group row">
+                                        <div class="col-sm-8 ml-sm-auto">
+                                             {% if button_show %}
+                                            <button class="btn btn-success" type="submit" name="btn-process">Process</button>
+                                             {% endif %}
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+    </div>
+    <div class="row">
+                    
+        <div class="col-xl-6">
+            <div class="ibox">
+                <div class="ibox-head">
+                    <div class="ibox-title">Selected Transactions</div>
+                </div>
+                <div class="ibox-body">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Account Number</th>
+                                <th>Amount Due</th>
+                                <th>Amount Paid</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        {% for item in items %}
+                            <tr>
+                                <td>{{forloop.counter}}</td>
+                                <td>{{item.loan_number}}</td>
+                                <td>{{item.amount_due}}</td>
+                                <td>{{item.amount_paid}}</td>
+                                <td><a href="{% url 'members_credit_sales_debt_recovery_cash_payment_after_transaction_delete' item.pk %}" class="btn btn-danger">Discard</a></td>
+                            
+                            </tr>
+                        {% endfor %}
+                   
+                        <tr>
+                            <td></td>
+                            <td>SUMMARY</td>
+                            <td></td>
+                            <td>{{total_amount}}</td>
+                            <td>
+                               
+                            </td>
+                        </tr>
+                   
+                        </tbody>
+                    
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="sidenav-backdrop backdrop"></div>
+<div class="preloader-backdrop">
+    <div class="page-preloader">Loading</div>
+</div>
+     {% include 'cooperative/includes/emptyspace.html' %} 
+{% endblock %}

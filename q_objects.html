@@ -206,6 +206,9 @@ Person.objects.filter(
 )
 
 
+from django.db.models import F
+
+Product.objects.update(price=F('price') * 1.2)
 
 
 

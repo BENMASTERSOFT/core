@@ -1,0 +1,131 @@
+{% extends 'deskofficer_templates/base_template.html' %}
+{% load static %}
+
+{% block content %}
+            <div class="page-content fade-in-up">
+                
+                <div class="row">
+
+                    <div class="col-md-6">
+                        <div class="ibox">
+                            <div class="ibox-head">
+                                <div class="ibox-title">Individual Data Capture</div>
+                            </div>
+                            <div class="ibox-body">
+                                 <form class="form-horizontal" method="POST" action="" enctype="multipart/form-data" novalidate>
+                                    {% csrf_token %}
+                                    <div class="form-group row">
+                                        <label class="col-sm-4 col-form-label">Coop. No</label>
+                                        <div class="col-sm-8">
+                                            {{form.coop_no}}
+                                        </div>
+                                    </div>                                    
+                                    <div class="form-group row">
+                                        <label class="col-sm-4 col-form-label">IPPIS No</label>
+                                        <div class="col-sm-8">
+                                            {{form.ippis_no}}
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-sm-4 col-form-label">File No</label>
+                                        <div class="col-sm-8">
+                                            {{form.file_no}}
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="form-group row">
+                                        <label class="col-sm-4 col-form-label">Title</label>
+                                        <div class="col-sm-8">
+                                            {{form.title}}
+                                        </div>
+                                    </div>  
+                                    <div class="form-group row">
+                                        <label class="col-sm-4 col-form-label">Last Name</label>
+                                        <div class="col-sm-8">
+                                            {{form.last_name}}
+                                        </div>
+                                    </div>                                    
+                                    <div class="form-group row">
+                                        <label class="col-sm-4 col-form-label">First Name</label>
+                                        <div class="col-sm-8">
+                                            {{form.first_name}}
+                                        </div>
+                                    </div>                                    
+                                    <div class="form-group row">
+                                        <label class="col-sm-4 col-form-label">Middle Name</label>
+                                        <div class="col-sm-8">
+                                           {{form.middle_name}}
+                                        </div>
+                                    </div>                                    
+                                    <div class="form-group row">
+                                        <label class="col-sm-4 col-form-label">Month Joined</label>
+                                        <div class="col-sm-8">
+                                            {{form.month_joined}}
+                                        </div>
+                                    </div>                                    
+                                    <div class="form-group row">
+                                        <label class="col-sm-4 col-form-label">Year Joined</label>
+                                        <div class="col-sm-8">
+                                           {{form.year_joined}}
+                                        </div>
+                                    </div>  
+                                    <div class="form-group row">
+                                        <label class="col-sm-4 col-form-label">Phone No</label>
+                                        <div class="col-sm-8">
+                                            {{form.phone_number}}
+                                        </div>
+                                    </div> 
+                                       <div class="form-group row">
+                                        <label class="col-sm-4 col-form-label">Salary Institution</label>
+                                        <div class="col-sm-8">
+                                            {{form.salary_institution}}
+                                        </div>
+                                    </div>                                   
+                                    
+                                    <div class="form-group row">
+                                        <label class="col-sm-4 col-form-label"></label>
+                                        <div class="col-sm-8">
+                                           <input type="checkbox" name="chk-dob">
+                                           <label style="color:blue;">Add Date of Birth</label>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group row">
+                                        <label class="col-sm-4 col-form-label">Date of Birth</label>
+                                        <div class="col-sm-8">
+                                            {{form.dob}}
+                                        </div>
+                                    </div>   
+                                    <div class="form-group row">
+                                        <label class="col-sm-4 col-form-label"></label>
+                                        <div class="col-sm-8">
+                                           <input type="checkbox" name="chk-fappt">
+                                           <label style="color:blue;">Add Date of First Appointment</label>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-sm-4 col-form-label">Date Hired</label>
+                                        <div class="col-sm-8">
+                                            {{form.date_hired}}
+                                        </div>
+                                    </div>                           
+                                 
+                                    <div class="form-group row">
+                                        <div class="col-sm-8 ml-sm-auto">
+                                            <button class="btn btn-info" type="submit">Submit</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+
+
+    <div class="sidenav-backdrop backdrop"></div>
+    <div class="preloader-backdrop">
+        <div class="page-preloader">Loading</div>
+    </div>
+{% endblock %}

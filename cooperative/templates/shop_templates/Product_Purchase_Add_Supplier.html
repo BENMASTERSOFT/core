@@ -69,7 +69,7 @@
                                             <th>#</th>
                                             <th>Prefix</th>
                                             <th>Suppliers</th>
-                                            <th></th>
+                                        
                                             <th>Branches</th>
                                             <th>Personnels</th>
                                          
@@ -79,9 +79,9 @@
                                         {% for item in suppliers %}
                                         <tr>
                                             <td>{{forloop.counter}}</td>
-                                            <td>{{item.prefix |default_if_none:""}}</td>
-                                            <td>{{item.name}}</td>
-                                            <td><a href="{% url 'Supplier_edit' item.pk %}" class="btn btn-success">Edit</a></td>
+                                            <td><a href="{% url 'Supplier_edit' item.pk %}">{{item.prefix |default_if_none:""}}</a></td>
+                                            <td><a href="{% url 'Supplier_edit' item.pk %}">{{item.name}}</a></td>
+                                          
                                             <td><a href="{% url 'Supplier_Branches_add' item.pk %}" class="btn btn-primary">Add</a></td>
 
                                             <td><a href="{% url 'Supplier_Personnel_add' item.pk %}" class="btn btn-secondary">Add</a></td>
@@ -105,4 +105,5 @@
     <div class="preloader-backdrop">
         <div class="page-preloader">Loading</div>
     </div>
+     {% include 'cooperative/includes/emptyspace.html' %} 
 {% endblock %}

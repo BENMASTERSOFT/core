@@ -1,0 +1,318 @@
+{% extends 'deskofficer_templates/base_template.html' %}
+{% load static %}
+
+{% block content %}
+            <div class="page-content fade-in-up">
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="ibox">
+                                        <div class="ibox-head">
+                                            <div class="ibox-title">Loan    Application | {{applicant.applicant.member.get_member_Id}} - {{applicant.applicant.member.get_full_name}} |  <input type="button" class="btn btn-primary" value="Back" onclick="history.back()"/>
+                                            </div>
+                                        </div>
+                                    <div class="form-group">
+                                          {% if messages %}
+                                            
+                                              {% for message in messages %}
+                                              {% if message.tags == "error" %}
+                                              <div class="alert alert-danger" style="margin-top:10px">{{message}}</div>
+                                              
+                                              {% endif %}
+
+                                              {% if message.tags == "success" %}
+                                              <div class="alert alert-success" style="margin-top:10px">{{message}}</div>
+                                              
+                                              {% endif %}
+                                              {% if message.tags == "info" %}
+                                              <div class="alert alert-info" style="margin-top:10px">{{message}}</div>
+                                              
+                                              {% endif %}
+
+                                              {% endfor %}
+                                          
+                                          {% endif %}
+                                    </div>
+                                    <div class="ibox-body">
+                                        <form class="form-horizontal" method="POST" action="" enctype="multipart/form-data" novalidate>
+                                            {% csrf_token %}
+                                            <div class="form-group row">
+                                                <label class="col-sm-3 col-form-label">Loan Type</label>
+                                                <div class="col-sm-9">
+                                                   {{form.loan_type}}
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label class="col-sm-3 col-form-label">Loan Amount</label>
+                                                <div class="col-sm-9">
+                                                    {{form.loan_amount}}
+                                                </div>
+                                            </div>
+                                            
+
+                                            <div class="form-group row">
+                                                <label class="col-sm-3 col-form-label">Loan New Amount</label>
+                                                <div class="col-sm-9">
+                                                    {{form.loan_new_amount}}
+                                                </div>
+                                            </div> 
+                                            <div class="form-group row">
+                                                <label class="col-sm-3 col-form-label">Duration</label>
+                                                <div class="col-sm-9">
+                                                    {{form.duration}}
+                                                </div>
+                                            </div> 
+                                            
+                                            
+                                            <div class="form-group row">
+                                                <div class="col-sm-9 ml-sm-auto">
+                                                    <button class="btn btn-info" type="submit" name="application">Submit</button>
+                                                    
+                                                </div>
+                                            </div>
+                                             <p>Please Click on <b>Submit</b> to Activate Transaction in this Page</p>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xl-12">
+                                <div class="ibox">
+                                    <div class="ibox-head">
+                                        <div class="ibox-title">Last Used Salary Information</div>
+                                    </div>
+                                    <div class="ibox-body">
+                                        <table class="table">
+                                            
+                                            <tbody>
+                                                <tr>
+                                                    <td>1</td>
+                                                    <td>Last Used Net Pay</td>
+                                                    <td>{{applicant.applicant.member.last_used_net_pay}}</td>
+                                                  
+                                                </tr>
+                                                
+                                                
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                           
+                           <div class="col-md-12">
+                                <div class="ibox">
+                                    <div class="ibox-head">
+                                        <div class="ibox-title">Salary Net Pay</div>
+                                        
+                                    </div>
+                                    <div class="ibox-body">
+                                        <form class="form-horizontal" method="POST" action="" enctype="multipart/form-data" novalidate>
+                                    {% csrf_token %}
+                                            <div class="form-group row">
+                                                <label class="col-sm-4 col-form-label">Net Pay as At</label>
+                                                <div class="col-sm-8">
+                                               {{net_form.payment_as_at}}
+                                                </div>
+                                            </div>
+                                            
+                                             <div class="form-group row">
+                                                <label class="col-sm-4 col-form-label">Net Pay</label>
+                                                <div class="col-sm-8">
+                                               {{net_form.net_pay}}
+                                                </div>
+                                            </div>                 
+                                            <div class="form-group row">
+                                                <label class="col-sm-4 col-form-label">Image</label>
+                                                <div class="col-sm-8">
+                                               {{net_form.image}}
+                                               <label name='image_link'>{{image_link}}</label>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="form-group row">
+                                                <div class="col-sm-8 ml-sm-auto">
+                                                {% if new_amount > 0 %}
+                                                    <button class="btn btn-info" type="submit" name='btn_net_pay'>Accept</button>
+                                                {% endif %}
+                                                </div>
+                                            </div>
+                                            <p>Please Click on <b>Accept</b> to Apply this Salary Info to this Loan</p>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+
+                    
+                            <div class="col-xl-12">
+                                <div class="ibox">
+                                    <div class="ibox-head">
+                                        <div class="ibox-title">Guarantor  | <a href="{% url 'loan_application_form_processing_guarantor_search' new_loan_pk %}" class="btn btn-primary">Add</a> </div>
+                                        
+                                    </div>
+                                    <div class="ibox-body">
+                                        <table class="table table-bordered">
+                                            <thead>
+                                                <tr>
+                                                    <th>#</th>
+                                                    <th>Member ID</th>
+                                                    <th>Name</th>
+                                                 
+                                                    <th>Action</th>
+                                                 
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                            {% for seleected_guarantor in seleected_guarantors %}
+                                                <tr>
+                                                    <td>{{forloop.counter}}</td>
+                                                    <td>{{seleected_guarantor.guarantor.get_member_Id}}</td>
+                                                    <td>{{seleected_guarantor.guarantor.get_full_name}}</td>
+                                                 
+                                                    <td><a href="{% url 'loan_application_form_processing_guarantor_delete' seleected_guarantor.pk return_pk %}" class="btn btn-danger">Discard</a></td>
+                                                   
+                                                </tr>
+                                            {% endfor %}
+                                            </tbody>
+                                        </table>
+                                        <p>Please Click on <b>Add</b> to Select Guarantors to this Loan</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-12">
+                                <div class="ibox">
+                                    <div class="ibox-head">
+                                        <div class="ibox-title">Bank Account Details</div>
+                                        
+                                    </div>
+                                    <div class="ibox-body">
+                                        <form class="form-horizontal" method="POST" action="" enctype="multipart/form-data" novalidate>
+                                    {% csrf_token %}
+                                            <div class="form-group row">
+                                                <label class="col-sm-2 col-form-label">Account Name</label>
+                                                <div class="col-sm-10">
+                                                   <select class="form-control" name="account">
+                                                  {% for bank_account in bank_accounts %}
+                                                        <option value={{bank_account.id }}> {{bank_account.account_name}} - {{bank_account.account_number}}  - {{bank_account.bank.title}}</option>
+                                                      {% endfor %}
+                                                </select>
+                                                </div>
+                                            </div>
+                                            
+                                            
+                                            <div class="form-group row">
+                                                <div class="col-sm-10 ml-sm-auto">
+                                                {% if new_amount > 0 %}
+                                                    <button class="btn btn-info" type="submit" name="btn_account">Submit</button>
+                                                {% endif %}
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xl-12">
+                                <div class="ibox">
+                                    
+                                    <div class="ibox-body">
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Bamk Name</th>
+                                            <th>Account Name</th>
+                                            <th>Account Number</th>
+                                            <th>Action</th>
+                                       
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% if new_loan.bank_account.account_number %}
+                                        <tr>
+                                            <td>1</td>
+                                            <td>{{new_loan.bank_account.bank.title}}</td>
+                                            <td>{{new_loan.bank_account.account_name}}</td>
+                                            <td>{{new_loan.bank_account.account_number}}</td>
+                                            <td><a href="{% url 'loan_application_form_processing_bank_account_delete' new_loan.pk return_pk %}" class="btn btn-danger">Discard</a></td>
+                                            
+                                        </tr>
+                                    {% endif %}
+                                    </tbody>
+                                </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="col-xl-6">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="ibox">
+                                    <div class="ibox-head">
+                                        <div class="ibox-title">Loan Criteria Settings for Loan Request</div>
+                                    </div>
+                                    <div class="ibox-body">
+                                        <table class="table table-bordered">
+                                            <thead>
+                                               <tr>
+                                                    <th>#</th>
+                                                    <th>Description</th>
+                                                    <th>Values</th>
+                                                 
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {% for item in loan_settings %}
+                                                <tr>
+                                                    <td>{{forloop.counter}}</td>
+                                                    <td>{{item.description}}</td>
+                                                    <td>{{item.value}}</td>
+                                                   
+                                                </tr>
+                                                {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div> 
+                        </div>
+                        
+                        {% if new_amount > 0 %}
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="ibox">
+                                    <div class="ibox-head">
+                                        <div class="ibox-title">Loan Application Preview</div>
+                                        
+                                    </div>
+                                    <div class="ibox-body">
+                                        <form class="form-horizontal">                                  <div class="form-group row">
+                                                <div class="col-sm-10 ml-sm-auto">
+                                                   
+
+                                                   
+                                                    <a href="{% url 'loan_application_preview' loan_pk return_pk %}" class="btn btn-success">Preview</a>
+                                                    
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            
+
+
+    <div class="sidenav-backdrop backdrop"></div>
+    <div class="preloader-backdrop">
+        <div class="page-preloader">Loading</div>
+    </div>
+    {% include 'cooperative/includes/emptyspace.html' %}
+{% endblock %}

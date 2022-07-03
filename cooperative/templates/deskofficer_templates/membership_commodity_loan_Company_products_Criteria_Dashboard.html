@@ -7,7 +7,10 @@
                     <div class="col-xl-6">
                         <div class="ibox">
                             <div class="ibox-head">
-                                <div class="ibox-title">Commodity Loan Dashboard</div>
+                                <div class="ibox-title">Commodity Loan Dashboard | <a href="{% url 'membership_commodity_loan_application_submit' member.pk period.pk batch.pk transaction.pk %}" class="btn btn-success">Submit Application</a></div>
+                            </div> 
+                            <div class="ibox-head">
+                                <div class="ibox-title">{{member.get_full_name}} | {{member.get_member_Id}}</div>
                             </div>
                             <div class="form-group">
                               {% if messages %}
@@ -44,16 +47,17 @@
                                             <td><a href="{% url 'membership_commodity_loan_Company_products_net_pay_Settings' member.pk period.pk batch.pk transaction.pk %}" class="btn btn-primary">Update</a></td>
                                         
                                         </tr>
-                                    {% if record.guarantor_required == '1' %}
+                                  {% comment %}  {% if record.guarantor_required == '1' %}
                                         <tr>
                                             <td>2</td>
                                             <td>Guarantor Details</td>
                                             <td> <a href="{% url 'membership_commodity_loan_Company_products_Guarantor_Settings' member.pk period.pk batch.pk transaction.pk %}" class="btn btn-primary">Update</a></td>
                                     
                                         </tr>
-                                    {% endif %}
+                                    {% endif %}{% endcomment %}
                                         
                                     </tbody>
+                                    
                                 </table>
                             </div>
                         </div>

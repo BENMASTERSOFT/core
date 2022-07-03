@@ -26,7 +26,7 @@
                                     <th>Re-Order Qty</th>
                                     <th>Unit Cost Price</th>
                                 
-                                    <th>Action</th>
+                                    <th colspan="2">Action</th>
                                 </tr>
                             </thead>
                             <tfoot>
@@ -39,7 +39,7 @@
                                     <th>Re-Order Qty</th>
                                     <th>Unit Cost Price</th>
                                  
-                                    <th>Action</th>
+                                    <th colspan="2">Action</th>
                                 </tr>
                             </tfoot>
                             <tbody>
@@ -58,7 +58,11 @@
                                         <td>{{stock.unit_cost_price}}</td>
                                        
                                         <td>
-                                            <a href="{% url 'Item_Write_off_product_Preview' stock.id %}" class="btn btn-success"> Select</a> 
+                                            <a href="{% url 'Item_Write_off_product_Preview' stock.id %}" class="btn btn-secondary"> Normal</a> 
+
+                                        </td>
+                                        <td>
+                                            <a href="{% url 'Item_Write_off_product_Auction_Preview' stock.code %}" class="btn btn-info"> Auction</a> 
 
                                         </td>
                                         
@@ -81,6 +85,7 @@
         <div class="page-preloader">Loading</div>
     </div>
     <!-- END PAGA BACKDROPS-->
+     {% include 'cooperative/includes/emptyspace.html' %} 
 {% endblock content %}
 
 {% block custom_js %}

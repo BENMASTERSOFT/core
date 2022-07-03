@@ -22,10 +22,11 @@
                             </div>
                 <div class="row">
 
-                  <div class="col-xl-6">
+                  <div class="col-xl-7">
                         <div class="ibox">
                             <div class="ibox-head">
-                                <div class="ibox-title"> <input type="button" class="btn btn-secondary" value="Back" onclick="history.back()"/> | SAVINGS | {{salary_institution.title}} | {{transaction_period.transaction_period}} |<a href="{% url 'MonthlyDeductionGenerationHeader' 'SAVINGS' salary_institution.pk %}" 
+                                <div class="ibox-title"> <input type="button" class="btn btn-secondary" value="Back" onclick="history.back()"/> | SAVINGS | {{salary_institution.title}} | {{transaction_period.transaction_period}} |
+                                    <a href="{% url 'MonthlyDeductionGenerationHeader' 'SAVINGS' salary_institution.pk %}" 
 
                                    {% if savings_status %} class="btn btn-danger" 
 
@@ -62,7 +63,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-xl-6">
+                    <div class="col-xl-5">
                         <div class="ibox">
                             <div class="ibox-head">
                                 <div class="ibox-title"> GENERATED TRANSACTIONS | {{transaction_period.transaction_period}}</div>

@@ -1,0 +1,216 @@
+{% extends 'deskofficer_templates/base_template.html' %}
+{% load static %}
+
+{% block content %}
+<div class="page-content fade-in-up">            
+    <div class="row">                   
+        <div class="col-xl-7">
+   
+            <div class="ibox">
+            <div class="ibox-head">
+                <div class="ibox-title">Settings Details |  <input type="button" class="btn btn-primary" value="Back" onclick="history.back()"/></div>
+            </div>
+
+            <div class="ibox-head">
+                    <div class="ibox-title">{{applicant.member.get_member_Id}} | {{applicant.member.get_full_name}} | {{applicant.loan.name}}  </div>
+            </div>
+
+                
+            <div class="ibox-body">
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>                                      
+                                <th>Description</th>
+                                <th>Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            
+                            {% if shops.particulars %}
+                            <tr>                                         
+                                <td>{{shops.particulars}}</td>
+                                <td>{{shop_balance}}</td>
+                            </tr>
+                            {% endif %}
+
+                        {% for saving in savings %}
+                            <tr>
+                                <td>{{saving.transaction.transaction.name}}</td>
+                                <td>{{saving.amount}}</td>
+                            </tr>
+                        {% endfor %}                                
+
+                    {% for loan in loans %}
+                            <tr>
+                                <td>{{loan.transaction.name}}</td>
+                                <td>{{loan.repayment}}</td>
+                            </tr>
+                        {% endfor %} 
+
+                        {% for record in records %}
+                            <tr>
+                                <td>{{record.description}}</td>
+                                <td>{{record.amount}}</td>
+                            </tr>
+                        {% endfor %}
+
+                        <tr>
+                                <td>SUMMARY</td>
+                                <td>{{total_debit}}</td>
+                              
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            </div>
+        </div>
+        <div class="col-md-5">
+            <div class="row">
+
+                <div class="col-md-12">
+                        <div class="ibox">
+                            <div class="ibox-head">
+                                <div class="ibox-title">Payslip Analysis Excluding Cooperative Deductions</div>
+                                
+                            </div>
+                            <div class="form-group">
+                          {% if messages %}
+                            
+                              {% for message in messages %}
+                              {% if message.tags == "error" %}
+                              <div class="alert alert-danger" style="margin-top:10px">{{message}}</div>
+                              
+                              {% endif %}
+
+                              {% if message.tags == "success" %}
+                              <div class="alert alert-success" style="margin-top:10px">{{message}}</div>
+                              
+                              {% endif %}
+                               {% if message.info == "info" %}
+                              <div class="alert alert-success" style="margin-top:10px">{{message}}</div>
+                              
+                              {% endif %}
+                              {% endfor %}
+                          
+                          {% endif %}
+                        </div>
+
+                                    
+                            <div class="ibox-body">
+                               <form class="form-horizontal" method="POST" action="" enctype="multipart/form-data" novalidate>
+                                {% csrf_token %}
+                                    <div class="form-group row">
+                                        <label class="col-sm-4 col-form-label">Salary as at:</label>
+                                        <div class="col-sm-8">
+                                            {{attachment_form.payment_as_at}}
+                                        </div>
+                                    </div>
+
+                                   
+                                    <div class="form-group row">
+                                        <label class="col-sm-4 col-form-label">Net Pay</label>
+                                        <div class="col-sm-8">
+                                            {{attachment_form.net_pay}}
+                                        </div>
+                                    </div>
+
+                                    
+                                    <div class="form-group row">
+                                        <label class="col-sm-4 col-form-label">Image</label>
+                                        <div class="col-sm-8">
+                                          {{attachment_form.image}}
+                                        </div>
+                                        
+                                    </div>  
+                                    <div class="form-group row">
+                                        <label class="col-sm-12 col-form-label">You must Click 0n SUBMIT to accept this existing Salary or Make Changes</label>
+                                        
+                                  
+                                    </div>
+                                    
+                                    <div class="form-group row">
+                                        <div class="col-sm-8 ml-sm-auto">
+                                            <button class="btn btn-info" type="submit" name='attachment'>Submit</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+
+                
+            </div>
+
+            <div class="row">
+                    <div class="col-xl-12">
+                        <div class="ibox">
+                            
+                            <div class="ibox-body">
+                                <table class="table">
+
+                                    <tbody>
+                                        <tr>
+                                            <td>1</td>
+                                            <td>Last Used Net Pay</td>
+                                            <td>{{applicant.member.last_used_net_pay}}</td>
+                                           
+                                        </tr>
+                                        
+                                        
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                   
+                </div>
+        </div>
+    </div>
+   <div class="row">   
+        <div class="col-xl-8">
+            <div class="ibox">
+                <div class="ibox-head">
+                    <div class="ibox-title">Available Attachments | <a href="{% url 'loan_request_preview' applicant.id %}" class="btn btn-success">Continue</a></div>
+                </div>
+                <div class="ibox-body">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Description</th>
+                                <th>Net Pay</th>
+                                <th>Image</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                       {% if applicant.description %}
+                            <tr>
+                                <td>1</td>
+                                <td>{{applicant.description}}</td>
+                            
+                                <td>{{applicant.net_pay}}</td>
+                                <td><img src="{{applicant.image}}" style="width:100px"></td>
+                                <td><a href="{% url 'LoanRequestAttachments_delete' applicant.pk pk %}">Remove</a></td>
+                            </tr>
+                        {% endif %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+  
+    
+    </div>
+
+
+</div>
+  <div class="sidenav-backdrop backdrop"></div>
+    <div class="preloader-backdrop">
+        <div class="page-preloader">Loading</div>
+    </div>
+    {% include 'cooperative/includes/emptyspace.html' %}
+{% endblock %}

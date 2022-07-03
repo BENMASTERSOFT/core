@@ -1,0 +1,105 @@
+{% extends 'deskofficer_templates/base_template.html' %}
+{% load static %}
+
+{% block content %}
+            <div class="page-content fade-in-up">
+                <div class="row">                   
+                    <div class="col-xl-6">
+                        <div class="ibox">
+                            <div class="ibox-head">
+                                <div class="ibox-title">Transaction Mergers | {{transaction_period.transaction_period}} | {{salary_institution.title}}</div>
+                            </div>
+                            <div class="form-group">
+                                  {% if messages %}
+                                    
+                                      {% for message in messages %}
+                                      {% if message.tags == "error" %}
+                                      <div class="alert alert-danger" style="margin-top:10px">{{message}}</div>
+                                      
+                                      {% endif %}
+
+                                      {% if message.tags == "success" %}
+                                      <div class="alert alert-success" style="margin-top:10px">{{message}}</div>
+                                      
+                                      {% endif %}
+                                      {% endfor %}
+                                  
+                                  {% endif %}
+                              </div>
+                            <div class="ibox-body">
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Description</th>
+                                            <th>Action</th>
+                                            
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>1</td>
+                                            <td>Main Cooperative</td>
+                                            <td><a href="{% url 'Monthly_Deduction_Main_and_Shop_Merger_Load_Main_Preview' salary_institution.pk %}" class='btn btn-primary'>Preview</a></td>
+                                           
+                                        </tr>
+                                        <tr>
+                                            <td>2</td>
+                                            <td>Shop</td>
+                                           
+                                            <td><a href="{% url 'Monthly_Deduction_Main_and_Shop_Merger_Load_Shop_Preview' salary_institution.pk %}" class='btn btn-primary'>Preview</a></td>
+                                            
+                                        </tr>
+                                        
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div> 
+
+                <div class="row">                   
+                    <div class="col-xl-6">
+                        <div class="ibox">
+                            <div class="ibox-head">
+                                <div class="ibox-title">Available Generated Transaction | 
+                                    {% if button_show %}
+                                    <a href="{% url 'MonthlyJointDeductionsGenerate' salary_institution.pk %}" class="btn btn-success"> Generate</a> 
+                                 {% endif %}
+                                </div>
+                                   
+                            </div>
+                            
+
+                                <div class="ibox-body">
+                                    <table class="table table-bordered">
+                                        <thead>
+                                            <tr>
+                                                <th>#</th>
+                                                <th>Description</th> 
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                        {% for record in records %}
+                                            <tr>
+                                                <td>{{forloop.counter}}</td>
+                                                <td>{{record.transaction}}</td>
+                                                
+                                            </tr>
+                                        {% endfor %}
+                                            
+                                        </tbody>
+                                        
+                                    </table>
+                                </div>
+
+                         
+                        </div>
+                    </div>
+                </div>           
+            </div>
+  <div class="sidenav-backdrop backdrop"></div>
+    <div class="preloader-backdrop">
+        <div class="page-preloader">Loading</div>
+    </div>
+{% endblock %}

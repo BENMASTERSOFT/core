@@ -2,9 +2,9 @@
 {% load static %}
 
 {% block content %}
-            <div class="page-content fade-in-up">
-                 <form class="form-horizontal" method="POST" action="">
-                                    {% csrf_token %}
+        <div class="page-content fade-in-up">
+            <form class="form-horizontal" method="POST" action="">
+              {% csrf_token %}
                 <div class="row">
                     <div class="col-md-6">
                         <div class="ibox">
@@ -32,10 +32,9 @@
                             </div>
                         </div>
                     </div>
-              
                 </div>
-                 <div class="row">
-                    <div class="col-xl-6">
+                <div class="row">
+                    <div class="col-xl-8">
                         <div class="ibox">
                             <div class="ibox-head">
                                 <div class="ibox-title">Summary Records | <button class="btn btn-default" name="btn_view" type="submit">View All</button> </div>
@@ -48,6 +47,7 @@
                                             <th>Description</th>
                                             <th>Amount</th>
                                             <th>Sales Category</th>
+                                            <th>Date</th>
                                             <th></th>
                                         </tr>
                                     </thead>
@@ -58,18 +58,23 @@
                                             <td>{{record.description}}</td>
                                             <td>{{record.amount}}</td>
                                             <td>{{record.sales_category.title}}</td>
+                                            <td>{{record.tdate}}</td>
                                             <td><a href="{% url 'Daily_Sales_Report_Details' record.pk %}" class="btn btn-primary">Details</a></td>
                                         </tr>
                                     {% endfor %}
+                                    <tr>
+                                        <td colspan="2">SUMMARY</td>
+                                        <td>{{total_amount}}</td>
+                                        <td colspan="2"></td>
+                                    </tr>
                                     </tbody>
                                 </table>
                             </div>
                         </div>
                     </div>
-               
                 </div>
              </form>
-            </div>
+        </div>
 
 
         
@@ -79,4 +84,5 @@
     <div class="preloader-backdrop">
         <div class="page-preloader">Loading</div>
     </div>
+     {% include 'cooperative/includes/emptyspace.html' %} 
 {% endblock %}

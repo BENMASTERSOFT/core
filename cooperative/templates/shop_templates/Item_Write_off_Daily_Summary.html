@@ -1,0 +1,94 @@
+{% extends 'shop_templates/base_template.html' %}
+{% load static %}
+
+{% block content %}
+            <div class="page-content fade-in-up">
+                 <div class="row">               
+
+                    <div class="col-md-6">
+                        <div class="ibox">
+                            <div class="ibox-head">
+                                <div class="ibox-title">Transaction Period</div>
+                               
+                            </div>
+                            <div class="ibox-body">
+                                <form class="form-horizontal" method="POST" action="">
+                                    {% csrf_token %}
+                                    <div class="form-group row">
+                                        <label class="col-sm-4 col-form-label">Transaction Date</label>
+                                        <div class="col-sm-8">
+                                            {{form.transaction_period}}
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="form-group row">
+                                        <div class="col-sm-8 ml-sm-auto">
+                                            <button class="btn btn-info" type="submit" name="btn-fetch">Fetch</button>
+                                            {% if button_show %}
+                                            <button class="btn btn-success" type="submit" name="btn-process">Process</button>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    
+                    <div class="col-xl-10">
+                        <div class="ibox">
+                            <div class="ibox-head">
+                                <div class="ibox-title">Bordered Table</div>
+                            </div>
+                            <div class="ibox-body">
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Code</th>
+                                            <th>Item Name</th>
+                                            <th>Quantity</th>
+                                            <th>Unit Cost</th>
+                                            <th>Total Cost</th>
+                                            <th>Source</th>
+                                          
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for record in records %}
+                                        <tr>
+                                            <td>{{forloop.counter}}</td>
+                                            <td>{{record.product.product.code}}</td>
+                                            <td>{{record.product.product.item_name}}</td>
+                                            <td>{{record.product.quantity}}</td>
+                                            <td>{{record.product.cost_price}}</td>
+                                            <td>{{record.product.total_cost}}</td>
+                                            <td>{{record.product.route}}</td>
+                                            
+                                           
+                                        </tr>
+                                       {% endfor %}
+
+                                       <tr>
+                                           <td colspan="3">SUMMARY</td>
+                                           <td>{{total_item}}</td>
+                                           <td></td>
+                                           <td>{{total_amount}}</td>
+                                           <td></td>
+                                       </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+             
+           
+            </div>
+  <div class="sidenav-backdrop backdrop"></div>
+    <div class="preloader-backdrop">
+        <div class="page-preloader">Loading</div>
+    </div>
+     {% include 'cooperative/includes/emptyspace.html' %} 
+{% endblock %}

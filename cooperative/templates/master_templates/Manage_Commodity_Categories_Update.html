@@ -11,6 +11,26 @@
                                 </div>
                                 
                             </div>
+                            <div class="form-group">
+                              {% if messages %}
+                                
+                                  {% for message in messages %}
+                                  {% if message.tags == "error" %}
+                                   <div class="alert alert-warning alert-dismissable fade show"  style="margin-top:10px">
+                                    <button class="close" data-dismiss="alert" aria-label="Close">×</button><strong>Warning!</strong> {{message}}</div>
+                                  
+                                  {% endif %}
+                                  {% if message.tags == "info" %}
+                                   <div class="alert alert-info alert-dismissable fade show"  style="margin-top:10px">
+                                    <button class="close" data-dismiss="alert" aria-label="Close">×</button><strong>Warning!</strong> {{message}}</div>
+                                  
+                                  {% endif %}
+
+                                  
+                                  {% endfor %}
+                              
+                              {% endif %}
+                            </div>
                             <div class="ibox-body">
                                 <form class="form-horizontal" action="" method="POST">
                                     {% csrf_token %}
@@ -60,12 +80,7 @@
                                         </div>
                                     </div>
                                 {% endif %}
-                                    <div class="form-group row">
-                                        <label class="col-sm-4 col-form-label">Price Status</label>
-                                        <div class="col-sm-8">
-                                            {{form.price_status}}
-                                        </div>
-                                    </div>  
+                                    
                                     <div class="form-group row">
                                         <label class="col-sm-4 col-form-label">Loan Age</label>
                                         <div class="col-sm-8">

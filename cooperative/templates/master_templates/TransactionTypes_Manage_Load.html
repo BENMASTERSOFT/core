@@ -7,7 +7,10 @@
 {% block content %}
 
       
-            <div class="page-content fade-in-up">
+    <div class="page-content fade-in-up">
+        <div class="row">
+            <div class="col-md-10">   
+
                 <div class="ibox">
                     <div class="ibox-head">
                         <div class="ibox-title">Transaction Types Manager |  <input type="button" class="btn btn-secondary" value="Back" onclick="history.back()"/></div>
@@ -19,11 +22,14 @@
                                    <th>#</th>
                                     <th>Code</th>
                                     <th>Description</th>
+                                    <th>Source</th>
+                                    {% comment %}
                                     <th>Maximun Amount</th>
                                     <th>Minimun Amount</th>
                                     <th>Receipt Type</th>
                                     <th>Rank</th>
                                     <th>Shares Range</th>
+                                    {% endcomment %}
                                     <th>Action</th>
                                 </tr>
                             </thead>
@@ -32,11 +38,14 @@
                                     <th>#</th>
                                     <th>Code</th>
                                     <th>Description</th>
+                                    <th>Source</th>
+                                    {% comment %}
                                     <th>Maximun Amount</th>
                                     <th>Minimun Amount</th>
                                     <th>Receipt Type</th>
                                     <th>Rank</th>
                                     <th>Shares Range</th>
+                                    {% endcomment %}
                                     <th>Action</th>
                                 </tr>
                             </tfoot>
@@ -47,14 +56,17 @@
                                         <td>{{forloop.counter}}</td>
                                         <td>{{item.code}}</td>
                                         <td>{{item.name}}</td>
+                                        <td>{{item.source.title}}</td>
+                                        
+                                         {% comment %}
                                         <td>{{item.maximum_amount}}</td>
                                         <td>{{item.minimum_amount}}</td>
                                         <td>{{item.receipt_type}}</td>
                                         <td>{{item.rank}}</td>
                                         <td>Min-{{item.share_unit_min}}/Max-{{item.share_unit_max}}</td>
-                                        
+                                         {% endcomment %}
                                         <td>
-                                            <a href="{% url 'TransactionTypes_Update' item.pk %}" class="btn btn-default btn-xs m-r-5" data-toggle="tooltip" data-original-title="Edit"><i class="fa fa-pencil font-14"></i></a>
+                                            <a href="{% url 'TransactionTypes_Update' item.pk %}" class="btn btn-success" >Edit</a>
                                           
                                         
                                         </td>
@@ -67,6 +79,8 @@
                 </div>
                
             </div>
+        </div>
+    </div>
   
     
     <!-- BEGIN PAGA BACKDROPS-->

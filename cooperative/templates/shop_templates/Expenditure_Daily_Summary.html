@@ -1,0 +1,74 @@
+{% extends 'shop_templates/base_template.html' %}
+{% load static %}
+
+
+
+{% block content %}
+            <div class="page-content fade-in-up">
+                     <div class="row">
+                  
+                    <div class="col-xl-10">
+                        <div class="ibox">
+                            <div class="ibox-head">
+                                <div class="ibox-title">Expenditure Details</div>
+                            </div>
+                            <div class="ibox-body">
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Details</th>
+                                            <th>Amount</th>
+                                            <th>Reference</th>
+                                            <th>Date</th>
+                                         
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+
+                                        {% for item in records %}
+                                        <tr>
+                                            <td>{{forloop.counter}}</td>
+                                            <td>{{item.details | safe}}</td>
+                                            <td>{{item.amount}}</td>
+                                            <td>{{item.reference}}</td>
+                                            <td>{{item.tdate}}</td>
+                                        </tr>
+                                       {% endfor %}
+                                       {% if total_amount %}
+                                        <tr>
+                                            <td colspan="2">SUMMARY</td>
+                                            <td>{{total_amount}}</td>
+                                            <td colspan="2">
+                                                
+                                                 <form class="form-horizontal" method="POST" action="">
+                                                      {% csrf_token %}
+                                                    
+                                                    <div class="form-group row">
+                                                        <div class="col-sm-8 ml-sm-auto">
+                                                            <button class="btn btn-success" type="submit">Submit</button>
+                                                        </div>
+                                                    </div>
+                                                </form>
+                                            </td>
+                                        </tr>
+                                        {% endif %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+             
+            </div>
+
+
+        
+
+
+    <div class="sidenav-backdrop backdrop"></div>
+    <div class="preloader-backdrop">
+        <div class="page-preloader">Loading</div>
+    </div>
+     {% include 'cooperative/includes/emptyspace.html' %} 
+{% endblock %}

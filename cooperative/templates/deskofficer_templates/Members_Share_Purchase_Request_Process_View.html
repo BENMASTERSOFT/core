@@ -33,7 +33,7 @@
                                  <form class="form-horizontal" method="POST" action="" enctype="multipart/form-data" novalidate>
                                     {% csrf_token %}
                                   
-                                    {% if transaction_receipt_category.receipt_type.title == 'MANUAL' %}
+                                    {% if transaction_receipt_category.receipt_type == 'MANUAL' %}
 
                                   
                                     <div class="form-group row">

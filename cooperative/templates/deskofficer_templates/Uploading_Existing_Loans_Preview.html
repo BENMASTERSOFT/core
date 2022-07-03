@@ -4,13 +4,11 @@
 {% block content %}
             <div class="page-content fade-in-up">
                 
-                <div class="row">
-                   
-
+                <div class="row">                  
                     <div class="col-md-6">
                         <div class="ibox">
                             <div class="ibox-head">
-                                <div class="ibox-title">LOAN UPLOAD | {{member.admin.first_name}} {{member.admin.first_name}} {{member.middle_name}} |  <input type="button" class="btn btn-secondary" value="Back" onclick="history.back()"/></div>
+                                <div class="ibox-title">LOAN UPLOAD | {{member.get_full_name}} |  <input type="button" class="btn btn-secondary" value="Back" onclick="history.back()"/></div>
                                 
                             </div>
                             <div class="form-group">
@@ -63,6 +61,12 @@
                                             {{form.interest_rate}}
                                         </div>
                                     </div>   
+                                    <div class="form-group row">
+                                        <label class="col-sm-4 col-form-label">Admin Charge Rate</label>
+                                        <div class="col-sm-6">
+                                            {{form.admin_charge_rate}}
+                                        </div>
+                                    </div>   
                                      <div class="form-group row">
                                         <label class="col-sm-4 col-form-label">Duration</label>
                                         <div class="col-sm-6">
@@ -110,12 +114,13 @@
                                             <th>Description</th>
                                             <th>Particulars</th>
                                             <th>Loan Amount</th>
-                                            <th>Amount Paid</th>
+                                          
                                             <th>Balance</th>
                                             <th>Repayment</th>
                                             <th>Duration</th>
                                             <th>Interest Rate</th>
                                             <th>Interest Deduction</th>
+                                            <th>Admin Charge</th>
                                             <th>Start Date</th>
                                             <th>Stop Date</th>
                                             <th>Action</th>
@@ -128,17 +133,18 @@
                                             <td>{{record.transaction.name}}</td>
                                             <td>{{record.particulars}}</td>
                                             <td>{{record.loan_amount}}</td>
-                                            <td>{{record.amount_paid}}</td>
+                                          
                                             <td>{{record.balance}}</td>
                                             <td>{{record.repayment}}</td>
                                             <td>{{record.duration}}</td>
                                             <td>{{record.interest_rate}}</td>
                                             <td>{{record.interest_deduction}}</td>
+                                            <td>{{record.admin_charge_rate}}</td>
                                             <td>{{record.start_date}}</td>
                                             <td>{{record.stop_date}}</td>
                                        
                                             <td>
-                                                {% if record.status.title == 'UNTREATED' %}
+                                                {% if record.status == 'UNTREATED' %}
                                                 <a href="{% url 'Uploading_Existing_Loans_delete' record.pk return_pk %}" class="btn btn-danger">Remove</a>
                                                 {% endif %}
 

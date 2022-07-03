@@ -67,7 +67,7 @@
                                             <td>{{item.member.repayment}}</td>
                                             <td>{{item.amount}}</td>
                                             <td>
-                                            {% if item.approval_status.title == 'PENDING' %}
+                                            {% if item.approval_status == 'PENDING' %}
                                                 <a href="{% url 'Transaction_Loan_adjustment_Transaction_Cancel' item.pk %}" class="btn btn-danger">Cancel</a>
                                             {% endif %}
 

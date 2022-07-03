@@ -52,7 +52,6 @@
                                             <th>Quantity</th>
                                             <th>Unit Prices</th>
                                             <th>No in Pack</th>
-                                            <th>Re-Order Level</th>
                                             <th>Action</th>
                                         </tr>
                                     </thead>
@@ -65,7 +64,6 @@
                                             <th>Quantity</th>
                                             <th>Unit Prices</th>
                                             <th>No in Pack</th>
-                                            <th>Re-Order Level</th>
                                             <th>Action</th>
                                         </tr>
                                     </tfoot>
@@ -79,13 +77,14 @@
                                             <td>{{item.quantity}}</td>
                                              <td>{{item.unit_selling_price}}</td>
                                             <td>{{item.no_in_pack}}</td>
-                                             <td>{{item.re_order_level}}</td>
+                                            
                                             <td>
-                                                {% if item.quantity == 0  or item.unit_selling_price == 0  %}
+                                                {% if item.quantity  or item.unit_selling_price  %}
                                                    
-                                                {% else %}
-                                                    <a href="{% url 'members_credit_issue_item' item.pk member.id %}" class="btn btn-success btn-xs m-r-5">Issue</a>
+                                               
+                                                    <a href="{% url 'members_credit_issue_item' item.pk member.id %}" class="btn btn-success btn-xs m-r-5">Normal</a>
                                                 {% endif %}
+                                                    <a href="{% url 'members_credit_issue_auction_item' item.code member.id %}" class="btn btn-primary btn-xs m-r-5">Auction</a>
                                             </td>
                                         </tr>
                                         {% endfor %}
@@ -99,7 +98,7 @@
             
               
                 <div class="row">
-                    <div class="col-xl-10">
+                    <div class="col-xl-12">
                         <div class="ibox">
                             <div class="ibox-head">
                                 <div class="ibox-title">Selected Items</div>
@@ -115,6 +114,7 @@
                                             <th>Quantity</th>
                                             <th>Unit Prices</th>
                                             <th>Total Amount</th>                        
+                                            <th>Sources</th>                        
                                             <th>Action</th>
                                         </tr>
                                     </thead>
@@ -128,6 +128,7 @@
                                             <td>{{select_item.quantity}}</td>
                                             <td>{{select_item.unit_selling_price}}</td>
                                             <td>{{select_item.total}}</td>
+                                            <td>{{select_item.sources}}</td>
                                     
                                             <td><a href="{% url 'Members_Credit_sales_item_select_remove' select_item.pk member.id %}" class="btn btn-danger">Remove</a></td>
                                             
@@ -163,6 +164,7 @@
         <div class="page-preloader">Loading</div>
     </div>
     <!-- END PAGA BACKDROPS-->
+     {% include 'cooperative/includes/emptyspace.html' %} 
 {% endblock content %}
 
 {% block custom_js %}

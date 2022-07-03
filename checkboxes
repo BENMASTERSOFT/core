@@ -6,9 +6,21 @@ Your display HTML is missing a name value for the checkboxes. If you just have a
 id_list = request.POST.getlist('checkboxname')
 
 
+ledger_balance=get_ledger_balance(member,transaction,loan_number)
 
 
-LoanRequestAttachments
+record = post_to_ledger(member,transaction,loan_number,particulars,debit,credit,balance,now,status,tdate)
+
+
+
+
+    Loan_Disbursed_Posting(member,transaction,loan_number,loan_amount,repayment,
+        amount_paid,balance,duration,schedule_status,interest_deduction,start_date,
+        stop_date,processed_by,loan_merge_status,status,tdate)
+
+    Loans_Repayment_Base(member,transaction,loan_number,loan_amount,repayment,
+        balance,amount_paid,start_date,stop_date,processed_by,loan_merge_status,status,tdate)
+
 
 
 

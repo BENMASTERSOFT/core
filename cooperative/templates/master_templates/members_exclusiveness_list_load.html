@@ -21,6 +21,7 @@
                                     <th>Name</th>
                                       <th>Purpose</th>
                                     <th>Date Applied</th>
+                                    <th>Batch</th>
                                
                                     <th>Action</th>
                                 </tr>
@@ -32,7 +33,7 @@
                                     <th>Name</th>
                                     <th>Purpose</th>
                                     <th>Date Applied</th>
-                               
+                               <th>Batch</th>
                                     <th>Action</th>
                                 </tr>
                             </tfoot>
@@ -44,6 +45,7 @@
                                     <td>{{applicant.member.get_full_name}}</td>
                                     <td>{{applicant.transaction.name}}</td>
                                     <td>{{applicant.created_at|date:"M d, Y"}}</td>
+                                    <td>{{applicant.period.title}}{{applicant.batch.title}}</td>
                                    
                                     <td><a href="{% url 'members_exclusiveness_process' applicant.pk %}" class="btn btn-success">Process</a></td>
                                 </tr>

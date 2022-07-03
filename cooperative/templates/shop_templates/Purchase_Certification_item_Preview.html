@@ -10,13 +10,17 @@
                     <div class="ibox">
                             <div class="ibox-head">
                                 <div class="ibox-title">LIST OF ITEMS | {{record.invoice}}  
-<a class="btn btn-xs btn-secondary m-l-5" href="{% url 'Purchase_Certification_item_Add_Item' record.pk %}">Add Item</a>
+                                {% if button_show %}
+                                <a class="btn btn-xs btn-secondary m-l-5" href="{% url 'Purchase_Certification_item_Add_Item' record.pk %}">Add Item</a>
+                                 {% endif %}
                                 </div>
                                 <div class="ibox-tools">
                                    
                                     <div class="form-group row">
                                         <div class="col-sm-10 ml-sm-auto">
+                                            {% if button_show %}
                                             <a href="{% url 'Purchase_Certification_item_Preview_Processed' record.pk %}"  class="btn btn-success">Process</a>
+                                            {% endif %}
                                         </div>
                                     </div>
                                 
@@ -77,4 +81,5 @@
     <div class="preloader-backdrop">
         <div class="page-preloader">Loading</div>
     </div>
+     {% include 'cooperative/includes/emptyspace.html' %} 
 {% endblock %}

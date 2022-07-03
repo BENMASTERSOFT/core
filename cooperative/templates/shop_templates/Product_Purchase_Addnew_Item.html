@@ -44,22 +44,18 @@
                                            {{form.category}}
                                         </div>
                                     </div> 
-                                    <div class="form-group row">
-                                        <label class="col-sm-4 col-form-label">Code</label>
-                                        <div class="col-sm-8">
-                                           {{form.code}}
-                                        </div>
-                                    </div>
+                                    
                                     <div class="form-group row">
                                         <label class="col-sm-4 col-form-label">Description</label>
                                         <div class="col-sm-8">
-                                            {{form.item_name}}
+                                            {{form.details}}
                                         </div>
                                     </div> 
                                     <div class="form-group row">
                                         <label class="col-sm-4 col-form-label">Item Name</label>
                                         <div class="col-sm-8">
-                                            {{form.details}}
+                                             {{form.item_name}}
+                                           
                                         </div>
                                     </div>
                                     <div class="form-group row">
@@ -112,6 +108,7 @@
         <div class="page-preloader">Loading</div>
     </div>
     <!-- END PAGA BACKDROPS-->
+     {% include 'cooperative/includes/emptyspace.html' %} 
 {% endblock content %}
 
 {% block custom_js %}

@@ -49,6 +49,11 @@
                                            
                                             <td>Company Price</td>
                                             <td>#{{product_data.company_price}}</td>
+                                        </tr> 
+                                        <tr>
+                                           
+                                            <td>Cooperative Price</td>
+                                            <td>#{{product_data.coop_price}}</td>
                                         </tr>
                                     {% if record.interest_rate_required == '1' %}
                                      
@@ -57,6 +62,7 @@
                                             <td>Interest Rate</td>
                                             <td>{{product_data.interest_rate}}%</td>
                                         </tr>
+                                    {% endif %} 
                                         <tr>
                                            
                                             <td>Interest Amount</td>
@@ -64,25 +70,27 @@
                                         </tr>
                                    
                                         
-                                    {% endif %} 
+                                    
 
                                     {% if record.admin_charges_required == '1' %}
                                         <tr>
                                            
                                             <td>Admin Charge Rating</td>
-                                            <td>{{record.admin_charges_rating.title}}</td>
+                                            <td>{{product_data.admin_charges_rating}}</td>
                                         </tr>
                                            <tr>
                                            
-                                            <td>Admin Charge Rate</td>
-                                            <td>{{record.admin_charges}}%</td>
-                                        </tr>
-                                        <tr>
-                                           
                                             <td>Admin Charge</td>
-                                            <td>#{{product_data.admin_charges}}</td>
+                                            <td>
+
+                                                {% if product_data.admin_charges_rating == 'CASH' %}
+                                                    #{{product_data.admin_charges}}
+                                                {% else %}
+                                                    {{product_data.admin_charges}}%
+                                                {% endif %}
+                                            </td>
                                         </tr>
-                                   
+                                       
                                         
                                     {% endif %}
 

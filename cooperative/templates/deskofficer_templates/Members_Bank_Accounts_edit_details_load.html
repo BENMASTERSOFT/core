@@ -11,7 +11,7 @@
 
                    
 
-                        <div class="col-xl-10">
+                        <div class="col-xl-12">
                         <div class="ibox">
                             <div class="ibox-head">
                                 <div class="ibox-title">Active Account Details |  <input type="button" class="btn btn-secondary" value="Back" onclick="history.back()"/></div>
@@ -25,7 +25,8 @@
                                             <th>Account Numbere</th>
                                             <th>Account Type</th>
                                             <th>Bank</th>
-                                            <th>Action</th>
+                                            <th>Priority</th>
+                                            <th colspan="2">Action</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -34,16 +35,35 @@
                                             <td>{{forloop.counter}}</td>
                                             <td>{{account.account_name}}</td>
                                             <td>{{account.account_number}}</td>
-                                            <td>{{account.account_type.title}}</td>
+                                            <td>{{account.account_type}}</td>
                                             <td>{{account.bank.title}}</td>
+                                            
+                                            {% if account.account_priority == 0 %}
+                                          
+                                               
+                                               <td> <a href="{% url 'Members_Bank_Accounts_Edit_Prioritization' account.pk %}"> <i class="fa fa-check text-success"></a></td>
+                                            {% else %}
+                                                <td> <a href="{% url 'Members_Bank_Accounts_Edit_Prioritization' account.pk %}"> <i class="fa fa-warning text-warning"></i></a></td>
+                                                
+                                            {% endif %}
+                                            
+
                                             <td>
-                                                {% if account.lock_status.title == 'OPEN' %}
+                                                {% if account.lock_status == 'OPEN' %}
                                                 <a href="{% url 'Members_Bank_Accounts_update_form' account.pk return_pk %}" class="btn btn-success">Update</a>  
+                                                
+                                                
+                                                
+                                                {% endif %}
+                                            </td>    <td>
+                                                {% if account.lock_status == 'OPEN' %}
+                                               
                                                 
                                                 
                                                 <a href="{% url 'Members_Bank_Accounts_delete' account.pk return_pk %}" class="btn btn-danger">Remove</a>
                                                 {% endif %}
                                             </td>
+
                                           
                                         </tr>
                                     {% endfor %}

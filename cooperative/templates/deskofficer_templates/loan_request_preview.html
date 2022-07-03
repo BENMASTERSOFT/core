@@ -6,7 +6,7 @@
                 
                 <div class="row">
                    
-                    <div class="col-xl-6">
+                    <div class="col-xl-7">
                         <div class="ibox">
                             <div class="ibox-head">
                                 <div class="ibox-title">Loan Application Analysis| {{applicant.member.get_full_name}} |  <input type="button" class="btn btn-primary" value="Back" onclick="history.back()"/></div>
@@ -23,152 +23,22 @@
                                         </tr>
                                     </thead>
                                     <tbody>
+                                        {% for record in record_array %}
                                          <tr>
-                                            <td>1</td>
-                                            <td> Net Pay </td>
-                                            <td>{{net_pay}}</td>
+                                            <td>{{forloop.counter}}</td>
+                                            <td> {{record.0}} </td>
+                                            <td>{{record.1}}</td>
                                             
                                         </tr>
-                                        <tr>
-                                            <td>2</td>
-                                            <td>Monthly Contributions</td>
-                                            <td>{{total_savings}}</td>
-                                           
-                                        </tr> 
-                                        <tr>
-                                            <td>3</td>
-                                            <td>Existing Loan Monthly Repayment </td>
-                                            <td>{{total_loans}}</td>
-                                           
-                                        </tr>
-                                        <tr>
-                                            <td>4</td>
-                                            <td>Cooperative Shop </td>
-                                            <td>{{shop_balance}}</td>
-                                           
-                                        </tr> 
-                                        <tr>
-                                            <td>5</td>
-                                            <td>Salary Balance After Deductions</td>
-                                            <td>{{balance}}</td>
-                                            
-                                        </tr> 
-                                        <tr>
-                                            <td>6</td>
-                                            <td>{{loan_type}}</td>
-                                            <td>{{loan_amount}}</td>
-                                            
-                                        </tr>
-                                       
-                                        <tr>
-                                            <td>7</td>
-                                            <td>Loan Duration </td>
-                                            <td>{{duration}} Months</td>
-                                           
-                                        </tr> 
-                                        
+                                    {% endfor %}
                                     
-                                         
-                                        <tr>
-                                            <td>8</td>
-                                            <td>Salary Loan Relationship </td>
-                                            <td>{{salary_loan_relationship}}%</td>
-                                           
-                                        </tr>  
-                                        <tr>
-                                            <td>9</td>
-                                            <td>Salary Loan Relationship Computed</td>
-                                            <td>{{salary_loan_relationship_computed}}</td>
-                                           
-                                        </tr> 
-
-                                         <tr>
-                                            <td>10</td>
-                                            <td>Loan Age </td>
-                                            <td>{{loan_age}} Months</td>
-                                           
-                                        </tr>
-                                         <tr>
-                                            <td>11</td>
-                                            <td>Date Joined </td>
-                                            <td>{{date_joined}}</td>
-                                           
-                                        </tr>
-                                        <tr>
-                                            <td>12</td>
-                                            <td>Members Age </td>
-                                            <td>{{members_age}} Months</td>
-                                           
-                                        </tr>
-
-                                        
-
-
-                                        <tr>
-                                            <td>13</td>
-                                            <td>Loan Interest Rate </td>
-                                            <td>{{interest_rate}}%</td>
-                                           
-                                        </tr>  
-                                        <tr>
-                                            <td>14</td>
-                                            <td>Interest Deduction </td>
-                                            <td>{{interest_deduction}}</td>
-                                           
-                                        </tr> 
-                                        <tr>
-                                            <td>15</td>
-                                            <td>Loan Interest </td>
-                                            <td>{{interest}}</td>
-                                           
-                                        </tr>
-                                        <tr>
-                                            <td>16</td>
-                                            <td>Amount Scheduled </td>
-                                            <td>{{amount_scheduled}}</td>
-                                           
-                                        </tr>
-                                       <tr>
-                                            <td>17</td>
-                                            <td>Monthly Repayment </td>
-                                            <td>{{monthly_repayment|floatformat:2}}</td>
-                                           
-                                        </tr>
-                                        <tr>
-                                            <td>18</td>
-                                            <td>Loan Based Savings </td>
-                                            <td>{{loan_based_saving.savings.name}}</td>
-                                           
-                                        </tr>  
-                                        <tr>
-                                            <td>19</td>
-                                            <td>Amount Saved ({{loan_based_saving.savings.name}})
-                                                <p style="color: red; font-weight: bold;">Not a true test, please Verify other 
-                                                loans that have been given based on this</p></td>
-                                            <td>{{savings_saved}}</td>
-                                           
-                                        </tr>
-                                        <tr>
-                                            <td>20</td>
-                                            <td>Loan Based Savings Rate</td>
-                                            <td>{{loan_based_saving_rating}}%</td>
-                                           
-                                        </tr>
-                                       
-                                        <tr>
-                                            <td>21</td>
-                                            <td>Exclusive Status </td>
-                                            <td>{{exclusive}}</td>
-                                           
-                                        </tr> 
-
                                     </tbody>
                                 </table>
                             </div>
                         </div>
                     </div>
 
-                    <div class="col-xl-6"> 
+                    <div class="col-xl-5"> 
                         <div class="row"> 
                             <div class="col-xl-12">
 
@@ -184,6 +54,7 @@
                                             <th>Description</th>
                                             <th>Value</th>
                                             <th>Status</th>
+                                            <th>Waver</th>
                                            
                                         </tr>
                                     </thead>
@@ -200,20 +71,11 @@
                                            {% else %}
                                                 <td><i class="fa fa-warning text-warning"></i></td>
                                            {% endif %}
+
+                                        <td>{{membership_waver}}</td>
                                         </tr>  
                                         
-                                        <tr>
-                                            <td>2</td>
-                                            <td>Same Type loan Exist </td>
-                                            <td>{{same_type_loan}}</td>
-                                           {% if not same_type_loan %}
-                                                <td><i class="fa fa-check text-success"></i></td>
-                                           {% else %}
-                                                <td><i class="fa fa-warning text-warning"></i></td>
-                                           {% endif %}
-                                        </tr>
-
-
+                                       
                                        
                                        
                                        <tr>
@@ -225,7 +87,10 @@
                                            {% else %}
                                                 <td><i class="fa fa-warning text-warning"></i></td>
                                            {% endif %}
+
+                                            <td>{{salary_status_waver}}</td>
                                         </tr>
+                                        {% if savings_anchored == 'YES' %}
                                         <tr>
                                             <td>4</td>
                                             <td>Loan Based Savings Status</td>
@@ -235,8 +100,10 @@
                                            {% else %}
                                                 <td><i class="fa fa-warning text-warning"></i></td>
                                            {% endif %}
-                                        </tr>
 
+                                            <td>{{savings_made_waver}}</td>
+                                        </tr>
+                                      {% endif %}
                                     </tbody>
                                 </table>
                             </div>

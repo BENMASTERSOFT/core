@@ -1,0 +1,55 @@
+{% extends 'deskofficer_templates/base_template.html' %}
+{% load static %}
+
+{% block content %}
+    <div class="page-content fade-in-up">
+       
+        <div class="row">
+            <div class="col-md-6">
+                <div class="ibox">
+                    <div class="ibox-head">
+                        <div class="ibox-title">LIST OF PRODUCTS |<a href="{% url 'trending_products_member_Search' %}" class="btn btn-secondary">Print</a> </div>
+                    </div>
+                    <div class="ibox-body">
+                        <table class="table table-hover">
+                            <caption>Commodity Products</caption>
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Title</th>
+                                  
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for record in records %}
+                                {% if forloop.counter0|divisibleby:2 %}
+                              
+                                <tr class="active">
+                                    <td>{{forloop.counter}}</td>
+                                    <td>{{record.title}}</td>
+                                  
+                                </tr>
+                                {% else %}
+                                <tr class="info">
+                                   <td>{{forloop.counter}}</td>
+                                    <td>{{record.title}}</td>
+                                    
+                                </tr>
+                                {% endif %}
+                                {% endfor %}
+                               
+                                
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+          
+        </div>
+   
+    </div>
+  <div class="sidenav-backdrop backdrop"></div>
+    <div class="preloader-backdrop">
+        <div class="page-preloader">Loading</div>
+    </div>
+{% endblock %}

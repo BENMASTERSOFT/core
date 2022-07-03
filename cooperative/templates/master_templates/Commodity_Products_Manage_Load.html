@@ -63,7 +63,7 @@
                                     <td>{{record.product_name}}</td>
                                     <td>{{record.product_model}}</td>
                                     <td>{{record.details}}</td>
-                                    <td>{{record.status.title}}</td>
+                                    <td>{{record.status}}</td>
                                     <td>
                                         <a href="{% url 'Commodity_Products_Manage_Update' record.pk %}" class="btn btn-primary">Update</a>
                                         <a href="{% url 'Commodity_Products_Manage_Remove' record.pk %}" class="btn btn-danger">Remove</a>

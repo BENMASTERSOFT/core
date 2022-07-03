@@ -43,7 +43,7 @@
                                     <th>Name</th>
                                     <th>Account No</th>
                                     <th>Amount</th>
-                                    <th>Action</th>
+                                  
                                 </tr>
                             </thead>
                             <tfoot>
@@ -54,7 +54,7 @@
                                     <th>Name</th>
                                     <th>Account No</th>
                                     <th>Amount</th>
-                                    <th>Action</th>
+                                  
                                 </tr>
                             </tfoot>
                             <tbody>
@@ -67,11 +67,7 @@
                                     <td>{{member.loan_number}}</td>
                                     <td>{{member.repayment}}</td>
                                     
-                                    <td>
-                                          {% if record_exist == False %}
-                                        <a href="" class="btn btn-secondary">SUSPEND</a>
-                                        {% endif %}
-                                    </td>
+                                    
                                 </tr>
                             {% endfor %}
                                 
@@ -101,10 +97,8 @@
                                     
                                    
                                     <div class="form-group row">
-                                        <div class="col-sm-8 ml-sm-auto">
-                                             {% if record_exist == False %}
-                                                <button class="btn btn-info" type="submit">Process</button>
-                                            {% endif %}
+                                        <div class="col-sm-8 ml-sm-auto">                                            
+                                            <button class="btn btn-info" type="submit">Process</button>                                         
                                         </div>
                                     </div>
 

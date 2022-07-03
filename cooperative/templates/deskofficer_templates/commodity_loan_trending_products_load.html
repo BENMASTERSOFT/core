@@ -1,0 +1,47 @@
+{% extends 'deskofficer_templates/base_template.html' %}
+{% load static %}
+
+{% block content %}
+            <div class="page-content fade-in-up">
+                <div class="row">
+                    <div class="col-xl-6">
+                        <div class="ibox">
+                            <div class="ibox-head">
+                                <div class="ibox-title">Categories
+                                    <a href="{% url 'Commodity_SubCategeory_list_load' %}" class="btn btn-secondary">Back</a>
+                                </div>
+                            </div>
+                            <div class="ibox-body">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Description</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for record in records %}
+                                        <tr>
+                                            <td>{{forloop.counter}}</td>
+                                            <td>{{record.title}}</td>
+                                            <td>
+                                                <a href="{% url 'commodity_loan_trending_products_details' record.pk %}" class="btn btn-primary">Load</a></td>
+                                          
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                  
+                </div>
+              
+           
+            </div>
+  <div class="sidenav-backdrop backdrop"></div>
+    <div class="preloader-backdrop">
+        <div class="page-preloader">Loading</div>
+    </div>
+{% endblock %}

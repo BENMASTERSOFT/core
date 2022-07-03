@@ -1,0 +1,66 @@
+{% extends 'deskofficer_templates/base_template.html' %}
+{% load static %}
+
+{% block content %}
+            <div class="page-content fade-in-up">
+                <div class="row">
+                   
+                    <div class="col-xl-10">
+                        <div class="ibox">
+                            <div class="ibox-head">
+                                <div class="ibox-title">MAIN MONTHLY GENERATED TRANSACTIONS | {{transaction_period.transaction_period}}</div>
+                            </div>
+                            <div class="ibox-body">
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Member ID</th>
+                                            <th>File N0</th>
+                                            <th>Name</th>
+                                            <th>Amount</th>
+                                            <th>Salary Code</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for record in records %}
+                                        <tr>
+                                            <td>{{forloop.counter}}</td>
+                                            <td>{{record.member.get_member_Id}}</td>
+                                            <td>{{record.member.file_no}}</td>
+                                            <td>{{record.member.get_full_name}}</td>
+                                            <td>{{record.amount}}</td>
+                                            <td>{{record.member.ippis_no}}</td>
+                                            <td><a href="{% url 'Monthly_Deduction_Main_and_Shop_Merger_Load_Main_Preview_details' record.member.ippis_no %}" class='btn btn-primary'>Details</a></td>
+                                         
+                                        </tr>
+                                    {% endfor %}
+                                    <form class="form-horizontal" method="POST" action="" enctype="multipart/form-data" novalidate>
+                                         {% csrf_token %}
+                                        <tr>
+                                            <td colspan="3"></td>
+                                                <td>
+                                                   
+                                                <div class="form-group row">
+                                                    <div class="col-sm-10 ml-sm-auto">
+                                                        <button class="btn btn-success" type="submit">Submit</button>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td colspan="3"></td>
+                                        </tr>
+                                    </form>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+  <div class="sidenav-backdrop backdrop"></div>
+    <div class="preloader-backdrop">
+        <div class="page-preloader">Loading</div>
+    </div>
+{% endblock %}

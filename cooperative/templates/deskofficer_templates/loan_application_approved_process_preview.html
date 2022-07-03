@@ -3,7 +3,8 @@
 
 {% block content %}
             <div class="page-content fade-in-up">
-                
+                 <form class="form-horizontal" method="POST" action="" enctype="multipart/form-data" novalidate>
+                                    {% csrf_token %}
                 <div class="row">
                     <div class="col-md-6">
                         <div class="row">
@@ -14,6 +15,24 @@
                                     <div class="ibox-head">
                                         <div class="ibox-title">Loan Analysis | {{applicant.applicant.applicant.member.admin.last_name}} {{applicant.applicant.applicant.member.admin.first_name}} {{applicant.applicant.applicant.member.middle_name}} |  <input type="button" class="btn btn-primary" value="Back" onclick="history.back()"/></div>
                                     </div>
+
+                                    <div class="form-group">
+                                  {% if messages %}
+                                    
+                                      {% for message in messages %}
+                                      {% if message.tags == "error" %}
+                                      <div class="alert alert-danger" style="margin-top:10px">{{message}}</div>
+                                      
+                                      {% endif %}
+
+                                      {% if message.tags == "success" %}
+                                      <div class="alert alert-success" style="margin-top:10px">{{message}}</div>
+                                      
+                                      {% endif %}
+                                      {% endfor %}
+                                  
+                                  {% endif %}
+                              </div>
                                     <div class="ibox-body">
                                         <table class="table table-bordered">
                                             <thead class="thead-default">
@@ -28,12 +47,12 @@
                                           
                                                 <tr>
                                                     <td>1</td>
-                                                    <td>LOAN AMOUNT</td>
+                                                    <td>LOAN TYPE</td>
                                                     <td>{{loan_type}}</td>
                                                 </tr>
                                                 <tr>
                                                     <td>2</td>
-                                                    <td>LOAN TYPE</td>
+                                                    <td>LOAN AMOUNT</td>
                                                     <td>{{loan_amount}}</td>
                                                 </tr> 
                                                 <tr>
@@ -67,10 +86,44 @@
                                                     <td>MONTHLY REPAYMENT</td>
                                                     <td>{{monthly_repayment}}</td>
                                                 </tr> 
-                                               
-                                                    
-                                           
+                                                <tr>
+                                                    <td>8</td>
+                                                    <td>ADMIN CHARGES</td>
+                                                    <td>{{admin_charge}}</td>
+                                                </tr> 
+                                               <tr>
+                                                    <td>9</td>
+                                                    <td>START DATE</td>
+                                                    <td>{{start_date}}</td>
+                                                </tr> 
+                                               <tr>
+                                                    <td>10</td>
+                                                    <td>STOP DATE</td>
+                                                    <td>{{stop_date}}</td>
+                                                </tr> 
+                                            {% if button_show %}   
+
+                                                <tr>
+                                                    <td></td>
+                                                   <td colspan="2">
+                                                      <div class="form-group">
+                                        <label class="col-sm-3 col-form-label"></label>
+                                            <input type="checkbox" name="effective_date_add">
+                                            <span class="input-span"></span>Yes, I Accept</label>
+                                    </div> 
+                                                 
+                                                    <div class="form-group row">
+                                                        <div class="col-sm-9 ml-sm-auto">
+                                                            <button class="btn btn-success" type="submit" name='btn-process'>Process</button>
+                                                            
+                                                        </div>
+                                                    </div>
+
+                                                   </td>
+                                               </tr>
+                                            {% endif %}
                                             </tbody>
+                                        
                                         </table>
                                     </div>
                                 </div>
@@ -87,34 +140,29 @@
                                 
                             </div>
                             <div class="ibox-body">
-                                <form class="form-horizontal" method="POST" action="" enctype="multipart/form-data" novalidate>
-                                    {% csrf_token %}
+                               
                                     <div class="form-group row">
                                         <label class="col-sm-3 col-form-label">Effective Date</label>
                                         <div class="col-sm-9">
                                             {{form.effective_date}}
                                         </div>
-                                    </div>  
-                                    <div class="form-group row">
-                                        <label class="col-sm-3 col-form-label">Print Form</label>
-                                        <div class="col-sm-9">
-                                            {{form.status}}
-                                        </div>
-                                    </div>  
+                                    </div> 
+                                    
                                     
                                
                                  
                                     <div class="form-group row">
                                         <div class="col-sm-9 ml-sm-auto">
-                                            <button class="btn btn-info" type="submit">Process</button>
+                                          
+                                            <button class="btn btn-info" type="submit" name='btn-fetch'>Fetch Duration</button>
                                         </div>
                                     </div>
-                                </form>
+                               
                             </div>
                         </div>
                     </div>
                 </div>
-               
+                </form>
             </div>
             
 

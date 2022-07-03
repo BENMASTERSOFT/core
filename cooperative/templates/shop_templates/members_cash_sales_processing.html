@@ -1,0 +1,185 @@
+{% extends 'shop_templates/base_template.html' %}
+{% load static %}
+
+
+
+{% block content %}
+            <div class="page-content fade-in-up">
+                {% if pay_status == 'False' %}
+                <div class="row">
+                    
+
+                    <div class="col-md-12">
+                        <div class="ibox">
+                            <div class="ibox-head">
+                                <div class="ibox-title">PAYMENT SCHEDULE</div>
+                               
+                            </div>
+                             <div class="form-group">
+                              {% if messages %}
+                                
+                                  {% for message in messages %}
+                                  {% if message.tags == "error" %}
+                                  <div class="alert alert-danger" style="margin-top:10px">{{message}}</div>
+                                  
+                                  {% endif %}
+
+                                  {% if message.tags == "success" %}
+                                  <div class="alert alert-success" style="margin-top:10px">{{message}}</div>
+                                  
+                                  {% endif %}
+                                  {% endfor %}
+                              
+                              {% endif %}
+                            </div>
+                            <div class="ibox-body">
+                                <form class="form-horizontal" method="POST" action="">
+                                    {% csrf_token %}
+                                    <div class="form-group row">
+                                        <label class="col-sm-4 col-form-label">Payment Channel</label>
+                                        <div class="col-sm-8">
+                                            {{form.channel}}
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-sm-4 col-form-label">Bank Name(Source)</label>
+                                        <div class="col-sm-8">
+                                            {{form.banks}}
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-sm-4 col-form-label">Account Name</label>
+                                        <div class="col-sm-8">
+                                           {{form.account_name}}
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-sm-4 col-form-label">Other Details</label>
+                                        <div class="col-sm-8">
+                                            {{form.other_details}}
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-sm-4 col-form-label">Amount</label>
+                                        <div class="col-sm-8">
+                                            {{form.amount}}
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-sm-4 col-form-label">Cooperative Bank Details(Destination)</label>
+                                        <div class="col-sm-8">
+                                            {{form.coop_accounts}}
+                                        </div>
+                                    </div>
+                                
+                                    <div class="form-group row">
+                                        <div class="col-sm-8 ml-sm-auto">
+                                            <button class="btn btn-info" type="submit" name='btn-add'>Add</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                   
+                </div>
+            {% endif %}
+                <div class="row">
+                    
+
+                
+                </div>
+                <div class="row">
+                    
+
+                    <div class="col-xl-6">
+                        <div class="ibox">
+                            <div class="ibox-head">
+                                <div class="ibox-title">PAYMENT SUMMARY</div>
+                            </div>
+                            <div class="ibox-body">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>PAYMENT CHANNELS</th>
+                                            <th>AMOUNT</th>
+                                            <th>ACTION</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>1</td>
+                                            <td>CASH</td>
+                                            <td>{{record.cash}}</td>
+                                            <td></td>
+                                        </tr>
+                                    {% if pay_status == 'False' %}
+                                        <tr>>
+                                            <td>2</td>
+                                            <td>TRANSFER</td>
+                                            <td>{{record.transfer}}</td>
+                                            <td>
+                                                {% if record.transfer %}
+                                                <a href="" class="btn btn-danger">Discard</a></td>
+                                                {% endif %}
+                                       </tr>
+                                        <tr>
+                                            <td>3</td>
+                                            <td>POS</td>
+                                            <td>{{record.pos}}</td>
+                                            <td>
+                                                {% if record.pos %}
+                                                <a href="" class="btn btn-danger">Discard</a></td>
+                                                {% endif %}
+                                        </tr>
+                                   {% endif %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                        <div class="col-xl-6">
+                          
+                        <div class="ibox">
+                            <div class="ibox-head">
+                                <div class="ibox-title">Sales Final Processing</div>
+                            </div>
+                            <div class="ibox-body">
+                                <form class="form-horizontal" method="POST" action="">
+                                    {% csrf_token %}
+                                    <div class="form-group row">
+                                        <label class="col-sm-4 col-form-label">Receipt Print</label>
+                                        <div class="col-sm-8">
+                                           {{receipt_print_form.receipt_print}}
+                                        </div>
+                                    </div>
+                                                                   
+                                    <div class="form-group row">
+                                        <div class="col-sm-8 ml-sm-auto">
+                                             {% if button_show %}
+                                                <button class="btn btn-secondary" type="submit" name='btn-process'>Submit</button>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+                 
+                    </div>
+                </div>
+            </div>
+
+
+        
+
+
+    <div class="sidenav-backdrop backdrop"></div>
+    <div class="preloader-backdrop">
+        <div class="page-preloader">Loading</div>
+    </div>
+     {% include 'cooperative/includes/emptyspace.html' %} 
+{% endblock %}

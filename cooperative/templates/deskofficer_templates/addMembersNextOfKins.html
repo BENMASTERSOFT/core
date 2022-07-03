@@ -8,7 +8,7 @@
                     <div class="col-md-6">
                         <div class="ibox">
                             <div class="ibox-head">
-                                <div class="ibox-title">{{title}} | {{member.admin.first_name}} {{member.admin.last_name}} {{member.get_middle_name}} |  <input type="button" class="btn btn-secondary" value="Back" onclick="history.back()"/></div>
+                                <div class="ibox-title">{{title}} | {{member.get_full_name}} |  <input type="button" class="btn btn-secondary" value="Back" onclick="history.back()"/></div>
                                 
                             </div>
                             <div class="form-group">
@@ -98,7 +98,7 @@
                                             <td>{{record.phone_number}}</td>
                                             <td>{{record.relationships.title}}</td>
                                             <td>
-                                                {% if record.lock_status.title == 'OPEN' %}
+                                                {% if record.lock_status == 'OPEN' %}
                                                 <a href="{% url 'MembersNextOfKins_remove' record.pk %}" class="btn btn-danger">Remove</a>
                                                 {% endif %}
 

@@ -12,18 +12,9 @@
                                 
                             </div>
                             <div class="ibox-body">
-                                <form c method ="POST" action="{% url 'Cash_Withdrawal_Transactions_Approved_list_Load' %}">
+                                <form method ="POST" action="{% url 'Cash_Withdrawal_Transactions_Approved_list_Load' %}">
                             {% csrf_token %}
-                                    <div class="row">
-                                        <div class="col-sm-6 form-group">
-                                            <label>Start Date</label>
-                                            {{form.start_date}}
-                                        </div>
-                                        <div class="col-sm-6 form-group">
-                                            <label>Stop Date</label>
-                                            {{form.stop_date}}
-                                        </div>
-                                    </div>
+                                    
                                     <div class="form-group">
                                         <label>Search</label>
                                         {{form.title}}

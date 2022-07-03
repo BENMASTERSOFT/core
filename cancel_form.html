@@ -1,2 +1,24 @@
  <input type="button" class="btn btn-secondary" value="Back" onclick="history.back()"/>
 
+Listing 8-12 Create multiple records of a Django model with the bulk_create() method
+# Import Django model class
+from coffeehouse.stores.models import Store
+
+# Create model Store instances
+store_corporate = Store(name='Corporate',address='624 Broadway',
+city ='San Diego',state='CA',email='corporate@coffeehouse.com')
+store_downtown = Store(name='Downtown',address='Horton Plaza',
+city ='San Diego',state='CA',email='downtown@coffeehouse.com')
+store_uptown = Store(name='Uptown',address='240 University Ave',
+city ='San Diego',state='CA',email='uptown@coffeehouse.com')
+store_midtown = Store(name='Midtown',address='784 W Washington St',
+city ='San Diego',state='CA',email='midtown@coffeehouse.com')
+
+# Create store list
+store_list = [store_corporate,store_downtown,store_uptown,store_midtown]
+
+# Call bulk_create to create records in a single call
+Store.objects.bulk_create(store_list)
+
+
+

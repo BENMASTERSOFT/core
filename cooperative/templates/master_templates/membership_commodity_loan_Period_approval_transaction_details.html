@@ -1,0 +1,141 @@
+{% extends 'master_templates/base_template.html' %}
+{% load static %}
+
+{% block content %}
+            <div class="page-content fade-in-up">
+                <div class="row">
+                   <div class="col-xl-6">
+                        <div class="ibox">
+                            <div class="ibox-head">
+                                <div class="ibox-title">Requesition Details</div>
+                            </div>
+                            <div class="ibox-body">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Description</th>
+                                            <th>Value</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>1</td>
+                                            <td>Name</td>
+                                            <td>{{applicant.member.member.get_full_name}}</td>
+                                            <td></td>
+                                        </tr>
+                                        <tr>
+                                            <td>2</td>
+                                            <td>Transaction Type</td>
+                                             <td>{{applicant.member.product.product.category.transaction.name}}</td>
+                                            <td></td>
+                                        </tr>
+                                        <tr>
+                                            <td>3</td>
+                                            <td>Company Price</td>
+                                           <td>{{applicant.company_price}}</td>
+                                            <td></td>
+                                        </tr> 
+                                        <tr>
+                                            <td>4</td>
+                                            <td>Cooperative Price</td>
+                                           <td>{{applicant.coop_price}}</td>
+                                            <td></td>
+                                        </tr>
+                                         <tr>
+                                            <td>5</td>
+                                            <td>Interest</td>
+                                           <td>{{applicant.interest}}</td>
+                                            <td></td>
+                                        </tr>
+                                        <tr>
+                                            <td>6</td>
+                                            <td>Admin Charge</td>
+                                           <td>{{applicant.admin_charge}}</td>
+                                            <td></td>
+                                        </tr> 
+                                        <tr>
+                                            <td>7</td>
+                                            <td>Duration</td>
+                                           <td>{{applicant.duration}}</td>
+                                            <td></td>
+                                        </tr>
+                                        <tr>
+                                            <td>8</td>
+                                            <td>Repayment</td>
+                                           <td>{{applicant.repayment}}</td>
+                                            <td></td>
+                                        </tr>
+                                        <tr>
+                                            <td>9</td>
+                                            <td>Comments</td>
+                                           <td>{{applicant.comments}}</td>
+                                            <td></td>
+                                        </tr> 
+                                        <tr>
+                                            <td>10</td>
+                                            <td>Net Pay</td>
+                                           <td>{{applicant.net_pay}}</td>
+                                            <td></td>
+                                        </tr>
+                                        
+                                        <tr>
+                                            <td>11</td>
+                                            <td>Existing Loans</td>
+                                           <td>{{applicant.loans}}</td>
+                                            <td></td>
+                                        </tr>
+                                        <tr>
+                                            <td>12</td>
+                                            <td>Existing Savings</td>
+                                           <td>{{applicant.savings}}</td>
+                                            <td></td>
+                                        </tr>
+                                         
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="ibox">
+                            <div class="ibox-head">
+                                <div class="ibox-title">Commodity Loan Approval | {{applicant.member.member.get_full_name}}</div>
+                               
+                            </div>
+                            <div class="ibox-body">
+                                 <form class="form-horizontal" method="POST">
+                                            {% csrf_token %}
+                                    <div class="form-group row">
+                                        <label class="col-sm-4 col-form-label">General Comment</label>
+                                        <div class="col-sm-8">
+                                            {{form.comment}}
+                                        </div>
+                                    </div>
+                              
+                                    <div class="form-group row">
+                                        <label class="col-sm-4 col-form-label">Status</label>
+                                        <div class="col-sm-8">
+                                            {{form.approval_status}}
+                                        </div>
+                                    </div>
+                                 
+                                    <div class="form-group row">
+                                        <div class="col-sm-8 ml-sm-auto">
+                                            <button class="btn btn-info" type="submit">Submit</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    <div class="sidenav-backdrop backdrop"></div>
+    <div class="preloader-backdrop">
+        <div class="page-preloader">Loading</div>
+    </div>
+{% endblock %}

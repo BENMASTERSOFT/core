@@ -8,7 +8,10 @@
                     <div class="col-md-7">
                         <div class="ibox">
                             <div class="ibox-head">
-                                <div class="ibox-title">{{title}} |  <input type="button" class="btn btn-primary" value="Back" onclick="history.back()"/></div>
+                                <div class="ibox-title">{{title}} 
+
+                                  {% comment %}  | <a href="{% url 'loan_settings_non_monetary_settings' item.pk %}" class="btn btn-secondary">Back</a>  {% endcomment %}
+                                </div>
                                 
                             </div>
                        

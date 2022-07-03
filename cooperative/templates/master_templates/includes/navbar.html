@@ -15,14 +15,45 @@
                         </a>
                     </li>
                     <li class="heading">SHARED FEATURS {{values.cash_withdrawal_certification }}</li>
-                    
 
-                    
-                    {% if request.user.user_type == '1' or current_user.user_manager  == '1' %}
+
+
+                    {% if request.user.user_type == '1' or 'USER MANAGER' in task_array %}
+
+                     <li>
+                        <a href="javascript:;"><i class="sidebar-item-icon fa fa-sitemap"></i>
+                            <span class="nav-label">Executives</span><i class="fa fa-angle-left arrow"></i></a>
+                        <ul class="nav-2-level collapse">
+                            <li>
+                                <a href="{% url 'Executive_Positions_add' %}">Executive Positions</a>
+                            </li>
+                            <li>
+                                <a href="javascript:;">
+                                    <span class="nav-label">Add Executives</span><i class="fa fa-angle-left arrow"></i></a>
+                                <ul class="nav-3-level collapse">
+                                    <li>
+                                        <a href="{% url 'Executive_add' %}">Fresh Member</a>
+                                    </li>
+                                    <li>
+                                        <a href="{% url 'Executive_add_Existing' %}">Existing Members</a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li>
+                                <a href="{% url 'Executive_Member_Manage' %}">Manage Executives</a>
+                            </li>
+                        </ul>
+                    </li>
+
+
+
+
                         <li>
                             <a href="javascript:;"><i class="sidebar-item-icon fa fa-edit"></i>
                                 <span class="nav-label">System Users</span><i class="fa fa-angle-left arrow"></i></a>
                             <ul class="nav-2-level collapse">
+
+
                                 <li>
                                     <a href="{% url 'add_staff' %}">System Users</a>
                                 </li>
@@ -32,33 +63,114 @@
                                  {% if request.user.user_type == '1' %}
                                 <li>
                                     <a href="{% url 'super_user_add' %}">Super Users</a>
-                                </li> 
+                                </li>
                                 <li>
                                     <a href="{% url 'super_user_manage' %}">Manage Super Users</a>
-                                </li> 
-                               
-                             
+                                </li>
+
+                                <li>
+                                    <a href="{% url 'Users_Task_Add_Category_load' %}">Add Users Tasks</a>
+                                </li>
+
                                 {% endif %}
                                 <li>
-                                  <a href="{% url 'General_Tasks_Manager' %}">User Task Manager</a> 
+                                  <a href="{% url 'General_Tasks_Manager' %}">User Task Manager</a>
+                                </li>
+                                <li>
+                                  <a href="{% url 'trending_commodity_signatories' %}">Trending Commodity Signatories</a>
                                 </li>
                             </ul>
                         </li>
                     {% endif %}
-                    
-                    {% if request.user.user_type == '1' or current_user.commodity_loan_products  == '1' %}
+
+                    {% comment %}
+                    {% if request.user.user_type == '1' or  'CASHBOOK' in task_array %}
+                    <li>
+                        <a href="javascript:;"><i class="sidebar-item-icon fa fa-file-text"></i>
+                                <span class="nav-label">Cashbook Manager</span><i class="fa fa-angle-left arrow"></i></a>
+                            <ul class="nav-2-level collapse">
+                                <li>
+                                    <a href="javascript:;">Daily Transaction </a>
+                                </li>
+                                <li>
+                                    <a href="javascript:;">Monthly Deduction</a>
+                                </li>
+                                <li>
+                                    <a href="javascript:;%}">Loan Disbursement</a>
+                                </li>
+                                <li>
+                                    <a href="javascript:;">Over Deduction</a>
+                                </li>
+                                <li>
+                                    <a href="javascript:;">Non Member Deduction</a>
+                                </li>
+                                <li>
+                                    <a href="javascript:;">Other Transactions</a>
+                                </li>
+                            </ul>
+                    </li>
+                    {% endif %}
+                    {% endcomment %}
+
+
+
+                    {% if request.user.user_type == '1' or 'LOAN CRITERIA SETTINGS' in task_array %}
+
+                     <li>
+                        <a href="javascript:;"><i class="sidebar-item-icon fa fa-sitemap"></i>
+                            <span class="nav-label">General Loan Settings</span><i class="fa fa-angle-left arrow"></i></a>
+                        <ul class="nav-2-level collapse">
+
+                            <li>
+                                <a href="{% url 'Commodity_Transaction_Period' %}">Loan Trans. Period</a>
+                            </li>
+                            <li>
+                                <a href="{% url 'Commodity_Transaction_Period_Batch' %}">Loan Trans. Batches</a>
+                            </li>
+                        {% if request.user.user_type == '1' %}
+                            <li>
+                                <a href="{% url 'loan_category_settings' %}">Loan Category Settings</a>
+                            </li>
+                         {% endif %}
+
+
+                             {% if request.user.user_type == '1' %}
+                            <li>
+                                <a href="{% url 'loan_based_savings_update' %}">Loan Based Savings</a>
+                            </li>
+
+                            <li>
+                                <a href="{% url 'Loan_Number_Manager' %}">Loan Number</a>
+                            </li>
+                            <li>
+                                <a href="{% url 'FailedLoanPenalty_Manager' %}">Failed Loan Penalty</a>
+                            </li>
+                             {% endif %}
+                        </ul>
+                    </li>
+
                     <li>
                         <a href="javascript:;"><i class="sidebar-item-icon fa fa-sitemap"></i>
-                            <span class="nav-label">Commodity Manager</span><i class="fa fa-angle-left arrow"></i></a>
+                            <span class="nav-label">Monetary Loan Manager</span><i class="fa fa-angle-left arrow"></i></a>
                         <ul class="nav-2-level collapse">
-                            
+
+
                             <li>
-                                <a href="{% url 'Commodity_Transaction_Period' %}">Commodity Trans. Period</a>
+                                <a href="{% url 'loan_settings_load' %}">Monetary Loan Settings</a>
                             </li>
+
+
+                        </ul>
+                    </li>
+
+                    {% endif %}
+                       {% if request.user.user_type == '1' or 'COMMODITY LOAN PRODUCTS' in task_array %}
+                    <li>
+                        <a href="javascript:;"><i class="sidebar-item-icon fa fa-sitemap"></i>
+                            <span class="nav-label">Non Monetary Manager</span><i class="fa fa-angle-left arrow"></i></a>
+                        <ul class="nav-2-level collapse">
+
                             <li>
-                                <a href="{% url 'Commodity_Transaction_Period_Batch' %}">Commodity Batches</a>
-                            </li>
-                              <li>
                                 <a href="javascript:;">
                                     <span class="nav-label">Companies Info</span><i class="fa fa-angle-left arrow"></i></a>
                                 <ul class="nav-3-level collapse">
@@ -70,35 +182,36 @@
                                     </li>
                                 </ul>
                             </li>
-                           
+
                             <li>
-                                 {% if request.user.user_type == '1' %}
-                                        <a href="javascript:;">
-                                            <span class="nav-label">Commodity Category</span><i class="fa fa-angle-left arrow"></i></a>
-                                        <ul class="nav-3-level collapse">
-                                       
-                                            <li>
-                                                <a href="{% url 'addCommodityCategory' %}">Add Categories</a>
-                                            </li> 
-                                            <li>
-                                                <a href="{% url 'Manage_Commodity_Categories_Core_properties_Transactions_Load' %}">Manage Core Values</a>
-                                            </li>
-                                            <li>
-                                                <a href="{% url 'Manage_Commodity_Categories_Peripherals_Transactions_Load' %}">Manage Peripherals</a>
-                                            </li>
-                                       
-                                        </ul>
-                                     {% endif %}
-                                </li>
+                                <a href="javascript:;">
+                                    <span class="nav-label">Commodity Category</span><i class="fa fa-angle-left arrow"></i></a>
+                                <ul class="nav-3-level collapse">
+
+                                    <li>
+                                        <a href="{% url 'addCommodityCategory' %}">Add Categories</a>
+                                    </li>
+
+
+                                    <li>
+                                        <a href="{% url 'Manage_Commodity_Categories_Core_properties_Transactions_Load' %}">Manage Core Values</a>
+                                    </li>
+                                    <li>
+                                        <a href="{% url 'Manage_Commodity_Categories_Peripherals_Transactions_Load' %}">Manage Peripherals</a>
+                                    </li>
+
+                                </ul>
+
+                            </li>
                             <li>
                                 <a href="javascript:;">
                                     <span class="nav-label">Commodity Products</span><i class="fa fa-angle-left arrow"></i></a>
                                 <ul class="nav-3-level collapse">
                                      <li>
-                                       
+
                                         <a href="{% url 'Commodity_Products_Add_Transactions_Load' %}">Product Capturing</a>
                                     </li>
-                                
+
                                     <li>
                                         <a href="{% url 'Commodity_Products_Manage_Transactions_Load' %}">Manage Commodity</a>
                                     </li>
@@ -107,56 +220,44 @@
                                         <a href="{% url 'Product_Linking_Period_Load' %}">Products Linking</a>
                                     </li>
                                     <li>
-                                        <a href="{% url 'Product_Settings_Period_Load' %}">Products Settings Update</a>
+                                        <a href="{% url 'Product_Settings_Period_Load' %}">Products Price Update</a>
                                     </li>
-                                </ul>
-                            </li>
-                          
-                            
-                           
-                        </ul>
-                    </li>
-                    
-                    {% endif %}
-
-                    {% if request.user.user_type == '1' or current_user.loan_criteria_settings  == '1' %}
-                    <li>
-                        <a href="javascript:;"><i class="sidebar-item-icon fa fa-sitemap"></i>
-                            <span class="nav-label">Loan Manager</span><i class="fa fa-angle-left arrow"></i></a>
-                        <ul class="nav-2-level collapse">
-                             {% if request.user.user_type == '1' %}
-                            <li>
-                                <a href="{% url 'loan_category_settings' %}">Loan Category Settings</a>
-                            </li>  
-                         {% endif %}
-                            <li>
-                                <a href="{% url 'loan_settings_load' %}">Monetary Loan Settings</a>
-                            </li>
-                            <li>
-                                <a href="javascript:;">
-                                    <span class="nav-label">Non-Monetary Loan</span><i class="fa fa-angle-left arrow"></i></a>
-                                <ul class="nav-3-level collapse">
                                     <li>
-                                        <a href="{% url 'loan_settings_non_monetary_list_load' %}">Commodity Loans </a>
+                                        <a href="{% url 'Product_Duration_Settings_Period_Load' %}">Package Deduction Start Date</a>
                                     </li>
-                                    
                                 </ul>
                             </li>
-                             {% if request.user.user_type == '1' %}
                             <li>
-                                <a href="{% url 'loan_based_savings_update' %}">Loan Based Savings</a>
-                            </li> 
-                           
+                                <a href="{% url 'loan_settings_non_monetary_list_load' %}">Non-Monetary Settings</a>
+                            </li>
                             <li>
-                                <a href="{% url 'Loan_Number_Manager' %}">Loan Number</a>
-                            </li> 
-                             {% endif %}
+                                <a href="{% url 'Commodity_SubCategeory_list_load' %}">Tranding Commodities</a>
+                            </li>
+
                         </ul>
                     </li>
-
                     {% endif %}
-
-                    {% if request.user.user_type == '1' or current_user.service_charges  == '1' %}
+                      {% if request.user.user_type == '1' or 'SAVINGS MANAGER' in task_array %}
+                         <li>
+                            <a href="javascript:;"><i class="sidebar-item-icon fa fa-map"></i>
+                                <span class="nav-label">Savings Manager</span><i class="fa fa-angle-left arrow"></i></a>
+                            <ul class="nav-2-level collapse">
+                                <li>
+                                    <a href="{% url 'Savings_Manager_load' %}">Minumum Amount</a>
+                                </li>
+                                <li>
+                                    <a href="{% url 'MembersCompulsorySavings' %}">Compulsory Savings</a>
+                                </li>
+                                 <li>
+                                    <a href="{% url 'Xmas_Savings_Default_Transfer_Account' %}">Xmas Default Account</a>
+                                </li>
+                                <li>
+                                    <a href="{% url 'WithdrawalController' %}">Withdrawal Controller</a>
+                                </li>
+                            </ul>
+                        </li>
+                      {% endif %}
+                    {% if request.user.user_type == '1' or 'SERVICE CHARGES' in task_array %}
                         <li>
                             <a href="javascript:;"><i class="sidebar-item-icon fa fa-map"></i>
                                 <span class="nav-label">Service Charges</span><i class="fa fa-angle-left arrow"></i></a>
@@ -165,66 +266,152 @@
                                     <a href="{% url 'membership_price_settings_load' %}">Members Registration</a>
                                 </li>
 
-                                
-                                <li>
-                                    <a href="{% url 'AddShares_Configurations' %}">Members Shares</a>
-                                </li>
+
 
                                 <li>
                                     <a href="{% url 'addWelfare_Configurations' %}">Members Welfare</a>
                                 </li>
 
+
                             </ul>
                         </li>
                     {% endif %}
+                      {% if request.user.user_type == '1' or 'RENTAL SERVICES' in task_array %}
+                     <li>
+                            <a href="javascript:;"><i class="sidebar-item-icon fa fa-map"></i>
+                                <span class="nav-label">Rental Service </span><i class="fa fa-angle-left arrow"></i></a>
+                            <ul class="nav-2-level collapse">
+                                 <li>
+                                    <a href="{% url 'RentalMainCategories_add' %}">Rental Categories</a>
+                                </li>
 
-                    {% if request.user.user_type == '1' or current_user.utilities  == '1' %}
+                                <li>
+                                    <a href="{% url 'RentalProducts_add' %}">Rental Products</a>
+                                </li>
+                                <li>
+                                    <a href="{% url 'Rental_Price_Settings' %}">Rental Price Settings</a>
+                                </li>
+
+                            </ul>
+                        </li>
+                      {% endif %}
+                        {% if request.user.user_type == '1' or 'SHARE GENERAL INFORMATION' in task_array %}
                         <li>
                             <a href="javascript:;"><i class="sidebar-item-icon fa fa-file-text"></i>
-                                <span class="nav-label">Utilities</span><i class="fa fa-angle-left arrow"></i></a>
+                                <span class="nav-label">Shares Information</span><i class="fa fa-angle-left arrow"></i></a>
                             <ul class="nav-2-level collapse">
-                          
+
+
                                  <li>
-                                    <a href="{% url 'Members_IdManager' %}">Membership ID</a>
-                                </li> 
+                                    <a href="{% url 'Shares_Deduction_savings' %}">Shares Deduction Savings</a>
+                                </li>
+
+
+                                <li>
+                                    <a href="{% url 'SharesUnits_add' %}">Shares Units</a>
+                                </li>
+                                <li>
+                                    <a href="{% url 'SharesUnits_Max_Min_Values' %}">Initial Shares Min. and Max.</a>
+                                </li>
+                                <li>
+                                    <a href="{% url 'AddShares_Configurations' %}">Unit Share Amount</a>
+                                </li>
+
+                            </ul>
+                        </li>
+                        {% endif %}
+                          {% if request.user.user_type == '1' or 'SHOP UTILITIES' in task_array %}
+                         <li>
+                            <a href="javascript:;"><i class="sidebar-item-icon fa fa-file-text"></i>
+                                <span class="nav-label">Shop Utilities</span><i class="fa fa-angle-left arrow"></i></a>
+                            <ul class="nav-2-level collapse">
+                                <li>
+                                    <a href="{% url 'CustomerID_Manager' %}">Manage Customer ID</a>
+                                </li>
+                                <li>
+                                    <a href="{% url 'Manage_Product_Code' %}">Stock Code</a>
+                                </li>
+                                <li>
+                                        <a href="{% url 'addExpiringDateInterval' %}">Expiring Date Interval</a>
+                                    </li>
+                            </ul>
+                        </li>
+                        {% endif %}
+                    {% if request.user.user_type == '1' or 'TERMINATION RECORDS' in task_array %}
+                         <li>
+                            <a href="javascript:;"><i class="sidebar-item-icon fa fa-file-text"></i>
+                                <span class="nav-label">Termination Records</span><i class="fa fa-angle-left arrow"></i></a>
+                            <ul class="nav-2-level collapse">
+
+
+                               <li>
+                                    <a href="{% url 'membership_termination_Duration_Manager_Transaction_Load' %}">Termination Duration</a>
+                                </li>
+                                <li>
+                                    <a href="{% url 'Termination_Loan_Allowed_load' %}">Termination Loan Allowed</a>
+                                </li>
+
+
+                            </ul>
+                        </li>
+                    {% endif %}
+                    {% if request.user.user_type == '1' or 'UTILITIES' in task_array %}
+                        <li>
+                            <a href="javascript:;"><i class="sidebar-item-icon fa fa-file-text"></i>
+                                <span class="nav-label">General Utilities</span><i class="fa fa-angle-left arrow"></i></a>
+                            <ul class="nav-2-level collapse">
+
                                  {% if request.user.user_type == '1' %}
+                                 <li>
+                                    <a href="{% url 'TransactionEnabler_Add' %}">Operational Task Add</a>
+                                </li>
+                                <li>
+                                    <a href="{% url 'TransactionEnabler_Manage' %}">Operational Task Enabler</a>
+                                </li>
+                                <li>
+                                    <a href="{% url 'Members_IdManager' %}">Membership ID</a>
+                                </li>
                                 <li>
                                     <a href="{% url 'addDefaultPassword' %}">Default Password</a>
                                 </li>
-                                <li>
-                                    <a href="{% url 'system_reset' %}">Reset Setting Database</a>
-                                </li> 
 
-                                 <li>
-                                    <a href="{% url 'DataCapture_Manager' %}">Manage Data Capture</a>
-                                </li> 
-                                 <li>
-                                    <a href="{% url 'Shares_Deduction_savings' %}">Shares Deduction Savings</a>
-                                </li> 
+
+
                                 <li>
-                                    <a href="{% url 'CustomerID_Manager' %}">Manage Customer ID</a>
-                                </li> 
-                                 <li>
-                                    <a href="{% url 'MembersCompulsorySavings' %}">Compulsory Savings</a>
+                                    <a href="{% url 'TransactionTypes_Sources_Manage' %}">Apex Transaction Settings</a>
                                 </li>
                                 {% endif %}
-                                <li>
-                                    <a href="{% url 'SharesUnits_add' %}">Shares Units</a>
-                                </li>  
-                               
-                               
-                                <li>
-                                    <a href="{% url 'WithdrawalController' %}">Withdrawal Controller</a>
-                                </li>                             
-                               
+
+
+
                                  <li>
                                     <a href="{% url 'Manage_NOKRelationships_Max_No' %}">Maximum NOK</a>
                                 </li>
+
+
                             </ul>
                         </li>
                     {% endif %}
+                      {% if request.user.user_type == '1' or 'BANK ACCOUNTS' in task_array %}
+                        <li>
+                                <a href="javascript:;"><i class="sidebar-item-icon fa fa-file-text"></i>
+                                        <span class="nav-label">Bank Account Records</span><i class="fa fa-angle-left arrow"></i></a>
+                                    <ul class="nav-2-level collapse">
 
-                    {% if request.user.user_type == '1' or current_user.invoice_management  == '1' %}
+
+                                        <li>
+                                            <a href="{% url 'CooperativeBankAccounts_add' %}">Add Bank Accounts</a>
+                                        </li>
+
+<li>
+                                            <a href="{% url 'BankAccounts_Designation_List_Load' %}">Accounts Designation</a>
+                                        </li>
+
+                                    </ul>
+                        </li>
+
+                        {% endif %}
+                    {% if request.user.user_type == '1' or 'INVOICE MANAGEMENT' in task_array %}
                         <li>
                                 <a href="javascript:;"><i class="sidebar-item-icon fa fa-file-text"></i>
                                         <span class="nav-label">Invoice Manager</span><i class="fa fa-angle-left arrow"></i></a>
@@ -234,31 +421,29 @@
                                         </li>
                                         <li>
                                             <a href="{% url 'AutoReceipt_Setup' %}">Auto Receipt </a>
-                                        </li> 
+                                        </li>
                                         <li>
                                             <a href="{% url 'FormAutoPrint_Settings' %}">Form and Receipt Print </a>
                                         </li>
                                         <li>
                                             <a href="{% url 'receipt_manager' %}">Main Receipt Manager</a>
-                                        </li> 
+                                        </li>
                                         <li>
                                             <a href="{% url 'receipt_manager_shop' %}">Shop Receipt Manager</a>
                                         </li>
-                                        <li>
-                                            <a href="{% url 'CooperativeBankAccounts_add' %}">Bank Accounts</a>
-                                        </li>                                         
+
+
+
+
                                     </ul>
                         </li>
-                    {% endif %} 
+                    {% endif %}
 
-                    {% if request.user.user_type == '1' or current_user.invoice_management  == '1' %}
+                    {% if request.user.user_type == '1' or 'COMPONENTS' in task_array %}
                         <li>
                                 <a href="javascript:;"><i class="sidebar-item-icon fa fa-sitemap"></i>
                                     <span class="nav-label">Components</span><i class="fa fa-angle-left arrow"></i></a>
                                 <ul class="nav-2-level collapse">
-                                   
-
-                   
                                     <li>
                                         <a href="javascript:;">
                                             <span class="nav-label">States</span><i class="fa fa-angle-left arrow"></i></a>
@@ -271,11 +456,12 @@
                                             </li>
                                         </ul>
                                     </li>
+
                                     <li>
                                         <a href="javascript:;">
                                             <span class="nav-label">NOK Relationships</span><i class="fa fa-angle-left arrow"></i></a>
                                         <ul class="nav-3-level collapse">
-                                           
+
                                             <li>
                                                 <a href="{% url 'addNOKRelationships' %}">Add NOK Relationships</a>
                                             </li>
@@ -306,7 +492,7 @@
                                                 <a href="{% url 'addDepartments' %}">Add Departments</a>
                                             </li>
                                             <li>
-                                                <a href="">Manage Departments</a>
+                                                <a href="{% url 'Manage_Departments' %}">Manage Departments</a>
                                             </li>
                                         </ul>
                                     </li>
@@ -322,6 +508,9 @@
                                             <li>
                                                 <a href="{% url 'TransactionTypes_Manage_Load' %}">Manage Transaction Types</a>
                                             </li>
+                                            <li>
+                                                <a href="{% url 'TransactionTypes_Ranking_Load' %}">Ranking Transaction Types</a>
+                                            </li>
                                         </ul>
                                     </li>
 
@@ -334,16 +523,10 @@
                                                 <a href="{% url 'addSalaryInstitution' %}">Add Salary Institutions</a>
                                             </li>
                                             <li>
-                                                <a href="">Manage Salary Institutions</a>
+                                                <a href="{% url 'Manage_Salary_Institution' %}">Manage Salary Institutions</a>
                                             </li>
                                         </ul>
                                     </li>
-
-
-                                    
-
-                                   
-
 
                                     <li>
                                         <a href="javascript:;">
@@ -353,10 +536,10 @@
                                                 <a href="{% url 'addBanks' %}">Add Banks</a>
                                             </li>
                                             <li>
-                                                <a href="">Manage Banks</a>
+                                                <a href="{% url 'Manage_Banks' %}">Manage Banks</a>
                                             </li>
                                         </ul>
-                                    </li> 
+                                    </li>
                                     <li>
                                         <a href="javascript:;">
                                             <span class="nav-label">Locations</span><i class="fa fa-angle-left arrow"></i></a>
@@ -365,10 +548,10 @@
                                                 <a href="{% url 'addLocations' %}">Add Locations</a>
                                             </li>
                                             <li>
-                                                <a href="">Manage Locations</a>
+                                                <a href="{% url 'Manage_Locations' %}">Manage Locations</a>
                                             </li>
                                         </ul>
-                                    </li> 
+                                    </li>
 
 
                                     <li>
@@ -376,10 +559,10 @@
                                             <span class="nav-label">Gender</span><i class="fa fa-angle-left arrow"></i></a>
                                         <ul class="nav-3-level collapse">
                                             <li>
-                                                <a href="{% url 'addGender' %}">Add Gender</a>
+                                                <a href="{% url 'addGender'  %}">Add Gender</a>
                                             </li>
                                             <li>
-                                                <a href="">Manage Gender</a>
+                                                <a href="{% url 'Manage_Gender' %}">Manage Gender</a>
                                             </li>
                                         </ul>
                                     </li>
@@ -391,27 +574,28 @@
                                                 <a href="{% url 'addTitles' %}">Add Initials</a>
                                             </li>
                                             <li>
-                                                <a href="">Manage Initials</a>
+                                                <a href="{% url 'Manage_Titles' %}">Manage Initials</a>
                                             </li>
                                         </ul>
                                     </li>
-                                    
-                                    
+
+
+
                                 </ul>
                         </li>
                     {% endif %}
-                                   
 
-                
-                     {% if request.user.user_type == '1' or current_user.data_imports  == '1' %}
+
+
+                     {% if request.user.user_type == '1' or 'DATA IMPORTS' in task_array %}
                         <li class="heading">IMPORT/EXPORT</li>
-                         
+
                         <li>
                             <a href="javascript:;"><i class="sidebar-item-icon fa fa-sitemap"></i>
                                 <span class="nav-label">IMPORT</span><i class="fa fa-angle-left arrow"></i></a>
                             <ul class="nav-2-level collapse">
-                                
-                               
+
+
                                 <li>
                                     <a href="javascript:;">
                                         <span class="nav-label">Components</span><i class="fa fa-angle-left arrow"></i></a>
@@ -425,296 +609,154 @@
                                         <li>
                                             <a href="{% url 'lga_upload' %}">LGA</a>
                                         </li>
-                                         
-                                         <li>
-                                             <a href="{% url 'MembershipStatus_upload' %}">Membership Status</a>
-                                         </li> 
-                                         <li>
-                                             <a href="{% url 'ProcessingStatus_upload' %}">Processing Status</a>
-                                         </li>  
-                                         <li>
-                                             <a href="{% url 'TransactionStatus_upload' %}">Transaction Status</a>
-                                         </li> 
-                                         <li>
-                                             <a href="{% url 'ReceiptStatus_upload' %}">Receipt Status</a>
-                                         </li>
-                                             <li>
-                                            <a href="{% url 'ReceiptTypes_upload' %}">Receipt Types</a>
-                                         </li>  
-                                         <li>
-                                             <a href="{% url 'CertificationStatus_upload' %}">Certification Status</a>
-                                         </li> 
-                                         <li>
-                                             <a href="{% url 'ApprovalStatus_upload' %}">Approval Status</a>
-                                         </li>  
-
-
-                                         <li>
-                                             <a href="{% url 'SubmissionStatus_upload' %}">Submission Status </a>
-                                         </li>
-        
-                                         <li>
-                                             <a href="{% url 'TicketStatus_upload' %}">Ticket Status </a>
-                                         </li>
-
 
                                           <li>
                                             <a href="{% url 'Gender_upload' %}">Gender</a>
-                                         </li> 
+                                         </li>
                                          <li>
                                             <a href="{% url 'Banks_upload' %}">Banks</a>
-                                         </li> 
-                                         <li>
-                                            <a href="{% url 'PaymentChannels_upload' %}">Payment Channels</a>
-                                         </li> 
-                                     
+                                         </li>
+
+
                                           <li>
                                             <a href="{% url 'Locations_upload' %}">Locations</a>
                                          </li>
-                                         <li>
-                                            <a href="{% url 'AccountTypes_upload' %}">Account Types</a>
-                                         </li>
+
                                          <li>
                                             <a href="{% url 'Departments_upload' %}">Departments</a>
-                                         </li> 
+                                         </li>
                                          <li>
                                             <a href="{% url 'SalaryInstitution_upload' %}">Salary Institution</a>
                                          </li>
-                                         <li>
-                                            <a href="{% url 'InterestDeductionSource_upload' %}">Interest Deduction Source</a>
-                                         </li> 
+
                                          <li>
                                             <a href="{% url 'TransactionSources_upload' %}">Transaction Sources</a>
-                                         </li>  
-                                         <li>
-                                            <a href="{% url 'AdminCharges_upload' %}">Admin Charges</a>
-                                         </li> 
-                                         <li>
-                                            <a href="{% url 'UserType_upload' %}">User Type</a>
                                          </li>
+
+
                                          <li>
                                             <a href="{% url 'NOKRelationships_upload' %}">NOK Relationships</a>
                                          </li>
 
-                                          <li>
-                                            <a href="{% url 'loan_criteria_base_upload' %}">Loan Criteria Bases</a>
-                                        </li> 
+
                                         <li>
                                             <a href="{% url 'ProductCategory_upload' %}">Product Category </a>
                                         </li>
-                                        
+
                                         <li>
-                                            <a href="{% url 'Stock_upload' %}">Product Upload </a>
+                                            {% comment %}<a href="{% url 'Stock_upload' %}">Product Upload </a>{% endcomment %}
                                             <a href="{% url 'upload_stock_roll' %}">Product Upload1 </a>
-                                        </li>   
-                                        <li>
-                                            <a href="{% url 'SalesCategory_upload' %}">Sales Category Upload </a>
-                                        </li>                                    
+                                        </li>
+
                                         <li>
                                             <a href="{% url 'Product_Write_off_Reasons_upload' %}">Item Write-off Reasons </a>
-                                        </li>    
-                                        <li>
-                                            <a href="{% url 'LockedStatus_upload' %}">Locked Status </a>
-                                        </li> 
-                                        <li>
-                                            <a href="{% url 'ExlusiveStatus_upload' %}">Exclusive Status </a>
                                         </li>
-                                        <li>
-                                            <a href="{% url 'LoanScheduleStatus_upload' %}">Loan Schedule Status </a>
-                                        </li>
-                                        <li>
-                                            <a href="{% url 'LoansUploadStatus_upload' %}">Loans Upload Status </a>
-                                        </li>
-                                        <li>
-                                            <a href="{% url 'SavingsUploadStatus_upload' %}">Savings Upload Status </a>
-                                        </li>
-                                        <li>
-                                            <a href="{% url 'LoanCategory_upload' %}">Loan Category </a>
-                                        </li> 
+
+
+                                        {% comment %}{% endcomment %}
                                         <li>
                                             <a href="{% url 'SharesUnits_upload' %}">Shares Units</a>
-                                        </li> 
-                                        <li>
-                                            <a href="{% url 'UsersLevel_upload' %}">Users Level</a>
-                                        </li> 
-                                        <li>
-                                            <a href="{% url 'SharesUploadStatus_upload' %}">Shares Upload Status</a>
-                                        </li>  
-                                        <li>
-                                            <a href="{% url 'WelfareUploadStatus_upload' %}">Welfare Upload Status</a>
                                         </li>
-                                        <li>
-                                            <a href="{% url 'DateJoinedUploadStatus_upload' %}">Date Joined Status</a>
-                                        </li>   
-                                        <li>
-                                            <a href="{% url 'Date_of_birth_status_upload' %}">Date of Birth Upload Status</a>
-                                        </li> 
-                                        <li>
-                                            <a href="{% url 'DateOfFirstAppointment_Status_upload' %}">Date Of First Appt Status</a>
-                                        </li> 
-                                        <li>
-                                            <a href="{% url 'WithdrawalStatus_upload' %}">Withdrawal Status</a>
-                                        </li>   
-                                        <li>
-                                            <a href="{% url 'MultipleLoanStatus_upload' %}">Multiple Loan Status</a>
-                                        </li> 
-                                        <li>
-                                            <a href="{% url 'LoanMergeStatus_upload' %}">Loan Merge Status</a>
-                                        </li>   
-                                        <li>
-                                            <a href="{% url 'YesNo_upload' %}">Yes and No Status</a>
-                                        </li> 
+
+
                                         <li>
                                             <a href="{% url 'MonthlyDeductionGenerationHeaders_upload' %}">Monthly Deduction Headers</a>
-                                        </li>   
+                                        </li>
                                         <li>
                                             <a href="{% url 'Termination_Sources_upload' %}">Termination Types</a>
-                                        </li>   
-                                        
+                                        </li>
+                                        <li>
+                                            <a href="{% url 'ExceptableCriterias_upload' %}">Members Waver Categories</a>
+                                        </li>
+                                        <li>
+                                            <a href="{% url 'UserTypes_upload' %}">User Types</a>
+                                        </li>
+                                        <li>
+                                            <a href="{% url 'System_Users_Tasks_upload' %}">User Types Task</a>
+                                        </li>
+                                        <li>
+                                            <a href="{% url 'Transaction_Types_upload' %}">Transaction Types</a>
+                                        </li>
 
-                                       
+
+
+
                                     </ul>
                                 </li>
-                             
+
                             </ul>
                         </li>
-                        
+
                     {% endif %}
-                       
-                  {% if current_user.cash_withdrawal_approval  == '1' or current_user.share_purchase_approval  == '1' or current_user.membership_exclusiveness_approval  == '1' or current_user.membership_approval == '1' or current_user.loan_request_approval  == '1' or current_user.loan_application_approval  == '1' %}           
+
+
                     <li>
                         <a href="javascript:;"><i class="sidebar-item-icon fa fa-bar-chart"></i>
                             <span class="nav-label">Approvals</span><i class="fa fa-angle-left arrow"></i></a>
                         <ul class="nav-2-level collapse">
-                        {% if current_user.membership_approval == '1' %}
+                        {% if 'MEMBERSHIP APPROVAL' in task_array %}
                             <li>
                                 <a href="{% url 'membership_request_approvals_list_load' %}">Membership Request</a>
                             </li>
-                            
-                        {% endif %}
-                        {% if current_user.loan_request_approval  == '1' %}
-                            <li>
-                                <a href="{% url 'loan_request_approval_list_load' %}">Loan Request</a>
-                            </li>
-                        {% endif %}
-                       
-                         
 
-                        {% if current_user.loan_application_approval  == '1' %}
-                            <li>
-                                <a href="{% url 'loan_application_approval_list_load' %}">Loan Application</a>
-                            </li> 
                         {% endif %}
-                          {% if current_user.commodity_loan_approval  == '1' %}
+                        {% if 'LOAN REQUEST APPROVAL' in task_array  %}
                             <li>
-                                <a href="">Commodity Loan Approval</a>
+                                <a href="{% url 'loan_request_approval_period_load' %}">Loan Request</a>
                             </li>
                         {% endif %}
-                        {% if current_user.membership_exclusiveness_approval  == '1' %}
+
+                        {% if 'LOAN APPLICATION APPROVAL' in task_array %}
+                            <li>
+                                <a href="{% url 'Loan_application_approval_period_load' %}">Loan Application</a>
+                            </li>
+                        {% endif %}
+                        {% if 'LOAN UNSCHEDULING APPROVAL' in task_array %}
+                            <li>
+                                <a href="{% url 'Loan_unscheduling_approval_load' %}">Loan Unscheduling</a>
+                            </li>
+                        {% endif %}
+                          {% if 'COMMODITY LOAN APPROVAL' in task_array %}
+                            <li>
+                                <a href="{% url 'membership_commodity_loan_Period_approval_transaction_load' %}">Commodity Loan Approval</a>
+                            </li>
+                        {% endif %}
+                        {% if 'MEMBERS EXCEPTIONS' in task_array %}
                             <li>
                                 <a href="{% url 'members_exclusiveness_list_load' %}">Members Exclusiveness</a>
-                            </li> 
+                            </li>
                         {% endif %}
 
-                         {% if current_user.share_purchase_approval  == '1' %}
+                         {% if 'SHARE PURCHASE APPROVAL' in task_array %}
                             <li>
                                 <a href="{% url 'Shares_Purchase_Request_Approval_List_Load' %}">Shares Purchase Request</a>
                             </li>
-                        {% endif %}      
-                        {% if current_user.cash_withdrawal_approval  == '1' %}
+                        {% endif %}
+                        {% if 'CASH WITHDRAWAL APPROVAL' in task_array %}
                             <li>
                                 <a href="{% url 'Cash_Withdrawal_Request_Approval_List_Load' %}">Cash Withdrawal Request</a>
                             </li>
-                        {% endif %}                        
-                      
-                        </ul>
-                    </li>
-                    {% endif %}
-
-                  
-                     {% if current_user.commodity_loan_certification  == '1' or current_user.loan_application_certification  == '1' %}
-
-                           <li>
-                                <a href="javascript:;"><i class="sidebar-item-icon fa fa-sitemap"></i>
-                                    <span class="nav-label">Certifications</span><i class="fa fa-angle-left arrow"></i></a>
-                                <ul class="nav-2-level collapse">
-                                  
-                                    {% if current_user.loan_application_certification  == '1' %}
-                                    <li>
-                                        <a href="javascript:;">
-                                            <span class="nav-label">Monetary Loans</span><i class="fa fa-angle-left arrow"></i></a>
-                                        <ul class="nav-3-level collapse">
-                                            <li>
-                                                <a href="{% url 'Loan_request_certification_list_load' %}">Monetary Loan Request</a>
-                                            </li>
-                                            <li>
-                                                <a href="{% url 'Loan_application_certification_list_load' %}">Monetary Loan Application</a>
-                                            </li>
-                                        </ul>
-                                    </li>
-                                    {% endif %}
-                                {% if current_user.commodity_loan_certification  == '1' %}
-                                    <li>
-                                        <a href="javascript:;">
-                                            <span class="nav-label">Non Monetary Loans</span><i class="fa fa-angle-left arrow"></i></a>
-                                        <ul class="nav-3-level collapse">
-                                            <li>
-                                                <a href="{% url 'Non_Monetary_Loan_Request_certification_Load' %}">Loan Request</a>
-                                            </li>
-                                            <li>
-                                                <a href="javascript:;">Loan Application</a>
-                                            </li>
-                                        </ul>
-                                    </li>
-                                {% endif %}
-                                </ul>
-                            </li>
-                   
-                          {% endif %}
-                {% if current_user.cash_withdrawal_certification  == '1' %}
-                    <li>
-                        <a href="javascript:;"><i class="sidebar-item-icon fa fa-edit"></i>
-                            <span class="nav-label">Cash Withdrawals</span><i class="fa fa-angle-left arrow"></i></a>
-                        <ul class="nav-2-level collapse">
-                        {% if current_user.cash_withdrawal_certification  == '1' %}
-                            <li>
-                                <a href="{% url 'savings_cash_withdrawal_Certitication_list_load' %}">Cash Withdrawal</a>
-                            </li> 
                         {% endif %}
-
-                        {% comment %}
+                        {% if 'TERMINATION REQUEST' in task_array %}
                             <li>
-                                <a href="{% url 'withdrawal_confirmation_list_load' %}">Withdrawal Confirmation</a>
+                                <a href="{% url 'membership_termination_Request_Approval_List_Load' %}">Termination Request</a>
                             </li>
-                        {% endcomment %} 
-
-                        </ul>
-                    </li>
-               {% endif %}
-             {% comment %}
-                    <li>
-                        <a href="javascript:;"><i class="sidebar-item-icon fa fa-sitemap"></i>
-                            <span class="nav-label">FINSEC Desk</span><i class="fa fa-angle-left arrow"></i></a>
-                        <ul class="nav-2-level collapse">
-                            
+                             {% endif %}
+                        {% if 'TERMINATION MATURITY EXCEPTION' in task_array %}
                             <li>
-                                <a href="javascript:;">
-                                    <span class="nav-label">Withdrawals</span><i class="fa fa-angle-left arrow"></i></a>
-                                <ul class="nav-3-level collapse">
-                                    <li>
-                                        <a href="{% url 'Cash_Withdrawal_Approved_list_load' %}">Savings  </a>
-                                    </li>
-                                    <li>
-                                        <a href="">Others</a>
-                                    </li>
-                                </ul>
+                                <a href="{% url 'membership_termination_maturity_date_exception_Approval_List_Load' %}">Termination Maturity Exception</a>
                             </li>
+                             {% endif %}
+                        {% if 'TERMINATION CASH DISBURSEMENT' in task_array %}
+                            <li>
+                                <a href="{% url 'membership_termination_Disbursement_Approval_List_Load' %}">Termination Disbursement</a>
+                            </li>
+                       {% endif %}
 
                         </ul>
                     </li>
 
-                   {% endcomment %}  
-              
+
                 </ul>
             </div>
         </nav>

@@ -45,6 +45,48 @@
                         </div>
                     </div>
                 </div>
+                 <div class="row">
+                    <div class="col-xl-10">
+                        <div class="ibox">
+                            <div class="ibox-head">
+                                <div class="ibox-title">Action Transactions</div>
+                            </div>
+                            <div class="ibox-body">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Description</th>
+                                            <th>Amount</th>
+                                            <th>Repayment</th>
+                                            <th>Duration</th>
+                                            <th>Period</th>
+                                            <th>Batch</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for item in applicants %}
+                                        <tr>
+                                            <td>{{forloop.counter}}</td>
+                                            <td>{{item.member.product.product.category.title}}</td>
+                                            <td>{{item.coop_price}}</td>
+                                            <td>{{item.repayment}}</td>
+                                            <td>{{item.duration}}</td>
+                                            <td>{{item.period.title}}</td>
+                                            <td>{{item.batch.title}}</td>
+                                            <td><a href="{% url 'membership_commodity_loan_Dashboard_load' item.pk member.pk %}" class="btn btn-success">Load</a></td>
+                                    
+                                        </tr>
+                                {% endfor %}
+                                    </tbody>
+                              
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                 
+                </div>
             </div>
             
 

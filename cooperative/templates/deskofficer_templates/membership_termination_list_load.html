@@ -19,7 +19,6 @@
                                     <th>#</th>
                                     <th>Member ID</th>
                                     <th>Name</th>
-                                    <th>Department</th>
                                     <th>Date Joined</th>
                                     <th>Phone No</th>
                                     <th>Action</th>
@@ -30,7 +29,6 @@
                                     <th>#</th>
                                     <th>Member ID</th>
                                     <th>Name</th>
-                                    <th>Department</th>
                                     <th>Date Joined</th>
                                     <th>Phone No</th>
                                     <th>Action</th>
@@ -43,9 +41,8 @@
                                     
                                     <td>{{member.get_member_Id}}</td>
                                     <td>{{member.get_full_name}}</td>
-                                    <td>{{member.department.title}}</td>
                                     <td>{{member.date_joined}}</td>
-                                    <td>{{member.Phone_number}}</td>
+                                    <td>{{member.phone_number}}</td>
             
                                     <td><a href="{% url 'membership_termination_transactions_load' member.pk %}" class="btn btn-primary">Proceed</a></td>
                                 </tr>

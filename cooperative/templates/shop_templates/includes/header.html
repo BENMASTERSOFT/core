@@ -1,8 +1,8 @@
 {% load static %}
         <header class="header">
             <div class="page-brand">
-                <a class="link" href="index.html">
-                    <span class="brand">FETH II 
+                <a class="link" href="{% url 'shop_home' %}">
+                    <span class="brand">FETHA II
                         <span class="brand-tip"> CTCS</span>
                     </span>
                     <span class="brand-mini">AC</span>
@@ -37,6 +37,7 @@
                                     <a class="pull-right" href="mailbox.html">view all</a>
                                 </div>
                             </li>
+                            {% comment %}
                             <li class="list-group list-group-divider scroller" data-height="240px" data-color="#71808f">
                                 <div>
                                     <a class="list-group-item">
@@ -85,8 +86,10 @@
                                     </a>
                                 </div>
                             </li>
+                            {% endcomment %}
                         </ul>
                     </li>
+
                     <li class="dropdown dropdown-notification">
                         <a class="nav-link dropdown-toggle" data-toggle="dropdown"><i class="fa fa-bell-o rel"><span class="notify-signal"></span></i></a>
                         <ul class="dropdown-menu dropdown-menu-right dropdown-menu-media">
@@ -96,6 +99,7 @@
                                     <a class="pull-right" href="javascript:;">view all</a>
                                 </div>
                             </li>
+                              {% comment %}
                             <li class="list-group list-group-divider scroller" data-height="240px" data-color="#71808f">
                                 <div>
                                     <a class="list-group-item">
@@ -104,7 +108,10 @@
                                                 <span class="badge badge-success badge-big"><i class="fa fa-check"></i></span>
                                             </div>
                                             <div class="media-body">
-                                                <div class="font-13">4 task compiled</div><small class="text-muted">22 mins</small></div>
+                                                 <a href="{% url 'Expiring_Products_Tracking_Load' %}">
+                                                    <div class="font-13">Expiry Products</div><small class="text-muted">22 mins</small>
+                                                </a>
+                                                </div>
                                         </div>
                                     </a>
                                     <a class="list-group-item">
@@ -136,6 +143,7 @@
                                     </a>
                                 </div>
                             </li>
+                              {% endcomment %}
                         </ul>
                     </li>
                     <li class="dropdown dropdown-user">
@@ -143,9 +151,9 @@
                             <img src="{% static '/cooperative/assets/img/admin-avatar.png' %}" />
                             <span></span>{{request.user}}<i class="fa fa-angle-down m-l-5"></i></a>
                         <ul class="dropdown-menu dropdown-menu-right">
-                            <a class="dropdown-item" href=""><i class="fa fa-user"></i>Profile</a>
-                            <a class="dropdown-item" href=""><i class="fa fa-cog"></i>Settings</a>
-                            <a class="dropdown-item" href=""><i class="fa fa-support"></i>Support</a>
+                            <a class="dropdown-item" href="{% url 'Useraccount_manager_Shop' %}"><i class="fa fa-user"></i>Profile</a>
+                            <a class="dropdown-item" href="{% url 'Useraccount_manager_Shop' %}"><i class="fa fa-cog"></i>Settings</a>
+
                             <li class="dropdown-divider"></li>
                             <a class="dropdown-item" href="{% url 'logout_user' %}"><i class="fa fa-power-off"></i>Logout</a>
                         </ul>

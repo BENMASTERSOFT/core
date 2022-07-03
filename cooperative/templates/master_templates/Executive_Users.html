@@ -27,7 +27,7 @@
                                             <td>{{record.last_name}}</td>
                                             <td>{{record.first_name}}</td>
                                             <td>{{record.username}}</td>
-                                            <td><a href="{% url 'Executive_Tasks' record.pk %}" class="btn btn-primary">Manage Task</a></td>
+                                            <td><a href="{% url 'Executive_Users_Tasks_Preview' record.pk %}" class="btn btn-primary">Manage Task</a></td>
                                           
                                         </tr>
                                     {% endfor %} 

@@ -17,7 +17,7 @@
                         </div>
                     </div>
 
-                                        <div class="col-xl-6">
+                    <div class="col-xl-6">
                         <div class="ibox">
                             <div class="ibox-head">
                                 <div class="ibox-title">User Types</div>
@@ -63,6 +63,7 @@
                                             <th>Middle Name</th>
                                             <th>Username</th>
                                             <th>User Type</th>
+                                            <th>Action</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -74,6 +75,7 @@
                                             <td>{{user.staff.middle_name}}</td>
                                             <td>{{user.username}}</td>
                                             <td>{{user.user_type}}</td>
+                                            <td><a href="{% url 'add_staff_delete' user.pk %}" class="btn btn-danger">Delete</a></td>
                                         
                                         </tr>
                                     {% endfor %}

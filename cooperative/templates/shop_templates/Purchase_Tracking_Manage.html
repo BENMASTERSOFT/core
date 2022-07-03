@@ -20,7 +20,7 @@
                                             <th>Amount</th>
                                             <th>Personnel</th>
                                             <th>Date</th>
-                                            <th></th>
+                                            <th colspan="2"></th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -33,6 +33,7 @@
                                             <td>{{record.personnel.name}}</td>
                                             <td><a href="{% url 'Purchase_Tracking_Invoice_Date_Update' record.pk %}" class="btn btn-default">{{record.invoice_date}}</a></td>
                                             <td><a href="{% url 'Purchase_Tracking_Details' record.pk %}" class="btn btn-primary">Details</a></td>
+                                            <td><a href="{% url 'Purchase_Tracking_Invoice_Delete' record.pk %}" class="btn btn-danger">Discard</a></td>
                                         </tr>
                                     {% endfor %}
                                     </tbody>
@@ -48,4 +49,5 @@
     <div class="preloader-backdrop">
         <div class="page-preloader">Loading</div>
     </div>
+     {% include 'cooperative/includes/emptyspace.html' %} 
 {% endblock %}

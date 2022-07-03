@@ -44,7 +44,18 @@ In template:
 </ul>
 
 
+ {% if forloop.counter|divisibleby:"2" %}
+    <tr class="active">
+{% else %}
+    <tr class="info">
 
+{% endif %}
 
 
 monthly_repayment=math.ceil(float(total_coop)/float(selected_Duration))
+
+
+                                 <td>{{record.loan_amount|floatformat:2|intcomma}}</td>
+                                    <td>{{record.amount_paid|floatformat:2|intcomma}}</td>
+                                    <td>{{record.balance|floatformat:2|intcomma}}</td>
+                                    <td>{{record.repayment|floatformat:2|intcomma}}</td>

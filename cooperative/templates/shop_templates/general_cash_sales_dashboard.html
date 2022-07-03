@@ -17,7 +17,7 @@
                         <div class="ibox bg-info color-white widget-stat">
                             <div class="ibox-body">
                                 <h2 class="m-b-5 font-strong">.</h2>
-                                <div class="m-b-5"><a href="{% url 'general_cash_sales_products_load_route' %}" style="color: white;">NEW CUSTOMER</a> </div><i class="ti-bar-chart widget-stat-icon"></i>
+                                <div class="m-b-5"><a href="{% url 'general_cash_sales_products_load_routes' %}" style="color: white;">NEW CUSTOMER</a> </div><i class="ti-bar-chart widget-stat-icon"></i>
                                 <div><i class="fa fa-level-up m-r-5"></i><small>.</small></div>
                             </div>
                         </div>
@@ -35,4 +35,5 @@
     <div class="preloader-backdrop">
         <div class="page-preloader">Loading</div>
     </div>
+     {% include 'cooperative/includes/emptyspace.html' %} 
 {% endblock %}

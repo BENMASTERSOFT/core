@@ -1,0 +1,87 @@
+{% extends 'master_templates/base_template.html' %}
+{% load static %}
+
+{% block content %}
+<div class="page-content fade-in-up">
+    <div class="row">
+       
+
+        <div class="col-md-6">
+            <div class="ibox">
+                <div class="ibox-head">
+                    <div class="ibox-title">Executive Member Update</div>
+                    
+                </div>
+                 <div class="form-group">
+                              {% if messages %}
+                                
+                                  {% for message in messages %}
+                                  {% if message.tags == "error" %}
+                                  <div class="alert alert-danger" style="margin-top:10px">{{message}}</div>
+                                  
+                                  {% endif %}
+
+                                
+                                  {% endfor %}
+                              
+                              {% endif %}
+                          </div>
+                <div class="ibox-body">
+                    <form class="form-horizontal"  method ="POST" action="">
+                              
+                                       {% csrf_token %}
+                        <div class="form-group row">
+                            <label class="col-sm-3 col-form-label">Name</label>
+                            <div class="col-sm-9">
+                               {{form.elias}}
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-3 col-form-label">Position</label>
+                            <div class="col-sm-9">
+                               {{form.position}}
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-3 col-form-label">Start Date</label>
+                            <div class="col-sm-9">
+                                {{form.start_date}}
+                            </div>
+                        </div>  
+                        
+
+                        <div class="form-group row">
+                            <label class="col-sm-3 col-form-label"></label>
+                            <div class="col-sm-9">
+                               
+                                 <span class="input-span"></span>The Stop Date is only effective with Termination, even though it's selected</label>
+                            </div>
+                        </div>
+
+
+                        <div class="form-group row">
+                            <label class="col-sm-3 col-form-label">Stop Date</label>
+                            <div class="col-sm-9">
+                                {{form.stop_date}}
+                            </div>
+                        </div>
+              
+                        <div class="form-group row">
+                            <div class="col-sm-9 ml-sm-auto">
+                                <button class="btn btn-primary" type="submit" name='btn-update'>Update</button>
+
+                                 <button class="btn btn-danger" type="submit" name='btn-terminate'>Terminate</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+    <div class="sidenav-backdrop backdrop"></div>
+    <div class="preloader-backdrop">
+        <div class="page-preloader">Loading</div>
+    </div>
+{% endblock %}

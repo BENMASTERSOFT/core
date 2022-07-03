@@ -1,0 +1,90 @@
+{% extends 'shop_templates/base_template.html' %}
+{% load static %}
+
+{% block content %}
+            <div class="page-content fade-in-up">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="ibox">
+                            <div class="ibox-head">
+                                <div class="ibox-title">Time Range</div>
+                                
+                            </div>
+                            <div class="ibox-body">
+                                <form class="form-horizontal" method="POST" action="">
+                                    {% csrf_token %}
+                                    <div class="row">
+                                        <div class="col-sm-6 form-group">
+                                            <label>Start Date</label>
+                                            {{form.start_date}}
+                                        </div>
+                                        <div class="col-sm-6 form-group">
+                                            <label>Stop Date</label>
+                                             {{form.stop_date}}
+                                        </div>
+                                    </div>
+                                    
+                                  
+                                    <div class="form-group">
+                                        <button class="btn btn-default" type="submit">Submit</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xl-12">
+                        <div class="ibox">
+                            <div class="ibox-head">
+                                <div class="ibox-title">Product Details</div>
+                            </div>
+                            <div class="ibox-body">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Name</th>
+                                            <th>Phone No</th>
+                                            <th>QTY</th>
+                                            <th>Price</th>
+                                            <th>Total</th>
+                                            <th>Category</th>
+                                            <th>Receipt No</th>
+                                            <th>Date</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for record in records %}
+                                        <tr>
+                                            <td>{{forloop.counter}}</td>
+                                            <td>{{record.name}}</td>
+                                            <td>{{record.phone_no}}</td>
+                                            <td>{{record.quantity}}</td>
+                                            <td>{{record.unit_selling_price}}</td>
+                                            <td>{{record.total}}</td>
+                                            <td>{{record.sales_category}}</td>
+                                            <td>{{record.receipt}}</td>
+                                            <td>{{record.tdate}}</td>
+                                           
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                  
+                </div>
+            </div>
+
+
+        
+
+
+    <div class="sidenav-backdrop backdrop"></div>
+    <div class="preloader-backdrop">
+        <div class="page-preloader">Loading</div>
+    </div>
+     {% include 'cooperative/includes/emptyspace.html' %} 
+{% endblock %}

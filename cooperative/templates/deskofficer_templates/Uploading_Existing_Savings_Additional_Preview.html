@@ -64,7 +64,7 @@
                 </div>
             <div class="row">
                     
-                    <div class="col-xl-8">
+                    <div class="col-xl-12">
                         <div class="ibox">
                             <div class="ibox-head">
                                 <div class="ibox-title">UPLOADED SAVINGS | 
@@ -76,7 +76,7 @@
                                     <thead>
                                         <tr>
                                             <th>#</th>
-                                            <th>Accpint No</th>
+                                            <th>Account No</th>
                                             <th>Description</th>
                                             <th>Particulars</th>
                                             <th>Balance</th>
@@ -95,7 +95,7 @@
                                             <td>{{record.schedule_amount}}</td>
                                        
                                             <td>
-                                                {% if record.status.title != 'TREATED' %}
+                                                {% if record.status != 'TREATED' %}
                                                 <a href="{% url 'Uploading_Existing_Savings_Additional_delete' record.pk return_pk %}" class="btn btn-danger">Remove</a>
                                                {% endif %}
                                             </td>

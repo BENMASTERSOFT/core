@@ -42,6 +42,7 @@
                                     <th>Model</th>
                                     <th>Details</th>
                                     <th>Amount</th>
+                                    <th>Coop. Amount</th>
                                     <th>Action</th>
                                     
                                 </tr>
@@ -54,6 +55,7 @@
                                     <th>Model</th>
                                     <th>Details</th>
                                     <th>Amount</th>
+                                    <th>Coop. Amount</th>
                                     <th>Action</th>
                                     
                                 </tr>
@@ -67,6 +69,7 @@
                                     <td>{{record.product.product_model}}</td>
                                     <td>{{record.product.details}}</td>
                                     <td>{{record.amount}}</td>
+                                    <td>{{record.coop_amount}}</td>
                                     <td><a href="{% url 'Product_Price_Settings_Update' company.pk record.pk %}" class="btn btn-primary">Update</a></td>
                                    
                                 </tr>

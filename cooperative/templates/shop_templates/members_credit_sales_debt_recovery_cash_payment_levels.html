@@ -1,0 +1,46 @@
+{% extends 'shop_templates/base_template.html' %}
+{% load static %}
+
+{% block content %}
+<div class="page-content fade-in-up">
+    <div class="row">
+        <div class="col-xl-6">
+            <div class="ibox">
+                <div class="ibox-head">
+                    <div class="ibox-title">Transaction Levels | {{member.get_full_name}}</div>
+                </div> 
+               
+                <div class="ibox-body">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Description</th>
+                                
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td><a href="{% url 'members_credit_sales_debt_recovery_cash_payment_current_day' member.pk %}">Days Before End of Month Transactions</a> </td>
+                                
+                            </tr>
+                            
+                            <tr>
+                                <td>2</td>
+                                <td><a href="{% url 'members_credit_sales_debt_recovery_cash_payment_after_transaction_list_load' member.pk %}">Days After End of Month Transactions</a></td>
+                                
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="sidenav-backdrop backdrop"></div>
+<div class="preloader-backdrop">
+    <div class="page-preloader">Loading</div>
+</div>
+ {% include 'cooperative/includes/emptyspace.html' %} 
+{% endblock %}

@@ -3,10 +3,12 @@
             <div id="sidebar-collapse">
                 <div class="admin-block d-flex">
                     <div>
-                        <img src="{% static '/cooperative/assets/img/admin-avatar.png' %}" width="45px" />
+                    <a href="{% url 'shop_home' %}"><img src="{% static '/cooperative/assets/img/admin-avatar.png' %}" width="45px" /> </a>
                     </div>
                     <div class="admin-info">
-                        <div class="font-strong">{{request.user}}</div><small>Administrator</small></div>
+                      <a href="{% url 'shop_home' %}" style="color:white;">
+                            <div class="font-strong">{{request.user}}</div><small style="color:white;">Administrator</small></div>
+                    </a>
                 </div>
                 <ul class="side-menu metismenu">
                     <li>
@@ -14,19 +16,19 @@
                             <span class="nav-label">Dashboard</span>
                         </a>
                     </li>
-                    
-                    <li class="heading">FEATURES</li>
-                    {% comment %}
+
+                    <li class="heading">QUICK ACCESS</li>
+                {% comment %}
                     <li><a href="{% url 'editable_invoice' %}">Editable Invoice</a>
                     </li>
                     <li>
                         <a href="javascript:;"><i class="sidebar-item-icon fa fa-edit"></i>
                             <span class="nav-label">PDF FILES  </span><i class="fa fa-angle-left arrow"></i></a>
                         <ul class="nav-2-level collapse">
-                           
+
                             <li>
                                 <a href="{% url 'GeneratePdf' %}">PDF 1</a>
-                            </li> 
+                            </li>
                             <li>
                                 <a href="{% url 'GeneratePdf2' %}">PDF 2</a>
                             </li>
@@ -36,342 +38,551 @@
                                 <a href="{% url 'GeneratePdf4' %}">PDF 4</a>
                             </li>
 
+
+                            <li>
+                                <a href="{% url 'Delete_Daily_Sales' %}">Delete</a>
+                            </li>
+                            <li>
+                                <a href="{% url 'Delete_Daily_Sales1' %}">Delete 1</a>
+                            </li>
+
                         </ul>
                     </li>
+
                 {% endcomment %}
-                 {% if user_level == '2'  %}
-                    <li>
-                        <a href="javascript:;"><i class="sidebar-item-icon fa fa-sitemap"></i>
-                            <span class="nav-label">Sales Desk</span><i class="fa fa-angle-left arrow"></i></a>
-                        <ul class="nav-2-level collapse">
-                            
-                            <li>
-                                <a href="javascript:;">
-                                    <span class="nav-label">Cash Sales</span><i class="fa fa-angle-left arrow"></i></a>
-                                <ul class="nav-3-level collapse">
-                               
-                                    <li>
-                                   
 
-                                        <a href="{% url 'general_cash_sales_dashboard' %}"><i class="sidebar-item-icon fa fa-calendar"></i>
-                                            <span class="nav-label">General Cash Sales</span>
-                                        </a>
-                                    </li> 
-                                    <li>
+                <li>
+                    <a href="{% url 'members_credit_sales_status_search' %}"><i class="sidebar-item-icon fa fa-calendar"></i>
+                        <span class="nav-label">Sales Status</span>
+                    </a>
+                </li>
 
-                                        <a href="{% url 'members_cash_sales_search' %}"><i class="sidebar-item-icon fa fa-calendar"></i>
-                                            <span class="nav-label">Members Cash Sales</span>
-                                        </a>
-                                    </li> 
-                                    
-                                </ul>
-                            </li>
+                 <li>
+                    <a href="{% url 'stock_status_search' %}"><i class="sidebar-item-icon fa fa-calendar"></i>
+                        <span class="nav-label">Stock Status</span>
+                    </a>
+                </li>
+                <li class="heading">FEATURES</li>
+                {% if 'CASH SALES' in task_array %}
 
-                            <li>
-                                <a href="javascript:;">
-                                    <span class="nav-label">Members Credit Sales</span><i class="fa fa-angle-left arrow"></i></a>
-                                <ul class="nav-3-level collapse">
+                <li>
+                    <a href="javascript:;"><i class="sidebar-item-icon fa fa-sitemap"></i>
+                        <span class="nav-label">Cash Sales</span><i class="fa fa-angle-left arrow"></i></a>
+                    <ul class="nav-2-level collapse">
+                       <li>
+                        <a href="{% url 'general_cash_sales_dashboard' %}"><i class="sidebar-item-icon fa fa-calendar"></i>
+                        <span class="nav-label">General Cash Sales</span>
+                                </a>
+                        </li>
 
-                                    <li>
+                        <li>
+                        <a href="{% url 'members_cash_sales_search' %}"><i class="sidebar-item-icon fa fa-calendar"></i>
+                        <span class="nav-label">Members Cash Sales</span>
+                        </a>
+                        </li>  <li>
+                        <a href="{% url 'members_cash_sales_manage_list_load' %}"><i class="sidebar-item-icon fa fa-calendar"></i>
+                        <span class="nav-label">Manage Members Cash Sales</span>
+                                </a>
+                        </li>
 
-                                        <a href="{% url 'Members_Credit_sales_list_search' %}"><i class="sidebar-item-icon fa fa-calendar"></i>
-                                            <span class="nav-label">Credit Sales Request</span>
-                                        </a>
-                                    </li> 
-                                    <li>
+                    </ul>
+                </li>
+            {% endif %}
+            {% if 'CREDIT SALES' in task_array %}
+                <li>
+                    <a href="javascript:;"><i class="sidebar-item-icon fa fa-sitemap"></i>
+                        <span class="nav-label">Credit Sales</span><i class="fa fa-angle-left arrow"></i></a>
+                    <ul class="nav-2-level collapse">
 
-                                        <a href="{% url 'members_credit_purchase_manage' %}"><i class="sidebar-item-icon fa fa-calendar"></i>
-                                            <span class="nav-label">Manage Credit Sales</span>
-                                        </a>
-                                    </li> 
+                       <li>
+                        <a href="{% url 'Members_Credit_sales_list_search' %}"><i class="sidebar-item-icon fa fa-calendar"></i>
+                        <span class="nav-label">Sales Request</span>
+                                </a>
+                        </li>
 
-                                    <li>
+                        <li>
+                        <a href="{% url 'members_credit_purchase_manage' %}"><i class="sidebar-item-icon fa fa-calendar"></i>
+                        <span class="nav-label">Manage Sales</span>
+                        </a>
+                        </li>  <li>
+                        <a href="{% url 'members_credit_sales_approved_list' %}"><i class="sidebar-item-icon fa fa-calendar"></i>
+                        <span class="nav-label">Approved Sales</span>
+                                </a>
+                        </li>
 
-                                        <a href="{% url 'members_credit_purchases_approved_list' %}"><i class="sidebar-item-icon fa fa-calendar"></i>
-                                            <span class="nav-label">Approved Credit Sales</span>
-                                        </a>
-                                    </li> 
+                    </ul>
+                </li>
+            {% endif %}
+            {% if 'EXPENDITURE' in task_array %}
+                <li>
+                    <a href="{% url 'Expenditure_Manager' %}"><i class="sidebar-item-icon fa fa-calendar"></i>
+                        <span class="nav-label">Miscellaneous Expenditure</span>
+                    </a>
+                </li>
+            {% endif %}
+
+            {% if 'DAILY TRANSACTION SUMMARY' in task_array %}
+                <li class="heading">TRANSACTION SUMMARY</li>
+                <li>
+                    <a href="javascript:;"><i class="sidebar-item-icon fa fa-sitemap"></i>
+                        <span class="nav-label">Daily Sales Summary</span><i class="fa fa-angle-left arrow"></i></a>
+                    <ul class="nav-2-level collapse">
+                       <li>
+                        <a href="{% url 'Daily_Sales_Summarization' request.user.id %}"><i class="sidebar-item-icon fa fa-calendar"></i>
+                        <span class="nav-label">Normal Sales</span>
+                                </a>
+                        </li>
 
 
-                                </ul>
-                                <li>
+                        <li>
+                            <a href="{% url 'Cash_Deposit_Summary' %}"><i class="sidebar-item-icon fa fa-calendar"></i>
+                            <span class="nav-label">Cash Deposits</span>
+                                </a>
+                        </li>
 
-                                    <a href="{% url 'Daily_Sales_Summarization' request.user.id %}"><i class="sidebar-item-icon fa fa-calendar"></i>
-                                        <span class="nav-label">Daily Sales Summary</span>
+                        <li>
+                            <a href="{% url 'members_credit_sales_debt_recovery_cash_payment_daily_summary_list_load' %}"><i class="sidebar-item-icon fa fa-calendar"></i>
+                            <span class="nav-label">Cash Payment Return</span>
+                                </a>
+                        </li>
+                        <li>
+                            <a href="{% url 'Expenditure_Daily_Summary' %}"><i class="sidebar-item-icon fa fa-calendar"></i>
+                            <span class="nav-label">Miscellaneous Expenditures</span>
                                     </a>
-                                </li> 
+                        </li>
 
-                            </li>
-                        
-                        </ul>
-                    </li>  
-                    {% endif %}    
-                 {% if user_level == '1' %}
-                 
+                        <li>
+                            <a href="{% url 'Item_Return_Process_issue_item_processing_Daily_Summary' %}"><i class="sidebar-item-icon fa fa-calendar"></i>
+                            <span class="nav-label">Item Return</span>
+                            </a>
+                        </li>
+
+                           <li>
+                            <a href="{% url 'Item_Write_off_Daily_Summary' %}"><i class="sidebar-item-icon fa fa-calendar"></i>
+                            <span class="nav-label">Item Write-off</span>
+                                    </a>
+                        </li>
+
+                    </ul>
+                </li>
+            {% endif %}
+
+                {% if 'DAY END TRANSACTION' in task_array %}
                     <li>
                         <a href="javascript:;"><i class="sidebar-item-icon fa fa-sitemap"></i>
                             <span class="nav-label">Day End Transactions</span><i class="fa fa-angle-left arrow"></i></a>
                         <ul class="nav-2-level collapse">
                            <li>
                             <a href="{% url 'Day_End_Transaction_Summary' %}"><i class="sidebar-item-icon fa fa-calendar"></i>
-                            <span class="nav-label">Day End Transaction</span>
+                            <span class="nav-label">Sales</span>
                                     </a>
-                                </li> 
-                        <li>
-                            <a href="{% url 'general_cash_sales_dashboard' %}">Purchases </a>
+                            </li>
+
+                            <li>
+                                <a href="{% url 'Product_Purchase_Day_End_Transaction' %}"><i class="sidebar-item-icon fa fa-calendar"></i>
+                                <span class="nav-label">Purchases</span>
+                                    </a>
+                            </li>
+                            <li>
+                            <a href="{% url 'Cash_Deposit_Day_End_Transactions' %}"><i class="sidebar-item-icon fa fa-calendar"></i>
+                            <span class="nav-label">Cash Deposit</span>
+                                    </a>
+                            </li>
+                            <li>
+                            <a href="{% url 'members_credit_sales_debt_recovery_cash_payment_Day_End_Transaction_list_load' %}"><i class="sidebar-item-icon fa fa-calendar"></i>
+                            <span class="nav-label">Cash Payment Return</span>
+                                    </a>
+                            </li>
+                            <li>
+                                <a href="{% url 'Expenditure_Day_End_Summary' %}"><i class="sidebar-item-icon fa fa-calendar"></i>
+                                <span class="nav-label">Miscellaneous Expenditures</span>
+                                    </a>
+                            </li>
+                            <li>
+                            <a href="{% url 'Item_Return_Process_issue_item_processing_Day_End_Transaction' %}"><i class="sidebar-item-icon fa fa-calendar"></i>
+                            <span class="nav-label">Item Return</span>
+                                    </a>
                         </li>
-                            
-                            
-                            
+
+                           <li>
+                            <a href="{% url 'Item_Write_off_Day_End_Transactions' %}"><i class="sidebar-item-icon fa fa-calendar"></i>
+                            <span class="nav-label">Item Write-off</span>
+                                    </a>
+                        </li>
+
+
                         </ul>
-                    </li> 
+                    </li>
+                {% endif %}
+               {% if 'MONTH END TRANSACTION' in task_array %}
+                    <li>
+                        <a href="javascript:;"><i class="sidebar-item-icon fa fa-edit"></i>
+                            <span class="nav-label">End of Month Transactions  </span><i class="fa fa-angle-left arrow"></i></a>
+                        <ul class="nav-2-level collapse">
+                            <li>
+                                <a href="{% url 'members_shop_credit_loan_salary_institution_select' %}">Collating of Credit Sales</a>
+                            </li>
+                            <li>
+                                <a href="{% url 'Month_End_Transaction_Summary' %}">Sales</a>
+                            </li>
+                            <li>
+                                <a href="{% url 'Product_Purchase_Month_End_Transaction' %}">Purchases</a>
+                            </li>
+                            <li>
+                                <a href="{% url 'Expenditure_Month_End_Summary' %}">Miscellaneous Expenditures</a>
+                            </li>
+                             <li>
+                                <a href="{% url 'Cash_Deposit_Month_End_Transactions' %}">Cash Deposits</a>
+                            </li>
+                            <li>
+                                <a href="{% url 'members_credit_sales_debt_recovery_cash_payment_Month_End_Transaction_list_load' %}">Cash Payment Return</a>
+                            </li>
+                            <li>
+                                <a href="{% url 'Item_Return_Process_issue_item_processing_Month_End_Transaction' %}">Item Return</a>
+                            </li>
+                            <li>
+                                <a href="{% url 'Item_Write_off_Month_End_Transactions' %}">Item Write-off</a>
+                            </li>
 
+                        </ul>
+                    </li>
 
-               
+                {% endif %}
+                {% if 'YEAR END TRANSACTION' in task_array %}
+                <li>
+                        <a href="javascript:;"><i class="sidebar-item-icon fa fa-edit"></i>
+                            <span class="nav-label">End of Year Transactions  </span><i class="fa fa-angle-left arrow"></i></a>
+                        <ul class="nav-2-level collapse">
+
+                            <li>
+                                <a href="{% url 'Year_End_Transaction_Summary' %}">Sales</a>
+                            </li>
+                            <li>
+                                <a href="{% url 'Product_Purchase_Year_End_Transaction' %}">Purchases</a>
+                            </li>
+                            <li>
+                                <a href="{% url 'Expenditure_Year_End_Summary' %}">Miscellaneous Expenditures</a>
+                            </li>
+                             <li>
+                                <a href="{% url 'Cash_Deposit_Year_End_Transactions' %}">Cash Deposits</a>
+                            </li>
+                            <li>
+                                <a href="{% url 'members_credit_sales_debt_recovery_cash_payment_Year_End_Transaction_list_load' %}">Cash Payment Return</a>
+                            </li>
+                            <li>
+                                <a href="{% url 'Item_Return_Process_issue_item_processing_Year_End_Transaction' %}">Item Return</a>
+                            </li>
+                            <li>
+                                <a href="{% url 'Item_Write_off_Year_End_Transactions' %}">Item Write-off</a>
+                            </li>
+
+                        </ul>
+                    </li>
+                 {% endif %}
+                {% if 'MONTHLY DEDUCTION' in task_array %}
+                    <li class="heading">MONTHLY DEDUCTION</li>
                     <li>
                         <a href="javascript:;"><i class="sidebar-item-icon fa fa-edit"></i>
                             <span class="nav-label">Monthly Deductions  </span><i class="fa fa-angle-left arrow"></i></a>
                         <ul class="nav-2-level collapse">
-                           
-                            <li>
-                                <a href="{% url 'monthly_deductions_salary_institution_select' %}">Generate Deductions</a>
-                            </li>
-                            <li>
-                                <a href="{% url 'monthly_deductions_ledger_posting' %}">Deductions Ledger Posting</a>
-                            </li>
-                        </ul>
-                    </li>   
-                {% endif %}
-
-                 {% if user_level == '2'  %} 
-                     <li>
-                        <a href="javascript:;"><i class="sidebar-item-icon fa fa-edit"></i>
-                            <span class="nav-label">Debt Recovering</span><i class="fa fa-angle-left arrow"></i></a>
-                        <ul class="nav-2-level collapse">
-                           
-                            <li>
-                                <a href="{% url 'Members_Credit_sales_Cash_Deposit_search' %}">Bank Deposit</a>
-                            </li> 
-                            <li>
-                                <a href="{% url 'Cash_Deposit_Summary' %}">Bank Deposit Summary</a>
-                            </li>
-
-                        </ul>
-                    </li>
-                {% endif %}
-                    <li>
-                        <a href="javascript:;"><i class="sidebar-item-icon fa fa-sitemap"></i>
-                            <span class="nav-label">Products</span><i class="fa fa-angle-left arrow"></i></a>
-                        <ul class="nav-2-level collapse">
-                            
-                            <li>
-                                <a href="javascript:;">
-                                    <span class="nav-label">Product Purchases</span><i class="fa fa-angle-left arrow"></i></a>
-                                <ul class="nav-3-level collapse">
-                                {% if user_level == '2'  %}
-                                    <li>
-                                        <a href="{% url 'Product_Purchase' %}">Purchase Tracking</a>
-                                    </li>
-                                    <li>
-                                        <a href="{% url 'Purchase_Tracking_Manage' %}">Manage Purchases</a>
-                                    </li>
-                                {% endif %}
-                                
-
-
-
-                                {% if user_level == '1'  %}
-                                    <li>
-                                        <a href="{% url 'Purchase_Certification_List_load' %}">Purchase Confirmation</a>
-                                    </li>
-                                  {% endif %}
-                                </ul>
-                            </li>
-
-
-                            <li>
-                                <a href="javascript:;">
-                                    <span class="nav-label">Item Write-Off</span><i class="fa fa-angle-left arrow"></i></a>
-                                <ul class="nav-3-level collapse">
-                                {% if user_level == '2'  %}
-                                    <li>
-                                        <a href="{% url 'Item_Write_off_search' %}">Write-Off Request</a>
-                                    </li>                                    
-                                    <li>
-                                        <a href="{% url 'Item_Write_off_manage' %}">Manage Write-Off</a>
-                                    </li>
-
-                                    <li>
-                                        <a href="{% url 'Item_Write_off_Approved_List' %}">Write-Off Processing</a>
-                                    </li>
-                                {% endif %}
-                                
-
-
-
-                                {% if user_level == '1'  %}
-                                    <li>
-                                        <a href="{% url 'Item_Write_off_Approval' %}">Write-Off Approval</a>
-                                    </li>
-                                  {% endif %}
-                                </ul>
-                            </li>
-                        </ul>
-                    </li>
-
-
-
-                 
-                    
-                         
-                    <li>
-                        <a href="javascript:;"><i class="sidebar-item-icon fa fa-edit"></i>
-                            <span class="nav-label">Personal Ledger </span><i class="fa fa-angle-left arrow"></i></a>
-                        <ul class="nav-2-level collapse">
-                           
-                            <li>
-                                <a href="{% url 'Members_Credit_sales_ledger_search' %}">Credit Sales</a>
-                            </li>                     
-                        </ul>
-                    </li>
-
-                    {% if user_level == '1' or user_level == '3' %}
-                          <li>
-                                <a href="javascript:;"><i class="sidebar-item-icon fa fa-sitemap"></i>
-                                    <span class="nav-label">Utilities</span><i class="fa fa-angle-left arrow"></i></a>
-                                <ul class="nav-2-level collapse">
-                            
-                            <li>
-                                <a href="javascript:;">
-                                    <span class="nav-label">Products</span><i class="fa fa-angle-left arrow"></i></a>
-                                <ul class="nav-3-level collapse">
-                                    <li>
-                                        <a href="{% url 'Stock_Category_Load' %}">Add Products</a>
-                                    </li>
-                                    <li>
-                                        <a href="{% url 'Manage_Stock_search' %}">Manage Products</a>
-                                    </li> 
-                                    <li>
-                                        <a href="{% url 'Manage_Stock_Product_Lock' %}">Lock Products</a>
-                                    </li>
-                                    <li>
-                                        <a href="{% url 'Item_Write_off_Reasons' %}">Lock Item Write-Off Reasons</a>
-                                    </li>
-                                </ul>
-                                
-                            </li>
-
-
-                            <li>
-                                <a href="javascript:;">
-                                    <span class="nav-label">Suppliers</span><i class="fa fa-angle-left arrow"></i></a>
-                                <ul class="nav-3-level collapse">
-                                    <li>
-                                        <a href="{% url 'Supplier_add' %}">Add Suppliers</a>
-                                    </li>
-                                    <li>
-                                        <a href="javascript:;">Manage Suppliers</a>
-                                    </li>
-                                </ul>
-                            </li>
-
-
-
-                        </ul>
-                    </li>
-
-                {% endif %}
-
-                    <li>
-                        <a href="javascript:;"><i class="sidebar-item-icon fa fa-sitemap"></i>
-                            <span class="nav-label">Reports</span><i class="fa fa-angle-left arrow"></i></a>
-                        <ul class="nav-2-level collapse">
-                            
-                            <li>
-                                <a href="javascript:;">
-                                    <span class="nav-label">Stock Levels</span><i class="fa fa-angle-left arrow"></i></a>
-                                <ul class="nav-3-level collapse">
-                               
-                                    <li>
-                                        <a href="{% url 'All_Stock_Status' %}"><i class="sidebar-item-icon fa fa-calendar"></i>
-                                            <span class="nav-label">All Stocks</span>
-                                        </a>
-                                    </li> 
-                                    <li>
-                                        <a href="{% url 'Stock_Status' %}"><i class="sidebar-item-icon fa fa-calendar"></i>
-                                            <span class="nav-label">Re-Order Level</span>
-                                        </a>
-                                    </li> 
-                                    
-                                </ul>
-                            </li>
-
-                            <li>
-                                <a href="javascript:;">
-                                    <span class="nav-label">Purchases</span><i class="fa fa-angle-left arrow"></i></a>
-                                <ul class="nav-3-level collapse">
-                                    <li>
-                                        <a href="{% url 'Purchase_Summary' %}">Purchase Summary</a>
-                                    </li>
-                                    <li>
-                                        <a href="javascript:;">Level 3</a>
-                                    </li>
-                                </ul>
-                            </li>
 
                              <li>
-                                <a href="javascript:;">
-                                    <span class="nav-label">Sales</span><i class="fa fa-angle-left arrow"></i></a>
-                                <ul class="nav-3-level collapse">
-                                    <li>
-                                        <a href="{% url 'Daily_Sales_Report_Summary' %}">Daily Sales</a>
-                                    </li>
-                                    <li>
-                                        <a href="javascript:;">Level 3</a>
-                                    </li>
-                                </ul>
+                                <a href="{% url 'monthly_deductions_salary_institution_select' %}">Individual Deductions</a>
                             </li>
 
                             <li>
-                                <a href="javascript:;">
-                                    <span class="nav-label">Debt Recovery</span><i class="fa fa-angle-left arrow"></i></a>
-                                <ul class="nav-3-level collapse">
-                                    <li>
-                                        <a href="">Bank Deposit</a>
-                                    </li>
-                                    <li>
-                                        <a href="javascript:;">Cash Payment</a>
-                                    </li>
-                                </ul>
+                                <a href="{% url 'monthly_grouped_deductions_salary_institution_select' %}">Grouped Deductions Generation</a>
                             </li>
-                        </ul>
-                    </li>   
-                {% comment %}
-                    <li class="heading">IMPORT/EXPORT</li>
-                    
-
-                 
-                  
-                    <li>
-                        <a href="javascript:;"><i class="sidebar-item-icon fa fa-sitemap"></i>
-                            <span class="nav-label">Menu Levels</span><i class="fa fa-angle-left arrow"></i></a>
-                        <ul class="nav-2-level collapse">
-                            
                             <li>
-                                <a href="javascript:;">
-                                    <span class="nav-label">Level 2</span><i class="fa fa-angle-left arrow"></i></a>
-                                <ul class="nav-3-level collapse">
-                                    <li>
-                                        <a href="javascript:;">Level 3</a>
-                                    </li>
-                                    <li>
-                                        <a href="javascript:;">Level 3</a>
-                                    </li>
-                                </ul>
+                                <a href="{% url 'Shop_Account_Deductions_Upload_salary_institution_select' %}">Process Account Deductions</a>
                             </li>
+
                         </ul>
                     </li>
-                {% endcomment %}
+                {% endif %}
+
+                 <li class="heading">DEBT RECOVERY</li>
+                {% if 'DEBT RECOVERY' in task_array %}
+                     <li>
+                        <a href="{% url 'members_credit_sales_debt_recovery_cash_payment_search' %}"><i class="sidebar-item-icon fa fa-calendar"></i>
+                            <span class="nav-label">Credit Cash Payment</span>
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="javascript:;"><i class="sidebar-item-icon fa fa-edit"></i>
+                            <span class="nav-label">Bank Deposit</span><i class="fa fa-angle-left arrow"></i></a>
+                        <ul class="nav-2-level collapse">
+
+                            <li>
+                                <a href="{% url 'Members_Credit_sales_Cash_Deposit_search' %}">Cash Deposit</a>
+                            </li>
+                             <li>
+                                <a href="{% url 'Members_Credit_sales_Cash_Deposit_Distributions_list_load' %}">Deposit Distributions</a>
+                            </li>
+                            <li>
+                                <a href="{% url 'Cash_Deposit_Summary' %}">Cash Deposit Summary</a>
+                            </li>
+
+                        </ul>
+                    </li>
+                {% endif %}
+                    <li class="heading">PRODUCTS</li>
+                     {% if 'PURCHASES TRACKING' in task_array %}
+                    <li>
+                        <a href="javascript:;"><i class="sidebar-item-icon fa fa-edit"></i>
+                            <span class="nav-label">Product Purchases</span><i class="fa fa-angle-left arrow"></i></a>
+                        <ul class="nav-2-level collapse">
+                            <li>
+                                <a href="{% url 'Product_Purchase' %}">Purchase Tracking</a>
+                            </li>
+                            <li>
+                                <a href="{% url 'Purchase_Tracking_Manage' %}">Manage Purchases</a>
+                            </li>
+
+                        </ul>
+                    </li>
+                    {% endif %}
+                     {% if 'ITEM WRITE OFF' in task_array %}
+                    <li>
+                        <a href="javascript:;"><i class="sidebar-item-icon fa fa-edit"></i>
+                            <span class="nav-label">Item Write-Off</span><i class="fa fa-angle-left arrow"></i></a>
+                        <ul class="nav-2-level collapse">
+                             <li>
+                                <a href="{% url 'Item_Write_off_search' %}">Write-Off Request</a>
+                            </li>
+                            <li>
+                                <a href="{% url 'Item_Write_off_manage' %}">Manage Write-Off</a>
+                            </li>
+                            <li>
+                                <a href="{% url 'Item_Write_off_Approved_List' %}">Write-Off Processing</a>
+                            </li>
+
+                        </ul>
+                    </li>
+                    {% endif %}
+
+                    {% if 'PRODUCT EXPIRY' in task_array %}
+                    <li>
+                        <a href="javascript:;"><i class="sidebar-item-icon fa fa-edit"></i>
+                            <span class="nav-label">Product Expiry Date</span><i class="fa fa-angle-left arrow"></i></a>
+                        <ul class="nav-2-level collapse">
+                            <li>
+                                <a href="{% url 'Expiring_Date_Tracking_search' %}">Track Expiry Date</a>
+                            </li>
+                            <li>
+                                <a href="{% url 'Expiring_Products_Tracking_Load' %}">Sort Expiry Products</a>
+                            </li>
+
+                        </ul>
+                    </li>
+
+                   <li>
+                        <a href="javascript:;"><i class="sidebar-item-icon fa fa-edit"></i>
+                            <span class="nav-label">Expired Products</span><i class="fa fa-angle-left arrow"></i></a>
+                        <ul class="nav-2-level collapse">
+                            <li>
+                                <a href="{% url 'Expired_Products_Main_Tracking_Load' %}">Expired Products Main</a>
+                            </li>
+                            <li>
+                                <a href="{% url 'Expired_Products_Auction_Tracking_Load' %}">Expired Products Auction</a>
+                            </li>
+
+                        </ul>
+                    </li>
+
+                {% endif %}
+                {% if 'ITEM RETURN' in task_array %}
+                   <li>
+                        <a href="javascript:;"><i class="sidebar-item-icon fa fa-edit"></i>
+                            <span class="nav-label">Item Return</span><i class="fa fa-angle-left arrow"></i></a>
+                        <ul class="nav-2-level collapse">
+                            <li>
+                                <a href="{% url 'Item_Return_Search_Page' %}">Item Return Register</a>
+                            </li>
+                            <li>
+                                <a href="{% url 'Item_Return_Manage_List_Load' %}">Manage Item Return</a>
+                            </li>
+
+
+                        </ul>
+                    </li>
+                {% endif %}
+                    {% if 'SUPPLIERS MANAGEMENT' in task_array %}
+                   <li>
+                        <a href="javascript:;"><i class="sidebar-item-icon fa fa-edit"></i>
+                            <span class="nav-label">Suppliers</span><i class="fa fa-angle-left arrow"></i></a>
+                        <ul class="nav-2-level collapse">
+                             <li>
+                                <a href="{% url 'Supplier_add' %}">Add Suppliers</a>
+                            </li>
+                            <li>
+                                <a href="javascript:;">Manage Suppliers</a>
+                            </li>
+
+                        </ul>
+                    </li>
+                    {% endif %}
+                 {% if 'STOCK TAKEN' in task_array %}
+                    <li>
+                        <a href="{% url 'Stock_Taken' %}"><i class="sidebar-item-icon fa fa-calendar"></i>
+                            <span class="nav-label">Stock Taken</span>
+                        </a>
+                    </li>
+                     {% endif %}
+                     <li class="heading">APPROVALS</li>
+                    {% if 'PURCHASES CERTIFICATION' in task_array or 'ITEM WRITE OFF APPROVAL' in task_array %}
+                        <li>
+                        <a href="javascript:;"><i class="sidebar-item-icon fa fa-edit"></i>
+                            <span class="nav-label">Approval</span><i class="fa fa-angle-left arrow"></i></a>
+                        <ul class="nav-2-level collapse">
+
+                            {% if 'PURCHASES CERTIFICATION' in task_array %}
+
+                                <li>
+                                    <a href="{% url 'Purchase_Certification_List_load' %}">Purchase Confirmation</a>
+                                </li>
+                                {% endif %}
+                             {% if 'ITEM WRITE OFF APPROVAL' in task_array %}
+
+                                <li>
+                                    <a href="{% url 'Item_Write_off_Approval' %}">Write-Off Approval</a>
+                                </li>
+                                 {% endif %}
+
+
+                        </ul>
+                        </li>
+                    {% endif %}
+
+                    {% if 'GENERAL REPORT' in task_array %}
+                    <li class="heading">GENERAL REPORT</li>
+                    {% if 'CREDIT SALES STATUS' in task_array %}
+                    <li>
+                        <a href="{% url 'Members_Credit_sales_ledger_search' %}"><i class="sidebar-item-icon fa fa-calendar"></i>
+                        <span class="nav-label">Credit Sales Status </span>
+                        </a>
+                    </li>
+                     {% endif %}
+                    {% if 'PERSONAL LEDGER' in task_array %}
+                     <li>
+                        <a href="{% url 'Members_Credit_sales_ledger_search' %}"><i class="sidebar-item-icon fa fa-calendar"></i>
+                            <span class="nav-label">Personal Dashboard</span>
+                        </a>
+                    </li>
+                    {% endif %}
+
+                    {% if 'CASHBOOK VIEW' in task_array %}
+
+                    <li>
+                        <a href="{% url 'CashBook_Shop_Display' %}"><i class="sidebar-item-icon fa fa-calendar"></i>
+                            <span class="nav-label">Cash Book</span>
+                        </a>
+                    </li>
+                    {% endif %}
+
+
+                    {% if 'PURCHASE REPORT' in task_array %}
+                    <li>
+                        <a href="javascript:;"><i class="sidebar-item-icon fa fa-edit"></i>
+                            <span class="nav-label">Purchases</span><i class="fa fa-angle-left arrow"></i></a>
+                        <ul class="nav-2-level collapse">
+
+                             <li>
+                                <a href="{% url 'Purchase_Summary' %}">Purchase Summary</a>
+                            </li>
+                            <li>
+                                <a href="javascript:;">Level 3</a>
+                            </li>
+
+                        </ul>
+                    </li>
+                 {% endif %}
+                 {% if 'GENERAL STOCK STATUS' in task_array %}
+                    <li>
+                        <a href="javascript:;"><i class="sidebar-item-icon fa fa-edit"></i>
+                            <span class="nav-label">Stock</span><i class="fa fa-angle-left arrow"></i></a>
+                        <ul class="nav-2-level collapse">
+
+                             <li>
+                                <a href="{% url 'All_Stock_Status' %}">Normal Stock</a>
+                            </li>
+                            <li>
+                                <a href="{% url 'All_Auction_Stock_Status' %}">Auction Stock</a>
+                            </li>
+                            <li>
+                                <a href="{% url 'Stock_Status' %}">Re-Order Level</a>
+                            </li>
+
+                        </ul>
+                    </li>
+                     {% endif %}
+                 {% if 'GENERAL SALES REPORT' in task_array %}
+                    <li>
+                        <a href="javascript:;"><i class="sidebar-item-icon fa fa-edit"></i>
+                            <span class="nav-label">Sales</span><i class="fa fa-angle-left arrow"></i></a>
+                        <ul class="nav-2-level collapse">
+
+                            <li>
+                                <a href="{% url 'Daily_Sales_Report' %}">Daily Sales</a>
+                            </li>
+                            <li>
+                                <a href="{% url 'Daily_Sales_Report_Summary' %}">Daily Sales Summary</a>
+                            </li>
+                            <li>
+                                <a href="javascript:;">Level 3</a>
+                            </li>
+
+                        </ul>
+                    </li>
+                {% endif %}
+            {% if 'BANK REPORT' in task_array %}
+                    <li>
+                        <a href="javascript:;"><i class="sidebar-item-icon fa fa-edit"></i>
+                            <span class="nav-label">Debt Recovery</span><i class="fa fa-angle-left arrow"></i></a>
+                        <ul class="nav-2-level collapse">
+
+                            <li>
+                                <a href="">Bank Deposit</a>
+                            </li>
+                            <li>
+                                <a href="javascript:;">Cash Payment</a>
+                            </li>
+
+                        </ul>
+                    </li>
+
+
+                {% endif %}
+                {% endif %}
+                  <li class="heading">UTILITIES</li>
+                  {% if 'PRODUCT MANAGEMENT' in task_array %}
+                    <li>
+                        <a href="javascript:;"><i class="sidebar-item-icon fa fa-edit"></i>
+                            <span class="nav-label">Utilities</span><i class="fa fa-angle-left arrow"></i></a>
+                        <ul class="nav-2-level collapse">
+
+                            <li>
+                                <a href="{% url 'Stock_Category_Load' %}">Add Products</a>
+                            </li>
+                            <li>
+                                <a href="{% url 'Manage_Stock_search' %}">Manage Selected Products</a>
+                            </li>
+                            <li>
+                                <a href="{% url 'Manage_Stock_Product_load_All' %}">Manage All Products</a>
+                            </li>
+                            <li>
+                                <a href="{% url 'Manage_Stock_Product_Lock' %}">Lock Products</a>
+                            </li>
+                            <li>
+                                <a href="{% url 'Item_Write_off_Reasons' %}">Write-Off Reasons</a>
+                            </li>
+
+                        </ul>
+                    </li>
+                    {% endif %}
+
+
                 </ul>
             </div>
         </nav>

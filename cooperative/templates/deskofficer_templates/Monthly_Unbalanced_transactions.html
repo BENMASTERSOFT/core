@@ -67,10 +67,10 @@
                                             <td>{{record.amount_deducted}}</td>
                                             <td>{{record.balance}}</td>
                                             <td>{{record.member.salary_institution}}</td>
-                                            <td>{{record.transaction_status}}</td>
+                                            <td>{{record.processing_status}}</td>
                                             
                                             <td>
-                                                {% if record.refund_status.title == "UNPROCESSED"  and record.balance > 0 %}
+                                                {% if record.processing_status == "UNPROCESSED"  and record.balance > 0 %}
 
                                                 <a href="{% url 'Monthly_Unbalanced_transactions_Processing' record.pk %}" class="btn btn-primary">Process</a>
 

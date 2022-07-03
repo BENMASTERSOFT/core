@@ -1,0 +1,37 @@
+def loan_request_manage_period_load(request):
+    current_user=Desk_Office_Tasks_Model.objects.get(user=request.user.id)
+    DataCapture=DataCaptureManager.objects.first()
+
+    submission_status=SubmissionStatus.objects.get(title="SUBMITTED")
+    transaction_status=TransactionStatus.objects.get(title="UNTREATED")
+
+    form=loan_request_order_form(request.POST or None)
+    exist_loans=[]
+    if request.method == 'POST':
+        period_id=request.POST.get("period")
+        period = Commodity_Period.objects.get(id=period_id)
+
+        batch_id=request.POST.get('batch')
+        batch=Commodity_Period_Batch.objects.get(id=batch_id)
+
+        loan_id = request.POST.get('loans')
+        loan = TransactionTypes.objects.get(id=loan_id)
+
+        exist_loans = LoanRequest.objects.filter(loan=loan,period=period,batch=batch,submission_status=submission_status,transaction_status=transaction_status)
+    
+    context={
+    'exist_loans':exist_loans,
+    'form':form,
+    'current_user':current_user,
+    'DataCapture':DataCapture,
+    }
+    return render(request,'deskofficer_templates/loan_request_manage_period_load.html',context)
+
+
+
+
+    period_id=request.POST.get("period")
+    period = Commodity_Period.objects.get(id=period_id)
+
+    batch_id=request.POST.get('batch')
+    batch=Commodity_Period_Batch.objects.get(id=batch_id)

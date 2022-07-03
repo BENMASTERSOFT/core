@@ -38,7 +38,7 @@
                                      <div class="form-group row">
                                         <label class="col-sm-3 col-form-label">Account</label>
                                         <div class="col-sm-8">
-                                            {{form.account}}
+                                            {{form.account_name}}
                                         </div>
                                     </div> 
                                      {% if receipt_types_status == True %}
@@ -79,18 +79,25 @@
                                         <div class="col-sm-8">
                                             {{form.amount_paid}}
                                         </div>
-                                    </div>                                    
+                                    </div> 
+                                {% comment %}                                   
                                     <div class="form-group row">
                                         <label class="col-sm-3 col-form-label">Form Print</label>
                                         <div class="col-sm-8">
                                             {{form.form_print}}
                                         </div>
                                     </div>                                    
-                                                    
+                                {% endcomment %}             
                                     <div class="form-group row">
                                         <label class="col-sm-3 col-form-label">Payment Reference</label>
                                         <div class="col-sm-8">
                                             {{form.payment_reference}}
+                                        </div>
+                                    </div>  
+                                    <div class="form-group row">
+                                        <label class="col-sm-3 col-form-label">Payment Date</label>
+                                        <div class="col-sm-8">
+                                            {{form.date_paid}}
                                         </div>
                                     </div>                                    
                                     <div class="form-group row">

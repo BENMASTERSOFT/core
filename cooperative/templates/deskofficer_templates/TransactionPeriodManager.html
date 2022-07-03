@@ -74,7 +74,10 @@
                                                     <td>{{forloop.counter}}</td>
                                                     <td>{{record.transaction_period}}</td>
                                                     <td>{{record.status}}</td>
-                                                    <td><a href="{% url 'TransactionPeriodsUpdate' record.pk %}" class="btn btn-primary">Update</a></td>
+                                                    <td>
+                                                        <a href="{% url 'TransactionPeriodsUpdate' record.pk %}" class="btn btn-primary">Update</a>
+                                                        <a href="{% url 'TransactionPeriodsDelete' record.pk %}" class="btn btn-danger">Drop</a>
+                                                    </td>
                                                 </tr>
                                             {% endfor %}
                                             </tbody>

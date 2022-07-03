@@ -1,4 +1,10 @@
-date_format = '%Y-%m-%d'
+    start_date_id=request.POST.get('start_date')
+        start_date=datetime.datetime.strptime(start_date_id, '%Y-%m-%d')    
+        stop_date = start_date+ relativedelta(months=int(duration))        
+
+
+
+        date_format = '%Y-%m-%d'
         dtObj = datetime.datetime.strptime(applied_date_id, date_format)
         applied_date=get_current_date(dtObj)
 
@@ -6,6 +12,17 @@ date_format = '%Y-%m-%d'
 
 
 
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""''
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""''
+date_format = '%Y-%m-%d'
+            new_expiry_date_id = datetime.strptime(new_expiry_date, date_format)
+            # stop_date = datetime.strptime(stop_date, date_format)
+            return HttpResponse(get_current_date(new_expiry_date_id))
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+|date:"D, d M, Y"
 
 
 

@@ -6,48 +6,56 @@
                 <div class="row">
                   
 
-                    <div class="col-md-6">
+                    <div class="col-md-7">
                         <div class="ibox">
                             <div class="ibox-head">
-                                <div class="ibox-title">Horizontal Form</div>
+                                <div class="ibox-title">Product Price Settings</div>
                                 
                             </div>
                             <div class="ibox-body">
                                 <form class="form-horizontal" method="POST">
                                             {% csrf_token %}
                                     <div class="form-group row">
-                                        <label class="col-sm-3 col-form-label">Product Name</label>
-                                        <div class="col-sm-9">
+                                        <label class="col-sm-4 col-form-label">Product Name</label>
+                                        <div class="col-sm-8">
                                             {{form.product_name}}
                                         </div>
                                     </div>
                                     <div class="form-group row">
-                                        <label class="col-sm-3 col-form-label">Model</label>
-                                        <div class="col-sm-9">
+                                        <label class="col-sm-4 col-form-label">Model</label>
+                                        <div class="col-sm-8">
                                             {{form.product_model}}
                                         </div>
                                     </div>
                                     <div class="form-group row">
-                                        <label class="col-sm-3 col-form-label">Details</label>
-                                        <div class="col-sm-9">
+                                        <label class="col-sm-4 col-form-label">Details</label>
+                                        <div class="col-sm-8">
                                             {{form.details}}
                                         </div>
                                     </div>
                                     <div class="form-group row">
-                                        <label class="col-sm-3 col-form-label">Cost Price</label>
-                                        <div class="col-sm-9">
+                                        <label class="col-sm-4 col-form-label">Cost Price</label>
+                                        <div class="col-sm-8">
                                             {{form.unit_cost_price}}
                                         </div>
                                     </div> 
+                                {% if coop_price_enabled %} 
                                     <div class="form-group row">
-                                        <label class="col-sm-3 col-form-label">Status</label>
-                                        <div class="col-sm-9">
+                                        <label class="col-sm-4 col-form-label">Cooperative Price</label>
+                                        <div class="col-sm-8">
+                                            {{form.coop_price}}
+                                        </div>
+                                    </div> 
+                                {% endif %}
+                                    <div class="form-group row">
+                                        <label class="col-sm-4 col-form-label">Status</label>
+                                        <div class="col-sm-8">
                                             {{form.status}}
                                         </div>
                                     </div>
                                    
                                     <div class="form-group row">
-                                        <div class="col-sm-9 ml-sm-auto">
+                                        <div class="col-sm-8 ml-sm-auto">
                                             <button class="btn btn-info" type="submit">Submit</button>
                                         </div>
                                     </div>

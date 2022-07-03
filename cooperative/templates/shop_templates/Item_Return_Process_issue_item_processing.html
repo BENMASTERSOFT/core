@@ -1,0 +1,140 @@
+{% extends 'shop_templates/base_template.html' %}
+{% load static %}
+
+
+
+{% block content %}
+<div class="page-content fade-in-up">
+    <div class="form-group">
+                      {% if messages %}
+                        
+                          {% for message in messages %}
+                          {% if message.tags == "error" %}
+                          <div class="alert alert-danger" style="margin-top:10px">{{message}}</div>
+                          
+                          {% endif %}
+
+                          {% if message.tags == "success" %}
+                          <div class="alert alert-success" style="margin-top:10px">{{message}}</div>
+                          
+                          {% endif %}
+                          {% endfor %}
+                      
+                      {% endif %}
+                    </div>
+    {% if not pay_status  %}
+        <div class="row">
+            <div class="col-md-8">
+                <div class="ibox">
+                    <div class="ibox-head">
+                        <div class="ibox-title">PAYMENT SCHEDULE</div> 
+                    </div>
+                    
+                    <div class="ibox-body">
+                        <form class="form-horizontal" method="POST" action="">
+                            {% csrf_token %}
+                            
+                            <div class="form-group row">
+                                <label class="col-sm-4 col-form-label">Bank Name(Source)</label>
+                                <div class="col-sm-8">
+                                    {{form.banks}}
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-4 col-form-label">Account Name</label>
+                                <div class="col-sm-8">
+                                   {{form.account_name}}
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-4 col-form-label">Other Details</label>
+                                <div class="col-sm-8">
+                                    {{form.other_details}}
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-4 col-form-label">Amount</label>
+                                <div class="col-sm-8">
+                                    {{form.amount_due}}
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-4 col-form-label">Cooperative Bank Details(Destination)</label>
+                                <div class="col-sm-8">
+                                    {{form.coop_accounts}}
+                                </div>
+                            </div>
+                            {% if receipt_type == 'MANUAL' %}
+                                <div class="form-group row">
+                                    <label class="col-sm-4 col-form-label">Receipt No</label>
+                                    <div class="col-sm-8">
+                                       {{form.receipt_no}}
+                                    </div>
+                                </div>
+                            {% endif %}
+                                <div class="form-group row">
+                                    <label class="col-sm-4 col-form-label">Receipt Print</label>
+                                    <div class="col-sm-8">
+                                       {{form.receipt_print}}
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-sm-8 ml-sm-auto">
+                                        <button class="btn btn-info" type="submit" name='btn-add'>Process</button>
+                                    </div>
+                                </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% else %}
+        <div class="row">
+            <div class="col-xl-6">   
+                <div class="ibox">
+                    <div class="ibox-head">
+                        <div class="ibox-title">Cash Payment</div>
+                    </div>
+                    <div class="ibox-body">
+                        <form class="form-horizontal" method="POST" action="">
+                            {% csrf_token %}
+                            <div class="form-group row">
+                                <label class="col-sm-4 col-form-label">Amount Paid</label>
+                                <div class="col-sm-8">
+                                   {{form.balance_amount}}
+                                </div>
+                            </div>   
+                           {% if receipt_type == 'MANUAL' %}
+                            <div class="form-group row">
+                                <label class="col-sm-4 col-form-label">Receipt No</label>
+                                <div class="col-sm-8">
+                                   {{form.receipt_no}}
+                                </div>
+                            </div>
+                         {% endif %}
+                            <div class="form-group row">
+                                <label class="col-sm-4 col-form-label">Receipt Print</label>
+                                <div class="col-sm-8">
+                                   {{form.receipt_print}}
+                                </div>
+                            </div>                          
+                            <div class="form-group row">
+                                <div class="col-sm-8 ml-sm-auto">
+                                        <button class="btn btn-secondary" type="submit" name='btn-process'>Process</button>
+                                
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>         
+        </div>
+    {% endif %}
+</div>
+
+<div class="sidenav-backdrop backdrop"></div>
+<div class="preloader-backdrop">
+    <div class="page-preloader">Loading</div>
+</div>
+ {% include 'cooperative/includes/emptyspace.html' %} 
+{% endblock %}

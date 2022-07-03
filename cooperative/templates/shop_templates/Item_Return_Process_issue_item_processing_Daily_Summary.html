@@ -1,0 +1,134 @@
+{% extends 'shop_templates/base_template.html' %}
+{% load static %}
+
+{% block content %}
+            <div class="page-content fade-in-up">
+                <div class="row">
+                    <div class="col-xl-12">
+                        <div class="ibox">
+                            <div class="ibox-head">
+                                <div class="ibox-title">Returned Item Daily Summary</div>
+                            </div>
+                            <div class="ibox-body">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Name</th>
+                                            <th>Receipt</th>
+                                            <th>Prev Amount</th>
+                                            <th>Current Amount</th>
+                                            <th>Balance Amount(+ve)</th>
+                                            <th>Balance Amount(-ve)</th>
+                                            <th>Channel</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for record in records %}
+                                        <tr>
+                                            <td>{{forloop.counter}}</td>
+                                            <td>{{record.sale.customer.sales.name}}</td>
+                                            <td>{{record.receipt}}</td>
+                                            <td>{{record.prev_amount}}</td>
+                                            <td>{{record.current_amount}}</td>
+                                            <td>{{record.balance_amount}}</td>
+                                            <td>{{record.balance_amount}}</td>
+                                            <td>{{record.channel}}</td>
+                                            
+                                        </tr>
+                                    {% endfor %}
+                                   
+                                    <tr>
+                                        <td colspan="3">SUMMARY</td>
+                                        <td>{{total_prev}}</td>
+                                        <td>{{total_current}}</td>
+                                        <td>{{total_balance}}</td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                             
+                                    </tbody>
+                              
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    
+                </div>
+               {% if button_show %}
+                <div class="row">
+                    <div class="col-xl-5">
+                        <div class="ibox">
+                            <div class="ibox-head">
+                                <div class="ibox-title">SUMMARY </div>
+                            </div>
+                            <div class="ibox-body">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Description</th>
+                                            <th>Amount</th>
+                                            
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                  
+                                        <tr>
+                                            <td>1</td>
+                                            <td>Total Previous Amount</td>
+                                            <td>{{total_prev}}</td>
+                                        </tr>
+                              
+                                    <tr>
+                                        <td>2</td>
+                                        <td>Total Current Amount</td>
+                                        <td>{{total_current}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>3</td>
+                                        <td>Total Positive Balance</td>
+                                        <td>
+                                        {% if total_positive %}
+                                                {{total_positive}}
+                                            {% else %}
+                                            0.00
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>4</td>
+                                        <td>Total Negative Balance</td>
+                                        <td>
+                                            {% if total_negative %}
+                                                {{total_negative}}
+                                            {% else %}
+                                            0.00
+                                            {% endif %}
+                                        </td>
+                                    </tr>   
+                                    <tr>
+                                        <td colspan="2"></td>
+                                        
+                                        <td>
+                                        <form class="form-horizontal" method="POST" action="">
+                                            {% csrf_token %}
+                                            <button class="btn btn-success" type="submit">Submit</button>
+                                        </form>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div> 
+                </div>
+                {% endif %}
+              
+            </div>
+  <div class="sidenav-backdrop backdrop"></div>
+    <div class="preloader-backdrop">
+        <div class="page-preloader">Loading</div>
+    </div>
+     {% include 'cooperative/includes/emptyspace.html' %} 
+{% endblock %}

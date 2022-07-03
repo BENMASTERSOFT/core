@@ -1,0 +1,69 @@
+{% extends 'deskofficer_templates/base_template.html' %}
+{% load static %}
+
+{% block content %}
+            <div class="page-content fade-in-up">
+                <div class="row">
+                    <div class="col-xl-6">
+                        <div class="ibox">
+                            <div class="ibox-head">
+                                <div class="ibox-title">Rental Services Details | {{record.name}} | {{record.category.description}}</div>
+                            </div>
+                            <div class="form-group">
+                              {% if messages %}
+                                
+                                  {% for message in messages %}
+                                  {% if message.tags == "info" %}
+                                   <div class="alert alert-warning alert-dismissable fade show"  style="margin-top:10px">
+                                    <button class="close" data-dismiss="alert" aria-label="Close">×</button><strong>Warning!</strong> {{message}}</div>
+                                  
+                                  {% endif %}
+
+                                  
+                                  {% endfor %}
+                              
+                              {% endif %}
+                            </div>
+                                                        <div class="ibox-body">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                         
+                                            <th>Date</th>
+                                            
+                                            <th colspan="2">Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for item in booking_array %}
+                                        <tr>
+                                            <td>{{forloop.counter}}</td>
+                                          
+                                            <td>{{item.1}}</td>
+                                          
+          
+                                            <td>
+                                                <form class="form-horizontal" method="POST" action="{% url 'Rental_Services_Management_Process_Completed' record.pk item.0 %}" enctype="multipart/form-data" novalidate>
+                                                    {% csrf_token %}
+                                                 <button class="btn btn-success" type="submit">Mark Used</button>
+                                            </form>
+                                            </td>
+                                            <td><a href="{% url 'Rental_Services_Management_Process_Details' item.0 record.pk %}" class="btn btn-secondary">Details</a></td>
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    
+                </div>
+           
+           
+            </div>
+  <div class="sidenav-backdrop backdrop"></div>
+    <div class="preloader-backdrop">
+        <div class="page-preloader">Loading</div>
+    </div>
+{% endblock %}

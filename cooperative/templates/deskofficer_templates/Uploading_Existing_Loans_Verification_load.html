@@ -41,9 +41,8 @@
                                 <tr>
                                     <th>#</th>
                                     <th>Member ID</th>
-                                    <th>First Name</th>
-                                    <th>Last Name</th>
-                                    <th>Middle Name</th>
+                                    <th>Name</th>
+                                  
                                     <th>Action</th>
                                     
                                 </tr>
@@ -52,9 +51,8 @@
                                 <tr>
                                     <th>#</th>
                                     <th>Member ID</th>
-                                    <th>First Name</th>
-                                    <th>Last Name</th>
-                                    <th>Middle Name</th>
+                                    <th>Name</th>
+                                  >
                                     <th>Action</th>
                                 </tr>
                             </tfoot>
@@ -63,9 +61,8 @@
                                 <tr>
                                     <td>{{forloop.counter}}</td>
                                     <td>{{member.get_member_Id}}</td>
-                                    <td>{{member.admin.first_name}}</td>
-                                    <td>{{member.admin.last_name}}</td>
-                                    <td>{{member.middle_name}}</td>
+                                    <td>{{member.get_full_name}}</td>
+                                  
                                    
                                     <td>
                                         <a href="{% url 'Uploading_Existing_Loans_Verification_View' member.pk %}" class="btn btn-primary">View</a>

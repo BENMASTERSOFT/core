@@ -18,7 +18,7 @@
                                 <table class="table table-hover">
                                     <thead>
                                         <tr>
-                                            <th>#</th>
+                                           
                                             <th>Description</th>
                                             <th>Value</th>
                                             <th>Action</th>
@@ -26,66 +26,87 @@
                                     </thead>
                                     <tbody>
                                         <tr>
-                                            <td>1</td>
+                                           
                                             <td>Duration</td>
                                             <td>{{record.duration}}</td>
                                              <td><a href="{% url 'non_monetary_loan_duration_update' record.pk %}" class="btn btn-primary">Update</a></td>
                                         </tr>
                                         <tr>
-                                            <td>2</td>
+                                           
                                             <td>Description</td>
                                             <td>{{record.title}}</td>
                                             <td><a href="{% url 'non_monetary_loan_name_update' record.pk %}" class="btn btn-primary">Update</a></td>
                                         </tr>
+                                        {% if record.interest_rate_required == '1' %}
                                         <tr>
-                                            <td>3</td>
+                                           
                                             <td>Interest Rate</td>
                                             <td>{{record.interest_rate}}</td>
                                              <td><a href="{% url 'non_monetary_loan_interest_rate_update' record.pk %}" class="btn btn-primary">Update</a></td>
                                         </tr>
+                                        {% endif %}
+
+                                      {% if admin_charges_required %}
                                         <tr>
-                                            <td>4</td>
+                                          
                                             <td>Admin Charge Rating</td>
                                             <td>{{record.admin_charges_rating}}</td>
                                              <td><a href="{% url 'non_monetary_loan_admin_charges_rate_update' record.pk %}" class="btn btn-primary">Update</a></td>
                                         </tr>
+                                      
                                         <tr>
-                                            <td>5</td>
+                                           
                                             <td>Admin Charges</td>
                                             <td>{{record.admin_charges}}</td>
                                              <td><a href="{% url 'non_monetary_loan_admin_charges_update' record.pk %}" class="btn btn-primary">Update</a></td>
                                         </tr>
+                                        {% endif %}
+                                        {% if guarantor_required %}
                                         <tr>
-                                            <td>6</td>
+                                         
                                             <td>Guarantors</td>
                                             <td>{{record.guarantors}}</td>
                                              <td><a href="{% url 'non_monetary_oan_guarantors_update' record.pk %}" class="btn btn-primary">Update</a></td>
-                                        </tr>
+                                        </tr>  
+                                           {% comment %}
                                         <tr>
-                                            <td>7</td>
+                                          
+                                            <td>Guarantors Gross Pay Rating</td>
+                                            <td>{{record.guarantors_gross_pay_rating}}</td>
+                                             <td><a href="{% url 'non_monetary_oan_guarantors_gross_pay_rating_update' record.pk %}" class="btn btn-primary">Update</a></td>
+                                        </tr>
+                                            {% endcomment %}
+                                          {% endif %} 
+                                            
+                                        <tr>
+                                          
                                             <td>Loan Age</td>
                                             <td>{{record.loan_age}}</td>
                                              <td><a href="{% url 'non_monetary_loan_loan_age_update' record.pk %}" class="btn btn-primary">Update</a></td>
                                         </tr>
                                         <tr>
-                                            <td>8</td>
+                                        
                                             <td>Receipt Type</td>
                                             <td>{{record.receipt_type}}</td>
                                              <td><a href="{% url 'non_monetary_loan_receipt_type_update' record.pk %}" class="btn btn-primary">Update</a></td>
                                         </tr>
+
+                                        {% comment %}
                                         <tr>
-                                            <td>9</td>
+                                       
                                             <td>Multiple Loan Status</td>
                                             <td>{{record.multiple_loan_status}}</td>
                                              <td><a href="{% url 'Non_Monetary_MultipleLoanStatus_update' record.pk %}" class="btn btn-primary">Update</a></td>
-                                        </tr>
+                                        </tr>  
+                                    
+                                     
                                         <tr>
-                                            <td>10</td>
+                                        
                                             <td>Form Print</td>
                                             <td>{{record.form_print}}</td>
                                             <td><a href="{% url 'non_monetary_loan_form_print_update' record.pk %}" class="btn btn-primary">Update</a></td>
                                         </tr>
-                                        
+                                        {% endcomment %}
                                         </tr>
                                     </tbody>
                                 </table>

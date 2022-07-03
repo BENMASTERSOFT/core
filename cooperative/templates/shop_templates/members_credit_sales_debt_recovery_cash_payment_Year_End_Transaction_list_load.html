@@ -1,0 +1,76 @@
+{% extends 'shop_templates/base_template.html' %}
+{% load static %}
+
+{% block content %}
+    <div class="page-content fade-in-up">
+        <div class="row">
+            <div class="col-md-4">
+                <div class="ibox">
+                    <div class="ibox-head">
+                        <div class="ibox-title">Transaction Period | {{request.user.username}}</div>
+                    </div>
+                    <div class="ibox-body">
+                         <form class="form-inline" method="POST" action="">
+                                      {% csrf_token %}
+                    
+                            <label class="sr-only" for="ex-email">Transaction Date</label>
+                            {{form.period}}
+                            
+                            <button class="btn btn-primary" type="submit" name='btn-fetch'>Fetch</button>
+                            {% if button_show %}
+                            <button class="btn btn-success" type="submit" name='btn-process'>Process</button>
+                            {% endif %}
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-xl-5">
+                <div class="ibox">
+                    <div class="ibox-head">
+                        <div class="ibox-title">LIST OF MEMBERS</div>
+                    </div>
+                    <div class="ibox-body">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Date</th>
+                                    <th>Amount</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            {% for record in records %}
+                                <tr>
+                                    <td>{{forloop.counter}}</td>
+                                    <td>{{record.tdate}}</td>
+                               
+                                    <td>{{record.amount}}</td>
+                               
+                                </tr>
+                            {% endfor %}
+                            <tr>
+                           
+                                <td colspan="2">SUMMARY</td>
+                                <td>
+                                {% if button_show %}
+                                {{total_amount}}
+                                {% endif %}
+                            </td>
+                             
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="sidenav-backdrop backdrop"></div>
+    <div class="preloader-backdrop">
+        <div class="page-preloader">Loading</div>
+    </div>
+      {% include 'cooperative/includes/emptyspace.html' %} 
+{% endblock %}

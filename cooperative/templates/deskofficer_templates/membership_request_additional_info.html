@@ -3,36 +3,32 @@
 
 {% block content %}
             <div class="page-content fade-in-up">
-                        <div class="form-group">
-                              {% if messages %}
-                                
-                                  {% for message in messages %}
-                                  {% if message.tags == "error" %}
-                                   <div class="alert alert-warning alert-dismissable fade show"  style="margin-top:10px">
-                                    <button class="close" data-dismiss="alert" aria-label="Close">×</button><strong>Warning!</strong> {{message}}</div>
-                                  
-                                  {% endif %}
+                <div class="form-group">
+                      {% if messages %}
+                        
+                          {% for message in messages %}
+                          {% if message.tags == "error" %}
+                           <div class="alert alert-warning alert-dismissable fade show"  style="margin-top:10px">
+                            <button class="close" data-dismiss="alert" aria-label="Close">×</button><strong>Warning!</strong> {{message}}</div>
+                          
+                          {% endif %}
 
-                                  {% if message.tags == "success" %}
-                                   <div class="alert alert-success alert-dismissable fade show"  style="margin-top:10px">
-                                    <button class="close" data-dismiss="alert" aria-label="Close">×</button><strong>Success!</strong> {{message}}</div>
-                                  
-                                  {% endif %}
-                                  {% endfor %}
-                              
-                              {% endif %}
-                        </div>
-
+                          {% if message.tags == "success" %}
+                           <div class="alert alert-success alert-dismissable fade show"  style="margin-top:10px">
+                            <button class="close" data-dismiss="alert" aria-label="Close">×</button><strong>Success!</strong> {{message}}</div>
+                          
+                          {% endif %}
+                          {% endfor %}
+                      
+                      {% endif %}
+                </div>
 
                 <div class="row">
-                  
-
-
                     <div class="col-md-6">
                         <div class="ibox">
                             <div class="ibox-head">
                                 <div class="ibox-title">Additional Info | <input class="btn btn-secondary" type="button" value="Back" onclick="history.back()"/></div> 
-                                <div class="ibox-title"><a href="{% url 'MemberShipRequest_submit' pk %}" class="btn btn-success">Submit</a> </div>
+                               
                                 
                             </div>
                             <div class="ibox-body">
@@ -79,8 +75,9 @@
                                             
                                             <td>
                                                 <a href="{% url 'membership_request_additional_info_update' record.pk %}" class="btn btn-secondary">Edit</a>
-                                                <a href="{% url 'membership_request_additional_info_delete_confirm' record.id pk %}" class="btn btn-danger">Remove</a>
+                                              <a href="{% url 'membership_request_additional_info_delete_confirm' record.pk pk %}" class="btn btn-danger">Remove</a>
                                                  </td>
+                                              
                                         </tr>
                                        {% endfor %}
                                     </tbody>
@@ -91,9 +88,7 @@
                 </div>
 
                  <div class="row">
-                 
-
-                     <div class="col-md-6">
+                    <div class="col-md-6">
                         <div class="ibox">
                             <div class="ibox-head">
                                 <div class="ibox-title">Additional Attachment</div>
@@ -150,7 +145,7 @@
                                             <td>{{attached_info.caption}}</td>
                                            
                                             <td>{% if attached_info.image %}<img src="{{attached_info.image}}" style="width:100px">{% endif %}</td>
-                                            <td><a href="">Remove</a> </td>
+                                           <td><a href="{% url 'MemberShipRequestAdditionalAttachment_info_delete_confirm' attached_info.pk pk %}">Remove</a> </td>
                                         </tr>
                                        {% endfor %}
                                     </tbody>
@@ -159,9 +154,23 @@
                         </div>
                     </div>
                 </div>
-            </div>
-            
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="ibox">
+                            <div class="ibox-head">
+                                Accept and Submit 
+                                <div class="ibox-title"><a href="{% url 'MemberShipRequest_submit' pk %}" class="btn btn-success">Submit</a> </div>
+                                
+                            </div>
+                            
+                        </div>
+                    </div>
+                </div>
 
+            </div>
+        </div>
+            
+<div 
 
     <div class="sidenav-backdrop backdrop"></div>
     <div class="preloader-backdrop">
