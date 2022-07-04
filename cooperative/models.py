@@ -527,7 +527,7 @@ class Staff(DateObjectsModels):
     phone_number=models.CharField(max_length=50)
     gender =models.ForeignKey(Gender,on_delete=models.CASCADE,blank=True,null=True)
     status= models.CharField(max_length=20,choices=MEMBERSHIP_STATUS,default='ACTIVE')
-
+    default_password=models.CharField(max_length=10,choices=YESNO,default='YES')
 
 
     # @property

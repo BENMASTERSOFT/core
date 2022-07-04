@@ -258,11 +258,17 @@ def Loan_application_processing_confirmation(request,pk):
 	task_enabler_array=[]
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
+	
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
 
 	applicant=LoansRepaymentBase.objects.get(loan_number=pk)
 	context={
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	'applicant':applicant,
 	}
 	return render(request, 'deskofficer_templates/Loan_application_processing_confirmation.html',context)
@@ -352,6 +358,11 @@ def Monthly_Deduction_Covering_Note(request):
 	task_enabler_array=[]
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
 	form = Monthly_Deduction_Covering_Note_Form(request.POST or None)
 
 
@@ -394,6 +405,7 @@ def Monthly_Deduction_Covering_Note(request):
 	context={
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	'form':form,
 	}
 	return render(request, 'deskofficer_templates/Monthly_Deduction_Covering_Note.html',context)
@@ -729,6 +741,10 @@ def deskofficer_home(request):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
 	member_count=Members.objects.filter(status='ACTIVE').count()
 
 
@@ -739,6 +755,7 @@ def deskofficer_home(request):
 
 	context={
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	'task_array':task_array,
 	'applicants':applicants,
 	'title':title,
@@ -776,6 +793,7 @@ def desk_datatable_table(request):
 # 	context={
 # 	'task_array':task_array,
 # 	'task_enabler_array':task_enabler_array,
+	# 'default_password':default_password,
 # 	}
 
 # 	return render(request, 'deskofficer_templates/basics/form_validation.html',context)
@@ -805,6 +823,9 @@ def Useraccount_manager(request):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 	form=Useraccount_manager_form(request.POST or None)
 	user=CustomUser.objects.get(id=request.user.id)
@@ -819,7 +840,8 @@ def Useraccount_manager(request):
 			messages.info(request,"Password Mistmatch")
 			return HttpResponseRedirect(reverse('Useraccount_manager'))
 
-		user.username=username
+		Staff.objects.filter(admin=request.user).update(default_password='NO')
+		
 		user.set_password(password1)
 		user.save()
 		return HttpResponseRedirect(reverse('Useraccount_manager'))
@@ -828,6 +850,7 @@ def Useraccount_manager(request):
 	'form':form,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	}
 	return render(request,'deskofficer_templates/Useraccount_manager.html',context)
 
@@ -847,6 +870,10 @@ def membership_request(request):
 	task_enabler_array=[]
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 
 	form=MembershipRequest_form(request.POST or None)
@@ -891,6 +918,7 @@ def membership_request(request):
 	'form':form,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	}
 	return render(request, 'deskofficer_templates/membership_request.html',context)
 
@@ -908,6 +936,9 @@ def membership_request_complete_search(request):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 	title="Search Membership Request Completion"
 	form = searchForm(request.POST or None)
@@ -928,6 +959,10 @@ def membership_request_complete_load(request):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
 	title="Complete Membership Request"
 	form = searchForm(request.POST)
 
@@ -942,6 +977,7 @@ def membership_request_complete_load(request):
 	'title':title,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	}
 	return render(request,'deskofficer_templates/membership_request_complete_list_load.html',context)
 
@@ -958,6 +994,9 @@ def membership_request_additional_info(request,pk):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 	applicant=MemberShipRequest.objects.get(id=pk)
 	officer=CustomUser.objects.get(id=request.user.id)
@@ -977,6 +1016,7 @@ def membership_request_additional_info(request,pk):
 	'attached_infos':attached_infos,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	}
 	return render(request,'deskofficer_templates/membership_request_additional_info.html',context)
 
@@ -1008,6 +1048,9 @@ def membership_request_additional_info_update(request,pk):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 	form=MemberShipRequestAdditionalInfo_form(request.POST or None)
 	record=MemberShipRequestAdditionalInfo.objects.get(id=pk)
@@ -1040,6 +1083,9 @@ def membership_request_additional_info_delete_confirm(request,pk,return_pk):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 	comment=MemberShipRequestAdditionalInfo.objects.get(id=pk)
 
@@ -1050,6 +1096,7 @@ def membership_request_additional_info_delete_confirm(request,pk,return_pk):
 	'return_pk':return_pk,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	}
 	return render(request,'deskofficer_templates/membership_request_additional_info_delete_confirm.html',context)
 
@@ -1075,6 +1122,9 @@ def MemberShipRequestAdditionalAttachment_save(request,pk):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 	applicant=MemberShipRequest.objects.get(id=pk)
 	officer=CustomUser.objects.get(id=request.user.id)
@@ -1121,6 +1171,9 @@ def MemberShipRequestAdditionalAttachment_info_delete_confirm(request,pk,return_
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 	comment=MemberShipRequestAdditionalAttachment.objects.get(id=pk)
 	title="Delete Records for " + comment.applicant.get_full_name
@@ -1132,6 +1185,7 @@ def MemberShipRequestAdditionalAttachment_info_delete_confirm(request,pk,return_
 	'title':title,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	}
 	return render(request,'deskofficer_templates/MemberShipRequestAdditionalAttachment_info_delete_confirm.html',context)
 
@@ -1157,6 +1211,9 @@ def MemberShipRequest_Delete_confirmation(request,pk):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 	title="Delete Applicant"
 	applicant=MemberShipRequest.objects.get(id=pk)
@@ -1188,6 +1245,9 @@ def MemberShipRequest_submit(request,pk):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 	submission_status="SUBMITTED"
 	record=MemberShipRequest.objects.get(id=pk)
@@ -1210,12 +1270,17 @@ def membership_request_manage_search(request):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
 
 	title="Search Membership Request for Update"
 	form = searchForm(request.POST or None)
 
 	return render(request,'deskofficer_templates/membership_request_manage_search.html',{'form':form,'title':title,'task_array':task_array,
-	'task_enabler_array':task_enabler_array,})
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,})
 
 
 def membership_request_manage_list_load(request):
@@ -1231,6 +1296,9 @@ def membership_request_manage_list_load(request):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 	title="Update Membership Request"
 	form = searchForm(request.POST)
@@ -1250,6 +1318,7 @@ def membership_request_manage_list_load(request):
 	'title':title,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	}
 	return render(request,'deskofficer_templates/membership_request_manage_list_load.html',context)
 
@@ -1267,6 +1336,9 @@ def membership_request_manage_details(request,pk):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 
 	form=MembershipRequest_form(request.POST or None)
@@ -1314,6 +1386,7 @@ def membership_request_manage_details(request,pk):
 	'record':record,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	}
 	return render(request,'deskofficer_templates/membership_request_manage_details.html',context)
 
@@ -1331,6 +1404,9 @@ def membership_request_manage_details_edit_comment(request,pk):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 
 	form=MemberShipRequestAdditionalInfo_form(request.POST or None)
@@ -1352,6 +1428,7 @@ def membership_request_manage_details_edit_comment(request,pk):
 
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	}
 	return render(request,'deskofficer_templates/membership_request_manage_details_edit_comment.html',context)
 
@@ -1378,6 +1455,9 @@ def membership_request_manage_details_add_comment(request,pk):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 
 	form=MemberShipRequestAdditionalInfo_form(request.POST or None)
@@ -1397,6 +1477,7 @@ def membership_request_manage_details_add_comment(request,pk):
 	'button_text':button_text,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 
 	}
 	return render(request,'deskofficer_templates/membership_request_manage_details_edit_comment.html',context)
@@ -1416,6 +1497,9 @@ def membership_request_manage_details_edit_attachment(request,pk):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 
 	form =MemberShipRequestAdditionalAttachment_form(request.POST or None)
@@ -1449,6 +1533,7 @@ def membership_request_manage_details_edit_attachment(request,pk):
 
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 
 	}
 	return render(request,'deskofficer_templates/membership_request_manage_details_edit_attachment.html',context)
@@ -1476,6 +1561,9 @@ def membership_request_manage_details_edit_attachment_add(request,pk):
 		task_enabler_array.append(item.title)
 
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 	form =MemberShipRequestAdditionalAttachment_form(request.POST or None)
 	applicant=MemberShipRequest.objects.get(id=pk)
@@ -1499,6 +1587,7 @@ def membership_request_manage_details_edit_attachment_add(request,pk):
 
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 
 	}
 	return render(request,'deskofficer_templates/membership_request_manage_details_edit_attachment_add.html',context)
@@ -1518,6 +1607,9 @@ def membership_request_delete_confirmation(request,pk):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 	member=MemberShipRequest.objects.get(id=pk)
 
@@ -1527,6 +1619,7 @@ def membership_request_delete_confirmation(request,pk):
 
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 
 	}
 	return render(request,'deskofficer_templates/membership_request_delete_confirmation.html',context)
@@ -1551,12 +1644,16 @@ def membership_form_sales_Search(request):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 	title="Search Applicants for Form Sales"
 	form = searchForm(request.POST or None)
 
 	return render(request,'deskofficer_templates/membership_form_sales_Search.html',{'form':form,'title':title,'task_array':task_array,
-	'task_enabler_array':task_enabler_array,})
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,})
 
 
 def membership_form_sales_list_load(request):
@@ -1572,6 +1669,9 @@ def membership_form_sales_list_load(request):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 
 	form = searchForm(request.POST)
@@ -1592,6 +1692,7 @@ def membership_form_sales_list_load(request):
 	'applicants':applicants,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	}
 	return render(request,'deskofficer_templates/membership_form_sales_list_load.html',context)
 
@@ -1611,6 +1712,9 @@ def membership_form_sales_preview(request,pk):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 	applicant=MemberShipRequest.objects.get(pk=pk)
 	comments=MemberShipRequestAdditionalInfo.objects.filter(applicant_id=pk)
@@ -1622,6 +1726,7 @@ def membership_form_sales_preview(request,pk):
 	'attachments':attachments,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	}
 	return render(request,'deskofficer_templates/membership_form_sales_preview.html',context)
 
@@ -1637,6 +1742,9 @@ def membership_form_sales_issue(request,pk):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 	form=membership_form_sales_issue_form(request.POST or None)
 	tdate = get_current_date(now)
@@ -1768,6 +1876,7 @@ def membership_form_sales_issue(request,pk):
 	'shares_uint_cost':shares_uint_cost,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	}
 	return render(request,'deskofficer_templates/membership_form_sales_issue.html',context)
 
@@ -1786,11 +1895,16 @@ def membership_form_sales_validation(request,pk):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
 	record=MemberShipFormSalesRecord.objects.get(receipt=pk)
 	context={
 	'record':record,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	}
 
 	return render(request,'deskofficer_templates/membership_form_sales_validation.html',context)
@@ -1810,10 +1924,15 @@ def membership_registration_applicant_search(request):
 		task_enabler_array.append(item.title)
 
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
 	title="Search Membership Request for Update"
 	form = searchForm(request.POST or None)
 	return render(request,'deskofficer_templates/membership_registration_applicant_search.html',{'form':form,'title':title,'task_array':task_array,
-	'task_enabler_array':task_enabler_array,})
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,})
 
 
 
@@ -1829,6 +1948,10 @@ def membership_registration_applicant_list_load(request):
 	task_enabler_array=[]
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 
 	title="Update Membership Request"
@@ -1848,6 +1971,7 @@ def membership_registration_applicant_list_load(request):
 	'title':title,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	}
 	return render(request,'deskofficer_templates/membership_registration_applicant_list_load.html',context)
 
@@ -1868,12 +1992,16 @@ def membership_registration_register_confirmation(request,pk):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 	context={
 	'record':record,
 	# 'title':title,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	}
 	return render(request,'deskofficer_templates/membership_registration_register_confirmation.html',context)
 
@@ -1891,6 +2019,10 @@ def membership_registration_register(request,pk):
 	task_enabler_array=[]
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 	form= membership_registration_register_form(request.POST or None)
 
@@ -2166,6 +2298,7 @@ def membership_registration_register(request,pk):
 	context={
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	'form':form,
 	}
 	return render(request,'deskofficer_templates/membership_registration_register.html',context)
@@ -2188,13 +2321,17 @@ def Members_Account_Creation_Search(request):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 
 	title="Search Membership for Account Creation"
 	form = searchForm(request.POST or None)
 
 	return render(request,'deskofficer_templates/Members_Account_Creation_Search.html',{'form':form,'title':title,'task_array':task_array,
-	'task_enabler_array':task_enabler_array,})
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,})
 
 
 def Members_Account_Creation_list_load(request):
@@ -2210,6 +2347,9 @@ def Members_Account_Creation_list_load(request):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 	title="Loan Request order"
 
@@ -2227,6 +2367,7 @@ def Members_Account_Creation_list_load(request):
 	'title':title,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	}
 	return render(request,'deskofficer_templates/Members_Account_Creation_list_load.html',context)
 
@@ -2243,6 +2384,10 @@ def Members_Account_Creation_preview(request,pk):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
 
 	member=Members.objects.get(id=pk)
 	transactions=TransactionTypes.objects.filter(~Q(source__title="LOAN") & ~Q(source__title='GENERAL')  & ~Q(code='701'))
@@ -2253,6 +2398,7 @@ def Members_Account_Creation_preview(request,pk):
 	'transactions':transactions,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	'records':records,
 	}
 	return render(request,'deskofficer_templates/Members_Account_Creation_process.html',context)
@@ -2293,6 +2439,9 @@ def Members_Multiple_Account_Creation_preview(request):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 	status="ACTIVE"
 	members=Members.objects.filter(status=status)
@@ -2303,6 +2452,7 @@ def Members_Multiple_Account_Creation_preview(request):
 	'transactions':transactions,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	}
 	return render(request,'deskofficer_templates/Members_Multiple_Account_Creation_preview.html',context)
 
@@ -2345,6 +2495,9 @@ def Members_account_details_list(request,pk):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 	transaction=TransactionTypes.objects.get(id=pk)
 	records=MembersAccountsDomain.objects.filter(transaction=transaction)
@@ -2352,6 +2505,7 @@ def Members_account_details_list(request,pk):
 	context={
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	'records':records,
 	'transaction':transaction,
 	}
@@ -2375,12 +2529,16 @@ def standing_order_reactivate_account_search(request):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 	title="Search Membership for Standing Order"
 	form = searchForm(request.POST or None)
 
 	return render(request,'deskofficer_templates/standing_order_reactivate_account_search.html',{'form':form,'title':title,'task_array':task_array,
-	'task_enabler_array':task_enabler_array,})
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,})
 
 
 def standing_order_reactivate_account_list_load(request):
@@ -2396,6 +2554,10 @@ def standing_order_reactivate_account_list_load(request):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
 	title="Loan Request order"
 	form = searchForm(request.POST)
 
@@ -2409,6 +2571,7 @@ def standing_order_reactivate_account_list_load(request):
 	'title':title,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	}
 	return render(request,'deskofficer_templates/standing_order_reactivate_account_list_load.html',context)
 
@@ -2428,6 +2591,9 @@ def standing_order_reactivate_account(request,pk):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 	form=standing_order_reactivate_account_form(request.POST or None)
 
@@ -2449,6 +2615,7 @@ def standing_order_reactivate_account(request,pk):
 	'record':record,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	}
 	return render(request,'deskofficer_templates/standing_order_reactivate_account.html',context)
 
@@ -2474,12 +2641,16 @@ def standing_order_selected_search(request):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 	title="Search Membership for Standing Order"
 	form = searchForm(request.POST or None)
 
 	return render(request,'deskofficer_templates/standing_order_selected_search.html',{'form':form,'title':title,'task_array':task_array,
-	'task_enabler_array':task_enabler_array,})
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,})
 
 
 def standing_order_selected_list_load(request):
@@ -2495,6 +2666,9 @@ def standing_order_selected_list_load(request):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 	title="Loan Request order"
 	form = searchForm(request.POST)
@@ -2510,6 +2684,7 @@ def standing_order_selected_list_load(request):
 	'title':title,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	}
 	return render(request,'deskofficer_templates/standing_order_selected_list_load.html',context)
 
@@ -2526,6 +2701,10 @@ def standing_order_selected_form(request,pk):
 	task_enabler_array=[]
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 
 	applicant=Members.objects.get(id=pk)
@@ -2579,6 +2758,7 @@ def standing_order_selected_form(request,pk):
 	'standing_orders':standing_orders,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	}
 	return render(request,'deskofficer_templates/standing_order_selected_form.html',context)
 
@@ -2596,6 +2776,11 @@ def standing_order_list_load(request):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
 	applicants=Members.objects.filter(status='ACTIVE')
 
 
@@ -2603,6 +2788,7 @@ def standing_order_list_load(request):
 	'applicants':applicants,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	}
 	return render(request,'deskofficer_templates/standing_order_list_load.html',context)
 
@@ -2620,6 +2806,9 @@ def standing_order_form(request,pk):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 	applicant=Members.objects.get(id=pk)
 	form=standing_orderform(request.POST or None)
@@ -2677,6 +2866,7 @@ def standing_order_form(request,pk):
 	'standing_orders':standing_orders,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	'account_number':account_number,
 	}
 	return render(request,'deskofficer_templates/standing_order_form.html',context)
@@ -2715,12 +2905,17 @@ def Standing_Order_Suspension_search(request):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
 
 	title="Search Membership for Standing Order Suspension"
 	form = searchForm(request.POST or None)
 
 	return render(request,'deskofficer_templates/Standing_Order_Suspension_search.html',{'form':form,'title':title,'task_array':task_array,
-	'task_enabler_array':task_enabler_array,})
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,})
 
 
 def Standing_Order_Suspension_List_load(request):
@@ -2736,6 +2931,10 @@ def Standing_Order_Suspension_List_load(request):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
 
 	title="Loan Request order"
 	form = searchForm(request.POST)
@@ -2750,6 +2949,7 @@ def Standing_Order_Suspension_List_load(request):
 	'title':title,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	}
 	return render(request,'deskofficer_templates/Standing_Order_Suspension_List_load.html',context)
 
@@ -2769,6 +2969,10 @@ def Standing_Order_Suspension_Transaction_Load(request,pk):
 	task_enabler_array=[]
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 
 	member=Members.objects.get(id=pk)
@@ -2811,6 +3015,7 @@ def Standing_Order_Suspension_Transaction_Load(request,pk):
 	'form':form,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	}
 	return render(request,'deskofficer_templates/Standing_Order_Suspension_Transaction_Load.html',context)
 
@@ -2836,6 +3041,9 @@ def Standing_Order_Suspension_Transaction_Approval_Load(request):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 	records = StandingOrderAccountsSuspensionRequest.objects.filter(status='UNTREATED',approval_status="PENDING").exclude(processed_by=processed_by.username)
 
@@ -2843,6 +3051,7 @@ def Standing_Order_Suspension_Transaction_Approval_Load(request):
 	'records':records,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	}
 	return render(request,'deskofficer_templates/Standing_Order_Suspension_Transaction_Approval_Load.html',context)
 
@@ -2861,6 +3070,9 @@ def Standing_Order_Suspension_Transaction_Approvals_Load_Details(request,pk):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 
 	record = StandingOrderAccountsSuspensionRequest.objects.get(id=pk)
@@ -2886,6 +3098,7 @@ def Standing_Order_Suspension_Transaction_Approvals_Load_Details(request,pk):
 	'record':record,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	}
 	return render(request,'deskofficer_templates/Standing_Order_Suspension_Transaction_Approvals_Load_Details.html',context)
 
@@ -2904,6 +3117,9 @@ def Standing_Order_Suspension_Transaction_Approval_Processing_Load(request):
 		task_enabler_array.append(item.title)
 
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 	records = StandingOrderAccountsSuspensionRequest.objects.filter(status='UNTREATED',approval_status='APPROVED')
 
@@ -2911,6 +3127,7 @@ def Standing_Order_Suspension_Transaction_Approval_Processing_Load(request):
 	'records':records,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	}
 	return render(request,'deskofficer_templates/Standing_Order_Suspension_Transaction_Approval_Processing_Load.html',context)
 
@@ -2928,6 +3145,9 @@ def Standing_Order_Suspension_Transaction_Approval_Processing(request,pk):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 
 	record = StandingOrderAccountsSuspensionRequest.objects.get(id=pk)
@@ -2954,12 +3174,16 @@ def Standing_Order_Suspension_Transaction_Releasing_search(request):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 	title="Search Membership for Standing Order Release"
 	form = searchForm(request.POST or None)
 
 	return render(request,'deskofficer_templates/Standing_Order_Suspension_Transaction_Releasing_search.html',{'form':form,'title':title,'task_array':task_array,
-	'task_enabler_array':task_enabler_array,})
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,})
 
 
 def Standing_Order_Suspension_Transaction_Releasing_list_load(request):
@@ -2975,6 +3199,10 @@ def Standing_Order_Suspension_Transaction_Releasing_list_load(request):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
 	title="Loan Request order"
 	form = searchForm(request.POST)
 
@@ -2989,6 +3217,7 @@ def Standing_Order_Suspension_Transaction_Releasing_list_load(request):
 	'title':title,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	}
 	return render(request,'deskofficer_templates/Standing_Order_Suspension_Transaction_Releasing_list_load.html',context)
 
@@ -3008,6 +3237,10 @@ def Standing_Order_Suspension_Transactions_Releasing_Details(request,pk):
 	task_enabler_array=[]
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 
 	record = StandingOrderAccounts.objects.get(id=pk)
@@ -3047,6 +3280,7 @@ def Standing_Order_Suspension_Transactions_Releasing_Details(request,pk):
 	'record':record,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	}
 	return render(request,'deskofficer_templates/Standing_Order_Suspension_Transactions_Releasing_Details.html',context)
 
@@ -3064,6 +3298,10 @@ def Standing_Order_Suspension_Transaction_Releasing_Approval_Load(request):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
 	processed_by=CustomUser.objects.get(id=request.user.id)
 
 	records = StandingOrderAccountsSuspensionReleaseRequest.objects.filter(status='UNTREATED',approval_status='PENDING').exclude(processed_by=processed_by.username)
@@ -3072,6 +3310,7 @@ def Standing_Order_Suspension_Transaction_Releasing_Approval_Load(request):
 	'records':records,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	}
 	return render(request,'deskofficer_templates/Standing_Order_Suspension_Transaction_Releasing_Approval_Load.html',context)
 
@@ -3089,6 +3328,10 @@ def Standing_Order_Suspension_Transaction_Releasing_Approval_Details(request,pk)
 	task_enabler_array=[]
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 	record = StandingOrderAccountsSuspensionReleaseRequest.objects.get(id=pk)
 
@@ -3123,6 +3366,7 @@ def Standing_Order_Suspension_Transaction_Releasing_Approval_Details(request,pk)
 	'record':record,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	}
 	return render(request,'deskofficer_templates/Standing_Order_Suspension_Transaction_Releasing_Approval_Details.html',context)
 
@@ -3142,6 +3386,9 @@ def Standing_Order_Suspension_Transaction_Activation_Approval_Processing_Load(re
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 	records = StandingOrderAccountsSuspensionReleaseRequest.objects.filter(status='UNTREATED',approval_status='APPROVED')
 
@@ -3149,6 +3396,7 @@ def Standing_Order_Suspension_Transaction_Activation_Approval_Processing_Load(re
 	'records':records,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 
 	}
 	return render(request,'deskofficer_templates/Standing_Order_Suspension_Transaction_Activation_Approval_Processing_Load.html',context)
@@ -3181,11 +3429,16 @@ def Transaction_adjustment_search(request):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
 	title="Search Membership for Adjustment"
 	form = searchForm(request.POST or None)
 
 	return render(request,'deskofficer_templates/Transaction_adjustment_search.html',{'form':form,'title':title,'task_array':task_array,
-	'task_enabler_array':task_enabler_array,})
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,})
 
 
 def Transaction_adjustment_List_load(request):
@@ -3201,6 +3454,10 @@ def Transaction_adjustment_List_load(request):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
 	title="Loan Request order"
 	form = searchForm(request.POST)
 
@@ -3215,6 +3472,7 @@ def Transaction_adjustment_List_load(request):
 	'title':title,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	}
 	return render(request,'deskofficer_templates/Transaction_adjustment_List_load.html',context)
 
@@ -3231,6 +3489,10 @@ def Transaction_adjustment_Transactions_load(request,pk):
 	task_enabler_array=[]
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 	form=Transaction_adjustment_Transactions_form(request.POST or None)
 	member=Members.objects.get(id=pk)
@@ -3255,6 +3517,7 @@ def Transaction_adjustment_Transactions_load(request,pk):
 	'active_transactions':active_transactions,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	'records':records,
 	}
 	return render(request,'deskofficer_templates/Transaction_adjustment_Transactions_load.html',context)
@@ -3273,6 +3536,10 @@ def Transaction_adjustment_Transactions_Accounts_load(request,pk, return_pk):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 
 	processed_by=CustomUser.objects.get(id=request.user.id)
@@ -3323,6 +3590,7 @@ def Transaction_adjustment_Transactions_Accounts_load(request,pk, return_pk):
 		'return_pk':return_pk,
 		'task_array':task_array,
 		'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 		}
 		return render(request,'deskofficer_templates/Transaction_adjustment_Transactions_Accounts_load.html',context)
 	else:
@@ -3351,12 +3619,16 @@ def Transaction_Adjustment_Approved_List_Load(request):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 	records=TransactionAjustmentRequest.objects.filter(approval_status='APPROVED',status='UNTREATED')
 
 	context={
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	'records':records,
 	}
 	return render(request,'deskofficer_templates/Transaction_Adjustment_Approved_List_Load.html',context)
@@ -3397,11 +3669,17 @@ def Transaction_Loan_adjustment_search(request):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
 	title="Search Membership for Loan Adjustment"
 	form = searchForm(request.POST or None)
 
 	return render(request,'deskofficer_templates/Transaction_Loan_adjustment_search.html',{'form':form,'title':title,'task_array':task_array,
-	'task_enabler_array':task_enabler_array,})
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,})
 
 
 def Transaction_Loan_adjustment_List_load(request):
@@ -3417,6 +3695,11 @@ def Transaction_Loan_adjustment_List_load(request):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
 	title="Loan Request order"
 	form = searchForm(request.POST)
 
@@ -3431,6 +3714,7 @@ def Transaction_Loan_adjustment_List_load(request):
 		'title':title,
 		'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 		}
 		return render(request,'deskofficer_templates/Transaction_Loan_adjustment_List_load.html',context)
 
@@ -3449,6 +3733,9 @@ def Transaction_Loan_adjustment_Transaction_load(request,pk):
 		task_enabler_array.append(item.title)
 
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 	member=Members.objects.get(id=pk)
 	records=LoansRepaymentBase.objects.filter(member=member,balance__lt=0)
@@ -3458,6 +3745,7 @@ def Transaction_Loan_adjustment_Transaction_load(request,pk):
 	context={
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	'records':records,
 	'member':member,
 	'existing_requests':existing_requests,
@@ -3478,6 +3766,9 @@ def Transaction_Loan_adjustment_Transaction_Preview(request,pk,loan_code):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 	form=Transaction_Loan_adjustment_selection_form(request.POST or None)
 
@@ -3493,6 +3784,7 @@ def Transaction_Loan_adjustment_Transaction_Preview(request,pk,loan_code):
 	context={
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	'member':member,
 	'loan':loan,
 	'form':form,
@@ -3564,12 +3856,16 @@ def Transaction_Loan_adjustment_Transaction_Approved_List_Load(request):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 	records=TransactionLoanAjustmentRequest.objects.filter(status='UNTREATED',approval_status='APPROVED')
 
 	context={
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	'records':records,
 	}
 	return render(request,'deskofficer_templates/Transaction_Loan_adjustment_Transaction_Approved_List_Load.html',context)
@@ -3586,6 +3882,10 @@ def Transaction_Loan_adjustment_Transaction_Approved_details_Processed(request,p
 	task_enabler_array=[]
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 	record=TransactionLoanAjustmentRequest.objects.get(id=pk)
 	LoansRepaymentBase.objects.filter(loan_number=record.member.loan_number).update(repayment=record.amount)
@@ -3614,6 +3914,11 @@ def loan_request_order_discard(request):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
+
 	records = LoanRequest.objects.filter(submission_status='PENDING')
 
 
@@ -3621,6 +3926,7 @@ def loan_request_order_discard(request):
 	'records':records,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	}
 	return render(request,'deskofficer_templates/loan_request_order_discard.html',context)
 
@@ -3637,6 +3943,10 @@ def loan_request_order_discard_delete(request,pk):
 	task_enabler_array=[]
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 	LoanRequest.objects.filter(id=pk).delete()
 	return HttpResponseRedirect(reverse('loan_request_order_discard'))
@@ -3655,11 +3965,17 @@ def loan_request_search(request):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
 	title="Search Membership Loan Request"
 	form = searchForm(request.POST or None)
 
 	return render(request,'deskofficer_templates/loan_request_search.html',{'form':form,'title':title,'task_array':task_array,
-	'task_enabler_array':task_enabler_array,})
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,})
 
 
 def loan_request_list_load(request):
@@ -3676,6 +3992,11 @@ def loan_request_list_load(request):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
 	title="Loan Request order"
 	form = searchForm(request.POST)
 
@@ -3690,6 +4011,7 @@ def loan_request_list_load(request):
 		'title':title,
 		'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 		}
 		return render(request,'deskofficer_templates/loan_request_list_load.html',context)
 
@@ -3706,6 +4028,10 @@ def loan_request_order(request,pk):
 	task_enabler_array=[]
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 	submission_status="PENDING"
 	transaction_status='UNTREATED'
@@ -3851,6 +4177,7 @@ def loan_request_order(request,pk):
 	'pk':pk,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	}
 	return render(request,'deskofficer_templates/loan_request_order.html',context)
 
@@ -3876,6 +4203,9 @@ def loan_request_criteria_Loading(request,pk):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 	applicant=LoanRequest.objects.get(id=pk)
 
@@ -3993,6 +4323,7 @@ def loan_request_criteria_Loading(request,pk):
 	'attachment_form':attachment_form,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	}
 	return render(request,'deskofficer_templates/loan_request_criteria_Loading.html',context)
 
@@ -4021,6 +4352,10 @@ def loan_request_preview(request,pk):
 	task_enabler_array=[]
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 	form=MemberShipRequestAdditionalInfo_form(request.POST or None)
 
@@ -4486,6 +4821,7 @@ def loan_request_preview(request,pk):
 	'button_enabled':button_enabled,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	'savings_saved':savings_saved,
 	}
 
@@ -4505,6 +4841,9 @@ def loan_request_manage_period_load(request):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 
 	form=loan_request_order_form(request.POST or None)
@@ -4526,6 +4865,7 @@ def loan_request_manage_period_load(request):
 	'form':form,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	}
 	return render(request,'deskofficer_templates/loan_request_manage_period_load.html',context)
 
@@ -4547,6 +4887,9 @@ def loan_request_approved_Issue_form_period_load(request):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 	applicants=[]
 	form=loan_request_order_form(request.POST or None)
@@ -4567,6 +4910,7 @@ def loan_request_approved_Issue_form_period_load(request):
 	'applicants':applicants,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	}
 	return render(request,'deskofficer_templates/loan_request_approved_Issue_form_period_load.html',context)
 
@@ -4585,6 +4929,10 @@ def loan_request_approved_list_form_sales(request,pk):
 	task_enabler_array=[]
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 	form = loan_request_approved_list_form_sales_form(request.POST or None)
 
@@ -4652,6 +5000,7 @@ def loan_request_approved_list_form_sales(request,pk):
 	'receipt_type':receipt_type,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	}
 	return render(request,'deskofficer_templates/loan_request_approved_list_form_sales.html',context)
 
@@ -4672,6 +5021,9 @@ def loan_application_request_form_issuanace_confirmation(request,pk):
 		task_enabler_array.append(item.title)
 
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 	form=loan_request_order_form(request.POST or None)
 
@@ -4688,6 +5040,7 @@ def loan_application_request_form_issuanace_confirmation(request,pk):
 	'applicant':applicant,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	}
 	return render(request,'deskofficer_templates/loan_application_request_form_issuanace_confirmation.html',context)
 
@@ -4706,6 +5059,9 @@ def loan_application_approved_period_load(request):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 	applicants=[]
 	form=loan_request_order_form(request.POST or None)
@@ -4734,6 +5090,7 @@ def loan_application_approved_period_load(request):
 	'applicants':applicants,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	}
 	return render(request,'deskofficer_templates/loan_application_approved_period_load.html',context)
 
@@ -4749,6 +5106,9 @@ def loan_application_form_processing(request,pk):
 		task_array.append(task.task.title)
 
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 	task_enabler=TransactionEnabler.objects.filter(status="YES")
 	task_enabler_array=[]
@@ -4935,6 +5295,7 @@ def loan_application_form_processing(request,pk):
 	'seleected_guarantors':seleected_guarantors,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	'return_pk':pk,
 	}
 	return render(request,'deskofficer_templates/loan_application_form_processing.html',context)
@@ -4954,12 +5315,17 @@ def loan_application_form_processing_guarantor_search(request,pk):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
 	title="Search Membership (Only Cooperative or IPPIS No is Allowed"
 	form = searchForm(request.POST or None)
 	record=LoanApplication.objects.get(id=pk)
 	return_pk=record.applicant_id
 	return render(request,'deskofficer_templates/loan_application_form_processing_guarantor_search.html',{'task_array':task_array,
-	'task_enabler_array':task_enabler_array,'form':form,'title':title,'pk':pk,'return_pk':return_pk,})
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,'form':form,'title':title,'pk':pk,'return_pk':return_pk,})
 
 
 def loan_application_form_processing_guarantor_add_list_load(request,pk):
@@ -4974,6 +5340,10 @@ def loan_application_form_processing_guarantor_add_list_load(request,pk):
 	task_enabler_array=[]
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 	title="Commodity Loan"
 	form = searchForm(request.POST)
@@ -4993,6 +5363,7 @@ def loan_application_form_processing_guarantor_add_list_load(request,pk):
 	'title':title,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	'pk':pk,
 	}
 	return render(request,'deskofficer_templates/loan_application_form_processing_guarantor_add_list_load.html',context)
@@ -5013,6 +5384,9 @@ def loan_application_form_processing_guarantor_add(request,pk,loan_pk):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 	guarantor=Members.objects.get(id=pk)
 	applicant=LoanApplication.objects.get(id=loan_pk)
@@ -5054,6 +5428,10 @@ def loan_application_preview(request,pk, return_pk):
 	task_enabler_array=[]
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 	applicant=LoanApplication.objects.get(id=pk)
 
@@ -5624,6 +6002,7 @@ def loan_application_preview(request,pk, return_pk):
 	'bank_account_status':bank_account_status,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	}
 
 	return render(request,'deskofficer_templates/loan_application_preview.html',context)
@@ -5643,6 +6022,9 @@ def Loan_application_processing_period_load(request):
 		task_enabler_array.append(item.title)
 
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 	form=loan_request_order_form(request.POST or None)
 
@@ -5665,6 +6047,7 @@ def Loan_application_processing_period_load(request):
 	'form':form,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	}
 	return render(request,'deskofficer_templates/Loan_application_processing_period_load.html',context)
 
@@ -5682,10 +6065,15 @@ def Loan_processing_scheduling_dashboard(request):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
 
 	context={
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	}
 	return render(request,'deskofficer_templates/Loan_processing_scheduling_dashboard.html',context)
 
@@ -5704,11 +6092,15 @@ def Loan_processing_scheduling_all_unscheduled(request):
 		task_enabler_array.append(item.title)
 
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 	records=LoansRepaymentBase.objects.filter(status='ACTIVE',schedule_status='UNSCHEDULED')
 	context={
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	'records':records,
 	}
 	return render(request,'deskofficer_templates/Loan_processing_scheduling_all_unscheduled.html',context)
@@ -5732,6 +6124,10 @@ def Loan_processing_scheduling_based_on_date(request):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
 	form=PersonalLedger_Transaction_Account_Load_form(request.POST or None)
 
 	records=[]
@@ -5752,6 +6148,7 @@ def Loan_processing_scheduling_based_on_date(request):
 	context={
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	'form':form,
 	'records':records,
 	}
@@ -5777,6 +6174,11 @@ def loan_application_approved_process_preview(request,pk):
 	task_enabler_array=[]
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
+
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 	form=loan_application_approved_process_preview_form(request.POST or None)
 	transaction_period=TransactionPeriods.objects.get(status='ACTIVE')
@@ -6123,6 +6525,7 @@ def loan_application_approved_process_preview(request,pk):
 	'form':form,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	}
 
 	return render(request,'deskofficer_templates/loan_application_approved_process_preview.html',context)
@@ -6142,11 +6545,17 @@ def loan_unscheduling_request_search(request):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
 	title="Search Membership Loan for Unscheduling"
 	form = searchForm(request.POST or None)
 
 	return render(request,'deskofficer_templates/loan_unscheduling_request_search.html',{'form':form,'title':title,'task_array':task_array,
-	'task_enabler_array':task_enabler_array,})
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,})
 
 
 def loan_unscheduling_request_list_load(request):
@@ -6162,6 +6571,11 @@ def loan_unscheduling_request_list_load(request):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
 	title="Loan Request order"
 	form = searchForm(request.POST or None)
 
@@ -6176,6 +6590,7 @@ def loan_unscheduling_request_list_load(request):
 		'title':title,
 		'task_array':task_array,
 		'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 
 		}
 		return render(request,'deskofficer_templates/loan_unscheduling_request_list_load.html',context)
@@ -6193,6 +6608,10 @@ def loan_unscheduling_request_transaction_load(request,pk):
 	task_enabler_array=[]
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 	form=MemberShipRequest_approval_comment_form(request.POST or None)
 	loan=LoansRepaymentBase.objects.get(id=pk)
@@ -6229,6 +6648,7 @@ def loan_unscheduling_request_transaction_load(request,pk):
 	'form':form,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	}
 	return render(request,'deskofficer_templates/loan_unscheduling_request_transaction_load.html',context)
 
@@ -6244,11 +6664,16 @@ def loan_unscheduling_request_transaction_processing(request):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
 	records=LoanUnschedulingRequest.objects.filter(approval_status='APPROVED',status='UNTREATED')
 	context={
 	'records':records,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	}
 	return render(request,'deskofficer_templates/loan_unscheduling_request_transaction_processing.html',context)
 
@@ -6264,6 +6689,10 @@ def loan_unscheduling_request_transaction_processing_details(request,pk):
 	task_enabler_array=[]
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 	record=LoanUnschedulingRequest.objects.get(id=pk)
 	item=LoansRepaymentBase.objects.get(loan_number=record.loan.loan_number)
@@ -6286,6 +6715,7 @@ def loan_unscheduling_request_transaction_processing_details(request,pk):
 	'form':form,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	}
 	return render(request,'deskofficer_templates/loan_unscheduling_request_transaction_processing_details.html',context)
 
@@ -6306,11 +6736,17 @@ def membership_commodity_loan_search(request):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
 	title="Search Membership Request Commodity"
 	form = searchForm(request.POST or None)
 
 	return render(request,'deskofficer_templates/membership_commodity_loan_search.html',{'task_array':task_array,
-	'task_enabler_array':task_enabler_array,'form':form,'title':title,})
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,'form':form,'title':title,})
 
 
 def membership_commodity_loan_list_load(request):
@@ -6323,6 +6759,11 @@ def membership_commodity_loan_list_load(request):
 	task_enabler_array=[]
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
+
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 	title="Commodity Loan"
 	form = searchForm(request.POST)
@@ -6338,6 +6779,7 @@ def membership_commodity_loan_list_load(request):
 	'title':title,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	}
 	return render(request,'deskofficer_templates/membership_commodity_loan_list_load.html',context)
 
@@ -6355,6 +6797,11 @@ def membership_commodity_loan_Company_load(request,pk,period_pk,batch_pk,transac
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
 	title="Commodity Loan"
 	member=Members.objects.get(id=pk)
 	transaction=TransactionTypes.objects.get(id=transaction_pk)
@@ -6371,6 +6818,7 @@ def membership_commodity_loan_Company_load(request,pk,period_pk,batch_pk,transac
 	'title':title,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	'period':period,
 	'batch':batch,
 	'transaction':transaction,
@@ -6394,6 +6842,11 @@ def membership_commodity_loan_Company_products(request,return_pk,period_pk,batch
 	task_enabler_array=[]
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
+
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 	form=membership_commodity_loan_Company_products_process_Form(request.POST or None)
 	status='UNTREATED'
@@ -6428,6 +6881,7 @@ def membership_commodity_loan_Company_products(request,return_pk,period_pk,batch
 	context={
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	'period':period,
 	'batch':batch,
 	'transaction':transaction,
@@ -6457,6 +6911,10 @@ def membership_commodity_loan_Company_products_details(request,comp_pk,pk, membe
 	task_enabler_array=[]
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 	form=membership_commodity_loan_Company_products_details_Form(request.POST or None)
 	member=Members.objects.get(id=member_pk)
@@ -6548,6 +7006,7 @@ def membership_commodity_loan_Company_products_details(request,comp_pk,pk, membe
 	context={
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 
 	'form':form,
 	'member':member,
@@ -6581,6 +7040,9 @@ def membership_commodity_loan_Company_products_proceed(request,mem_pk,comp_pk,pe
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 
 	form=membership_commodity_loan_Company_products_proceed_Form(request.POST or None)
@@ -6725,6 +7187,7 @@ def membership_commodity_loan_Company_products_proceed(request,mem_pk,comp_pk,pe
 	context={
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 
 	'button_enabled':button_enabled,
 	'company':company,
@@ -6765,6 +7228,10 @@ def membership_commodity_loan_Company_products_Criteria_Dashboard(request,member
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
 
 	transaction=TransactionTypes.objects.get(id=transaction_pk)
 	period=Commodity_Period.objects.get(id=period_pk)
@@ -6777,6 +7244,7 @@ def membership_commodity_loan_Company_products_Criteria_Dashboard(request,member
 	context={
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	'transaction':transaction,
 	'period':period,
 	'batch':batch,
@@ -6798,6 +7266,11 @@ def membership_commodity_loan_Company_products_net_pay_Settings(request,member_p
 	task_enabler_array=[]
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
+
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 	form=membership_commodity_loan_Company_products_Criteria_Settings_form(request.POST or None)
 	member=Members.objects.get(id=member_pk)
@@ -6873,6 +7346,7 @@ def membership_commodity_loan_Company_products_net_pay_Settings(request,member_p
 	context={
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 
 	# 'records':records,
 	'member':member,
@@ -6928,6 +7402,11 @@ def membership_commodity_loan_Period__manage_transaction_load(request):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
 	form=Product_Linking_Period_Load_form(request.POST or None)
 
 	applicants=[]
@@ -6948,6 +7427,7 @@ def membership_commodity_loan_Period__manage_transaction_load(request):
 	context={
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	'applicants':applicants,
 	'form':form,
 	}
@@ -6969,12 +7449,17 @@ def membership_commodity_loan_Period__manage_transaction_delete_Confirmation(req
 		task_enabler_array.append(item.title)
 
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
 
 	title = "Are you sure you want to drop this Request"
 	record=Members_Commodity_Loan_Application.objects.get(ticket=pk)
 	context={
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 
 
 	'record':record,
@@ -6998,6 +7483,10 @@ def membership_commodity_loan_Period_Transactions_load(request,pk):
 	task_enabler_array=[]
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 	title="Commodity Loan"
 	submission_status='PENDING'
@@ -7026,6 +7515,7 @@ def membership_commodity_loan_Period_Transactions_load(request,pk):
 	'title':title,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 
 	'applicants':applicants,
 	}
@@ -7046,6 +7536,10 @@ def membership_commodity_loan_Dashboard_load(request,pk,return_pk):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
 
 	title="Commodity Loan"
 	submission_status='PENDING'
@@ -7057,6 +7551,7 @@ def membership_commodity_loan_Dashboard_load(request,pk,return_pk):
 	'member':member,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	'applicant':applicant,
 	}
 	return render(request,'deskofficer_templates/membership_commodity_loan_Dashboard_load.html',context)
@@ -7075,6 +7570,10 @@ def membership_commodity_loan_Company_products_net_pay_SettingsB(request,pk,retu
 	task_enabler_array=[]
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 	form=membership_commodity_loan_Company_products_Criteria_Settings_form(request.POST or None)
 	member=Members.objects.get(id=return_pk)
@@ -7105,6 +7604,7 @@ def membership_commodity_loan_Company_products_net_pay_SettingsB(request,pk,retu
 	context={
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 
 
 	# 'records':records,
@@ -7142,11 +7642,16 @@ def Savings_Lockup_search(request):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
 	title="Search Membership"
 	form = searchForm(request.POST or None)
 
 	return render(request,'deskofficer_templates/Savings_Lockup_Search.html',{'form':form,'title':title,'task_array':task_array,
-	'task_enabler_array':task_enabler_array,})
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,})
 
 
 def Savings_Lockup_list_load(request):
@@ -7159,6 +7664,11 @@ def Savings_Lockup_list_load(request):
 	task_enabler_array=[]
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
+
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 	title="Members Exclusiveness"
 	status="ACTIVE"
@@ -7175,6 +7685,7 @@ def Savings_Lockup_list_load(request):
 		'title':title,
 		'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 
 		}
 		return render(request,'deskofficer_templates/Savings_Lockup_list_load.html',context)
@@ -7192,6 +7703,11 @@ def Savings_Lockup_Processing(request,pk):
 	task_enabler_array=[]
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
+
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 	lock_status='NO'
 	record=MembersAccountsDomain.objects.filter(id=pk).update(loan_lock=lock_status)
@@ -7212,10 +7728,10 @@ def TransactionPeriodManager(request):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
-	task_enabler=TransactionEnabler.objects.filter(status="YES")
-	task_enabler_array=[]
-	for item in task_enabler:
-		task_enabler_array.append(item.title)
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
 
 	status='INACTIVE'
 	records=TransactionPeriods.objects.all().order_by('transaction_period')
@@ -7235,6 +7751,7 @@ def TransactionPeriodManager(request):
 	'records':records,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	}
 	return render(request,'deskofficer_templates/TransactionPeriodManager.html',context)
 
@@ -7268,10 +7785,10 @@ def Monthly_Deduction_Salary_Institution_Load(request):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
-	task_enabler=TransactionEnabler.objects.filter(status="YES")
-	task_enabler_array=[]
-	for item in task_enabler:
-		task_enabler_array.append(item.title)
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
 
 	status="ACTIVE"
 	transaction_period=TransactionPeriods.objects.get(status=status)
@@ -7282,6 +7799,7 @@ def Monthly_Deduction_Salary_Institution_Load(request):
 	'transaction_period':transaction_period,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	}
 	return render(request,'deskofficer_templates/Monthly_Deduction_Salary_Institution_Load.html',context)
 
@@ -7298,10 +7816,10 @@ def Monthly_Individual_Transactions_Load(request,pk):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
-	task_enabler=TransactionEnabler.objects.filter(status="YES")
-	task_enabler_array=[]
-	for item in task_enabler:
-		task_enabler_array.append(item.title)
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
 
 	source1=TransactionSources.objects.get(title='SAVINGS')
 	source2=TransactionSources.objects.get(title='LOAN')
@@ -7337,6 +7855,7 @@ def Monthly_Individual_Transactions_Load(request,pk):
 	'generated_transactions':generated_transactions,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	}
 	return render(request,'deskofficer_templates/Monthly_Individual_Transactions_Load.html',context)
 
@@ -7353,10 +7872,10 @@ def Monthly_Savings_Contribution_preview(request,pk, salary_inst_key):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
-	task_enabler=TransactionEnabler.objects.filter(status="YES")
-	task_enabler_array=[]
-	for item in task_enabler:
-		task_enabler_array.append(item.title)
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
 
 	status='ACTIVE'
 
@@ -7387,6 +7906,7 @@ def Monthly_Savings_Contribution_preview(request,pk, salary_inst_key):
 	'record_exist':record_exist,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	}
 	return render(request,'deskofficer_templates/Monthly_Savings_Contribution_preview.html',context)
 
@@ -7442,10 +7962,10 @@ def Monthly_loan_repayement_preview(request,pk, salary_inst_key):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
-	task_enabler=TransactionEnabler.objects.filter(status="YES")
-	task_enabler_array=[]
-	for item in task_enabler:
-		task_enabler_array.append(item.title)
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
 
 	transaction_period=TransactionPeriods.objects.get(status=status)
 	salary_institution=SalaryInstitution.objects.get(id=salary_inst_key)
@@ -7464,6 +7984,7 @@ def Monthly_loan_repayement_preview(request,pk, salary_inst_key):
 	'salary_inst_key':salary_inst_key,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	}
 	return render(request,'deskofficer_templates/Monthly_loan_repayement_preview.html',context)
 
@@ -7602,10 +8123,10 @@ def MonthlyDeductionGenerationHeader(request, caption,salary_inst_key):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
-	task_enabler=TransactionEnabler.objects.filter(status="YES")
-	task_enabler_array=[]
-	for item in task_enabler:
-		task_enabler_array.append(item.title)
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
 
 	transaction_period=TransactionPeriods.objects.get(status=status1)
 	salary_institution=SalaryInstitution.objects.get(id=salary_inst_key)
@@ -7630,10 +8151,10 @@ def Monthly_Group_transaction_Institution_Load(request):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
-	task_enabler=TransactionEnabler.objects.filter(status="YES")
-	task_enabler_array=[]
-	for item in task_enabler:
-		task_enabler_array.append(item.title)
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
 
 	status='ACTIVE'
 	transaction_period=TransactionPeriods.objects.get(status=status)
@@ -7647,6 +8168,7 @@ def Monthly_Group_transaction_Institution_Load(request):
 	'records':records,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	}
 	return render(request,'deskofficer_templates/Monthly_Group_transaction_Institution_Load.html',context)
 
@@ -7664,10 +8186,10 @@ def Monthly_Group_Generated_Transaction(request,pk):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
-	task_enabler=TransactionEnabler.objects.filter(status="YES")
-	task_enabler_array=[]
-	for item in task_enabler:
-		task_enabler_array.append(item.title)
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
 
 	status="ACTIVE"
 	transaction_period=TransactionPeriods.objects.get(status=status)
@@ -7707,6 +8229,7 @@ def Monthly_Group_Generated_Transaction(request,pk):
 	'transaction_period':transaction_period,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	'records':records,
 	'members_array':members_array,
 	"savings_generated":savings_generated,
@@ -7727,10 +8250,10 @@ def Monthly_Group_Transaction_preview(request,pk):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
-	task_enabler=TransactionEnabler.objects.filter(status="YES")
-	task_enabler_array=[]
-	for item in task_enabler:
-		task_enabler_array.append(item.title)
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
 
 	status="ACTIVE"
 
@@ -7750,6 +8273,7 @@ def Monthly_Group_Transaction_preview(request,pk):
 	'total_deductions':total_deductions,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	}
 	return render(request,'deskofficer_templates/Monthly_Group_Transaction_preview.html',context)
 
@@ -7802,10 +8326,10 @@ def Monthly_Group_Transaction_View(request,pk):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
-	task_enabler=TransactionEnabler.objects.filter(status="YES")
-	task_enabler_array=[]
-	for item in task_enabler:
-		task_enabler_array.append(item.title)
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
 
 	salary_institution=SalaryInstitution.objects.get(id=pk)
 
@@ -7818,6 +8342,7 @@ def Monthly_Group_Transaction_View(request,pk):
 	'records':records,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	}
 	return render(request,'deskofficer_templates/Monthly_Group_Transaction_View.html',context)
 
@@ -7833,10 +8358,10 @@ def Monthly_Deduction_Main_and_Shop_Merger_Institution_load(request):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
-	task_enabler=TransactionEnabler.objects.filter(status="YES")
-	task_enabler_array=[]
-	for item in task_enabler:
-		task_enabler_array.append(item.title)
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
 
 	status="ACTIVE"
 	transaction_period=TransactionPeriods.objects.get(status=status)
@@ -7848,6 +8373,7 @@ def Monthly_Deduction_Main_and_Shop_Merger_Institution_load(request):
 	# 'records':records,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	}
 	return render(request,'deskofficer_templates/Monthly_Deduction_Main_and_Shop_Merger_Institution_load.html',context)
 
@@ -7864,6 +8390,10 @@ def Monthly_Deduction_Main_and_Shop_Merger_Load(request,pk):
 	task_enabler_array=[]
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 	status="ACTIVE"
 	transaction_status='UNTREATED'
@@ -7885,6 +8415,7 @@ def Monthly_Deduction_Main_and_Shop_Merger_Load(request,pk):
 	'salary_institution':salary_institution,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	'records':records,
 	}
 	return render(request,'deskofficer_templates/Monthly_Deduction_Main_and_Shop_Merger_Load.html',context)
@@ -7902,6 +8433,10 @@ def Monthly_Deduction_Main_and_Shop_Merger_Load_Main_Preview(request,pk):
 	task_enabler_array=[]
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 	transaction_status='UNTREATED'
 	transaction_status1='TREATED'
@@ -7948,6 +8483,7 @@ def Monthly_Deduction_Main_and_Shop_Merger_Load_Main_Preview(request,pk):
 	'salary_institution':salary_institution,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	'records':records,
 	}
 	return render(request,'deskofficer_templates/Monthly_Deduction_Main_and_Shop_Merger_Load_Main_Preview.html',context)
@@ -7963,6 +8499,10 @@ def Monthly_Deduction_Main_and_Shop_Merger_Load_Main_Preview_details(request,pk)
 	task_enabler_array=[]
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 	status="ACTIVE"
 
@@ -7981,6 +8521,7 @@ def Monthly_Deduction_Main_and_Shop_Merger_Load_Main_Preview_details(request,pk)
 	'total_deductions':total_deductions,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	}
 	return render(request,'deskofficer_templates/Monthly_Group_Transaction_preview.html',context)
 
@@ -7995,6 +8536,10 @@ def Monthly_Deduction_Main_and_Shop_Merger_Load_Shop_Preview(request,pk):
 	task_enabler_array=[]
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 	status="ACTIVE"
 	transaction_period=TransactionPeriods.objects.get(status=status)
@@ -8042,6 +8587,7 @@ def Monthly_Deduction_Main_and_Shop_Merger_Load_Shop_Preview(request,pk):
 	'salary_institution':salary_institution,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	'records':records,
 	'button_enabled':button_enabled,
 	}
@@ -8058,6 +8604,10 @@ def Monthly_Deduction_Main_and_Shop_Merger_Load_Shop_Preview_details(request,pk)
 	task_enabler_array=[]
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 	status="ACTIVE"
 
@@ -8076,6 +8626,7 @@ def Monthly_Deduction_Main_and_Shop_Merger_Load_Shop_Preview_details(request,pk)
 	'total_deductions':total_deductions,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	}
 	return render(request,'deskofficer_templates/Monthly_Group_Transaction_preview.html',context)
 
@@ -8093,6 +8644,10 @@ def MonthlyJointDeductionsGenerate(request,pk):
 	task_enabler_array=[]
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 	transaction_status1='TREATED'
 	status="ACTIVE"
@@ -8146,6 +8701,7 @@ def MonthlyJointDeductionsGenerate(request,pk):
 	'records':records,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	'salary_institution':salary_institution,
 	}
 	return render(request,'deskofficer_templates/MonthlyJointDeductionsGenerate.html',context)
@@ -8161,6 +8717,10 @@ def MonthlyJointDeductionsGenerateDetails(request,pk,member_pk):
 	task_enabler_array=[]
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 	status="ACTIVE"
 	transaction_period=TransactionPeriods.objects.get(status=status)
@@ -8179,6 +8739,7 @@ def MonthlyJointDeductionsGenerateDetails(request,pk,member_pk):
 	'transaction_period':transaction_period,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	'salary_institution':salary_institution,
 	}
 	return render(request,'deskofficer_templates/MonthlyJointDeductionsGenerateDetails.html',context)
@@ -8196,6 +8757,10 @@ def Monthly_Deduction_excel_Export_Institution_Load(request):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
 	status="ACTIVE"
 	transaction_period=TransactionPeriods.objects.get(status=status)
 	items=SalaryInstitution.objects.all()
@@ -8206,6 +8771,7 @@ def Monthly_Deduction_excel_Export_Institution_Load(request):
 	# 'records':records,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	}
 	return render(request,'deskofficer_templates/Monthly_Deduction_excel_Export_Institution_Load.html',context)
 
@@ -8220,6 +8786,10 @@ def Monthly_Deduction_excel_Export_load(request,pk):
 	task_enabler_array=[]
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 	salary_institution=SalaryInstitution.objects.get(id=pk)
 
@@ -8238,6 +8808,7 @@ def Monthly_Deduction_excel_Export_load(request,pk):
 	'salary_institution':salary_institution,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	'button_enabled':button_enabled,
 	}
 	return render(request,'deskofficer_templates/Monthly_Deduction_excel_Export_load.html',context)
@@ -8255,6 +8826,10 @@ def Monthly_Deduction_excel_Export_Details(request,pk,member_pk):
 	task_enabler_array=[]
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 	salary_institution=SalaryInstitution.objects.get(id=pk)
 
@@ -8284,6 +8859,7 @@ def Monthly_Deduction_excel_Export_Details(request,pk,member_pk):
 	'pk':pk,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 
 	}
 	return render(request,'deskofficer_templates/Monthly_Deduction_excel_Export_Details.html',context)
@@ -8370,6 +8946,10 @@ def Monthly_Account_deduction_Excel_import_Institution_Load(request):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
 	status="ACTIVE"
 	transaction_period=TransactionPeriods.objects.get(status=status)
 	items=SalaryInstitution.objects.all()
@@ -8379,6 +8959,7 @@ def Monthly_Account_deduction_Excel_import_Institution_Load(request):
 	'transaction_period':transaction_period,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	}
 	return render(request,'deskofficer_templates/Monthly_Account_deduction_Excel_import_Institution_Load.html',context)
 
@@ -8396,6 +8977,11 @@ def upload_AccountDeductionsResource(request,pk):
 	task_enabler_array=[]
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
 
 	status="ACTIVE"
 	transaction_period=TransactionPeriods.objects.get(status=status)
@@ -8431,6 +9017,7 @@ def upload_AccountDeductionsResource(request,pk):
 	'transaction_period':transaction_period,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	}
 	return render(request,'deskofficer_templates/upload.html',context)
 
@@ -8449,6 +9036,10 @@ def Monthly_Account_deduction_Processing_Institution_Load(request):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
 	status="ACTIVE"
 
 	items=SalaryInstitution.objects.all()
@@ -8459,6 +9050,7 @@ def Monthly_Account_deduction_Processing_Institution_Load(request):
 	'items':items,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	}
 	return render(request,'deskofficer_templates/Monthly_Account_deduction_Processing_Institution_Load.html',context)
 
@@ -8476,6 +9068,10 @@ def Monthly_Account_deduction_Processing_Preview(request):
 	for task in tasks:
 		task_array.append(task.task.title)
 
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 
 	task_enabler=TransactionEnabler.objects.filter(status="YES")
@@ -8498,6 +9094,7 @@ def Monthly_Account_deduction_Processing_Preview(request):
 	'pk':salary_institution_id,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	}
 	return render(request,'deskofficer_templates/Monthly_Account_deduction_Processing_Preview.html',context)
 
@@ -8544,6 +9141,10 @@ def Monthly_Account_Main_and_Shop_Deductions_Separations(request):
 	task_enabler_array=[]
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 	form=deduction_ledger_posting_form(request.POST or None)
 
@@ -8655,6 +9256,7 @@ def Monthly_Account_Main_and_Shop_Deductions_Separations(request):
 	'process_status':process_status,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	}
 
 	return render(request,'deskofficer_templates/Monthly_Account_Main_and_Shop_Deductions_Separations.html',context)
@@ -8678,6 +9280,11 @@ def Monthly_Main_Account_deductions_Separations(request):
 	task_enabler_array=[]
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
+
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 	form=deduction_ledger_posting_form(request.POST or None)
 
@@ -8745,6 +9352,7 @@ def Monthly_Main_Account_deductions_Separations(request):
 	'process_status':process_status,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	}
 
 	return render(request,'deskofficer_templates/Monthly_Main_Account_deductions_Separations.html',context)
@@ -8765,6 +9373,10 @@ def monthly_wrongful_deduction_transaction_period_load(request):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
 	form=TransactionPeriod_view_form(request.POST or None)
 	records=[]
 	if request.method=="POST":
@@ -8777,6 +9389,7 @@ def monthly_wrongful_deduction_transaction_period_load(request):
 	'records':records,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	}
 	return render(request,'deskofficer_templates/monthly_wrongful_deduction_transaction_period_load.html',context)
 
@@ -8794,6 +9407,9 @@ def Monthly_Unbalanced_transactions(request):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 	form=TransactionPeriod_view_form(request.POST or None)
 	processing_status="UNPROCESSED"
@@ -8811,6 +9427,7 @@ def Monthly_Unbalanced_transactions(request):
 	'records':records,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	}
 	return render(request,'deskofficer_templates/Monthly_Unbalanced_transactions.html',context)
 
@@ -8828,12 +9445,16 @@ def Monthly_Unbalanced_transactions_Processing(request,pk):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 	record=MonthlyJointDeductionGenerated.objects.get(id=pk)
 
 	context={
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	'record':record,
 	}
 	return render(request,'deskofficer_templates/Monthly_Unbalanced_transactions_Processing.html',context)
@@ -8852,6 +9473,9 @@ def Monthly_Unbalanced_transactions_Processing_Savings(request,pk):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 
 	tdate=get_current_date(now)
@@ -8942,6 +9566,7 @@ def Monthly_Unbalanced_transactions_Processing_Savings(request,pk):
 	'account_number_status':account_number_status,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	}
 	return render(request,'deskofficer_templates/Monthly_Unbalanced_transactions_Processing_Savings.html',context)
 
@@ -8960,6 +9585,9 @@ def Monthly_deduction_ledger_posting_preview(request):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 	form=deduction_ledger_posting_form(request.POST or None)
 
@@ -9133,6 +9761,7 @@ def Monthly_deduction_ledger_posting_preview(request):
 	'process_status':process_status,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	}
 	return render(request,'deskofficer_templates/Monthly_deduction_ledger_posting_preview.html',context)
 
@@ -9155,12 +9784,16 @@ def external_fascility_update_search(request):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 	title="Search Membership External Fascilities"
 	form = searchForm(request.POST or None)
 
 	return render(request,'deskofficer_templates/external_fascility_update_search.html',{'form':form,'title':title,'task_array':task_array,
-	'task_enabler_array':task_enabler_array,})
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,})
 
 
 def external_fascility_update_list_load(request):
@@ -9175,6 +9808,10 @@ def external_fascility_update_list_load(request):
 	task_enabler_array=[]
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 
 	title="Members Exclusiveness"
@@ -9192,6 +9829,7 @@ def external_fascility_update_list_load(request):
 		'title':title,
 		'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 
 		}
 		return render(request,'deskofficer_templates/external_fascility_update_list_load.html',context)
@@ -9217,12 +9855,16 @@ def members_wavers_request_search(request):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 	title="Search Members Additional Loan Request"
 	form = searchForm(request.POST or None)
 
 	return render(request,'deskofficer_templates/members_wavers_request_search.html',{'form':form,'title':title,'task_array':task_array,
-	'task_enabler_array':task_enabler_array,})
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,})
 
 
 def members_wavers_request_list_load(request):
@@ -9238,6 +9880,9 @@ def members_wavers_request_list_load(request):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 	title="Members Additional Loan"
 	form = searchForm(request.POST)
@@ -9252,6 +9897,7 @@ def members_wavers_request_list_load(request):
 		'title':title,
 		'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 
 		}
 		return render(request,'deskofficer_templates/members_wavers_request_list_load.html',context)
@@ -9270,6 +9916,9 @@ def members_wavers_request_register(request,pk):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 	status='UNTREATED'
 	approval_status='PENDING'
@@ -9320,6 +9969,7 @@ def members_wavers_request_register(request,pk):
 	'return_pk':pk,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	}
 	return render(request,'deskofficer_templates/members_wavers_request_register.html',context)
 
@@ -9339,6 +9989,9 @@ def members_wavers_request_approved_list_load(request):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 	approval_status="PENDING"
 	status='UNTREATED'
@@ -9351,6 +10004,7 @@ def members_wavers_request_approved_list_load(request):
 	'members':members,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	}
 	return render(request,'deskofficer_templates/members_wavers_request_approved_list_load.html',context)
 
@@ -9376,12 +10030,16 @@ def members_additional_loan_request_search(request):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 	title="Search Members Additional Loan Request"
 	form = searchForm(request.POST or None)
 
 	return render(request,'deskofficer_templates/members_additional_loan_request_search.html',{'form':form,'title':title,'task_array':task_array,
-	'task_enabler_array':task_enabler_array,})
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,})
 
 
 def members_additional_loan_request_list_load(request):
@@ -9397,6 +10055,9 @@ def members_additional_loan_request_list_load(request):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 	title="Members Additional Loan"
 	form = searchForm(request.POST)
@@ -9415,6 +10076,7 @@ def members_additional_loan_request_list_load(request):
 		'title':title,
 		'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 
 		}
 		return render(request,'deskofficer_templates/members_additional_loan_request_list_load.html',context)
@@ -9433,6 +10095,9 @@ def members_additional_loan_request_register(request,pk):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 	status='UNTREATED'
 	approval_status='PENDING'
@@ -9479,6 +10144,7 @@ def members_additional_loan_request_register(request,pk):
 	'return_pk':pk,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	}
 	return render(request,'deskofficer_templates/members_additional_loan_request_register.html',context)
 
@@ -9496,12 +10162,16 @@ def members_exclusiveness_request_search(request):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 	title="Search Membership Exclusive Request"
 	form = searchForm(request.POST or None)
 
 	return render(request,'deskofficer_templates/members_exclusiveness_request_search.html',{'form':form,'title':title,'task_array':task_array,
-	'task_enabler_array':task_enabler_array,})
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,})
 
 
 def members_exclusiveness_request_list_load(request):
@@ -9516,6 +10186,10 @@ def members_exclusiveness_request_list_load(request):
 	task_enabler_array=[]
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 
 	title="Members Exclusiveness"
@@ -9536,6 +10210,7 @@ def members_exclusiveness_request_list_load(request):
 		'title':title,
 		'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 
 		}
 		return render(request,'deskofficer_templates/members_exclusiveness_request_list_load.html',context)
@@ -9554,6 +10229,9 @@ def members_exclusiveness_request_register(request,pk):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 	status='UNTREATED'
 	approval_status='PENDING'
@@ -9593,6 +10271,7 @@ def members_exclusiveness_request_register(request,pk):
 	'return_pk':pk,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	}
 	return render(request,'deskofficer_templates/members_exclusiveness_request_register.html',context)
 
@@ -9612,6 +10291,9 @@ def members_exclusiveness_approved_list_load(request):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 	approval_status="PENDING"
 	status='UNTREATED'
@@ -9624,6 +10306,7 @@ def members_exclusiveness_approved_list_load(request):
 	'members':members,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	}
 	return render(request,'deskofficer_templates/members_exclusiveness_approved_list_load.html',context)
 
@@ -9657,12 +10340,16 @@ def MembersBankAccounts_list_search(request):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 	title="Search Membership Account Creation"
 	form = searchForm(request.POST or None)
 
 	return render(request,'deskofficer_templates/MembersBankAccounts_list_search.html',{'form':form,'title':title,'task_array':task_array,
-	'task_enabler_array':task_enabler_array,})
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,})
 
 
 
@@ -9679,6 +10366,10 @@ def MembersBankAccounts_list_load(request):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
 
 	title="Bank Accoun Creation"
 	status="ACTIVE"
@@ -9694,6 +10385,7 @@ def MembersBankAccounts_list_load(request):
 		'title':title,
 		'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 
 		}
 		return render(request,'deskofficer_templates/MembersBankAccounts_list_load.html',context)
@@ -9714,6 +10406,9 @@ def Members_Bank_Accounts(request,pk):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 	form=MembersBankAccounts_form(request.POST or None)
 	member=Members.objects.get(id=pk)
@@ -9757,6 +10452,7 @@ def Members_Bank_Accounts(request,pk):
 	'return_pk':pk,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	}
 	return render(request,'deskofficer_templates/MembersBankAccounts.html',context)
 
@@ -9798,12 +10494,17 @@ def Members_Bank_Accounts_edit_search(request):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
 
 	title="Search Membership Account Update"
 	form = searchForm(request.POST or None)
 
 	return render(request,'deskofficer_templates/Members_Bank_Accounts_edit_search.html',{'form':form,'title':title,'task_array':task_array,
-	'task_enabler_array':task_enabler_array,})
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,})
 
 
 def Members_Bank_Accounts_edit_list_load(request):
@@ -9818,6 +10519,10 @@ def Members_Bank_Accounts_edit_list_load(request):
 	task_enabler_array=[]
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 
 	title="Bank Accoun update"
@@ -9835,6 +10540,7 @@ def Members_Bank_Accounts_edit_list_load(request):
 		'title':title,
 		'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 
 		}
 		return render(request,'deskofficer_templates/Members_Bank_Accounts_edit_list_load.html',context)
@@ -9854,6 +10560,9 @@ def Members_Bank_Accounts_edit_details_load(request,pk):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 	member=Members.objects.get(id=pk)
 	accounts = MembersBankAccounts.objects.filter(member_id_id=pk).order_by("account_priority")
@@ -9866,6 +10575,7 @@ def Members_Bank_Accounts_edit_details_load(request,pk):
 		'return_pk':pk,
 		'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 
 		}
 	return render(request,'deskofficer_templates/Members_Bank_Accounts_edit_details_load.html',context)
@@ -9892,6 +10602,10 @@ def Members_Bank_Accounts_update_form(request,pk,return_pk):
 	task_enabler_array=[]
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 
 	form=MembersBankAccounts_form(request.POST or None)
@@ -9929,6 +10643,7 @@ def Members_Bank_Accounts_update_form(request,pk,return_pk):
 		'form':form,
 		'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 		}
 	return render(request,'deskofficer_templates/Members_Bank_Accounts_update_form.html',context)
 
@@ -9959,12 +10674,16 @@ def Members_Next_Of_Kins_search(request):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 	title="Search Membership for Next Of Kins"
 	form = searchForm(request.POST or None)
 
 	return render(request,'deskofficer_templates/Members_Next_Of_Kins_search.html',{'form':form,'title':title,'task_array':task_array,
-	'task_enabler_array':task_enabler_array,})
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,})
 
 
 def Members_Next_Of_Kins_list_load(request):
@@ -9979,6 +10698,10 @@ def Members_Next_Of_Kins_list_load(request):
 	task_enabler_array=[]
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 
 	title="Members Next Of Kins"
@@ -9997,6 +10720,7 @@ def Members_Next_Of_Kins_list_load(request):
 		'title':title,
 		'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 
 		}
 		return render(request,'deskofficer_templates/Members_Next_Of_Kins_list_load.html',context)
@@ -10017,6 +10741,10 @@ def addMembersNextOfKins(request,pk):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 	member=Members.objects.get(id=pk)
 	title="Add Next Of Kins"
@@ -10069,6 +10797,7 @@ def addMembersNextOfKins(request,pk):
 	'records':records,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	}
 	return render(request,'deskofficer_templates/addMembersNextOfKins.html',context)
 
@@ -10101,12 +10830,17 @@ def Members_Next_Of_Kins_Manage_search(request):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
 
 	title="Search Membership for Next Of Kins"
 	form = searchForm(request.POST or None)
 
 	return render(request,'deskofficer_templates/Members_Next_Of_Kins_Manage_search.html',{'form':form,'title':title,'task_array':task_array,
-	'task_enabler_array':task_enabler_array,})
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,})
 
 
 def Members_Next_Of_Kins_Manage_list_load(request):
@@ -10123,6 +10857,10 @@ def Members_Next_Of_Kins_Manage_list_load(request):
 		task_enabler_array.append(item.title)
 
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
 	title="Members Next Of Kins"
 	status="ACTIVE"
 	form = searchForm(request.POST)
@@ -10138,6 +10876,7 @@ def Members_Next_Of_Kins_Manage_list_load(request):
 		'title':title,
 		'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 
 		}
 		return render(request,'deskofficer_templates/Members_Next_Of_Kins_Manage_list_load.html',context)
@@ -10157,6 +10896,10 @@ def Members_Next_Of_Kins_Manage_NOK_Load(request,pk):
 		task_enabler_array.append(item.title)
 
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
 	member=Members.objects.get(id=pk)
 	noks=MembersNextOfKins.objects.filter(member_id=pk)
 	title="List of Next Of Kins"
@@ -10168,6 +10911,7 @@ def Members_Next_Of_Kins_Manage_NOK_Load(request,pk):
 	'member_id':pk,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	}
 	return render(request,'deskofficer_templates/Members_Next_Of_Kins_Manage_NOK_Load.html',context)
 
@@ -10187,6 +10931,10 @@ def Members_Next_Of_Kins_Manage_NOK_Update(request,pk,member_id):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 	form=MembersNextOfKins_form(request.POST or None)
 	member=Members.objects.get(id=member_id)
@@ -10226,6 +10974,7 @@ def Members_Next_Of_Kins_Manage_NOK_Update(request,pk,member_id):
 	'nok':nok,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	}
 	return render(request,'deskofficer_templates/Members_Next_Of_Kins_Manage_NOK_Update.html',context)
 
@@ -10245,6 +10994,10 @@ def Members_Without_Next_of_Kin_list_load(request):
 		task_enabler_array.append(item.title)
 
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
 	members=Members.objects.filter(status="ACTIVE")
 	k=0
 	member_array = []
@@ -10261,6 +11014,7 @@ def Members_Without_Next_of_Kin_list_load(request):
 
 		'task_array':task_array,
 		'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 
 		}
 	return render(request,'deskofficer_templates/Members_Without_Next_of_Kin_list_load.html',context)
@@ -10279,6 +11033,10 @@ def Members_Without_Next_of_Kin_Update(request,pk):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 	member=Members.objects.get(id=pk)
 	title="Add Next Of Kins"
@@ -10331,6 +11089,7 @@ def Members_Without_Next_of_Kin_Update(request,pk):
 	'records':records,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	}
 	return render(request,'deskofficer_templates/Members_Without_Next_of_Kin_Update.html',context)
 
@@ -10362,11 +11121,16 @@ def Members_Salary_Update_request_search(request):
 		task_enabler_array.append(item.title)
 
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
 	title="Search Membership for Salary Update"
 	form = searchForm(request.POST or None)
 
 	return render(request,'deskofficer_templates/Members_Salary_Update_request_search.html',{'form':form,'title':title,'task_array':task_array,
-	'task_enabler_array':task_enabler_array,})
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,})
 
 
 def Members_Salary_Update_Request_list_load(request):
@@ -10383,6 +11147,10 @@ def Members_Salary_Update_Request_list_load(request):
 		task_enabler_array.append(item.title)
 
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
 	title="Members Salary Update"
 	status="ACTIVE"
 	form = searchForm(request.POST)
@@ -10398,6 +11166,7 @@ def Members_Salary_Update_Request_list_load(request):
 		'title':title,
 		'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 
 		}
 		return render(request,'deskofficer_templates/Members_Salary_Update_Request_list_load.html',context)
@@ -10416,6 +11185,10 @@ def Members_Salary_Update_Request_Load(request,pk):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 	form=Members_Salary_Update_Request_form(request.POST or None)
 	member=Members.objects.get(id=pk)
@@ -10442,6 +11215,7 @@ def Members_Salary_Update_Request_Load(request,pk):
 	'member_id':pk,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	}
 	return render(request,'deskofficer_templates/Members_Salary_Update_Request_Load.html',context)
 
@@ -10459,6 +11233,9 @@ def Members_Salary_Update_Request_approval_Load(request):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 	status="APPROVED"
 	processing_status='PROCESSED'
@@ -10470,6 +11247,7 @@ def Members_Salary_Update_Request_approval_Load(request):
 	'members':members,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	}
 	return render(request,'deskofficer_templates/Members_Salary_Update_Request_approval_Load.html',context)
 
@@ -10519,6 +11297,10 @@ def upload_norminal_roll(request):
 	task_enabler_array=[]
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 
 	if request.method == 'POST':
@@ -10578,6 +11360,7 @@ def upload_norminal_roll(request):
 
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	}
 	return render(request,'deskofficer_templates/upload_norminal.html',context)
 
@@ -10596,6 +11379,10 @@ def upload_distinct_norminal_roll(request):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 	if request.method == 'POST':
 
@@ -10628,6 +11415,7 @@ def upload_distinct_norminal_roll(request):
 
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	}
 	return render(request,'deskofficer_templates/upload_norminal.html',context)
 
@@ -10645,6 +11433,9 @@ def Norminal_Roll_Preview(request):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 	transaction_status="UNTREATED"
 	records=NorminalRoll.objects.filter(transaction_status=transaction_status)
@@ -10654,6 +11445,7 @@ def Norminal_Roll_Preview(request):
 	'records':records,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	}
 	return render(request,'deskofficer_templates/Norminal_Roll_Preview.html',context)
 
@@ -10820,6 +11612,10 @@ def Individual_Capture(request):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
 	prefix=MembersIdManager.objects.first()
 	tdate=get_current_date(now)
 	processed_by=CustomUser.objects.get(id=request.user.id)
@@ -10973,6 +11769,7 @@ def Individual_Capture(request):
 	# 'records':records,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	}
 	return render(request,'deskofficer_templates/Individual_Capture.html',context)
 
@@ -10988,11 +11785,16 @@ def Individual_Capture_Delete_Search(request):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
 	title="Search Members for Ledger Information"
 	form = searchForm(request.POST or None)
 
 	return render(request,'deskofficer_templates/Individual_Capture_Delete_Search.html',{'form':form,'title':title,'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	})
 
 
@@ -11007,6 +11809,10 @@ def Individual_Capture_Delete_List_load(request):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 	title="LIST OF MEMBERS"
 	form = searchForm(request.POST)
@@ -11028,6 +11834,7 @@ def Individual_Capture_Delete_List_load(request):
 		'title':title,
 		'task_array':task_array,
 		'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 		}
 		return render(request,'deskofficer_templates/Individual_Capture_Delete_List_load.html',context)
 
@@ -11057,11 +11864,16 @@ def Uploading_Existing_Savings_Search(request):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
 	title="Search Members for Ledger Information"
 	form = searchForm(request.POST or None)
 
 	return render(request,'deskofficer_templates/Uploading_Existing_Savings_Search.html',{'form':form,'title':title,'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	})
 
 
@@ -11075,6 +11887,10 @@ def Uploading_Existing_Savings_List_load(request):
 	task_enabler_array=[]
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 
 	title="LIST OF MEMBERS"
@@ -11097,6 +11913,7 @@ def Uploading_Existing_Savings_List_load(request):
 		'title':title,
 		'task_array':task_array,
 		'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 		}
 		return render(request,'deskofficer_templates/Uploading_Existing_Savings_List_load.html',context)
 
@@ -11111,6 +11928,10 @@ def Uploading_Existing_Savings_Preview(request,pk):
 	task_enabler_array=[]
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 	form=Uploading_Existing_Savings_form(request.POST or None)
 	member_id=Members.objects.get(id=pk)
@@ -11170,6 +11991,7 @@ def Uploading_Existing_Savings_Preview(request,pk):
 	'return_pk':pk,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	}
 	return render(request,'deskofficer_templates/Uploading_Existing_Savings_Preview.html',context)
 
@@ -11185,6 +12007,9 @@ def Uploading_Existing_Savings_validate(request,pk):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 	lock_status='LOCKED'
 	savings_status='UPLOADED'
@@ -11288,11 +12113,16 @@ def Uploading_Existing_Savings_Additional_search(request):
 		task_enabler_array.append(item.title)
 
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
 	title="Search Members for Savings Upload"
 	form = searchForm(request.POST or None)
 
 	return render(request,'deskofficer_templates/Uploading_Existing_Savings_Additional_search.html',{'form':form,'title':title,'task_array':task_array,
-	'task_enabler_array':task_enabler_array,})
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,})
 
 
 def Uploading_Existing_Savings_Additional_list_load(request):
@@ -11308,6 +12138,10 @@ def Uploading_Existing_Savings_Additional_list_load(request):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 	title="LIST OF MEMBERS FOR SAVINGS UPLOAD"
 	status="ACTIVE"
@@ -11325,6 +12159,7 @@ def Uploading_Existing_Savings_Additional_list_load(request):
 		'title':title,
 		'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 
 		}
 		return render(request,'deskofficer_templates/Uploading_Existing_Savings_Additional_list_load.html',context)
@@ -11343,6 +12178,9 @@ def Uploading_Existing_Savings_Additional_Preview(request,pk):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 	form=Uploading_Existing_Savings_form(request.POST or None)
 	member=Members.objects.get(id=pk)
@@ -11411,6 +12249,7 @@ def Uploading_Existing_Savings_Additional_Preview(request,pk):
 	'return_pk':pk,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	}
 	return render(request,'deskofficer_templates/Uploading_Existing_Savings_Additional_Preview.html',context)
 
@@ -11515,11 +12354,16 @@ def Uploading_Existing_Loans_Search(request):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
 	title="Search Members for Ledger Information"
 	form = searchForm(request.POST or None)
 
 	return render(request,'deskofficer_templates/Uploading_Existing_Loans_Search.html',{'form':form,'title':title,'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	})
 
 
@@ -11535,6 +12379,9 @@ def Uploading_Existing_Loans_List_load(request):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 	title="LIST OF MEMBERS"
 	form = searchForm(request.POST)
@@ -11556,6 +12403,7 @@ def Uploading_Existing_Loans_List_load(request):
 		'title':title,
 		'task_array':task_array,
 		'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 		}
 		return render(request,'deskofficer_templates/Uploading_Existing_Loans_List_load.html',context)
 
@@ -11573,6 +12421,9 @@ def Uploading_Existing_Loans_Preview(request,pk):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 	form=Uploading_Existing_Loans_form(request.POST or None)
 	member=Members.objects.get(id=pk)
@@ -11689,6 +12540,7 @@ def Uploading_Existing_Loans_Preview(request,pk):
 	'return_pk':pk,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	}
 	return render(request,'deskofficer_templates/Uploading_Existing_Loans_Preview.html',context)
 
@@ -11863,6 +12715,10 @@ def Uploading_Existing_Aditional_Loans(request):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
 
 	loan_status='PENDING'
 	records=Members.objects.filter(~Q(loan_status=loan_status))
@@ -11872,6 +12728,7 @@ def Uploading_Existing_Aditional_Loans(request):
 	'records':records,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	}
 	return render(request,'deskofficer_templates/Uploading_Existing_Aditional_Loans.html',context)
 
@@ -11889,6 +12746,9 @@ def Uploading_Existing_Additional_Loans_Preview(request,pk):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 	form=Uploading_Existing_Loans_form(request.POST or None)
 	member=Members.objects.get(id=pk)
@@ -12007,6 +12867,7 @@ def Uploading_Existing_Additional_Loans_Preview(request,pk):
 	'return_pk':pk,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	}
 	return render(request,'deskofficer_templates/Uploading_Existing_Additional_Loans_Preview.html',context)
 
@@ -12160,10 +13021,10 @@ def Updating_Salary_Grosspay_list_load(request):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
-	task_enabler=TransactionEnabler.objects.filter(status="YES")
-	task_enabler_array=[]
-	for item in task_enabler:
-		task_enabler_array.append(item.title)
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
 
 
 	status="ACTIVE"
@@ -12175,6 +13036,7 @@ def Updating_Salary_Grosspay_list_load(request):
 	'records':records,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	}
 	return render(request,'deskofficer_templates/Updating_Salary_Grosspay_list_load.html',context)
 
@@ -12196,12 +13058,17 @@ def Norminal_Roll_Search(request):
 		task_enabler_array.append(item.title)
 
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
 
 	title="Search Members for Cash Deposit"
 	form = searchForm(request.POST or None)
 
 	return render(request,'deskofficer_templates/Norminal_Roll_Search.html',{'form':form,'title':title,'task_array':task_array,
-	'task_enabler_array':task_enabler_array,})
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,})
 
 def Norminal_Roll_Update(request,pk):
 	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
@@ -12213,6 +13080,10 @@ def Norminal_Roll_Update(request,pk):
 	task_enabler_array=[]
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 
 	form = Norminal_Roll_Update_form(request.POST or None)
@@ -12326,6 +13197,7 @@ def Norminal_Roll_Update(request,pk):
 	'member':member,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	}
 	return render(request,'deskofficer_templates/Norminal_Roll_Update.html',context)
 
@@ -12343,10 +13215,9 @@ def Norminal_Roll_Update_list_load(request):
 		task_enabler_array.append(item.title)
 
 
-	task_enabler=TransactionEnabler.objects.filter(status="YES")
-	task_enabler_array=[]
-	for item in task_enabler:
-		task_enabler_array.append(item.title)
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 
 	title="LIST OF MEMBERS"
@@ -12365,6 +13236,7 @@ def Norminal_Roll_Update_list_load(request):
 		'title':title,
 		'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 		}
 		return render(request,'deskofficer_templates/Norminal_Roll.html',context)
 
@@ -12394,13 +13266,10 @@ def Members_Shares_Upload_Search(request):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
-
-
-	task_enabler=TransactionEnabler.objects.filter(status="YES")
-	task_enabler_array=[]
-	for item in task_enabler:
-		task_enabler_array.append(item.title)
 
 
 	title="Search Members for Ledger Information"
@@ -12408,6 +13277,7 @@ def Members_Shares_Upload_Search(request):
 
 	return render(request,'deskofficer_templates/Members_Shares_Upload_Search.html',{'form':form,'title':title,'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	})
 
 
@@ -12423,11 +13293,10 @@ def Members_Shares_Upload_list_load(request):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
-	task_enabler=TransactionEnabler.objects.filter(status="YES")
-	task_enabler_array=[]
-	for item in task_enabler:
-		task_enabler_array.append(item.title)
 
 	title="LIST OF MEMBERS"
 	form = searchForm(request.POST)
@@ -12450,6 +13319,7 @@ def Members_Shares_Upload_list_load(request):
 		'title':title,
 		'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 		}
 		return render(request,'deskofficer_templates/Members_Shares_Upload_list_load.html',context)
 
@@ -12468,11 +13338,10 @@ def Members_Shares_Upload_Preview(request,pk):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
-	task_enabler=TransactionEnabler.objects.filter(status="YES")
-	task_enabler_array=[]
-	for item in task_enabler:
-		task_enabler_array.append(item.title)
 
 
 	form=Existing_Shares_Upload_form(request.POST or None)
@@ -12567,6 +13436,7 @@ def Members_Shares_Upload_Preview(request,pk):
 	'form':form,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	}
 	return render(request,'deskofficer_templates/Members_Shares_Upload_Preview.html',context)
 
@@ -12587,18 +13457,18 @@ def Members_Initial_Shares_update_Search(request):
 
 
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
-	task_enabler=TransactionEnabler.objects.filter(status="YES")
-	task_enabler_array=[]
-	for item in task_enabler:
-		task_enabler_array.append(item.title)
 
 
 	title="Search Members for Initial Share Update"
 	form = searchForm(request.POST or None)
 
 	return render(request,'deskofficer_templates/Members_Initial_Shares_update_Search.html',{'form':form,'title':title,'task_array':task_array,
-	'task_enabler_array':task_enabler_array,})
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,})
 
 
 def Members_Initial_Shares_update_list_load(request):
@@ -12615,12 +13485,10 @@ def Members_Initial_Shares_update_list_load(request):
 		task_enabler_array.append(item.title)
 
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
-
-	task_enabler=TransactionEnabler.objects.filter(status="YES")
-	task_enabler_array=[]
-	for item in task_enabler:
-		task_enabler_array.append(item.title)
 
 
 	title="LIST OF MEMBERS"
@@ -12644,6 +13512,7 @@ def Members_Initial_Shares_update_list_load(request):
 		'title':title,
 		'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 		}
 		return render(request,'deskofficer_templates/Members_Initial_Shares_update_list_load.html',context)
 
@@ -12661,6 +13530,10 @@ def Members_Initial_Shares_update_preview(request,pk):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 	form=MembersInitialShare_update_form(request.POST or None)
 	tdate=get_current_date(now)
@@ -12691,6 +13564,7 @@ def Members_Initial_Shares_update_preview(request,pk):
 	context={
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	'form':form,
 	}
 	return render(request,'deskofficer_templates/Members_Initial_Shares_update_preview.html',context)
@@ -12709,6 +13583,10 @@ def Members_Initial_Shares_update_approved_list_load(request):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
 
 	status='UNTREATED'
 	approval_status='APPROVED'
@@ -12717,6 +13595,7 @@ def Members_Initial_Shares_update_approved_list_load(request):
 	context={
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	'members':members,
 	}
 	return render(request,'deskofficer_templates/Members_Initial_Shares_update_approved_list_load.html',context)
@@ -12732,6 +13611,10 @@ def Members_Initial_Shares_update_approved_processed(request,pk):
 	task_enabler_array=[]
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 	transaction_period=TransactionPeriods.objects.get(status='ACTIVE')
 	status1='ACTIVE'
@@ -12772,6 +13655,7 @@ def Members_Initial_Shares_update_approved_processed(request,pk):
 	context={
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	'member':member,
 	'ledger_balance':ledger_balance.balance,
 	}
@@ -12789,11 +13673,16 @@ def Members_Share_Purchase_Request_Search(request):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
 	title="Search Members for Share Purchase"
 	form = searchForm(request.POST or None)
 
 	return render(request,'deskofficer_templates/Members_Share_Purchase_Request_Search.html',{'form':form,'title':title,'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	})
 
 
@@ -12810,6 +13699,10 @@ def Members_Share_Purchase_Request_list_load(request):
 		task_enabler_array.append(item.title)
 
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
 	title="LIST OF MEMBERS"
 	status="ACTIVE"
 	form = searchForm(request.POST)
@@ -12825,6 +13718,7 @@ def Members_Share_Purchase_Request_list_load(request):
 		'title':title,
 		'task_array':task_array,
 		'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 
 		}
 		return render(request,'deskofficer_templates/Members_Share_Purchase_Request_list_load.html',context)
@@ -12840,6 +13734,11 @@ def Members_Share_Purchase_Request_View(request,pk):
 	task_enabler_array=[]
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
 
 	form = Members_Share_Purchase_Request_form(request.POST or None)
 	member1=MembersShareAccounts.objects.get(id=pk)
@@ -12880,6 +13779,7 @@ def Members_Share_Purchase_Request_View(request,pk):
 	"member":member,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 
 	'account_number':account_number,
 	}
@@ -12900,12 +13800,17 @@ def Members_Share_Purchase_Request_Manage_Search(request):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
 
 	title="Search Members for Share Purchase"
 	form = searchForm(request.POST or None)
 
 	return render(request,'deskofficer_templates/Members_Share_Purchase_Request_Manage_Search.html',{'form':form,'title':title,'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	})
 
 
@@ -12921,6 +13826,9 @@ def Members_Share_Purchase_Request_Manage_list_load(request):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 	title="LIST OF MEMBERS"
 	status="ACTIVE"
@@ -12937,6 +13845,7 @@ def Members_Share_Purchase_Request_Manage_list_load(request):
 		'title':title,
 		'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 		}
 		return render(request,'deskofficer_templates/Members_Share_Purchase_Request_Manage_list_load.html',context)
 
@@ -12955,6 +13864,9 @@ def Members_Share_Purchase_Request_Manage_Details(request,pk):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 	member=MembersSharePurchaseRequest.objects.get(id=pk)
 
@@ -12992,6 +13904,7 @@ def Members_Share_Purchase_Request_Manage_Details(request,pk):
 	'member':member,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 
 	}
 	return render(request,'deskofficer_templates/Members_Share_Purchase_Request_Manage_Details.html',context)
@@ -13009,11 +13922,16 @@ def Members_Share_Purchase_Request_Manage_Details_delete_Confirmation(request,pk
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
 	title = "Are you sure you want to drop this Request"
 	record=MembersSharePurchaseRequest.objects.get(id=pk)
 	context={
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 
 
 	'record':record,
@@ -13039,6 +13957,10 @@ def Members_Share_Purchase_Request_Process(request):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
 	approval_status='APPROVED'
 	status='UNTREATED'
 	records=MembersSharePurchaseRequest.objects.filter(approval_status=approval_status,status=status)
@@ -13047,6 +13969,7 @@ def Members_Share_Purchase_Request_Process(request):
 	context={
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 
 
 	'records':records,
@@ -13066,6 +13989,10 @@ def Members_Share_Purchase_Request_Process_View(request,pk):
 	task_enabler_array=[]
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 	processed_by=CustomUser.objects.get(id=request.user.id)
 
@@ -13217,6 +14144,7 @@ def Members_Share_Purchase_Request_Process_View(request,pk):
 	context={
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 
 
 	'record':record,
@@ -13243,11 +14171,16 @@ def Members_Welfare_Upload_Search(request):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
 	title="Search Members for Ledger Information"
 	form = searchForm(request.POST or None)
 
 	return render(request,'deskofficer_templates/Members_Welfare_Upload_Search.html',{'form':form,'title':title,'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	})
 
 
@@ -13264,6 +14197,10 @@ def Members_Welfare_Upload_list_load(request):
 	task_enabler_array=[]
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 
 	title="LIST OF MEMBERS"
@@ -13289,6 +14226,7 @@ def Members_Welfare_Upload_list_load(request):
 	'title':title,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	}
 	return render(request,'deskofficer_templates/Members_Welfare_Upload_list_load.html',context)
 
@@ -13308,6 +14246,9 @@ def Members_Welfare_Upload_Preview(request,pk):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 	form=Existing_Welfare_Upload_form(request.POST or None)
 	welfare_status='VERIFIED'
@@ -13361,6 +14302,7 @@ def Members_Welfare_Upload_Preview(request,pk):
 	'form':form,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	}
 	return render(request,'deskofficer_templates/Members_Welfare_Upload_Preview.html',context)
 
@@ -13382,12 +14324,16 @@ def Cash_Deposit_Shares_Search(request):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 	title="Search Members for Cash Deposit for Shares"
 	form = searchForm(request.POST or None)
 
 	return render(request,'deskofficer_templates/Cash_Deposit_Shares_Search.html',{'form':form,'title':title,'task_array':task_array,
-	'task_enabler_array':task_enabler_array,})
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,})
 
 
 def Cash_Deposit_Shares_list_load(request):
@@ -13403,6 +14349,9 @@ def Cash_Deposit_Shares_list_load(request):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 	title="LIST OF MEMBERS"
 	transaction=TransactionTypes.objects.get(code='700')
@@ -13420,6 +14369,7 @@ def Cash_Deposit_Shares_list_load(request):
 		'title':title,
 		'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 
 		}
 		return render(request,'deskofficer_templates/Cash_Deposit_Shares_list_load.html',context)
@@ -13438,6 +14388,9 @@ def Cash_Deposit_Shares_Preview(request,pk):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 	form=Cash_Deposit_Shares_Preview_Form(request.POST or None)
 	member=MembersAccountsDomain.objects.get(id=pk)
@@ -13570,6 +14523,7 @@ def Cash_Deposit_Shares_Preview(request,pk):
 	context={
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 
 	'member':member,
 	'form':form,
@@ -13591,12 +14545,17 @@ def Cash_Deposit_Welfare_Search(request):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
 
 	title="Search Members for Cash Deposit for Welfare"
 	form = searchForm(request.POST or None)
 
 	return render(request,'deskofficer_templates/Cash_Deposit_Welfare_Search.html',{'form':form,'title':title,'task_array':task_array,
-	'task_enabler_array':task_enabler_array,})
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,})
 
 
 def Cash_Deposit_Welfare_list_load(request):
@@ -13611,6 +14570,10 @@ def Cash_Deposit_Welfare_list_load(request):
 	task_enabler_array=[]
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 
 	title="LIST OF MEMBERS"
@@ -13628,6 +14591,7 @@ def Cash_Deposit_Welfare_list_load(request):
 		'title':title,
 		'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 
 		}
 		return render(request,'deskofficer_templates/Cash_Deposit_Welfare_list_load.html',context)
@@ -13645,6 +14609,10 @@ def Cash_Deposit_Welfare_Preview(request,pk):
 	task_enabler_array=[]
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 
 	form=Cash_Deposit_Welfare_Preview_Form(request.POST or None)
@@ -13761,6 +14729,7 @@ def Cash_Deposit_Welfare_Preview(request,pk):
 	context={
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 
 	'member':member,
 	'form':form,
@@ -13782,11 +14751,16 @@ def Cash_Deposit_Savings_Search(request):
 		task_enabler_array.append(item.title)
 
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
 	title="Search Members for Cash Deposit"
 	form = searchForm(request.POST or None)
 
 	return render(request,'deskofficer_templates/Cash_Deposit_Savings_Search.html',{'form':form,'title':title,'task_array':task_array,
-	'task_enabler_array':task_enabler_array,})
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,})
 
 
 
@@ -13803,6 +14777,9 @@ def Cash_Deposit_Savings_list_load(request):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 	title="LIST OF MEMBERS"
 	form = searchForm(request.POST)
@@ -13821,6 +14798,7 @@ def Cash_Deposit_Savings_list_load(request):
 		'title':title,
 		'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 		}
 		return render(request,'deskofficer_templates/Cash_Deposit_Savings_list_load.html',context)
 
@@ -13838,6 +14816,9 @@ def Cash_Deposit_Savings_Load(request,pk):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 	member=Members.objects.get(id=pk)
 	records=MembersAccountsDomain.objects.filter(member=member,transaction__source__title="SAVINGS")
@@ -13845,6 +14826,7 @@ def Cash_Deposit_Savings_Load(request,pk):
 	context={
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	'records':records,
 	'member':member,
 	}
@@ -13865,6 +14847,10 @@ def Cash_Deposit_Savings_Preview(request,pk):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 	receipt_status='UNUSED'
 	receipt_status1='USED'
@@ -13997,6 +14983,7 @@ def Cash_Deposit_Savings_Preview(request,pk):
 	'form':form,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	# 'transaction':transaction,
 	}
 	return render(request,'deskofficer_templates/Cash_Deposit_Savings_Preview.html',context)
@@ -14015,12 +15002,16 @@ def Cash_Deposit_Loans_Search(request):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 	title="Search Members for Cash Deposit"
 	form = searchForm(request.POST or None)
 
 	return render(request,'deskofficer_templates/Cash_Deposit_Loans_Search.html',{'form':form,'title':title,'task_array':task_array,
-	'task_enabler_array':task_enabler_array,})
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,})
 
 
 def Cash_Deposit_Loan_list_load(request):
@@ -14036,6 +15027,9 @@ def Cash_Deposit_Loan_list_load(request):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 	title="LIST OF MEMBERS"
 	status="ACTIVE"
@@ -14053,6 +15047,7 @@ def Cash_Deposit_Loan_list_load(request):
 		'title':title,
 		'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 		}
 		return render(request,'deskofficer_templates/Cash_Deposit_Loan_list_load.html',context)
 
@@ -14070,6 +15065,9 @@ def Cash_Deposit_Loans_Preview(request,pk):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 	form=Cash_Deposit_Loans_form(request.POST or None)
 	status1='ACTIVE'
@@ -14259,6 +15257,7 @@ def Cash_Deposit_Loans_Preview(request,pk):
 	'loans':loans,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	}
 	return render(request,'deskofficer_templates/Cash_Deposit_Loans_Preview.html',context)
 
@@ -14288,6 +15287,9 @@ def Xmas_Savings_Shortlisting_list_Load(request):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 	form=Xmas_Savings_Shortlisting_form(request.POST or None)
 	title="LIST OF MEMBERS FOR XMAS SAVINGS SHORTLISTING"
@@ -14371,6 +15373,7 @@ def Xmas_Savings_Shortlisting_list_Load(request):
 	'title':title,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	'button_enabled':button_enabled,
 
 	}
@@ -14395,6 +15398,9 @@ def Xmas_Savings_Shortlisting_Filter_Batch_Load(request):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 	if request.method == 'POST':
 		batch=request.POST.get('batch')
@@ -14402,6 +15408,7 @@ def Xmas_Savings_Shortlisting_Filter_Batch_Load(request):
 	context={
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	'form':form,
 	}
 	return render(request,'deskofficer_templates/Xmas_Savings_Shortlisting_Filter_Batch_Load.html',context)
@@ -14421,6 +15428,9 @@ def Xmas_Savings_Shortlisting_Filter_List_Load(request,batch,payment):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 	form=Xmas_Savings_Shortlisting_Export_form(request.POST or None)
 
@@ -14436,6 +15446,7 @@ def Xmas_Savings_Shortlisting_Filter_List_Load(request,batch,payment):
 		'batch':batch,
 		'payment':category,
 		'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 		}
 		return render(request,'deskofficer_templates/Xmas_Savings_Shortlisting_Filter_List_Load.html',context)
 
@@ -14459,6 +15470,7 @@ def Xmas_Savings_Shortlisting_Filter_List_Load(request,batch,payment):
 	'batch':batch,
 	'payment':payment,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	}
 	return render(request,'deskofficer_templates/Xmas_Savings_Shortlisting_Filter_List_Load.html',context)
 
@@ -14493,6 +15505,10 @@ def Xmas_Savings_Shortlisting_Account_Linkage_Batch_Load(request):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
 	if request.method == 'POST':
 		batch=request.POST.get('batch')
 		payment=request.POST.get('category')
@@ -14500,6 +15516,7 @@ def Xmas_Savings_Shortlisting_Account_Linkage_Batch_Load(request):
 	context={
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	'form':form,
 	}
 	return render(request,'deskofficer_templates/Xmas_Savings_Shortlisting_Account_Linkage_Batch_Load.html',context)
@@ -14520,6 +15537,9 @@ def Xmas_Savings_Shortlisting_Account_Linkage_List_Load(request,batch,payment):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 	if payment == "CASH":
 		account_status='NO'
@@ -14531,6 +15551,7 @@ def Xmas_Savings_Shortlisting_Account_Linkage_List_Load(request,batch,payment):
 		'batch':batch,
 		'payment':payment,
 		'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 		}
 		return render(request,'deskofficer_templates/Xmas_Savings_Shortlisting_Account_Linkage_List_Load.html',context)
 
@@ -14549,6 +15570,7 @@ def Xmas_Savings_Shortlisting_Account_Linkage_List_Load(request,batch,payment):
 		'batch':batch,
 		'payment':payment,
 		'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 		'code':code,
 		}
 		return render(request,'deskofficer_templates/Xmas_Savings_Shortlisting_Account_Transfer_List_Load.html',context)
@@ -14588,6 +15610,9 @@ def Xmas_Savings_Shortlisting_Account_Assignment(request,pk):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 	member=Xmas_Savings_Shortlist.objects.get(id=pk)
 	if request.method == 'POST':
@@ -14606,6 +15631,7 @@ def Xmas_Savings_Shortlisting_Account_Assignment(request,pk):
 	context={
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	'accounts':accounts,
 	}
 	return render(request,'deskofficer_templates/Xmas_Savings_Shortlisting_Account_Assignment.html',context)
@@ -14624,6 +15650,9 @@ def Xmas_Savings_Shortlisting_Account_Transfer(request,pk):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 	member=Xmas_Savings_Shortlist.objects.get(id=pk)
 
@@ -14664,6 +15693,7 @@ def Xmas_Savings_Shortlisting_Account_Transfer(request,pk):
 	context={
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	'savings':savings,
 	'member':member,
 	}
@@ -14689,6 +15719,9 @@ def Xmas_Savings_Shortlisting_Export_Batch_Load(request):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 	if request.method == 'POST':
 		batch=request.POST.get('batch')
@@ -14697,6 +15730,7 @@ def Xmas_Savings_Shortlisting_Export_Batch_Load(request):
 	context={
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	'form':form,
 	}
 	return render(request,'deskofficer_templates/Xmas_Savings_Shortlisting_Export_Batch_Load.html',context)
@@ -14719,6 +15753,9 @@ def Xmas_Savings_Shortlisting_Export_List_Load(request,batch,payment):
 
 
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 	records=Xmas_Savings_Shortlist.objects.filter(batch=batch,payment_channel=payment,status=status)
 
@@ -14728,6 +15765,7 @@ def Xmas_Savings_Shortlisting_Export_List_Load(request,batch,payment):
 	'batch':batch,
 	'payment':payment,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	}
 	return render(request,'deskofficer_templates/Xmas_Savings_Shortlisting_Export_List_Load.html',context)
 
@@ -14811,6 +15849,9 @@ def Xmas_Savings_Shortlisting_Processing_Batch_Load(request):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 	if request.method == 'POST':
 		batch=request.POST.get('batch')
@@ -14819,6 +15860,7 @@ def Xmas_Savings_Shortlisting_Processing_Batch_Load(request):
 	context={
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	'form':form,
 	}
 	return render(request,'deskofficer_templates/Xmas_Savings_Shortlisting_Processing_Batch_Load.html',context)
@@ -14841,6 +15883,9 @@ def Xmas_Savings_Shortlisting_Processing_List_Load(request,batch,payment):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 	records=Xmas_Savings_Shortlist.objects.filter(batch=batch,payment_channel=payment,status=status,processing_status=processing_status)
 
@@ -14850,6 +15895,7 @@ def Xmas_Savings_Shortlisting_Processing_List_Load(request,batch,payment):
 	'batch':batch,
 	'payment':payment,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	}
 	return render(request,'deskofficer_templates/Xmas_Savings_Shortlisting_Processing_List_Load.html',context)
 
@@ -14869,6 +15915,11 @@ def Xmas_Savings_Shortlisting_Processing_Preview(request,pk):
 	task_enabler_array=[]
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
+
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 
 	form = Xmas_Savings_Shortlisting_Processing_Preview_form(request.POST or None)
@@ -14897,6 +15948,7 @@ def Xmas_Savings_Shortlisting_Processing_Preview(request,pk):
 	'batch':record.batch,
 	'payment':record.payment_channel,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	'form':form,
 	}
 	return render(request,'deskofficer_templates/Xmas_Savings_Shortlisting_Processing_Preview.html',context)
@@ -14917,6 +15969,9 @@ def Xmas_Savings_Shortlisting_Processing_Update_Bank_account(request,pk):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 	record=Xmas_Savings_Shortlist.objects.get(id=pk)
 
@@ -14940,6 +15995,7 @@ def Xmas_Savings_Shortlisting_Processing_Update_Bank_account(request,pk):
 	'batch':record.batch,
 	'payment':record.payment_channel,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	'accounts':accounts,
 	}
 	return render(request,'deskofficer_templates/Xmas_Savings_Shortlisting_Processing_Update_Bank_account.html',context)
@@ -14958,6 +16014,11 @@ def Xmas_Savings_Shortlisting_Ledger_Posting_Batch_Load(request):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
 	if request.method == 'POST':
 		batch=request.POST.get('batch')
 		payment="CASH"
@@ -14965,6 +16026,7 @@ def Xmas_Savings_Shortlisting_Ledger_Posting_Batch_Load(request):
 	context={
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	'form':form,
 	}
 	return render(request,'deskofficer_templates/Xmas_Savings_Shortlisting_Ledger_Posting_Batch_Load.html',context)
@@ -14985,6 +16047,10 @@ def Xmas_Savings_Shortlisting_Ledger_Posting_List_Load(request,batch,payment):
 	task_enabler_array=[]
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 	total_positive_balance=0
 	total_negative_balance=0
@@ -15041,6 +16107,7 @@ def Xmas_Savings_Shortlisting_Ledger_Posting_List_Load(request,batch,payment):
 	'batch':batch,
 	'payment':payment,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	'total_amount_generated':total_amount_generated,
 	'total_amount_paid':total_amount_paid,
 	'total_negative_balance':total_negative_balance,
@@ -15060,12 +16127,17 @@ def Cash_Withdrawal_Search(request):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
 	title="Search Members for Cash Withdrawal"
 	form = searchForm(request.POST or None)
 
 	return render(request,'deskofficer_templates/Cash_Withdrawal_Search.html',
 				{'form':form,'title':title,'task_array':task_array,
-				'task_enabler_array':task_enabler_array,}
+				'task_enabler_array':task_enabler_array,
+	'default_password':default_password,}
 				)
 
 
@@ -15082,6 +16154,9 @@ def Cash_Withdrawal_list_load(request):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 	title="LIST OF MEMBERS FOR CASH WITHDRAWALS"
 	status="ACTIVE"
@@ -15099,6 +16174,7 @@ def Cash_Withdrawal_list_load(request):
 		'title':title,
 		'task_array':task_array,
 		'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 
 		}
 		return render(request,'deskofficer_templates/Cash_Withdrawal_list_load.html',context)
@@ -15114,6 +16190,10 @@ def Cash_Withdrawal_Transactions_load(request,pk):
 	task_enabler_array=[]
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 	form=Cash_Withdrawal_form(request.POST or None)
 	member=Members.objects.get(id=pk)
@@ -15203,6 +16283,7 @@ def Cash_Withdrawal_Transactions_load(request,pk):
 	'account_number':account_number,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	}
 	return render(request,'deskofficer_templates/Cash_Withdrawal_Transactions_load.html',context)
 
@@ -15219,12 +16300,17 @@ def Cash_Withdrawal_Transactions_Request_Status_list_Search(request):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
 	title="Search Members for Cash Withdrawal Status"
 	form = search_with_date_Form(request.POST or None)
 	form.fields['start_date'].initial=now
 	form.fields['stop_date'].initial=now
 	return render(request,'deskofficer_templates/Cash_Withdrawal_Transactions_Request_Status_list_Search.html',{'form':form,'title':title,'task_array':task_array,
-	'task_enabler_array':task_enabler_array,})
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,})
 
 
 def Cash_Withdrawal_Transactions_Request_Status_list_Load(request):
@@ -15237,6 +16323,10 @@ def Cash_Withdrawal_Transactions_Request_Status_list_Load(request):
 	task_enabler_array=[]
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 	title="LIST OF MEMBERS FOR CASH WITHDRAWALS"
 	status="ACTIVE"
@@ -15258,6 +16348,7 @@ def Cash_Withdrawal_Transactions_Request_Status_list_Load(request):
 	'title':title,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	}
 	return render(request,'deskofficer_templates/Cash_Withdrawal_Transactions_Request_Status_list_Load.html',context)
 
@@ -15280,6 +16371,10 @@ def Cash_Withdrawal_Transactions_All_Uncleared_list_Load(request):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
 
 	title="LIST OF MEMBERS FOR CASH WITHDRAWALS"
 	status='UNTREATED'
@@ -15291,6 +16386,7 @@ def Cash_Withdrawal_Transactions_All_Uncleared_list_Load(request):
 	'title':title,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 
 	}
 	return render(request,'deskofficer_templates/Cash_Withdrawal_Transactions_All_Uncleared_list_Load.html',context)
@@ -15310,12 +16406,16 @@ def Cash_Withdrawal_Transactions_Approved_list_Search(request):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 	title="Search Members for Cash Withdrawal Status"
 	form = searchForm(request.POST or None)
 
 	return render(request,'deskofficer_templates/Cash_Withdrawal_Transactions_Approved_list_Search.html',{'form':form,'title':title,'task_array':task_array,
-	'task_enabler_array':task_enabler_array,})
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,})
 
 
 
@@ -15333,6 +16433,9 @@ def Cash_Withdrawal_Transactions_Approved_list_Load(request):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 	title="LIST OF MEMBERS FOR CASH WITHDRAWALS"
 	status="ACTIVE"
@@ -15364,6 +16467,7 @@ def Cash_Withdrawal_Transactions_Approved_list_Load(request):
 	'title':title,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	}
 	return render(request,'deskofficer_templates/Cash_Withdrawal_Transactions_Approved_list_Load.html',context)
 
@@ -15388,6 +16492,9 @@ def membership_termination_search(request):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 	title="Search Membership Request Termination"
 	form = searchForm(request.POST or None)
@@ -15408,6 +16515,9 @@ def membership_termination_list_load(request):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 	title="Membership Termination Request"
 	form = searchForm(request.POST)
@@ -15423,6 +16533,7 @@ def membership_termination_list_load(request):
 	'title':title,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	}
 	return render(request,'deskofficer_templates/membership_termination_list_load.html',context)
 
@@ -15441,6 +16552,9 @@ def membership_termination_transactions_load(request,pk):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 	form=Termination_Sources_upload_form(request.POST or None)
 	member=Members.objects.get(id=pk)
@@ -15526,6 +16640,7 @@ def membership_termination_transactions_load(request,pk):
 	context={
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	'form':form,
 	'loans':loans,
 	'member':member,
@@ -15549,6 +16664,10 @@ def membership_termination_approved_list_processing_list_load(request):
 		task_enabler_array.append(item.title)
 
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
 	title="Membership Termination Request"
 
 	status="UNTREATED"
@@ -15561,6 +16680,7 @@ def membership_termination_approved_list_processing_list_load(request):
 	'title':title,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	}
 	return render(request,'deskofficer_templates/membership_termination_approved_list_processing_list_load.html',context)
 
@@ -15578,6 +16698,9 @@ def membership_termination_approved_list_processing_preview(request,pk):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 	title="Membership Termination Request"
 	tdate=get_current_date(now)
@@ -15696,6 +16819,7 @@ def membership_termination_approved_list_processing_preview(request,pk):
 	'title':title,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	}
 	return render(request,'deskofficer_templates/membership_termination_approved_list_processing_preview.html',context)
 
@@ -15714,12 +16838,17 @@ def membership_termination_approved_transaction_details(request,pk):
 		task_enabler_array.append(item.title)
 
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
 	records=Display_PersonalLedger_All_Records(pk)
 
 	context={
 	'records':records,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	}
 	return render(request,'deskofficer_templates/membership_termination_approved_transaction_details.html',context)
 
@@ -15740,6 +16869,9 @@ def membership_termination_maturity_date_exception_search(request):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 	title="Membership Request Termination maturity Date Exception"
 	form = searchForm(request.POST or None)
@@ -15761,6 +16893,11 @@ def membership_termination_maturity_date_exception_list_load(request):
 		task_enabler_array.append(item.title)
 
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
+
 	title="Membership Termination Request"
 	form = searchForm(request.POST)
 	status="INACTIVE"
@@ -15779,6 +16916,7 @@ def membership_termination_maturity_date_exception_list_load(request):
 	'title':title,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	}
 	return render(request,'deskofficer_templates/membership_termination_maturity_date_exception_list_load.html',context)
 
@@ -15796,6 +16934,9 @@ def membership_termination_maturity_date_exception_process(request,pk):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 	title="Membership Termination Request"
 	form = Standing_Order_Suspension_Transaction_Releasing_Details_form(request.POST)
@@ -15823,6 +16964,7 @@ def membership_termination_maturity_date_exception_process(request,pk):
 	'title':title,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	}
 	return render(request,'deskofficer_templates/membership_termination_maturity_date_exception_process.html',context)
 
@@ -15841,6 +16983,9 @@ def membership_termination_maturity_date_exception_approved_list_load(request):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 	title="Membership Termination Request"
 	status="UNTREATED"
@@ -15854,6 +16999,7 @@ def membership_termination_maturity_date_exception_approved_list_load(request):
 	'title':title,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	}
 	return render(request,'deskofficer_templates/membership_termination_maturity_date_exception_approved_list_load.html',context)
 
@@ -15870,6 +17016,10 @@ def membership_termination_maturity_date_exception_approved_process(request,pk):
 	task_enabler_array=[]
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 
 	title="Membership Termination Request"
@@ -15903,6 +17053,9 @@ def membership_termination_Disbursement_Processing_list_Load(request):
 		task_enabler_array.append(item.title)
 
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 	form=membership_termination_Request_Approval_Process_form(request.POST or None)
 
@@ -15920,6 +17073,7 @@ def membership_termination_Disbursement_Processing_list_Load(request):
 	'members':members,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	}
 	return render(request,'deskofficer_templates/membership_termination_Disbursement_Processing_list_Load.html',context)
 
@@ -15938,6 +17092,9 @@ def membership_termination_Disbursement_Processing_Preview(request,pk):
 		task_enabler_array.append(item.title)
 
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 	form=membership_termination_Disbursement_Processing_Preview_form(request.POST or None)
 
@@ -15964,6 +17121,7 @@ def membership_termination_Disbursement_Processing_Preview(request,pk):
 	'member':member,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	}
 	return render(request,'deskofficer_templates/membership_termination_Disbursement_Processing_Preview.html',context)
 
@@ -15981,6 +17139,9 @@ def membership_termination_Disbursement_Processing_Cash(request,pk,payment):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 	processed_by=CustomUser.objects.get(id=request.user.id)
 	tdate=get_current_date(now)
@@ -16024,6 +17185,7 @@ def membership_termination_Disbursement_Processing_Cash(request,pk,payment):
 	'member':member,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	}
 	return render(request,'deskofficer_templates/membership_termination_Disbursement_Processing_Cash.html',context)
 
@@ -16040,6 +17202,9 @@ def membership_termination_Disbursement_Processing_Cheque(request,pk,payment):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 	processed_by=CustomUser.objects.get(id=request.user.id)
 	tdate=get_current_date(now)
@@ -16102,6 +17267,7 @@ def membership_termination_Disbursement_Processing_Cheque(request,pk,payment):
 	'member':member,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	}
 	return render(request,'deskofficer_templates/membership_termination_Disbursement_Processing_Cheque.html',context)
 
@@ -16119,6 +17285,9 @@ def membership_termination_Disbursement_Processing_Transfer(request,pk,payment):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 	processed_by=CustomUser.objects.get(id=request.user.id)
 	tdate=get_current_date(now)
@@ -16183,6 +17352,7 @@ def membership_termination_Disbursement_Processing_Transfer(request,pk,payment):
 	'member':member,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	}
 	return render(request,'deskofficer_templates/membership_termination_Disbursement_Processing_Transfer.html',context)
 
@@ -16210,6 +17380,9 @@ def membership_commodity_loan_form_sales_transaction_period_load(request):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 	form=Product_Linking_Period_Load_form(request.POST or None)
 
@@ -16235,6 +17408,7 @@ def membership_commodity_loan_form_sales_transaction_period_load(request):
 	context={
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 
 	'form':form,
 
@@ -16257,6 +17431,10 @@ def membership_commodity_loan_form_sales(request,pk):
 	task_enabler_array=[]
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 
 	form=membership_commodity_loan_form_sales_transaction_form(request.POST or None)
@@ -16292,6 +17470,7 @@ def membership_commodity_loan_form_sales(request,pk):
 	context={
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 
 	'applicant':applicant,
 	'form':form,
@@ -16309,6 +17488,10 @@ def membership_commodity_loan_form_sales_process(request,pk,payment):
 	task_enabler_array=[]
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 	form=membership_commodity_loan_form_sales_process_Form(request.POST or None)
 	applicant=Members_Commodity_Loan_Application.objects.get(pk=pk)
@@ -16408,6 +17591,7 @@ def membership_commodity_loan_form_sales_process(request,pk,payment):
 	context={
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	'payment':payment,
 	'applicant':applicant,
 	'recceipt_type':recceipt_type,
@@ -16429,6 +17613,10 @@ def membership_commodity_loan_Final_Applications(request):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 	form=Product_Linking_Period_Load_form(request.POST or None)
 
@@ -16454,6 +17642,7 @@ def membership_commodity_loan_Final_Applications(request):
 	context={
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 
 	'form':form,
 
@@ -16475,11 +17664,15 @@ def commodity_loan_trending_products(request):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 	records =TransactionTypes.objects.filter(category='NON-MONETARY')
 	context={
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	'records':records,
 	# 'transaction':transaction,
 	}
@@ -16499,12 +17692,16 @@ def commodity_loan_trending_products_load(request,pk):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 	transaction =TransactionTypes.objects.get(id=pk)
 	records=Commodity_Categories.objects.filter(transaction=transaction)
 	context={
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	'records':records,
 	'transaction':transaction,
 	# 'transaction':transaction,
@@ -16525,10 +17722,15 @@ def commodity_loan_trending_products_details(request,pk):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
 	records=Commodity_Category_Sub.objects.filter(category=pk)
 	context={
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	'records':records,
 
 	}
@@ -16548,12 +17750,16 @@ def trending_products_member_Search(request):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 	title="Search Members for Trending Product List"
 	form = searchForm(request.POST or None)
 
 	return render(request,'deskofficer_templates/trending_products_member_Search.html',{'form':form,'title':title,'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	})
 
 
@@ -16570,6 +17776,9 @@ def trending_products_member_list_load(request):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 	title="LIST OF MEMBERS"
 	form = searchForm(request.POST)
@@ -16586,6 +17795,7 @@ def trending_products_member_list_load(request):
 		'title':title,
 		'task_array':task_array,
 		'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 		}
 		return render(request,'deskofficer_templates/trending_products_member_list_load.html',context)
 
@@ -16605,6 +17815,10 @@ def membership_commodity_loan_Final_Applications_Process(request,pk):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
 	form=searchForm(request.POST or None)
 
 	applicant=Members_Commodity_Loan_Application_Form_Sales.objects.get(id=pk)
@@ -16621,6 +17835,7 @@ def membership_commodity_loan_Final_Applications_Process(request,pk):
 	context={
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	'records':records,
 	'applicant':applicant,
 	'form':form,
@@ -16640,6 +17855,10 @@ def membership_commodity_loan_Final_Applications_Process1(request,pk):
 	task_enabler_array=[]
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 	form=searchForm(request.POST or None)
 
@@ -16672,6 +17891,7 @@ def membership_commodity_loan_Final_Applications_Process1(request,pk):
 		context={
 		'task_array':task_array,
 		'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 		'members':members,
 		'pk':pk,
 		}
@@ -16684,6 +17904,7 @@ def membership_commodity_loan_Final_Applications_Process1(request,pk):
 	context={
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	'guarnator_status':guarnator_status,
 	'guarantors':guarantors,
 	'button_enabled':button_enabled,
@@ -16734,6 +17955,9 @@ def membership_commodity_loan_Final_Applications_Process_Submit(request,pk):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 	applicant=Members_Commodity_Loan_Application_Form_Sales.objects.get(id=pk)
 	max_guarantor=applicant.applicant.member.product.product.category.guarantors
@@ -16847,6 +18071,9 @@ def Company_add(request,pk):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 	if request.method =='POST':
 		company=request.POST.get('company')
@@ -16860,6 +18087,7 @@ def Company_add(request,pk):
 	context={
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 
 
 	}
@@ -16891,12 +18119,17 @@ def Monthly_Deductions_Report_Search(request):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
 
 	title="Search Members for Monthly Deduction"
 	form = searchForm(request.POST or None)
 
 	return render(request,'deskofficer_templates/Monthly_Deductions_Report_Search.html',{'form':form,'title':title,'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	})
 
 
@@ -16914,6 +18147,9 @@ def Monthly_Deductions_Report_list_load(request):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 	title="LIST OF MEMBERS"
 	form = searchForm(request.POST)
@@ -16930,6 +18166,7 @@ def Monthly_Deductions_Report_list_load(request):
 		'title':title,
 		'task_array':task_array,
 		'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 		}
 		return render(request,'deskofficer_templates/Monthly_Deductions_Report_list_load.html',context)
 
@@ -16947,6 +18184,9 @@ def Monthly_Deductions_Report_Preview(request,pk):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 	periods=TransactionPeriods.objects.all().order_by('transaction_period')
 
@@ -16968,6 +18208,7 @@ def Monthly_Deductions_Report_Preview(request,pk):
 	'member':member,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 
 	}
 	return render(request,'deskofficer_templates/Monthly_Deductions_Report_Preview.html',context)
@@ -16986,6 +18227,9 @@ def Monthly_Deductions_All_Records_Report_Period(request):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 	periods=TransactionPeriods.objects.all().order_by('transaction_period')
 
@@ -17003,6 +18247,7 @@ def Monthly_Deductions_All_Records_Report_Period(request):
 	'periods':periods,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 
 	}
 	return render(request,'deskofficer_templates/Monthly_Deductions_All_Records_Report_Period.html',context)
@@ -17020,6 +18265,9 @@ def Monthly_Deductions_All_Records_Report_Deatials(request,pk):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 	record=MonthlyDeductionListGenerated.objects.get(id=pk)
 
@@ -17031,6 +18279,7 @@ def Monthly_Deductions_All_Records_Report_Deatials(request,pk):
 	'period':record.transaction_period,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 
 	}
 	return render(request,'deskofficer_templates/Monthly_Deductions_All_Records_Report_Deatials.html',context)
@@ -17067,6 +18316,9 @@ def Load_Active_loans(request):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 	status="ACTIVE"
 	records=LoansRepaymentBase.objects.filter(status=status)
@@ -17074,6 +18326,7 @@ def Load_Active_loans(request):
 	context={
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	'records':records,
 	}
 	return render(request,'deskofficer_templates/Load_Active_loans.html',context)
@@ -17096,12 +18349,16 @@ def Members_Dashboard_Search(request):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 	title="Search Members Dashboard"
 	form = searchForm(request.POST or None)
 
 	return render(request,'deskofficer_templates/Members_Dashboard_Search.html',{'form':form,'title':title,'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	})
 
 
@@ -17119,6 +18376,9 @@ def Members_Dashboard_Search_list_load(request):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 	title="LIST OF MEMBERS"
 	form = searchForm(request.POST)
@@ -17136,6 +18396,7 @@ def Members_Dashboard_Search_list_load(request):
 		'title':title,
 		'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 		}
 		return render(request,'deskofficer_templates/Members_Dashboard_Search_list_load.html',context)
 
@@ -17153,6 +18414,10 @@ def Members_Dashboard_Load(request,pk):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 	status='UNTREATED'
 
@@ -17191,6 +18456,7 @@ def Members_Dashboard_Load(request,pk):
 	'orders':orders,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	}
 	return render(request,'deskofficer_templates/Members_Dashboard_Load.html',context)
 
@@ -17208,17 +18474,16 @@ def PersonalLedger_Selected_Search(request):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
-	task_enabler=TransactionEnabler.objects.filter(status="YES")
-	task_enabler_array=[]
-	for item in task_enabler:
-		task_enabler_array.append(item.title)
-
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 	title="Search Members for Ledger Information"
 	form = searchForm(request.POST or None)
 
 	return render(request,'deskofficer_templates/PersonalLedger_Selected_Search.html',{'form':form,'title':title,'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	})
 
 
@@ -17237,12 +18502,9 @@ def PersonalLedger_Selected_list_load(request):
 		task_enabler_array.append(item.title)
 
 
-
-
-	task_enabler=TransactionEnabler.objects.filter(status="YES")
-	task_enabler_array=[]
-	for item in task_enabler:
-		task_enabler_array.append(item.title)
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 
 	title="LIST OF MEMBERS"
@@ -17260,6 +18522,7 @@ def PersonalLedger_Selected_list_load(request):
 		'title':title,
 		'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 		}
 		return render(request,'deskofficer_templates/PersonalLedger_Selected_list_load.html',context)
 
@@ -17277,13 +18540,10 @@ def PersonalLedger_Transaction_Load(request,pk):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
-
-
-	task_enabler=TransactionEnabler.objects.filter(status="YES")
-	task_enabler_array=[]
-	for item in task_enabler:
-		task_enabler_array.append(item.title)
 
 
 	form=PersonalLedger_Transaction_Load_form(request.POST or None)
@@ -17300,6 +18560,7 @@ def PersonalLedger_Transaction_Load(request,pk):
 	'member':member,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	}
 	return render(request,'deskofficer_templates/PersonalLedger_Transaction_Load.html',context)
 
@@ -17317,13 +18578,10 @@ def PersonalLedger_Transaction_Account_Load(request,pk,trans_id):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
-
-
-	task_enabler=TransactionEnabler.objects.filter(status="YES")
-	task_enabler_array=[]
-	for item in task_enabler:
-		task_enabler_array.append(item.title)
 
 
 	form=PersonalLedger_Transaction_Account_Load_form(request.POST or None)
@@ -17376,6 +18634,7 @@ def PersonalLedger_Transaction_Account_Load(request,pk,trans_id):
 	'member':member,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	# 'status':status,
 	'transaction':transaction,
 	'account_number':account_number,
@@ -17402,17 +18661,16 @@ def PersonalLedger_Display(request,account_number,start_date,stop_date):
 		task_enabler_array.append(item.title)
 
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
-
-	task_enabler=TransactionEnabler.objects.filter(status="YES")
-	task_enabler_array=[]
-	for item in task_enabler:
-		task_enabler_array.append(item.title)
 
 
 	context={
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 
 
 	'records':items,
@@ -17431,6 +18689,10 @@ def MemberShipFormSalesReport(request):
 	task_enabler_array=[]
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 	form=Purchase_Summary_form(request.POST or None)
 
@@ -17452,6 +18714,7 @@ def MemberShipFormSalesReport(request):
 	context={
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 
 	'form':form,
 	'records':records,
@@ -17473,11 +18736,16 @@ def MemberShipFormSales_Report_individual_Search(request):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
 	title="Search Members"
 	form = searchForm(request.POST or None)
 
 	return render(request,'deskofficer_templates/MemberShipFormSales_Report_individual_Search.html',{'form':form,'title':title,'task_array':task_array,
-	'task_enabler_array':task_enabler_array,})
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,})
 
 
 def MemberShipFormSales_Report_individual_list_Load(request):
@@ -17492,6 +18760,10 @@ def MemberShipFormSales_Report_individual_list_Load(request):
 	task_enabler_array=[]
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 	title="LIST OF MEMBERS"
 	form = searchForm(request.POST or None)
@@ -17509,6 +18781,7 @@ def MemberShipFormSales_Report_individual_list_Load(request):
 		'title':title,
 		'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 
 		}
 		return render(request,'deskofficer_templates/MemberShipFormSales_Report_individual_list_Load.html',context)
@@ -17532,13 +18805,9 @@ def MemberShipFormSalesSummary(request):
 		task_enabler_array.append(item.title)
 
 
-
-
-	task_enabler=TransactionEnabler.objects.filter(status="YES")
-	task_enabler_array=[]
-	for item in task_enabler:
-		task_enabler_array.append(item.title)
-
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 	form=Purchase_Summary_form(request.POST or None)
 	processed_by=CustomUser.objects.get(id=request.user.id)
@@ -17589,6 +18858,7 @@ def MemberShipFormSalesSummary(request):
 	context={
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 
 
 	'form':form,
@@ -17610,13 +18880,9 @@ def MemberShip_Form_Sales_Summary_Details(request,pk):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
-
-
-
-	task_enabler=TransactionEnabler.objects.filter(status="YES")
-	task_enabler_array=[]
-	for item in task_enabler:
-		task_enabler_array.append(item.title)
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 
 	record=MemberShipFormSalesRecord.objects.get(id=pk)
@@ -17625,6 +18891,7 @@ def MemberShip_Form_Sales_Summary_Details(request,pk):
 	context={
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 
 
 	'record':record,
@@ -17655,17 +18922,16 @@ def members_credit_purchase_approval(request):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
-
-	task_enabler=TransactionEnabler.objects.filter(status="YES")
-	task_enabler_array=[]
-	for item in task_enabler:
-		task_enabler_array.append(item.title)
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 
 	context={
 	'records':records,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 
 	}
 	return render(request,'deskofficer_templates/members_credit_purchase_approval.html',context)
@@ -17684,13 +18950,10 @@ def members_credit_purchase_approval_preview(request,ticket):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
-
-
-	task_enabler=TransactionEnabler.objects.filter(status="YES")
-	task_enabler_array=[]
-	for item in task_enabler:
-		task_enabler_array.append(item.title)
 
 
 	form=approval_form(request.POST or None)
@@ -17753,6 +19016,7 @@ def members_credit_purchase_approval_preview(request,ticket):
 	context={
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 
 
 	'records':records,
@@ -17785,11 +19049,9 @@ def Initial_Shares_Update_List_Load(request):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
-
-	task_enabler=TransactionEnabler.objects.filter(status="YES")
-	task_enabler_array=[]
-	for item in task_enabler:
-		task_enabler_array.append(item.title)
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 
 	approval_status='PENDING'
@@ -17800,6 +19062,7 @@ def Initial_Shares_Update_List_Load(request):
 	context={
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 
 
 	'members':members,
@@ -17821,12 +19084,9 @@ def Initial_Shares_Update_preview(request,pk):
 		task_enabler_array.append(item.title)
 
 
-
-
-	task_enabler=TransactionEnabler.objects.filter(status="YES")
-	task_enabler_array=[]
-	for item in task_enabler:
-		task_enabler_array.append(item.title)
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 
 	form=Initial_Shares_Update_preview_form(request.POST or None)
@@ -17847,6 +19107,7 @@ def Initial_Shares_Update_preview(request,pk):
 	context={
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	'form':form,
 	'member':member,
 	}
@@ -17866,6 +19127,10 @@ def Transaction_Adjustment_Approval_list_Load(request):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
 	processed_by=CustomUser.objects.get(id=request.user.id)
 	approval_status='PENDING'
 	records=TransactionAjustmentRequest.objects.filter(approval_status=approval_status).exclude(processed_by=processed_by.username)
@@ -17873,6 +19138,7 @@ def Transaction_Adjustment_Approval_list_Load(request):
 	context={
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	'records':records,
 	}
 	return render(request,'deskofficer_templates/Transaction_Adjustment_Approval_list_Load.html',context)
@@ -17903,13 +19169,9 @@ def Transaction_Loan_Adjustment_Approval_list_Load(request):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
-
-
-
-	task_enabler=TransactionEnabler.objects.filter(status="YES")
-	task_enabler_array=[]
-	for item in task_enabler:
-		task_enabler_array.append(item.title)
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 
 	approval_status='PENDING'
@@ -17918,6 +19180,7 @@ def Transaction_Loan_Adjustment_Approval_list_Load(request):
 	context={
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	'records':records,
 	}
 	return render(request,'deskofficer_templates/Transaction_Loan_Adjustment_Approval_list_Load.html',context)
@@ -17950,12 +19213,17 @@ def Essential_Commodity_Loan_Request_Approval(request):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
 
 	approval_status='PENDING'
 	records=Essential_Commodity_Product_Selection_Summary.objects.filter(approval_status=approval_status)
 	context={
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 
 	'records':records,
 	}
@@ -17975,6 +19243,10 @@ def Essential_Commodity_Loan_Request_Approval_Details(request,pk):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 	form=Essential_Commodity_Loan_Request_Approval_Details_form(request.POST or None)
 
@@ -17999,6 +19271,7 @@ def Essential_Commodity_Loan_Request_Approval_Details(request,pk):
 	context={
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 
 	'form':form,
 	'record':record,
@@ -18024,6 +19297,10 @@ def Cash_Deposit_Report_Date_Load(request):
 		task_enabler_array.append(item.title)
 
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
 	form=Cash_Deposit_Report_Date_Load_form(request.POST or None)
 
 	form.fields['start_date'].initial=now
@@ -18047,6 +19324,7 @@ def Cash_Deposit_Report_Date_Load(request):
 	context={
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	'form':form,
 	'records':records,
 	}
@@ -18067,11 +19345,16 @@ def Norminal_Roll_List_Load(request):
 		task_enabler_array.append(item.title)
 
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
 	records=Members.objects.all()
 
 	context={
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	'records':records,
 	}
 	return render(request,'deskofficer_templates/Norminal_Roll_List_Load.html',context)
@@ -18090,12 +19373,17 @@ def Norminal_Roll_Personel_Detail(request,pk):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
 
 	member=Members.objects.get(id=pk)
 
 	context={
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	'member':member,
 	}
 	return render(request,'deskofficer_templates/Norminal_Roll_Personel_Detail.html',context)
@@ -18116,6 +19404,10 @@ def Over_Deductions_report(request):
 		task_enabler_array.append(item.title)
 
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
 	periods=TransactionPeriods.objects.all().order_by('transaction_period')
 
 	records=[]
@@ -18130,6 +19422,7 @@ def Over_Deductions_report(request):
 	'periods':periods,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	}
 	return render(request,'deskofficer_templates/Over_Deductions_report.html',context)
 
@@ -18147,6 +19440,9 @@ def Under_Deductions_report(request):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 	periods=TransactionPeriods.objects.all().order_by('transaction_period')
 
@@ -18162,6 +19458,7 @@ def Under_Deductions_report(request):
 	'periods':periods,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 
 	}
 	return render(request,'deskofficer_templates/Under_Deductions_report.html',context)
@@ -18179,6 +19476,9 @@ def Non_Members_Deductions_report(request):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 	periods=TransactionPeriods.objects.all().order_by('transaction_period')
 
@@ -18194,6 +19494,7 @@ def Non_Members_Deductions_report(request):
 	'periods':periods,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	}
 	return render(request,'deskofficer_templates/Non_Members_Deductions_report.html',context)
 
@@ -18211,11 +19512,16 @@ def Members_Welfare_Report_Search(request):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
 	title="Search Members for Welfare Report"
 	form = searchForm(request.POST or None)
 
 	return render(request,'deskofficer_templates/Members_Welfare_Report_Search.html',{'form':form,'title':title,'task_array':task_array,
-	'task_enabler_array':task_enabler_array,})
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,})
 
 
 def Members_Welfare_Report_list_load(request):
@@ -18230,6 +19536,11 @@ def Members_Welfare_Report_list_load(request):
 	task_enabler_array=[]
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
+
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 	title="LIST OF MEMBERS"
 	form = searchForm(request.POST or None)
@@ -18246,6 +19557,7 @@ def Members_Welfare_Report_list_load(request):
 		'title':title,
 		'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 
 		}
 		return render(request,'deskofficer_templates/Members_Welfare_Report_list_load.html',context)
@@ -18264,12 +19576,18 @@ def Members_Welfare_Report_details(request,pk):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
 	member=MembersAccountsDomain.objects.get(id=pk)
 	records=MembersWelfareAccounts.objects.filter(member=member)
 
 	context={
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	'records':records,
 	'member':member,
 	}
@@ -18288,6 +19606,11 @@ def Members_Welfare_Report_General_Records(request):
 	task_enabler_array=[]
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
+
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 	form=Members_Welfare_Report_General_Records_form(request.POST or None)
 
@@ -18309,6 +19632,7 @@ def Members_Welfare_Report_General_Records(request):
 	context={
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	'form':form,
 	'members_array':members_array,
 	}
@@ -18328,12 +19652,16 @@ def Members_Welfare_Report_General_Record_details(request,pk,member_id):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 	records=MembersWelfareAccounts.objects.filter(member__member__ippis_no=pk)
 
 	context={
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	'records':records,
 	'member':member_id,
 	}
@@ -18354,6 +19682,11 @@ def Members_Cleared_Loans_Records(request):
 	task_enabler_array=[]
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
+
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 	form=search_with_date_Form(request.POST or None)
 
@@ -18380,6 +19713,7 @@ def Members_Cleared_Loans_Records(request):
 	context={
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	'form':form,
 	'records':records,
 	}
@@ -18400,6 +19734,11 @@ def Members_Cleared_Loans_Records_Details(request,pk):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
 	form=search_with_date_Form(request.POST or None)
 
 	records=PersonalLedger.objects.filter(account_number=pk)
@@ -18407,6 +19746,7 @@ def Members_Cleared_Loans_Records_Details(request,pk):
 	context={
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	'records':records,
 	}
 	return render(request,'deskofficer_templates/Members_Cleared_Loans_Records_Details.html',context)
@@ -18426,12 +19766,16 @@ def Transaction_adjustment_history_Search(request):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 	title="Search Members for Ledger Information"
 	form = searchForm(request.POST or None)
 
 	return render(request,'deskofficer_templates/Transaction_adjustment_history_Search.html',{'form':form,'title':title,'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	})
 
 
@@ -18449,6 +19793,9 @@ def Transaction_adjustment_history_List_load(request):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 	title="LIST OF MEMBERS"
 	form = searchForm(request.POST)
@@ -18467,6 +19814,7 @@ def Transaction_adjustment_history_List_load(request):
 		'title':title,
 		'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 		}
 		return render(request,'deskofficer_templates/Transaction_adjustment_history_List_load.html',context)
 
@@ -18485,6 +19833,9 @@ def TransactionAjustmentHistory_Transaction_Load(request,pk):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 	member=Members.objects.get(id=pk)
 	records=MembersAccountsDomain.objects.filter(member=member,transaction__source="SAVINGS")
@@ -18492,6 +19843,7 @@ def TransactionAjustmentHistory_Transaction_Load(request,pk):
 	'member':member,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	'records':records,
 	}
 	return render(request,'deskofficer_templates/TransactionAjustmentHistory_Transaction_Load.html',context)
@@ -18509,6 +19861,9 @@ def TransactionAjustmentHistory_details(request,pk):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 	member=MembersAccountsDomain.objects.get(id=pk)
 
@@ -18517,6 +19872,7 @@ def TransactionAjustmentHistory_details(request,pk):
 	'member':member,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	'records':records,
 	}
 	return render(request,'deskofficer_templates/TransactionAjustmentHistory_details.html',context)
@@ -18535,6 +19891,9 @@ def Members_Initial_Shares_Reports_Load(request):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 	members=Members.objects.all()
 
@@ -18551,6 +19910,7 @@ def Members_Initial_Shares_Reports_Load(request):
 
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	'members_array':members_array,
 	}
 	return render(request,'deskofficer_templates/Members_Initial_Shares_Reports_Load.html',context)
@@ -18569,12 +19929,17 @@ def Members_Individual_Shares_Report_Search(request):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
 
 	title="Search Members for Shares Information"
 	form = searchForm(request.POST or None)
 
 	return render(request,'deskofficer_templates/Members_Individual_Shares_Report_Search.html',{'form':form,'title':title,'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	})
 
 
@@ -18592,6 +19957,9 @@ def Members_Individual_Shares_Report_List_load(request):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 	title="LIST OF MEMBERS"
 	form = searchForm(request.POST)
@@ -18615,6 +19983,7 @@ def Members_Individual_Shares_Report_List_load(request):
 		'title':title,
 		'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 		}
 		return render(request,'deskofficer_templates/Members_Individual_Shares_Report_List_load.html',context)
 
@@ -18631,6 +20000,9 @@ def Members_Individual_Shares_Report_Details(request,pk):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 	title="LIST OF MEMBERS"
 	form = searchForm(request.POST)
@@ -18650,6 +20022,7 @@ def Members_Individual_Shares_Report_Details(request,pk):
 	'title':title,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	}
 	return render(request,'deskofficer_templates/Members_Individual_Shares_Report_Details.html',context)
 
@@ -18665,6 +20038,9 @@ def Members_General_Shares_Report_List_Load(request):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 	title="LIST OF MEMBERS"
 	status='UNTREATED'
@@ -18676,6 +20052,7 @@ def Members_General_Shares_Report_List_Load(request):
 	'title':title,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	}
 	return render(request,'deskofficer_templates/Members_General_Shares_Report_List_Load.html',context)
 
@@ -18701,6 +20078,7 @@ def Members_General_Shares_Report_List_Load(request):
 # 	'records':records,
 # 	'task_array':task_array,
 # 	'task_enabler_array':task_enabler_array,
+	# 'default_password':default_password,
 # 	}
 # 	return render(request,'deskofficer_templates/Rental_Services_List_Load.html',context)
 
@@ -18716,6 +20094,9 @@ def Rental_Services_Category_List_Load(request):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 	# contact=RentalBookingHeaders.objects.get(id=pk)
 
@@ -18726,6 +20107,7 @@ def Rental_Services_Category_List_Load(request):
 	'records':records,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	}
 	return render(request,'deskofficer_templates/Rental_Services_Category_List_Load.html',context)
 
@@ -18742,6 +20124,9 @@ def Rental_Services_Contact_Person_Register(request,pk):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 	processed_by=CustomUser.objects.get(id=request.user.id)
 
@@ -18784,6 +20169,7 @@ def Rental_Services_Contact_Person_Register(request,pk):
 	'form':form,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	}
 	return render(request,'deskofficer_templates/Rental_Services_Contact_Person_Register.html',context)
 
@@ -18805,6 +20191,10 @@ def Rental_Date_Time_Selector(request,pk):
 	task_enabler_array=[]
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 	t = time.localtime()
 	current_time = time.strftime("%H:%M", t)
@@ -18853,6 +20243,7 @@ def Rental_Date_Time_Selector(request,pk):
 	'selections':selections,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	}
 	return render(request,'deskofficer_templates/Rental_Date_Time_Selector.html',context)
 
@@ -18867,6 +20258,10 @@ def Rental_Products_List_Load(request,pk,b_date,start_time,stop_time):
 	task_enabler_array=[]
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 	processed_by=CustomUser.objects.get(id=request.user.id)
 	tdate=get_current_date(now)
@@ -18901,6 +20296,7 @@ def Rental_Products_List_Load(request,pk,b_date,start_time,stop_time):
 	'stop_time':stop_time,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	}
 	return render(request,'deskofficer_templates/Rental_Products_List_Load.html',context)
 
@@ -18931,6 +20327,9 @@ def Rental_Services_Selection_Preview(request,pk):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 	form=Rental_Services_Selection_Preview_Form(request.POST or None)
 	form1=Rental_Services_Selection_Preview_Final_Form(request.POST or None)
@@ -19057,6 +20456,7 @@ def Rental_Services_Selection_Preview(request,pk):
 	'total_amount':total_amount,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	}
 	return render(request,'deskofficer_templates/Rental_Services_Selection_Preview.html',context)
 
@@ -19074,12 +20474,17 @@ def Rental_Services_Unpaid_Bill(request):
 		task_enabler_array.append(item.title)
 
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
 	records=RentalBookingSelectionsSummary.objects.filter(Q(balance__gt=0))
 
 	context={
 	'records':records,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	}
 	return render(request,'deskofficer_templates/Rental_Services_Unpaid_Bill.html',context)
 
@@ -19095,6 +20500,10 @@ def Rental_Services_Unpaid_Bill_Preview(request,pk):
 	task_enabler_array=[]
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 	form=Rental_Services_Selection_Preview_Final_Form(request.POST or None)
 	record=RentalBookingSelectionsSummary.objects.get(id=pk)
@@ -19165,6 +20574,7 @@ def Rental_Services_Unpaid_Bill_Preview(request,pk):
 	'record':record,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	}
 	return render(request,'deskofficer_templates/Rental_Services_Unpaid_Bill_Preview.html',context)
 
@@ -19179,6 +20589,11 @@ def Rental_Services_Management(request):
 	task_enabler_array=[]
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
 	records=RentalBookingHeaders.objects.filter(processing_status='UNPROCESSED')
 
 
@@ -19186,6 +20601,7 @@ def Rental_Services_Management(request):
 	'records':records,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	}
 	return render(request,'deskofficer_templates/Rental_Services_Management.html',context)
 
@@ -19202,6 +20618,10 @@ def Rental_Services_Management_Process(request,pk):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
 	record=RentalBookingHeaders.objects.get(id=pk)
 
 	queryset=RentalBookingSelections.objects.filter(contact=record,status='UNTREATED').order_by('booked_date').values_list('booked_date','booked_date').distinct()
@@ -19217,6 +20637,7 @@ def Rental_Services_Management_Process(request,pk):
 	'booking_array':booking_array,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	}
 	return render(request,'deskofficer_templates/Rental_Services_Management_Process.html',context)
 
@@ -19254,6 +20675,11 @@ def Rental_Services_Management_Process_Details(request,pk,contact):
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
 
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
 	record=RentalBookingHeaders.objects.get(id=contact)
 
 	records=RentalBookingSelections.objects.filter(contact=record,booked_date=pk)
@@ -19264,5 +20690,6 @@ def Rental_Services_Management_Process_Details(request,pk,contact):
 	'records':records,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	}
 	return render(request,'deskofficer_templates/Rental_Services_Management_Process_Details.html',context)
