@@ -83,7 +83,7 @@ UPLOAD_STATUS=(
             ("PENDING","PENDING"),
             ("UPLOADED","UPLOADED"),
             ("VERIFIED","VERIFIED")
-            ) 
+            )
 MULTIPLE_LOAN_STATUS=(
             ("NOT ALLOWED",'NOT ALLOWED'),
             ("ALLOWED",'ALLOWED'),
@@ -154,14 +154,14 @@ class titleBase(models.Model):
 
 class UserType(titleBase):
     code=models.CharField(max_length=2,unique=True)
-    
+
     # class Meta:
     #     db_table = "usertype"
 
 
     def __str__(self):
         return self.title
-    
+
 
 
 
@@ -259,8 +259,8 @@ class Banks(titleBase):
 
     def __str__(self):
         return self.title
-  
- 
+
+
 class Locations(titleBase):
     class Meta(titleBase.Meta):
         # db_table='Locations'
@@ -336,7 +336,7 @@ class ProductCategory(titleBase):
 
 class DefaultPassword(titleBase):
     title= models.CharField(max_length=255,unique=True,verbose_name="Password")
-    
+
     # class Meta:
     #     db_table="Default_Password"
 
@@ -355,7 +355,7 @@ class ExceptableCriterias(titleBase):
 
 class TransactionEnabler(titleBase):
     status = models.CharField(max_length=20,choices=YESNO,default='NO')
-   
+
     class Meta(titleBase.Meta):
         # db_table="Transaction_Sources"
         ordering = ['title']
@@ -371,7 +371,7 @@ class DateObjectsModels(models.Model):
     updated_at=models.DateTimeField(auto_now=True)
     processed_by=models.CharField(max_length=100,blank=True,null=True)
     tdate = models.DateField(default=timezone.now)
-  
+
     objects=models.Manager()
 
     class Meta:
@@ -392,7 +392,7 @@ class System_Users_Tasks(DateObjectsModels):
     title=models.CharField(max_length=255)
     rank=models.IntegerField(default=0)
     usertype=models.ForeignKey(UserType,on_delete=models.CASCADE)
-   
+
 
 class System_Users_Tasks_Model(DateObjectsModels):
     task=models.ForeignKey(System_Users_Tasks,on_delete=models.CASCADE)
@@ -409,7 +409,7 @@ class CustomerID(DateObjectsModels):
 class TransactionPeriods(DateObjectsModels):
     transaction_period=models.DateField()
     status= models.CharField(max_length=20,choices=MEMBERSHIP_STATUS,default='ACTIVE')
-    
+
     # class Meta(DateObjectsModels.Meta):
     #     db_table="Transaction_Periods"
 
@@ -420,14 +420,14 @@ class InvoiceHeader(DateObjectsModels):
     address1= models.CharField(max_length=255)
     address2= models.CharField(max_length=255)
     phone_no= models.CharField(max_length=255)
-    
+
     # class Meta(DateObjectsModels.Meta):
     #     db_table="Invoice_Header"
 
 
 class AutoReceipt(DateObjectsModels):
     receipt= models.CharField(max_length=255)
-    
+
     # class Meta(DateObjectsModels.Meta):
     #     db_table="Auto_Receipt"
 
@@ -441,7 +441,7 @@ class Receipts(DateObjectsModels):
     id=models.AutoField(primary_key=True)
     receipt= models.CharField(max_length=255,unique=True)
     status = models.CharField(max_length=30,choices=RECEIPT_STATUS,default="UNUSED")
-    
+
 
     # class Meta(DateObjectsModels.Meta):
     #     db_table="Receipts"
@@ -450,7 +450,7 @@ class Receipts_Shop(DateObjectsModels):
     id=models.AutoField(primary_key=True)
     receipt= models.CharField(max_length=255,unique=True)
     status = models.CharField(max_length=30,choices=RECEIPT_STATUS,default="UNUSED")
-    
+
 
     # class Meta(DateObjectsModels.Meta):
     #     db_table="Receipts_Shop"
@@ -460,7 +460,7 @@ class FormAutoPrints(DateObjectsModels):
     id=models.AutoField(primary_key=True)
     title= models.CharField(max_length=255,unique=True)
     status = models.CharField(max_length=20,choices=YESNO,default='NO')
-    
+
     # class Meta(DateObjectsModels.Meta):
     #     db_table="form_auto_prints"
 
@@ -468,15 +468,15 @@ class FormAutoPrints(DateObjectsModels):
 class Receipt_Cancelled(DateObjectsModels):
     receipt = models.ForeignKey(Receipts,on_delete=models.CASCADE,blank=True,null=True)
     reasons= models.TextField()
-  
-    
+
+
     # class Meta(DateObjectsModels.Meta):
     #     db_table="Receipt_Cancelled"
 
 
 class SharesUnits(DateObjectsModels):
     unit= models.IntegerField(unique=True)
-   
+
     # class Meta(DateObjectsModels.Meta):
     #     db_table="Shares_Units"
 
@@ -485,11 +485,11 @@ class MembersIdManager(DateObjectsModels):
     prefix_title= models.CharField(max_length=255)
     prefix_year= models.CharField(max_length=255)
     member_id= models.IntegerField(unique=True)
-    
+
     # class Meta(DateObjectsModels.Meta):
     #     db_table="Members_Id_Manager"
 
- 
+
 
 class CooperativeBankAccounts(DateObjectsModels):
     bank=models.ForeignKey(Banks,on_delete=models.CASCADE)
@@ -497,7 +497,7 @@ class CooperativeBankAccounts(DateObjectsModels):
     account_type=models.CharField(max_length=20,choices=ACCOUNT_TYPES,default='SAVINGS')
     account_number=models.CharField(max_length=255)
     sort_code=models.CharField(max_length=255, blank=True,null=True)
-    
+
     # class Meta(DateObjectsModels.Meta):
     #     db_table="Cooperative_Bank_Accounts"
 
@@ -506,7 +506,7 @@ class AccountsSignatories(DateObjectsModels):
     bank=models.ForeignKey(CooperativeBankAccounts,on_delete=models.CASCADE)
     name=models.CharField(max_length=255)
     position=models.CharField(max_length=20,choices=ACCOUNT_TYPES,default='SAVINGS')
-    
+
     # class Meta(DateObjectsModels.Meta):
     #     db_table="AccountsSignatories"
 
@@ -514,7 +514,7 @@ class AccountsSignatories(DateObjectsModels):
 class Lga(DateObjectsModels):
     title= models.CharField(max_length=255,blank=True,null=True)
     state=models.ForeignKey(States,on_delete=models.CASCADE)
-   
+
     # class Meta(DateObjectsModels.Meta):
     #     db_table="Lga"
 
@@ -528,15 +528,15 @@ class Staff(DateObjectsModels):
     gender =models.ForeignKey(Gender,on_delete=models.CASCADE,blank=True,null=True)
     status= models.CharField(max_length=20,choices=MEMBERSHIP_STATUS,default='ACTIVE')
 
-    
+
 
     # @property
     # def get_full_name(self):
     #     if self.middle_name:
     #           return self.admin.last_name + " " + self.admin.first_name + " " + self.middle_name
     #     else:
-    #           return self.admin.last_name + " " + self.admin.first_name 
-   
+    #           return self.admin.last_name + " " + self.admin.first_name
+
 
     # class Meta(DateObjectsModels.Meta):
     #     db_table="Staff"
@@ -574,7 +574,7 @@ class TransactionTypes(DateObjectsModels):
     multiple_loan_status= models.CharField(max_length=20,choices=MULTIPLE_LOAN_STATUS,default='NOT ALLOWED')
     auto_stop_savings= models.CharField(default='NO',choices=CHOICES,max_length=15)
     form_print=models.CharField(max_length=20,choices=YESNO,default='NO')
-   
+
 
     # class Meta(DateObjectsModels.Meta):
     #     db_table="Transaction_Types"
@@ -584,16 +584,23 @@ class CooperativeBankAccountsOperationalDesignations(DateObjectsModels):
     account=models.ForeignKey(CooperativeBankAccounts,on_delete=models.CASCADE)
     transaction=models.ForeignKey(TransactionTypes,on_delete=models.CASCADE)
     status=models.CharField(max_length=20,choices=MEMBERSHIP_STATUS,default='ACTIVE')
-    
 
-    
+
+
     # class Meta(DateObjectsModels.Meta):
     #     db_table="CooperativeBankAccountsOperationalDesignations"
+
+class XmasSavingsTransactionPeriod(DateObjectsModels):
+    batch=models.CharField(max_length=100)
+    status=models.CharField(max_length=20,choices=MEMBERSHIP_STATUS,default='ACTIVE')
+
+    class Meta(DateObjectsModels.Meta):
+        db_table="XmasSavingsTransactionPeriod"
 
 
 class XmasTransferDefaultSaving(DateObjectsModels):
     transaction=models.ForeignKey(TransactionTypes,on_delete=models.CASCADE)
-    
+
     # class Meta(DateObjectsModels.Meta):
     #     db_table="XmasTransferDefaultSaving"
 
@@ -601,23 +608,23 @@ class XmasTransferDefaultSaving(DateObjectsModels):
 
 class  CompulsorySavings(DateObjectsModels):
     transaction=models.ForeignKey(TransactionTypes,on_delete=models.CASCADE,blank=True,null=True)
-    
+
     # class Meta(DateObjectsModels.Meta):
     #     db_table="Compulsory_Savings"
-   
+
 
 class  WithdrawableTransactions(DateObjectsModels):
     transaction=models.ForeignKey(TransactionTypes,on_delete=models.CASCADE)
     status= models.CharField(max_length=20,choices=WITHDRAWAL_STATUS,default='LOCKED')
     maturity= models.IntegerField(default=0)
-   
+
 
     # class Meta(DateObjectsModels.Meta):
     #     db_table="Withdrawable_Transactions"
 
 class  LoanBasedSavings(DateObjectsModels):
     savings=models.ForeignKey(TransactionTypes,on_delete=models.CASCADE)
-    
+
 
     # class Meta(DateObjectsModels.Meta):
     #     db_table="Loanbased_Savings"
@@ -646,7 +653,7 @@ class MemberShipRequest(DateObjectsModels):
     date_of_first_appointment=models.DateField(blank=True,null=True)
     dob=models.DateField(blank=True,null=True)
     next_of_kin=models.CharField(max_length=255,blank=True,null=True)
-   
+
 
     # class Meta(DateObjectsModels.Meta):
     #     db_table="Membership_Request"
@@ -661,20 +668,20 @@ class MemberShipRequest(DateObjectsModels):
             return self.middle_name
         else:
             return ""
-   
+
     @property
     def get_full_name(self):
         if self.middle_name:
             return self.last_name + " " + self.first_name + " " + self.middle_name
         else:
-            return self.last_name + " " + self.first_name 
-   
+            return self.last_name + " " + self.first_name
+
 
 class MemberShipRequestAdditionalInfo(DateObjectsModels):
     applicant=models.ForeignKey(MemberShipRequest,on_delete=models.CASCADE,blank=True,null=True)
     comment=models.TextField(blank=True,null=True)
     officer=models.ForeignKey(CustomUser,on_delete=models.CASCADE,blank=True,null=True)
-   
+
     # class Meta(DateObjectsModels.Meta):
     #     db_table="MemberShip_Request_Additional_Info"
 
@@ -684,8 +691,8 @@ class MemberShipRequestAdditionalAttachment(DateObjectsModels):
     caption=models.CharField(max_length=255)
     image=models.FileField(blank=True,null=True)
     officer=models.ForeignKey(CustomUser,on_delete=models.CASCADE)
-   
-    
+
+
     # class Meta(DateObjectsModels.Meta):
     #     db_table="Membership_Request_Additional_Attachment"
 
@@ -704,7 +711,7 @@ class MemberShipFormSalesRecord(DateObjectsModels):
     cashbook_status=models.CharField(max_length=30,choices=CASHBOOK_STATUS,default='UNPOSTED')
     new_registration=models.BooleanField(default=False)
     date_paid=models.DateField()
-   
+
 
     # class Meta(DateObjectsModels.Meta):
     #     db_table="Membership_Form_Sales_Record"
@@ -748,8 +755,8 @@ class Members(DateObjectsModels):
     date_of_first_appointment_status= models.CharField(max_length=30,choices=UPLOAD_STATUS,default='PENDING')
     dob_status= models.CharField(max_length=30,choices=UPLOAD_STATUS,default='PENDING')
     member_category=models.CharField(default='OLD',choices=CHOICES,max_length=15)
-   
-  
+
+
 
     def __str__(self):
         return '{} {} {}'.format(self.admin.last_name, self.admin.first_name, self.admin.middle_name)
@@ -760,14 +767,14 @@ class Members(DateObjectsModels):
             return self.middle_name
         else:
             return ""
-   
+
     @property
     def get_full_name(self):
         if self.middle_name:
             return self.admin.last_name + " " + self.admin.first_name + " " + self.middle_name
         else:
-            return self.admin.last_name + " " + self.admin.first_name 
-   
+            return self.admin.last_name + " " + self.admin.first_name
+
 
     @property
     def get_department(self):
@@ -775,7 +782,7 @@ class Members(DateObjectsModels):
             return self.department
         else:
             return ""
-    
+
 
     @property
     def get_member_Id(self):
@@ -793,16 +800,16 @@ class MembersBankAccounts(DateObjectsModels):
     status= models.CharField(max_length=20,choices=MEMBERSHIP_STATUS,default='ACTIVE')
     account_priority=models.PositiveSmallIntegerField(validators=[MinValueValidator(0)],default=1)
     lock_status= models.CharField(max_length=20,choices=LOCK_STATUS,default='LOCKED')
-    
+
     # class Meta(DateObjectsModels.Meta):
     #     db_table="Members_Bank_Accounts"
 
 class ExecutivePositions(DateObjectsModels):
     title=models.CharField(max_length=255)
-     
+
     # class Meta(DateObjectsModels.Meta):
     #     db_table="ExecutivePositions"
- 
+
 class Executives(DateObjectsModels):
     member=models.ForeignKey(Members,on_delete=models.CASCADE)
     name=models.CharField(max_length=255)
@@ -810,20 +817,20 @@ class Executives(DateObjectsModels):
     start_date=models.DateField()
     stop_date=models.DateField(blank=True, null=True)
     status=models.CharField(max_length=20, choices=MEMBERSHIP_STATUS,default='INACTIVE')
-     
+
     # class Meta(DateObjectsModels.Meta):
     #     db_table="Executives"
 
 
 class Termination_Loan_Allowed(DateObjectsModels):
     termination=models.ForeignKey(Termination_Types,on_delete=models.CASCADE)
-  
+
 
     # class Meta(DateObjectsModels.Meta):
     #     db_table="Termination_Loan_Allowed"
 
 
- 
+
 class Member_Salary_Adjustment(DateObjectsModels):
     member= models.ForeignKey(Members,on_delete=models.CASCADE)
     existing_gross_pay=models.DecimalField(max_digits=20,decimal_places = 2,default=0)
@@ -835,7 +842,7 @@ class Member_Salary_Adjustment(DateObjectsModels):
     approval_status= models.CharField(max_length=30,choices=APPROVAL_STATUS,default='PENDING')
     approved_at=models.DateField(blank=True,null=True)
     status= models.CharField(max_length=20,choices=TRANSACTION_STATUS,default='UNTREATED')
-  
+
 
 
 class MemberShipTerminationRequest(DateObjectsModels):
@@ -863,7 +870,7 @@ class MemberShipTerminationTransactionBalances(DateObjectsModels):
     debit=models.DecimalField(max_digits=20,decimal_places = 2)
     credit=models.DecimalField(max_digits=20,decimal_places = 2)
     status= models.CharField(max_length=20,choices=TRANSACTION_STATUS,default='UNTREATED')
-  
+
 
     # class Meta(DateObjectsModels.Meta):
     #     db_table="MemberShipTerminationTransactionBalances"
@@ -878,7 +885,7 @@ class MemberShipTermination(DateObjectsModels):
     processing_status=models.CharField(max_length=20,choices=PROCESSING_STATUS,default='UNPROCESSED')
     lock_status=models.CharField(max_length=20,choices=LOCK_STATUS,default='LOCKED')
     status= models.CharField(max_length=20,choices=TRANSACTION_STATUS,default='UNTREATED')
-  
+
 
     # class Meta(DateObjectsModels.Meta):
     #     db_table="MemberShipTermination"
@@ -892,7 +899,7 @@ class MemberShipTerminationRequestException(DateObjectsModels):
     approval_status= models.CharField(max_length=30,choices=APPROVAL_STATUS,default='PENDING')
     approved_at=models.DateField(blank=True,null=True)
     status= models.CharField(max_length=20,choices=TRANSACTION_STATUS,default='UNTREATED')
-  
+
 
     # class Meta(DateObjectsModels.Meta):
     #     db_table="MemberShipTerminationRequestException"
@@ -910,8 +917,8 @@ class MemberShipTerminationFundDisbursement(DateObjectsModels):
     member_account=models.ForeignKey(MembersBankAccounts,on_delete=models.CASCADE,blank=True,null=True)
     transfer_date=models.DateField(blank=True,null=True)
     status= models.CharField(max_length=20,choices=TRANSACTION_STATUS,default='UNTREATED')
-  
-  
+
+
 
     # class Meta(DateObjectsModels.Meta):
     #     db_table="MemberShipTerminationFundDisbursement"
@@ -930,7 +937,7 @@ class MembersExclusiveness(DateObjectsModels):
     approved_at=models.DateField(blank=True,null=True)
     status= models.CharField(max_length=20,choices=TRANSACTION_STATUS,default='UNTREATED')
     processing_status= models.CharField(max_length=30,choices=PROCESSING_STATUS,default='UNPROCESSED')
-  
+
 
     # class Meta(DateObjectsModels.Meta):
     #     db_table="Members_Exclusiveness"
@@ -938,7 +945,7 @@ class MembersExclusiveness(DateObjectsModels):
 
 
 class NextOfKinsMaximun(DateObjectsModels):
-    maximun=models.CharField(max_length=255)   
+    maximun=models.CharField(max_length=255)
 
     # class Meta(DateObjectsModels.Meta):
     #     db_table="Next_Of_Kins_Maximun"
@@ -964,7 +971,7 @@ class MembersAccountsDomain(DateObjectsModels):
     account_number=models.CharField(max_length=255,blank=True,null=True)
     status=models.CharField(max_length=20,choices=MEMBERSHIP_STATUS,default='ACTIVE')
     loan_lock=models.CharField(max_length=20,choices=YESNO,default='NO')
-   
+
     # class Meta(DateObjectsModels.Meta):
     #     db_table="Members_Accounts_Domain"
 
@@ -974,14 +981,14 @@ class StandingOrderAccounts(DateObjectsModels):
     amount=models.DecimalField(max_digits=20,decimal_places = 2)
     status=models.CharField(max_length=20,choices=MEMBERSHIP_STATUS,default='ACTIVE')
     lock_status=models.CharField(max_length=20,choices=LOCK_STATUS,default='LOCKED')
-  
+
     # class Meta(DateObjectsModels.Meta):
     #     db_table="Standing_Order_Accounts"
 
 
 class Xmas_Savings_Generated(DateObjectsModels):
     batch=models.CharField(max_length=100)
-  
+
 
     # class Meta(DateObjectsModels.Meta):
     #     db_table="Xmas_Savings_Generated"
@@ -1004,7 +1011,7 @@ class Xmas_Savings_Shortlist(DateObjectsModels):
     details=models.TextField(blank=True,null=True)
     processing_status=models.CharField(max_length=20,choices=PROCESSING_STATUS,default='UNPROCESSED')
     submission_status= models.CharField(max_length=30,choices=SUBMISSION_STATUS,default='NOT SUBMITTED')
-   
+
 
     # class Meta(DateObjectsModels.Meta):
     #     db_table="Xmas_Savings_Shortlist"
@@ -1014,7 +1021,7 @@ class Xmas_Savings_Shortlist(DateObjectsModels):
 class StandingOrderDeactivatedAccounts(DateObjectsModels):
     transaction=models.ForeignKey(StandingOrderAccounts,on_delete=models.CASCADE)
     status= models.CharField(max_length=20,choices=TRANSACTION_STATUS,default='UNTREATED')
-    
+
     # class Meta(DateObjectsModels.Meta):
     #     db_table="StandingOrderDeactivatedAccounts"
 
@@ -1028,7 +1035,7 @@ class StandingOrderAccountsSuspensionRequest(DateObjectsModels):
     approval_comment=models.TextField(blank=True,null=True)
     approval_date=models.DateField(blank=True,null=True)
     status= models.CharField(max_length=20,choices=TRANSACTION_STATUS,default='UNTREATED')
-      
+
     # class Meta(DateObjectsModels.Meta):
     #     db_table="StandingOrderAccountsSuspensionRequest"
 
@@ -1041,8 +1048,8 @@ class StandingOrderAccountsSuspensionReleaseRequest(DateObjectsModels):
     approval_comment=models.TextField(blank=True,null=True)
     approval_date=models.DateField(blank=True,null=True)
     status= models.CharField(max_length=20,choices=TRANSACTION_STATUS,default='UNTREATED')
-    
-    
+
+
     # class Meta(DateObjectsModels.Meta):
     #     db_table="StandingOrderAccountsSuspensionRequest"
 
@@ -1054,7 +1061,7 @@ class SavingsUploaded(DateObjectsModels):
     schedule_amount=models.DecimalField(max_digits=20,decimal_places = 2,default=0)
     transaction_period=models.ForeignKey(TransactionPeriods,on_delete=models.CASCADE)
     status= models.CharField(max_length=20,choices=TRANSACTION_STATUS,default='UNTREATED')
-    
+
 
     # class Meta(DateObjectsModels.Meta):
     #     db_table="Savings_Uploaded"
@@ -1072,15 +1079,15 @@ class LoansUploaded(DateObjectsModels):
     interest_rate=models.DecimalField(max_digits=20,decimal_places = 2,default=0)
     interest_deduction=models.CharField(max_length=255,choices=INTEREST_DEDUCTION,default='SOURCE')
     admin_charge_rate=models.DecimalField(max_digits=20,decimal_places = 2,default=0)
-    
+
     start_date=models.DateField(blank=True,null=True)
     stop_date=models.DateField(blank=True,null=True)
     transaction_period=models.ForeignKey(TransactionPeriods,on_delete=models.CASCADE)
     status= models.CharField(max_length=20,choices=TRANSACTION_STATUS,default='UNTREATED')
-   
-  
 
-    
+
+
+
     # class Meta(DateObjectsModels.Meta):
     #     db_table="Loans_Uploaded"
 
@@ -1118,7 +1125,7 @@ class LoanRequestAttachments(DateObjectsModels):
     description=models.CharField(max_length=255)
     image=models.FileField()
     status= models.CharField(max_length=20,choices=TRANSACTION_STATUS,default='UNTREATED')
-    
+
     # class Meta(DateObjectsModels.Meta):
     #     db_table="Loan_Request_Attachments"
 
@@ -1191,7 +1198,7 @@ class LoanApplicationSettings(DateObjectsModels):
     tag= models.CharField(max_length=255,default=0)
     waver=models.BooleanField(default=False)
     status= models.CharField(max_length=20,choices=TRANSACTION_STATUS,default='UNTREATED')
-    
+
     # class Meta(DateObjectsModels.Meta):
     #     db_table="Loan_Application_Settings"
 
@@ -1199,7 +1206,7 @@ class LoanApplicationSettings(DateObjectsModels):
 
 class LoansRepaymentBase(DateObjectsModels):
     member= models.ForeignKey(Members,on_delete=models.CASCADE,blank=True,null=True)
-    
+
     transaction= models.ForeignKey(TransactionTypes,on_delete=models.CASCADE,blank=True,null=True)
     loan_number=models.CharField(max_length=255,unique=True)
     duration=models.CharField(max_length=255,blank=True,null=True)
@@ -1221,7 +1228,7 @@ class LoansRepaymentBase(DateObjectsModels):
     nok_Relationship=models.CharField(max_length=255,blank=True,null=True)
     nok_phone_no=models.CharField(max_length=255,blank=True,null=True)
     nok_address=models.CharField(max_length=255,blank=True,null=True)
-    
+
 
     # class Meta(DateObjectsModels.Meta):
     #     db_table="Loans_Repayment_Base"
@@ -1229,7 +1236,7 @@ class LoansRepaymentBase(DateObjectsModels):
 class LoanGuarantors(DateObjectsModels):
     loan= models.ForeignKey(LoansRepaymentBase,on_delete=models.CASCADE,blank=True,null=True)
     member= models.ForeignKey(Members,on_delete=models.CASCADE,blank=True,null=True)
-   
+
 
     # class Meta(DateObjectsModels.Meta):
     #     db_table="Loan_Guarantors"
@@ -1296,7 +1303,7 @@ class MonthlyDeductionListGenerated(DateObjectsModels):
     salary_institution=models.ForeignKey(SalaryInstitution,on_delete=models.CASCADE)
     transaction_status= models.CharField(max_length=20,choices=TRANSACTION_STATUS,default='UNTREATED')
     processing_status=models.CharField(max_length=20,choices=PROCESSING_STATUS,default='UNPROCESSED')
-  
+
 
 
     # class Meta(DateObjectsModels.Meta):
@@ -1345,7 +1352,7 @@ class TransactionAjustmentRequest(DateObjectsModels):
     approved_at=models.DateField(blank=True,null=True)
     effective_date=models.DateField(blank=True,null=True)
     status=models.CharField(max_length=20,choices=TRANSACTION_STATUS,default='UNTREATED')
-    
+
 
     # class Meta(DateObjectsModels.Meta):
     #     db_table="Transaction_Adjustment_Request"
@@ -1356,7 +1363,7 @@ class TransactionAjustmentHistory(DateObjectsModels):
     amount=models.DecimalField(max_digits=20,decimal_places = 2)
     start_date=models.DateField()
     stop_date=models.DateField()
-    
+
     # class Meta(DateObjectsModels.Meta):
     #     db_table="Transaction_Ajustment_History"
 
@@ -1392,7 +1399,7 @@ class NorminalRoll(DateObjectsModels):
     next_of_kin=models.CharField(max_length=255,blank=True,null=True)
     salary_institution=models.CharField(max_length=255)
     transaction_status=models.CharField(max_length=20,choices=TRANSACTION_STATUS,default='UNTREATED')
-   
+
 
     @property
     def get_middle_name(self):
@@ -1410,14 +1417,14 @@ class NorminalRoll(DateObjectsModels):
 ####################################################################
 class SharesDeductionSavings(DateObjectsModels):
     savings=models.ForeignKey(TransactionTypes,on_delete=models.CASCADE,blank=True,null=True)
-    
+
 
     # class Meta(DateObjectsModels.Meta):
     #     db_table="Shares_Deduction_Savings"
 
 class MembersShareConfigurations(DateObjectsModels):
     unit_cost=models.DecimalField(max_digits=20,decimal_places = 2,default=0)
-    
+
     # class Meta(DateObjectsModels.Meta):
     #     db_table="Members_Share_Configurations"
 
@@ -1457,7 +1464,7 @@ class MembersShareAccountsMain(DateObjectsModels):
     effective_date=models.DateField(blank=True,null=True)
     year=models.IntegerField(default=0)
     status= models.CharField(max_length=20,choices=MEMBERSHIP_STATUS,default='ACTIVE')
-    
+
 
     # class Meta(DateObjectsModels.Meta):
     #     db_table="Members_Share_Accounts_Main"
@@ -1488,7 +1495,7 @@ class SharesSalesRecord(DateObjectsModels):
     bank_account= models.ForeignKey(CooperativeBankAccounts,on_delete=models.CASCADE,blank=True,null=True)
     image=models.FileField(blank=True,null=True)
     status= models.CharField(max_length=20,choices=TRANSACTION_STATUS,default='UNTREATED')
-  
+
 
     # class Meta(DateObjectsModels.Meta):
     #     db_table="Shares_Sales_Record"
@@ -1496,7 +1503,7 @@ class SharesSalesRecord(DateObjectsModels):
 
 class MembersWelfare(DateObjectsModels):
     amount=models.DecimalField(max_digits=20,decimal_places = 2,default=0)
-   
+
 
     # class Meta(DateObjectsModels.Meta):
     #     db_table="Members_Welfare"
@@ -1533,10 +1540,10 @@ class MembersCashDeposits(DateObjectsModels):
 
 class MembersCashWithdrawals(DateObjectsModels):
     member=models.ForeignKey(MembersAccountsDomain,on_delete=models.CASCADE)
-    amount=models.DecimalField(max_digits=20,decimal_places = 2,default=0)    
-    ledger_balance=models.DecimalField(max_digits=20,decimal_places = 2,default=0)    
+    amount=models.DecimalField(max_digits=20,decimal_places = 2,default=0)
+    ledger_balance=models.DecimalField(max_digits=20,decimal_places = 2,default=0)
     narration=models.TextField()
-    approved_amount=models.DecimalField(max_digits=20,decimal_places = 2,default=0)    
+    approved_amount=models.DecimalField(max_digits=20,decimal_places = 2,default=0)
     approval_officer=models.CharField(max_length=255,blank=True,null=True)
     approval_status = models.CharField(max_length=30,choices=APPROVAL_STATUS,default='PENDING')
     approval_comment=models.TextField(blank=True,null=True)
@@ -1550,10 +1557,10 @@ class MembersCashWithdrawals(DateObjectsModels):
 
 class MembersCashWithdrawalsApplication(DateObjectsModels):
     member=models.ForeignKey(MembersAccountsDomain,on_delete=models.CASCADE)
-    amount=models.DecimalField(max_digits=20,decimal_places = 2,default=0)    
-    ledger_balance=models.DecimalField(max_digits=20,decimal_places = 2,default=0)    
+    amount=models.DecimalField(max_digits=20,decimal_places = 2,default=0)
+    ledger_balance=models.DecimalField(max_digits=20,decimal_places = 2,default=0)
     narration=models.TextField()
-    approved_amount=models.DecimalField(max_digits=20,decimal_places = 2,default=0)    
+    approved_amount=models.DecimalField(max_digits=20,decimal_places = 2,default=0)
     approval_officer=models.CharField(max_length=255,blank=True,null=True)
     approval_status = models.CharField(max_length=30,choices=APPROVAL_STATUS,default='PENDING')
     approval_comment=models.TextField(blank=True,null=True)
@@ -1597,7 +1604,7 @@ class Companies(titleBase):
 
 
 class Commodity_Categories(DateObjectsModels):
-   
+
     REQUIRED_STATUS=(
         ('0','NO'),
         ('1','YES')
@@ -1618,8 +1625,8 @@ class Commodity_Categories(DateObjectsModels):
     status= models.CharField(max_length=20,choices=MEMBERSHIP_STATUS,default='ACTIVE')
     multiple_loan_status= models.CharField(max_length=20,choices=MULTIPLE_LOAN_STATUS,default='NOT ALLOWED')
     form_print=models.CharField(max_length=20,choices=YESNO,default='NO')
-    
-    
+
+
     def __str__(self):
         return self.title
 
@@ -1627,7 +1634,7 @@ class Commodity_Category_Sub(DateObjectsModels):
     category=models.ForeignKey(Commodity_Categories,on_delete=models.CASCADE)
     title=models.CharField(max_length=100,unique=True)
     status= models.CharField(max_length=20,choices=MEMBERSHIP_STATUS,default='INACTIVE')
-    
+
     def __str__(self):
         return self.title
 
@@ -1636,7 +1643,7 @@ class Treanding_Commodity_Signatory(DateObjectsModels):
     name=models.CharField(max_length=100)
     designation=models.CharField(max_length=100)
     phone_no=models.CharField(max_length=11)
-   
+
     def __str__(self):
         return self.name
 
@@ -1646,7 +1653,7 @@ class Company_Products_Duration(DateObjectsModels):
     batch=models.ForeignKey(Commodity_Period_Batch,on_delete=models.CASCADE,blank=True,null=True)
     start_date=models.DateField(blank=True,null=True)
     stop_date=models.DateField(blank=True,null=True)
-   
+
     # class Meta(DateObjectsModels.Meta):
     #     db_table="Company_Products_Duration"
 
@@ -1658,8 +1665,8 @@ class Commodity_Product_List(DateObjectsModels):
     details=models.TextField(blank=True,null=True)
     # amount=models.DecimalField(max_digits=20,decimal_places = 2,default=0)
     status= models.CharField(max_length=20,choices=MEMBERSHIP_STATUS,default='ACTIVE')
-    
-    
+
+
     def __str__(self):
         return self.product_name
 
@@ -1691,7 +1698,7 @@ class Members_Commodity_Loan_Products_Selection(DateObjectsModels):
     admin_charges = models.DecimalField(max_digits=20,decimal_places = 2,blank=True,null=True)
     duration= models.PositiveSmallIntegerField(validators=[MinValueValidator(0)],default=0)
     status= models.CharField(max_length=20,choices=TRANSACTION_STATUS,default='UNTREATED')
-   
+
 
     # class Meta(DateObjectsModels.Meta):
     #     db_table="members_commodity_loan_products_selection"
@@ -1727,11 +1734,11 @@ class Members_Commodity_Loan_Application(DateObjectsModels):
     savings = models.DecimalField(max_digits=20,decimal_places = 2,default=0)
     submission_status=models.CharField(max_length=20,choices=SUBMISSION_STATUS,default="NOT SUBMITTED")
     status= models.CharField(max_length=20,choices=TRANSACTION_STATUS,default='UNTREATED')
-   
+
     @property
     def get_total(self):
         return float(self.company_price) + float(self.interest)
-      
+
 
     # class Meta(DateObjectsModels.Meta):
     #     db_table="members_commodity_loan_application"
@@ -1744,7 +1751,7 @@ class Members_Commodity_Loan_Application_Settings(DateObjectsModels):
     value=models.CharField(max_length=255)
     status= models.CharField(max_length=20,choices=TRANSACTION_STATUS,default='UNTREATED')
     ticket=models.CharField(max_length=255,blank=True,null=True)
-   
+
     # class Meta(DateObjectsModels.Meta):
     #     db_table="members_commodity_loan_application_settings"
 
@@ -1756,7 +1763,7 @@ class Members_Commodity_Loan_Application_Form_Sales(DateObjectsModels):
     applicant=models.ForeignKey(Members_Commodity_Loan_Application,on_delete=models.CASCADE)
     # receipt=models.CharField(max_length=255,blank=True,null=True)
     status = models.CharField(max_length=20,choices=TRANSACTION_STATUS,default='UNTREATED')
-    
+
 
     # class Meta(DateObjectsModels.Meta):
     #     db_table="Members_Commodity_Loan_Application_Form_Sales"
@@ -1768,12 +1775,12 @@ class Members_Commodity_Loan_Application_Guarantors(DateObjectsModels):
     applicant=models.ForeignKey(Members_Commodity_Loan_Application_Form_Sales,on_delete=models.CASCADE)
     guarantor=models.ForeignKey(Members,on_delete=models.CASCADE)
     gross_pay = models.DecimalField(max_digits=20,decimal_places = 2,default=0)
-    
+
 
     # class Meta(DateObjectsModels.Meta):
     #     db_table="Members_Commodity_Loan_Application_Guarantors"
 
-   
+
 ####################################################################
 ##################### LEDGER, CASH BOOK AND OTHERS##################
 ####################################################################
@@ -1873,8 +1880,8 @@ class Stock_Auction(DateObjectsModels):
     expiry_date=models.DateField()
     expiry_date2=models.DateField()
     # status=models.ForeignKey(TransactionStatus,on_delete=models.CASCADE,default=1)
-  
-   
+
+
     # class Meta(DateObjectsModels.Meta):
     #     db_table="Auction_Stock
 
@@ -1887,14 +1894,14 @@ class Stock_History(DateObjectsModels):
     unit_cost_price=models.DecimalField(max_digits=20,decimal_places = 2,default=0)
     total=models.DecimalField(max_digits=20,decimal_places = 2)
     sources=models.CharField(max_length=255)
-  
-    
+
+
 
     # class Meta(DateObjectsModels.Meta):
     #     db_table="Stock_History"
 
- 
-  
+
+
 class Product_Code(DateObjectsModels):
     code=models.IntegerField(default=0)
 
@@ -1907,7 +1914,7 @@ class Members_Credit_Sales_Selected(DateObjectsModels):
     CHOICES=(
         ('MAIN','MAIN'),
         ('AUCTION','AUCTION')
-        ) 
+        )
     member=models.ForeignKey(Members,on_delete=models.CASCADE)
     product= models.ForeignKey(Stock,on_delete=models.CASCADE,blank=True,null=True)
     ticket=models.CharField(max_length=255)
@@ -1927,7 +1934,7 @@ class members_credit_sales_analysis(DateObjectsModels):
     debit=models.DecimalField(max_digits=20,decimal_places = 2)
     credit=models.DecimalField(max_digits=20,decimal_places = 2)
     status=models.CharField(max_length=20,choices=TRANSACTION_STATUS,default='UNTREATED')
-    
+
 
     # class Meta(DateObjectsModels.Meta):
     #     db_table="Members_Credit_Purchase_Analysis"
@@ -1963,7 +1970,7 @@ class members_shop_credit_loans(DateObjectsModels):
     balance=models.DecimalField(max_digits=20,decimal_places = 2)
     status=models.CharField(max_length=20,choices=TRANSACTION_STATUS,default='UNTREATED')
     schedule_status=models.CharField(max_length=20,choices=LOAN_SCHEDULE_STATUS,default='UNSCHEDULED')
-  
+
 
     # class Meta(DateObjectsModels.Meta):
     #     db_table="members_shop_credit_loans"
@@ -1973,9 +1980,9 @@ class members_credit_sales_debt_recovery_after_temp(DateObjectsModels):
     loan_number=models.CharField(max_length=255,blank=True,null=True)
     amount_due=models.DecimalField(max_digits=20,decimal_places = 2)
     amount_paid=models.DecimalField(max_digits=20,decimal_places = 2)
-  
 
-   
+
+
 
 class members_credit_loans_Cash_Receipt(DateObjectsModels):
     member= models.ForeignKey(Members,on_delete=models.CASCADE,blank=True,null=True)
@@ -1983,7 +1990,7 @@ class members_credit_loans_Cash_Receipt(DateObjectsModels):
     amount=models.DecimalField(max_digits=20,decimal_places = 2)
     receipt=models.CharField(max_length=50)
     status=models.CharField(max_length=20,choices=TRANSACTION_STATUS,default='UNTREATED')
-  
+
 
     # class Meta(DateObjectsModels.Meta):
     #     db_table="members_credit_loans_Cash_Receipt"
@@ -1994,7 +2001,7 @@ class members_credit_loans_Cash_Receipt_Daily_Summary(DateObjectsModels):
     cash_book=models.CharField(max_length=50)
     day_end_code=models.CharField(max_length=50,blank=True,null=True)
     status=models.CharField(max_length=20,choices=TRANSACTION_STATUS,default='UNTREATED')
-  
+
 
     # class Meta(DateObjectsModels.Meta):
     #     db_table="members_credit_loans_Cash_Receipt"
@@ -2006,7 +2013,7 @@ class members_credit_loans_Cash_Receipt_Day_End_Transaction(DateObjectsModels):
     day_end_code=models.CharField(max_length=50)
     month_end_code=models.CharField(max_length=50,blank=True,null=True)
     status=models.CharField(max_length=20,choices=TRANSACTION_STATUS,default='UNTREATED')
-  
+
 
     # class Meta(DateObjectsModels.Meta):
     #     db_table="members_credit_loans_Cash_Receipt_Day_End_Transaction"
@@ -2016,7 +2023,7 @@ class members_credit_loans_Cash_Receipt_Day_End(DateObjectsModels):
     day_end_code=models.CharField(max_length=50)
     month_end_code=models.CharField(max_length=50,blank=True,null=True)
     status=models.CharField(max_length=20,choices=TRANSACTION_STATUS,default='UNTREATED')
-  
+
 
     # class Meta(DateObjectsModels.Meta):
     #     db_table="members_credit_loans_Cash_Receipt_Day_End_Transaction"
@@ -2029,7 +2036,7 @@ class members_credit_loans_Cash_Receipt_Month_End_Transaction(DateObjectsModels)
     month_end_code=models.CharField(max_length=50)
     year_end_code=models.CharField(max_length=50,blank=True,null=True)
     status=models.CharField(max_length=20,choices=TRANSACTION_STATUS,default='UNTREATED')
-  
+
 
     # class Meta(DateObjectsModels.Meta):
     #     db_table="members_credit_loans_Cash_Receipt_Month_End_Transaction"
@@ -2041,7 +2048,7 @@ class members_credit_loans_Cash_Receipt_Year_End_Transaction(DateObjectsModels):
     amount=models.DecimalField(max_digits=20,decimal_places = 2)
     year_end_code=models.CharField(max_length=50)
     status=models.CharField(max_length=20,choices=TRANSACTION_STATUS,default='UNTREATED')
-  
+
 
     # class Meta(DateObjectsModels.Meta):
     #     db_table="members_credit_loans_Cash_Receipt_Month_End_Transaction"
@@ -2056,11 +2063,11 @@ class MonthlyShopdeductionList(DateObjectsModels):
     amount=models.DecimalField(max_digits=20,decimal_places = 2,default=0)
     amount_deducted=models.DecimalField(max_digits=20,decimal_places = 2,default=0)
     balance=models.DecimalField(max_digits=20,decimal_places = 2,default=0)
-  
+
     salary_institution=models.ForeignKey(SalaryInstitution,on_delete=models.CASCADE)
     status= models.CharField(max_length=20,choices=TRANSACTION_STATUS,default='UNTREATED')
     processing_status= models.CharField(max_length=20,choices=PROCESSING_STATUS,default='UNPROCESSED')
-   
+
     # class Meta(DateObjectsModels.Meta):
     #     db_table="MonthlyShopdeductionList"
 
@@ -2072,7 +2079,7 @@ class MonthlyShopdeductionListGenerated(DateObjectsModels):
     balance=models.DecimalField(max_digits=20,decimal_places = 2)
     transaction_period=models.ForeignKey(TransactionPeriods,on_delete=models.CASCADE)
     status=models.CharField(max_length=20,choices=TRANSACTION_STATUS,default='UNTREATED')
-  
+
     salary_institution=models.ForeignKey(SalaryInstitution,on_delete=models.CASCADE)
     processing_status= models.CharField(max_length=20,choices=PROCESSING_STATUS,default='UNPROCESSED')
 
@@ -2083,7 +2090,7 @@ class MonthlyShopGroupGeneratedTransactions(DateObjectsModels):
     salary_institution=models.ForeignKey(SalaryInstitution,on_delete=models.CASCADE)
     transaction_period=models.ForeignKey(TransactionPeriods,on_delete=models.CASCADE)
     transaction=models.ForeignKey(TransactionTypes,on_delete=models.CASCADE)
-  
+
     transaction_status= models.CharField(max_length=20,choices=TRANSACTION_STATUS,default='UNTREATED')
 
     # class Meta(DateObjectsModels.Meta):
@@ -2097,11 +2104,11 @@ class MonthlyJointDeductionList(DateObjectsModels):
     amount=models.DecimalField(max_digits=20,decimal_places = 2,default=0)
     amount_deducted=models.DecimalField(max_digits=20,decimal_places = 2,default=0)
     balance=models.DecimalField(max_digits=20,decimal_places = 2,default=0)
-  
+
     salary_institution=models.ForeignKey(SalaryInstitution,on_delete=models.CASCADE)
     status= models.CharField(max_length=20,choices=TRANSACTION_STATUS,default='UNTREATED')
     processing_status= models.CharField(max_length=20,choices=PROCESSING_STATUS,default='UNPROCESSED')
-   
+
     # class Meta(DateObjectsModels.Meta):
     #     db_table="MonthlyJointDeductionList"
 
@@ -2114,7 +2121,7 @@ class MonthlyJointDeductionGeneratedTransactions(DateObjectsModels):
     salary_institution=models.ForeignKey(SalaryInstitution,on_delete=models.CASCADE)
     transaction_period=models.ForeignKey(TransactionPeriods,on_delete=models.CASCADE)
     transaction=models.CharField(max_length=255)
-  
+
     transaction_status= models.CharField(max_length=20,choices=TRANSACTION_STATUS,default='UNTREATED')
 
     # class Meta(DateObjectsModels.Meta):
@@ -2126,11 +2133,11 @@ class MonthlyJointDeductionGenerated(DateObjectsModels):
     amount=models.DecimalField(max_digits=20,decimal_places = 2,default=0)
     amount_deducted=models.DecimalField(max_digits=20,decimal_places = 2,default=0)
     balance=models.DecimalField(max_digits=20,decimal_places = 2,default=0)
-  
+
     salary_institution=models.ForeignKey(SalaryInstitution,on_delete=models.CASCADE)
     status= models.CharField(max_length=20,choices=TRANSACTION_STATUS,default='UNTREATED')
     processing_status= models.CharField(max_length=20,choices=PROCESSING_STATUS,default='UNPROCESSED')
-   
+
     # class Meta(DateObjectsModels.Meta):
     #     db_table="MonthlyJointDeductionGenerated"
 
@@ -2152,7 +2159,7 @@ class MonthlyOverdeductionsRefund(DateObjectsModels):
     over_deduction=models.ForeignKey(MonthlyJointDeductionGenerated,on_delete=models.CASCADE)
     channel=models.CharField(max_length=255)
     ref_number=models.CharField(max_length=255,blank=True,null=True)
-  
+
 
     # class Meta(DateObjectsModels.Meta):
         #     db_table="Monthly_Over_deductions_Refund"
@@ -2162,19 +2169,19 @@ class Members_Cash_Sales_Selected(DateObjectsModels):
     CHOICES=(
         ('MAIN','MAIN'),
         ('AUCTION','AUCTION')
-        )   
-    
+        )
+
     member=models.ForeignKey(Members,on_delete=models.CASCADE)
     product= models.ForeignKey(Stock,on_delete=models.CASCADE,blank=True,null=True)
     ticket=models.CharField(max_length=255)
     quantity=models.IntegerField(default=0)
     unit_selling_price=models.DecimalField(max_digits=20,decimal_places = 2)
     total=models.DecimalField(max_digits=20,decimal_places = 2)
-  
+
     status=models.CharField(max_length=20,choices=TRANSACTION_STATUS,default='UNTREATED')
     sources= models.CharField(default='MAIN',choices=CHOICES,max_length=15)
     submission_status= models.CharField(default='NOT SUBMITTED',choices=SUBMISSION_STATUS,max_length=15)
- 
+
 
     # class Meta(DateObjectsModels.Meta):
     #     db_table="Members_Cash_Sales_Selected"
@@ -2191,7 +2198,7 @@ class Customers(DateObjectsModels):
     active_ticket=models.CharField(max_length=255,blank=True, null=True)
     ticket_status=models.CharField(max_length=20,choices=TICKET_STATUS,default='OPEN')
     locked_status=models.CharField(max_length=20,choices=LOCK_STATUS,default='LOCKED')
-  
+
 
     # class Meta(DateObjectsModels.Meta):
     #     db_table="Customers"
@@ -2201,14 +2208,14 @@ class General_Cash_Sales_Selected(DateObjectsModels):
     CHOICES=(
         ('MAIN','MAIN'),
         ('AUCTION','AUCTION')
-        )    
+        )
     customer=models.ForeignKey(Customers,on_delete=models.CASCADE,blank=True,null=True)
     product= models.ForeignKey(Stock,on_delete=models.CASCADE,blank=True,null=True)
     ticket=models.CharField(max_length=255)
     quantity=models.IntegerField(default=0)
     unit_selling_price=models.DecimalField(max_digits=20,decimal_places = 2)
     total=models.DecimalField(max_digits=20,decimal_places = 2)
-  
+
     status=models.CharField(max_length=20,choices=TRANSACTION_STATUS,default='UNTREATED')
     sources= models.CharField(default='MAIN',choices=CHOICES,max_length=15)
 
@@ -2223,7 +2230,7 @@ class General_Cash_Sales_SelectedTemp(DateObjectsModels):
     quantity=models.IntegerField(default=0)
     unit_selling_price=models.DecimalField(max_digits=20,decimal_places = 2)
     total=models.DecimalField(max_digits=20,decimal_places = 2)
-  
+
     status=models.CharField(max_length=20,choices=TRANSACTION_STATUS,default='UNTREATED')
 
     # class Meta(DateObjectsModels.Meta):
@@ -2234,7 +2241,7 @@ class Daily_Sales(DateObjectsModels):
     CHOICES=(
         ('MAIN','MAIN'),
         ('AUCTION','AUCTION')
-        ) 
+        )
     ticket=models.CharField(max_length=255)
     name=models.CharField(max_length=255,default='Anonymous')
     phone_no=models.CharField(max_length=255,default='Anonymous')
@@ -2247,7 +2254,7 @@ class Daily_Sales(DateObjectsModels):
     total=models.DecimalField(max_digits=20,decimal_places = 2)
     status=models.CharField(max_length=20,choices=TRANSACTION_STATUS,default='UNTREATED')
     processing_status=models.CharField(max_length=30,choices=PROCESSING_STATUS,default='UNPROCESSED')
-  
+
     sources=models.CharField(max_length=20,choices=CHOICES,default='MAIN')
     quantity_returned=models.IntegerField(blank=False,null=False,default=0)
     date_returned = models.DateField(blank=True,null=True)
@@ -2263,7 +2270,7 @@ class Daily_Sales_Item_Return(DateObjectsModels):
     status=models.CharField(max_length=20,choices=TRANSACTION_STATUS,default="UNTREATED")
     processing_status=models.CharField(max_length=20,choices=PROCESSING_STATUS,default="UNPROCESSED")
     reasons=models.TextField(blank=False,null=False)
-   
+
     # class Meta(DateObjectsModels.Meta):
     #     db_table="Daily_Sales_Item_Return"
 
@@ -2276,7 +2283,7 @@ class Daily_Sales_Item_Return_Selection(DateObjectsModels):
     total=models.DecimalField(max_digits=20,decimal_places = 2)
     receipt=models.CharField(max_length=255,blank=True,null=True)
     status=models.CharField(max_length=20,choices=TRANSACTION_STATUS,default='UNTREATED')
-    
+
 
     # class Meta(DateObjectsModels.Meta):
     #     db_table="Daily_Sales_Item_Return_Selection"
@@ -2288,7 +2295,7 @@ class Daily_Sales_Item_Return_Summary(DateObjectsModels):
     current_amount=models.DecimalField(max_digits=20,decimal_places = 2)
     balance_amount=models.DecimalField(max_digits=20,decimal_places = 2)
     channel=models.CharField(max_length=20,choices=CHANNELS,default='CASH')
-   
+
     source_bank=models.ForeignKey(Banks,on_delete=models.CASCADE,blank=True,null=True)
     account_name=models.CharField(max_length=150,blank=True,null=True)
     other_details=models.CharField(max_length=255,blank=True,null=True)
@@ -2297,7 +2304,7 @@ class Daily_Sales_Item_Return_Summary(DateObjectsModels):
     submission_status=models.CharField(max_length=50,choices=SUBMISSION_STATUS,default='NOT SUBMITTED')
     status=models.CharField(max_length=20,choices=TRANSACTION_STATUS,default='UNTREATED')
     processing_status=models.CharField(max_length=20,choices=PROCESSING_STATUS,default='UNPROCESSED')
-  
+
 
     # class Meta(DateObjectsModels.Meta):
     #     db_table="Daily_Sales_Item_Return_Summary"
@@ -2308,8 +2315,8 @@ class Daily_Sales_Item_Return_Left_Over_Fund(DateObjectsModels):
     amount=models.DecimalField(max_digits=20,decimal_places = 2)
     status=models.CharField(max_length=20,choices=TRANSACTION_STATUS,default="UNTREATED")
     processing_status=models.CharField(max_length=20,choices=PROCESSING_STATUS,default="UNPROCESSED")
-  
-   
+
+
     # class Meta(DateObjectsModels.Meta):
     #     db_table="Daily_Sales_Item_Return_Left_Over_Fund"
 
@@ -2456,7 +2463,7 @@ class Daily_Cash_Deposit_Month_End_Transaction(DateObjectsModels):
     amount=models.DecimalField(max_digits=20,decimal_places = 2)
     month_end_code=models.CharField(max_length=50)
     year_end_code=models.CharField(max_length=50,blank=True,null=True)
-  
+
     status=models.CharField(max_length=20,choices=TRANSACTION_STATUS,default='UNTREATED')
 
     # class Meta(DateObjectsModels.Meta):
@@ -2476,7 +2483,7 @@ class Daily_Cash_Deposit_Year_End_Transaction(DateObjectsModels):
 class Suppliers(DateObjectsModels):
     prefix=models.CharField(max_length=255,blank=True,null=True)
     name=models.CharField(max_length=255)
-    
+
     # class Meta(DateObjectsModels.Meta):
     #     db_table="Suppliers"
 
@@ -2485,7 +2492,7 @@ class Suppliers_Branches(DateObjectsModels):
     supplier= models.ForeignKey(Suppliers,on_delete=models.CASCADE)
     address=models.TextField()
     phone=models.CharField(max_length=255)
-    
+
     # class Meta(DateObjectsModels.Meta):
     #     db_table="Suppliers_Branches"
 
@@ -2494,7 +2501,7 @@ class Suppliers_Reps(DateObjectsModels):
     suppliers= models.ForeignKey(Suppliers,on_delete=models.CASCADE)
     name=models.CharField(max_length=255)
     phone=models.CharField(max_length=255)
-   
+
     # class Meta(DateObjectsModels.Meta):
     #     db_table="Suppliers_Reps"
 
@@ -2515,7 +2522,7 @@ class Purchase_Header(DateObjectsModels):
     personnel=models.ForeignKey(Suppliers_Reps,on_delete=models.CASCADE,blank=True,null=True)
     status=models.CharField(max_length=20,choices=TRANSACTION_STATUS,default='UNTREATED')
     approval_status=models.CharField(max_length=30,choices=PROCESSING_STATUS,default='UNPROCESSED')
-   
+
 
     # class Meta(DateObjectsModels.Meta):
     #     db_table="Purchase_Header"
@@ -2528,8 +2535,8 @@ class Purchases_Temp(DateObjectsModels):
     cost_price =models.DecimalField(max_digits=20,decimal_places = 2,default=0)
     total_cost= models.DecimalField(max_digits=20,decimal_places = 2,default=0)
     selling_price =models.DecimalField(max_digits=20,decimal_places = 2,default=0)
-    
-    
+
+
 
     # class Meta(DateObjectsModels.Meta):
     #     db_table="Purchase_Temp"
@@ -2544,7 +2551,7 @@ class Purchases(DateObjectsModels):
     selling_price =models.DecimalField(max_digits=20,decimal_places = 2,default=0)
     cash_book=models.CharField(max_length=50,blank=True,null=True)
     status=models.CharField(max_length=20,choices=TRANSACTION_STATUS,default='UNTREATED')
-   
+
 
     # class Meta(DateObjectsModels.Meta):
     #     db_table="Purchases"
@@ -2555,7 +2562,7 @@ class Purchases_Day_End_Transaction(DateObjectsModels):
     cash_book=models.CharField(max_length=50)
     month_key=models.CharField(max_length=50,blank=True,null=True)
     status=models.CharField(max_length=20,choices=TRANSACTION_STATUS,default='UNTREATED')
-   
+
 
     # class Meta(DateObjectsModels.Meta):
     #     db_table="Purchases_Day_End_Transaction"
@@ -2566,7 +2573,7 @@ class Purchases_Month_End_Transaction(DateObjectsModels):
     month_key=models.CharField(max_length=50)
     year_key=models.CharField(max_length=50,blank=True,null=True)
     status=models.CharField(max_length=20,choices=TRANSACTION_STATUS,default='UNTREATED')
-   
+
 
     # class Meta(DateObjectsModels.Meta):
     #     db_table="Purchases_Month_End_Transaction"
@@ -2577,7 +2584,7 @@ class Purchases_Year_End_Transaction(DateObjectsModels):
     total_cost= models.DecimalField(max_digits=20,decimal_places = 2,default=0)
     year_key=models.CharField(max_length=50)
     status=models.CharField(max_length=20,choices=TRANSACTION_STATUS,default='UNTREATED')
-   
+
 
     # class Meta(DateObjectsModels.Meta):
     #     db_table="Purchases_Year_End_Transaction"
@@ -2632,7 +2639,7 @@ class Item_Write_Off_Day_End_Transactions(DateObjectsModels):
     status=models.CharField(max_length=20,choices=TRANSACTION_STATUS,default='UNTREATED')
     cash_book=models.CharField(max_length=50)
     month_key=models.CharField(max_length=50,blank=True,null=True)
-    
+
 
     # class Meta(DateObjectsModels.Meta):
     #     db_table="Daily_Item_Write_Off_Day_End_Transactions"
@@ -2654,7 +2661,7 @@ class Item_Write_Off_Year_End_Transactions(DateObjectsModels):
     amount=models.DecimalField(max_digits=20,decimal_places = 2)
     status=models.CharField(max_length=20,choices=TRANSACTION_STATUS,default='UNTREATED')
     year_key=models.CharField(max_length=50,blank=True,null=True)
-    
+
 
     # class Meta(DateObjectsModels.Meta):
     #     db_table="Item_Write_Off_Year_End_Transactions"
@@ -2703,7 +2710,7 @@ class Expenditures_Month_End_Summary(DateObjectsModels):
 class Expenditures_Year_End_Summary(DateObjectsModels):
     amount =models.DecimalField(max_digits=20,decimal_places = 2,default=0)
     status=models.CharField(default='UNTREATED',choices=TRANSACTION_STATUS,max_length=15)
-  
+
     year_end_code=models.CharField(max_length=20)
 
     # class Meta(DateObjectsModels.Meta):
@@ -2720,7 +2727,7 @@ class CooperativeShopLedger(DateObjectsModels):
     balance=models.DecimalField(max_digits=20,decimal_places = 2)
     receipt = models.CharField(max_length=20,blank=True, null=True)
     status= models.CharField(max_length=20,choices=TRANSACTION_STATUS,default='UNTREATED')
-    
+
     # class Meta(DateObjectsModels.Meta):
     #     db_table="Cooperative_Shop_Ledger"
 
@@ -2759,16 +2766,16 @@ class Cooperative_Shop_Cash_Deposit_Distributions(DateObjectsModels):
 
 class RentalMainCategories(DateObjectsModels):
     description=models.TextField()
-  
-    
+
+
     # class Meta(DateObjectsModels.Meta):
     #     db_table="RentalMainCategories"
 
 
 class RentalProducts(DateObjectsModels):
     description=models.TextField()
-  
-    
+
+
     # class Meta(DateObjectsModels.Meta):
     #     db_table="RentalSubCategories"
 
@@ -2777,8 +2784,8 @@ class RentalPriceSettings(DateObjectsModels):
     products=models.ForeignKey(RentalProducts,on_delete=models.CASCADE)
     amount=models.DecimalField(max_digits=20,decimal_places = 2)
     status = models.CharField(max_length=10,choices=MEMBERSHIP_STATUS,default='ACTIVE')
-  
-    
+
+
     # class Meta(DateObjectsModels.Meta):
     #     db_table="RentalPriceSettings"
 
@@ -2789,8 +2796,8 @@ class RentalBookingHeaders(DateObjectsModels):
     phone_no=models.CharField(max_length=11,blank=True,null=True)
     status = models.CharField(max_length=10,choices=TRANSACTION_STATUS,default='UNTREATED')
     processing_status=models.CharField(max_length=20,choices=PROCESSING_STATUS,default='UNPROCESSED')
-  
-    
+
+
     # class Meta(DateObjectsModels.Meta):
     #     db_table="RentalBookingHeaders"
 
@@ -2803,8 +2810,8 @@ class RentalBookingSelections(DateObjectsModels):
     start_time=models.CharField(max_length=30)
     stop_time=models.CharField(max_length=30)
     status = models.CharField(max_length=10,choices=TRANSACTION_STATUS,default='UNTREATED')
-  
-    
+
+
     # class Meta(DateObjectsModels.Meta):
     #     db_table="RentalBookingHeaders"
 
@@ -2817,8 +2824,8 @@ class RentalBookingSelectionsSummary(DateObjectsModels):
     amount_paid=models.DecimalField(max_digits=20,decimal_places=2,default=0)
     balance=models.DecimalField(max_digits=20,decimal_places=2,default=0)
     status = models.CharField(max_length=10,choices=TRANSACTION_STATUS,default='UNTREATED')
-  
-    
+
+
     # class Meta(DateObjectsModels.Meta):
     #     db_table="RentalBookingSelectionsSummary"
 
@@ -2828,8 +2835,8 @@ class RentalBookingSelectionsPayment(DateObjectsModels):
     amount=models.DecimalField(max_digits=20,decimal_places = 2)
     receipt=models.CharField(max_length=30,blank=True,null=True)
     status = models.CharField(max_length=10,choices=TRANSACTION_STATUS,default='UNTREATED')
-  
-    
+
+
     # class Meta(DateObjectsModels.Meta):
     #     db_table="RentalBookingSelectionsSummary"
 
@@ -2837,7 +2844,7 @@ class RentalBookingSelectionsPayment(DateObjectsModels):
 
 class TaskManager(DateObjectsModels):
     description=models.TextField()
-  
+
     # class Meta(DateObjectsModels.Meta):
     #     db_table="Task_Manager"
 
@@ -2848,15 +2855,15 @@ class ReportHeader(DateObjectsModels):
     line2=models.CharField(max_length=100)
     line3=models.CharField(max_length=100)
     line4=models.CharField(max_length=100)
-  
+
     # class Meta(DateObjectsModels.Meta):
     #     db_table="ReportHeader"
 
 class ReportFooter(DateObjectsModels):
     code=models.CharField(max_length=100)
     note=models.CharField(max_length=100)
-   
-  
+
+
     # class Meta(DateObjectsModels.Meta):
     #     db_table="ReportFooter"
 
@@ -2866,14 +2873,14 @@ class ReportFooter(DateObjectsModels):
 def create_user_profile(sender,instance,created,**kwargs):
     if created:
         if instance.user_type==1:
-            AdminMASTER.objects.create(admin=instance)       
+            AdminMASTER.objects.create(admin=instance)
         if instance.user_type==2:
             Staff.objects.create(admin=instance,middle_name="",address="",phone_number="080",gender=Gender.objects.first(),status="ACTIVE")
         if instance.user_type==3:
             Staff.objects.create(admin=instance,middle_name="",address="",phone_number="080",gender=Gender.objects.first(),status="ACTIVE")
             # Desk_Office_Tasks.objects.create(user=instance)
         if instance.user_type==4:
-             Staff.objects.create(admin=instance,middle_name="",address="",phone_number="080",gender=Gender.objects.first(),status="ACTIVE") 
+             Staff.objects.create(admin=instance,middle_name="",address="",phone_number="080",gender=Gender.objects.first(),status="ACTIVE")
         if instance.user_type==5:
             Members.objects.create(admin=instance,member_id="",date_joined="2020-01-01",
                                     middle_name="",phone_number="",
@@ -2886,9 +2893,9 @@ def create_user_profile(sender,instance,created,**kwargs):
                                     shares_status="PENDING",
                                     welfare_status="PENDING",
                                     date_joined_status="PENDING"
-                                    ) 
+                                    )
 
-         
+
     class Meta(DateObjectsModels.Meta):
         db_table="Create_User_Profile"
 
@@ -2903,9 +2910,9 @@ def save_user_profile(sender,instance,**kwargs):
         instance.staff.save()
         # instance.desk_office_tasks.save()
     if instance.user_type==4:
-        instance.staff.save() 
+        instance.staff.save()
     if instance.user_type==5:
-        instance.members.save() 
+        instance.members.save()
 
     class Meta(DateObjectsModels.Meta):
         db_table="Save_User_Profile"

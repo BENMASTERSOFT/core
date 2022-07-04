@@ -48,7 +48,7 @@ from . utils import render_to_pdf
 
 
 month_list =['JANUARY','FEBRUARY','MARCH','APRIL','MAY','JUNE','JULY','AUGUST','SEPTEMBER','OCTOBER','NOVEMBER','DECEMBER']
-		
+
 
 ############################################################
 ########## REPORT LAB IMPORT ##############################
@@ -123,7 +123,7 @@ def commodity_trending_product_Print(request,pk):
 			[''],
 			[''],
 			[''],
-			
+
 		],
 		colWidths= width-40,
 		rowHeights= heightList
@@ -258,7 +258,7 @@ def Loan_application_processing_confirmation(request,pk):
 	task_enabler_array=[]
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
-	
+
 	applicant=LoansRepaymentBase.objects.get(loan_number=pk)
 	context={
 	'task_array':task_array,
@@ -358,7 +358,7 @@ def Monthly_Deduction_Covering_Note(request):
 	if request.method == 'POST':
 		staff1_id = request.POST.get('staff1')
 		staff1 = Executives.objects.get(id=staff1_id)
-		
+
 
 		account = request.POST.get('account')
 		# account = CooperativeBankAccounts.objects.get(id=account_id)
@@ -383,12 +383,12 @@ def Monthly_Deduction_Covering_Note(request):
 		dtObj = datetime.datetime.strptime(transaction_date_id, date_format)
 		transaction_date=get_current_date(dtObj)
 		month = month_list[transaction_date.month-1]
-	
+
 		transaction_period = '{} {}'.format(month,transaction_date.year)
 
-		
+
 		return HttpResponseRedirect(reverse('Monthly_Deduction_Covering_Note_Print',args=(print_date,transaction_period,staff1.name,staff1.position.title,staff2.name,staff2.position.title,account)))
-	
+
 	form.fields['print_date'].initial = now
 	form.fields['transaction_date'].initial = now
 	context={
@@ -404,7 +404,7 @@ def Monthly_Deduction_Covering_Note(request):
 
 def Monthly_Deduction_Covering_Note_Print(request,print_date,transaction_period,staff1,position1,staff2,position2,account):
 	operator=request.user.username
-	
+
 
 	buf = io.BytesIO()
 
@@ -442,7 +442,7 @@ def Monthly_Deduction_Covering_Note_Print(request,print_date,transaction_period,
 			[deductionCoverDateTable(width,heightList[1],tdate)], #
 			[addressTable(width,heightList[2])],
 			[deductionOrderBodyTable(width,heightList[3],transaction_period)],
-		
+
 			[bankTable(width,heightList[4],account)],
 			[signatureTable(width,heightList[5],stafList)],
 			['']
@@ -506,7 +506,7 @@ def Membership_Front_Form_Print(request,pk):
 		height * 2 / 100,
 	]
 
-	
+
 	mainTable = Table([
 			[_membershipMainHeaderTitle()],#_registeredMembersMainHeaderTitle()
 			[_membershipGenHeaderTable(width, heightList[1])], #
@@ -569,7 +569,7 @@ def Membership_Deduction_Order_Form_Print(request,pk):
 		height * 2 / 100,
 	]
 
-	
+
 	mainTable = Table([
 			[_membershipDeductionOrderHeader()],#
 			[_membershipDeductionOrderGetLogoTable(width,heightList[1])],#
@@ -1687,10 +1687,10 @@ def membership_form_sales_issue(request,pk):
 		processed_by=CustomUser.objects.get(id=request.user.id)
 
 		date_paid=request.POST.get("date_paid")
-	
+
 
 		payment_reference=request.POST.get('payment_reference')
-		
+
 		if payment_reference=="":
 			messages.error(request,'Payment Reference is required')
 			return HttpResponseRedirect(reverse('membership_form_sales_issue',args=(pk,)))
@@ -1747,7 +1747,7 @@ def membership_form_sales_issue(request,pk):
 		applicant.transaction_status='TREATED'
 		applicant.save()
 
-		
+
 		return HttpResponseRedirect(reverse('membership_form_sales_validation', args=(receipt,)))
 
 
@@ -2068,7 +2068,7 @@ def membership_registration_register(request,pk):
 			messages.error(request,"Sorry The Member ID Found is already in use")
 			return HttpResponseRedirect(reverse('membership_registration_register',args=(pk,)))
 
-		
+
 
 		# try:
 		user = CustomUser.objects.create_user(username=username,password=password,email=email,last_name=last_name,first_name=first_name,user_type=int(user_type))
@@ -3911,7 +3911,7 @@ def loan_request_criteria_Loading(request,pk):
 
 		savings = get_standing_orders(applicant.member_id)
 		total_savings=get_standing_orders_sum(applicant.member_id)
-	
+
 	else:
 		messages.error(request,'No Available Savings Standing Order')
 		return HttpResponseRedirect(reverse('loan_request_order',args=(applicant.member_id,)))
@@ -4028,7 +4028,7 @@ def loan_request_preview(request,pk):
 	apex_loan=TransactionSources.objects.get(title='LOAN')
 
 	applicant=LoanRequest.objects.get(id=pk)
-	
+
 	net_pay=applicant.net_pay
 	loan_type=applicant.loan.name
 	loan_amount=applicant.loan_amount
@@ -4100,7 +4100,7 @@ def loan_request_preview(request,pk):
 			messages.error(request,'Loan Based Saving Rating not set')
 			return HttpResponseRedirect(reverse('loan_request_criteria_Loading', args=(pk,)))
 
-		
+
 		loan_saving_relationship=float(int(loan_based_saving_rating)/100) * float(expected_total_loans)
 
 		if savings_made_waver:
@@ -4110,7 +4110,7 @@ def loan_request_preview(request,pk):
 				loan_savings_status=True
 
 		if not loan_savings_status:
-		
+
 			messages.error(request,'You do not Have Expected Savings for this Loan Amount, You have  ' + str(savings_saved) + ' while you need ' + str(loan_saving_relationship) )
 			return HttpResponseRedirect(reverse('loan_request_criteria_Loading', args=(pk,)))
 	else:
@@ -4604,8 +4604,8 @@ def loan_request_approved_list_form_sales(request,pk):
 
 
 	if request.method == "POST":
-		
-		
+
+
 
 		if receipt_type == "MANUAL":
 			receipt_no_id = request.POST.get('receipt')
@@ -4643,7 +4643,7 @@ def loan_request_approved_list_form_sales(request,pk):
 			receipt_obj.save()
 
 		return HttpResponseRedirect(reverse('loan_application_request_form_issuanace_confirmation',args=(receipt,)))
-		
+
 
 	context={
 
@@ -4672,9 +4672,9 @@ def loan_application_request_form_issuanace_confirmation(request,pk):
 		task_enabler_array.append(item.title)
 
 
-	
+
 	form=loan_request_order_form(request.POST or None)
-	
+
 	applicant = LoanFormIssuance.objects.get(receipt=pk)
 
 	if request.method == 'POST':
@@ -5085,7 +5085,7 @@ def loan_application_preview(request,pk, return_pk):
 
 	apex_loan=TransactionSources.objects.get(title='LOAN')
 	maximum_loan = apex_loan.maximum_amount
-	
+
 	loan_type=applicant.applicant.applicant.loan.name
 	loan_amount=applicant.loan_amount
 	duration = applicant.duration
@@ -5170,7 +5170,7 @@ def loan_application_preview(request,pk, return_pk):
 
 
 		savings_saved=0
-		
+
 		if StandingOrderAccounts.objects.filter(transaction__transaction=loan_based_saving.savings,transaction__member=applicant.applicant.applicant.member).exists():
 			account_id=StandingOrderAccounts.objects.get(transaction__transaction=loan_based_saving.savings,transaction__member=applicant.applicant.applicant.member)
 
@@ -5213,7 +5213,7 @@ def loan_application_preview(request,pk, return_pk):
 	else:
 		total_savings=savings_sum
 		standing_order_status=True
-	
+
 	total_loans=0
 	balance_total=0
 	loans_sum=LoansRepaymentBase.objects.filter(Q(balance__lt=0) & Q(member_id=applicant.applicant.applicant.member_id)).aggregate(total_amount=Sum('repayment'),total_balance=Sum('balance'))
@@ -5459,7 +5459,7 @@ def loan_application_preview(request,pk, return_pk):
 		waver=0
 		tag=0
 		Loan_Application_Posting(applicant,description,value,category,'UNTREATED',tag,waver)
-		
+
 
 		description="NEXT OF KIN"
 		value=nok_list
@@ -5546,10 +5546,10 @@ def loan_application_preview(request,pk, return_pk):
 
 		if StandingOrderAccounts.objects.filter(transaction__member=applicant.applicant.applicant.member,transaction__transaction=compulsory_saving.transaction).exists():
 			compulsory_saving_status = True
-	
-	maximum_loan_status = False		
+
+	maximum_loan_status = False
 	compound_loan =float(abs(balance_total)) + float(applicant.loan_amount)
-	
+
 	if float(compound_loan)<= float(maximum_loan):
 		maximum_loan_status =True
 
@@ -5792,7 +5792,7 @@ def loan_application_approved_process_preview(request,pk):
 	nok_address=applicant.nok_address
 
 	guarantors = LoanApplicationGuarnators.objects.filter(applicant=applicant)
-	
+
 	records=LoanApplicationSettings.objects.filter(applicant=applicant)
 
 	loan_type=applicant.applicant.applicant.loan.name
@@ -6092,10 +6092,10 @@ def loan_application_approved_process_preview(request,pk):
 				StandingOrderDeactivatedAccounts(transaction=queryset,status='UNTREATED',processed_by=processed_by.username,tdate=tdate).save()
 
 
-		
-	
+
+
 		return HttpResponseRedirect(reverse('Loan_application_processing_confirmation',args=(loan_number,)))
-	
+
 
 
 
@@ -10869,8 +10869,8 @@ def Individual_Capture(request):
 		approved_date=date(int(year),int(month_list.index(month))+1,1)
 		date_joined=date(int(year),int(month_list.index(month))+1,1)
 
-		
-		
+
+
 		item=MemberShipRequest(title=title,submission_status=submission_status,
 			transaction_status=transaction_status1,
 			first_name=first_name,last_name=last_name,
@@ -10884,19 +10884,19 @@ def Individual_Capture(request):
 			member_id=member_id,
 			month=month,
 			year=year,
-			
+
 			tdate=tdate,
 			approved_date=approved_date)
 		item.save()
 
-		if chk_dob:			
+		if chk_dob:
 			item.dob=dob
 			item.save()
 
 		if chk_fappt:
 			item.date_of_first_appointment=date_hired
 			item.save()
-		
+
 
 		applicant = item
 
@@ -10942,13 +10942,13 @@ def Individual_Capture(request):
 		user.members.dob=dob
 
 		user.members.date_joined_status=date_joined_status
-		
+
 		if chk_fappt:
 			user.members.date_of_first_appointment_status=date_of_first_appointment_status
-		
+
 		if chk_dob:
 			user.members.dob_status=dob_status
-		
+
 		user.save()
 
 		transactions=TransactionTypes.objects.filter(~Q(source__title="LOAN") & ~Q(source__title='GENERAL') & ~Q(code='701'))
@@ -11746,7 +11746,7 @@ def Uploading_Existing_Loans_validate(request,pk):
 
 			interest_rate=record.interest_rate
 			interest_deduction=record.interest_deduction
-			
+
 			interest = (float(interest_rate)/100) * float(loan_amount)
 			admin_charge_rate=record.admin_charge_rate
 			admin_charge = (float(admin_charge_rate/100))* float(loan_amount)
@@ -11785,7 +11785,7 @@ def Uploading_Existing_Loans_validate(request,pk):
 				if LoansRepaymentBase.objects.filter(member=member,transaction=transaction,status=status1).exists():
 					pass
 				else:
-					
+
 
 					Loans_Repayment_Base(
 						member,
@@ -14295,15 +14295,14 @@ def Xmas_Savings_Shortlisting_list_Load(request):
 
 	if request.method == 'POST' and 'btn-fetch' in request.POST:
 		transaction_date=request.POST.get('transaction_date')
-		batch_id=request.POST.get("batch")
-		batch=Commodity_Period_Batch.objects.get(id=batch_id)
+		batch=request.POST.get("batch")
+
 
 		date_format = '%Y-%m-%d'
 		dtObj = datetime.datetime.strptime(transaction_date, date_format)
 		transaction_date=get_current_date(dtObj)
 
-		year = transaction_date.year
-		batch= str(year) + " " + batch.title
+		
 
 		members=MembersAccountsDomain.objects.filter(transaction=transaction)
 		for member in members:
@@ -16531,7 +16530,7 @@ def commodity_loan_trending_products_details(request,pk):
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
 	'records':records,
-	
+
 	}
 	return render(request,'deskofficer_templates/commodity_loan_trending_products_details.html',context)
 
@@ -16543,7 +16542,7 @@ def trending_products_member_Search(request):
 		task_array.append(task.task.title)
 
 
-	
+
 	task_enabler=TransactionEnabler.objects.filter(status="YES")
 	task_enabler_array=[]
 	for item in task_enabler:
@@ -16581,7 +16580,7 @@ def trending_products_member_list_load(request):
 			return HttpResponseRedirect(reverse('trending_products_member_Search'))
 
 		members=searchMembers(form['title'].value(),status)
-		
+
 		context={
 		'members':members,
 		'title':title,

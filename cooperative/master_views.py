@@ -3246,6 +3246,36 @@ def Manage_Product_Code(request):
     }
     return render(request,'master_templates/Manage_Product_Code.html',context)
 
+def Xmas_Savings_Transaction_Period(request):
+    task_array=[]
+    if not request.user.user_type == '1':
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
+
+    form=Xmas_Savings_Transaction_Period_form(request.POST or None)
+    records=XmasSavingsTransactionPeriod.objects.all()
+
+    if request.method ==  'POST':
+        batch = request.POST.get('batch')
+
+        if XmasSavingsTransactionPeriod.objects.filter(batch=batch).exists():
+            messages.error(request, "Record Already Exists")
+            return HttpResponseRedirect(reverse('Xmas_Savings_Transaction_Period'))
+
+        else:
+            XmasSavingsTransactionPeriod(batch=batch,status='INACTIVE').save()
+        return HttpResponseRedirect(reverse('Xmas_Savings_Transaction_Period'))
+    context={
+    'task_array':task_array,
+    'records':records,
+    'form':form,
+    }
+    return render(request,'master_templates/Xmas_Savings_Transaction_Period.html',context)
+
+def Xmas_Savings_Transaction_Period_Delete(request,pk):
+    XmasSavingsTransactionPeriod.objects.filter(id=pk).delete()
+    return HttpResponseRedirect(reverse('Xmas_Savings_Transaction_Period'))
 
 
 def Xmas_Savings_Default_Transfer_Account(request):
