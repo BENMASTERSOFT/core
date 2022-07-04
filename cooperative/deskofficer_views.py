@@ -258,7 +258,7 @@ def Loan_application_processing_confirmation(request,pk):
 	task_enabler_array=[]
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
-	
+
 	default_password="NO"
 	if Staff.objects.filter(admin=request.user,default_password='YES'):
 		default_password="YES"
@@ -841,7 +841,7 @@ def Useraccount_manager(request):
 			return HttpResponseRedirect(reverse('Useraccount_manager'))
 
 		Staff.objects.filter(admin=request.user).update(default_password='NO')
-		
+
 		user.set_password(password1)
 		user.save()
 		return HttpResponseRedirect(reverse('Useraccount_manager'))
@@ -2403,6 +2403,42 @@ def Members_Account_Creation_preview(request,pk):
 	}
 	return render(request,'deskofficer_templates/Members_Account_Creation_process.html',context)
 
+def Members_Account_Creation_process_Delete(request,pk):
+	member=MembersAccountsDomain.objects.get(id=pk)
+	MembersAccountsDomain.objects.filter(id=pk).delete()
+	return HttpResponseRedirect(reverse('Members_Account_Creation_preview',args=(member.member.pk,)))
+
+def Members_Account_Creation_preview_all(request):
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	task_array=[]
+	for task in tasks:
+		task_array.append(task.task.title)
+
+
+
+	task_enabler=TransactionEnabler.objects.filter(status="YES")
+	task_enabler_array=[]
+	for item in task_enabler:
+		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
+
+
+	transactions=TransactionTypes.objects.filter(~Q(source__title="LOAN") & ~Q(source__title='GENERAL')  & ~Q(code='701'))
+	records=MembersAccountsDomain.objects.all().order_by('id')
+
+	context={
+	# 'member':member,
+	'transactions':transactions,
+	'task_array':task_array,
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
+	'records':records,
+	}
+	return render(request,'deskofficer_templates/Members_Account_Creation_process_all.html',context)
 
 def Members_Account_Creation_process(request,pk):
 
@@ -15304,7 +15340,7 @@ def Xmas_Savings_Shortlisting_list_Load(request):
 		dtObj = datetime.datetime.strptime(transaction_date, date_format)
 		transaction_date=get_current_date(dtObj)
 
-		
+
 
 		members=MembersAccountsDomain.objects.filter(transaction=transaction)
 		for member in members:

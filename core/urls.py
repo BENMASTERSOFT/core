@@ -514,7 +514,9 @@ urlpatterns = [
 
     path('Members_Account_Creation_Search/', deskofficer_views.Members_Account_Creation_Search,name='Members_Account_Creation_Search'),
     path('Members_Account_Creation_list_load/', deskofficer_views.Members_Account_Creation_list_load,name='Members_Account_Creation_list_load'),
+    path('Members_Account_Creation_preview_all/', deskofficer_views.Members_Account_Creation_preview_all,name='Members_Account_Creation_preview_all'),
     path('Members_Account_Creation_preview/<str:pk>/', deskofficer_views.Members_Account_Creation_preview,name='Members_Account_Creation_preview'),
+    path('Members_Account_Creation_process_Delete/<str:pk>/', deskofficer_views.Members_Account_Creation_process_Delete,name='Members_Account_Creation_process_Delete'),
     path('Members_Account_Creation_process/<str:pk>/', deskofficer_views.Members_Account_Creation_process,name='Members_Account_Creation_process'),
 
     path('Members_Multiple_Account_Creation_preview/', deskofficer_views.Members_Multiple_Account_Creation_preview,name='Members_Multiple_Account_Creation_preview'),
