@@ -12727,14 +12727,24 @@ def Uploading_Existing_Loans_Preview(request,pk):
 	form=Uploading_Existing_Loans_form(request.POST or None)
 	member=Members.objects.get(id=pk)
 	records=LoansUploaded.objects.filter(member=member)
-
+	transaction_status='UNTREATED'
+	status="ACTIVE"
+	
+	if TransactionPeriods.objects.filter(status=status).exists():
+		transaction_period=TransactionPeriods.objects.get(status=status)
+		transaction_period= transaction_period.transaction_period
+	else:
+		transaction_period= now
 
 	if request.method=="POST":
-		transaction_status='UNTREATED'
-		status="ACTIVE"
-		transaction_period=TransactionPeriods.objects.get(status=status)
+		date_format = '%Y-%m-%d'
+		transaction_period_id=request.POST.get('transaction_period')
+		dtObj = datetime.datetime.strptime(transaction_period_id, date_format)
+		transaction_period=get_current_date(dtObj)
 
-		formatted_date = defaultfilters.date(transaction_period.transaction_period, "SHORT_DATE_FORMAT")
+
+
+		formatted_date = defaultfilters.date(transaction_period, "SHORT_DATE_FORMAT")
 		particulars="Balance Brought Forward as at " + str(formatted_date)
 
 		transaction_id=request.POST.get('transactions')
@@ -12828,7 +12838,10 @@ def Uploading_Existing_Loans_Preview(request,pk):
 			messages.success(request,"Record Addedd Successfully")
 
 		return HttpResponseRedirect(reverse('Uploading_Existing_Loans_Preview',args=(pk,)))
+	
+
 	form.fields['start_date'].initial=now
+	form.fields['transaction_period'].initial=get_current_date(transaction_period)
 
 
 	context={
@@ -12855,8 +12868,8 @@ def Uploading_Existing_Loans_validate(request,pk):
 	schedule_status='SCHEDULED'
 	loan_lock='YES'
 
-	transaction_period=TransactionPeriods.objects.get(status=status1)
-	formatted_date = defaultfilters.date(transaction_period.transaction_period, "SHORT_DATE_FORMAT")
+	# transaction_period=TransactionPeriods.objects.get(status=status1)
+	
 
 
 	now = datetime.datetime.now()
@@ -12879,6 +12892,9 @@ def Uploading_Existing_Loans_validate(request,pk):
 		loan_records=LoansUploaded.objects.filter(member=member,status=status)
 
 		for record in loan_records:
+			transaction_period=record.transaction_period
+			formatted_date = defaultfilters.date(transaction_period, "SHORT_DATE_FORMAT")
+
 			transaction_id=record.transaction_id
 			transaction=TransactionTypes.objects.get(id=transaction_id)
 
@@ -12927,7 +12943,7 @@ def Uploading_Existing_Loans_validate(request,pk):
 							debit,
 							credit,
 							balance,
-							transaction_period.transaction_period,
+							transaction_period,
 							status1,
 							tdate,
 							)
@@ -13055,13 +13071,19 @@ def Uploading_Existing_Additional_Loans_Preview(request,pk):
 
 	records=LoansUploaded.objects.filter(member=member)
 
+	transaction_status='UNTREATED'
+	status="ACTIVE"
+
+	if TransactionPeriods.objects.filter(status=status).exists():
+		transaction_period=TransactionPeriods.objects.get(status=status)
+		transaction_period=transaction_period.transaction_period
+	else:
+		transaction_period=now
+
 
 	if request.method=="POST":
-		transaction_status='UNTREATED'
-		status="ACTIVE"
-		transaction_period=TransactionPeriods.objects.get(status=status)
-
-		formatted_date = defaultfilters.date(transaction_period.transaction_period, "SHORT_DATE_FORMAT")
+		
+		formatted_date = defaultfilters.date(transaction_period, "SHORT_DATE_FORMAT")
 		particulars="Balance Brought Forward as at " + str(formatted_date)
 
 		transaction_id=request.POST.get('transactions')
@@ -13156,6 +13178,7 @@ def Uploading_Existing_Additional_Loans_Preview(request,pk):
 
 		return HttpResponseRedirect(reverse('Uploading_Existing_Additional_Loans_Preview',args=(pk,)))
 	form.fields['start_date'].initial=now
+	form.fields['transaction_period'].initial=get_current_date(transaction_period)
 
 
 	context={
@@ -13181,9 +13204,8 @@ def Uploading_Existing_Additional_Loans_validate(request,pk):
 	schedule_status='SCHEDULED'
 
 
-	transaction_period=TransactionPeriods.objects.get(status=status1)
-	formatted_date = defaultfilters.date(transaction_period.transaction_period, "SHORT_DATE_FORMAT")
-
+	
+	
 	now = datetime.datetime.now()
 	tdate=get_current_date(now)
 
@@ -13204,6 +13226,9 @@ def Uploading_Existing_Additional_Loans_validate(request,pk):
 		loan_records=LoansUploaded.objects.filter(member=member,status=status)
 
 		for record in loan_records:
+			transaction_period=record.transaction_period
+			formatted_date = defaultfilters.date(transaction_period, "SHORT_DATE_FORMAT")
+
 			transaction_id=record.transaction_id
 			transaction=TransactionTypes.objects.get(id=transaction_id)
 
@@ -13250,7 +13275,7 @@ def Uploading_Existing_Additional_Loans_validate(request,pk):
 								debit,
 								credit,
 								balance,
-								transaction_period.transaction_period,
+								transaction_period,
 								status1,
 								tdate,
 								)

@@ -1958,6 +1958,11 @@ class Uploading_Existing_Loans_form(forms.Form):
                            required=True, disabled=False,
                            widget=DateInput(attrs={'class': 'form-control'}),
                            error_messages={'required': "This field is required."})
+  transaction_period = forms.DateField(label='Transaction Period', label_suffix=" : ",
+                             required=True, disabled=False,
+                             widget=DateInput(attrs={'class': 'form-control'}),
+                             error_messages={'required': "This field is required."})
+
 
 
 class Updating_Gross_Pay_Preview_form(forms.Form):
