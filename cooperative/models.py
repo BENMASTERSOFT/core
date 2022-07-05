@@ -369,7 +369,7 @@ class DateObjectsModels(models.Model):
     id=models.AutoField(primary_key=True)
     created_at=models.DateTimeField(auto_now_add=True)
     updated_at=models.DateTimeField(auto_now=True)
-    processed_by=models.CharField(max_length=100,blank=True,null=True)
+    processed_by=models.CharField(max_length=100,default='ADMIN')
     tdate = models.DateField(default=timezone.now)
 
     objects=models.Manager()
@@ -1059,7 +1059,8 @@ class SavingsUploaded(DateObjectsModels):
     particulars=models.CharField(max_length=255)
     balance=models.DecimalField(max_digits=20,decimal_places = 2,default=0)
     schedule_amount=models.DecimalField(max_digits=20,decimal_places = 2,default=0)
-    transaction_period=models.ForeignKey(TransactionPeriods,on_delete=models.CASCADE)
+
+    transaction_period=models.DateField(blank=True,null=True)
     status= models.CharField(max_length=20,choices=TRANSACTION_STATUS,default='UNTREATED')
 
 
@@ -1082,7 +1083,7 @@ class LoansUploaded(DateObjectsModels):
 
     start_date=models.DateField(blank=True,null=True)
     stop_date=models.DateField(blank=True,null=True)
-    transaction_period=models.ForeignKey(TransactionPeriods,on_delete=models.CASCADE)
+    transaction_period=models.DateField(blank=True,null=True)
     status= models.CharField(max_length=20,choices=TRANSACTION_STATUS,default='UNTREATED')
 
 
@@ -1265,7 +1266,7 @@ class LoansCleared(DateObjectsModels):
 
 class MonthlyDeductionList(DateObjectsModels):
     member=models.ForeignKey(Members,on_delete=models.CASCADE)
-    transaction_period=models.ForeignKey(TransactionPeriods,on_delete=models.CASCADE)
+    transaction_period=models.DateField(blank=True,null=True)
     transaction=models.ForeignKey(TransactionTypes,on_delete=models.CASCADE)
     account_number=models.CharField(max_length=255,blank=True,null=True)
     amount=models.DecimalField(max_digits=20,decimal_places = 2,default=0)
@@ -1285,7 +1286,7 @@ class MonthlyDeductionList(DateObjectsModels):
 
 class MonthlyGeneratedTransactions(DateObjectsModels):
     transaction=models.ForeignKey(TransactionTypes,on_delete=models.CASCADE)
-    transaction_period=models.ForeignKey(TransactionPeriods,on_delete=models.CASCADE)
+    transaction_period=models.DateField(blank=True,null=True)
     salary_institution=models.ForeignKey(SalaryInstitution,on_delete=models.CASCADE)
     transaction_status= models.CharField(max_length=20,choices=TRANSACTION_STATUS,default='UNTREATED')
 
@@ -1295,7 +1296,7 @@ class MonthlyGeneratedTransactions(DateObjectsModels):
 
 
 class MonthlyDeductionListGenerated(DateObjectsModels):
-    transaction_period=models.ForeignKey(TransactionPeriods,on_delete=models.CASCADE)
+    transaction_period=models.DateField(blank=True,null=True)
     member=models.ForeignKey(Members,on_delete=models.CASCADE)
     amount=models.DecimalField(max_digits=20,decimal_places = 2,default=0)
     amount_deducted=models.DecimalField(max_digits=20,decimal_places = 2,default=0)
@@ -1312,7 +1313,7 @@ class MonthlyDeductionListGenerated(DateObjectsModels):
 
 class MonthlyGroupGeneratedTransactions(DateObjectsModels):
     salary_institution=models.ForeignKey(SalaryInstitution,on_delete=models.CASCADE)
-    transaction_period=models.ForeignKey(TransactionPeriods,on_delete=models.CASCADE)
+    transaction_period=models.DateField(blank=True,null=True)
     transaction_status= models.CharField(max_length=20,choices=TRANSACTION_STATUS,default='UNTREATED')
 
     # class Meta(DateObjectsModels.Meta):
@@ -1321,7 +1322,7 @@ class MonthlyGroupGeneratedTransactions(DateObjectsModels):
 
 class MonthlyDeductionGenerationHeading(DateObjectsModels):
      salary_institution=models.ForeignKey(SalaryInstitution,on_delete=models.CASCADE)
-     transaction_period=models.ForeignKey(TransactionPeriods,on_delete=models.CASCADE)
+     transaction_period=models.DateField(blank=True,null=True)
      heading=models.CharField(max_length=255)
      status= models.CharField(max_length=20,choices=TRANSACTION_STATUS,default='UNTREATED')
 
@@ -1331,7 +1332,7 @@ class MonthlyDeductionGenerationHeading(DateObjectsModels):
 
 class AccountDeductions(DateObjectsModels):
     salary_institution=models.ForeignKey(SalaryInstitution,on_delete=models.CASCADE)
-    transaction_period=models.ForeignKey(TransactionPeriods,on_delete=models.CASCADE)
+    transaction_period=models.DateField(blank=True,null=True)
     ippis_no=models.CharField(max_length=255)
     name=models.CharField(max_length=255)
     amount=models.DecimalField(max_digits=20,decimal_places = 2,default=0)
@@ -1814,7 +1815,7 @@ class FailedLoanPenaltyRecords(DateObjectsModels):
     amount=models.DecimalField(max_digits=20,decimal_places = 2,default=0)
     penalty=models.DecimalField(max_digits=20,decimal_places = 2,default=0)
     rate=models.DecimalField(max_digits=20,decimal_places = 2,default=0)
-    transaction_period=models.ForeignKey(TransactionPeriods,on_delete=models.CASCADE)
+    transaction_period=models.DateField(blank=True,null=True)
     loan_date=models.DateField()
     due_date=models.DateField()
     penalty_date=models.DateField()
@@ -2057,7 +2058,7 @@ class members_credit_loans_Cash_Receipt_Year_End_Transaction(DateObjectsModels):
 
 class MonthlyShopdeductionList(DateObjectsModels):
     member=models.ForeignKey(Members,on_delete=models.CASCADE)
-    transaction_period=models.ForeignKey(TransactionPeriods,on_delete=models.CASCADE)
+    transaction_period=models.DateField(blank=True,null=True)
     transaction=models.ForeignKey(TransactionTypes,on_delete=models.CASCADE)
     account_number=models.CharField(max_length=255,blank=True,null=True)
     amount=models.DecimalField(max_digits=20,decimal_places = 2,default=0)
@@ -2077,7 +2078,7 @@ class MonthlyShopdeductionListGenerated(DateObjectsModels):
     coop_amount=models.DecimalField(max_digits=20,decimal_places = 2)
     account_amount=models.DecimalField(max_digits=20,decimal_places = 2)
     balance=models.DecimalField(max_digits=20,decimal_places = 2)
-    transaction_period=models.ForeignKey(TransactionPeriods,on_delete=models.CASCADE)
+    transaction_period=models.DateField(blank=True,null=True)
     status=models.CharField(max_length=20,choices=TRANSACTION_STATUS,default='UNTREATED')
 
     salary_institution=models.ForeignKey(SalaryInstitution,on_delete=models.CASCADE)
@@ -2088,7 +2089,7 @@ class MonthlyShopdeductionListGenerated(DateObjectsModels):
 
 class MonthlyShopGroupGeneratedTransactions(DateObjectsModels):
     salary_institution=models.ForeignKey(SalaryInstitution,on_delete=models.CASCADE)
-    transaction_period=models.ForeignKey(TransactionPeriods,on_delete=models.CASCADE)
+    transaction_period=models.DateField(blank=True,null=True)
     transaction=models.ForeignKey(TransactionTypes,on_delete=models.CASCADE)
 
     transaction_status= models.CharField(max_length=20,choices=TRANSACTION_STATUS,default='UNTREATED')
@@ -2099,7 +2100,7 @@ class MonthlyShopGroupGeneratedTransactions(DateObjectsModels):
 
 class MonthlyJointDeductionList(DateObjectsModels):
     member=models.ForeignKey(Members,on_delete=models.CASCADE)
-    transaction_period=models.ForeignKey(TransactionPeriods,on_delete=models.CASCADE)
+    transaction_period=models.DateField(blank=True,null=True)
     transaction=models.CharField(max_length=255,blank=True,null=True)
     amount=models.DecimalField(max_digits=20,decimal_places = 2,default=0)
     amount_deducted=models.DecimalField(max_digits=20,decimal_places = 2,default=0)
@@ -2119,7 +2120,7 @@ class MonthlyJointDeductionList(DateObjectsModels):
 
 class MonthlyJointDeductionGeneratedTransactions(DateObjectsModels):
     salary_institution=models.ForeignKey(SalaryInstitution,on_delete=models.CASCADE)
-    transaction_period=models.ForeignKey(TransactionPeriods,on_delete=models.CASCADE)
+    transaction_period=models.DateField(blank=True,null=True)
     transaction=models.CharField(max_length=255)
 
     transaction_status= models.CharField(max_length=20,choices=TRANSACTION_STATUS,default='UNTREATED')
@@ -2129,7 +2130,7 @@ class MonthlyJointDeductionGeneratedTransactions(DateObjectsModels):
 
 class MonthlyJointDeductionGenerated(DateObjectsModels):
     member=models.ForeignKey(Members,on_delete=models.CASCADE)
-    transaction_period=models.ForeignKey(TransactionPeriods,on_delete=models.CASCADE)
+    transaction_period=models.DateField(blank=True,null=True)
     amount=models.DecimalField(max_digits=20,decimal_places = 2,default=0)
     amount_deducted=models.DecimalField(max_digits=20,decimal_places = 2,default=0)
     balance=models.DecimalField(max_digits=20,decimal_places = 2,default=0)
@@ -2145,7 +2146,7 @@ class MonthlyJointDeductionGenerated(DateObjectsModels):
 
 class NonMemberAccountDeductions(DateObjectsModels):
     salary_institution=models.ForeignKey(SalaryInstitution,on_delete=models.CASCADE)
-    transaction_period=models.ForeignKey(TransactionPeriods,on_delete=models.CASCADE)
+    transaction_period=models.DateField(blank=True,null=True)
     ippis_no=models.CharField(max_length=255)
     name=models.CharField(max_length=255)
     amount=models.DecimalField(max_digits=20,decimal_places = 2,default=0)

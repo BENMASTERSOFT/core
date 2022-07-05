@@ -519,6 +519,8 @@ urlpatterns = [
     path('Members_Account_Creation_process_Delete/<str:pk>/', deskofficer_views.Members_Account_Creation_process_Delete,name='Members_Account_Creation_process_Delete'),
     path('Members_Account_Creation_process/<str:pk>/', deskofficer_views.Members_Account_Creation_process,name='Members_Account_Creation_process'),
 
+    path('Members_Account_Creation_preview_remove_duplicate/', deskofficer_views.Members_Account_Creation_preview_remove_duplicate,name='Members_Account_Creation_preview_remove_duplicate'),
+    
     path('Members_Multiple_Account_Creation_preview/', deskofficer_views.Members_Multiple_Account_Creation_preview,name='Members_Multiple_Account_Creation_preview'),
     path('Members_Multiple_Account_Creation_process/', deskofficer_views.Members_Multiple_Account_Creation_process,name='Members_Multiple_Account_Creation_process'),
 
@@ -773,7 +775,18 @@ urlpatterns = [
     path('Uploading_Existing_Savings_Preview/<str:pk>/', deskofficer_views.Uploading_Existing_Savings_Preview,name='Uploading_Existing_Savings_Preview'),
     path('Uploading_Existing_Savings_validate/<str:pk>/', deskofficer_views.Uploading_Existing_Savings_validate,name='Uploading_Existing_Savings_validate'),
     path('Uploading_Existing_Savings_delete/<str:pk>/<str:return_pk>/', deskofficer_views.Uploading_Existing_Savings_delete,name='Uploading_Existing_Savings_delete'),
+    
 
+    path('Uploading_Existing_Savings_All_List_load/', deskofficer_views.Uploading_Existing_Savings_All_List_load,name='Uploading_Existing_Savings_All_List_load'),
+    path('Uploading_Existing_Savings_Preview_All/<str:pk>/', deskofficer_views.Uploading_Existing_Savings_Preview_All,name='Uploading_Existing_Savings_Preview_All'),
+    path('Uploading_Existing_Savings_delete_All/<str:pk>/<str:return_pk>/', deskofficer_views.Uploading_Existing_Savings_delete_All,name='Uploading_Existing_Savings_delete_All'),
+    path('Uploading_Existing_Savings_Discard_All/<str:pk>/', deskofficer_views.Uploading_Existing_Savings_Discard_All,name='Uploading_Existing_Savings_Discard_All'),
+
+    path('Uploading_Existing_Savings_Done_Transaction_Date_Update/', deskofficer_views.Uploading_Existing_Savings_Done_Transaction_Date_Update,name='Uploading_Existing_Savings_Done_Transaction_Date_Update'),
+    
+
+    path('Uploading_Existing_Savings_Done_List_load/', deskofficer_views.Uploading_Existing_Savings_Done_List_load,name='Uploading_Existing_Savings_Done_List_load'),
+    path('Uploading_Existing_Savings_Done_View_Details/<str:pk>/', deskofficer_views.Uploading_Existing_Savings_Done_View_Details,name='Uploading_Existing_Savings_Done_View_Details'),
 
     path('Cash_Deposit_Welfare_Search/', deskofficer_views.Cash_Deposit_Welfare_Search,name='Cash_Deposit_Welfare_Search'),
     path('Cash_Deposit_Welfare_list_load/', deskofficer_views.Cash_Deposit_Welfare_list_load,name='Cash_Deposit_Welfare_list_load'),
@@ -918,6 +931,8 @@ urlpatterns = [
     path('membership_termination_approved_list_processing_list_load/', deskofficer_views.membership_termination_approved_list_processing_list_load,name='membership_termination_approved_list_processing_list_load'),
     path('membership_termination_approved_list_processing_preview/<str:pk>/', deskofficer_views.membership_termination_approved_list_processing_preview,name='membership_termination_approved_list_processing_preview'),
     path('membership_termination_approved_transaction_details/<str:pk>/', deskofficer_views.membership_termination_approved_transaction_details,name='membership_termination_approved_transaction_details'),
+   
+    path('membership_dashboard_transaction_details/<str:pk>/', deskofficer_views.membership_dashboard_transaction_details,name='membership_dashboard_transaction_details'),
 
 
     path('membership_termination_search/', deskofficer_views.membership_termination_search,name='membership_termination_search'),

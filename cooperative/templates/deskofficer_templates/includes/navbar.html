@@ -809,13 +809,22 @@
                                 <a href="javascript:;">
                                     <span class="nav-label">Savings</span><i class="fa fa-angle-left arrow"></i></a>
                                 <ul class="nav-3-level collapse">
+                                   
                                     <li>
-                                        <a href="{% url 'Uploading_Existing_Savings_Search' %}">Savings Upload</a>
+                                        <a href="{% url 'Uploading_Existing_Savings_Search' %}">Selected Savings Upload</a>
                                     </li>
                                     <li>
                                         <a href="{% url 'Uploading_Existing_Savings_Additional_search' %}">Additional Savings</a>
+                                    </li> 
+                                    <li>
+                                        <a href="{% url 'Uploading_Existing_Savings_Done_List_load' %}">Savings Already Uploaded</a>
                                     </li>
-
+                                    <li>
+                                        <a href="{% url 'Uploading_Existing_Savings_All_List_load' %}">Revert Uploaded Savings</a>
+                                    </li>
+                                    <li>
+                                        <a href="{% url 'Uploading_Existing_Savings_Done_Transaction_Date_Update' %}">Update Transaction Period</a>
+                                    </li>
                                 </ul>
                             </li>
 

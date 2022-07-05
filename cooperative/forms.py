@@ -1881,6 +1881,17 @@ class Uploading_Existing_Savings_form(forms.Form):
                               decimal_places=2, required=False,
                               disabled = False,
                               error_messages={'required': "Please Enter Amount"})
+   transaction_period = forms.DateField(label='Transaction Period', label_suffix=" : ",
+                             required=True, disabled=False,
+                             widget=DateInput(attrs={'class': 'form-control'}),
+                             error_messages={'required': "This field is required."})
+
+
+   tdate = forms.DateField(label='Transaction Date', label_suffix=" : ",
+                             required=True, disabled=False,
+                             widget=DateInput(attrs={'class': 'form-control'}),
+                             error_messages={'required': "This field is required."})
+
 
 
 class Uploading_Existing_Savings_Verification_Update_form(forms.Form):

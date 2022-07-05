@@ -3,35 +3,33 @@
 
 {% block content %}
             <div class="page-content fade-in-up">
-               
-             <div class="row">
-                    <div class="col-xl-12">
+                <div class="row">
+                    <div class="col-xl-10">
                         <div class="ibox">
                             <div class="ibox-head">
-                                <div class="ibox-title">AVAILABLE ACCOUNTS | <a href="{% url 'Members_Account_Creation_preview_remove_duplicate' %}">Remove All Duplicates</a> </div>
+                                <div class="ibox-title">Uploaded Savings | {{member.get_full_name}}</div>
                             </div>
                             <div class="ibox-body">
                                 <table class="table">
                                     <thead>
                                         <tr>
                                             <th>#</th>
-                                            <th>Member ID</th>
-                                            <th>Name</th>
-                                            <th>Transactions</th>
+                                            <th>Account Name</th>
                                             <th>Account Number</th>
-
+                                            <th>Balance B/F</th>
+                                            <th>Standing Order</th>
+                                          
                                         </tr>
                                     </thead>
                                     <tbody>
                                     {% for record in records %}
                                         <tr>
                                             <td>{{forloop.counter}}</td>
-                                            <td>{{record.member.get_member_Id}}</td>
-                                            <td>{{record.member.get_full_name}}</td>
-                                            <td>{{record.transaction.name}}</td>
-                                            <td>{{record.account_number}}</td>
-                                            
-
+                                            <td>{{record.transaction.transaction.name}}</td>
+                                            <td>{{record.transaction.account_number}}</td>
+                                            <td>{{record.balance}}</td>
+                                            <td>{{record.schedule_amount}}</td>
+                                         
                                         </tr>
                                     {% endfor %}
                                     </tbody>
@@ -39,12 +37,13 @@
                             </div>
                         </div>
                     </div>
-
+                  
                 </div>
+             
+           
             </div>
   <div class="sidenav-backdrop backdrop"></div>
     <div class="preloader-backdrop">
         <div class="page-preloader">Loading</div>
     </div>
-    {% include 'cooperative/includes/emptyspace.html' %}
 {% endblock %}

@@ -2408,6 +2408,16 @@ def Members_Account_Creation_process_Delete(request,pk):
 	MembersAccountsDomain.objects.filter(id=pk).delete()
 	return HttpResponseRedirect(reverse('Members_Account_Creation_preview',args=(member.member.pk,)))
 
+
+def Members_Account_Creation_preview_remove_duplicate(request):
+	records=MembersAccountsDomain.objects.filter().order_by('account_number').values_list('account_number').distinct()
+
+	for record in records:
+		for tag in MembersAccountsDomain.objects.filter(account_number=record[0])[1:]:
+			tag.delete()
+	return HttpResponseRedirect(reverse('Members_Account_Creation_preview_all'))
+
+
 def Members_Account_Creation_preview_all(request):
 	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
 	task_array=[]
@@ -2425,10 +2435,11 @@ def Members_Account_Creation_preview_all(request):
 	if Staff.objects.filter(admin=request.user,default_password='YES'):
 		default_password="YES"
 
-
+		
+	
 
 	transactions=TransactionTypes.objects.filter(~Q(source__title="LOAN") & ~Q(source__title='GENERAL')  & ~Q(code='701'))
-	records=MembersAccountsDomain.objects.all().order_by('id')
+	records=MembersAccountsDomain.objects.all().order_by('member_id')
 
 	context={
 	# 'member':member,
@@ -11888,7 +11899,6 @@ def Individual_Capture_Delete(request,pk):
 ############################################################################
 ################# UPLOADING EXISTING SAVINGS ###############################
 ############################################################################
-
 def Uploading_Existing_Savings_Search(request):
 	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
 	task_array=[]
@@ -11973,24 +11983,31 @@ def Uploading_Existing_Savings_Preview(request,pk):
 	member_id=Members.objects.get(id=pk)
 
 	records=SavingsUploaded.objects.filter(transaction__member=member_id)
+	transaction_status='UNTREATED'
+	status="ACTIVE"
+
+	if TransactionPeriods.objects.filter(status=status).exists():
+		transaction_period=TransactionPeriods.objects.get(status=status)
+		transaction_period=transaction_period.transaction_period
+	else:
+		transaction_period=now
+
 
 	if request.method=="POST":
-		transaction_status='UNTREATED'
-		status="ACTIVE"
+		date_format = '%Y-%m-%d'
+		transaction_period_id=request.POST.get('transaction_period')
+		dtObj = datetime.datetime.strptime(transaction_period_id, date_format)
+		transaction_period=get_current_date(dtObj)
 
-		if TransactionPeriods.objects.filter(status=status).exists():
-			transaction_period=TransactionPeriods.objects.get(status=status)
-		else:
-			messages.error(request,"Please setup transaction Period")
-			return HttpResponseRedirect(reverse('Uploading_Existing_Savings_Preview',args=(pk,)))
-
+			
 		balance=request.POST.get('balance')
 		schedule_amount=request.POST.get('schedule_amount')
 		processed_by=CustomUser.objects.get(id=request.user.id)
 
 		transaction_id=request.POST.get('transactions')
 		transaction=TransactionTypes.objects.get(id=transaction_id)
-		formatted_date = defaultfilters.date(transaction_period.transaction_period, "SHORT_DATE_FORMAT")
+		
+		formatted_date = defaultfilters.date(transaction_period, "SHORT_DATE_FORMAT")
 		particulars="Balance Brought Forward as at " + str(formatted_date)
 
 		if float(balance)<=0:
@@ -12019,7 +12036,8 @@ def Uploading_Existing_Savings_Preview(request,pk):
 
 		return HttpResponseRedirect(reverse('Uploading_Existing_Savings_Preview',args=(pk,)))
 
-
+	t_period= get_current_date(transaction_period)
+	form.fields['transaction_period'].initial = t_period
 	context={
 	'member':member_id,
 	'form':form,
@@ -12052,7 +12070,7 @@ def Uploading_Existing_Savings_validate(request,pk):
 	status='UNTREATED'
 
 	status1='ACTIVE'
-	transaction_period=TransactionPeriods.objects.get(status=status1)
+	# transaction_period=TransactionPeriods.objects.get(status=status1)
 
 	member=Members.objects.get(id=pk)
 	tdate=get_current_date(now)
@@ -12066,6 +12084,7 @@ def Uploading_Existing_Savings_validate(request,pk):
 			transaction_id=item.transaction.transaction_id
 			transaction=TransactionTypes.objects.get(id=transaction_id)
 
+			transaction_period=item.transaction_period
 			particulars=item.particulars
 			debit=0
 			credit=item.balance
@@ -12092,7 +12111,7 @@ def Uploading_Existing_Savings_validate(request,pk):
 							debit,
 							credit,
 							balance,
-							transaction_period.transaction_period,
+							transaction_period,
 							status1,
 							tdate
 							)
@@ -12129,6 +12148,242 @@ def Uploading_Existing_Savings_delete(request,pk,return_pk):
 	record.delete()
 	return HttpResponseRedirect(reverse('Uploading_Existing_Savings_Preview',args=(return_pk,)))
 
+
+
+
+
+
+
+def Uploading_Existing_Savings_All_List_load(request):
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	task_array=[]
+	for task in tasks:
+		task_array.append(task.task.title)
+
+	task_enabler=TransactionEnabler.objects.filter(status="YES")
+	task_enabler_array=[]
+	for item in task_enabler:
+		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
+
+	title="LIST OF MEMBERS"
+
+	savings_status='PENDING'
+
+
+	records=Members.objects.all()
+
+	context={
+	'records':records,
+	'title':title,
+	'task_array':task_array,
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
+	}
+	return render(request,'deskofficer_templates/Uploading_Existing_Savings_All_List_load.html',context)
+
+
+def Uploading_Existing_Savings_Preview_All(request,pk):
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	task_array=[]
+	for task in tasks:
+		task_array.append(task.task.title)
+
+	task_enabler=TransactionEnabler.objects.filter(status="YES")
+	task_enabler_array=[]
+	for item in task_enabler:
+		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
+	form=Uploading_Existing_Savings_form(request.POST or None)
+	member_id=Members.objects.get(id=pk)
+
+	records=SavingsUploaded.objects.filter(transaction__member=member_id)
+	
+
+	transaction_status='UNTREATED'
+	status="ACTIVE"
+
+
+
+	context={
+	'member':member_id,
+	
+	'records':records,
+	'return_pk':pk,
+	'task_array':task_array,
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
+	}
+	return render(request,'deskofficer_templates/Uploading_Existing_Savings_Preview_All.html',context)
+
+
+
+
+def Uploading_Existing_Savings_delete_All(request,pk,return_pk):
+	record=SavingsUploaded.objects.get(id=pk)
+	record.delete()
+	member=Members.objects.get(id=return_pk)
+	if SavingsUploaded.objects.filter(transaction__member=member).exists():
+		pass
+	else:
+		member.savings_status='PENDING'
+		member.save()
+	return HttpResponseRedirect(reverse('Uploading_Existing_Savings_Preview_All',args=(return_pk,)))
+
+
+def Uploading_Existing_Savings_Discard_All(request,pk):
+	member=Members.objects.get(id=pk)
+	SavingsUploaded.objects.filter(transaction__member=member).delete()
+	member.savings_status='PENDING'
+	member.save()
+	return HttpResponseRedirect(reverse('Uploading_Existing_Savings_Preview_All',args=(pk,)))
+
+
+
+def Uploading_Existing_Savings_Done_Transaction_Date_Update(request):
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	task_array=[]
+	for task in tasks:
+		task_array.append(task.task.title)
+
+	task_enabler=TransactionEnabler.objects.filter(status="YES")
+	task_enabler_array=[]
+	for item in task_enabler:
+		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
+	status="ACTIVE"
+
+	if TransactionPeriods.objects.filter(status=status).exists():
+		transaction_period=TransactionPeriods.objects.get(status=status)
+		transaction_period=transaction_period.transaction_period
+	else:
+		transaction_period=now
+
+
+	form=Uploading_Existing_Savings_form(request.POST or None)
+
+	records=SavingsUploaded.objects.all()
+	if request.method == 'POST':
+		tdate_status=request.POST.get('t-date')
+		
+		date_format = '%Y-%m-%d'
+		
+
+		transaction_period_id=request.POST.get('transaction_period')
+		dtObj = datetime.datetime.strptime(transaction_period_id, date_format)
+		transaction_period=get_current_date(dtObj)
+		
+		if tdate_status:
+			tdate_id=request.POST.get('tdate')
+			dtObj = datetime.datetime.strptime(tdate_id, date_format)
+			tdate=get_current_date(dtObj)
+
+			SavingsUploaded.objects.all().update(tdate=tdate,transaction_period=transaction_period)
+		
+			particulars = f"Balance Brought Forward as at {transaction_period}"
+			for record in records:
+				PersonalLedger.objects.filter(account_number=record.transaction.account_number).update(transaction_period=transaction_period,tdate=tdate,particulars=particulars)
+		
+
+		else:
+
+			SavingsUploaded.objects.all().update(transaction_period=transaction_period)
+		
+
+			particulars = f"Balance Brought Forward as at {transaction_period}"
+			for record in records:
+				PersonalLedger.objects.filter(account_number=record.transaction.account_number).update(transaction_period=transaction_period,particulars=particulars)
+			
+
+		return HttpResponseRedirect(reverse('Uploading_Existing_Savings_Done_Transaction_Date_Update'))
+	form.fields['transaction_period'].initial = get_current_date(transaction_period)
+	form.fields['tdate'].initial = get_current_date(now)
+	context={
+	'records':records,
+	'form':form,
+	'task_array':task_array,
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
+	}
+	return render(request,'deskofficer_templates/Uploading_Existing_Savings_Done_Transaction_Date_Update.html',context)
+
+
+
+def Uploading_Existing_Savings_Done_List_load(request):
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	task_array=[]
+	for task in tasks:
+		task_array.append(task.task.title)
+
+	task_enabler=TransactionEnabler.objects.filter(status="YES")
+	task_enabler_array=[]
+	for item in task_enabler:
+		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
+
+
+	title="LIST OF MEMBERS"
+
+	savings_status='UPLOADED'
+
+
+	records=Members.objects.filter(savings_status=savings_status)
+
+	context={
+	'records':records,
+	'title':title,
+	'task_array':task_array,
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
+	}
+	return render(request,'deskofficer_templates/Uploading_Existing_Savings_Done_List_load.html',context)
+
+
+def Uploading_Existing_Savings_Done_View_Details(request,pk):
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	task_array=[]
+	for task in tasks:
+		task_array.append(task.task.title)
+
+	task_enabler=TransactionEnabler.objects.filter(status="YES")
+	task_enabler_array=[]
+	for item in task_enabler:
+		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
+
+
+
+	member=Members.objects.get(id=pk)
+	records=SavingsUploaded.objects.filter(transaction__member=member)
+
+	context={
+	'records':records,
+	'member':member,
+	'task_array':task_array,
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
+	}
+	return render(request,'deskofficer_templates/Uploading_Existing_Savings_Done_View_Details.html',context)
 
 
 
@@ -12221,16 +12476,22 @@ def Uploading_Existing_Savings_Additional_Preview(request,pk):
 	form=Uploading_Existing_Savings_form(request.POST or None)
 	member=Members.objects.get(id=pk)
 	records=SavingsUploaded.objects.filter(transaction__member=member)
+	transaction_status='UNTREATED'
+	status="ACTIVE"
+
+	if TransactionPeriods.objects.filter(status=status).exists():
+		transaction_period=TransactionPeriods.objects.get(status=status)
+		transaction_period=transaction_period.transaction_period
+	else:
+		transaction_period=now
 
 	if request.method=="POST":
-		transaction_status='UNTREATED'
-		status="ACTIVE"
+		transaction_period_id=request.POST.get('transaction_period')
+		date_format = '%Y-%m-%d'
+		dtObj = datetime.datetime.strptime(transaction_period_id, date_format)
+		transaction_period=get_current_date(dtObj)
 
-		if TransactionPeriods.objects.filter(status=status).exists():
-			transaction_period=TransactionPeriods.objects.get(status=status)
-		else:
-			messages.error(request,"Please setup transaction Period")
-			return HttpResponseRedirect(reverse('Uploading_Existing_Savings_Additional_Preview',args=(pk,)))
+
 
 		balance=request.POST.get('balance')
 		schedule_amount=request.POST.get('schedule_amount')
@@ -12246,7 +12507,7 @@ def Uploading_Existing_Savings_Additional_Preview(request,pk):
 
 
 		# return HttpResponse(transaction.account_number)
-		formatted_date = defaultfilters.date(transaction_period.transaction_period, "SHORT_DATE_FORMAT")
+		formatted_date = defaultfilters.date(transaction_period, "SHORT_DATE_FORMAT")
 		particulars="Balance Brought Forward as at " + str(formatted_date)
 
 		if float(balance)<=0:
@@ -12276,7 +12537,8 @@ def Uploading_Existing_Savings_Additional_Preview(request,pk):
 
 		return HttpResponseRedirect(reverse('Uploading_Existing_Savings_Additional_Preview',args=(pk,)))
 
-
+	t_period = get_current_date(transaction_period)
+	form.fields['transaction_period'].initial=t_period
 	context={
 
 	'member':member,
@@ -12304,7 +12566,7 @@ def Uploading_Existing_Savings_Additional_validate(request,pk):
 	status='UNTREATED'
 
 	status1='ACTIVE'
-	transaction_period=TransactionPeriods.objects.get(status=status1)
+	# transaction_period=TransactionPeriods.objects.get(status=status1)
 
 
 	member=Members.objects.get(id=pk)
@@ -12314,6 +12576,7 @@ def Uploading_Existing_Savings_Additional_validate(request,pk):
 			transaction_id=item.transaction.transaction_id
 			transaction=TransactionTypes.objects.get(id=transaction_id)
 
+			transaction_period=item.transaction_period
 			particulars=item.particulars
 			debit=0
 			credit=item.balance
@@ -12344,7 +12607,7 @@ def Uploading_Existing_Savings_Additional_validate(request,pk):
 								debit,
 								credit,
 								float(balance)+float(ledger),
-								transaction_period.transaction_period,
+								transaction_period,
 								status1,
 								tdate)
 
@@ -12356,7 +12619,7 @@ def Uploading_Existing_Savings_Additional_validate(request,pk):
 								debit,
 								credit,
 								balance,
-								transaction_period.transaction_period,
+								transaction_period,
 								status1,
 								tdate)
 
@@ -16887,6 +17150,35 @@ def membership_termination_approved_transaction_details(request,pk):
 	'default_password':default_password,
 	}
 	return render(request,'deskofficer_templates/membership_termination_approved_transaction_details.html',context)
+
+
+def membership_dashboard_transaction_details(request,pk):
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	task_array=[]
+	for task in tasks:
+		task_array.append(task.task.title)
+
+
+
+	task_enabler=TransactionEnabler.objects.filter(status="YES")
+	task_enabler_array=[]
+	for item in task_enabler:
+		task_enabler_array.append(item.title)
+
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
+	records=Display_PersonalLedger_All_Records(pk)
+
+	context={
+	'records':records,
+	'task_array':task_array,
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
+	}
+	return render(request,'deskofficer_templates/membership_dashboard_transaction_details.html',context)
 
 
 
