@@ -7,7 +7,7 @@
                 <div class="row">
                    
 
-                    <div class="col-md-6">
+                    <div class="col-md-7">
                         <div class="ibox">
                             <div class="ibox-head">
                                 <div class="ibox-title">SAVINGS UPLOAD | {{member.get_full_name}} |  <input type="button" class="btn btn-secondary" value="Back" onclick="history.back()"/></div>
@@ -45,12 +45,23 @@
                                             {{form.balance}}
                                         </div>
                                     </div>
+                                  
+                                    <div class="form-group row">
+                                        <label class="col-sm-6 col-form-label"></label>
+                                        <div class="col-sm-6">
+                                            <label class="ui-checkbox" style="color: blue;">
+                                            <input type="checkbox" name='standing_order'>
+                                            <span class="input-span"></span>Standing Order Only</label>
+                                        </div>
+                                    </div>
+
                                     <div class="form-group row">
                                         <label class="col-sm-6 col-form-label">Standing Order Amount</label>
                                         <div class="col-sm-6">
                                             {{form.schedule_amount}}
                                         </div>
                                     </div>
+                                    
                                     <div class="form-group row">
                                         <label class="col-sm-6 col-form-label">Balance as At</label>
                                         <div class="col-sm-6">
@@ -60,7 +71,7 @@
                                     
                                     <div class="form-group row">
                                         <div class="col-sm-6 ml-sm-auto">
-                                            <button class="btn btn-info" type="submit">Submit</button>
+                                            <button class="btn btn-success" type="submit">Submit</button>
                                         </div>
                                     </div>
                                 </form>

@@ -10,7 +10,7 @@
     <div class="page-content fade-in-up">
         <div class="row">
 
-            <div class="col-xl-8">
+            <div class="col-xl-12">
 
                 <div class="ibox">
                     <div class="ibox-head">
@@ -28,6 +28,8 @@
                                     <th>Title</th>
                                     <th>Member ID</th>
                                     <th>Name</th>
+                                    <th>IPPIS NO</th>
+                                    <th>FILE NO</th>
                                     
                                    
                                     <th>Action</th>
@@ -39,6 +41,8 @@
                                      <th>Title</th>
                                      <th>Member ID</th>
                                     <th>Name</th>
+                                    <th>IPPIS NO</th>
+                                    <th>FILE NO</th>
                                   
                                    
                                     <th>Action</th>
@@ -51,6 +55,8 @@
                                     <td>{{member.title.title}}</td>
                                     <td>{{member.get_member_Id}}</td>
                                     <td>{{member.get_full_name}}</td>
+                                    <td>{{member.ippis_no}}</td>
+                                    <td>{{member.file_no}}</td>
                                     
                                     <td>
                                         <a href="{% url 'Norminal_Roll_Update' member.id %}" class="btn btn-primary">Update</a> 

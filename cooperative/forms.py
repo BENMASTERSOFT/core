@@ -24,6 +24,10 @@ MONTH_LIST =(('JANUARY','JANUARY'),
                ('NOVEMBER','NOVEMBER'),
                ('DECEMBER','DECEMBER'))
 
+TRANSACTION_RANGE =(
+      ("SELECTED DATE", "SELECTED DATE"),
+      ("ALL RECORDS", "ALL RECORDS"),
+   )
 FORM_PRINT_CHOICES =(
       ("NO", "NO"),
       ("YES", "YES"),
@@ -4096,6 +4100,15 @@ class Rental_Services_Selection_Preview_Final_Form(forms.Form):
                                 disabled = False, error_messages={'required': "Please Min Unit"})
 
 
+
+class Uploading_Existing_Savings_Done_List_Select_Period_Form(forms.Form):
+  transaction_range = forms.ChoiceField(label="Transaction Range", choices=TRANSACTION_RANGE,widget=forms.Select(attrs={"class":"form-control"}))
+  tdate = forms.DateField(label='Transaction Date', label_suffix=" : ",
+                                required=True, disabled=False,
+                                widget=DateInput(attrs={'class': 'form-control'}),
+                                error_messages={'required': "This field is required."})
+
+# CURRENT DATE
 
 # class Rental_Products_List_Load_Form(forms.Form):
 

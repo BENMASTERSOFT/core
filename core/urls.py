@@ -785,7 +785,8 @@ urlpatterns = [
     path('Uploading_Existing_Savings_Done_Transaction_Date_Update/', deskofficer_views.Uploading_Existing_Savings_Done_Transaction_Date_Update,name='Uploading_Existing_Savings_Done_Transaction_Date_Update'),
     
 
-    path('Uploading_Existing_Savings_Done_List_load/', deskofficer_views.Uploading_Existing_Savings_Done_List_load,name='Uploading_Existing_Savings_Done_List_load'),
+    path('Uploading_Existing_Savings_Done_List_Select_Period/', deskofficer_views.Uploading_Existing_Savings_Done_List_Select_Period,name='Uploading_Existing_Savings_Done_List_Select_Period'),
+    path('Uploading_Existing_Savings_Done_List_load/<str:transaction_period>/<str:tdate>/', deskofficer_views.Uploading_Existing_Savings_Done_List_load,name='Uploading_Existing_Savings_Done_List_load'),
     path('Uploading_Existing_Savings_Done_View_Details/<str:pk>/', deskofficer_views.Uploading_Existing_Savings_Done_View_Details,name='Uploading_Existing_Savings_Done_View_Details'),
 
     path('Cash_Deposit_Welfare_Search/', deskofficer_views.Cash_Deposit_Welfare_Search,name='Cash_Deposit_Welfare_Search'),

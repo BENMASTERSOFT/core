@@ -9,10 +9,10 @@
 
     <div class="page-content fade-in-up">
         <div class="row">    
-            <div class="col-xl-8">
+            <div class="col-xl-12">
                 <div class="ibox">
                     <div class="ibox-head">
-                        <div class="ibox-title">LIST OF MEMBERS | UPLOADED EXISTING SAVINGS |  <input type="button" class="btn btn-secondary" value="Back" onclick="history.back()"/></div>
+                        <div class="ibox-title">LIST OF MEMBERxS | UPLOADED EXISTING SAVINGS |  <input type="button" class="btn btn-secondary" value="Back" onclick="history.back()"/></div>
                     </div>
                  
                     <div class="ibox-body">
@@ -22,6 +22,8 @@
                                     <th>#</th>
                                     <th>Member ID</th>
                                     <th>Name</th>
+                                    <th>Date Posted</th>
+                                    <th>Treated By</th>
                                     <th>Action</th>
                                  
 
@@ -34,6 +36,8 @@
                                     <th>#</th>
                                      <th>Member ID</th>
                                     <th>Name</th>
+                                    <th>Date Posted</th>
+                                    <th>Treated By</th>
                                     <th>Action</th>
                                 
 
@@ -41,13 +45,15 @@
                                 </tr>
                             </tfoot>
                             <tbody>
-                            {% for record in records %}
+                            {% for record in member_array %}
                                 <tr>
                                     <td>{{forloop.counter}}</td>
-                                    <td>{{record.get_member_Id}}</td>
-                                     <td>{{record.get_full_name}}</td>
-                                    <td><a href="{% url 'Uploading_Existing_Savings_Done_View_Details' record.pk %}" class="btn btn-secondary">View</a></td>
-                                    
+                                    <td>{{record.0}}</td>
+                                     <td>{{record.1}} {{record.2}} {{record.3}}</td>
+                                     <td>{{record.6}}</td>
+                                     <td>{{record.5}}</td>
+                                    <td><a href="{% url 'Uploading_Existing_Savings_Done_View_Details' record.4 %} " class="btn btn-secondary">View</a></td>
+                                   
                                 </tr>
                             {% endfor %}
 

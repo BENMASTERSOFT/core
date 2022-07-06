@@ -7839,6 +7839,7 @@ def Monthly_Deduction_Salary_Institution_Load(request):
 
 	status="ACTIVE"
 	transaction_period=TransactionPeriods.objects.get(status=status)
+	transaction_period= get_current_date(transaction_period.transaction_period)
 	items=SalaryInstitution.objects.all()
 
 	context={
@@ -7874,6 +7875,7 @@ def Monthly_Individual_Transactions_Load(request,pk):
 
 	status='ACTIVE'
 	transaction_period=TransactionPeriods.objects.get(status=status)
+	transaction_period= get_current_date(transaction_period.transaction_period)
 
 	transactions1=TransactionTypes.objects.filter(source=source1)
 	transactions2=TransactionTypes.objects.filter(source=source2)
@@ -7928,6 +7930,7 @@ def Monthly_Savings_Contribution_preview(request,pk, salary_inst_key):
 
 
 	transaction_period=TransactionPeriods.objects.get(status=status)
+	transaction_period= get_current_date(transaction_period.transaction_period)
 
 	salary_institution=SalaryInstitution.objects.get(id=salary_inst_key)
 
@@ -7966,6 +7969,8 @@ def Monthly_Savings_Contribution_Generate(request,pk,salary_inst_key):
 	processing_status='UNPROCESSED'
 
 	transaction_period=TransactionPeriods.objects.get(status=status)
+	transaction_period= get_current_date(transaction_period.transaction_period)
+
 	salary_institution=SalaryInstitution.objects.get(id=salary_inst_key)
 	transaction=TransactionTypes.objects.get(id=pk)
 	members=StandingOrderAccounts.objects.filter(transaction__transaction=transaction,status=status,transaction__member__salary_institution=salary_institution)
@@ -8014,7 +8019,9 @@ def Monthly_loan_repayement_preview(request,pk, salary_inst_key):
 		default_password="YES"
 
 
-	transaction_period=TransactionPeriods.objects.get(status=status)
+	# transaction_period=TransactionPeriods.objects.get(status=status)
+	# transaction_period=transaction_period.transaction_period
+
 	salary_institution=SalaryInstitution.objects.get(id=salary_inst_key)
 	transaction=TransactionTypes.objects.get(id=pk)
 	members=LoansRepaymentBase.objects.filter(schedule_status=schedule_status,transaction=transaction,status=status,member__salary_institution=salary_institution).filter(Q(balance__lt=0))
@@ -8045,6 +8052,8 @@ def Monthly_loan_repayement_Generate(request,pk, salary_inst_key):
 	processing_status='UNPROCESSED'
 
 	transaction_period=TransactionPeriods.objects.get(status=status)
+	transaction_period= get_current_date(transaction_period.transaction_period)
+
 	salary_institution=SalaryInstitution.objects.get(id=salary_inst_key)
 	transaction=TransactionTypes.objects.get(id=pk)
 	members=LoansRepaymentBase.objects.filter(transaction=transaction,status=status,member__salary_institution=salary_institution).filter(Q(balance__lt=0))
@@ -8205,6 +8214,8 @@ def Monthly_Group_transaction_Institution_Load(request):
 
 	status='ACTIVE'
 	transaction_period=TransactionPeriods.objects.get(status=status)
+	transaction_period= get_current_date(transaction_period.transaction_period)
+
 	items=SalaryInstitution.objects.all()
 
 	records=MonthlyGroupGeneratedTransactions.objects.filter(transaction_period=transaction_period)
@@ -8240,6 +8251,8 @@ def Monthly_Group_Generated_Transaction(request,pk):
 
 	status="ACTIVE"
 	transaction_period=TransactionPeriods.objects.get(status=status)
+	transaction_period= get_current_date(transaction_period.transaction_period)
+
 	salary_institution=SalaryInstitution.objects.get(id=pk)
 
 	transaction_ready=False
@@ -8305,6 +8318,8 @@ def Monthly_Group_Transaction_preview(request,pk):
 	status="ACTIVE"
 
 	transaction_period=TransactionPeriods.objects.get(status=status)
+	transaction_period= get_current_date(transaction_period.transaction_period)
+
 	member=Members.objects.get(ippis_no=pk)
 
 	records=MonthlyDeductionList.objects.filter(transaction_period=transaction_period,member__ippis_no=pk)
@@ -8336,6 +8351,7 @@ def Monthly_Group_Transaction_generate(request,pk):
 	transaction_status="TREATED"
 
 	transaction_period=TransactionPeriods.objects.get(status=status)
+	transaction_period= get_current_date(transaction_period.transaction_period)
 
 	salary_institution=SalaryInstitution.objects.get(id=pk)
 	members=Members.objects.filter(status=status,salary_institution=salary_institution)
@@ -8381,6 +8397,7 @@ def Monthly_Group_Transaction_View(request,pk):
 	salary_institution=SalaryInstitution.objects.get(id=pk)
 
 	transaction_period=TransactionPeriods.objects.get(status=status)
+	transaction_period= get_current_date(transaction_period.transaction_period)
 
 	records=MonthlyDeductionListGenerated.objects.filter(salary_institution=salary_institution,transaction_period=transaction_period)
 
@@ -8412,6 +8429,8 @@ def Monthly_Deduction_Main_and_Shop_Merger_Institution_load(request):
 
 	status="ACTIVE"
 	transaction_period=TransactionPeriods.objects.get(status=status)
+	transaction_period= get_current_date(transaction_period.transaction_period)
+
 	items=SalaryInstitution.objects.all()
 
 	context={
@@ -8445,6 +8464,8 @@ def Monthly_Deduction_Main_and_Shop_Merger_Load(request,pk):
 	status="ACTIVE"
 	transaction_status='UNTREATED'
 	transaction_period=TransactionPeriods.objects.get(status=status)
+	transaction_period= get_current_date(transaction_period.transaction_period)
+
 	salary_institution=SalaryInstitution.objects.get(id=pk)
 
 	records=MonthlyJointDeductionGeneratedTransactions.objects.filter(transaction_period=transaction_period,salary_institution=salary_institution,transaction_status=transaction_status)
@@ -8491,6 +8512,8 @@ def Monthly_Deduction_Main_and_Shop_Merger_Load_Main_Preview(request,pk):
 	status="ACTIVE"
 
 	transaction_period=TransactionPeriods.objects.get(status=status)
+	transaction_period= get_current_date(transaction_period.transaction_period)
+
 	salary_institution=SalaryInstitution.objects.get(id=pk)
 	processed_by=CustomUser.objects.get(id=request.user.id)
 	tdate=get_current_date(now)
@@ -8554,6 +8577,8 @@ def Monthly_Deduction_Main_and_Shop_Merger_Load_Main_Preview_details(request,pk)
 	status="ACTIVE"
 
 	transaction_period=TransactionPeriods.objects.get(status=status)
+	transaction_period= get_current_date(transaction_period.transaction_period)
+
 	member=Members.objects.get(ippis_no=pk)
 
 	records=MonthlyDeductionList.objects.filter(transaction_period=transaction_period,member__ippis_no=pk)
@@ -8590,6 +8615,9 @@ def Monthly_Deduction_Main_and_Shop_Merger_Load_Shop_Preview(request,pk):
 
 	status="ACTIVE"
 	transaction_period=TransactionPeriods.objects.get(status=status)
+	transaction_period= get_current_date(transaction_period.transaction_period)
+
+
 	salary_institution=SalaryInstitution.objects.get(id=pk)
 	transaction_status='UNTREATED'
 	transaction_status1='TREATED'
@@ -8659,6 +8687,8 @@ def Monthly_Deduction_Main_and_Shop_Merger_Load_Shop_Preview_details(request,pk)
 	status="ACTIVE"
 
 	transaction_period=TransactionPeriods.objects.get(status=status)
+	transaction_period= get_current_date(transaction_period.transaction_period)
+
 	member=Members.objects.get(ippis_no=pk)
 
 	records=MonthlyShopdeductionList.objects.filter(transaction_period=transaction_period,member__ippis_no=pk)
@@ -8699,6 +8729,8 @@ def MonthlyJointDeductionsGenerate(request,pk):
 	transaction_status1='TREATED'
 	status="ACTIVE"
 	transaction_period=TransactionPeriods.objects.get(status=status)
+	transaction_period= get_current_date(transaction_period.transaction_period)
+
 	salary_institution=SalaryInstitution.objects.get(id=pk)
 
 	processed_by=CustomUser.objects.get(id=request.user.id)
@@ -8771,6 +8803,8 @@ def MonthlyJointDeductionsGenerateDetails(request,pk,member_pk):
 
 	status="ACTIVE"
 	transaction_period=TransactionPeriods.objects.get(status=status)
+	transaction_period= get_current_date(transaction_period.transaction_period)
+
 	salary_institution=SalaryInstitution.objects.get(id=pk)
 	member=Members.objects.get(ippis_no=member_pk)
 
@@ -8810,6 +8844,8 @@ def Monthly_Deduction_excel_Export_Institution_Load(request):
 
 	status="ACTIVE"
 	transaction_period=TransactionPeriods.objects.get(status=status)
+	transaction_period= get_current_date(transaction_period.transaction_period)
+
 	items=SalaryInstitution.objects.all()
 
 	context={
@@ -8842,6 +8878,8 @@ def Monthly_Deduction_excel_Export_load(request,pk):
 
 	status="ACTIVE"
 	transaction_period=TransactionPeriods.objects.get(status=status)
+	transaction_period= get_current_date(transaction_period.transaction_period)
+
 	records=MonthlyJointDeductionGenerated.objects.filter(salary_institution=salary_institution,transaction_period=transaction_period)
 
 	button_enabled=True
@@ -8882,6 +8920,7 @@ def Monthly_Deduction_excel_Export_Details(request,pk,member_pk):
 
 	status="ACTIVE"
 	transaction_period=TransactionPeriods.objects.get(status=status)
+	transaction_period= get_current_date(transaction_period.transaction_period)
 
 	record=MonthlyJointDeductionGenerated.objects.get(id=member_pk)
 
@@ -8918,6 +8957,7 @@ def export_monthly_deductions_xls(request,pk):
 
 	status="ACTIVE"
 	transaction_period=TransactionPeriods.objects.get(status=status)
+	transaction_period= get_current_date(transaction_period.transaction_period)
 
 	response = HttpResponse(content_type='application/ms-excel')
 	response['Content-Disposition'] = 'attachment; filename="deductions.xls"'
@@ -8999,6 +9039,8 @@ def Monthly_Account_deduction_Excel_import_Institution_Load(request):
 
 	status="ACTIVE"
 	transaction_period=TransactionPeriods.objects.get(status=status)
+	transaction_period= get_current_date(transaction_period.transaction_period)
+
 	items=SalaryInstitution.objects.all()
 
 	context={
@@ -9032,6 +9074,8 @@ def upload_AccountDeductionsResource(request,pk):
 
 	status="ACTIVE"
 	transaction_period=TransactionPeriods.objects.get(status=status)
+	transaction_period= get_current_date(transaction_period.transaction_period)
+
 	transaction_status='UNTREATED'
 	salary_institution=SalaryInstitution.objects.get(id=pk)
 
@@ -9153,7 +9197,8 @@ def Monthly_Account_deduction_Process(request,pk,trans_id):
 	transaction_status1='UNTREATED'
 
 	transaction_period=TransactionPeriods.objects.get(id=trans_id)
-
+	transaction_period=get_current_date(transaction_period.transaction_period)
+	
 	salary_institution=SalaryInstitution.objects.get(id=pk)
 
 	records=AccountDeductions.objects.filter(salary_institution=salary_institution,transaction_period=transaction_period)
@@ -9202,6 +9247,8 @@ def Monthly_Account_Main_and_Shop_Deductions_Separations(request):
 
 		transaction_period_id=request.POST.get('transaction_period')
 		transaction_period=TransactionPeriods.objects.get(id=transaction_period_id)
+		transaction_period=get_current_date(transaction_period.transaction_period)
+
 		status='UNTREATED'
 		status1='TREATED'
 		salary_institution_id=request.POST.get('salary_institution')
@@ -9286,6 +9333,8 @@ def Monthly_Account_Main_and_Shop_Deductions_Separations(request):
 
 		transaction_period_id=request.POST.get('transaction_period')
 		transaction_period=TransactionPeriods.objects.get(id=transaction_period_id)
+		transaction_period=get_current_date(transaction_period.transaction_period)
+
 
 		salary_institution_id=request.POST.get('salary_institution')
 		salary_institution=SalaryInstitution.objects.get(id=salary_institution_id)
@@ -9342,6 +9391,7 @@ def Monthly_Main_Account_deductions_Separations(request):
 
 		transaction_period_id=request.POST.get('transaction_period')
 		transaction_period=TransactionPeriods.objects.get(id=transaction_period_id)
+		transaction_period=get_current_date(transaction_period.transaction_period)
 
 		salary_institution_id=request.POST.get('salary_institution')
 		salary_institution=SalaryInstitution.objects.get(id=salary_institution_id)
@@ -9381,6 +9431,8 @@ def Monthly_Main_Account_deductions_Separations(request):
 	if request.method=="POST" and 'btnview' in request.POST:
 		transaction_period_id=request.POST.get('transaction_period')
 		transaction_period=TransactionPeriods.objects.get(id=transaction_period_id)
+		transaction_period=get_current_date(transaction_period.transaction_period)
+
 
 		salary_institution_id=request.POST.get('salary_institution')
 		salary_institution=SalaryInstitution.objects.get(id=salary_institution_id)
@@ -9429,6 +9481,7 @@ def monthly_wrongful_deduction_transaction_period_load(request):
 	if request.method=="POST":
 		transaction_period_id=request.POST.get('transaction_period')
 		transaction_period=TransactionPeriods.objects.get(id=transaction_period_id)
+		transaction_period=get_current_date(transaction_period.transaction_period)
 		records=NonMemberAccountDeductions.objects.filter(transaction_period=transaction_period)
 	context={
 
@@ -9463,7 +9516,14 @@ def Monthly_Unbalanced_transactions(request):
 	records=[]
 	if request.method=="POST":
 		transaction_period_id=request.POST.get('transaction_period')
+		date_format = '%Y-%m-%d'
+		dtObj = datetime.datetime.strptime(transaction_period_id, date_format)
+		transaction_period=get_current_date(dtObj)
+
+
 		transaction_period=TransactionPeriods.objects.get(id=transaction_period_id)
+		transaction_period=get_current_date(transaction_period.transaction_period)
+		
 		records=MonthlyJointDeductionGenerated.objects.filter(transaction_period=transaction_period,processing_status=processing_status).filter(~Q(balance=0))
 
 
@@ -11914,7 +11974,7 @@ def Uploading_Existing_Savings_Search(request):
 	if Staff.objects.filter(admin=request.user,default_password='YES'):
 		default_password="YES"
 
-	title="Search Members for Ledger Information"
+	title="Search Members for Savings Upload"
 	form = searchForm(request.POST or None)
 
 	return render(request,'deskofficer_templates/Uploading_Existing_Savings_Search.html',{'form':form,'title':title,'task_array':task_array,
@@ -11949,7 +12009,7 @@ def Uploading_Existing_Savings_List_load(request):
 			messages.info(request,"Please Enter a search data")
 			return HttpResponseRedirect(reverse('Uploading_Existing_Savings_Search'))
 
-		records=Members.objects.filter(Q(file_no__icontains=form['title'].value()) |Q(ippis_no__icontains=form['title'].value()) |Q(phone_number__icontains=form['title'].value()) | Q(admin__first_name__icontains=form['title'].value()) | Q(admin__last_name__icontains=form['title'].value()) | Q(middle_name__icontains=form['title'].value())).filter(status=status,savings_status=savings_status,member_category="OLD")
+		records=Members.objects.filter(Q(member_id__icontains=form['title'].value()) | Q(admin__first_name__icontains=form['title'].value()) | Q(admin__last_name__icontains=form['title'].value()) | Q(middle_name__icontains=form['title'].value())).filter(status=status,savings_status=savings_status,member_category="OLD")
 		if records.count() <= 0:
 			messages.info(request,"No Record Found")
 			return HttpResponseRedirect(reverse('Uploading_Existing_Savings_Search'))
@@ -11988,21 +12048,24 @@ def Uploading_Existing_Savings_Preview(request,pk):
 
 	if TransactionPeriods.objects.filter(status=status).exists():
 		transaction_period=TransactionPeriods.objects.get(status=status)
-		transaction_period=transaction_period.transaction_period
+		transaction_period= get_current_date(transaction_period.transaction_period)
+
 	else:
 		transaction_period=now
 
 
 	if request.method=="POST":
-		date_format = '%Y-%m-%d'
+		processed_by=CustomUser.objects.get(id=request.user.id)
 		transaction_period_id=request.POST.get('transaction_period')
+
+
+		date_format = '%Y-%m-%d'
 		dtObj = datetime.datetime.strptime(transaction_period_id, date_format)
 		transaction_period=get_current_date(dtObj)
 
 			
 		balance=request.POST.get('balance')
 		schedule_amount=request.POST.get('schedule_amount')
-		processed_by=CustomUser.objects.get(id=request.user.id)
 
 		transaction_id=request.POST.get('transactions')
 		transaction=TransactionTypes.objects.get(id=transaction_id)
@@ -12010,29 +12073,82 @@ def Uploading_Existing_Savings_Preview(request,pk):
 		formatted_date = defaultfilters.date(transaction_period, "SHORT_DATE_FORMAT")
 		particulars="Balance Brought Forward as at " + str(formatted_date)
 
-		if float(balance)<=0:
-			messages.error(request,"Balance Brought Forward must be greater than zero")
-			return HttpResponseRedirect(reverse('Uploading_Existing_Savings_Preview',args=(pk,)))
 
-		if MembersAccountsDomain.objects.filter(member=member_id,transaction=transaction).exists():
-			member=MembersAccountsDomain.objects.get(member=member_id,transaction=transaction)
+
+
+		standing_order=request.POST.get('standing_order')
+	
+		if standing_order:		
+			saving = transaction
+
+			account_number=[]
+			if MembersAccountsDomain.objects.filter(member=member_id,transaction=saving).exists():
+				account_number=MembersAccountsDomain.objects.get(member=member_id,transaction=saving)
+			else:
+				account_number=MembersAccountsDomain(member=member_id,transaction=saving,account_number=str(saving.code) + str(member_id.get_member_Id),status='ACTIVE',loan_lock='YES',processed_by=processed_by.username)
+				account_number.save()
+
+
+			if account_number:
+				amount=schedule_amount
+
+				minimum_amount = saving.minimum_amount
+
+				if float(amount)<=0:
+					messages.error(request,"Amount  cannot be zero(0)")
+					return HttpResponseRedirect(reverse('Uploading_Existing_Savings_Preview',args=(pk,)))
+
+
+				if float(amount)<float(minimum_amount):
+					messages.error(request,"Amount Specified is Less than " + str(minimum_amount) + " Minimum Amount allowed for this Transaction")
+					return HttpResponseRedirect(reverse('Uploading_Existing_Savings_Preview',args=(pk,)))
+
+				if StandingOrderAccounts.objects.filter(transaction=account_number).exists():
+					member=StandingOrderAccounts.objects.get(transaction=account_number)
+					if member.lock_status.title == 'OPEN':
+						member.amount=amount
+						processed_by=processed_by.username
+						member.save()
+					else:
+						messages.error(request,"This Transaction is Locked, Update not Allowed from this point")
+					return HttpResponseRedirect(reverse('Uploading_Existing_Savings_Preview',args=(pk,)))
+
+
+				member=StandingOrderAccounts(lock_status='LOCKED',status='ACTIVE',transaction=account_number,amount=amount,processed_by=processed_by.username)
+				member.save()
+				messages.success(request,"Standing order Created Successfully, To view it, Kindly visit the Membr's Dashboard")
+				return HttpResponseRedirect(reverse('Uploading_Existing_Savings_Preview',args=(pk,)))
+
+			else:
+				messages.error(request,"Account Number not Found")
+				return HttpResponseRedirect(reverse('Uploading_Existing_Savings_Preview',args=(pk,)))
+
 		else:
-			member=MembersAccountsDomain(member=member_id,transaction=transaction,account_number=str(transaction.code) + str(member_id.get_member_Id),status='ACTIVE',loan_lock='YES')
-			member.save()
-			# return HttpResponseRedirect(reverse('Uploading_Existing_Savings_Preview',args=(pk,)))
+			
+			
+			if float(balance)<=0:
+				messages.error(request,"Balance Brought Forward must be greater than zero")
+				return HttpResponseRedirect(reverse('Uploading_Existing_Savings_Preview',args=(pk,)))
+
+			if MembersAccountsDomain.objects.filter(member=member_id,transaction=transaction).exists():
+				member=MembersAccountsDomain.objects.get(member=member_id,transaction=transaction)
+			else:
+				member=MembersAccountsDomain(member=member_id,transaction=transaction,account_number=str(transaction.code) + str(member_id.get_member_Id),status='ACTIVE',loan_lock='YES')
+				member.save()
+				# return HttpResponseRedirect(reverse('Uploading_Existing_Savings_Preview',args=(pk,)))
 
 
-		if SavingsUploaded.objects.filter(transaction=member).exists():
-			record=SavingsUploaded.objects.get(transaction=member)
-			record.delete()
+			if SavingsUploaded.objects.filter(transaction=member).exists():
+				record=SavingsUploaded.objects.get(transaction=member)
+				record.delete()
 
-			record=SavingsUploaded(transaction=member,particulars=particulars,balance=balance,schedule_amount=schedule_amount,processed_by=processed_by.username,status=transaction_status,transaction_period=transaction_period)
-			record.save()
-			messages.success(request,"Record Updated Successfully")
-		else:
-			record=SavingsUploaded(transaction=member,particulars=particulars,balance=balance,schedule_amount=schedule_amount,processed_by=processed_by.username,status=transaction_status,transaction_period=transaction_period)
-			record.save()
-			messages.success(request,"Record Addedd Successfully")
+				record=SavingsUploaded(transaction=member,particulars=particulars,balance=balance,schedule_amount=schedule_amount,processed_by=processed_by.username,status=transaction_status,transaction_period=transaction_period)
+				record.save()
+				messages.success(request,"Record Updated Successfully")
+			else:
+				record=SavingsUploaded(transaction=member,particulars=particulars,balance=balance,schedule_amount=schedule_amount,processed_by=processed_by.username,status=transaction_status,transaction_period=transaction_period)
+				record.save()
+				messages.success(request,"Record Addedd Successfully")
 
 		return HttpResponseRedirect(reverse('Uploading_Existing_Savings_Preview',args=(pk,)))
 
@@ -12321,7 +12437,49 @@ def Uploading_Existing_Savings_Done_Transaction_Date_Update(request):
 
 
 
-def Uploading_Existing_Savings_Done_List_load(request):
+def Uploading_Existing_Savings_Done_List_Select_Period(request):
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	task_array=[]
+	for task in tasks:
+		task_array.append(task.task.title)
+
+	task_enabler=TransactionEnabler.objects.filter(status="YES")
+	task_enabler_array=[]
+	for item in task_enabler:
+		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
+	form = Uploading_Existing_Savings_Done_List_Select_Period_Form(request.POST or None)
+	if request.method == "POST":
+		date_format = '%Y-%m-%d'
+		
+		tdate_id=request.POST.get('tdate')
+		dtObj = datetime.datetime.strptime(tdate_id, date_format)
+		tdate=get_current_date(dtObj)
+
+		transaction_period=request.POST.get('transaction_range')
+		
+		return HttpResponseRedirect(reverse('Uploading_Existing_Savings_Done_List_load', args=(transaction_period,tdate,)))
+	
+
+	form.fields['tdate'].initial=get_current_date(now)
+	context={
+	'form':form,
+	# 'member_array':member_array,
+	# 'title':title,
+	'task_array':task_array,
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
+	}
+	return render(request,'deskofficer_templates/Uploading_Existing_Savings_Done_List_Select_Period.html',context)
+
+
+
+
+def Uploading_Existing_Savings_Done_List_load(request,transaction_period,tdate):
 	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
 	task_array=[]
 	for task in tasks:
@@ -12342,11 +12500,25 @@ def Uploading_Existing_Savings_Done_List_load(request):
 
 	savings_status='UPLOADED'
 
+	if transaction_period == 'ALL RECORDS':
+		# queryset=SavingsUploaded.objects.filter().order_by('transaction__member__member_id').values_list('transaction__member__member_id','transaction__member__admin__last_name','transaction__member__admin__first_name','transaction__member__middle_name','transaction__member__ippis_no','processed_by','tdate').distinct()
+		queryset=SavingsUploaded.objects.filter().order_by('transaction__member__member_id').values_list('transaction__member__member_id','transaction__member__admin__last_name','transaction__member__admin__first_name','transaction__member__middle_name','transaction__member__ippis_no','processed_by','tdate').distinct()
+	
+	elif transaction_period == 'SELECTED DATE':
 
-	records=Members.objects.filter(savings_status=savings_status)
+		date_format = '%Y-%m-%d'
+		dtObj = datetime.datetime.strptime(tdate, date_format)
+		t_date=get_current_date(dtObj)
+
+		queryset=SavingsUploaded.objects.filter(Q(tdate__year=t_date.year,tdate__month=t_date.month,tdate__day=t_date.day)).order_by('transaction__member__member_id').values_list('transaction__member__member_id','transaction__member__admin__last_name','transaction__member__admin__first_name','transaction__member__middle_name','transaction__member__ippis_no','processed_by','tdate').distinct()
+		
+	member_array = []
+	for query in queryset:
+		member_array.append((query[0][13:],query[1],query[2],query[3],query[4],query[5],get_current_date(query[6])))
 
 	context={
-	'records':records,
+	# 'records':records,
+	'member_array':member_array,
 	'title':title,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
@@ -12373,8 +12545,9 @@ def Uploading_Existing_Savings_Done_View_Details(request,pk):
 
 
 
-	member=Members.objects.get(id=pk)
-	records=SavingsUploaded.objects.filter(transaction__member=member)
+	records=SavingsUploaded.objects.filter(transaction__member__ippis_no=pk)
+	print(pk)
+	member=Members.objects.get(ippis_no=pk)
 
 	context={
 	'records':records,
@@ -13082,8 +13255,15 @@ def Uploading_Existing_Additional_Loans_Preview(request,pk):
 
 
 	if request.method=="POST":
+		transaction_period_id = request.POST.get('transaction_period')
 		
-		formatted_date = defaultfilters.date(transaction_period, "SHORT_DATE_FORMAT")
+		date_format = '%Y-%m-%d'
+		dtObj = datetime.datetime.strptime(transaction_period_id, date_format)
+		transaction_period=get_current_date(dtObj)
+
+
+
+		formatted_date = defaultfilters.date(transaction_period_id, "SHORT_DATE_FORMAT")
 		particulars="Balance Brought Forward as at " + str(formatted_date)
 
 		transaction_id=request.POST.get('transactions')
@@ -13455,6 +13635,13 @@ def Norminal_Roll_Update(request,pk):
 		last_name=request.POST.get('last_name')
 		first_name=request.POST.get('first_name')
 		middle_name=request.POST.get('middle_name')
+
+		
+		# exist_records=Members.objects.filter(file_no=file_no)
+		# k=1
+		# for item in exist_records:
+		# 	print(f'{item.admin.last_name} {item.pk} row{k}')
+		# 	k=k+1
 
 		if Members.objects.filter(file_no=file_no).exclude(id=pk).exists():
 			messages.error(request,'Record with this File No Already Exist')
@@ -19839,6 +20026,7 @@ def Non_Members_Deductions_report(request):
 	if request.method == 'POST':
 		transaction_period_id = request.POST.get('period')
 		transaction_period=TransactionPeriods.objects.get(id=transaction_period_id)
+		transaction_period=get_current_date(transaction_period.transaction_period)
 
 		records=NonMemberAccountDeductions.objects.filter(transaction_period=transaction_period)
 
@@ -20999,8 +21187,8 @@ def Rental_Services_Management_Process_Completed(request,pk,b_date):
 	record=RentalBookingHeaders.objects.get(id=pk)
 	tdate=get_current_date(now)
 	booked_date=b_date
-	print("Current Date: " + str(tdate))
-	print("Booked Date: " + str(booked_date))
+	# print("Current Date: " + str(tdate))
+	# print("Booked Date: " + str(booked_date))
 
 	if str(tdate) < str(booked_date):
 		messages.info(request,'Sorry Booked Date is still ahead of this Current Date')
