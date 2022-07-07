@@ -672,9 +672,25 @@
                                      <li>
                                         <a href="{% url 'Cash_Deposit_Report_Date_Load' %}">Cash Deposit</a>
                                     </li>
+
+
                                     <li>
-                                        <a href="{% url 'Norminal_Roll_List_Load' %}">Norminal Roll</a>
+                                        <a href="javascript:;">
+                                            <span class="nav-label">Norminal Roll</span><i class="fa fa-angle-left arrow"></i></a>
+                                        <ul class="nav-3-level collapse">
+                                            <li>
+                                                <a href="{% url 'Norminal_Roll_List_Load' %}">Comprehensive List</a>
+                                            </li>
+                                            <li>
+                                                <a href="{% url 'Norminal_Roll_By_Institution_Load' %}">Based on Institutions</a>
+                                            </li>
+
+                                        </ul>
                                     </li>
+
+
+
+                                    
                                     <li>
                                         <a href="{% url 'PersonalLedger_Selected_Search' %}">Personal Ledger</a>
                                     </li>

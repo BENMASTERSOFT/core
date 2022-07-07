@@ -30,6 +30,7 @@
                                     <th>Name</th>
                                     <th>IPPIS NO</th>
                                     <th>FILE NO</th>
+                                    <th>INSTITUTION</th>
                                     
                                    
                                     <th>Action</th>
@@ -43,6 +44,7 @@
                                     <th>Name</th>
                                     <th>IPPIS NO</th>
                                     <th>FILE NO</th>
+                                    <th>INSTITUTION</th>
                                   
                                    
                                     <th>Action</th>
@@ -57,6 +59,7 @@
                                     <td>{{member.get_full_name}}</td>
                                     <td>{{member.ippis_no}}</td>
                                     <td>{{member.file_no}}</td>
+                                    <td>{{member.salary_institution.title}}</td>
                                     
                                     <td>
                                         <a href="{% url 'Norminal_Roll_Update' member.id %}" class="btn btn-primary">Update</a> 

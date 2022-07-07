@@ -645,89 +645,7 @@ def Membership_Deduction_Order_Form_Print(request,pk):
 #     return HttpResponse(html)
 
 def deskofficer_home(request):
-	# status="ACTIVE"
-	# Members.objects.all().update(status=status)
-	# LoanRequest.objects.all().delete()
-	# PersonalLedger.objects.all().delete()
-	# CooperativeShopLedger.objects.all().delete()
-
-	# # Members.objects.all().update(loan_status=loan_status,savings_status=savings_status)
-	# Stock.objects.all().update(quantity=0,unit_cost_price=0)
-	# Stock_Auction.objects.all().delete()
-	# Companies.objects.all().delete()
-	# Daily_Sales.objects.all().delete()
-	# Daily_Sales_Item_Return.objects.all().delete()
-	# Daily_Sales_Cash_Flow_Summary.objects.all().delete()
-	# Day_End_Sales_Transactions.objects.all().delete()
-	# ItemWriteOffTemp.objects.all().delete()
-	# LoansRepaymentBase.objects.all().delete()
-	# LoansUploaded.objects.all().delete()
-	# MembersCashDeposits.objects.all().delete()
-	# Members_Commodity_Loan_Application.objects.all().delete()
-	# MonthlyDeductionGenerationHeading.objects.all().delete()
-	# MonthlyGroupGeneratedTransactions.objects.all().delete()
-	# MonthlyGeneratedTransactions.objects.all().delete()
-	# MonthlyDeductionGenerationHeading.objects.all().delete()
-	# MonthlyJointDeductionList.objects.all().delete()
-	# MonthlyJointDeductionGeneratedTransactions.objects.all().delete()
-	# MonthlyJointDeductionGenerated.objects.all().delete()
-	# NonMemberAccountDeductions.objects.all().delete()
-	# MonthlyShopGroupGeneratedTransactions.objects.all().delete()
-	# Purchases.objects.all().delete()
-	# Customers.objects.all().delete()
-	# Xmas_Savings_Generated.objects.all().delete()
-	# Expenditures.objects.all().delete()
-	# Expenditures_Dialy_Summary.objects.all().delete()
-	# Expenditures_Day_End_Summary.objects.all().delete()
-	# Expenditures_Month_End_Summary.objects.all().delete()
-	# Expenditures_Year_End_Summary.objects.all().delete()
-	# Daily_Cash_Deposit_Year_End_Transaction.objects.all().delete()
-	# Daily_Cash_Deposit_Month_End_Transaction.objects.all().delete()
-	# Daily_Cash_Deposit_Day_End_Transaction.objects.all().delete()
-	# Daily_Cash_Deposit_Summary.objects.all().delete()
-	# Purchases_Year_End_Transaction.objects.all().delete()
-	# Purchases_Day_End_Transaction.objects.all().delete()
-	# Purchases_Month_End_Transaction.objects.all().delete()
-	# members_credit_loans_Cash_Receipt_Month_End_Transaction.objects.all().delete()
-	# members_credit_loans_Cash_Receipt_Year_End_Transaction.objects.all().delete()
-	# members_credit_loans_Cash_Receipt_Day_End_Transaction.objects.all().delete()
-	# Cooperative_Shop_Cash_Deposit.objects.all().delete()
-	# Cooperative_Shop_Cash_Deposit_Distributions.objects.all().delete()
-	# ItemWriteOff.objects.all().delete()
-	# members_credit_loans_Cash_Receipt.objects.all().delete()
-	# members_credit_loans_Cash_Receipt_Daily_Summary.objects.all().delete()
-	# members_credit_loans_Cash_Receipt_Day_End_Transaction.objects.all().delete()
-	# members_credit_loans_Cash_Receipt_Month_End_Transaction.objects.all().delete()
-	# members_credit_loans_Cash_Receipt_Year_End_Transaction.objects.all().delete()
-	# Members_Credit_Sales_Selected.objects.all().delete()
-	# members_shop_credit_loans.objects.all().delete()
-	# Month_End_Sales_Transactions.objects.all().delete()
-	# Purchase_Header.objects.all().delete()
-	# Daily_Sales_Item_Return_Selection.objects.all().delete()
-	# Daily_Sales_Item_Return_Year_End_Transaction.objects.all().delete()
-	# Daily_Sales_Item_Return_Month_End_Transaction.objects.all().delete()
-	# Daily_Sales_Item_Return_Day_End_Transaction.objects.all().delete()
-	# Daily_Sales_Item_Return_Cash_Flow_Summary.objects.all().delete()
-
-
-
-	# CooperativeBankAccounts.objects.all().delete()
-	# Commodity_Period_Batch.objects.all().delete()
-	# Commodity_Period.objects.all().delete()
-	# Commodity_Categories.objects.all().delete()
-	# CashBook_Shop.objects.all().delete()
-	# CashBook_Main.objects.all().delete()
-	# Receipts_Shop.objects.all().update(status='UNUSED')
-	# Receipts.objects.all().update(status='UNUSED')
-	# MembersIdManager.objects.all().update(member_id=1)
-	# LoanNumber.objects.all().update(code=1)
-	# AutoReceipt.objects.all().update(receipt=1)
-	# AccountDeductions.objects.filter().delete()
-	# NorminalRoll.objects.all().delete()
-	# MemberShipRequest.objects.all().delete()
-	# CustomUser.objects.filter(user_type='5').delete()
-	# return HttpResponse("ok")
-
+	
 # System_Users_Tasks_Model user
 
 	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
@@ -777,26 +695,6 @@ def desk_basic_table(request):
 def desk_datatable_table(request):
 	return render(request, 'deskofficer_templates/basics/datatable.html')
 
-
-# def desk_form_validation(request):
-# 	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
-# 	task_array=[]
-# 	for task in tasks:
-# 		task_array.append(task.task.title)
-
-
-# 	task_enabler=TransactionEnabler.objects.filter(status="YES")
-# 	task_enabler_array=[]
-# 	for item in task_enabler:
-# 		task_enabler_array.append(item.title)
-
-# 	context={
-# 	'task_array':task_array,
-# 	'task_enabler_array':task_enabler_array,
-	# 'default_password':default_password,
-# 	}
-
-# 	return render(request, 'deskofficer_templates/basics/form_validation.html',context)
 
 
 @csrf_exempt
@@ -7952,6 +7850,7 @@ def Monthly_Savings_Contribution_preview(request,pk, salary_inst_key):
 	'transaction_period':transaction_period,
 	'pk':pk,
 	'members':members,
+	'salary_institution':salary_institution,
 	'salary_inst_key':salary_inst_key,
 	'record_exist':record_exist,
 	'task_array':task_array,
@@ -8033,7 +7932,7 @@ def Monthly_loan_repayement_preview(request,pk, salary_inst_key):
 	context={
 	'transaction':transaction,
 	'members':members,
-	'transaction_period':transaction_period,
+	
 	'pk':pk,
 	'salary_inst_key':salary_inst_key,
 	'task_array':task_array,
@@ -8041,6 +7940,7 @@ def Monthly_loan_repayement_preview(request,pk, salary_inst_key):
 	'default_password':default_password,
 	}
 	return render(request,'deskofficer_templates/Monthly_loan_repayement_preview.html',context)
+
 
 
 def Monthly_loan_repayement_Generate(request,pk, salary_inst_key):
@@ -8072,68 +7972,72 @@ def Monthly_loan_repayement_Generate(request,pk, salary_inst_key):
 	for member in members:
 		expected_stop_date=member.stop_date
 		expected_stop_date=get_current_date(expected_stop_date)
-		new_date=get_current_date(transaction_period.transaction_period)
+		new_date=transaction_period
 		penalty_rate=0
 
-		duction_amount= float(n_transaction)*float(member.repayment)
+		deduction_amount= float(n_transaction)*float(member.repayment)
 
 		generated_amount=0
 		repayment=0
 		penalty=0
-		if abs(float(member.balance)) >= float(duction_amount):
+
+		if abs(float(member.balance)) >= float(deduction_amount):
 
 			generated_amount=member.repayment
 
 			if new_date > expected_stop_date:
-				penalty=FailedLoanPenalty.objects.all().first()
-				penalty_rate=penalty.code
-				penalty_amount=(float(penalty_rate)/100)*float(member.balance)
+				if member.penalty_status == 'DEFAULTED':
 
-				ledger_balance=get_ledger_balance(member.loan_number)
+					penalty=FailedLoanPenalty.objects.all().first()
+					penalty_rate=penalty.code
+					penalty_amount=(float(penalty_rate)/100)*float(member.balance)
 
-				new_ledger_balance=float(ledger_balance)+ float(penalty_amount)
-				debit=abs(penalty_amount)
-				credit=0
-				particulars="Penalty on loan with balance of " + str(abs(member.balance))
+					ledger_balance=get_ledger_balance(member.loan_number)
 
-				penalty=debit
+					new_ledger_balance=float(ledger_balance)+ float(penalty_amount)
+					debit=abs(penalty_amount)
+					credit=0
+					particulars="Penalty on loan with balance of " + str(abs(member.balance))
 
-				post_to_ledger(member.member,
-							transaction,
-							member.loan_number,
-							particulars,
-							debit,
-							credit,
-							new_ledger_balance,
-							transaction_period.transaction_period,
-							status,
-							tdate
-							)
+					penalty=debit
 
-				loan_date=get_current_date(member.start_date)
-				due_date=get_current_date(member.stop_date)
+					post_to_ledger(member.member,
+								transaction,
+								member.loan_number,
+								particulars,
+								debit,
+								credit,
+								new_ledger_balance,
+								transaction_period.transaction_period,
+								status,
+								tdate
+								)
 
-				FailedLoanPenaltyRecords(transaction=member,
-										amount=abs(member.balance),
-										penalty=abs(penalty_amount),
-										rate=penalty_rate,
-										transaction_period=transaction_period,
+					loan_date=get_current_date(member.start_date)
+					due_date=get_current_date(member.stop_date)
 
-										processed_by=processed_by.username,
-										status=transaction_status,
-										tdate=tdate
-										).save()
+					FailedLoanPenaltyRecords(transaction=member,
+											amount=abs(member.balance),
+											penalty=abs(penalty_amount),
+											rate=penalty_rate,
+											transaction_period=transaction_period,
 
-										# loan_date=member.start_date,
-										# due_date=member.stop_date,
-										# penalty_date=transaction_period,
+											processed_by=processed_by.username,
+											status=transaction_status,
+											tdate=tdate
+											).save()
 
-				member.loan_amount = float(abs(member.loan_amount)) + float(abs(penalty_amount))
-				member.penalty_amount=float(member.penalty_amount) + float(abs(penalty_amount))
-				member.balance=-(float(abs(member.balance)) + float(abs(penalty_amount)))
-				member.save()
-				generated_amount=float(generated_amount)+float(abs(penalty_amount))
+											# loan_date=member.start_date,
+											# due_date=member.stop_date,
+											# penalty_date=transaction_period,
 
+					member.loan_amount = float(abs(member.loan_amount)) + float(abs(penalty_amount))
+					member.penalty_amount=float(member.penalty_amount) + float(abs(penalty_amount))
+					member.balance=-(float(abs(member.balance)) + float(abs(penalty_amount)))
+					member.save()
+					generated_amount=float(generated_amount)+float(abs(penalty_amount))
+				else:
+					pass
 
 			record=MonthlyDeductionList(member=member.member,
 
@@ -8185,6 +8089,7 @@ def MonthlyDeductionGenerationHeader(request, caption,salary_inst_key):
 
 
 	transaction_period=TransactionPeriods.objects.get(status=status1)
+	transaction_period=get_current_date(transaction_period.transaction_period)
 	salary_institution=SalaryInstitution.objects.get(id=salary_inst_key)
 
 
@@ -8992,7 +8897,7 @@ def export_monthly_deductions_xls(request,pk):
 
 def export_norminal_roll_xls(request):
 	response = HttpResponse(content_type='application/ms-excel')
-	response['Content-Disposition'] = 'attachment; filename="deductions.xls"'
+	response['Content-Disposition'] = 'attachment; filename="norminalRoll.xls"'
 
 	wb = xlwt.Workbook(encoding='utf-8')
 	ws = wb.add_sheet('Users Data') # this will make a sheet named Users Data
@@ -9002,14 +8907,14 @@ def export_norminal_roll_xls(request):
 	font_style = xlwt.XFStyle()
 	font_style.font.bold = True
 
-	columns = ['File No', 'IPPIS No','Last Name', 'Fist_Name','Middle Name','Phone No','Year','Institute' ]
+	columns = ['File No', 'IPPIS No','Last Name', 'Fist_Name','Middle Name','Phone No' ]
 
 	for col_num in range(len(columns)):
 		ws.write(row_num, col_num, columns[col_num], font_style) # at 0 row 0 column
 
 	font_style = xlwt.XFStyle()  # Sheet body, remaining rows
 
-	rows = NorminalRoll.objects.all().values_list('file_no','ippis_no','last_name','first_name', 'middle_name','phone_no','year','salary_institution')
+	rows = Members.objects.all().values_list('file_no','ippis_no','admin__last_name','admin__first_name', 'middle_name','phone_number')
 
 	for row in rows:
 		row_num += 1
@@ -9020,6 +8925,35 @@ def export_norminal_roll_xls(request):
 	return response
 
 
+def export_norminal_roll_institution_xls(request,pk):
+	response = HttpResponse(content_type='application/ms-excel')
+	response['Content-Disposition'] = 'attachment; filename="norminal.xls"'
+
+	wb = xlwt.Workbook(encoding='utf-8')
+	ws = wb.add_sheet('Users Data') # this will make a sheet named Users Data
+
+	row_num = 0  # Sheet header, first row
+
+	font_style = xlwt.XFStyle()
+	font_style.font.bold = True
+
+	columns = ['File No', 'IPPIS No','Last Name', 'Fist_Name','Middle Name','Phone No' ]
+
+	for col_num in range(len(columns)):
+		ws.write(row_num, col_num, columns[col_num], font_style) # at 0 row 0 column
+
+	font_style = xlwt.XFStyle()  # Sheet body, remaining rows
+
+	salary_institution=SalaryInstitution.objects.get(id=pk)
+	rows = Members.objects.filter(salary_institution=salary_institution).values_list('file_no','ippis_no','admin__last_name','admin__first_name', 'middle_name','phone_number')
+
+	for row in rows:
+		row_num += 1
+		for col_num in range(len(row)):
+			ws.write(row_num, col_num, row[col_num], font_style)
+	wb.save(response)
+
+	return response
 
 
 def Monthly_Account_deduction_Excel_import_Institution_Load(request):
@@ -9150,7 +9084,8 @@ def Monthly_Account_deduction_Processing_Institution_Load(request):
 def Monthly_Account_deduction_Processing_Preview(request):
 	transaction_period_id=request.POST.get('transaction_period')
 	transaction_period=TransactionPeriods.objects.get(id=transaction_period_id)
-
+	transaction_period=get_current_date(transaction_period.transaction_period)
+	
 	salary_institution_id = request.POST.get('salary_institution')
 	salary_institution=SalaryInstitution.objects.get(id=salary_institution_id)
 
@@ -9196,8 +9131,8 @@ def Monthly_Account_deduction_Process(request,pk,trans_id):
 	status="ACTIVE"
 	transaction_status1='UNTREATED'
 
-	transaction_period=TransactionPeriods.objects.get(id=trans_id)
-	transaction_period=get_current_date(transaction_period.transaction_period)
+	# transaction_period=trans_id
+	transaction_period=get_current_date(transaction_period)
 	
 	salary_institution=SalaryInstitution.objects.get(id=pk)
 
@@ -19539,9 +19474,8 @@ def members_credit_purchase_approval_preview(request,ticket):
 		approval_officer=CustomUser.objects.get(id=request.user.id).username
 		approval_comment=request.POST.get('comment')
 
-		status_id=request.POST.get('approval_status')
-		approval_status=ApprovalStatus.objects.get(id=status_id)
-
+		approval_status=request.POST.get('approval_status')
+	
 		record=members_credit_sales_summary.objects.get(trans_code__ticket=ticket)
 
 		record.approval_comment=approval_comment
@@ -19551,6 +19485,7 @@ def members_credit_purchase_approval_preview(request,ticket):
 		record.save()
 		return HttpResponseRedirect(reverse('members_credit_purchase_approval'))
 	form.fields['comment'].initial='APPROVED'
+	form.fields['approval_status'].initial='APPROVED'
 
 
 	context={
@@ -19927,6 +19862,68 @@ def Norminal_Roll_Personel_Detail(request,pk):
 	'member':member,
 	}
 	return render(request,'deskofficer_templates/Norminal_Roll_Personel_Detail.html',context)
+
+
+
+def Norminal_Roll_By_Institution_Load(request):
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	task_array=[]
+	for task in tasks:
+		task_array.append(task.task.title)
+
+
+
+	task_enabler=TransactionEnabler.objects.filter(status="YES")
+	task_enabler_array=[]
+	for item in task_enabler:
+		task_enabler_array.append(item.title)
+
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
+	
+	records = SalaryInstitution.objects.all().order_by('rank')
+	context={
+	'task_array':task_array,
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
+	'records':records,
+	}
+	return render(request,'deskofficer_templates/Norminal_Roll_By_Institution_Load.html',context)
+
+
+
+def Norminal_Roll_By_Institution_List_Load(request,pk):
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	task_array=[]
+	for task in tasks:
+		task_array.append(task.task.title)
+
+
+
+	task_enabler=TransactionEnabler.objects.filter(status="YES")
+	task_enabler_array=[]
+	for item in task_enabler:
+		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
+	salary_institution=SalaryInstitution.objects.get(id=pk)
+	members=Members.objects.filter(salary_institution=salary_institution)
+
+	context={
+	'task_array':task_array,
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
+	'members':members,
+	'pk':pk,
+	}
+	return render(request,'deskofficer_templates/Norminal_Roll_By_Institution_List_Load.html',context)
+
 
 
 

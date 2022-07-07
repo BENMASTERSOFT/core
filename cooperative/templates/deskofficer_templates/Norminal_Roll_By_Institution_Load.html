@@ -4,11 +4,11 @@
 {% block content %}
             <div class="page-content fade-in-up">
                 <div class="row">
-                   
+                
                     <div class="col-xl-6">
                         <div class="ibox">
                             <div class="ibox-head">
-                                <div class="ibox-title">Salary Institution | {{transaction_period}} |  <input type="button" class="btn btn-secondary" value="Back" onclick="history.back()"/></div>
+                                <div class="ibox-title">Salary Institutions</div>
                             </div>
                             <div class="ibox-body">
                                 <table class="table table-bordered">
@@ -16,31 +16,31 @@
                                         <tr>
                                             <th>#</th>
                                             <th>Description</th>
+                                         
                                             <th>Action</th>
-                                            
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {% for item in items %}
+                                    {% for record in records %}
                                         <tr>
                                             <td>{{forloop.counter}}</td>
-                                            <td>{{item.title}}</td>
-                                            <td><a href="{% url 'Monthly_Individual_Transactions_Load' item.pk %}" class="btn btn-primary">Generate</a></td>
-                                         
+                                            <td>{{record.title}}</td>
+                                            <td><a href="{% url 'Norminal_Roll_By_Institution_List_Load' record.pk %}" class="btn btn-primary">Load</a></td>
+                                          
                                         </tr>
                                     {% endfor %}
+                                        
                                     </tbody>
                                 </table>
                             </div>
                         </div>
                     </div>
                 </div>
-             
+               
            
             </div>
   <div class="sidenav-backdrop backdrop"></div>
     <div class="preloader-backdrop">
         <div class="page-preloader">Loading</div>
     </div>
-    {% include 'cooperative/includes/emptyspace.html' %}
 {% endblock %}

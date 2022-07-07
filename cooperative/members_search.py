@@ -9,7 +9,7 @@ def generalMemberSearch(frm,status):
 
 
 def searchMembers(frm,status):
-	records=Members.objects.filter(Q(member_id__icontains=frm) | Q(phone_number__icontains=frm) | Q(file_no__icontains=frm) | Q(ippis_no__icontains=frm)  | Q(admin__first_name__icontains=frm) | Q(admin__last_name__icontains=frm) | Q(middle_name__icontains=frm)).filter(status=status)
+	records=Members.objects.filter(Q(member_id__icontains=frm) | Q(ippis_no__icontains=frm)  | Q(admin__first_name__icontains=frm) | Q(admin__last_name__icontains=frm) | Q(middle_name__icontains=frm)).filter(status=status)
 
 	return records
 
@@ -26,7 +26,7 @@ def searchGuarantorMembers(frm,status,member):
 
 
 def searchShopMembers(frm,status):
-	records=CooperativeShopLedger.objects.filter(Q(member__member__phone_number__icontains=frm) | Q(member__member__admin__first_name__icontains=frm) | Q(member__member__admin__last_name__icontains=frm) | Q(member__member__middle_name__icontains=frm)).values_list('member__member__member_id','member__member__admin__last_name' + ' ' + 'member__member__admin__first_name' + ' ' + 'member__member__middle_name').distinct()
+	records=CooperativeShopLedger.objects.filter(Q(member__member__ippis_no__icontains=frm) | Q(member__member__admin__first_name__icontains=frm) | Q(member__member__admin__last_name__icontains=frm) | Q(member__member__middle_name__icontains=frm)).values_list('member__member__member_id','member__member__admin__last_name' + ' ' + 'member__member__admin__first_name' + ' ' + 'member__member__middle_name').distinct()
 	# items=Daily_Sales.objects.filter(processed_by_id=processed_by.id,created_at__year=year,created_at__month= month,created_at__day= day).order_by('receipt').values_list('receipt','item_code','item_name').distinct()
 	return records
 

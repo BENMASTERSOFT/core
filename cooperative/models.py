@@ -119,6 +119,11 @@ WITHDRAWAL_STATUS=(
         ("LOCKED","LOCKED"),
         ("UNLOCKED","UNLOCKED")
         )
+
+PENALTY_STATUS=(
+        ("NORMAL","NORMAL"),
+        ("DEFAULTED","DEFAULTED")
+        )
 LOAN_CATEGORY=(
             ("NONE","NONE"),
             ("MONETARY","MONETARY"),
@@ -385,6 +390,16 @@ class FailedLoanPenalty(DateObjectsModels):
 
     def __str__(self):
         return self.code
+
+
+class FailedLoanPenaltyDuration(DateObjectsModels):
+    duration = models.DecimalField(max_digits=20,decimal_places = 2)
+    class Meta(DateObjectsModels.Meta):
+        # db_table="FailedLoanPenaltyDuration"
+        ordering = ['id']
+
+    def __str__(self):
+        return self.duration
 
 
 
@@ -1229,7 +1244,7 @@ class LoansRepaymentBase(DateObjectsModels):
     nok_Relationship=models.CharField(max_length=255,blank=True,null=True)
     nok_phone_no=models.CharField(max_length=255,blank=True,null=True)
     nok_address=models.CharField(max_length=255,blank=True,null=True)
-
+    penalty_status=models.CharField(max_length=20,choices=PENALTY_STATUS,default='NORMAL')
 
     # class Meta(DateObjectsModels.Meta):
     #     db_table="Loans_Repayment_Base"

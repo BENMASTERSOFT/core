@@ -21,6 +21,7 @@ import datetime
 from django.utils.dateparse import parse_date
 from dateutil.relativedelta import relativedelta
 now = datetime.datetime.now()
+import xlwt
 ####################################################################
 ###################### HOME PAGE ###################################
 ####################################################################
@@ -1111,7 +1112,7 @@ def upload_stock_roll(request):
 
         if not new_stock_list.name.endswith('xlsx'):
             messages.error(request,'Wrong format')
-            return HttpResponseRedirect(reverse('upload_stock_roll',args=(pk,)))
+            return HttpResponseRedirect(reverse('upload_stock_roll'))
 
         imported_data = dataset.load(new_stock_list.read(),format='xlsx')
         for data in imported_data:
@@ -2204,6 +2205,38 @@ def Users_Task_Add_Category_load(request):
     'records':records,
     }
     return render(request,'master_templates/Users_Task_Add_Category_load.html',context)
+
+
+def export_User_Task_xls(request):
+    response = HttpResponse(content_type='application/ms-excel')
+    response['Content-Disposition'] = 'attachment; filename="user_tasks.xls"'
+
+    wb = xlwt.Workbook(encoding='utf-8')
+    ws = wb.add_sheet('Users Data') # this will make a sheet named Users Data
+
+    row_num = 0  # Sheet header, first row
+
+    font_style = xlwt.XFStyle()
+    font_style.font.bold = True
+
+    columns = ['Title', 'Rank','User' ]
+
+    for col_num in range(len(columns)):
+        ws.write(row_num, col_num, columns[col_num], font_style) # at 0 row 0 column
+
+    font_style = xlwt.XFStyle()  # Sheet body, remaining rows
+
+    rows = System_Users_Tasks.objects.all().values_list('title','rank','usertype__title')
+
+    for row in rows:
+        row_num += 1
+        for col_num in range(len(row)):
+            ws.write(row_num, col_num, row[col_num], font_style)
+    wb.save(response)
+
+    return response
+
+
 
 
 def Users_Task_Add(request,pk):
@@ -6653,6 +6686,40 @@ def FailedLoanPenalty_Manager(request):
     'form':form,
     }
     return render(request,'master_templates/FailedLoanPenalty_Manager.html',context)
+
+
+def FailedLoanPenalty_Duration_Manager(request):
+    task_array=[]
+    if not request.user.user_type == '1':
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
+    
+    form=FailedLoanPenalty_Duration_Manager_form(request.POST or None)
+
+    if FailedLoanPenaltyDuration.objects.all().count()>0:
+        item=FailedLoanPenaltyDuration.objects.first()
+        form.fields['duration'].initial=item.duration
+
+
+    if request.method=="POST":
+        duration=request.POST.get('duration')
+
+        if FailedLoanPenaltyDuration.objects.all().count()>0:
+            record=FailedLoanPenaltyDuration.objects.first()
+            record.duration=duration
+            record.save()
+
+        else:
+            record=FailedLoanPenaltyDuration(duration=duration)
+            record.save()
+        return HttpResponseRedirect(reverse('FailedLoanPenalty_Duration_Manager'))
+
+    context={
+    'task_array':task_array,
+    'form':form,
+    }
+    return render(request,'master_templates/FailedLoanPenalty_Duration_Manager.html',context)
 
 #######################################################################
 ################## COOPERATIVE ACCOUNTS ################################

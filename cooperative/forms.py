@@ -1665,6 +1665,12 @@ class approval_form(forms.Form):
    comment= forms.CharField(widget=forms.Textarea(attrs={"rows":2, "cols":50}))
    approval_status = forms.ChoiceField(label="Approval Status", choices=APPROVAL_STATUS,widget=forms.Select(attrs={"class":"form-control"}))
 
+   def __init__(self, *args, **kwargs):
+      super(approval_form, self).__init__(*args, **kwargs)
+      # assign a (computed, I assume) default value to the choice field
+      self.initial['APPROVAL_STATUS'] = 'APPROVED'
+
+
 
 class Shop_Issue_Receipt_form(forms.Form):
    receipt_types = forms.ChoiceField(label="Receipt_ Types", choices=RECEIPT_TYPES,widget=forms.Select(attrs={"class":"form-control"}))
@@ -2449,6 +2455,12 @@ class FailedLoanPenalty_Manager_form(forms.Form):
                               decimal_places=2, required=True,
                               disabled = False,
                               error_messages={'required': "Please Enter Amount Approved"})
+
+
+class FailedLoanPenalty_Duration_Manager_form(forms.Form):
+   duration = forms.IntegerField(initial=0,label='Number', label_suffix=" : ", min_value=0, required=True,
+                     widget=forms.NumberInput(attrs={'class': 'form-control','autocomplete':'off'}),
+                             disabled = False, error_messages={'required': "Please Enter Loan Number"})
 
 
 class Transaction_adjustment_Transactions_form(forms.Form):

@@ -142,9 +142,21 @@
                             <li>
                                 <a href="{% url 'Loan_Number_Manager' %}">Loan Number</a>
                             </li>
+                       
                             <li>
-                                <a href="{% url 'FailedLoanPenalty_Manager' %}">Failed Loan Penalty</a>
+                                <a href="javascript:;">
+                                    <span class="nav-label">Loan Defaulting</span><i class="fa fa-angle-left arrow"></i></a>
+                                <ul class="nav-3-level collapse">
+
+                                    <li>
+                                        <a href="{% url 'FailedLoanPenalty_Manager' %}">Failed Loan Penalty</a>
+                                    </li>
+                                    <li>
+                                        <a href="{% url 'FailedLoanPenalty_Duration_Manager' %}">Penalty Duration</a>
+                                    </li>
+                                </ul>
                             </li>
+
                              {% endif %}
                         </ul>
                     </li>

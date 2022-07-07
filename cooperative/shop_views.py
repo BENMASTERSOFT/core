@@ -683,6 +683,8 @@ def Item_Write_off_product_Preview(request,pk):
 		status="UNTREATED"
 		approval_status='PENDING'
 		processed_by=CustomUser.objects.get(id=request.user.id)
+		processed_by=processed_by.username
+
 		reason_id=request.POST.get('reasons')
 		reason=ItemWriteOffReasons.objects.get(id=reason_id)
 		available_quantity=item.quantity
@@ -736,6 +738,10 @@ def Item_Write_off_product_Auction_Preview(request,pk):
 	for task in tasks:
 		task_array.append(task.task.title)
 
+	processed_by=CustomUser.objects.get(id=request.user.id)
+	processed_by=processed_by.username
+
+
 	form = Item_Write_off_product_form(request.POST or None)
 	item=[]
 	if Stock_Auction.objects.filter(stock__code=pk).exists():
@@ -748,7 +754,6 @@ def Item_Write_off_product_Auction_Preview(request,pk):
 	if request.method =='POST':
 		tdate=get_current_date(now)
 
-		processed_by=CustomUser.objects.get(id=request.user.id)
 		reason_id=request.POST.get('reasons')
 		reason=ItemWriteOffReasons.objects.get(id=reason_id)
 		available_quantity=item.quantity
@@ -818,6 +823,9 @@ def Item_Write_off_manage_Preview(request,pk):
 	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
 	for task in tasks:
 		task_array.append(task.task.title)
+	
+	processed_by=CustomUser.objects.get(id=request.user.id)
+	processed_by=processed_by.username
 
 	form = Item_Write_off_product_form(request.POST or None)
 	item = ItemWriteOffTemp.objects.get(id=pk)
@@ -831,7 +839,7 @@ def Item_Write_off_manage_Preview(request,pk):
 	form.fields['unit_cost_price'].initial = item.cost_price
 
 	if request.method =='POST':
-		processed_by=CustomUser.objects.get(id=request.user.id)
+
 		reason_id=request.POST.get('reasons')
 		reason=ItemWriteOffReasons.objects.get(id=reason_id)
 		available_quantity=item.product.quantity
@@ -932,6 +940,9 @@ def Item_Write_off_Approved_Process(request,pk):
 	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
 	for task in tasks:
 		task_array.append(task.task.title)
+	
+	processed_by=CustomUser.objects.get(id=request.user.id)
+	processed_by=processed_by.username
 
 	form = Item_Write_off_Approval_form(request.POST or None)
 	item = ItemWriteOffTemp.objects.get(id=pk)
@@ -947,7 +958,6 @@ def Item_Write_off_Approved_Process(request,pk):
 	if request.method =='POST':
 		tdate=get_current_date(now)
 
-		processed_by=CustomUser.objects.get(id=request.user.id)
 		record=ItemWriteOff(tdate=tdate,product=item,processed_by=processed_by,status="UNTREATED")
 		record.save()
 
@@ -980,6 +990,7 @@ def Item_Write_off_Daily_Summary(request):
 	tdate=get_current_date(now)
 	form=TransactionPeriod_form(request.POST or None)
 	processed_by=CustomUser.objects.get(id=request.user.id)
+	processed_by=processed_by.username
 
 	records=[]
 	total_amount=0
@@ -1044,6 +1055,7 @@ def Item_Write_off_Day_End_Transactions(request):
 	tdate=get_current_date(now)
 	form=TransactionPeriod_form(request.POST or None)
 	processed_by=CustomUser.objects.get(id=request.user.id)
+	processed_by=processed_by.username
 
 	records=[]
 	total_amount=0
@@ -1118,6 +1130,7 @@ def Item_Write_off_Month_End_Transactions(request):
 	tdate=get_current_date(now)
 	form=TransactionPeriod_form(request.POST or None)
 	processed_by=CustomUser.objects.get(id=request.user.id)
+	processed_by=processed_by.username
 
 	records=[]
 	total_amount=0
@@ -1188,6 +1201,7 @@ def Item_Write_off_Year_End_Transactions(request):
 	tdate=get_current_date(now)
 	form=TransactionPeriod_form(request.POST or None)
 	processed_by=CustomUser.objects.get(id=request.user.id)
+	processed_by=processed_by.username
 
 	records=[]
 	total_amount=0
@@ -1370,6 +1384,8 @@ def Expiring_Products_Tracking_Auction_Product_select(request,pk):
 		task_array.append(task.task.title)
 
 	processed_by=CustomUser.objects.get(id=request.user.id)
+	processed_by=processed_by.username
+
 	form=Expired_Products_Main_Tracking_Write_Off_Form(request.POST or None)
 
 	stock=Stock.objects.get(code=pk)
@@ -1479,6 +1495,9 @@ def Expired_Products_Main_Tracking_Write_Off(request,pk):
 	reason=ItemWriteOffReasons.objects.get(title='EXPIRED')
 	approval_status='PENDING'
 	processed_by=CustomUser.objects.get(id=request.user.id)
+	processed_by=processed_by.username
+
+
 	details="Sent through Expiring date module"
 	status='UNTREATED'
 	tdate=get_current_date(now)
@@ -1609,6 +1628,8 @@ def Expired_Products_Auction_Tracking_Write_Off(request,pk):
 	reason=ItemWriteOffReasons.objects.get(title='EXPIRED')
 	approval_status='PENDING'
 	processed_by=CustomUser.objects.get(id=request.user.id)
+	processed_by=processed_by.username
+
 	details="Sent through Expiring date module"
 	status='UNTREATED'
 	tdate=get_current_date(now)
@@ -1817,8 +1838,8 @@ def Members_Credit_sales_item_select(request,pk):
 		task_array.append(task.task.title)
 
 	status='UNTREATED'
-	processed_by_id=request.user.id
-	processed_by=CustomUser.objects.get(id=processed_by_id)
+	processed_by=request.user.id
+	processed_by=CustomUser.objects.get(id=processed_by)
 	items=Stock.objects.filter(Q(quantity__gt=0))
 	member=Members.objects.get(id=pk)
 
@@ -1901,6 +1922,7 @@ def members_credit_issue_item(request,pk,member_id):
 
 		total=float(quantity) * float(unit_selling_price)
 		processed_by=CustomUser.objects.get(id=request.user.id)
+		processed_by=processed_by.username
 
 		if Members_Credit_Sales_Selected.objects.filter(member=member,status=status,processed_by=processed_by):
 			ticket_id=Members_Credit_Sales_Selected.objects.filter(member=member,status=status).first()
@@ -1987,6 +2009,7 @@ def members_credit_issue_auction_item(request,pk,member_id):
 
 		total=float(quantity) * float(unit_selling_price)
 		processed_by=CustomUser.objects.get(id=request.user.id)
+		processed_by=processed_by.username
 
 		if Members_Credit_Sales_Selected.objects.filter(member=member,status=status,processed_by=processed_by):
 			ticket_id=Members_Credit_Sales_Selected.objects.filter(member=member,status=status).first()
@@ -2228,6 +2251,8 @@ def members_credit_sales_manage_preview(request,ticket):
 
 		net_pay=request.POST.get('net_pay')
 		officer=CustomUser.objects.get(id=request.user.id).username
+		processed_by=processed_by.username
+
 		approval_comment=request.POST.get('comment')
 
 		payment_date=request.POST.get('payment_date')
@@ -2340,12 +2365,6 @@ def members_credit_sales_approved_item_details(request,ticket):
 	status="TREATED"
 	status2="UNTREATED"
 
-
-	autoprint=YesNo.objects.all()
-	autoFormPrint=[]
-	if FormAutoPrints.objects.filter(title='SHOP SALES').exists():
-		autoFormPrint=FormAutoPrints.objects.get(title='SHOP SALES')
-
 	items=Members_Credit_Sales_Selected.objects.filter(ticket=ticket)
 	if not items:
 		return HttpResponseRedirect(reverse('members_credit_sales_approved_list'))
@@ -2364,8 +2383,6 @@ def members_credit_sales_approved_item_details(request,ticket):
 	if request.method=="POST":
 
 		tdate =  get_current_date(now)
-		autoprint_id = request.POST.get('autoprint')
-		autoprint=YesNo.objects.get(id=autoprint_id)
 
 		if MembersAccountsDomain.objects.filter(member=item.trans_code.member,transaction=transaction).exists():
 			member=MembersAccountsDomain.objects.get(member=item.trans_code.member,transaction=transaction)
@@ -2373,10 +2390,10 @@ def members_credit_sales_approved_item_details(request,ticket):
 			messages.error(request,"This Transaction Has no Account Number")
 			return HttpResponseRedirect(reverse('members_credit_sales_approved_item_details', args=(ticket,)))
 
-		receipt_types_id=request.POST.get('receipt_types')
-		receipt_types=ReceiptTypes.objects.get(id=receipt_types_id)
+		receipt_types=request.POST.get('receipt_types')
 
-		if receipt_types.title=="MANUAL":
+
+		if receipt_types=="MANUAL":
 			# return HttpResponse("MANUAL")
 			receipt_status='USED'
 			receipt_id=request.POST.get('receipt_no')
@@ -2391,7 +2408,7 @@ def members_credit_sales_approved_item_details(request,ticket):
 			receipt_id.status=receipt_status
 			receipt_id.save()
 
-		elif receipt_types.title=="AUTO":
+		elif receipt_types=="AUTO":
 			# return HttpResponse("Auto")
 			receipt_id=AutoReceipt.objects.first()
 			receipt="AUT-" + str(receipt_id.receipt.zfill(5))
@@ -2422,6 +2439,8 @@ def members_credit_sales_approved_item_details(request,ticket):
 
 
 		processed_by=CustomUser.objects.get(id=request.user.id)
+		processed_by=processed_by.username
+
 		sales_category='CREDIT'
 
 		for item in items:
@@ -2455,7 +2474,7 @@ def members_credit_sales_approved_item_details(request,ticket):
 		selected=Daily_Sales.objects.filter(ticket=ticket).first()
 
 
-		record=Daily_Sales_Summary(tdate=tdate,receipt=receipt,sale=selected,amount=amount_due,status=status)
+		record=Daily_Sales_Summary(tdate=tdate,receipt=receipt,sale=selected,amount=amount_due,status=status,processed_by=processed_by)
 		record.save()
 
 
@@ -2479,21 +2498,16 @@ def members_credit_sales_approved_item_details(request,ticket):
 		item.status=status
 		item.save()
 
-		if autoprint.title == "NO":
+		return HttpResponseRedirect(reverse('general_cash_issue_item_print_receipt',args=(ticket,)))
 
-			return HttpResponseRedirect(reverse('members_credit_sales_approved_list'))
-		elif autoprint.title == 'YES':
-			return HttpResponseRedirect(reverse('general_cash_issue_item_print_receipt',args=(ticket,)))
-
-
+	form.fields["receipt_types"].initial="AUTO"
 	context={
 	'task_array':task_array,
 	'form':form,
 	'items':items,
 	'full_name':items[0].member.get_full_name,
 	'amount_due':amount_due,
-	'autoprint':autoprint,
-	'autoFormPrint':autoFormPrint,
+
 	'transaction':transaction,
 	}
 	return render(request,'shop_templates/members_credit_sales_approved_item_details.html',context)
@@ -2562,6 +2576,7 @@ def members_credit_sales_debt_recovery_cash_payment_current_day(request,pk):
 	transaction_status='UNTREATED'
 	tdate=get_current_date(now)
 	processed_by=CustomUser.objects.get(id=request.user.id)
+	processed_by=processed_by.username
 
 	form=members_credit_sales_debt_recovery_cash_payment_current_day_form(request.POST or None)
 	autoFormPrint=FormAutoPrints.objects.get(title='SHOP SALES')
@@ -2580,7 +2595,7 @@ def members_credit_sales_debt_recovery_cash_payment_current_day(request,pk):
 
 		amount_paid=request.POST.get('amount_paid')
 
-		if receipt_types.title=="MANUAL":
+		if receipt_types=="MANUAL":
 			receipt_status='USED'
 			try:
 				receipt_id=request.POST.get('receipt_no')
@@ -2609,7 +2624,7 @@ def members_credit_sales_debt_recovery_cash_payment_current_day(request,pk):
 				return HttpResponseRedirect(reverse('members_credit_sales_debt_recovery_cash_payment_current_day',args=(pk,)))
 
 
-		elif receipt_types.title=="AUTO":
+		elif receipt_types=="AUTO":
 			receipt_id=AutoReceipt.objects.first()
 			receipt="AUT-" + str(receipt_id.receipt.zfill(5))
 			receipt_id.receipt=int(receipt_id.receipt)+1
@@ -2690,6 +2705,7 @@ def members_credit_sales_debt_recovery_cash_payment_daily_summary_list_load(requ
 	status1='ACTIVE'
 	tdate=get_current_date(now)
 	processed_by=CustomUser.objects.get(id=request.user.id)
+	processed_by=processed_by.username
 
 	records=[]
 	total_amount=0
@@ -2761,6 +2777,7 @@ def members_credit_sales_debt_recovery_cash_payment_Day_End_Transaction_list_loa
 	status1='ACTIVE'
 	tdate=get_current_date(now)
 	processed_by=CustomUser.objects.get(id=request.user.id)
+	processed_by=processed_by.username
 
 	records=[]
 	total_amount=0
@@ -2826,6 +2843,7 @@ def members_credit_sales_debt_recovery_cash_payment_Month_End_Transaction_list_l
 	status1='ACTIVE'
 	tdate=get_current_date(now)
 	processed_by=CustomUser.objects.get(id=request.user.id)
+	processed_by=processed_by.username
 
 	records=[]
 	total_amount=0
@@ -2892,6 +2910,7 @@ def members_credit_sales_debt_recovery_cash_payment_Year_End_Transaction_list_lo
 	status1='ACTIVE'
 	tdate=get_current_date(now)
 	processed_by=CustomUser.objects.get(id=request.user.id)
+	processed_by=processed_by.username
 
 	records=[]
 	total_amount=0
@@ -2953,6 +2972,7 @@ def members_credit_sales_debt_recovery_cash_payment_after_transaction_list_load(
 
 	tdate=get_current_date(now)
 	processed_by=CustomUser.objects.get(id=request.user.id)
+	processed_by=processed_by.username
 
 	schedule_status='UNSCHEDULED'
 	status='UNTREATED'
@@ -3001,7 +3021,7 @@ def members_credit_sales_debt_recovery_cash_payment_after_transaction_list_load(
 		shop_cashbook_posting('Cash Payment Return',total_amount,0,balance,'CASH-' + str(reference),status1,tdate,processed_by,'CASH PAYMENT')
 
 
-		if receipt_types.title=="MANUAL":
+		if receipt_types=="MANUAL":
 			receipt_status='USED'
 			try:
 				receipt_id=request.POST.get('receipt_no')
@@ -3032,7 +3052,7 @@ def members_credit_sales_debt_recovery_cash_payment_after_transaction_list_load(
 				return HttpResponseRedirect(reverse('members_credit_sales_debt_recovery_cash_payment_after_transaction_list_load',args=(pk,)))
 
 
-		elif receipt_types.title=="AUTO":
+		elif receipt_types=="AUTO":
 			receipt_id=AutoReceipt.objects.first()
 			receipt="AUT-" + str(receipt_id.receipt.zfill(5))
 			receipt_id.receipt=int(receipt_id.receipt)+1
@@ -3096,6 +3116,7 @@ def members_cash_sales_manage_list_load(request):
 	for task in tasks:
 		task_array.append(task.task.title)
 	processed_by=CustomUser.objects.get(id=request.user.id)
+	processed_by=processed_by.username
 
 	status = 'UNTREATED'
 	records = Members_Cash_Sales_Selected.objects.filter(status=status,processed_by=processed_by).order_by('ticket').values_list('member__member_id','member__admin__last_name','member__admin__first_name','member__middle_name','tdate','ticket','member_id').distinct()
@@ -3167,8 +3188,6 @@ def members_cash_sales_product_load(request,pk,ticket):
 	status="UNTREATED"
 	status1="TREATED"
 	member=Members.objects.get(id=pk)
-	autoprint=YesNo.objects.all()
-	autoFormPrint=FormAutoPrints.objects.get(title='SHOP SALES')
 
 
 	select_items=[]
@@ -3189,6 +3208,8 @@ def members_cash_sales_product_load(request,pk,ticket):
 		button_show=False
 
 	processed_by=CustomUser.objects.get(id=request.user.id)
+	processed_by=processed_by.username
+
 	sales_category='CASH'
 
 
@@ -3211,10 +3232,10 @@ def members_cash_sales_product_load(request,pk,ticket):
 				receipt_id.save()
 		else:
 
-			receipt_types_id=request.POST.get('receipt_types')
-			receipt_types=ReceiptTypes.objects.get(id=receipt_types_id)
+			receipt_types=request.POST.get('receipt_types')
+			
 
-			if receipt_types.title=="MANUAL":
+			if receipt_types=="MANUAL":
 
 				receipt_status='USED'
 				receipt_id=request.POST.get('receipt_no')
@@ -3228,7 +3249,7 @@ def members_cash_sales_product_load(request,pk,ticket):
 				receipt_id.status=receipt_status
 				receipt_id.save()
 
-			elif receipt_types.title=="AUTO":
+			elif receipt_types=="AUTO":
 
 				receipt_id=AutoReceipt.objects.first()
 				receipt= 'AUT-' + str(receipt_id.receipt).zfill(5)
@@ -3277,7 +3298,7 @@ def members_cash_sales_product_load(request,pk,ticket):
 
 			selected=Daily_Sales.objects.filter(ticket=ticket).first()
 
-			record=Daily_Sales_Summary(ticket=ticket,tdate=tdate,receipt=receipt,sale=selected,pos=0,transfer=0,cash=grand_total,amount=grand_total,status=status1)
+			record=Daily_Sales_Summary(processed_by=processed_by,ticket=ticket,tdate=tdate,receipt=receipt,sale=selected,pos=0,transfer=0,cash=grand_total,amount=grand_total,status=status1)
 			record.save()
 
 
@@ -3285,11 +3306,10 @@ def members_cash_sales_product_load(request,pk,ticket):
 			Members_Cash_Sales_Selected.objects.filter(ticket=ticket).update(submission_status='SUBMITTED')
 		return HttpResponseRedirect(reverse('members_cash_sales_processing',args=(receipt,pay_status,)))
 
-
+	form.fields['receipt_types'].initial='AUTO'
 	context={
 	'task_array':task_array,
-	'autoprint':autoprint,
-	'autoFormPrint':autoFormPrint,
+	
 	'form':form,
 	'items':items,
 	'member':member,
@@ -3309,6 +3329,8 @@ def members_cash_sales_processing(request,pk,pay_status):
 	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
 	for task in tasks:
 		task_array.append(task.task.title)
+
+
 	form=Daily_Sales_Summar_Form(request.POST or None)
 	receipt_print_form=Final_Members_Cash_Sales_Processing_form(request.POST or None)
 
@@ -3361,9 +3383,8 @@ def members_cash_sales_processing(request,pk,pay_status):
 			return HttpResponseRedirect(reverse('members_cash_sales_processing',args=(pk,pay_status,)))
 
 	if request.method == 'POST' and 'btn-process' in request.POST:
-		autoprint_id = request.POST.get('receipt_print')
-		autoprint=YesNo.objects.get(id=autoprint_id)
-
+		autoprint = request.POST.get('receipt_print')
+		
 		select_items = Members_Cash_Sales_Selected.objects.filter(ticket=ticket)
 
 		grand_total=0
@@ -3385,10 +3406,10 @@ def members_cash_sales_processing(request,pk,pay_status):
 
 		item = Members_Cash_Sales_Selected.objects.filter(ticket=ticket).delete()
 
-		if autoprint.title == "NO":
+		if autoprint == "NO":
 
 			return HttpResponseRedirect(reverse('shop_home'))
-		elif autoprint.title == 'YES':
+		elif autoprint == 'YES':
 			return HttpResponseRedirect(reverse('general_cash_issue_item_print_receipt',args=(ticket,)))
 
 
@@ -3438,6 +3459,7 @@ def members_cash_sales_item_issue(request,pk,member_id):
 
 		total=float(quantity) * float(unit_selling_price)
 		processed_by=CustomUser.objects.get(id=request.user.id)
+		processed_by=processed_by.username
 
 		if Members_Cash_Sales_Selected.objects.filter(member=member,status=status,processed_by=processed_by).exists():
 			ticket_id=Members_Cash_Sales_Selected.objects.filter(member=member,status=status).first()
@@ -3511,6 +3533,7 @@ def members_cash_sales_auction_item_issue(request,pk,member_id,ticket):
 
 		total=float(quantity) * float(unit_selling_price)
 		processed_by=CustomUser.objects.get(id=request.user.id)
+		processed_by=processed_by.username
 
 		if Members_Cash_Sales_Selected.objects.filter(member=member,status=status,processed_by=processed_by).exists():
 			ticket_id=Members_Cash_Sales_Selected.objects.filter(member=member,status=status).first()
@@ -3565,6 +3588,8 @@ def general_cash_sales_dashboard(request):
 
 def general_cash_sales_products_load_routes(request):
 	processed_by=CustomUser.objects.get(id=request.user.id)
+	processed_by=processed_by.username
+
 	if CustomerID.objects.all().exists():
 		customer_obj=CustomerID.objects.first()
 		customer_value=customer_obj.title
@@ -3585,7 +3610,7 @@ def general_cash_sales_products_load_routes(request):
 	record_drop.delete()
 	Customers.objects.filter(locked_status=locked_status,processed_by=processed_by).delete()
 
-	customer=Customers(customer_id=customer_id,status=status,cust_status=cust_status,locked_status=locked_status,processed_by=processed_by)
+	customer=Customers(customer_id=customer_id,status=status,cust_status=cust_status,locked_status=locked_status,ticket_status='CLOSED',processed_by=processed_by)
 	customer.save()
 
 
@@ -3621,6 +3646,7 @@ def general_cash_sales_products_load(request,pk,ticket):
 	form.fields['address'].initial=customer.address
 	form.fields['phone_no'].initial=customer.phone_no
 	form.fields['receipt'].initial='00001'
+	form.fields['receipt_types'].initial='AUTO'
 
 	context={
 	'task_array':task_array,
@@ -3653,6 +3679,8 @@ def general_cash_issue_item(request,pk,cust_id):
 		task_array.append(task.task.title)
 
 	processed_by=CustomUser.objects.get(id=request.user.id)
+	processed_by=processed_by.username
+
 	form =form=members_credit_issue_item_form(request.POST or None)
 	customer=Customers.objects.get(id=cust_id)
 	product = Stock.objects.get(id=pk)
@@ -3687,12 +3715,14 @@ def general_cash_issue_item(request,pk,cust_id):
 		unit_selling_price=product.unit_selling_price
 
 		total=float(quantity) * float(unit_selling_price)
+		
 		if Customers.objects.filter(ticket_status=ticket_status,cust_status=cust_status,processed_by=processed_by).exists():
 			select_customer=Customers.objects.get(ticket_status=ticket_status,processed_by=processed_by)
 			selected_ticket=select_customer.active_ticket
+			
 		else:
 			# now = datetime.now()
-			# return HttpResponse("ok")
+			
 			_ticket=GeneralTicket.objects.first()
 			selected_ticket=_ticket.ticket
 			customer.status=status1
@@ -3703,6 +3733,11 @@ def general_cash_issue_item(request,pk,cust_id):
 
 			_ticket.ticket = int(_ticket.ticket) + 1
 			_ticket.save()
+
+		if not selected_ticket:
+			messages.error(request,"Ticket not Available")
+			return HttpResponseRedirect(reverse('general_cash_issue_item',args=(pk,cust_id)))
+
 
 		if General_Cash_Sales_Selected.objects.filter(sources='MAIN',product=product,ticket=selected_ticket).exists():
 			record=General_Cash_Sales_Selected.objects.get(sources='MAIN',product=product,ticket=selected_ticket)
@@ -3729,6 +3764,8 @@ def general_cash_issue_auction_item(request,pk,cust_id,ticket):
 		task_array.append(task.task.title)
 
 	processed_by=CustomUser.objects.get(id=request.user.id)
+	processed_by=processed_by.username
+
 	form =form=members_credit_issue_item_form(request.POST or None)
 	customer=Customers.objects.get(id=cust_id)
 	if not Stock_Auction.objects.filter(stock__code=pk).exists():
@@ -3827,6 +3864,8 @@ def general_cash_issue_item_preview(request,ticket):
 	receipt_print_form=Final_Members_Cash_Sales_Processing_form(request.POST or None)
 
 	processed_by=CustomUser.objects.get(id=request.user.id)
+	processed_by=processed_by.username
+
 	tdate =  get_current_date(now)
 	status='UNTREATED'
 	status1='TREATED'
@@ -3842,8 +3881,8 @@ def general_cash_issue_item_preview(request,ticket):
 			button_show=True
 
 	customer=Customers.objects.get(active_ticket=ticket)
-	autoprint=YesNo.objects.all()
-	autoFormPrint=FormAutoPrints.objects.get(title='SHOP SALES')
+	# autoprint=YesNo.objects.all()
+	# autoFormPrint=FormAutoPrints.objects.get(title='SHOP SALES')
 
 	total_amount=0
 	total_item=0
@@ -3889,15 +3928,15 @@ def general_cash_issue_item_preview(request,ticket):
 				record_drop=Customers.objects.filter(phone_no=phone_no).first()
 				record_drop.delete()
 
-			receipt_types_id=request.POST.get('receipt_types')
-			receipt_types=ReceiptTypes.objects.get(id=receipt_types_id)
+			receipt_types=request.POST.get('receipt_types')
+			
 
-			if receipt_types.title == 'AUTO':
+			if receipt_types == 'AUTO':
 				receipt_id=AutoReceipt.objects.first()
 				receipt= "AUT-" + str(receipt_id.receipt.zfill(5))
 				receipt_id.receipt=int(receipt_id.receipt)+1
 				receipt_id.save()
-			elif receipt_types.title == 'MANUAL':
+			elif receipt_types == 'MANUAL':
 				receipt_id=request.POST.get('receipt')
 				if receipt_id:
 					receipt_obj=Receipts_Shop.objects.get(receipt=receipt_id)
@@ -3918,12 +3957,12 @@ def general_cash_issue_item_preview(request,ticket):
 				sales_detail.save()
 
 			sale=Daily_Sales.objects.filter(ticket=ticket).first()
-			summary=Daily_Sales_Summary(ticket=ticket,tdate=tdate,receipt=receipt,sale=sale,amount=grand_total,cash=grand_total,pos=0,transfer=0,status=status1)
+			summary=Daily_Sales_Summary(ticket=ticket,tdate=tdate,receipt=receipt,sale=sale,amount=grand_total,cash=grand_total,pos=0,transfer=0,status=status1,processed_by=processed_by)
 			summary.save()
 
 			record=Daily_Sales_Summary.objects.get(ticket=ticket)
 
-			if receipt_types.title == 'MANUAL':
+			if receipt_types == 'MANUAL':
 				Receipts_Shop.objects.filter(receipt=receipt_id).update(status=receipt_status)
 
 
@@ -3963,8 +4002,8 @@ def general_cash_issue_item_preview(request,ticket):
 		return HttpResponseRedirect(reverse('general_cash_issue_item_preview',args=(ticket,)))
 
 	if request.method=='POST' and 'btn-submit' in request.POST:
-		autoprint_id=request.POST.get('receipt_print')
-		autoprint=YesNo.objects.get(id=autoprint_id)
+		autoprint=request.POST.get('receipt_print')
+		
 
 		if Customers.objects.filter(active_ticket=ticket).exists():
 			active_cust = Customers.objects.get(active_ticket=ticket)
@@ -3993,9 +4032,9 @@ def general_cash_issue_item_preview(request,ticket):
 
 		General_Cash_Sales_Selected.objects.filter(ticket=ticket).delete()
 
-		if autoprint.title == "NO":
+		if autoprint == "NO":
 			return HttpResponseRedirect(reverse('general_cash_sales_dashboard'))
-		elif autoprint.title == 'YES':
+		elif autoprint == 'YES':
 			return HttpResponseRedirect(reverse('general_cash_issue_item_print_receipt',args=(ticket,)))
 
 	context={
@@ -4006,9 +4045,9 @@ def general_cash_issue_item_preview(request,ticket):
 	'record':record,
 	'cash_only':cash_only,
 	'button_show':button_show,
-	'autoFormPrint':autoFormPrint,
+	
 	'receipt_print_form':receipt_print_form,
-	'autoprint':autoprint,
+
 	}
 	return render(request,'shop_templates/general_cash_issue_item_preview.html',context)
 
@@ -4053,10 +4092,12 @@ def general_cash_issue_item_print_receipt(request,ticket):
 	total_amount=queryset['total_amount']
 
 	processed_by=CustomUser.objects.get(id=request.user.id)
+	processed_by=processed_by.username
 
 	if InvoiceHeader.objects.all().count()>0:
 		record=InvoiceHeader.objects.first()
-
+	else:
+		record="FETHAII CTCS"
 
 	context={
 	'task_array':task_array,
@@ -4123,6 +4164,7 @@ def Daily_Sales_Summarization(request,pk):
 	from datetime import datetime
 	form=Daily_Sales_Summarization_form(request.POST or None)
 	processed_by= CustomUser.objects.get(id=request.user.id)
+	processed_by=processed_by.username
 
 	status='UNTREATED'
 	status1='TREATED'
@@ -4146,27 +4188,27 @@ def Daily_Sales_Summarization(request,pk):
 		month=int(dtObj.month)
 		day=int(dtObj.day)
 
-		Members_Cash_Sales_Selected.objects.filter(processed_by_id=processed_by.id,status=status).delete()
-		records=Daily_Sales_Summary.objects.filter(sale__processed_by_id=processed_by.id,tdate__year=year,tdate__month= month,tdate__day= day).filter(processing_status=processing_status)
+		Members_Cash_Sales_Selected.objects.filter(processed_by=processed_by,status=status).delete()
+		records=Daily_Sales_Summary.objects.filter(sale__processed_by=processed_by,tdate__year=year,tdate__month= month,tdate__day= day).filter(processing_status=processing_status)
 
 		if records.count():
 			button_show=True
 
 
-		queryset=Daily_Sales.objects.filter(processed_by_id=processed_by.id,tdate__year=year,tdate__month= month,tdate__day= day).filter(sales_category='CREDIT',processing_status=processing_status).aggregate(total_credit=Sum('total'))
+		queryset=Daily_Sales.objects.filter(processed_by=processed_by,tdate__year=year,tdate__month= month,tdate__day= day).filter(sales_category='CREDIT',processing_status=processing_status).aggregate(total_credit=Sum('total'))
 		total_credit_amount=queryset['total_credit']
 
 
-		queryset=Daily_Sales.objects.filter(processed_by_id=processed_by.id,tdate__year=year,tdate__month= month,tdate__day= day).filter(sales_categor='CASH',processing_status=processing_status).aggregate(total_cash=Sum('total'))
+		queryset=Daily_Sales.objects.filter(processed_by=processed_by,tdate__year=year,tdate__month= month,tdate__day= day).filter(sales_category='CASH',processing_status=processing_status).aggregate(total_cash=Sum('total'))
 		total_cash_amount=queryset['total_cash']
 
 
-		queryset=Daily_Sales.objects.filter(processed_by_id=processed_by.id,tdate__year=year,tdate__month= month,tdate__day= day).filter(processing_status=processing_status).aggregate(total_amount=Sum('total'))
+		queryset=Daily_Sales.objects.filter(processed_by=processed_by,tdate__year=year,tdate__month= month,tdate__day= day).filter(processing_status=processing_status).aggregate(total_amount=Sum('total'))
 		total_amount=queryset['total_amount']
 
 
 
-		# items=Daily_Sales.objects.filter(processed_by_id=processed_by.id,created_at__year=year,created_at__month= month,created_at__day= day).order_by('receipt').values_list('receipt','item_code','item_name').distinct()
+		# items=Daily_Sales.objects.filter(processed_by=processed_by,created_at__year=year,created_at__month= month,created_at__day= day).order_by('receipt').values_list('receipt','item_code','item_name').distinct()
 
 
 	if request.method == 'POST' and 'btn_details' in request.POST:
@@ -4180,9 +4222,9 @@ def Daily_Sales_Summarization(request,pk):
 
 		tdate=date(year,month,day)
 
-		records=Daily_Sales.objects.filter(processed_by_id=processed_by.id,tdate__year=year,tdate__month= month,tdate__day= day).filter(processing_status=processing_status)
+		records=Daily_Sales.objects.filter(processed_by=processed_by,tdate__year=year,tdate__month= month,tdate__day= day).filter(processing_status=processing_status)
 
-		queryset=Daily_Sales.objects.filter(processed_by_id=processed_by.id,tdate__year=year,tdate__month= month,tdate__day= day).filter(processing_status=processing_status).aggregate(total_amount=Sum('total'))
+		queryset=Daily_Sales.objects.filter(processed_by=processed_by,tdate__year=year,tdate__month= month,tdate__day= day).filter(processing_status=processing_status).aggregate(total_amount=Sum('total'))
 		total_amount=queryset['total_amount']
 
 		# return HttpResponse(total_amount)
@@ -4201,21 +4243,22 @@ def Daily_Sales_Summarization(request,pk):
 
 		tdate=get_current_date(dtObj)
 
-		queryset=Daily_Sales.objects.filter(processed_by_id=processed_by.id,tdate__year=year,tdate__month= month,tdate__day= day).filter(sales_category='CREDIT',processing_status=processing_status).aggregate(total_credit=Sum('total'))
+		queryset=Daily_Sales.objects.filter(processed_by=processed_by,tdate__year=year,tdate__month= month,tdate__day= day).filter(sales_category='CREDIT',processing_status=processing_status).aggregate(total_credit=Sum('total'))
 		total_credit_amount=queryset['total_credit']
 
 
-		queryset=Daily_Sales.objects.filter(processed_by_id=processed_by.id,tdate__year=year,tdate__month= month,tdate__day= day).filter(sales_category='CASH',processing_status=processing_status).aggregate(total_cash=Sum('total'))
+		queryset=Daily_Sales.objects.filter(processed_by=processed_by,tdate__year=year,tdate__month= month,tdate__day= day).filter(sales_category='CASH',processing_status=processing_status).aggregate(total_cash=Sum('total'))
 		total_cash_amount=queryset['total_cash']
 
 
-		queryset=Daily_Sales.objects.filter(processed_by_id=processed_by.id,tdate__year=year,tdate__month= month,tdate__day= day).filter(processing_status=processing_status).aggregate(total_amount=Sum('total'))
+		queryset=Daily_Sales.objects.filter(processed_by=processed_by,tdate__year=year,tdate__month= month,tdate__day= day).filter(processing_status=processing_status).aggregate(total_amount=Sum('total'))
 		total_amount=queryset['total_amount']
 
 		sales_category1='CASH'
 		sales_category2='CREDIT'
 
 		processed_by=CustomUser.objects.get(id=request.user.id)
+		processed_by=processed_by.username
 
 		if total_cash_amount:
 			record=Daily_Sales_Cash_Flow_Summary(tdate=tdate,description='CASH SALES',amount=total_cash_amount,sales_category=sales_category1,processed_by=processed_by,status=status)
@@ -4226,8 +4269,8 @@ def Daily_Sales_Summarization(request,pk):
 			record.save()
 
 
-		Daily_Sales_Summary.objects.filter(sale__processed_by_id=processed_by.id,tdate__year=year,tdate__month= month,tdate__day= day).filter(processing_status=processing_status).update(processing_status=processing_status1)
-		Daily_Sales.objects.filter(processed_by_id=processed_by.id,tdate__year=year,tdate__month= month,tdate__day= day).filter(processing_status=processing_status).update(processing_status=processing_status1)
+		Daily_Sales_Summary.objects.filter(sale__processed_by=processed_by,tdate__year=year,tdate__month= month,tdate__day= day).filter(processing_status=processing_status).update(processing_status=processing_status1)
+		Daily_Sales.objects.filter(processed_by=processed_by,tdate__year=year,tdate__month= month,tdate__day= day).filter(processing_status=processing_status).update(processing_status=processing_status1)
 
 		return HttpResponseRedirect(reverse('Daily_Sales_Summarization', args=(pk,)))
 
@@ -4283,6 +4326,7 @@ def Day_End_Transaction_Summary(request):
 	tdate=get_current_date(now)
 	cashbook_status='ACTIVE'
 	processed_by = CustomUser.objects.get(id=request.user.id)
+	processed_by=processed_by.username
 
 	year=[]
 	month=[]
@@ -4350,7 +4394,7 @@ def Day_End_Transaction_Summary(request):
 			ticket=get_ticket()
 
 			Daily_Sales_Cash_Flow_Summary.objects.filter(tdate__year=year,tdate__month= month,tdate__day= day,status="UNTREATED",sales_category='CASH').update(cash_book=ticket)
-			cash_book_array.append(('CASH SALES',total_cash_amount,0,sales_category.title,ticket))
+			cash_book_array.append(('CASH SALES',total_cash_amount,0,sales_category,ticket))
 			record=Day_End_Sales_Transactions(description='CASH SALES',
 												amount=total_cash_amount,
 												sales_category=sales_category,
@@ -4372,7 +4416,7 @@ def Day_End_Transaction_Summary(request):
 		if total_credit_amount:
 			ticket=get_ticket()
 			Daily_Sales_Cash_Flow_Summary.objects.filter(tdate__year=year,tdate__month= month,tdate__day= day,status="UNTREATED",sales_category='CREDIT').update(cash_book=ticket)
-			cash_book_array.append(('CREDIT SALES',0,total_credit_amount,sales_category.title,ticket))
+			cash_book_array.append(('CREDIT SALES',0,total_credit_amount,sales_category,ticket))
 			record=Day_End_Sales_Transactions(description='CREDIT SALES',
 												amount=total_credit_amount,
 												sales_category=sales_category,
@@ -4407,7 +4451,7 @@ def Day_End_Transaction_Summary(request):
 					source='SALES'
 					balance=-float(item[2])
 
-
+			
 				shop_cashbook_posting(item[0],item[1],item[2],balance,'CR-' + str(item[4]),cashbook_status,tdate,processed_by,source)
 
 
@@ -4464,6 +4508,7 @@ def Month_End_Transaction_Summary(request):
 	status = 'UNTREATED'
 	status1 = 'TREATED'
 	processed_by = CustomUser.objects.get(id=request.user.id)
+	processed_by=processed_by.username
 
 	records=[]
 	cash=[]
@@ -4472,14 +4517,21 @@ def Month_End_Transaction_Summary(request):
 	total_credit_amount=0
 	total_cash_amount=0
 	button_show=False
-
+	tday=[]
+	tmonth=[]
+	tyear=[]
 
 	if request.method == 'POST' and 'btn_fetch' in request.POST:
+
 
 		current_date=request.POST.get('sales_date')
 
 		date_format = '%Y-%m-%d'
 		current_date = datetime.strptime(current_date, date_format)
+
+		tday=current_date.day
+		tmonth=current_date.month
+		tyear=current_date.year
 
 		records = Day_End_Sales_Transactions.objects.filter(Q(tdate__lte=current_date)).filter(status=status)
 		queryset=Day_End_Sales_Transactions.objects.filter(Q(tdate__lte=current_date)).filter(status=status).aggregate(total_amount=Sum('amount'))
@@ -4497,11 +4549,16 @@ def Month_End_Transaction_Summary(request):
 		if records.count() > 0:
 			button_show=True
 
+
 	if request.method == "POST" and 'btn_submit' in request.POST:
 		current_date=request.POST.get('sales_date')
 
 		date_format = '%Y-%m-%d'
 		tdate = datetime.strptime(current_date, date_format)
+
+		tday=tdate.day
+		tmonth=tdate.month
+		tyear=tdate.year
 
 		sales_category='CASH'
 
@@ -4549,6 +4606,9 @@ def Month_End_Transaction_Summary(request):
 
 
 	context={
+	'tday':tday,
+	'tmonth':tmonth,
+	'tyear':tyear,
 	'task_array':task_array,
 	'cash':cash,
 	'credits':credits,
@@ -4573,7 +4633,7 @@ def Year_End_Transaction_Summary(request):
 	status1 ='TREATED'
 	tdate=get_current_date(now)
 	processed_by = CustomUser.objects.get(id=request.user.id)
-
+	processed_by=processed_by.username
 
 
 	records=[]
@@ -4636,7 +4696,7 @@ def Year_End_Transaction_Summary(request):
 												processed_by=processed_by,
 												year_key=ticket,
 												status=status,
-												tdate=dtObj,
+												tdate=tdate,
 												)
 			record.save()
 
@@ -4772,6 +4832,7 @@ def members_shop_credit_loan_salary_institution_select(request):
 	status='ACTIVE'
 	records=SalaryInstitution.objects.all()
 	transaction_period=TransactionPeriods.objects.get(status=status)
+	transaction_period=transaction_period.transaction_period
 
 	context={
 	'task_array':task_array,
@@ -4792,7 +4853,6 @@ def members_shop_sales_credit_generate(request,pk):
 	loan_code=transaction.code
 
 	status1='ACTIVE'
-	transaction_period=TransactionPeriods.objects.get(status=status1)
 
 	status="TREATED"
 	status2="UNTREATED"
@@ -4833,6 +4893,7 @@ def members_shop_sales_credit_generate(request,pk):
 		tdate=get_current_date(dtObj)
 
 		processed_by=CustomUser.objects.get(id=request.user.id)
+		processed_by=processed_by.username
 
 		deduction_array=[]
 		for member in members:
@@ -4934,6 +4995,8 @@ def Item_Return_Process(request,pk):
 	for task in tasks:
 			task_array.append(task.task.title)
 	processed_by=CustomUser.objects.get(id=request.user.id)
+	processed_by=processed_by.username
+
 	tdate=get_current_date(now)
 
 	form=Item_Return_form(request.POST or None)
@@ -5064,6 +5127,8 @@ def Item_Return_Process_issue_item(request,pk,item_return):
 			task_array.append(task.task.title)
 	tdate=get_current_date(now)
 	processed_by=CustomUser.objects.get(id=request.user.id)
+	processed_by=processed_by.username
+
 	form=members_credit_issue_item_form(request.POST or None)
 
 	product=Stock.objects.get(id=pk)
@@ -5114,6 +5179,9 @@ def Item_Return_Process_issue_item_Preview(request,pk):
 
 	tdate=get_current_date(now)
 	processed_by=CustomUser.objects.get(id=request.user.id)
+	processed_by=processed_by.username
+
+
 	form=Item_Return_Process_issue_item_Preview_Form(request.POST or None)
 	record=Daily_Sales_Item_Return.objects.get(id=pk)
 	records=Daily_Sales_Item_Return_Selection.objects.filter(customer__sales=record.sales)
@@ -5176,6 +5244,8 @@ def Item_Return_Process_issue_item_processing(request,pk,channel,receipt_type):
 			task_array.append(task.task.title)
 	tdate=get_current_date(now)
 	processed_by=CustomUser.objects.get(id=request.user.id)
+	processed_by=processed_by.username
+
 
 	form=Item_Return_Process_issue_item_Preview_Form(request.POST or None)
 	record=Daily_Sales_Item_Return.objects.get(id=pk)
@@ -5320,6 +5390,8 @@ def Item_Return_Process_issue_item_processing_Daily_Summary(request):
 			task_array.append(task.task.title)
 
 	processed_by=CustomUser.objects.get(id=request.user.id)
+	processed_by=processed_by.username
+
 	tdate=get_current_date(now)
 	records=Daily_Sales_Item_Return_Summary.objects.filter(processed_by=processed_by,status='UNTREATED').filter(Q(tdate=tdate))
 
@@ -5384,6 +5456,9 @@ def Item_Return_Process_issue_item_processing_Day_End_Transaction(request):
 			task_array.append(task.task.title)
 
 	processed_by=CustomUser.objects.get(id=request.user.id)
+	processed_by=processed_by.username
+
+
 	form=TransactionPeriod_form(request.POST or None)
 
 	total_prev=0
@@ -5480,7 +5555,7 @@ def Item_Return_Process_issue_item_processing_Day_End_Transaction(request):
 		ref_no=ticket
 		status='ACTIVE'
 		tdate=get_current_date(now)
-		processed_by=CustomUser.objects.get(id=request.user.id)
+		
 		source='ITEM RETURN'
 
 		shop_cashbook_posting(particulars,debit,credit,balance,ref_no,status,tdate,processed_by,source)
@@ -5493,7 +5568,6 @@ def Item_Return_Process_issue_item_processing_Day_End_Transaction(request):
 		ref_no=ticket
 		status='ACTIVE'
 		tdate=get_current_date(now)
-		processed_by=CustomUser.objects.get(id=request.user.id)
 		source='ITEM RETURN'
 
 		shop_cashbook_posting(particulars,debit,credit,balance,ref_no,status,tdate,processed_by,source)
@@ -5524,6 +5598,9 @@ def Item_Return_Process_issue_item_processing_Month_End_Transaction(request):
 			task_array.append(task.task.title)
 
 	processed_by=CustomUser.objects.get(id=request.user.id)
+	processed_by=processed_by.username
+
+
 	form=TransactionPeriod_form(request.POST or None)
 
 	total_prev=0
@@ -5638,6 +5715,9 @@ def Item_Return_Process_issue_item_processing_Year_End_Transaction(request):
 			task_array.append(task.task.title)
 
 	processed_by=CustomUser.objects.get(id=request.user.id)
+	processed_by=processed_by.username
+
+
 	form=TransactionPeriod_form(request.POST or None)
 
 	total_prev=0
@@ -5850,6 +5930,7 @@ def monthly_deductions_salary_institution_select(request):
 	status='ACTIVE'
 	records=SalaryInstitution.objects.all()
 	transaction_period=TransactionPeriods.objects.get(status=status)
+	transaction_period=transaction_period.transaction_period
 
 	context={
 	'task_array':task_array,
@@ -5862,6 +5943,9 @@ def monthly_deductions_salary_institution_select(request):
 def monthly_individual_deductions_generate(request,pk):
 
 	processed_by=CustomUser.objects.get(id=request.user.id)
+	processed_by=processed_by.username
+
+
 	tdate=get_current_date(now)
 
 
@@ -5873,6 +5957,8 @@ def monthly_individual_deductions_generate(request,pk):
 
 	transaction=TransactionTypes.objects.get(name='SHOP')
 	transaction_period=TransactionPeriods.objects.get(status='ACTIVE')
+	transaction_period=transaction_period.transaction_period
+
 	processing_status="UNPROCESSED"
 	status='UNTREATED'
 	salary_institution=SalaryInstitution.objects.get(id=pk)
@@ -5927,7 +6013,7 @@ def monthly_individual_deductions_generate(request,pk):
 		return HttpResponseRedirect(reverse('monthly_deductions_salary_institution_select'))
 
 
-	date_time_obj = get_current_date(transaction_period.transaction_period)
+	date_time_obj = get_current_date(transaction_period)
 
 
 	form.fields['transaction_period'].initial=date_time_obj.strftime("%a,%d %b, %Y")
@@ -5953,7 +6039,7 @@ def monthly_grouped_deductions_salary_institution_select(request):
 	status='ACTIVE'
 	records=SalaryInstitution.objects.all()
 	transaction_period=TransactionPeriods.objects.get(status=status)
-
+	transaction_period=transaction_period.transaction_period
 	context={
 	'task_array':task_array,
 	'records':records,
@@ -5973,11 +6059,15 @@ def monthly_grouped_deductions_generated(request,pk):
 	transaction_status1='TREATED'
 	salary_institution=SalaryInstitution.objects.get(id=pk)
 	transaction_period=TransactionPeriods.objects.get(status=status)
+	transaction_period=transaction_period.transaction_period
+
 	processing_status='UNPROCESSED'
 	processing_status1='PROCESSED'
 	transaction=TransactionTypes.objects.get(name='SHOP')
 	tdate=get_current_date(now)
 	processed_by=CustomUser.objects.get(id=request.user.id)
+	processed_by=processed_by.username
+
 
 	records=MonthlyShopdeductionList.objects.filter(transaction_period=transaction_period,transaction=transaction,member__salary_institution=salary_institution,processing_status=processing_status,status=transaction_status).order_by('member__member_id').values_list('member__member_id','member__ippis_no','member__admin__last_name','member__admin__first_name','member__middle_name').distinct()
 
@@ -6051,6 +6141,7 @@ def Shop_Account_Deductions_Upload_salary_institution_select(request):
 	status='ACTIVE'
 	records=SalaryInstitution.objects.all()
 	transaction_period=TransactionPeriods.objects.get(status=status)
+	transaction_period=transaction_period.transaction_period
 
 	context={
 	'task_array':task_array,
@@ -6068,9 +6159,14 @@ def Shop_Account_Deductions_Upload_Load(request,pk):
 		task_array.append(task.task.title)
 
 	processed_by=CustomUser.objects.get(id=request.user.id)
+	processed_by=processed_by.username
+
+
 	status='ACTIVE'
 	salary_institution=SalaryInstitution.objects.get(id=pk)
 	transaction_period=TransactionPeriods.objects.get(status=status)
+	transaction_period=transaction_period.transaction_period
+
 	processing_status='UNPROCESSED'
 	processing_status1='PROCESSED'
 	schedule_status='SCHEDULED'
@@ -6226,6 +6322,9 @@ def Members_Credit_sales_Cash_Deposit_Details(request,pk):
 		tdate = get_current_date(now)
 
 		processed_by=CustomUser.objects.get(id=request.user.id)
+		processed_by=processed_by.username
+
+
 		payment_reference=request.POST.get('payment_reference')
 		amount_paid = request.POST.get("amount_paid")
 		amount_distributed=0
@@ -6307,6 +6406,8 @@ def Members_Credit_sales_Cash_Deposit_Distributions_Process(request,pk):
 	status2="TREATED"
 	status1 = "INACTIVE"
 	processed_by=CustomUser.objects.get(id=request.user.id)
+	processed_by=processed_by.username
+
 
 	member=Cooperative_Shop_Cash_Deposit.objects.get(id=pk)
 	receipt=member.receipt
@@ -6470,6 +6571,7 @@ def Members_Credit_sales_Cash_Deposit_Distributions_Transaction_Select(request,p
 	record=members_shop_credit_loans.objects.get(id=pk)
 	status='UNTREATED'
 	processed_by=CustomUser.objects.get(id=request.user.id)
+	processed_by=processed_by.username
 	tdate=get_current_date(now)
 
 	if Cooperative_Shop_Cash_Deposit_Distributions.objects.filter(member=record.member,
@@ -6535,6 +6637,8 @@ def Members_Credit_sales_Cash_Deposit_Distributions_Transaction_2nd_Level_Select
 	record=members_credit_sales_summary.objects.get(id=pk)
 	status='UNTREATED'
 	processed_by=CustomUser.objects.get(id=request.user.id)
+	processed_by=processed_by.username
+
 	tdate=get_current_date(now)
 
 	if Cooperative_Shop_Cash_Deposit_Distributions.objects.filter(member=record.trans_code.member,
@@ -6565,6 +6669,8 @@ def Cash_Deposit_Summary(request):
 
 	form=Cash_Deposit_Summary_form(request.POST or None)
 	processed_by = CustomUser.objects.get(id=request.user.id)
+	processed_by=processed_by.username
+
 	status = 'UNTREATED'
 	status1 = 'TREATED'
 	status2 = 'ACTIVE'
@@ -6609,7 +6715,7 @@ def Cash_Deposit_Summary(request):
 		sales_category='BANK DEPOSIT'
 
 		processed_by=CustomUser.objects.get(id=request.user.id)
-
+		processed_by=processed_by.username
 
 		record=Daily_Cash_Deposit_Summary(tdate=tdate,description='BANK DEPOSIT',amount=total_amount,processed_by=processed_by,status=status)
 		record.save()
@@ -6641,6 +6747,8 @@ def Cash_Deposit_Day_End_Transactions(request):
 
 	form=Cash_Deposit_Summary_form(request.POST or None)
 	processed_by = CustomUser.objects.get(id=request.user.id)
+	processed_by=processed_by.username
+
 	status = 'UNTREATED'
 	status1 = 'TREATED'
 	status2 = 'ACTIVE'
@@ -6683,8 +6791,6 @@ def Cash_Deposit_Day_End_Transactions(request):
 
 
 		sales_category='BANK DEPOSIT'
-
-		processed_by=CustomUser.objects.get(id=request.user.id)
 
 		ticket=get_ticket()
 
@@ -6727,6 +6833,8 @@ def Cash_Deposit_Month_End_Transactions(request):
 
 	form=Cash_Deposit_Summary_form(request.POST or None)
 	processed_by = CustomUser.objects.get(id=request.user.id)
+	processed_by=processed_by.username
+
 	status = 'UNTREATED'
 	status1 = 'TREATED'
 	status2 = 'ACTIVE'
@@ -6768,8 +6876,6 @@ def Cash_Deposit_Month_End_Transactions(request):
 
 
 		sales_category='BANK DEPOSIT'
-
-		processed_by=CustomUser.objects.get(id=request.user.id)
 
 		ticket=get_ticket()
 
@@ -6804,6 +6910,9 @@ def Cash_Deposit_Year_End_Transactions(request):
 
 	form=Cash_Deposit_Summary_form(request.POST or None)
 	processed_by = CustomUser.objects.get(id=request.user.id)
+	processed_by=processed_by.username
+
+
 	status = 'UNTREATED'
 	status1 = 'TREATED'
 	status2 = 'ACTIVE'
@@ -6845,8 +6954,6 @@ def Cash_Deposit_Year_End_Transactions(request):
 
 
 		sales_category='BANK DEPOSIT'
-
-		processed_by=CustomUser.objects.get(id=request.user.id)
 
 		ticket=get_ticket()
 
@@ -7094,6 +7201,8 @@ def Stock_Taken(request):
 
 	tdate=get_current_date(now)
 	processed_by=CustomUser.objects.get(id=request.user.id)
+	processed_by=processed_by.username
+
 	records = Stock.objects.filter(Q(quantity__gt=0)).order_by('code').values_list('code','item_name','details','quantity','unit_cost_price','category').distinct()
 	record_array=[]
 	total_amount=0
@@ -7212,6 +7321,8 @@ def Product_Purchase(request):
 		status = 'UNTREATED'
 		approval_status='PENDING'
 		processed_by=CustomUser.objects.get(id=request.user.id)
+		processed_by=processed_by.username
+
 		branch_id=request.POST.get('branch')
 		branch = Suppliers_Branches.objects.get(id=branch_id)
 		prefix = branch.supplier.prefix
@@ -7532,6 +7643,9 @@ def Purchase_Tracking_Manage(request):
 		task_array.append(task.task.title)
 
 	processed_by=CustomUser.objects.get(id=request.user.id)
+	processed_by=processed_by.username
+
+
 	approval_status="PENDING"
 	status="TREATED"
 	records=Purchase_Header.objects.filter(approval_status=approval_status,status=status,processed_by=processed_by)
@@ -7664,6 +7778,8 @@ def Purchase_Certification_List_load(request):
 		task_array.append(task.task.title)
 
 	processed_by=CustomUser.objects.get(id=request.user.id)
+	processed_by=processed_by.username
+
 	status='TREATED'
 	approval_status='PENDING'
 	records=Purchase_Header.objects.filter(~Q(processed_by=processed_by)).filter(status=status,approval_status=approval_status)
@@ -7943,6 +8059,7 @@ def Product_Purchase_Day_End_Transaction(request):
 	status1='TREATED'
 	status2='ACTIVE'
 	processed_by=CustomUser.objects.get(id=request.user.id)
+	processed_by=processed_by.username
 
 	tdate=get_current_date(now)
 
@@ -8024,6 +8141,7 @@ def Product_Purchase_Month_End_Transaction(request):
 	status1='TREATED'
 	status2='ACTIVE'
 	processed_by=CustomUser.objects.get(id=request.user.id)
+	processed_by=processed_by.username
 
 	tdate=get_current_date(now)
 
@@ -8095,6 +8213,7 @@ def Product_Purchase_Year_End_Transaction(request):
 	status1='TREATED'
 	status2='ACTIVE'
 	processed_by=CustomUser.objects.get(id=request.user.id)
+	processed_by=processed_by.username
 
 	tdate=get_current_date(now)
 
@@ -8407,13 +8526,13 @@ def Daily_Sales_Report_Details(request,pk):
 		task_array.append(task.task.title)
 
 	record=Daily_Sales_Cash_Flow_Summary.objects.get(id=pk)
-	items=Daily_Sales_Summary.objects.filter(tdate=record.tdate,sale__sales_category=record.sales_category.title)
+	items=Daily_Sales_Summary.objects.filter(tdate=record.tdate,sale__sales_category=record.sales_category)
 
 	context={
 	'task_array':task_array,
 	'items':items,
 	'tdate':record.tdate,
-	'sales_category':record.sales_category.title,
+	'sales_category':record.sales_category,
 	}
 	return render(request,'shop_templates/Daily_Sales_Report_Details.html',context)
 
@@ -8483,6 +8602,7 @@ def Expenditure_Manager(request):
 		task_array.append(task.task.title)
 	tdate=get_current_date(now)
 	processed_by=CustomUser.objects.get(id=request.user.id)
+	processed_by=processed_by.username
 
 	form=Expenditure_Manager_form(request.POST or None)
 
@@ -8534,6 +8654,7 @@ def Expenditure_Daily_Summary(request):
 		task_array.append(task.task.title)
 	tdate=get_current_date(now)
 	processed_by=CustomUser.objects.get(id=request.user.id)
+	processed_by=processed_by.username
 
 	form=Expenditure_Manager_form(request.POST or None)
 
@@ -8565,6 +8686,8 @@ def Expenditure_Day_End_Summary(request):
 		task_array.append(task.task.title)
 
 	processed_by=CustomUser.objects.get(id=request.user.id)
+	processed_by=processed_by.username
+
 	status='ACTIVE'
 	form=members_shop_sales_credit_generate_form(request.POST or None)
 
@@ -8620,6 +8743,7 @@ def Expenditure_Month_End_Summary(request):
 		task_array.append(task.task.title)
 
 	processed_by=CustomUser.objects.get(id=request.user.id)
+	processed_by=processed_by.username
 
 	form=members_shop_sales_credit_generate_form(request.POST or None)
 
@@ -8670,6 +8794,7 @@ def Expenditure_Year_End_Summary(request):
 		task_array.append(task.task.title)
 
 	processed_by=CustomUser.objects.get(id=request.user.id)
+	processed_by=processed_by.username
 
 	form=members_shop_sales_credit_generate_form(request.POST or None)
 

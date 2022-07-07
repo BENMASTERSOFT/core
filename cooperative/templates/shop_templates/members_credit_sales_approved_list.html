@@ -35,7 +35,7 @@
                                             <td>{{item.amount}}</td>
                                             
                                             <td>
-                                            {% if approval_status1.title == 'APPROVED' %}
+                                            {% if approval_status1 == 'APPROVED' %}
                                                 <a href="{% url 'members_credit_sales_approved_item_details' item.trans_code.ticket %}" class='btn btn-success'>Process</a> 
 
                                             {% else %}

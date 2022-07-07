@@ -81,6 +81,8 @@ urlpatterns = [
 
     # path('system_reset/', master_views.system_reset,name='system_reset'),
 
+    path('export_User_Task_xls/', master_views.export_User_Task_xls,name='export_User_Task_xls'),
+   
     path('Users_Task_Add_Category_load/', master_views.Users_Task_Add_Category_load,name='Users_Task_Add_Category_load'),
     path('Users_Task_Add/<str:pk>/', master_views.Users_Task_Add,name='Users_Task_Add'),
     path('Users_Task_Edit/<str:pk>/', master_views.Users_Task_Edit,name='Users_Task_Edit'),
@@ -296,6 +298,11 @@ urlpatterns = [
     path('TransactionEnabler_Add/', master_views.TransactionEnabler_Add,name='TransactionEnabler_Add'),
     path('TransactionEnabler_Manage/', master_views.TransactionEnabler_Manage,name='TransactionEnabler_Manage'),
     path('Loan_Number_Manager/', master_views.Loan_Number_Manager,name='Loan_Number_Manager'),
+   
+
+    path('FailedLoanPenalty_Duration_Manager/', master_views.FailedLoanPenalty_Duration_Manager,name='FailedLoanPenalty_Duration_Manager'),
+    
+
     path('FailedLoanPenalty_Manager/', master_views.FailedLoanPenalty_Manager,name='FailedLoanPenalty_Manager'),
     path('TransactionEnabler_delete/<str:pk>/', master_views.TransactionEnabler_delete,name='TransactionEnabler_delete'),
     path('TransactionEnabler_enabler/<str:pk>/', master_views.TransactionEnabler_enabler,name='TransactionEnabler_enabler'),
@@ -737,6 +744,7 @@ urlpatterns = [
     path('export_monthly_deductions_xls/<str:pk>/', deskofficer_views.export_monthly_deductions_xls,name='export_monthly_deductions_xls'),
     path('export_norminal_roll_xls/', deskofficer_views.export_norminal_roll_xls,name='export_norminal_roll_xls'),
 
+    path('export_norminal_roll_institution_xls/<str:pk>/', deskofficer_views.export_norminal_roll_institution_xls,name='export_norminal_roll_institution_xls'),
 
     path('Monthly_Account_deduction_Excel_import_Institution_Load/', deskofficer_views.Monthly_Account_deduction_Excel_import_Institution_Load,name='Monthly_Account_deduction_Excel_import_Institution_Load'),
     path('upload_AccountDeductionsResource/<str:pk>/', deskofficer_views.upload_AccountDeductionsResource,name='upload_AccountDeductionsResource'),
@@ -1054,6 +1062,10 @@ urlpatterns = [
 
     path('Norminal_Roll_List_Load/', deskofficer_views.Norminal_Roll_List_Load,name='Norminal_Roll_List_Load'),
     path('Norminal_Roll_Personel_Detail/<str:pk>/', deskofficer_views.Norminal_Roll_Personel_Detail,name='Norminal_Roll_Personel_Detail'),
+
+    path('Norminal_Roll_By_Institution_Load/', deskofficer_views.Norminal_Roll_By_Institution_Load,name='Norminal_Roll_By_Institution_Load'),
+    path('Norminal_Roll_By_Institution_List_Load/<str:pk>/', deskofficer_views.Norminal_Roll_By_Institution_List_Load,name='Norminal_Roll_By_Institution_List_Load'),
+    
 
     path('MemberShipFormSalesReport/', deskofficer_views.MemberShipFormSalesReport,name='MemberShipFormSalesReport'),
     path('MemberShipFormSales_Report_individual_Search/', deskofficer_views.MemberShipFormSales_Report_individual_Search,name='MemberShipFormSales_Report_individual_Search'),

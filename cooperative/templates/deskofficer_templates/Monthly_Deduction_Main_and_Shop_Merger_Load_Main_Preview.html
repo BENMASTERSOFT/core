@@ -3,12 +3,18 @@
 
 {% block content %}
             <div class="page-content fade-in-up">
+                <form class="form-horizontal" method="POST" action="" enctype="multipart/form-data" novalidate>
+                                         {% csrf_token %}    
                 <div class="row">
                    
                     <div class="col-xl-10">
                         <div class="ibox">
                             <div class="ibox-head">
-                                <div class="ibox-title">MAIN MONTHLY GENERATED TRANSACTIONS | {{transaction_period.transaction_period}}</div>
+                                <div class="ibox-title">MAIN MONTHLY GENERATED TRANSACTIONS | {{transaction_period}}
+                                            <button class="btn btn-success" type="submit">Submit</button>
+                                  
+                                </div>
+
                             </div>
                             <div class="ibox-body">
                                 <table class="table table-bordered">
@@ -36,8 +42,7 @@
                                          
                                         </tr>
                                     {% endfor %}
-                                    <form class="form-horizontal" method="POST" action="" enctype="multipart/form-data" novalidate>
-                                         {% csrf_token %}
+                                    
                                         <tr>
                                             <td colspan="3"></td>
                                                 <td>
@@ -50,14 +55,14 @@
                                             </td>
                                             <td colspan="3"></td>
                                         </tr>
-                                    </form>
+                               
                                     </tbody>
                                 </table>
                             </div>
                         </div>
                     </div>
                 </div>
-                
+                     </form>
             </div>
   <div class="sidenav-backdrop backdrop"></div>
     <div class="preloader-backdrop">
