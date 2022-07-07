@@ -811,6 +811,9 @@ urlpatterns = [
     path('Uploading_Existing_Additional_Loans_Preview/<str:pk>/', deskofficer_views.Uploading_Existing_Additional_Loans_Preview,name='Uploading_Existing_Additional_Loans_Preview'),
     path('Uploading_Existing_Additional_Loans_validate/<str:pk>/', deskofficer_views.Uploading_Existing_Additional_Loans_validate,name='Uploading_Existing_Additional_Loans_validate'),
     path('Uploading_Existing_Additional_Loans_delete/<str:pk>/<str:return_pk>/', deskofficer_views.Uploading_Existing_Additional_Loans_delete,name='Uploading_Existing_Additional_Loans_delete'),
+    path('Uploade_Existing_Loan_Period_load/', deskofficer_views.Uploade_Existing_Loan_Period_load,name='Uploade_Existing_Loan_Period_load'),
+    path('Uploaded_Existing_Loans_Done_List_load/<str:transaction_period>/<str:tdate>/', deskofficer_views.Uploaded_Existing_Loans_Done_List_load,name='Uploaded_Existing_Loans_Done_List_load'),
+    path('Uploaded_Existing_loan_Done_View_Details/<str:pk>/', deskofficer_views.Uploaded_Existing_loan_Done_View_Details,name='Uploaded_Existing_loan_Done_View_Details'),
 
     path('Uploading_Existing_Savings_Additional_search/', deskofficer_views.Uploading_Existing_Savings_Additional_search,name='Uploading_Existing_Savings_Additional_search'),
     path('Uploading_Existing_Savings_Additional_list_load/', deskofficer_views.Uploading_Existing_Savings_Additional_list_load,name='Uploading_Existing_Savings_Additional_list_load'),

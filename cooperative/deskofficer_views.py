@@ -11661,6 +11661,7 @@ def Individual_Capture(request):
 	prefix=MembersIdManager.objects.first()
 	tdate=get_current_date(now)
 	processed_by=CustomUser.objects.get(id=request.user.id)
+	processed_by=processed_by.username
 
 	approval_status='APPROVED'
 	submission_status="SUBMITTED"
@@ -11689,12 +11690,12 @@ def Individual_Capture(request):
 		chk_dob=request.POST.get('chk-dob')
 		date_hired=request.POST.get('date_hired')
 		chk_fappt=request.POST.get('chk-fappt')
-		file_no=request.POST.get('file_no')
+		file_no=request.POST.get('file_no').upper()
 		ippis_no=request.POST.get('ippis_no')
 		coop_no=request.POST.get('coop_no')
-		last_name=request.POST.get('last_name')
-		first_name=request.POST.get('first_name')
-		middle_name=request.POST.get('middle_name')
+		last_name=request.POST.get('last_name').upper()
+		first_name=request.POST.get('first_name').upper()
+		middle_name=request.POST.get('middle_name').upper()
 		phone_number=request.POST.get('phone_number')
 		year=request.POST.get('year_joined')
 		month=request.POST.get('month_joined')
@@ -11707,7 +11708,21 @@ def Individual_Capture(request):
 		approved_date=date(int(year),int(month_list.index(month))+1,1)
 		date_joined=date(int(year),int(month_list.index(month))+1,1)
 
-
+		if not file_no:
+			messages.error(request,'File Number is Missing')
+			return HttpResponseRedirect(reverse('Individual_Capture'))
+		if not ippis_no:
+			messages.error(request,'IPPIS Number is Missing')
+			return HttpResponseRedirect(reverse('Individual_Capture'))
+		if not coop_no:
+			messages.error(request,'Coop Number is Missing')
+			return HttpResponseRedirect(reverse('Individual_Capture'))
+		if not last_name:
+			messages.error(request,'Last Name is Missing')
+			return HttpResponseRedirect(reverse('Individual_Capture'))
+		if not first_name:
+			messages.error(request,'First Name is Missing')
+			return HttpResponseRedirect(reverse('Individual_Capture'))
 
 		item=MemberShipRequest(title=title,submission_status=submission_status,
 			transaction_status=transaction_status1,
@@ -11722,7 +11737,7 @@ def Individual_Capture(request):
 			member_id=member_id,
 			month=month,
 			year=year,
-
+			processed_by=processed_by,
 			tdate=tdate,
 			approved_date=approved_date)
 		item.save()
@@ -11742,7 +11757,7 @@ def Individual_Capture(request):
 		receipt_obj=AutoReceipt.objects.first()
 		receipt='C-' + str(receipt_obj.receipt.zfill(5))
 
-		record=MemberShipFormSalesRecord(cashbook_status=cashbook_status,tdate=tdate,applicant=applicant,receipt=receipt,processed_by=processed_by.username,status=transaction_status1,date_paid=tdate)
+		record=MemberShipFormSalesRecord(cashbook_status=cashbook_status,tdate=tdate,applicant=applicant,receipt=receipt,processed_by=processed_by,status=transaction_status1,date_paid=tdate)
 		record.save()
 
 		receipt_obj.receipt=int(receipt_obj.receipt) + 1
@@ -11778,7 +11793,7 @@ def Individual_Capture(request):
 
 		user.members.date_of_first_appointment=date_hired
 		user.members.dob=dob
-
+		user.processed_by=processed_by
 		user.members.date_joined_status=date_joined_status
 
 		if chk_fappt:
@@ -11791,15 +11806,15 @@ def Individual_Capture(request):
 
 		transactions=TransactionTypes.objects.filter(~Q(source__title="LOAN") & ~Q(source__title='GENERAL') & ~Q(code='701'))
 
-		count=0
+	
 
 		for transaction in transactions:
 			account_number=str(transaction.code) + str(coop_no).zfill(5)
 			if MembersAccountsDomain.objects.filter(member=user.members,transaction=transaction,account_number=account_number).exists():
 				pass
 			else:
-				count +=1
-				record=MembersAccountsDomain(status=status,member=user.members,transaction=transaction,account_number=account_number)
+			
+				record=MembersAccountsDomain(processed_by=processed_by,status=status,member=user.members,transaction=transaction,account_number=account_number)
 				record.save()
 
 		return HttpResponseRedirect(reverse("Individual_Capture"))
@@ -12396,7 +12411,7 @@ def Uploading_Existing_Savings_Done_List_Select_Period(request):
 		tdate=get_current_date(dtObj)
 
 		transaction_period=request.POST.get('transaction_range')
-		
+		()
 		return HttpResponseRedirect(reverse('Uploading_Existing_Savings_Done_List_load', args=(transaction_period,tdate,)))
 	
 
@@ -12481,7 +12496,7 @@ def Uploading_Existing_Savings_Done_View_Details(request,pk):
 
 
 	records=SavingsUploaded.objects.filter(transaction__member__ippis_no=pk)
-	print(pk)
+	
 	member=Members.objects.get(ippis_no=pk)
 
 	context={
@@ -12878,15 +12893,18 @@ def Uploading_Existing_Loans_Preview(request,pk):
 			messages.error(request,'Monthly Repayment cannot be zero')
 			return HttpResponseRedirect(reverse('Uploading_Existing_Loans_Preview',args=(pk,)))
 
-		interest_rate=request.POST.get('interest_rate')
-		if float(interest_rate)<0:
-			messages.error(request,'Interest Rate cannot be less than zero')
-			return HttpResponseRedirect(reverse('Uploading_Existing_Loans_Preview',args=(pk,)))
 
-		admin_charge_rate=request.POST.get('admin_charge_rate')
-		if float(admin_charge_rate)<0:
-			messages.error(request,'Admin Charge Rate cannot be less than zero')
-			return HttpResponseRedirect(reverse('Uploading_Existing_Loans_Preview',args=(pk,)))
+		# interest_rate=request.POST.get('interest_rate')
+		interest_rate=transaction.interest_rate
+		# if float(interest_rate)<0:
+		# 	messages.error(request,'Interest Rate cannot be less than zero')
+		# 	return HttpResponseRedirect(reverse('Uploading_Existing_Loans_Preview',args=(pk,)))
+
+		# admin_charge_rate=request.POST.get('admin_charge_rate')
+		admin_charge_rate=transaction.admin_charges
+		# if float(admin_charge_rate)<0:
+		# 	messages.error(request,'Admin Charge Rate cannot be less than zero')
+		# 	return HttpResponseRedirect(reverse('Uploading_Existing_Loans_Preview',args=(pk,)))
 
 
 		duration=request.POST.get('duration')
@@ -12901,6 +12919,8 @@ def Uploading_Existing_Loans_Preview(request,pk):
 		if float(repayment) > abs(float(balance)) or float(repayment)>float(loan_amount):
 			messages.error(request,'Monthly repayment cannot be greater than Loan Amount or Balance')
 			return HttpResponseRedirect(reverse('Uploading_Existing_Loans_Preview',args=(pk,)))
+
+
 
 		start_date_id=request.POST.get('start_date')
 		start_date=datetime.datetime.strptime(start_date_id, '%Y-%m-%d')
@@ -13093,6 +13113,7 @@ def Uploading_Existing_Loans_validate(request,pk):
 			transaction_status='TREATED'
 
 			record.status=transaction_status
+			record.loan_number=loan_number
 			record.save()
 
 		member.loan_status=loan_status
@@ -13444,6 +13465,131 @@ def Uploading_Existing_Additional_Loans_delete(request,pk,return_pk):
 	record.delete()
 	return HttpResponseRedirect(reverse('Uploading_Existing_Additional_Loans_Preview',args=(return_pk,)))
 
+
+def Uploade_Existing_Loan_Period_load(request):
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	task_array=[]
+	for task in tasks:
+		task_array.append(task.task.title)
+
+	task_enabler=TransactionEnabler.objects.filter(status="YES")
+	task_enabler_array=[]
+	for item in task_enabler:
+		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
+
+
+	status="ACTIVE"
+	salary_status='PENDING'
+	# records=Members.objects.filter(status=status).filter(Q(gender__isnull=True) | Q(gender=""))
+	# records=Members.objects.filter(status=status).filter(Q(salary_status__isnull=True) | Q(salary_status=""))
+	
+	form = Uploading_Existing_Savings_Done_List_Select_Period_Form(request.POST or None)
+	if request.method == "POST":
+		date_format = '%Y-%m-%d'
+		
+		tdate_id=request.POST.get('tdate')
+		dtObj = datetime.datetime.strptime(tdate_id, date_format)
+		tdate=get_current_date(dtObj)
+
+		transaction_period=request.POST.get('transaction_range')
+		
+		return HttpResponseRedirect(reverse('Uploaded_Existing_Loans_Done_List_load', args=(transaction_period,tdate,)))
+	
+
+	form.fields['tdate'].initial=get_current_date(now)
+	context={
+	'form':form,
+	'task_array':task_array,
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
+	}
+	return render(request,'deskofficer_templates/Uploade_Existing_Loan_Period_load.html',context)
+
+
+
+def Uploaded_Existing_Loans_Done_List_load(request,transaction_period,tdate):
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	task_array=[]
+	for task in tasks:
+		task_array.append(task.task.title)
+
+	task_enabler=TransactionEnabler.objects.filter(status="YES")
+	task_enabler_array=[]
+	for item in task_enabler:
+		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
+
+
+	title="LIST OF MEMBERS"
+
+	savings_status='UPLOADED'
+
+	if transaction_period == 'ALL RECORDS':
+		# queryset=SavingsUploaded.objects.filter().order_by('transaction__member__member_id').values_list('transaction__member__member_id','transaction__member__admin__last_name','transaction__member__admin__first_name','transaction__member__middle_name','transaction__member__ippis_no','processed_by','tdate').distinct()
+		queryset=LoansUploaded.objects.filter(status='TREATED').order_by('member__member_id').values_list('member__member_id','member__admin__last_name','member__admin__first_name','member__middle_name','member__ippis_no','processed_by','tdate').distinct()
+	
+	elif transaction_period == 'SELECTED DATE':
+
+		date_format = '%Y-%m-%d'
+		dtObj = datetime.datetime.strptime(tdate, date_format)
+		t_date=get_current_date(dtObj)
+		queryset=LoansUploaded.objects.filter(Q(tdate__year=t_date.year,tdate__month=t_date.month,tdate__day=t_date.day) & Q(status='TREATED')).order_by('member__member_id').values_list('member__member_id','member__admin__last_name','member__admin__first_name','member__middle_name','member__ippis_no','processed_by','tdate').distinct()
+		
+		
+	member_array = []
+	for query in queryset:
+		member_array.append((query[0][13:],query[1],query[2],query[3],query[4],query[5],get_current_date(query[6])))
+
+	context={
+	# 'records':records,
+	'member_array':member_array,
+	'title':title,
+	'task_array':task_array,
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
+	}
+	return render(request,'deskofficer_templates/Uploaded_Existing_Loans_Done_List_load.html',context)
+
+
+def Uploaded_Existing_loan_Done_View_Details(request,pk):
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	task_array=[]
+	for task in tasks:
+		task_array.append(task.task.title)
+
+	task_enabler=TransactionEnabler.objects.filter(status="YES")
+	task_enabler_array=[]
+	for item in task_enabler:
+		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
+
+
+
+	records=LoansUploaded.objects.filter(member__ippis_no=pk)
+	
+	member=Members.objects.get(ippis_no=pk)
+
+	context={
+	'records':records,
+	'member':member,
+	'task_array':task_array,
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
+	}
+	return render(request,'deskofficer_templates/Uploaded_Existing_loan_Done_View_Details.html',context)
 
 
 ########################################################################

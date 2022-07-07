@@ -1086,6 +1086,7 @@ class SavingsUploaded(DateObjectsModels):
 class LoansUploaded(DateObjectsModels):
     member= models.ForeignKey(Members,on_delete=models.CASCADE,blank=True,null=True)
     particulars=models.CharField(max_length=255)
+    loan_number=models.CharField(max_length=255,blank=True,null=True)
     transaction=models.ForeignKey(TransactionTypes,on_delete=models.CASCADE,blank=True,null=True)
     loan_amount=models.DecimalField(max_digits=20,decimal_places = 2,default=0)
     amount_paid=models.DecimalField(max_digits=20,decimal_places = 2,default=0)
