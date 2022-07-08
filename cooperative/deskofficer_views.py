@@ -11724,6 +11724,21 @@ def Individual_Capture(request):
 			messages.error(request,'First Name is Missing')
 			return HttpResponseRedirect(reverse('Individual_Capture'))
 
+		if Members.objects.filter(member_id=member_id).exists():
+			messages.error(request, "Member with this cooperative number already exist")
+			return HttpResponseRedirect(reverse('Individual_Capture'))
+
+		username = first_name + last_name + str(file_no).zfill(5)
+		email = first_name + str(file_no).zfill(5) + "@gmail.com"
+
+		if CustomUser.objects.filter(username=username).exists():
+			username=str(username) + str(ippis_no)
+			
+		if CustomUser.objects.filter(email=email).exists():
+			email=first_name + str(file_no).zfill(5) + "@fetha.gov.ng"
+			
+
+
 		item=MemberShipRequest(title=title,submission_status=submission_status,
 			transaction_status=transaction_status1,
 			first_name=first_name,last_name=last_name,
@@ -11769,44 +11784,47 @@ def Individual_Capture(request):
 		user_type_obj = UserType.objects.get(title='MEMBERS')
 		user_type=user_type_obj.code
 
-		username = first_name + last_name + str(file_no).zfill(5)
-		email = first_name + str(file_no).zfill(5) + "@gmail.com"
+		
+		try:
+			user = CustomUser.objects.create_user(username=username,password=password,email=email,last_name=last_name,first_name=first_name,user_type=int(user_type))
+			user.members.applicant=record
+			user.members.member_id=member_id
+			user.members.title=title
+			user.members.middle_name=middle_name
+			user.members.full_name=str(first_name) + ' ' + str(last_name) + ' ' + str(middle_name)
+			user.members.phone_number=phone_number
+			user.members.salary_institution=salary_institution
+			user.members.file_no=file_no
+			user.members.ippis_no=ippis_no
+			user.members.date_joined=date_joined
+
+			user.members.status=status
+			user.members.savings_status=savings_status
+			user.members.loan_status=loan_status
+			user.members.shares_status=shares_status
+			user.members.welfare_status=welfare_status
+
+			user.members.date_of_first_appointment=date_hired
+			user.members.dob=dob
+			user.processed_by=processed_by
+			user.members.date_joined_status=date_joined_status
+
+			if chk_fappt:
+				user.members.date_of_first_appointment_status=date_of_first_appointment_status
+
+			if chk_dob:
+				user.members.dob_status=dob_status
+
+			user.save()
 
 
-		user = CustomUser.objects.create_user(username=username,password=password,email=email,last_name=last_name,first_name=first_name,user_type=int(user_type))
-		user.members.applicant=record
-		user.members.member_id=member_id
-		user.members.title=title
-		user.members.middle_name=middle_name
-		user.members.full_name=str(first_name) + ' ' + str(last_name) + ' ' + str(middle_name)
-		user.members.phone_number=phone_number
-		user.members.salary_institution=salary_institution
-		user.members.file_no=file_no
-		user.members.ippis_no=ippis_no
-		user.members.date_joined=date_joined
-
-		user.members.status=status
-		user.members.savings_status=savings_status
-		user.members.loan_status=loan_status
-		user.members.shares_status=shares_status
-		user.members.welfare_status=welfare_status
-
-		user.members.date_of_first_appointment=date_hired
-		user.members.dob=dob
-		user.processed_by=processed_by
-		user.members.date_joined_status=date_joined_status
-
-		if chk_fappt:
-			user.members.date_of_first_appointment_status=date_of_first_appointment_status
-
-		if chk_dob:
-			user.members.dob_status=dob_status
-
-		user.save()
-
+		except:
+			applicant.delete()
+			user.delete()
+			record.delete()
+			return HttpResponse("OK")
+		
 		transactions=TransactionTypes.objects.filter(~Q(source__title="LOAN") & ~Q(source__title='GENERAL') & ~Q(code='701'))
-
-	
 
 		for transaction in transactions:
 			account_number=str(transaction.code) + str(coop_no).zfill(5)
@@ -12967,7 +12985,7 @@ def Uploading_Existing_Loans_Preview(request,pk):
 
 		return HttpResponseRedirect(reverse('Uploading_Existing_Loans_Preview',args=(pk,)))
 	
-
+	transaction_period=date(2022,6,30)
 	form.fields['start_date'].initial=now
 	form.fields['transaction_period'].initial=get_current_date(transaction_period)
 
@@ -13133,7 +13151,7 @@ def Uploading_Existing_Loans_validate(request,pk):
 
 	else:
 		messages.error(request,"No Record Found")
-	return HttpResponseRedirect(reverse('deskofficer_home'))
+	return HttpResponseRedirect(reverse('Uploading_Existing_Loans_Search'))
 
 
 def Uploading_Existing_Loans_delete(request,pk,return_pk):
@@ -13648,7 +13666,7 @@ def Norminal_Roll_Search(request):
 		default_password="YES"
 
 
-	title="Search Members for Cash Deposit"
+	title="Search Members"
 	form = searchForm(request.POST or None)
 
 	return render(request,'deskofficer_templates/Norminal_Roll_Search.html',{'form':form,'title':title,'task_array':task_array,

@@ -1661,7 +1661,7 @@ def Commodity_Products_add(request,pk):
             task_array.append(task.task.title)
     form = Commodity_Products_add_Form(request.POST or None)
     sub_category =Commodity_Category_Sub.objects.get(id=pk)
-    records=Commodity_Product_List.objects.filter()
+    records=Commodity_Product_List.objects.filter(category='8')
     # records=Commodity_Product_List.objects.filter(sub_category=sub_category)
 
     if request.method=="POST":
@@ -1669,17 +1669,16 @@ def Commodity_Products_add(request,pk):
         product_model = request.POST.get('product_model').upper()
         details = request.POST.get('details').upper()
         if Commodity_Product_List.objects.filter(product_name=product_name).exists():
-            queryset=Commodity_Product_List.objects.get(product_name=product_name)
-            queryset.sub_category=sub_category
-            queryset.product_name=product_name
-            queryset.product_model=product_model
-            queryset.details=details
-            queryset.status="ACTIVE"
+            Commodity_Product_List.objects.filter(product_name=product_name).update(sub_category=sub_category,
+            product_name=product_name,
+            product_model=product_model,
+            details=details,
+            status="ACTIVE",category=0)
             messages.success(request,'Record Updated Successfully')
         else:
             queryset=Commodity_Product_List(sub_category=sub_category,product_name=product_name,product_model=product_model,details=details,status="ACTIVE")
             messages.success(request,'Record Submitted Successfully')
-        queryset.save()
+            queryset.save()
        
 
         return HttpResponseRedirect(reverse('Commodity_Products_add',args=(pk,)))
