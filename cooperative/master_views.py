@@ -1636,6 +1636,22 @@ def Commodity_Products_Add_Transactions_Categories_Load(request,pk):
     return render(request,'master_templates/Commodity_Products_Add_Transactions_Categories_Load.html',context)
 
 
+def Commodity_Products_Add_Transactions_Sub_Categories_Load(request,pk):
+    task_array=[]
+    if not request.user.user_type == '1':
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
+    category =Commodity_Categories.objects.get(id=pk)
+    records= Commodity_Category_Sub.objects.filter(category=category)
+    context={
+    'task_array':task_array,
+    'category':category,
+    'records':records,
+    }
+    return render(request,'master_templates/Commodity_Products_Add_Transactions_Sub_Categories_Load.html',context)
+
+
 
 def Commodity_Products_add(request,pk):
     task_array=[]
@@ -1644,21 +1660,33 @@ def Commodity_Products_add(request,pk):
         for task in tasks:
             task_array.append(task.task.title)
     form = Commodity_Products_add_Form(request.POST or None)
-    record =Commodity_Categories.objects.get(id=pk)
-    records=Commodity_Product_List.objects.filter(category=record)
+    sub_category =Commodity_Category_Sub.objects.get(id=pk)
+    records=Commodity_Product_List.objects.filter()
+    # records=Commodity_Product_List.objects.filter(sub_category=sub_category)
 
     if request.method=="POST":
-        product_name = request.POST.get('product_name')
-        product_model = request.POST.get('product_model')
-        details = request.POST.get('details')
-        queryset=Commodity_Product_List(category=record,product_name=product_name.upper(),product_model=product_model.upper(),details=details.title(),status="ACTIVE")
+        product_name = request.POST.get('product_name').upper()
+        product_model = request.POST.get('product_model').upper()
+        details = request.POST.get('details').upper()
+        if Commodity_Product_List.objects.filter(product_name=product_name).exists():
+            queryset=Commodity_Product_List.objects.get(product_name=product_name)
+            queryset.sub_category=sub_category
+            queryset.product_name=product_name
+            queryset.product_model=product_model
+            queryset.details=details
+            queryset.status="ACTIVE"
+            messages.success(request,'Record Updated Successfully')
+        else:
+            queryset=Commodity_Product_List(sub_category=sub_category,product_name=product_name,product_model=product_model,details=details,status="ACTIVE")
+            messages.success(request,'Record Submitted Successfully')
         queryset.save()
-        messages.success(request,'Record Submitted Successfully')
+       
+
         return HttpResponseRedirect(reverse('Commodity_Products_add',args=(pk,)))
     context={
     'task_array':task_array,
     'form':form,
-    'record':record,
+    'sub_category':sub_category,
     'records':records,
     }
     return render(request,'master_templates/Commodity_Products_add.html',context)
@@ -1680,6 +1708,43 @@ def Commodity_Products_Manage_Transactions_Load(request):
     return render(request,'master_templates/Commodity_Products_Manage_Transactions_Load.html',context)
 
 
+def Commodity_Products_Manage_Category_Load(request,pk):
+    task_array=[]
+    if not request.user.user_type == '1':
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
+    transaction =TransactionTypes.objects.get(id=pk)
+    categories = Commodity_Categories.objects.filter(transaction=transaction)
+    # records=Commodity_Product_List.objects.filter(category__transaction=transaction)
+
+    context={
+    'task_array':task_array,
+    'categories':categories,
+    'transaction':transaction,
+    }
+    return render(request,'master_templates/Commodity_Products_Manage_Category_Load.html',context)
+
+
+def Commodity_Products_Manage_Sub_Category_Load(request,pk):
+    task_array=[]
+    if not request.user.user_type == '1':
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
+
+    category = Commodity_Categories.objects.get(id=pk)
+    records=Commodity_Category_Sub.objects.filter(category=category)
+
+    context={
+    'task_array':task_array,
+    'category':category,
+    'records':records,
+    }
+    return render(request,'master_templates/Commodity_Products_Manage_Sub_Category_Load.html',context)
+
+
+
 
 def Commodity_Products_Manage_Load(request,pk):
     task_array=[]
@@ -1687,8 +1752,9 @@ def Commodity_Products_Manage_Load(request,pk):
         tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
         for task in tasks:
             task_array.append(task.task.title)
-    transaction =TransactionTypes.objects.get(id=pk)
-    records=Commodity_Product_List.objects.filter(category__transaction=transaction)
+    sub_category =Commodity_Category_Sub.objects.get(id=pk)
+    
+    records=Commodity_Product_List.objects.filter(sub_category=sub_category)
 
     context={
     'task_array':task_array,
@@ -1716,11 +1782,11 @@ def Commodity_Products_Manage_Update(request,pk):
 
         record.product_name=product_name.upper()
         record.product_model=product_model.upper()
-        record.details=details.title()
+        record.details=details.upper()
         record.status=status
         record.save()
         messages.success(request,'Record Updated Successfully')
-        return HttpResponseRedirect(reverse('Commodity_Products_Manage_Load',args=(record.category.transaction_id,)))
+        return HttpResponseRedirect(reverse('Commodity_Products_Manage_Load',args=(record.sub_category_id,)))
 
     form.fields['product_name'].initial = record.product_name
     form.fields['product_model'].initial = record.product_model
@@ -1868,8 +1934,58 @@ def Product_Linking_Company_Load(request,period_obj,batch_obj,transaction_obj):
     return render(request,'master_templates/Product_Linking_Company_Load.html',context)
 
 
+def Product_Linking_Category_Load(request,period_obj,batch_obj,transaction_obj,company_pk):
+    task_array=[]
+    if not request.user.user_type == '1':
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
+    company=Companies.objects.get(id=company_pk)
+    period=Commodity_Period.objects.get(id=period_obj)
+    batch=Commodity_Period_Batch.objects.get(id=batch_obj)
+    transaction=TransactionTypes.objects.get(id=transaction_obj)
 
-def Product_Linking_Details(request,pk,period_pk,batch_pk,transaction_pk):
+    categories=Commodity_Categories.objects.filter(transaction=transaction)
+    context={
+    'task_array':task_array,
+    'company':company,
+    'period':period,
+    'batch':batch,
+    'transaction':transaction,
+    'categories':categories,
+    }
+    return render(request,'master_templates/Product_Linking_Category_Load.html',context)
+
+
+
+def Product_Linking_Sub_Category_Load(request,period_obj,batch_obj,transaction_obj,company_pk,cat_pk):
+    task_array=[]
+    if not request.user.user_type == '1':
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
+    
+    company=Companies.objects.get(id=company_pk)
+    period=Commodity_Period.objects.get(id=period_obj)
+    batch=Commodity_Period_Batch.objects.get(id=batch_obj)
+    transaction=TransactionTypes.objects.get(id=transaction_obj)
+    category=Commodity_Categories.objects.get(pk=cat_pk)
+
+    sub_categories = Commodity_Category_Sub.objects.filter(category=category)
+    context={
+    'task_array':task_array,
+    'company':company,
+    'period':period,
+    'batch':batch,
+    'transaction':transaction,
+    'category':category,
+    'sub_categories':sub_categories,
+    }
+    return render(request,'master_templates/Product_Linking_Sub_Category_Load.html',context)
+
+
+
+def Product_Linking_Details(request,pk,period_pk,batch_pk,transaction_pk,company_pk,cat_pk):
     task_array=[]
     if not request.user.user_type == '1':
         tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
@@ -1879,11 +1995,14 @@ def Product_Linking_Details(request,pk,period_pk,batch_pk,transaction_pk):
     period=Commodity_Period.objects.get(id=period_pk)
     batch=Commodity_Period_Batch.objects.get(id=batch_pk)
     transaction=TransactionTypes.objects.get(id=transaction_pk)
-    # return HttpResponse(transaction.name)
-    company=Companies.objects.get(id=pk)
+    category=Commodity_Categories.objects.get(pk=cat_pk)
 
-    records=Commodity_Product_List.objects.filter(category__transaction=transaction,status='ACTIVE')
-    linked_records = Company_Products.objects.filter(company=company,period=period,batch=batch,product__category__transaction=transaction)
+    company=Companies.objects.get(id=company_pk)
+
+    sub_cat =Commodity_Category_Sub.objects.get(id=pk)
+
+    records=Commodity_Product_List.objects.filter(sub_category=sub_cat,status='ACTIVE')
+    linked_records = Company_Products.objects.filter(company=company,period=period,batch=batch,product__sub_category=sub_cat)
 
     context={
     'task_array':task_array,
@@ -1892,50 +2011,58 @@ def Product_Linking_Details(request,pk,period_pk,batch_pk,transaction_pk):
     'linked_records':linked_records,
     'period':period,
     'batch':batch,
+    'sub_cat':sub_cat,
+    'category':category,
     'transaction':transaction,
     }
     return render(request,'master_templates/Product_Linking_Details.html',context)
 
 
-def Product_Linking_Details_Preview(request,comp_pk,pk,period_pk,batch_pk,transaction_pk):
+def Product_Linking_Details_Preview(request,comp_pk,pk,period_pk,batch_pk,transaction_pk,cat_pk,sub_cat):
+   
     task_array=[]
     if not request.user.user_type == '1':
         tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
         for task in tasks:
             task_array.append(task.task.title)
+    processed_by=CustomUser.objects.get(id=request.user.id)
+    processed_by=processed_by.username
+
     form=Product_Linking_Details_Preview_form(request.POST or None)
+    
     company=Companies.objects.get(id=comp_pk)
     product=Commodity_Product_List.objects.get(id=pk)
 
     coop_price_enabled=False
-    if product.category.interest_rate_required != '1':
+    if product.sub_category.category.interest_rate_required != '1':
         coop_price_enabled=True
 
     if request.method == "POST":
+      
         period=Commodity_Period.objects.get(id=period_pk)
         batch=Commodity_Period_Batch.objects.get(id=batch_pk)
 
         amount=request.POST.get('amount')
 
         coop_amount=0
-        if product.category.interest_rate_required != '1':
+        if product.sub_category.category.interest_rate_required != '1':
             coop_amount=request.POST.get('coop_amount')
 
             if not coop_amount:
                 messages.error(request,'Company Price Missing')
-                return HttpResponseRedirect(reverse('Product_Linking_Details',args=(comp_pk,period_pk,batch_pk,transaction_pk)))
+                return HttpResponseRedirect(reverse('Product_Linking_Details',args=(sub_cat,period_pk,batch_pk,transaction_pk,comp_pk,cat_pk,)))
 
 
         if not amount:
             messages.error(request,'Company Price Missing')
-            return HttpResponseRedirect(reverse('Product_Linking_Details',args=(comp_pk,period_pk,batch_pk,transaction_pk)))
+            return HttpResponseRedirect(reverse('Product_Linking_Details',args=(sub_cat,period_pk,batch_pk,transaction_pk,comp_pk,cat_pk,)))
 
         if Company_Products.objects.filter(company=company,product=product,period=period,batch=batch).exists():
-            Company_Products.objects.filter(company=company,product=product,period=period,batch=batch).update(amount=amount,coop_amount=coop_amount)
+            Company_Products.objects.filter(company=company,product=product,period=period,batch=batch).update(amount=amount,coop_amount=coop_amount,processed_by=processed_by)
         else:
-            Company_Products(company=company,product=product,period=period,batch=batch,amount=amount,coop_amount=coop_amount,status='ACTIVE').save()
+            Company_Products(company=company,product=product,period=period,batch=batch,amount=amount,coop_amount=coop_amount,status='ACTIVE',processed_by=processed_by).save()
 
-        return HttpResponseRedirect(reverse('Product_Linking_Details',args=(comp_pk,period_pk,batch_pk,transaction_pk)))
+        return HttpResponseRedirect(reverse('Product_Linking_Details',args=(sub_cat,period_pk,batch_pk,transaction_pk,comp_pk,cat_pk,)))
 
     form.fields['product_name'].initial=product.product_name
     form.fields['product_model'].initial=product.product_model
@@ -2112,20 +2239,75 @@ def Product_Price_Settings_Company_Load(request,period_obj,batch_obj,transaction
     return render(request,'master_templates/Product_Price_Settings_Company_Load.html',context)
 
 
-def Product_Price_Settings_details(request,pk,period_obj,batch_obj,transaction_obj):
+
+
+def Product_Price_Settings_Category_Load(request,period_obj,batch_obj,transaction_obj,company_pk):
     task_array=[]
     if not request.user.user_type == '1':
         tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
         for task in tasks:
             task_array.append(task.task.title)
-    company=Companies.objects.get(id=pk)
+    company=Companies.objects.get(id=company_pk)
     period=Commodity_Period.objects.get(id=period_obj)
     batch=Commodity_Period_Batch.objects.get(id=batch_obj)
     transaction=TransactionTypes.objects.get(id=transaction_obj)
+    categories=Commodity_Categories.objects.filter(transaction=transaction)
+
+    context={
+    'task_array':task_array,
+    'company':company,
+    'period':period,
+    'batch':batch,
+    'transaction':transaction,
+    'categories':categories,
+    }
+    return render(request,'master_templates/Product_Price_Settings_Category_Load.html',context)
 
 
-    # records=Company_Products.objects.filter(company=company)
-    records=Company_Products.objects.filter(company=company,period=period,batch=batch,product__category__transaction=transaction)
+
+def Product_Price_Settings_Sub_Category_Load(request,period_obj,batch_obj,transaction_obj,company_pk,cat_pk):
+    task_array=[]
+    if not request.user.user_type == '1':
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
+    company=Companies.objects.get(id=company_pk)
+    period=Commodity_Period.objects.get(id=period_obj)
+    batch=Commodity_Period_Batch.objects.get(id=batch_obj)
+    transaction=TransactionTypes.objects.get(id=transaction_obj)
+    category=Commodity_Categories.objects.get(id=cat_pk)
+
+    sub_categories = Commodity_Category_Sub.objects.filter(category=category)
+    context={
+    'task_array':task_array,
+    'company':company,
+    'period':period,
+    'batch':batch,
+    'transaction':transaction,
+    'category':category,
+    'sub_categories':sub_categories,
+    }
+    return render(request,'master_templates/Product_Price_Settings_Sub_Category_Load.html',context)
+
+
+
+
+def Product_Price_Settings_details(request,period_obj,batch_obj,transaction_obj,company_pk,cat_pk,sub_cat):
+    task_array=[]
+    if not request.user.user_type == '1':
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
+   
+    company=Companies.objects.get(id=company_pk)
+    period=Commodity_Period.objects.get(id=period_obj)
+    batch=Commodity_Period_Batch.objects.get(id=batch_obj)
+    transaction=TransactionTypes.objects.get(id=transaction_obj)
+    category=Commodity_Categories.objects.get(id=cat_pk)
+    sub_category = Commodity_Category_Sub.objects.get(id=sub_cat)
+
+  
+    records=Company_Products.objects.filter(company=company,period=period,batch=batch,product__sub_category__category__transaction=transaction,product__sub_category=sub_category)
 
     context={
     'task_array':task_array,
@@ -2134,8 +2316,12 @@ def Product_Price_Settings_details(request,pk,period_obj,batch_obj,transaction_o
     'period':period,
     'batch':batch,
     'transaction':transaction,
+    'category':category,
+    'sub_category':sub_category,
     }
     return render(request,'master_templates/Product_Price_Settings_details.html',context)
+
+
 
 
 def Product_Price_Settings_Update(request,comp_pk,pk):
@@ -2144,12 +2330,16 @@ def Product_Price_Settings_Update(request,comp_pk,pk):
         tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
         for task in tasks:
             task_array.append(task.task.title)
+
+    processed_by=CustomUser.objects.get(id=request.user.id)
+    processed_by=processed_by.username
+
     form=Commodity_Products_Price_Update_Form(request.POST or None)
     company=Companies.objects.get(id=comp_pk)
     record=Company_Products.objects.get(id=pk)
 
     coop_price_enabled=False
-    if record.product.category.interest_rate_required != '1':
+    if record.product.sub_category.category.interest_rate_required != '1':
         coop_price_enabled=True
 
 
@@ -2160,15 +2350,17 @@ def Product_Price_Settings_Update(request,comp_pk,pk):
         if coop_price_enabled:
             coop_price=request.POST.get('coop_price')
         else:
-            coop_price=float(unit_cost_price) + (float(record.product.category.interest_rate)/100)*float(unit_cost_price)
+            coop_price=float(unit_cost_price) + (float(record.product.sub_category.category.interest_rate)/100)*float(unit_cost_price)
 
         status=request.POST.get('status')
         record.amount=unit_cost_price
         record.coop_amount=coop_price
+        record.processed_by=processed_by
         record.status=status
         record.save()
-        return HttpResponseRedirect(reverse('Product_Price_Settings_details',args=(comp_pk,record.period_id,record.batch_id,record.product.category.transaction_id)))
-
+        return HttpResponseRedirect(reverse('Product_Price_Settings_details',args=(record.period_id,record.batch_id,record.product.sub_category.category.transaction_id,
+                                                                                   comp_pk,record.product.sub_category.category_id,record.product.sub_category_id, )))
+                                                                           
 
     form.fields['product_name'].initial=record.product.product_name
     form.fields['product_model'].initial=record.product.product_model

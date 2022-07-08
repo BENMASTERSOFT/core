@@ -4,31 +4,29 @@
 {% block content %}
             <div class="page-content fade-in-up">
                 <div class="row">
-                    
-
-                      <div class="col-xl-8">
+                   
+                    <div class="col-xl-6">
                         <div class="ibox">
                             <div class="ibox-head">
-                                <div class="ibox-title">LIST OF COMPANIES | {{period.title}} | {{batch.title}} | {{transaction.name}}</div>
+                                <div class="ibox-title">Commodity Product Categories</div>
                             </div>
                             <div class="ibox-body">
-                                <table class="table">
+                                <table class="table table-bordered">
                                     <thead>
                                         <tr>
                                             <th>#</th>
-                                            <th>Title</th>
+                                            <th>Description</th>
+                                        
                                             <th>Action</th>
-                                      
                                         </tr>
                                     </thead>
                                     <tbody>
-                                    {% for company in companies %}
+                                    {% for record in categories %}
                                         <tr>
                                             <td>{{forloop.counter}}</td>
-                                            <td>{{company.title}}</td>
-                                            
-                                            <td>
-                                                <a href="{% url 'Product_Linking_Category_Load' period.pk batch.pk transaction.pk company.pk  %}" class="btn btn-success">Select</a>  </td>
+                                            <td>{{record.title}}</td>
+                                            <td><a href="{% url 'Commodity_Products_Manage_Sub_Category_Load' record.pk %}" class="btn btn-primary">Load</a></td>
+                                      
                                         </tr>
                                     {% endfor %}
                                     </tbody>
@@ -37,11 +35,10 @@
                         </div>
                     </div>
                 </div>
+             
+           
             </div>
-            
-
-
-    <div class="sidenav-backdrop backdrop"></div>
+  <div class="sidenav-backdrop backdrop"></div>
     <div class="preloader-backdrop">
         <div class="page-preloader">Loading</div>
     </div>

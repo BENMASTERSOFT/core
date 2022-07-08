@@ -28,7 +28,7 @@
                                             <td>{{company.title}}</td>
                                             
                                             <td>
-                                                <a href="{% url 'Product_Price_Settings_details' company.pk period.pk batch.pk transaction.pk %}" class="btn btn-success">Select</a>  </td>
+                                                <a href="{% url 'Product_Price_Settings_Category_Load' period.pk batch.pk transaction.pk company.pk  %}" class="btn btn-success">Select</a>  </td>
                                         </tr>
                                     {% endfor %}
                                     </tbody>

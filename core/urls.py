@@ -264,6 +264,7 @@ urlpatterns = [
 
     path('Commodity_Products_Add_Transactions_Load/', master_views.Commodity_Products_Add_Transactions_Load,name='Commodity_Products_Add_Transactions_Load'),
     path('Commodity_Products_Add_Transactions_Categories_Load/<str:pk>/', master_views.Commodity_Products_Add_Transactions_Categories_Load,name='Commodity_Products_Add_Transactions_Categories_Load'),
+    path('Commodity_Products_Add_Transactions_Sub_Categories_Load/<str:pk>/', master_views.Commodity_Products_Add_Transactions_Sub_Categories_Load,name='Commodity_Products_Add_Transactions_Sub_Categories_Load'),
 
     path('Commodity_Products_add/<str:pk>/', master_views.Commodity_Products_add,name='Commodity_Products_add'),
     path('Manage_Commodity_Categories_Delete/<str:pk>/', master_views.Manage_Commodity_Categories_Delete,name='Manage_Commodity_Categories_Delete'),
@@ -324,6 +325,10 @@ urlpatterns = [
     path('Manage_Commodity_Categories_Update/<str:pk>/', master_views.Manage_Commodity_Categories_Update,name='Manage_Commodity_Categories_Update'),
 
     path('Commodity_Products_Manage_Transactions_Load/', master_views.Commodity_Products_Manage_Transactions_Load,name='Commodity_Products_Manage_Transactions_Load'),
+    path('Commodity_Products_Manage_Category_Load/<str:pk>/', master_views.Commodity_Products_Manage_Category_Load,name='Commodity_Products_Manage_Category_Load'),
+    path('Commodity_Products_Manage_Sub_Category_Load/<str:pk>/', master_views.Commodity_Products_Manage_Sub_Category_Load,name='Commodity_Products_Manage_Sub_Category_Load'),
+   
+
     path('Commodity_Products_Manage_Load/<str:pk>/', master_views.Commodity_Products_Manage_Load,name='Commodity_Products_Manage_Load'),
     path('Commodity_Products_Manage_Update/<str:pk>/', master_views.Commodity_Products_Manage_Update,name='Commodity_Products_Manage_Update'),
     path('Commodity_Products_Manage_Remove/<str:pk>/', master_views.Commodity_Products_Manage_Remove,name='Commodity_Products_Manage_Remove'),
@@ -335,13 +340,22 @@ urlpatterns = [
 
     path('Product_Linking_Period_Load/', master_views.Product_Linking_Period_Load,name='Product_Linking_Period_Load'),
     path('Product_Linking_Company_Load/<str:period_obj>/<str:batch_obj>/<str:transaction_obj>/', master_views.Product_Linking_Company_Load,name='Product_Linking_Company_Load'),
-    path('Product_Linking_Details/<str:pk>/<str:period_pk>/<str:batch_pk>/<str:transaction_pk>/', master_views.Product_Linking_Details,name='Product_Linking_Details'),
-    path('Product_Linking_Details_Preview/<str:comp_pk>/<str:pk>/<str:period_pk>/<str:batch_pk>/<str:transaction_pk>/', master_views.Product_Linking_Details_Preview,name='Product_Linking_Details_Preview'),
+    path('Product_Linking_Category_Load/<str:period_obj>/<str:batch_obj>/<str:transaction_obj>/<str:company_pk>/', master_views.Product_Linking_Category_Load,name='Product_Linking_Category_Load'),
+    path('Product_Linking_Sub_Category_Load/<str:period_obj>/<str:batch_obj>/<str:transaction_obj>/<str:company_pk>/<str:cat_pk>/', master_views.Product_Linking_Sub_Category_Load,name='Product_Linking_Sub_Category_Load'),
+    
+
+
+    path('Product_Linking_Details/<str:pk>/<str:period_pk>/<str:batch_pk>/<str:transaction_pk>/<str:company_pk>/<str:cat_pk>/', master_views.Product_Linking_Details,name='Product_Linking_Details'),
+    path('Product_Linking_Details_Preview/<str:comp_pk>/<str:pk>/<str:period_pk>/<str:batch_pk>/<str:transaction_pk>/<str:cat_pk>/<str:sub_cat>/', master_views.Product_Linking_Details_Preview,name='Product_Linking_Details_Preview'),
     path('Product_UnLinking_Process/<str:comp_pk>/<str:pk>/<str:period_pk>/<str:batch_pk>/<str:transaction_pk>/', master_views.Product_UnLinking_Process,name='Product_UnLinking_Process'),
 
     path('Product_Settings_Period_Load/', master_views.Product_Settings_Period_Load,name='Product_Settings_Period_Load'),
     path('Product_Price_Settings_Company_Load/<str:period_obj>/<str:batch_obj>/<str:transaction_obj>/', master_views.Product_Price_Settings_Company_Load,name='Product_Price_Settings_Company_Load'),
-    path('Product_Price_Settings_details/<str:pk>/<str:period_obj>/<str:batch_obj>/<str:transaction_obj>/', master_views.Product_Price_Settings_details,name='Product_Price_Settings_details'),
+    path('Product_Price_Settings_Category_Load/<str:period_obj>/<str:batch_obj>/<str:transaction_obj>/<str:company_pk>/', master_views.Product_Price_Settings_Category_Load,name='Product_Price_Settings_Category_Load'),
+    path('Product_Price_Settings_Sub_Category_Load/<str:period_obj>/<str:batch_obj>/<str:transaction_obj>/<str:company_pk>/<str:cat_pk>/', master_views.Product_Price_Settings_Sub_Category_Load,name='Product_Price_Settings_Sub_Category_Load'),
+    
+
+    path('Product_Price_Settings_details/<str:period_obj>/<str:batch_obj>/<str:transaction_obj>/<str:company_pk>/<str:cat_pk>/<str:sub_cat>/', master_views.Product_Price_Settings_details,name='Product_Price_Settings_details'),
     path('Product_Price_Settings_Update/<str:comp_pk>/<str:pk>/', master_views.Product_Price_Settings_Update,name='Product_Price_Settings_Update'),
 
     path('Product_Duration_Settings_Period_Load/', master_views.Product_Duration_Settings_Period_Load,name='Product_Duration_Settings_Period_Load'),

@@ -1676,7 +1676,8 @@ class Company_Products_Duration(DateObjectsModels):
 
 
 class Commodity_Product_List(DateObjectsModels):
-    category=models.ForeignKey(Commodity_Categories,on_delete=models.CASCADE)
+    sub_category=models.ForeignKey(Commodity_Category_Sub,on_delete=models.CASCADE,blank=True,null=True)
+    category=models.CharField(max_length=255)
     product_name=models.CharField(max_length=255)
     product_model=models.CharField(max_length=100,blank=True,null=True)
     details=models.TextField(blank=True,null=True)
