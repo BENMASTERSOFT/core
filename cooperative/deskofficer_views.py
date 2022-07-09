@@ -13717,6 +13717,7 @@ def Uploaded_Existing_loan_Done_View_Details(request,pk):
 	
 	member=Members.objects.get(ippis_no=pk)
 
+
 	context={
 	'records':records,
 	'member':member,
@@ -13729,6 +13730,53 @@ def Uploaded_Existing_loan_Done_View_Details(request,pk):
 
 
 
+def Uploaded_Existing_loan_Done_View_Details_Upload_Guarantors(request,pk):
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	task_array=[]
+	for task in tasks:
+		task_array.append(task.task.title)
+
+	task_enabler=TransactionEnabler.objects.filter(status="YES")
+	task_enabler_array=[]
+	for item in task_enabler:
+		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
+
+	form=GuarantorsForm(request.POST or None)
+
+	loan=LoansRepaymentBase.objects.get(loan_number=pk)
+	
+	records=LoanGuarantors.objects.filter(loan=loan)
+	
+	if request.POST:
+		guarantors_id = request.POST.get('guarantors')
+		guarantor=Members.objects.get(id=guarantors_id)
+		LoanGuarantors(loan=loan,member=guarantor).save()
+		return HttpResponseRedirect(reverse('Uploaded_Existing_loan_Done_View_Details_Upload_Guarantors',args=(pk,)))
+
+	context={
+	'loan':loan,
+	'records':records,
+	'form':form,
+	'task_array':task_array,
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
+	}
+	return render(request,'deskofficer_templates/Uploaded_Existing_loan_Done_View_Details_Upload_Guarantors.html',context)
+
+
+
+def Uploaded_Existing_loan_Done_View_Details_Upload_Guarantors_delete(request,pk):
+	record=LoanGuarantors.objects.get(id=pk)
+
+	return_pk = record.loan.loan_number
+	record.delete()
+	return HttpResponseRedirect(reverse("Uploaded_Existing_loan_Done_View_Details_Upload_Guarantors", args=(return_pk,)))
+	
 
 def Uploaded_Existing_Loan_Revert_Search(request):
 	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
@@ -13855,6 +13903,48 @@ def Uploaded_Existing_Loan_Revert_Discard_All(request,pk):
 	return HttpResponseRedirect(reverse('Uploaded_Existing_Loan_Revert_Preview_All',args=(pk,)))
 
 
+
+def Uploade_Existing_Loan_Guarantors_Upload_Period_load(request):
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	task_array=[]
+	for task in tasks:
+		task_array.append(task.task.title)
+
+	task_enabler=TransactionEnabler.objects.filter(status="YES")
+	task_enabler_array=[]
+	for item in task_enabler:
+		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
+
+
+	status="ACTIVE"
+	salary_status='PENDING'
+	
+	form = Uploading_Existing_Savings_Done_List_Select_Period_Form(request.POST or None)
+	if request.method == "POST":
+		date_format = '%Y-%m-%d'
+		
+		tdate_id=request.POST.get('tdate')
+		dtObj = datetime.datetime.strptime(tdate_id, date_format)
+		tdate=get_current_date(dtObj)
+
+		transaction_period=request.POST.get('transaction_range')
+		
+		return HttpResponseRedirect(reverse('Uploade_Existing_Loan_Guarantors_Upload_Period_load', args=(transaction_period,tdate,)))
+	
+
+	form.fields['tdate'].initial=get_current_date(now)
+	context={
+	'form':form,
+	'task_array':task_array,
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
+	}
+	return render(request,'deskofficer_templates/Uploade_Existing_Loan_Guarantors_Upload_Period_load.html',context)
 
 
 

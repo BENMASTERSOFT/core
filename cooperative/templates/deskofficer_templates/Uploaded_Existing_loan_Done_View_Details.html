@@ -19,6 +19,7 @@
                                             <th>Loan Amount</th>
                                             <th>Balance B/F</th>
                                             <th>Repayment</th>
+                                            <th>Action</th>
                                           
                                         </tr>
                                     </thead>
@@ -31,6 +32,7 @@
                                             <td>{{record.loan_amount}}</td>
                                             <td>{{record.balance}}</td>
                                             <td>{{record.repayment}}</td>
+                                            <td><a href="{% url 'Uploaded_Existing_loan_Done_View_Details_Upload_Guarantors' record.loan_number %}" class="btn btn-primary">Add Guarantors</a></td>
                                          
                                         </tr>
                                     {% endfor %}

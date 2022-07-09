@@ -1430,9 +1430,9 @@ class MembersNextOfKins_form(forms.Form):
 class GuarantorsForm(forms.Form):
    guarantor_list=[]
    try:
-      guarantors = Members.objects.all()
+      guarantors = Members.objects.all().order_by('member_id')
       for guarantor in guarantors:
-         small_guarantor=(guarantor.id,guarantor.admin.first_name + " " + guarantor.admin.last_name + " " + guarantor.middle_name)
+         small_guarantor=(guarantor.id,guarantor.admin.first_name + " " + guarantor.admin.last_name + " " + guarantor.middle_name +"(" + str(guarantor.get_member_Id) +")")
          guarantor_list.append(small_guarantor)
    except:
       guarantor_list=[]

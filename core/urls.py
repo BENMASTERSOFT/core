@@ -833,6 +833,12 @@ urlpatterns = [
     path('Uploade_Existing_Loan_Period_load/', deskofficer_views.Uploade_Existing_Loan_Period_load,name='Uploade_Existing_Loan_Period_load'),
     path('Uploaded_Existing_Loans_Done_List_load/<str:transaction_period>/<str:tdate>/', deskofficer_views.Uploaded_Existing_Loans_Done_List_load,name='Uploaded_Existing_Loans_Done_List_load'),
     path('Uploaded_Existing_loan_Done_View_Details/<str:pk>/', deskofficer_views.Uploaded_Existing_loan_Done_View_Details,name='Uploaded_Existing_loan_Done_View_Details'),
+    
+    path('Uploaded_Existing_loan_Done_View_Details_Upload_Guarantors/<str:pk>/', deskofficer_views.Uploaded_Existing_loan_Done_View_Details_Upload_Guarantors,name='Uploaded_Existing_loan_Done_View_Details_Upload_Guarantors'),
+    path('Uploaded_Existing_loan_Done_View_Details_Upload_Guarantors_delete/<str:pk>/', deskofficer_views.Uploaded_Existing_loan_Done_View_Details_Upload_Guarantors_delete,name='Uploaded_Existing_loan_Done_View_Details_Upload_Guarantors_delete'),
+
+    path('Uploade_Existing_Loan_Guarantors_Upload_Period_load/', deskofficer_views.Uploade_Existing_Loan_Guarantors_Upload_Period_load,name='Uploade_Existing_Loan_Guarantors_Upload_Period_load'),
+    
 
     path('Uploaded_Existing_Loan_Revert_Search/', deskofficer_views.Uploaded_Existing_Loan_Revert_Search,name='Uploaded_Existing_Loan_Revert_Search'),
     path('Uploaded_Existing_Loan_Revert_List_Load/', deskofficer_views.Uploaded_Existing_Loan_Revert_List_Load,name='Uploaded_Existing_Loan_Revert_List_Load'),
