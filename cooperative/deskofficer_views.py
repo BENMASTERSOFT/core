@@ -8927,7 +8927,10 @@ def export_norminal_roll_xls(request):
 
 def export_norminal_roll_institution_xls(request,pk):
 	response = HttpResponse(content_type='application/ms-excel')
-	response['Content-Disposition'] = 'attachment; filename="norminal.xls"'
+	filename="ben" + ".xls"
+	salary_institution=SalaryInstitution.objects.get(id=pk)
+
+	response['Content-Disposition'] = f'attachment; filename="{salary_institution.title}_norminal_roll.xls"'
 
 	wb = xlwt.Workbook(encoding='utf-8')
 	ws = wb.add_sheet('Users Data') # this will make a sheet named Users Data
@@ -8937,14 +8940,14 @@ def export_norminal_roll_institution_xls(request,pk):
 	font_style = xlwt.XFStyle()
 	font_style.font.bold = True
 
-	columns = ['File No', 'IPPIS No','Last Name', 'Fist_Name','Middle Name','Phone No' ]
+	columns = ['File No', 'IPPIS No','Last Name', 'First_Name','Middle Name','Phone No' ]
 
 	for col_num in range(len(columns)):
 		ws.write(row_num, col_num, columns[col_num], font_style) # at 0 row 0 column
 
 	font_style = xlwt.XFStyle()  # Sheet body, remaining rows
 
-	salary_institution=SalaryInstitution.objects.get(id=pk)
+	
 	rows = Members.objects.filter(salary_institution=salary_institution).values_list('file_no','ippis_no','admin__last_name','admin__first_name', 'middle_name','phone_number')
 
 	for row in rows:
@@ -12234,7 +12237,28 @@ def Uploading_Existing_Savings_delete(request,pk,return_pk):
 
 
 
+def Uploading_Existing_Savings_All_List_Search(request):
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	task_array=[]
+	for task in tasks:
+		task_array.append(task.task.title)
 
+	task_enabler=TransactionEnabler.objects.filter(status="YES")
+	task_enabler_array=[]
+	for item in task_enabler:
+		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
+	title="Search Members for Savings Posting Revert"
+	form = searchForm(request.POST or None)
+
+	return render(request,'deskofficer_templates/Uploading_Existing_Savings_All_List_Search.html',{'form':form,'title':title,'task_array':task_array,
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
+	})
 
 
 
@@ -12253,22 +12277,32 @@ def Uploading_Existing_Savings_All_List_load(request):
 	if Staff.objects.filter(admin=request.user,default_password='YES'):
 		default_password="YES"
 
-
 	title="LIST OF MEMBERS"
-
+	form = searchForm(request.POST)
+	status="ACTIVE"
 	savings_status='PENDING'
+	if request.method == "POST":
+		if request.POST.get("title")=="":
+			messages.info(request,"Please Enter a search data")
+			return HttpResponseRedirect(reverse('Uploaded_Existing_Loan_Revert_Search'))
 
 
-	records=Members.objects.all()
+		records=Members.objects.filter(Q(file_no__icontains=form['title'].value()) |Q(ippis_no__icontains=form['title'].value()) |Q(phone_number__icontains=form['title'].value()) | Q(admin__first_name__icontains=form['title'].value()) | Q(admin__last_name__icontains=form['title'].value()) | Q(middle_name__icontains=form['title'].value())).filter(status=status,member_category="OLD").filter(~Q(savings_status=savings_status))
+		if records.count() <= 0:
+			messages.info(request,"No Record Found")
+			return HttpResponseRedirect(reverse('Uploaded_Existing_Loan_Revert_Search'))
 
-	context={
-	'records':records,
-	'title':title,
-	'task_array':task_array,
-	'task_enabler_array':task_enabler_array,
-	'default_password':default_password,
-	}
-	return render(request,'deskofficer_templates/Uploading_Existing_Savings_All_List_load.html',context)
+		context={
+		'records':records,
+		'title':title,
+		'task_array':task_array,
+		'task_enabler_array':task_enabler_array,
+		'default_password':default_password,
+		}
+		return render(request,'deskofficer_templates/Uploaded_Existing_Loan_Revert_List_Load.html',context)
+
+
+
 
 
 def Uploading_Existing_Savings_Preview_All(request,pk):
@@ -12313,7 +12347,11 @@ def Uploading_Existing_Savings_Preview_All(request,pk):
 
 def Uploading_Existing_Savings_delete_All(request,pk,return_pk):
 	record=SavingsUploaded.objects.get(id=pk)
+	account_number=record.account_number
 	record.delete()
+	StandingOrderAccounts.objects.filter(transaction__account_number=account_number).delete()
+	PersonalLedger.objects.filter(account_number=account_number).delete()
+
 	member=Members.objects.get(id=return_pk)
 	if SavingsUploaded.objects.filter(transaction__member=member).exists():
 		pass
@@ -12326,13 +12364,16 @@ def Uploading_Existing_Savings_delete_All(request,pk,return_pk):
 def Uploading_Existing_Savings_Discard_All(request,pk):
 	member=Members.objects.get(id=pk)
 	SavingsUploaded.objects.filter(transaction__member=member).delete()
+	StandingOrderAccounts.objects.filter(transaction__member=member).delete()
+	PersonalLedger.objects.filter(member=member,transaction__source__title='SAVINGS').delete()
+
 	member.savings_status='PENDING'
 	member.save()
 	return HttpResponseRedirect(reverse('Uploading_Existing_Savings_Preview_All',args=(pk,)))
 
 
 
-def Uploading_Existing_Savings_Done_Transaction_Date_Update(request):
+def Members_without_Compulsory_Savings(request):
 	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
 	task_array=[]
 	for task in tasks:
@@ -12347,61 +12388,81 @@ def Uploading_Existing_Savings_Done_Transaction_Date_Update(request):
 	if Staff.objects.filter(admin=request.user,default_password='YES'):
 		default_password="YES"
 
-	status="ACTIVE"
+	members=Members.objects.filter(status='ACTIVE')
 
-	if TransactionPeriods.objects.filter(status=status).exists():
-		transaction_period=TransactionPeriods.objects.get(status=status)
-		transaction_period=transaction_period.transaction_period
-	else:
-		transaction_period=now
+	transaction=[]
+	if  CompulsorySavings.objects.all().exists():
+		transaction = CompulsorySavings.objects.first()
 
 
-	form=Uploading_Existing_Savings_form(request.POST or None)
-
-	records=SavingsUploaded.objects.all()
-	if request.method == 'POST':
-		tdate_status=request.POST.get('t-date')
-		
-		date_format = '%Y-%m-%d'
-		
-
-		transaction_period_id=request.POST.get('transaction_period')
-		dtObj = datetime.datetime.strptime(transaction_period_id, date_format)
-		transaction_period=get_current_date(dtObj)
-		
-		if tdate_status:
-			tdate_id=request.POST.get('tdate')
-			dtObj = datetime.datetime.strptime(tdate_id, date_format)
-			tdate=get_current_date(dtObj)
-
-			SavingsUploaded.objects.all().update(tdate=tdate,transaction_period=transaction_period)
-		
-			particulars = f"Balance Brought Forward as at {transaction_period}"
-			for record in records:
-				PersonalLedger.objects.filter(account_number=record.transaction.account_number).update(transaction_period=transaction_period,tdate=tdate,particulars=particulars)
-		
-
+	member_array=[]
+	for member in members:
+		if SavingsUploaded.objects.filter(transaction__member=member,transaction__transaction=transaction.transaction).exists():
+			pass
 		else:
+			member_array.append((member.get_member_Id,member.get_full_name,member.ippis_no,member.salary_institution.title))
 
-			SavingsUploaded.objects.all().update(transaction_period=transaction_period)
-		
 
-			particulars = f"Balance Brought Forward as at {transaction_period}"
-			for record in records:
-				PersonalLedger.objects.filter(account_number=record.transaction.account_number).update(transaction_period=transaction_period,particulars=particulars)
-			
-
-		return HttpResponseRedirect(reverse('Uploading_Existing_Savings_Done_Transaction_Date_Update'))
-	form.fields['transaction_period'].initial = get_current_date(transaction_period)
-	form.fields['tdate'].initial = get_current_date(now)
 	context={
-	'records':records,
-	'form':form,
+	'member_array':member_array,
+
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
 	'default_password':default_password,
 	}
-	return render(request,'deskofficer_templates/Uploading_Existing_Savings_Done_Transaction_Date_Update.html',context)
+	return render(request,'deskofficer_templates/Members_without_Compulsory_Savings.html',context)
+
+
+
+
+def Members_without_Compulsory_Savings_export_Excel_xls(request):
+	status='TREATED'
+	response = HttpResponse(content_type='application/ms-excel')
+
+	response['Content-Disposition'] = 'attachment; filename="xmas_savings_paid.xls"'
+
+	wb = xlwt.Workbook(encoding='utf-8')
+	ws = wb.add_sheet('Users Data') # this will make a sheet named Users Data
+
+	row_num = 0  # Sheet header, first row
+
+	font_style = xlwt.XFStyle()
+	font_style.font.bold = True
+
+	columns = ['Member ID', 'Name', 'Saving Number', 'Bank', 'Account Name','Account Number','Amount']
+
+	for col_num in range(len(columns)):
+		ws.write(row_num, col_num, columns[col_num], font_style) # at 0 row 0 column
+
+	font_style = xlwt.XFStyle()  # Sheet body, remaining rows
+
+	members=Members.objects.filter(status='ACTIVE')
+
+	transaction=[]
+	if  CompulsorySavings.objects.all().exists():
+		transaction = CompulsorySavings.objects.first()
+
+
+	member_array=[]
+	for member in members:
+		if SavingsUploaded.objects.filter(transaction__member=member,transaction__transaction=transaction.transaction).exists():
+			pass
+		else:
+			member_array.append((member.get_member_Id,member.get_full_name,member.ippis_no,member.salary_institution.title))
+
+
+
+
+	rows = Xmas_Savings_Shortlist.objects.filter(batch=batch,payment_channel=payment,status=status).values_list('transaction__member__member_id','transaction__member__full_name','transaction__account_number','bank_account__bank','bank_account__account_name', 'bank_account__account_number', 'amount')
+
+	for row in rows:
+		row_num += 1
+		for col_num in range(len(row)):
+			ws.write(row_num, col_num, row[col_num], font_style)
+	wb.save(response)
+
+	
+	return response
 
 
 
@@ -12836,7 +12897,7 @@ def Uploading_Existing_Loans_List_load(request):
 		records=Members.objects.filter(Q(file_no__icontains=form['title'].value()) |Q(ippis_no__icontains=form['title'].value()) |Q(phone_number__icontains=form['title'].value()) | Q(admin__first_name__icontains=form['title'].value()) | Q(admin__last_name__icontains=form['title'].value()) | Q(middle_name__icontains=form['title'].value())).filter(status=status,loan_status=loan_status,member_category="OLD")
 		if records.count() <= 0:
 			messages.info(request,"No Record Found")
-			return HttpResponseRedirect(reverse('Transaction_adjustment_history_Search'))
+			return HttpResponseRedirect(reverse('Uploading_Existing_Loans_Search'))
 
 		context={
 		'records':records,
@@ -13164,13 +13225,11 @@ def Uploading_Existing_Loans_delete(request,pk,return_pk):
 ########################################################################
 ############################# UPLOADING EXISTING ADDITIONAL LOANS ######
 #########################################################################
-def Uploading_Existing_Aditional_Loans(request):
+def Uploading_Existing_Additional_Loans_Search(request):
 	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
 	task_array=[]
 	for task in tasks:
 		task_array.append(task.task.title)
-
-
 
 	task_enabler=TransactionEnabler.objects.filter(status="YES")
 	task_enabler_array=[]
@@ -13181,18 +13240,57 @@ def Uploading_Existing_Aditional_Loans(request):
 	if Staff.objects.filter(admin=request.user,default_password='YES'):
 		default_password="YES"
 
+	title="Search Members for Additional Loans Information"
+	form = searchForm(request.POST or None)
 
-	loan_status='PENDING'
-	records=Members.objects.filter(~Q(loan_status=loan_status))
-
-	context={
-
-	'records':records,
-	'task_array':task_array,
+	return render(request,'deskofficer_templates/Uploading_Existing_Additional_Loans_Search.html',{'form':form,'title':title,'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
 	'default_password':default_password,
-	}
-	return render(request,'deskofficer_templates/Uploading_Existing_Aditional_Loans.html',context)
+	})
+
+
+
+def Uploading_Existing_Aditional_Loans(request):
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	task_array=[]
+	for task in tasks:
+		task_array.append(task.task.title)
+
+	task_enabler=TransactionEnabler.objects.filter(status="YES")
+	task_enabler_array=[]
+	for item in task_enabler:
+		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
+	title="LIST OF MEMBERS"
+	form = searchForm(request.POST)
+	status="ACTIVE"
+	loan_status='PENDING'
+	if request.method == "POST":
+		if request.POST.get("title")=="":
+			messages.info(request,"Please Enter a search data")
+			return HttpResponseRedirect(reverse('Uploading_Existing_Additional_Loans_Search'))
+
+
+		records=Members.objects.filter(Q(file_no__icontains=form['title'].value()) |Q(ippis_no__icontains=form['title'].value()) |Q(phone_number__icontains=form['title'].value()) | Q(admin__first_name__icontains=form['title'].value()) | Q(admin__last_name__icontains=form['title'].value()) | Q(middle_name__icontains=form['title'].value())).filter(status=status,member_category="OLD").filter(~Q(loan_status=loan_status))
+		if records.count() <= 0:
+			messages.info(request,"No Record Found")
+			return HttpResponseRedirect(reverse('Uploading_Existing_Additional_Loans_Search'))
+
+		context={
+		'records':records,
+		'title':title,
+		'task_array':task_array,
+		'task_enabler_array':task_enabler_array,
+		'default_password':default_password,
+		}
+		return render(request,'deskofficer_templates/Uploading_Existing_Aditional_Loans.html',context)
+
+
+
 
 
 def Uploading_Existing_Additional_Loans_Preview(request,pk):
@@ -13215,6 +13313,7 @@ def Uploading_Existing_Additional_Loans_Preview(request,pk):
 	form=Uploading_Existing_Loans_form(request.POST or None)
 	member=Members.objects.get(id=pk)
 	processed_by=CustomUser.objects.get(id=request.user.id)
+	processed_by=processed_by.username
 
 	records=LoansUploaded.objects.filter(member=member)
 
@@ -13262,17 +13361,27 @@ def Uploading_Existing_Additional_Loans_Preview(request,pk):
 		if float(repayment)<=0:
 			messages.error(request,'Monthly Repayment cannot be zero')
 			return HttpResponseRedirect(reverse('Uploading_Existing_Additional_Loans_Preview',args=(pk,)))
-
-
-		interest_rate=request.POST.get('interest_rate')
-		if float(interest_rate)<0:
-			messages.error(request,'Interest Rate cannot be less than zero')
+	
+		if float(loan_amount) < float(repayment):
+			messages.error(request,f'This Monthly repayment cannot exceed {loan_amount}')
 			return HttpResponseRedirect(reverse('Uploading_Existing_Additional_Loans_Preview',args=(pk,)))
 
-		admin_charge_rate=request.POST.get('admin_charge_rate')
-		if float(interest_rate)<0:
-			messages.error(request,'Admin Charge Rate cannot be less than zero')
+		loan_max=transaction.maximum_amount
+		if float(loan_amount) > float(loan_max):
+			messages.error(request,f'This Loan amount cannot exceed {loan_max}')
 			return HttpResponseRedirect(reverse('Uploading_Existing_Additional_Loans_Preview',args=(pk,)))
+	
+
+
+		interest_rate=transaction.interest_rate
+		# if float(interest_rate)<0:
+		# 	messages.error(request,'Interest Rate cannot be less than zero')
+		# 	return HttpResponseRedirect(reverse('Uploading_Existing_Additional_Loans_Preview',args=(pk,)))
+
+		admin_charge_rate=transaction.admin_charges
+		# if float(interest_rate)<0:
+		# 	messages.error(request,'Admin Charge Rate cannot be less than zero')
+		# 	return HttpResponseRedirect(reverse('Uploading_Existing_Additional_Loans_Preview',args=(pk,)))
 
 
 		duration=request.POST.get('duration')
@@ -13310,6 +13419,7 @@ def Uploading_Existing_Additional_Loans_Preview(request,pk):
 			record.processed_by=processed_by.username
 			record.status=transaction_status
 			record.transaction_period=transaction_period
+			record.processed_by=processed_by
 			record.save()
 			messages.success(request,"Record Updated Successfully")
 		else:
@@ -13326,11 +13436,13 @@ def Uploading_Existing_Additional_Loans_Preview(request,pk):
 				interest_deduction=interest_deduction,
 				start_date=start_date,
 				stop_date=stop_date,
-				processed_by=processed_by.username,status=transaction_status,transaction_period=transaction_period)
+				processed_by=processed_by,status=transaction_status,transaction_period=transaction_period)
 			record.save()
 			messages.success(request,"Record Addedd Successfully")
 
 		return HttpResponseRedirect(reverse('Uploading_Existing_Additional_Loans_Preview',args=(pk,)))
+	
+	transaction_period=date(2022,6,30)
 	form.fields['start_date'].initial=now
 	form.fields['transaction_period'].initial=get_current_date(transaction_period)
 
@@ -13408,6 +13520,7 @@ def Uploading_Existing_Additional_Loans_validate(request,pk):
 			start_date=record.start_date
 			stop_date=record.stop_date
 			processed_by=CustomUser.objects.get(id=request.user.id)
+			processed_by=processed_by.username
 
 			loan_code=transaction.code
 			if LoanNumber.objects.all().count() == 0:
@@ -13464,17 +13577,21 @@ def Uploading_Existing_Additional_Loans_validate(request,pk):
 						schedule_status
 						)
 
+
 			record.status='TREATED'
+			record.loan_number=loan_number
 			record.save()
 
+
 		member.loan_status=loan_status
+
 		member.save()
 		messages.success(request,"Record Validated Successfully")
 
 
 	else:
 		messages.error(request,"No Record Found")
-	return HttpResponseRedirect(reverse('Uploading_Existing_Aditional_Loans'))
+	return HttpResponseRedirect(reverse('Uploading_Existing_Additional_Loans_Search'))
 
 
 
@@ -13608,6 +13725,138 @@ def Uploaded_Existing_loan_Done_View_Details(request,pk):
 	'default_password':default_password,
 	}
 	return render(request,'deskofficer_templates/Uploaded_Existing_loan_Done_View_Details.html',context)
+
+
+
+
+
+def Uploaded_Existing_Loan_Revert_Search(request):
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	task_array=[]
+	for task in tasks:
+		task_array.append(task.task.title)
+
+	task_enabler=TransactionEnabler.objects.filter(status="YES")
+	task_enabler_array=[]
+	for item in task_enabler:
+		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
+	title="Search Members for Loans Posting Revert"
+	form = searchForm(request.POST or None)
+
+	return render(request,'deskofficer_templates/Uploaded_Existing_Loan_Revert_Search.html',{'form':form,'title':title,'task_array':task_array,
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
+	})
+
+
+
+def Uploaded_Existing_Loan_Revert_List_Load(request):
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	task_array=[]
+	for task in tasks:
+		task_array.append(task.task.title)
+
+	task_enabler=TransactionEnabler.objects.filter(status="YES")
+	task_enabler_array=[]
+	for item in task_enabler:
+		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
+	title="LIST OF MEMBERS"
+	form = searchForm(request.POST)
+	status="ACTIVE"
+	loan_status='PENDING'
+	if request.method == "POST":
+		if request.POST.get("title")=="":
+			messages.info(request,"Please Enter a search data")
+			return HttpResponseRedirect(reverse('Uploaded_Existing_Loan_Revert_Search'))
+
+
+		records=Members.objects.filter(Q(file_no__icontains=form['title'].value()) |Q(ippis_no__icontains=form['title'].value()) |Q(phone_number__icontains=form['title'].value()) | Q(admin__first_name__icontains=form['title'].value()) | Q(admin__last_name__icontains=form['title'].value()) | Q(middle_name__icontains=form['title'].value())).filter(status=status,member_category="OLD").filter(~Q(loan_status=loan_status))
+		if records.count() <= 0:
+			messages.info(request,"No Record Found")
+			return HttpResponseRedirect(reverse('Uploaded_Existing_Loan_Revert_Search'))
+
+		context={
+		'records':records,
+		'title':title,
+		'task_array':task_array,
+		'task_enabler_array':task_enabler_array,
+		'default_password':default_password,
+		}
+		return render(request,'deskofficer_templates/Uploaded_Existing_Loan_Revert_List_Load.html',context)
+
+
+
+def Uploaded_Existing_Loan_Revert_Preview_All(request,pk):
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	task_array=[]
+	for task in tasks:
+		task_array.append(task.task.title)
+
+	task_enabler=TransactionEnabler.objects.filter(status="YES")
+	task_enabler_array=[]
+	for item in task_enabler:
+		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
+	
+	member_id=Members.objects.get(id=pk)
+
+	records=LoansUploaded.objects.filter(member=member_id)
+	
+	context={
+	'member':member_id,
+	
+	'records':records,
+	'return_pk':pk,
+	'task_array':task_array,
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
+	}
+	return render(request,'deskofficer_templates/Uploaded_Existing_Loan_Revert_Preview_All.html',context)
+
+
+def Uploaded_Existing_Loan_Revert_delete_Selected(request,pk,return_pk):
+	record=LoansUploaded.objects.get(id=pk)
+	loan_number=record.loan_number
+	record.delete()
+	PersonalLedger.objects.filter(account_number=loan_number).delete()
+	LoansRepaymentBase.objects.filter(loan_number=loan_number).delete()
+
+	member=Members.objects.get(id=return_pk)
+
+	if LoansUploaded.objects.filter(member=member).exists():
+		pass
+	else:
+		member.loan_status='PENDING'
+		member.save()
+	return HttpResponseRedirect(reverse('Uploaded_Existing_Loan_Revert_Preview_All',args=(return_pk,)))
+
+
+def Uploaded_Existing_Loan_Revert_Discard_All(request,pk):
+	member=Members.objects.get(id=pk)
+	LoansUploaded.objects.filter(member=member).delete()
+	LoansRepaymentBase.objects.filter(member=member).delete()
+	PersonalLedger.objects.filter(member=member,transaction__source__title='LOAN').delete()
+	member.loan_status='PENDING'
+	member.save()
+	return HttpResponseRedirect(reverse('Uploaded_Existing_Loan_Revert_Preview_All',args=(pk,)))
+
+
+
+
 
 
 ########################################################################

@@ -263,6 +263,9 @@ urlpatterns = [
 
 
     path('Commodity_Products_Add_Transactions_Load/', master_views.Commodity_Products_Add_Transactions_Load,name='Commodity_Products_Add_Transactions_Load'),
+    path('Commodity_Products_add_Delete/<str:pk>/<str:return_pk>/', master_views.Commodity_Products_add_Delete,name='Commodity_Products_add_Delete'),
+    path('Commodity_Products_add_Update_Category/<str:pk>/<str:return_pk>/', master_views.Commodity_Products_add_Update_Category,name='Commodity_Products_add_Update_Category'),
+    
     path('Commodity_Products_Add_Transactions_Categories_Load/<str:pk>/', master_views.Commodity_Products_Add_Transactions_Categories_Load,name='Commodity_Products_Add_Transactions_Categories_Load'),
     path('Commodity_Products_Add_Transactions_Sub_Categories_Load/<str:pk>/', master_views.Commodity_Products_Add_Transactions_Sub_Categories_Load,name='Commodity_Products_Add_Transactions_Sub_Categories_Load'),
 
@@ -799,12 +802,13 @@ urlpatterns = [
     path('Uploading_Existing_Savings_delete/<str:pk>/<str:return_pk>/', deskofficer_views.Uploading_Existing_Savings_delete,name='Uploading_Existing_Savings_delete'),
     
 
+    path('Uploading_Existing_Savings_All_List_Search/', deskofficer_views.Uploading_Existing_Savings_All_List_Search,name='Uploading_Existing_Savings_All_List_Search'),
     path('Uploading_Existing_Savings_All_List_load/', deskofficer_views.Uploading_Existing_Savings_All_List_load,name='Uploading_Existing_Savings_All_List_load'),
     path('Uploading_Existing_Savings_Preview_All/<str:pk>/', deskofficer_views.Uploading_Existing_Savings_Preview_All,name='Uploading_Existing_Savings_Preview_All'),
     path('Uploading_Existing_Savings_delete_All/<str:pk>/<str:return_pk>/', deskofficer_views.Uploading_Existing_Savings_delete_All,name='Uploading_Existing_Savings_delete_All'),
     path('Uploading_Existing_Savings_Discard_All/<str:pk>/', deskofficer_views.Uploading_Existing_Savings_Discard_All,name='Uploading_Existing_Savings_Discard_All'),
 
-    path('Uploading_Existing_Savings_Done_Transaction_Date_Update/', deskofficer_views.Uploading_Existing_Savings_Done_Transaction_Date_Update,name='Uploading_Existing_Savings_Done_Transaction_Date_Update'),
+    path('Members_without_Compulsory_Savings/', deskofficer_views.Members_without_Compulsory_Savings,name='Members_without_Compulsory_Savings'),
     
 
     path('Uploading_Existing_Savings_Done_List_Select_Period/', deskofficer_views.Uploading_Existing_Savings_Done_List_Select_Period,name='Uploading_Existing_Savings_Done_List_Select_Period'),
@@ -821,6 +825,7 @@ urlpatterns = [
     path('Uploading_Existing_Loans_delete/<str:pk>/<str:return_pk>/', deskofficer_views.Uploading_Existing_Loans_delete,name='Uploading_Existing_Loans_delete'),
     path('Uploading_Existing_Loans_validate/<str:pk>/', deskofficer_views.Uploading_Existing_Loans_validate,name='Uploading_Existing_Loans_validate'),
 
+    path('Uploading_Existing_Additional_Loans_Search/', deskofficer_views.Uploading_Existing_Additional_Loans_Search,name='Uploading_Existing_Additional_Loans_Search'),
     path('Uploading_Existing_Aditional_Loans/', deskofficer_views.Uploading_Existing_Aditional_Loans,name='Uploading_Existing_Aditional_Loans'),
     path('Uploading_Existing_Additional_Loans_Preview/<str:pk>/', deskofficer_views.Uploading_Existing_Additional_Loans_Preview,name='Uploading_Existing_Additional_Loans_Preview'),
     path('Uploading_Existing_Additional_Loans_validate/<str:pk>/', deskofficer_views.Uploading_Existing_Additional_Loans_validate,name='Uploading_Existing_Additional_Loans_validate'),
@@ -828,6 +833,14 @@ urlpatterns = [
     path('Uploade_Existing_Loan_Period_load/', deskofficer_views.Uploade_Existing_Loan_Period_load,name='Uploade_Existing_Loan_Period_load'),
     path('Uploaded_Existing_Loans_Done_List_load/<str:transaction_period>/<str:tdate>/', deskofficer_views.Uploaded_Existing_Loans_Done_List_load,name='Uploaded_Existing_Loans_Done_List_load'),
     path('Uploaded_Existing_loan_Done_View_Details/<str:pk>/', deskofficer_views.Uploaded_Existing_loan_Done_View_Details,name='Uploaded_Existing_loan_Done_View_Details'),
+
+    path('Uploaded_Existing_Loan_Revert_Search/', deskofficer_views.Uploaded_Existing_Loan_Revert_Search,name='Uploaded_Existing_Loan_Revert_Search'),
+    path('Uploaded_Existing_Loan_Revert_List_Load/', deskofficer_views.Uploaded_Existing_Loan_Revert_List_Load,name='Uploaded_Existing_Loan_Revert_List_Load'),
+    path('Uploaded_Existing_Loan_Revert_Preview_All/<str:pk>/', deskofficer_views.Uploaded_Existing_Loan_Revert_Preview_All,name='Uploaded_Existing_Loan_Revert_Preview_All'),
+    path('Uploaded_Existing_Loan_Revert_Discard_All/<str:pk>/', deskofficer_views.Uploaded_Existing_Loan_Revert_Discard_All,name='Uploaded_Existing_Loan_Revert_Discard_All'),
+    path('Uploaded_Existing_Loan_Revert_delete_Selected/<str:pk>/<str:return_pk>/', deskofficer_views.Uploaded_Existing_Loan_Revert_delete_Selected,name='Uploaded_Existing_Loan_Revert_delete_Selected'),
+    
+    
 
     path('Uploading_Existing_Savings_Additional_search/', deskofficer_views.Uploading_Existing_Savings_Additional_search,name='Uploading_Existing_Savings_Additional_search'),
     path('Uploading_Existing_Savings_Additional_list_load/', deskofficer_views.Uploading_Existing_Savings_Additional_list_load,name='Uploading_Existing_Savings_Additional_list_load'),

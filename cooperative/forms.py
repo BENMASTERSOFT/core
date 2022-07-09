@@ -1921,7 +1921,7 @@ class Uploading_Existing_Savings_Verification_Update_form(forms.Form):
 class Uploading_Existing_Loans_form(forms.Form):
   transaction_list=[]
   try:
-    transactions = TransactionTypes.objects.filter(source__title='LOAN')
+    transactions = TransactionTypes.objects.filter(source__title='LOAN',category='MONETARY')
     for transaction in transactions:
        small_transaction=(transaction.id,transaction.name)
        transaction_list.append(small_transaction)

@@ -1661,8 +1661,8 @@ def Commodity_Products_add(request,pk):
             task_array.append(task.task.title)
     form = Commodity_Products_add_Form(request.POST or None)
     sub_category =Commodity_Category_Sub.objects.get(id=pk)
-    records=Commodity_Product_List.objects.filter(category='8')
-    # records=Commodity_Product_List.objects.filter(sub_category=sub_category)
+    # records=Commodity_Product_List.objects.filter(~Q(category='1'))
+    records=Commodity_Product_List.objects.filter(sub_category=sub_category)
 
     if request.method=="POST":
         product_name = request.POST.get('product_name').upper()
@@ -1670,13 +1670,13 @@ def Commodity_Products_add(request,pk):
         details = request.POST.get('details').upper()
         if Commodity_Product_List.objects.filter(product_name=product_name).exists():
             Commodity_Product_List.objects.filter(product_name=product_name).update(sub_category=sub_category,
-            product_name=product_name,
-            product_model=product_model,
-            details=details,
+            product_name=product_name.strip(),
+            product_model=product_model.strip(),
+            details=details.strip(),
             status="ACTIVE",category=0)
             messages.success(request,'Record Updated Successfully')
         else:
-            queryset=Commodity_Product_List(sub_category=sub_category,product_name=product_name,product_model=product_model,details=details,status="ACTIVE")
+            queryset=Commodity_Product_List(sub_category=sub_category,product_name=product_name.strip(),product_model=product_model.strip(),details=details.strip(),status="ACTIVE")
             messages.success(request,'Record Submitted Successfully')
             queryset.save()
        
@@ -1689,6 +1689,21 @@ def Commodity_Products_add(request,pk):
     'records':records,
     }
     return render(request,'master_templates/Commodity_Products_add.html',context)
+
+
+def Commodity_Products_add_Delete(request,pk,return_pk):
+    record=Commodity_Product_List.objects.get(id=pk)
+    record.delete()
+   
+    return HttpResponseRedirect(reverse('Commodity_Products_add',args=(return_pk,)))
+
+
+
+def Commodity_Products_add_Update_Category(request,pk,return_pk):
+    Commodity_Product_List.objects.filter(id=pk).update(category=1)
+
+   
+    return HttpResponseRedirect(reverse('Commodity_Products_add',args=(return_pk,)))
 
 
 
@@ -1758,6 +1773,7 @@ def Commodity_Products_Manage_Load(request,pk):
     context={
     'task_array':task_array,
     'records':records,
+    'sub_category':sub_category,
     }
     return render(request,'master_templates/Commodity_Products_Manage_Load.html',context)
 
@@ -1801,6 +1817,7 @@ def Commodity_Products_Manage_Update(request,pk):
 
 
 def Commodity_Products_Manage_Remove(request,pk):
+
     record=Commodity_Product_List.objects.get(id=pk)
 
     if Members_Commodity_Loan_Products_Selection.objects.filter(product__product=record).exists():
@@ -1808,7 +1825,7 @@ def Commodity_Products_Manage_Remove(request,pk):
         return HttpResponseRedirect(reverse('Commodity_Products_Manage_Load',args=(record.category.transaction_id,)))
     record.delete()
     messages.success(request,'Record Deleted Successfully')
-    return HttpResponseRedirect(reverse('Commodity_Products_Manage_Load',args=(record.category.transaction_id,)))
+    return HttpResponseRedirect(reverse('Commodity_Products_Manage_Load',args=(record.sub_category_id,)))
 
 
 

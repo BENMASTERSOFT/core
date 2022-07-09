@@ -9,8 +9,8 @@
                     <div class="col-xl-12">
                         <div class="ibox">
                             <div class="ibox-head">
-                                <div class="ibox-title">UPLOADED SAVINGS | {{member.get_full_name}} | {{member.get_member_Id}} 
-                                    <a href="{% url 'Uploading_Existing_Savings_Discard_All' member.pk %}" class="btn btn-danger">Discard All Records</a>
+                                <div class="ibox-title">UPLOADED LOANS | {{member.get_full_name}} | {{member.get_member_Id}} 
+                                    <a href="{% url 'Uploaded_Existing_Loan_Revert_Discard_All' member.pk %}" class="btn btn-danger">Discard All Records</a>
                                 </div>
                             </div>
                             <div class="ibox-body">
@@ -18,11 +18,11 @@
                                     <thead>
                                         <tr>
                                             <th>#</th>
-                                            <th>Account Number</th>
+                                            <th>Loan Number</th>
                                             <th>Description</th>
                                             <th>Particulars</th>
                                             <th>Balance</th>
-                                            <th>Amount</th>
+                                            <th>Repayment</th>
                                             <th>Action</th>
                                         </tr>
                                     </thead>
@@ -30,13 +30,13 @@
                                     {% for record in records %}
                                         <tr>
                                             <td>{{forloop.counter}}</td>
-                                            <td>{{record.transaction.account_number}}</td>
-                                            <td>{{record.transaction.transaction.name}}</td>
+                                            <td>{{record.loan_number}}</td>
+                                            <td>{{record.transaction.name}}</td>
                                             <td>{{record.particulars}}</td>
                                             <td>{{record.balance}}</td>
-                                            <td>{{record.schedule_amount}}</td>
+                                            <td>{{record.repayment}}</td>
                                        
-                                            <td><a href="{% url 'Uploading_Existing_Savings_delete_All' record.pk return_pk %}" class="btn btn-danger">Remove</a></td>
+                                            <td><a href="{% url 'Uploaded_Existing_Loan_Revert_delete_Selected' record.pk return_pk %}" class="btn btn-danger">Remove</a></td>
                                         </tr>
                                     {% endfor %}
                                     </tbody>

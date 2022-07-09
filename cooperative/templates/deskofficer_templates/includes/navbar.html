@@ -836,34 +836,52 @@
                                         <a href="{% url 'Uploading_Existing_Savings_Done_List_Select_Period' %}">Savings Already Uploaded</a>
                                     </li>
                                     <li>
-                                        <a href="{% url 'Uploading_Existing_Savings_All_List_load' %}">Revert Uploaded Savings</a>
+                                        <a href="{% url 'Uploading_Existing_Savings_All_List_Search' %}">Revert Uploaded Savings</a>
                                     </li>
-                                   {% comment %} <li>
-                                        <a href="{% url 'Uploading_Existing_Savings_Done_Transaction_Date_Update' %}">Update Transaction Period</a>
-                                    </li>{% endcomment %}
+                               <li>
+                                        <a href="{% url 'Members_without_Compulsory_Savings' %}">Members Without Compulsory Savings</a>
+                                    </li>
                                 </ul>
                             </li>
 
-                             <li>
+                            <li>
                                 <a href="javascript:;">
-                                    <span class="nav-label">Loans</span><i class="fa fa-angle-left arrow"></i></a>
+                                    <span class="nav-label">Monetary Loans</span><i class="fa fa-angle-left arrow"></i></a>
                                 <ul class="nav-3-level collapse">
                                     <li>
                                        <a href="{% url 'Uploading_Existing_Loans_Search' %}">Uploading Loans</a>
                                     </li>
                                     <li>
-                                       <a href="{% url 'Uploading_Existing_Aditional_Loans' %}">Additional Loan</a>
+                                       <a href="{% url 'Uploading_Existing_Additional_Loans_Search' %}">Additional Loan</a>
                                     </li>
                                     <li>
                                        <a href="{% url 'Uploade_Existing_Loan_Period_load' %}">Already Uploaded Loans</a>
                                     </li>
 
                                     <li>
-                                        <a href="{% url 'Uploading_Existing_Savings_All_List_load' %}">Revert Uploaded Loans</a>
+                                        <a href="{% url 'Uploaded_Existing_Loan_Revert_Search' %}">Revert Uploaded Loans</a>
                                     </li>
                                 </ul>
                             </li>
+                            <li>
+                                <a href="javascript:;">
+                                    <span class="nav-label">Non Monetary Loans</span><i class="fa fa-angle-left arrow"></i></a>
+                                <ul class="nav-3-level collapse">
+                                    <li>
+                                       <a href="">Upload Commodity Loans</a>
+                                    </li>
+                                    <li>
+                                       <a href="">Additional Commodity Loans</a>
+                                    </li>
+                                    <li>
+                                       <a href="">Already Uploaded Commodity Loans</a>
+                                    </li>
 
+                                    <li>
+                                        <a href="">Revert Uploaded Loans</a>
+                                    </li>
+                                </ul>
+                            </li>
                            <li>
                                <a href="{% url 'Members_Shares_Upload_Search' %}">Uploading Shares</a>
                             </li>

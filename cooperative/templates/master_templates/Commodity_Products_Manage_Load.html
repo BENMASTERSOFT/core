@@ -10,7 +10,7 @@
             <div class="page-content fade-in-up">
                 <div class="ibox">
                     <div class="ibox-head">
-                        <div class="ibox-title">LIST OF PRODUCTS</div>
+                        <div class="ibox-title">LIST OF PRODUCTS | {{sub_category.title}}</div>
                     </div>
                      <div class="form-group">
                                   {% if messages %}
@@ -34,11 +34,11 @@
                             <thead>
                                 <tr>
                                     <th>#</th>
-                                    <th>Category</th>
+                                    
                                     <th>Name</th>
                                     <th>Model</th>
                                     <th>Details</th>
-                                    <th>Status</th>
+                                
                                     <th>Action</th>
                                     
                                 </tr>
@@ -46,12 +46,12 @@
                             <tfoot>
                                 <tr>
                                     <th>#</th>
-                                    <th>Category</th>
+                                
                                     <th>Name</th>
                                     <th>Model</th>
                                     <th>Details</th>
-                                    <th>Status</th>
-                                    <th>Action</th>
+                                
+                                    <th colspan="2">Action</th>
                                     
                                 </tr>
                             </tfoot>
@@ -59,16 +59,19 @@
                             {% for record in records %}
                                 <tr>
                                     <td>{{forloop.counter}}</td>
-                                    <td>{{record.category.title}}</td>
+                                  
                                     <td>{{record.product_name}}</td>
                                     <td>{{record.product_model}}</td>
                                     <td>{{record.details}}</td>
-                                    <td>{{record.status}}</td>
+                                
                                     <td>
                                         <a href="{% url 'Commodity_Products_Manage_Update' record.pk %}" class="btn btn-primary">Update</a>
-                                        <a href="{% url 'Commodity_Products_Manage_Remove' record.pk %}" class="btn btn-danger">Remove</a>
+                                       
                                     </td>
-                                   
+                                    <td>
+                                     
+                                        <a href="{% url 'Commodity_Products_Manage_Remove' record.id %}" class="btn btn-danger">Remove</a>
+                                    </td>
                                 </tr>
                             {% endfor %} 
                                 
