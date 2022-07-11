@@ -741,6 +741,7 @@ class Members(DateObjectsModels):
     admin=models.OneToOneField(CustomUser,on_delete=models.CASCADE)
     applicant=models.ForeignKey(MemberShipFormSalesRecord,on_delete=models.CASCADE,blank=True,null=True)
     member_id = models.CharField(max_length=255, unique=True)
+    coop_no = models.CharField(max_length=15, default='00001')
     title=models.ForeignKey(Titles,on_delete=models.CASCADE,blank=True,null=True)
     middle_name=models.CharField(max_length=255,blank=True,null=True)
     full_name=models.CharField(max_length=255,blank=True,null=True)
@@ -1253,7 +1254,7 @@ class LoansRepaymentBase(DateObjectsModels):
 class LoanGuarantors(DateObjectsModels):
     loan= models.ForeignKey(LoansRepaymentBase,on_delete=models.CASCADE,blank=True,null=True)
     member= models.ForeignKey(Members,on_delete=models.CASCADE,blank=True,null=True)
-
+    status=models.CharField(max_length=20, choices=LOCK_STATUS,default='OPEN')
 
     # class Meta(DateObjectsModels.Meta):
     #     db_table="Loan_Guarantors"

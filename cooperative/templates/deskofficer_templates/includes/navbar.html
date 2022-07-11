@@ -646,6 +646,10 @@
                                      <li>
                                         <a href="{% url 'Members_Dashboard_Search' %}">Members Dashboard</a>
                                     </li>
+                                   
+                                    <li>
+                                        <a href="{% url 'Standing_Orders_Transaction_List_Load' %}">Standing Orders</a>
+                                    </li>
                                     <li>
                                         <a href="{% url 'Transaction_adjustment_history_Search' %}">Transaction Adjustment History</a>
                                     </li>
@@ -733,7 +737,7 @@
                                                 <a href="javascript:;">Loans Applcations</a>
                                             </li>
                                             <li>
-                                                <a href="{% url 'Load_Active_loans' %}">Active Loans</a>
+                                                <a href="{% url 'Load_Active_loans_Transaction_List_Load' %}">Active Loans</a>
                                             </li>
                                             <li>
                                                 <a href="{% url 'Members_Cleared_Loans_Records' %}">Cleared Loans</a>
@@ -799,7 +803,7 @@
                                 <a href="javascript:;">
                                     <span class="nav-label">Norminal Roll</span><i class="fa fa-angle-left arrow"></i></a>
                                 <ul class="nav-3-level collapse">
-                                    <li>
+                                   {% comment %} <li>
                                         <a href="{% url 'upload_norminal_roll' %}">Compound Norminal Roll</a>
                                     </li>
                                     <li>
@@ -807,9 +811,12 @@
                                     </li>
                                    <li>
                                         <a href="{% url 'Norminal_Roll_Preview' %}">Process Norminal Roll</a>
-                                     </li>
+                                     </li>{% endcomment %}
                                      <li>
                                         <a href="{% url 'Individual_Capture' %}">Individual Record Capture</a>
+                                     </li>
+                                     <li>
+                                        <a href="{% url 'Duplicate_Membership_Records_List_load' %}">Duplicate Membership Records</a>
                                      </li>
                                      <li>
                                         <a href="{% url 'Individual_Capture_Delete_Search' %}">Delete Registered Member</a>
@@ -861,9 +868,7 @@
                                     <li>
                                         <a href="{% url 'Uploaded_Existing_Loan_Revert_Search' %}">Revert Uploaded Loans</a>
                                     </li> 
-                                    <li>
-                                        <a href="{% url 'Uploade_Existing_Loan_Guarantors_Upload_Period_load' %}">Upload Guarantors Loans</a>
-                                    </li>
+                                    
                                 </ul>
                             </li>
                             <li>

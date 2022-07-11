@@ -644,10 +644,14 @@ def Membership_Deduction_Order_Form_Print(request,pk):
 #     html = "<html><body><b>Current Time Value:</b> %s</body></html>" % current_time
 #     return HttpResponse(html)
 
-def deskofficer_home(request):
-	
-# System_Users_Tasks_Model user
 
+
+
+
+
+
+
+def deskofficer_home(request):
 	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
 	task_array=[]
 	for task in tasks:
@@ -665,8 +669,23 @@ def deskofficer_home(request):
 
 	member_count=Members.objects.filter(status='ACTIVE').count()
 
+	# return HttpResponse("OJKJJJJJ")
+	# StandingOrderAccounts.objects.filter(amount=0).delete()
 
+	# members = Members.objects.all()
+	# for member in members:
+	# 	Members.objects.filter(id=member.pk).update(coop_no=member.member_id[13:])
+	
 
+	# records=Members.objects.filter().order_by('coop_no').values_list('coop_no','admin__last_name','admin__first_name','middle_name','ippis_no').distinct()
+	# members_array=[]
+	# for record in records:
+		
+	# 	if Members.objects.filter(coop_no=record[0]).count()>1:
+	# 		for tag in Members.objects.filter(coop_no=record[0]):
+	# 			members_array.append((record[0],record[1] + ' ' + record[2] + ' ' + record[3],record[4]))
+
+	# print(members_array)
 	applicants=MemberShipRequest.objects.filter(transaction_status='UNTREATED',approval_status='APPROVED').count()
 
 	title="System User"
@@ -2104,6 +2123,7 @@ def membership_registration_register(request,pk):
 		user = CustomUser.objects.create_user(username=username,password=password,email=email,last_name=last_name,first_name=first_name,user_type=int(user_type))
 		user.members.applicant=applicant
 		user.members.member_id=member_id
+		user.members.coop_no=str(member_id_obj.member_id).zfill(5)
 		user.members.title=title
 		user.members.middle_name=middle_name
 		user.members.full_name=str(first_name) + ' ' + str(last_name) + ' ' + str(middle_name)
@@ -9904,7 +9924,7 @@ def members_wavers_request_search(request):
 	if Staff.objects.filter(admin=request.user,default_password='YES'):
 		default_password="YES"
 
-	title="Search Members Additional Loan Request"
+	title="Search Members"
 	form = searchForm(request.POST or None)
 
 	return render(request,'deskofficer_templates/members_wavers_request_search.html',{'form':form,'title':title,'task_array':task_array,
@@ -9929,11 +9949,11 @@ def members_wavers_request_list_load(request):
 	if Staff.objects.filter(admin=request.user,default_password='YES'):
 		default_password="YES"
 
-	title="Members Additional Loan"
+	title="Members Waver Search"
 	form = searchForm(request.POST)
 	if request.method == "POST":
 		if request.POST.get("title")=="":
-			return HttpResponseRedirect(reverse('members_additional_loan_request_search'))
+			return HttpResponseRedirect(reverse('members_wavers_request_search'))
 
 		members=searchMembers(form['title'].value(),'ACTIVE')
 
@@ -11792,6 +11812,7 @@ def Individual_Capture(request):
 			user = CustomUser.objects.create_user(username=username,password=password,email=email,last_name=last_name,first_name=first_name,user_type=int(user_type))
 			user.members.applicant=record
 			user.members.member_id=member_id
+			user.members.coop_no=str(coop_no).zfill(5)
 			user.members.title=title
 			user.members.middle_name=middle_name
 			user.members.full_name=str(first_name) + ' ' + str(last_name) + ' ' + str(middle_name)
@@ -11867,7 +11888,7 @@ def Individual_Capture_Delete_Search(request):
 	if Staff.objects.filter(admin=request.user,default_password='YES'):
 		default_password="YES"
 
-	title="Search Members for Ledger Information"
+	title="Search Members | About to Delete Registered Member"
 	form = searchForm(request.POST or None)
 
 	return render(request,'deskofficer_templates/Individual_Capture_Delete_Search.html',{'form':form,'title':title,'task_array':task_array,
@@ -11912,7 +11933,7 @@ def Individual_Capture_Delete_List_load(request):
 		'title':title,
 		'task_array':task_array,
 		'task_enabler_array':task_enabler_array,
-	'default_password':default_password,
+		'default_password':default_password,
 		}
 		return render(request,'deskofficer_templates/Individual_Capture_Delete_List_load.html',context)
 
@@ -11926,6 +11947,82 @@ def Individual_Capture_Delete(request,pk):
 	return HttpResponseRedirect(reverse('Individual_Capture_Delete_Search'))
 
 
+
+def Duplicate_Membership_Records_List_load(request):
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	task_array=[]
+	for task in tasks:
+		task_array.append(task.task.title)
+
+	task_enabler=TransactionEnabler.objects.filter(status="YES")
+	task_enabler_array=[]
+	for item in task_enabler:
+		task_enabler_array.append(item.title)
+
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
+	records=Members.objects.all()
+	members_array=[]
+	# return HttpResponse("IOIIISUUSHJSJS")
+	for record in records:
+		
+		if Members.objects.filter(coop_no=record.coop_no).count()>1:
+			queryset = Members.objects.filter(coop_no=record.coop_no)
+			for item in queryset:
+				members_array.append((item.member_id,item.get_full_name,item.ippis_no,item.coop_no,item.pk,item.admin.pk))
+			
+	# print(members_array)
+
+	context={
+	'members_array':members_array,
+
+	'task_array':task_array,
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
+	}
+	return render(request,'deskofficer_templates/Duplicate_Membership_Records_List_load.html',context)
+
+def Duplicate_Membership_View_Records(request,pk):
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	task_array=[]
+	for task in tasks:
+		task_array.append(task.task.title)
+
+	task_enabler=TransactionEnabler.objects.filter(status="YES")
+	task_enabler_array=[]
+	for item in task_enabler:
+		task_enabler_array.append(item.title)
+
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
+
+	member=Members.objects.get(id=pk)
+	records=PersonalLedger.objects.filter(member=member)
+
+	context={
+	'records':records,
+
+	'task_array':task_array,
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
+	}
+	return render(request,'deskofficer_templates/Duplicate_Membership_View_Records.html',context)
+
+
+
+def Duplicate_Membership_View_Records_Delete(request,pk):
+	member=Members.objects.get(id=pk)
+	ippis_no= member.ippis_no
+	record=CustomUser.objects.get(id=member.admin_id)
+	record.delete()
+	MemberShipRequest.objects.filter(ippis_no=ippis_no).delete()
+	return HttpResponseRedirect(reverse('Duplicate_Membership_Records_List_load'))
 
 ############################################################################
 ################# UPLOADING EXISTING SAVINGS ###############################
@@ -12284,13 +12381,13 @@ def Uploading_Existing_Savings_All_List_load(request):
 	if request.method == "POST":
 		if request.POST.get("title")=="":
 			messages.info(request,"Please Enter a search data")
-			return HttpResponseRedirect(reverse('Uploaded_Existing_Loan_Revert_Search'))
+			return HttpResponseRedirect(reverse('Uploading_Existing_Savings_All_List_Search'))
 
 
 		records=Members.objects.filter(Q(file_no__icontains=form['title'].value()) |Q(ippis_no__icontains=form['title'].value()) |Q(phone_number__icontains=form['title'].value()) | Q(admin__first_name__icontains=form['title'].value()) | Q(admin__last_name__icontains=form['title'].value()) | Q(middle_name__icontains=form['title'].value())).filter(status=status,member_category="OLD").filter(~Q(savings_status=savings_status))
 		if records.count() <= 0:
 			messages.info(request,"No Record Found")
-			return HttpResponseRedirect(reverse('Uploaded_Existing_Loan_Revert_Search'))
+			return HttpResponseRedirect(reverse('Uploading_Existing_Savings_All_List_Search'))
 
 		context={
 		'records':records,
@@ -12299,7 +12396,7 @@ def Uploading_Existing_Savings_All_List_load(request):
 		'task_enabler_array':task_enabler_array,
 		'default_password':default_password,
 		}
-		return render(request,'deskofficer_templates/Uploaded_Existing_Loan_Revert_List_Load.html',context)
+		return render(request,'deskofficer_templates/Uploading_Existing_Savings_All_List_load.html',context)
 
 
 
@@ -12347,7 +12444,7 @@ def Uploading_Existing_Savings_Preview_All(request,pk):
 
 def Uploading_Existing_Savings_delete_All(request,pk,return_pk):
 	record=SavingsUploaded.objects.get(id=pk)
-	account_number=record.account_number
+	account_number=record.transaction.account_number
 	record.delete()
 	StandingOrderAccounts.objects.filter(transaction__account_number=account_number).delete()
 	PersonalLedger.objects.filter(account_number=account_number).delete()
@@ -12531,7 +12628,7 @@ def Uploading_Existing_Savings_Done_List_load(request,transaction_period,tdate):
 
 	if transaction_period == 'ALL RECORDS':
 		# queryset=SavingsUploaded.objects.filter().order_by('transaction__member__member_id').values_list('transaction__member__member_id','transaction__member__admin__last_name','transaction__member__admin__first_name','transaction__member__middle_name','transaction__member__ippis_no','processed_by','tdate').distinct()
-		queryset=SavingsUploaded.objects.filter().order_by('transaction__member__member_id').values_list('transaction__member__member_id','transaction__member__admin__last_name','transaction__member__admin__first_name','transaction__member__middle_name','transaction__member__ippis_no','processed_by','tdate').distinct()
+		queryset=SavingsUploaded.objects.filter().order_by('transaction__member__coop_no').values_list('transaction__member__member_id','transaction__member__admin__last_name','transaction__member__admin__first_name','transaction__member__middle_name','transaction__member__ippis_no','processed_by','tdate','transaction__member__coop_no').distinct()
 	
 	elif transaction_period == 'SELECTED DATE':
 
@@ -12539,11 +12636,11 @@ def Uploading_Existing_Savings_Done_List_load(request,transaction_period,tdate):
 		dtObj = datetime.datetime.strptime(tdate, date_format)
 		t_date=get_current_date(dtObj)
 
-		queryset=SavingsUploaded.objects.filter(Q(tdate__year=t_date.year,tdate__month=t_date.month,tdate__day=t_date.day)).order_by('transaction__member__member_id').values_list('transaction__member__member_id','transaction__member__admin__last_name','transaction__member__admin__first_name','transaction__member__middle_name','transaction__member__ippis_no','processed_by','tdate').distinct()
+		queryset=SavingsUploaded.objects.filter(Q(tdate__year=t_date.year,tdate__month=t_date.month,tdate__day=t_date.day)).order_by('transaction__member__coop_no').values_list('transaction__member__member_id','transaction__member__admin__last_name','transaction__member__admin__first_name','transaction__member__middle_name','transaction__member__ippis_no','processed_by','tdate','transaction__member__coop_no').distinct()
 		
 	member_array = []
 	for query in queryset:
-		member_array.append((query[0][13:],query[1],query[2],query[3],query[4],query[5],get_current_date(query[6])))
+		member_array.append((query[0][13:],query[1],query[2],query[3],query[4],query[5],get_current_date(query[6]),query[7]))
 
 	context={
 	# 'records':records,
@@ -12574,9 +12671,9 @@ def Uploading_Existing_Savings_Done_View_Details(request,pk):
 
 
 
-	records=SavingsUploaded.objects.filter(transaction__member__ippis_no=pk)
+	records=SavingsUploaded.objects.filter(transaction__member__coop_no=pk)
 	
-	member=Members.objects.get(ippis_no=pk)
+	member=Members.objects.get(coop_no=pk)
 
 	context={
 	'records':records,
@@ -13403,42 +13500,44 @@ def Uploading_Existing_Additional_Loans_Preview(request,pk):
 		start_date=datetime.datetime.strptime(start_date_id, '%Y-%m-%d')
 		stop_date = start_date+ relativedelta(months=int(duration))
 
-		if LoansUploaded.objects.filter(member=member,transaction=transaction).exists():
-			record=LoansUploaded.objects.get(member=member,transaction=transaction)
-			record.particulars=particulars
-			record.loan_amount=loan_amount
-			record.amount_paid=amount_paid
-			record.balance=balance
-			record.repayment=repayment,
-			record.admin_charge_rate=admin_charge_rate,
-			record.interest_rate=interest_rate,
-			record.duration=duration,
-			record.interest_deduction=interest_deduction,
-			record.start_date=start_date,
-			record.stop_date=stop_date,
-			record.processed_by=processed_by.username
-			record.status=transaction_status
-			record.transaction_period=transaction_period
-			record.processed_by=processed_by
-			record.save()
-			messages.success(request,"Record Updated Successfully")
-		else:
-			record=LoansUploaded(member=member,
-				particulars=particulars,
-				transaction=transaction,
-				loan_amount=loan_amount,
-				amount_paid=amount_paid,
-				balance=balance,
-				repayment=repayment,
-				interest_rate=interest_rate,
-				admin_charge_rate=admin_charge_rate,
-				duration=duration,
-				interest_deduction=interest_deduction,
-				start_date=start_date,
-				stop_date=stop_date,
-				processed_by=processed_by,status=transaction_status,transaction_period=transaction_period)
-			record.save()
-			messages.success(request,"Record Addedd Successfully")
+		# if LoansUploaded.objects.filter(member=member,transaction=transaction).exists():
+		# 	record=LoansUploaded.objects.get(member=member,transaction=transaction)
+		# 	record.particulars=particulars
+		# 	record.loan_amount=loan_amount
+		# 	record.amount_paid=amount_paid
+		# 	record.balance=balance
+		# 	record.repayment=repayment,
+		# 	record.admin_charge_rate=admin_charge_rate,
+		# 	record.interest_rate=interest_rate,
+		# 	record.duration=duration,
+		# 	record.interest_deduction=interest_deduction,
+		# 	record.start_date=start_date,
+		# 	record.stop_date=stop_date,
+		# 	record.processed_by=processed_by
+		# 	record.status=transaction_status
+		# 	record.transaction_period=transaction_period
+		# 	record.processed_by=processed_by
+		# 	record.save()
+		# 	messages.success(request,"Record Updated Successfully")
+		# else:
+		record=LoansUploaded(member=member,
+			particulars=particulars,
+			transaction=transaction,
+			loan_amount=loan_amount,
+			amount_paid=amount_paid,
+			balance=balance,
+			repayment=repayment,
+			interest_rate=interest_rate,
+			admin_charge_rate=admin_charge_rate,
+			duration=duration,
+			interest_deduction=interest_deduction,
+			start_date=start_date,
+			stop_date=stop_date,
+			processed_by=processed_by,
+			status=transaction_status,
+			transaction_period=transaction_period)
+		record.save()
+		messages.success(request,"Record Addedd Successfully")
 
 		return HttpResponseRedirect(reverse('Uploading_Existing_Additional_Loans_Preview',args=(pk,)))
 	
@@ -13532,50 +13631,45 @@ def Uploading_Existing_Additional_Loans_validate(request,pk):
 
 			particulars="Balance Brought Forward as at " + str(formatted_date) + " for a loan of " + str(loan_amount)
 
-			if PersonalLedger.objects.filter(member=member,transaction=transaction).exists():
-				pass
-			else:
-				post_to_ledger(member,
-								transaction,
-								loan_number,
-								particulars,
-								debit,
-								credit,
-								balance,
-								transaction_period,
-								status1,
-								tdate,
-								)
+			
+			post_to_ledger(member,
+							transaction,
+							loan_number,
+							particulars,
+							debit,
+							credit,
+							balance,
+							transaction_period,
+							status1,
+							tdate,
+							)
 
 
 
-				if LoansRepaymentBase.objects.filter(member=member,transaction=transaction,status=status1).exists():
-					pass
-				else:
-					Loans_Repayment_Base(
-						member,
-						nok_name,
-	                    nok_Relationship,
-	                    nok_phone_no,
-	                    nok_address,
-						duration,
-						interest_deduction,
-                    	interest_rate,
-                    	interest,
-                    	admin_charge,
-						transaction,
-						loan_number,
-						loan_amount,
-						repayment,
-						balance,
-						amount_paid,
-						start_date,
-						stop_date,
-						processed_by,
-						status1,
-						tdate,
-						schedule_status
-						)
+			Loans_Repayment_Base(
+				member,
+				nok_name,
+                nok_Relationship,
+                nok_phone_no,
+                nok_address,
+				duration,
+				interest_deduction,
+            	interest_rate,
+            	interest,
+            	admin_charge,
+				transaction,
+				loan_number,
+				loan_amount,
+				repayment,
+				balance,
+				amount_paid,
+				start_date,
+				stop_date,
+				processed_by,
+				status1,
+				tdate,
+				schedule_status
+				)
 
 
 			record.status='TREATED'
@@ -13670,19 +13764,19 @@ def Uploaded_Existing_Loans_Done_List_load(request,transaction_period,tdate):
 
 	if transaction_period == 'ALL RECORDS':
 		# queryset=SavingsUploaded.objects.filter().order_by('transaction__member__member_id').values_list('transaction__member__member_id','transaction__member__admin__last_name','transaction__member__admin__first_name','transaction__member__middle_name','transaction__member__ippis_no','processed_by','tdate').distinct()
-		queryset=LoansUploaded.objects.filter(status='TREATED').order_by('member__member_id').values_list('member__member_id','member__admin__last_name','member__admin__first_name','member__middle_name','member__ippis_no','processed_by','tdate').distinct()
+		queryset=LoansUploaded.objects.filter(status='TREATED').order_by('member__coop_no').values_list('member__member_id','member__admin__last_name','member__admin__first_name','member__middle_name','member__ippis_no','processed_by','tdate','member__coop_no').distinct()
 	
 	elif transaction_period == 'SELECTED DATE':
 
 		date_format = '%Y-%m-%d'
 		dtObj = datetime.datetime.strptime(tdate, date_format)
 		t_date=get_current_date(dtObj)
-		queryset=LoansUploaded.objects.filter(Q(tdate__year=t_date.year,tdate__month=t_date.month,tdate__day=t_date.day) & Q(status='TREATED')).order_by('member__member_id').values_list('member__member_id','member__admin__last_name','member__admin__first_name','member__middle_name','member__ippis_no','processed_by','tdate').distinct()
+		queryset=LoansUploaded.objects.filter(Q(tdate__year=t_date.year,tdate__month=t_date.month,tdate__day=t_date.day) & Q(status='TREATED')).order_by('member__coop_no').values_list('member__member_id','member__admin__last_name','member__admin__first_name','member__middle_name','member__ippis_no','processed_by','tdate','member__coop_no').distinct()
 		
 		
 	member_array = []
 	for query in queryset:
-		member_array.append((query[0][13:],query[1],query[2],query[3],query[4],query[5],get_current_date(query[6])))
+		member_array.append((query[0][13:],query[1],query[2],query[3],query[4],query[5],get_current_date(query[6]),query[7]))
 
 	context={
 	# 'records':records,
@@ -13710,13 +13804,9 @@ def Uploaded_Existing_loan_Done_View_Details(request,pk):
 	if Staff.objects.filter(admin=request.user,default_password='YES'):
 		default_password="YES"
 
-
-
-
-	records=LoansUploaded.objects.filter(member__ippis_no=pk)
+	records=LoansRepaymentBase.objects.filter(member__coop_no=pk)
 	
-	member=Members.objects.get(ippis_no=pk)
-
+	member=Members.objects.get(coop_no=pk)
 
 	context={
 	'records':records,
@@ -13745,29 +13835,89 @@ def Uploaded_Existing_loan_Done_View_Details_Upload_Guarantors(request,pk):
 	if Staff.objects.filter(admin=request.user,default_password='YES'):
 		default_password="YES"
 
-
-	form=GuarantorsForm(request.POST or None)
+	title="Search Members "
+	form = searchForm(request.POST or None)
 
 	loan=LoansRepaymentBase.objects.get(loan_number=pk)
 	
 	records=LoanGuarantors.objects.filter(loan=loan)
-	
-	if request.POST:
-		guarantors_id = request.POST.get('guarantors')
-		guarantor=Members.objects.get(id=guarantors_id)
-		LoanGuarantors(loan=loan,member=guarantor).save()
-		return HttpResponseRedirect(reverse('Uploaded_Existing_loan_Done_View_Details_Upload_Guarantors',args=(pk,)))
 
-	context={
-	'loan':loan,
-	'records':records,
-	'form':form,
-	'task_array':task_array,
+
+	return render(request,'deskofficer_templates/Uploaded_Existing_loan_Done_View_Details_Upload_Guarantors.html',{'form':form,'title':title,'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
 	'default_password':default_password,
-	}
-	return render(request,'deskofficer_templates/Uploaded_Existing_loan_Done_View_Details_Upload_Guarantors.html',context)
+	'loan':loan,
+	'records':records,
+	})
 
+
+
+
+def Uploaded_Guarantors_for_Existing_Loans_List_Load(request,pk):
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	task_array=[]
+	for task in tasks:
+		task_array.append(task.task.title)
+
+	task_enabler=TransactionEnabler.objects.filter(status="YES")
+	task_enabler_array=[]
+	for item in task_enabler:
+		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
+	title="LIST OF MEMBERS"
+	form = searchForm(request.POST)
+	status="ACTIVE"
+	loan_status='PENDING'
+	if request.method == "POST":
+		if request.POST.get("title")=="":
+			messages.info(request,"Please Enter a search data")
+			return HttpResponseRedirect(reverse('Uploaded_Existing_loan_Done_View_Details_Upload_Guarantors',args=(pk,)))
+
+
+		records=Members.objects.filter(Q(coop_no__icontains=form['title'].value()) |Q(ippis_no__icontains=form['title'].value()) | Q(admin__first_name__icontains=form['title'].value()) | Q(admin__last_name__icontains=form['title'].value()) | Q(middle_name__icontains=form['title'].value())).filter(status=status,member_category="OLD")
+		if records.count() <= 0:
+			messages.info(request,"No Record Found")
+			return HttpResponseRedirect(reverse('Uploaded_Existing_loan_Done_View_Details_Upload_Guarantors',args=(pk,)))
+		
+		loan=LoansRepaymentBase.objects.get(loan_number=pk)
+		context={
+		'loan':loan,
+		'records':records,
+		'pk':pk,
+		'task_array':task_array,
+		'task_enabler_array':task_enabler_array,
+		'default_password':default_password,
+		}
+		return render(request,'deskofficer_templates/Uploaded_Guarantors_for_Existing_Loans_List_Load.html',context)
+
+
+
+def Uploaded_Guarantors_for_Save(request,pk,member_pk):
+	processed_by=CustomUser.objects.get(id=request.user.id)
+	processed_by=processed_by.username
+
+	member=Members.objects.get(id=member_pk)
+	loan=LoansRepaymentBase.objects.get(loan_number=pk)
+	guarantors=loan.transaction.guarantors
+
+	existing_guarantors=LoanGuarantors.objects.filter(loan=loan).count()
+	
+	if int(existing_guarantors) >=int(guarantors):
+		messages.error(request,'You have select the number of guarantors required')
+		return HttpResponseRedirect(reverse('Uploaded_Existing_loan_Done_View_Details_Upload_Guarantors',args=(pk,)))
+	
+	if LoanGuarantors.objects.filter(loan=loan,member=member).exists():
+		messages.error(request,'This member has been selected as guarantors for this loan')
+		return HttpResponseRedirect(reverse('Uploaded_Existing_loan_Done_View_Details_Upload_Guarantors',args=(pk,)))
+	
+
+	LoanGuarantors(loan=loan,member=member,processed_by=processed_by).save()
+
+	return HttpResponseRedirect(reverse('Uploaded_Existing_loan_Done_View_Details_Upload_Guarantors',args=(pk,)))
 
 
 def Uploaded_Existing_loan_Done_View_Details_Upload_Guarantors_delete(request,pk):
@@ -13777,6 +13927,15 @@ def Uploaded_Existing_loan_Done_View_Details_Upload_Guarantors_delete(request,pk
 	record.delete()
 	return HttpResponseRedirect(reverse("Uploaded_Existing_loan_Done_View_Details_Upload_Guarantors", args=(return_pk,)))
 	
+
+
+def Uploaded_Existing_loan_Done_View_Details_Upload_Guarantors_lock(request,pk):
+	LoanGuarantors.objects.filter(loan__loan_number=pk).update(status='LOCKED')
+	return HttpResponseRedirect(reverse("Uploaded_Existing_loan_Done_View_Details_Upload_Guarantors", args=(pk,)))
+	
+
+
+
 
 def Uploaded_Existing_Loan_Revert_Search(request):
 	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
@@ -13946,6 +14105,204 @@ def Uploade_Existing_Loan_Guarantors_Upload_Period_load(request):
 	}
 	return render(request,'deskofficer_templates/Uploade_Existing_Loan_Guarantors_Upload_Period_load.html',context)
 
+
+
+
+########################################################################
+############################# VIEWING STANDING ORDERS ##################
+#########################################################################
+def Standing_Orders_Transaction_List_Load(request):
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	task_array=[]
+	for task in tasks:
+		task_array.append(task.task.title)
+
+	task_enabler=TransactionEnabler.objects.filter(status="YES")
+	task_enabler_array=[]
+	for item in task_enabler:
+		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
+	records=TransactionTypes.objects.filter(source__title='SAVINGS')
+	
+
+	context={
+	'records':records,
+	'task_array':task_array,
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
+	}
+	return render(request,'deskofficer_templates/Standing_Orders_Transaction_List_Load.html',context)
+
+
+def Standing_Orders_Transaction_Details_List_Load(request,pk):
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	task_array=[]
+	for task in tasks:
+		task_array.append(task.task.title)
+
+	task_enabler=TransactionEnabler.objects.filter(status="YES")
+	task_enabler_array=[]
+	for item in task_enabler:
+		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
+	transaction=TransactionTypes.objects.get(id=pk)
+	records=StandingOrderAccounts.objects.filter(transaction__transaction=transaction,status='ACTIVE')
+
+	queryset=  StandingOrderAccounts.objects.filter(transaction__transaction=transaction,status='ACTIVE').aggregate(total_cash=Sum('amount'))
+	total_amount=queryset['total_cash']
+
+
+	context={
+	'total_amount':total_amount,
+	'records':records,
+	'transaction':transaction,
+	'task_array':task_array,
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
+	}
+	return render(request,'deskofficer_templates/Standing_Orders_Transaction_Details_List_Load.html',context)
+
+
+def export_Standing_Orders_Transaction_Details_List_xls(request,pk):
+	response = HttpResponse(content_type='application/ms-excel')
+
+	transaction=TransactionTypes.objects.get(id=pk)
+
+	response['Content-Disposition'] = f'attachment; filename="{transaction.name}.xls"'
+
+	wb = xlwt.Workbook(encoding='utf-8')
+	ws = wb.add_sheet('Users Data') # this will make a sheet named Users Data
+
+	row_num = 0  # Sheet header, first row
+
+	font_style = xlwt.XFStyle()
+	font_style.font.bold = True
+
+	columns = ['Coop No', 'IPPIS No','Last Name', 'First_Name','Middle Name','Amount' ]
+
+	for col_num in range(len(columns)):
+		ws.write(row_num, col_num, columns[col_num], font_style) # at 0 row 0 column
+
+	font_style = xlwt.XFStyle()  # Sheet body, remaining rows
+
+	
+	rows = StandingOrderAccounts.objects.filter(transaction__transaction=transaction,status='ACTIVE').values_list('transaction__member__coop_no','transaction__member__ippis_no','transaction__member__admin__last_name','transaction__member__admin__first_name', 'transaction__member__middle_name','amount')
+
+	for row in rows:
+		row_num += 1
+		for col_num in range(len(row)):
+			ws.write(row_num, col_num, row[col_num], font_style)
+	wb.save(response)
+
+	return response
+
+
+def Standing_Orders_Transaction_Salary_Institution_Load(request,pk):
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	task_array=[]
+	for task in tasks:
+		task_array.append(task.task.title)
+
+	task_enabler=TransactionEnabler.objects.filter(status="YES")
+	task_enabler_array=[]
+	for item in task_enabler:
+		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
+	records=SalaryInstitution.objects.all()
+	transaction=TransactionTypes.objects.get(id=pk)
+	# records=StandingOrderAccounts.objects.filter(transaction__member__salary_institution=salary_institution,transaction__transaction=transaction,status='ACTIVE')
+	context={
+	'transaction':transaction,
+	'records':records,
+	'task_array':task_array,
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
+	}
+	return render(request,'deskofficer_templates/Standing_Orders_Transaction_Salary_Institution_Load.html',context)
+
+
+def Standing_Orders_Transaction_Details_Salary_Institution_Details(request,pk,trans_id):
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	task_array=[]
+	for task in tasks:
+		task_array.append(task.task.title)
+
+	task_enabler=TransactionEnabler.objects.filter(status="YES")
+	task_enabler_array=[]
+	for item in task_enabler:
+		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
+	salary_institution=SalaryInstitution.objects.get(id=pk)
+	transaction=TransactionTypes.objects.get(id=trans_id)
+	records=StandingOrderAccounts.objects.filter(transaction__member__salary_institution=salary_institution,transaction__transaction=transaction,status='ACTIVE')
+
+	queryset=  StandingOrderAccounts.objects.filter(transaction__member__salary_institution=salary_institution,transaction__transaction=transaction,status='ACTIVE').aggregate(total_cash=Sum('amount'))
+	total_amount=queryset['total_cash']
+
+
+	context={
+	'total_amount':total_amount,
+	'records':records,
+	'salary_institution':salary_institution,
+	'transaction':transaction,
+	'task_array':task_array,
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
+	}
+	return render(request,'deskofficer_templates/Standing_Orders_Transaction_Details_Salary_Institution_Details.html',context)
+
+
+def Standing_Orders_Transaction_Details_Salary_Institution_Details_Excel_Export(request,pk,trans_id):
+	response = HttpResponse(content_type='application/ms-excel')
+
+	salary_institution=SalaryInstitution.objects.get(id=pk)
+	transaction=TransactionTypes.objects.get(id=trans_id)
+
+
+
+	response['Content-Disposition'] = f'attachment; filename="{salary_institution.title}_{transaction.name}.xls"'
+
+	wb = xlwt.Workbook(encoding='utf-8')
+	ws = wb.add_sheet('Users Data') # this will make a sheet named Users Data
+
+	row_num = 0  # Sheet header, first row
+
+	font_style = xlwt.XFStyle()
+	font_style.font.bold = True
+
+	columns = ['Coop No', 'IPPIS No','Last Name', 'First_Name','Middle Name','Amount' ]
+
+	for col_num in range(len(columns)):
+		ws.write(row_num, col_num, columns[col_num], font_style) # at 0 row 0 column
+
+	font_style = xlwt.XFStyle()  # Sheet body, remaining rows
+
+
+	rows = StandingOrderAccounts.objects.filter(transaction__member__salary_institution=salary_institution,transaction__transaction=transaction,status='ACTIVE').values_list('transaction__member__coop_no','transaction__member__ippis_no','transaction__member__admin__last_name','transaction__member__admin__first_name', 'transaction__member__middle_name','amount')
+
+	for row in rows:
+		row_num += 1
+		for col_num in range(len(row)):
+			ws.write(row_num, col_num, row[col_num], font_style)
+	wb.save(response)
+
+	return response
 
 
 
@@ -19280,14 +19637,39 @@ def Members_General_Search(request):
 ############################################################
 ##################### ACTIVE LOANS ########################
 ############################################################
+def Load_Active_loans_Transaction_List_Load(request):
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	task_array=[]
+	for task in tasks:
+		task_array.append(task.task.title)
+		
+	task_enabler=TransactionEnabler.objects.filter(status="YES")
+	task_enabler_array=[]
+	for item in task_enabler:
+		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
+	status="ACTIVE"
+	records=TransactionTypes.objects.filter(source__title="LOAN")
+
+	context={
+	'task_array':task_array,
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
+	'records':records,
+	}
+	return render(request,'deskofficer_templates/Load_Active_loans_Transaction_List_Load.html',context)
+
+
 
 def Load_Active_loans(request):
 	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
 	task_array=[]
 	for task in tasks:
 		task_array.append(task.task.title)
-
-
 
 	task_enabler=TransactionEnabler.objects.filter(status="YES")
 	task_enabler_array=[]
@@ -19309,6 +19691,263 @@ def Load_Active_loans(request):
 	}
 	return render(request,'deskofficer_templates/Load_Active_loans.html',context)
 
+
+
+def export_load_Active_loans_all_records_xls(request):
+
+	status="ACTIVE"
+	
+	response = HttpResponse(content_type='application/ms-excel')
+	response['Content-Disposition'] = 'attachment; filename="All_active_loans.xls"'
+
+	wb = xlwt.Workbook(encoding='utf-8')
+	ws = wb.add_sheet('Users Data') # this will make a sheet named Users Data
+
+	row_num = 0  # Sheet header, first row
+
+	font_style = xlwt.XFStyle()
+	font_style.font.bold = True
+
+	columns = ['Member ID', 'Last Name', 'First Name', 'Middle Name','Loan Type','Loan Number','Loan Amount','Amount Paid',"Balance",'Repayment']
+
+	for col_num in range(len(columns)):
+		ws.write(row_num, col_num, columns[col_num], font_style) # at 0 row 0 column
+
+	font_style = xlwt.XFStyle()  # Sheet body, remaining rows
+
+	rows = LoansRepaymentBase.objects.filter(status='ACTIVE').values_list('member__coop_no','member__admin__last_name','member__admin__first_name','member__middle_name','transaction__name','loan_number','loan_amount', 'amount_paid','balance','repayment')
+
+	for row in rows:
+		row_num += 1
+		for col_num in range(len(row)):
+			ws.write(row_num, col_num, row[col_num], font_style)
+	wb.save(response)
+
+	return response
+
+
+
+def Load_Active_loans_Based_on_Transaction(request,pk):
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	task_array=[]
+	for task in tasks:
+		task_array.append(task.task.title)
+
+	task_enabler=TransactionEnabler.objects.filter(status="YES")
+	task_enabler_array=[]
+	for item in task_enabler:
+		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
+	status="ACTIVE"
+	transaction=TransactionTypes.objects.get(id=pk)
+	records=LoansRepaymentBase.objects.filter(transaction=transaction,status=status)
+
+	context={
+	'transaction':transaction,
+	'task_array':task_array,
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
+	'records':records,
+	}
+	return render(request,'deskofficer_templates/Load_Active_loans_Based_on_Transaction.html',context)
+
+
+
+def export_Active_loans_Based_on_Transaction_records_xls(request,pk):
+
+	status="ACTIVE"
+	transaction=TransactionTypes.objects.get(id=pk)
+	response = HttpResponse(content_type='application/ms-excel')
+	response['Content-Disposition'] = f'attachment; filename="{transaction.name}.xls"'
+
+	wb = xlwt.Workbook(encoding='utf-8')
+	ws = wb.add_sheet('Users Data') # this will make a sheet named Users Data
+
+	row_num = 0  # Sheet header, first row
+
+	font_style = xlwt.XFStyle()
+	font_style.font.bold = True
+
+	columns = ['Member ID', 'Last Name', 'First Name', 'Middle Name','Loan Type','Loan Number','Loan Amount','Amount Paid',"Balance",'Repayment']
+
+	for col_num in range(len(columns)):
+		ws.write(row_num, col_num, columns[col_num], font_style) # at 0 row 0 column
+
+	font_style = xlwt.XFStyle()  # Sheet body, remaining rows
+	
+	
+	rows = LoansRepaymentBase.objects.filter(transaction=transaction,status=status).values_list('member__coop_no','member__admin__last_name','member__admin__first_name','member__middle_name','transaction__name','loan_number','loan_amount', 'amount_paid','balance','repayment')
+
+	for row in rows:
+		row_num += 1
+		for col_num in range(len(row)):
+			ws.write(row_num, col_num, row[col_num], font_style)
+	wb.save(response)
+
+	return response
+
+
+
+
+def Load_Active_loans_Based_on_Transaction_on_Institution(request,pk):
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	task_array=[]
+	for task in tasks:
+		task_array.append(task.task.title)
+
+	task_enabler=TransactionEnabler.objects.filter(status="YES")
+	task_enabler_array=[]
+	for item in task_enabler:
+		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
+	status="ACTIVE"
+	transaction=TransactionTypes.objects.get(id=pk)
+	records=SalaryInstitution.objects.filter()
+
+	context={
+	'transaction':transaction,
+	'task_array':task_array,
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
+	'records':records,
+	}
+	return render(request,'deskofficer_templates/Load_Active_loans_Based_on_Transaction_on_Institution.html',context)
+
+
+def Load_Active_loans_Based_on_Transaction_on_Institution_Details(request,pk,trans_id):
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	task_array=[]
+	for task in tasks:
+		task_array.append(task.task.title)
+
+	task_enabler=TransactionEnabler.objects.filter(status="YES")
+	task_enabler_array=[]
+	for item in task_enabler:
+		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
+	status="ACTIVE"
+	transaction=TransactionTypes.objects.get(id=trans_id)
+	salary_institution=SalaryInstitution.objects.get(id=pk)
+
+	records = LoansRepaymentBase.objects.filter(transaction=transaction,member__salary_institution=salary_institution,status=status)
+	
+	context={
+	'salary_institution':salary_institution,
+	'transaction':transaction,
+	'task_array':task_array,
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
+	'records':records,
+	}
+	return render(request,'deskofficer_templates/Load_Active_loans_Based_on_Transaction_on_Institution_Details.html',context)
+
+
+def export_Load_Active_loans_Based_on_Transaction_on_Institution_Details_xls(request,pk,trans_id):
+
+	status="ACTIVE"
+	
+	transaction=TransactionTypes.objects.get(id=trans_id)
+	salary_institution=SalaryInstitution.objects.get(id=pk)
+
+	response = HttpResponse(content_type='application/ms-excel')
+	response['Content-Disposition'] = f'attachment; filename="{salary_institution.title}_{transaction.name}.xls"'
+
+	wb = xlwt.Workbook(encoding='utf-8')
+	ws = wb.add_sheet('Users Data') # this will make a sheet named Users Data
+
+	row_num = 0  # Sheet header, first row
+
+	font_style = xlwt.XFStyle()
+	font_style.font.bold = True
+
+	columns = ['Member ID', 'Last Name', 'First Name', 'Middle Name','Loan Type','Loan Number','Loan Amount','Amount Paid',"Balance",'Repayment']
+
+	for col_num in range(len(columns)):
+		ws.write(row_num, col_num, columns[col_num], font_style) # at 0 row 0 column
+
+	font_style = xlwt.XFStyle()  # Sheet body, remaining rows
+	
+
+	rows = LoansRepaymentBase.objects.filter(transaction=transaction,member__salary_institution=salary_institution,status=status).values_list('member__coop_no','member__admin__last_name','member__admin__first_name','member__middle_name','transaction__name','loan_number','loan_amount', 'amount_paid','balance','repayment')
+
+	for row in rows:
+		row_num += 1
+		for col_num in range(len(row)):
+			ws.write(row_num, col_num, row[col_num], font_style)
+	wb.save(response)
+
+	return response
+
+
+
+
+def Standardized_Standing_Orders_Transaction_Load(request):
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	task_array=[]
+	for task in tasks:
+		task_array.append(task.task.title)
+
+	task_enabler=TransactionEnabler.objects.filter(status="YES")
+	task_enabler_array=[]
+	for item in task_enabler:
+		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
+
+	records=TransactionTypes.objects.filter(source__title='SAVINGS')
+	
+	context={
+	
+	'task_array':task_array,
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
+	'records':records,
+	}
+	return render(request,'deskofficer_templates/Standardized_Standing_Orders_Transaction_Load.html',context)
+
+
+
+def Standardized_Standing_Orders_Details(request,pk):
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	task_array=[]
+	for task in tasks:
+		task_array.append(task.task.title)
+
+	task_enabler=TransactionEnabler.objects.filter(status="YES")
+	task_enabler_array=[]
+	for item in task_enabler:
+		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
+
+	transaction=TransactionTypes.objects.get(id=pk)
+	Members=Members.objects.filter(status='ACTIVE')
+	context={
+	'transaction':transaction,
+	'task_array':task_array,
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
+	'Members':Members,
+	}
+	return render(request,'deskofficer_templates/Standardized_Standing_Orders_Details.html',context)
 
 ############################################################
 ##################### PERSONEL LEDGER ########################

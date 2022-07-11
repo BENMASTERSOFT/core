@@ -1,0 +1,56 @@
+{% extends 'deskofficer_templates/base_template.html' %}
+{% load static %}
+
+{% block content %}
+            <div class="page-content fade-in-up">
+                <div class="row">
+                   
+                    <div class="col-xl-12">
+                        <div class="ibox">
+                            <div class="ibox-head">
+                                <div class="ibox-title">Duplicate Records</div>
+                            </div>
+                            <div class="ibox-body">
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Member ID</th>
+                                            <th>Name</th>
+                                            <th>IPPIS No</th>
+                                            <th>Coop No</th>
+                                            <th>S/No</th>
+                                            <th>User Pk</th>
+                                            <th colspan="2">Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for record in  members_array %}
+                                        <tr>
+                                            <td>{{forloop.counter}}</td>
+                                            <td>{{record.0}}</td>
+                                            <td>{{record.1}}</td>
+                                            <td>{{record.2}}</td>
+                                            <td>{{record.3}}</td>
+                                            <td>{{record.4}}</td>
+                                            <td>{{record.5}}</td>
+                                            <td><a href="{% url 'Duplicate_Membership_View_Records' record.4 %}" class="btn btn-primary">View Records</a></td>
+
+                                            <td><a href="{% url 'Duplicate_Membership_View_Records_Delete' record.4 %}" class="btn btn-danger">Drop Record</a></td>
+                                       
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+              
+           
+            </div>
+  <div class="sidenav-backdrop backdrop"></div>
+    <div class="preloader-backdrop">
+        <div class="page-preloader">Loading</div>
+    </div>
+{% endblock %}

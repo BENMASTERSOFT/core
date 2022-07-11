@@ -793,6 +793,11 @@ urlpatterns = [
     path('Individual_Capture_Delete_List_load/', deskofficer_views.Individual_Capture_Delete_List_load,name='Individual_Capture_Delete_List_load'),
     path('Individual_Capture_Delete/<str:pk>/', deskofficer_views.Individual_Capture_Delete,name='Individual_Capture_Delete'),
 
+    path('Duplicate_Membership_Records_List_load/', deskofficer_views.Duplicate_Membership_Records_List_load,name='Duplicate_Membership_Records_List_load'),
+    path('Duplicate_Membership_View_Records/<str:pk>/', deskofficer_views.Duplicate_Membership_View_Records,name='Duplicate_Membership_View_Records'),
+    path('Duplicate_Membership_View_Records_Delete/<str:pk>/', deskofficer_views.Duplicate_Membership_View_Records_Delete,name='Duplicate_Membership_View_Records_Delete'),
+    
+
     path('upload_distinct_norminal_roll/', deskofficer_views.upload_distinct_norminal_roll,name='upload_distinct_norminal_roll'),
 
     path('Uploading_Existing_Savings_Search/', deskofficer_views.Uploading_Existing_Savings_Search,name='Uploading_Existing_Savings_Search'),
@@ -835,9 +840,13 @@ urlpatterns = [
     path('Uploaded_Existing_loan_Done_View_Details/<str:pk>/', deskofficer_views.Uploaded_Existing_loan_Done_View_Details,name='Uploaded_Existing_loan_Done_View_Details'),
     
     path('Uploaded_Existing_loan_Done_View_Details_Upload_Guarantors/<str:pk>/', deskofficer_views.Uploaded_Existing_loan_Done_View_Details_Upload_Guarantors,name='Uploaded_Existing_loan_Done_View_Details_Upload_Guarantors'),
+    path('Uploaded_Guarantors_for_Existing_Loans_List_Load/<str:pk>/', deskofficer_views.Uploaded_Guarantors_for_Existing_Loans_List_Load,name='Uploaded_Guarantors_for_Existing_Loans_List_Load'),
+    path('Uploaded_Guarantors_for_Save/<str:pk>/<str:member_pk>/', deskofficer_views.Uploaded_Guarantors_for_Save,name='Uploaded_Guarantors_for_Save'),
+    
     path('Uploaded_Existing_loan_Done_View_Details_Upload_Guarantors_delete/<str:pk>/', deskofficer_views.Uploaded_Existing_loan_Done_View_Details_Upload_Guarantors_delete,name='Uploaded_Existing_loan_Done_View_Details_Upload_Guarantors_delete'),
+    path('Uploaded_Existing_loan_Done_View_Details_Upload_Guarantors_lock/<str:pk>/', deskofficer_views.Uploaded_Existing_loan_Done_View_Details_Upload_Guarantors_lock,name='Uploaded_Existing_loan_Done_View_Details_Upload_Guarantors_lock'),
 
-    path('Uploade_Existing_Loan_Guarantors_Upload_Period_load/', deskofficer_views.Uploade_Existing_Loan_Guarantors_Upload_Period_load,name='Uploade_Existing_Loan_Guarantors_Upload_Period_load'),
+    # path('Uploade_Existing_Loan_Guarantors_Upload_Period_load/', deskofficer_views.Uploade_Existing_Loan_Guarantors_Upload_Period_load,name='Uploade_Existing_Loan_Guarantors_Upload_Period_load'),
     
 
     path('Uploaded_Existing_Loan_Revert_Search/', deskofficer_views.Uploaded_Existing_Loan_Revert_Search,name='Uploaded_Existing_Loan_Revert_Search'),
@@ -1028,10 +1037,12 @@ urlpatterns = [
     path('membership_commodity_loan_Period__manage_transaction_delete/<str:pk>/', deskofficer_views.membership_commodity_loan_Period__manage_transaction_delete,name='membership_commodity_loan_Period__manage_transaction_delete'),
 
 
-    # path('membership_commodity_loan_manage/', deskofficer_views.membership_commodity_loan_manage,name='membership_commodity_loan_manage'),
-    # path('membership_commodity_loan_manage_delete/<str:pk>/', deskofficer_views.membership_commodity_loan_manage_delete,name='membership_commodity_loan_manage_delete'),
-    # path('membership_commodity_loan_manage_details/<str:pk>/', deskofficer_views.membership_commodity_loan_manage_details,name='membership_commodity_loan_manage_details'),
-    # path('membership_commodity_loan_manage_details_reset_Confirmation/<str:pk>/', deskofficer_views.membership_commodity_loan_manage_details_reset_Confirmation,name='membership_commodity_loan_manage_details_reset_Confirmation'),
+    path('Standing_Orders_Transaction_List_Load/', deskofficer_views.Standing_Orders_Transaction_List_Load,name='Standing_Orders_Transaction_List_Load'),
+    path('Standing_Orders_Transaction_Details_List_Load/<str:pk>/', deskofficer_views.Standing_Orders_Transaction_Details_List_Load,name='Standing_Orders_Transaction_Details_List_Load'),
+    path('export_Standing_Orders_Transaction_Details_List_xls/<str:pk>/', deskofficer_views.export_Standing_Orders_Transaction_Details_List_xls,name='export_Standing_Orders_Transaction_Details_List_xls'),
+    path('Standing_Orders_Transaction_Salary_Institution_Load/<str:pk>/', deskofficer_views.Standing_Orders_Transaction_Salary_Institution_Load,name='Standing_Orders_Transaction_Salary_Institution_Load'),
+    path('Standing_Orders_Transaction_Details_Salary_Institution_Details/<str:pk>/<str:trans_id>/', deskofficer_views.Standing_Orders_Transaction_Details_Salary_Institution_Details,name='Standing_Orders_Transaction_Details_Salary_Institution_Details'),
+    path('Standing_Orders_Transaction_Details_Salary_Institution_Details_Excel_Export/<str:pk>/<str:trans_id>/', deskofficer_views.Standing_Orders_Transaction_Details_Salary_Institution_Details_Excel_Export,name='Standing_Orders_Transaction_Details_Salary_Institution_Details_Excel_Export'),
 
 
     path('membership_commodity_loan_form_sales_transaction_period_load/', deskofficer_views.membership_commodity_loan_form_sales_transaction_period_load,name='membership_commodity_loan_form_sales_transaction_period_load'),
@@ -1091,10 +1102,25 @@ urlpatterns = [
     ################################################################################
 
     path('Members_General_Search/', deskofficer_views.Members_General_Search,name='Members_General_Search'),
+   
+
+    path('Standardized_Standing_Orders_Transaction_Load/', deskofficer_views.Standardized_Standing_Orders_Transaction_Load,name='Standardized_Standing_Orders_Transaction_Load'),
+    # path('Standardized_Standing_Orders_Details/<str:pk>/', deskofficer_views.Standardized_Standing_Orders_Details,name='Standardized_Standing_Orders_Details'),
 
 
     path('Cash_Deposit_Report_Date_Load/', deskofficer_views.Cash_Deposit_Report_Date_Load,name='Cash_Deposit_Report_Date_Load'),
+    
+
+    path('Load_Active_loans_Transaction_List_Load/', deskofficer_views.Load_Active_loans_Transaction_List_Load,name='Load_Active_loans_Transaction_List_Load'),
+    path('Load_Active_loans_Based_on_Transaction/<str:pk>/', deskofficer_views.Load_Active_loans_Based_on_Transaction,name='Load_Active_loans_Based_on_Transaction'),
+    path('export_Active_loans_Based_on_Transaction_records_xls/<str:pk>/', deskofficer_views.export_Active_loans_Based_on_Transaction_records_xls,name='export_Active_loans_Based_on_Transaction_records_xls'),
+    path('Load_Active_loans_Based_on_Transaction_on_Institution/<str:pk>/', deskofficer_views.Load_Active_loans_Based_on_Transaction_on_Institution,name='Load_Active_loans_Based_on_Transaction_on_Institution'),
+    path('Load_Active_loans_Based_on_Transaction_on_Institution_Details/<str:pk>/<str:trans_id>/', deskofficer_views.Load_Active_loans_Based_on_Transaction_on_Institution_Details,name='Load_Active_loans_Based_on_Transaction_on_Institution_Details'),
+    path('export_Load_Active_loans_Based_on_Transaction_on_Institution_Details_xls/<str:pk>/<str:trans_id>/', deskofficer_views.export_Load_Active_loans_Based_on_Transaction_on_Institution_Details_xls,name='export_Load_Active_loans_Based_on_Transaction_on_Institution_Details_xls'),
+
+
     path('Load_Active_loans/', deskofficer_views.Load_Active_loans,name='Load_Active_loans'),
+    path('export_load_Active_loans_all_records_xls/', deskofficer_views.export_load_Active_loans_all_records_xls,name='export_load_Active_loans_all_records_xls'),
 
     path('Norminal_Roll_List_Load/', deskofficer_views.Norminal_Roll_List_Load,name='Norminal_Roll_List_Load'),
     path('Norminal_Roll_Personel_Detail/<str:pk>/', deskofficer_views.Norminal_Roll_Personel_Detail,name='Norminal_Roll_Personel_Detail'),

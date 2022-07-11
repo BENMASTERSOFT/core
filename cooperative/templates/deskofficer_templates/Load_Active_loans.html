@@ -8,10 +8,16 @@
 {% block content %}
 
       
-            <div class="page-content fade-in-up">
+    <div class="page-content fade-in-up">
+        <div class="row">
+                   
+            <div class="col-xl-12">
                 <div class="ibox">
                     <div class="ibox-head">
-                        <div class="ibox-title">ACTIVE LOAN |  <input type="button" class="btn btn-secondary" value="Back" onclick="history.back()"/></div>
+                        <div class="ibox-title">ACTIVE LOAN |  <input type="button" class="btn btn-secondary" value="Back" onclick="history.back()"/>
+
+                        <a href="{% url 'export_load_Active_loans_all_records_xls' %}" class="btn btn-primary">Export</a>
+                        </div>
                     </div>
                     <div class="ibox-body">
                         <table class="table table-striped table-bordered table-hover" id="example-table" cellspacing="0" width="100%">
@@ -22,12 +28,12 @@
                                     <th>Loan Number</th>
                                     <th>Loan Amount</th>
                                     <th>Amount Paid</th>
-                                    <th>Balance</th>
+                              
                                     <th>Repayment</th>
                                 
-                                    <th>Start Date</th>
-                                    <th>Stop Date</th>
-                                    <th>Schedule</th>
+                           
+                                 
+                                
                                 </tr>
                             </thead>
                             <tfoot>
@@ -37,12 +43,12 @@
                                     <th>Loan Number</th>
                                     <th>Loan Amount</th>
                                     <th>Amount Paid</th>
-                                    <th>Balance</th>
+                            
                                     <th>Repayment</th>
                                   
-                                    <th>Start Date</th>
-                                    <th>Stop Date</th>
-                                     <th>Schedule</th>
+                             
+                                 
+                              
                                 </tr>
                             </tfoot>
                             <tbody>
@@ -53,11 +59,11 @@
                                     <td>{{record.loan_number}}</td>
                                     <td>{{record.loan_amount|floatformat:2|intcomma}}</td>
                                     <td>{{record.amount_paid|floatformat:2|intcomma}}</td>
-                                    <td>{{record.balance|floatformat:2|intcomma}}</td>
+                                   
                                     <td>{{record.repayment|floatformat:2|intcomma}}</td>
-                                    <td>{{record.start_date}}</td>
-                                    <td>{{record.stop_date}}</td>
-                                    <td>{{record.schedule_status}}</td>
+                            
+                              
+                                 
                                
                                 </tr>
                                 
@@ -66,8 +72,9 @@
                         </table>
                     </div>
                 </div>
-               
             </div>
+        </div>
+    </div>
   
     
     <!-- BEGIN PAGA BACKDROPS-->

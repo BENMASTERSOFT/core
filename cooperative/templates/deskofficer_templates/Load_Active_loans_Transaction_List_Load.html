@@ -1,0 +1,45 @@
+{% extends 'deskofficer_templates/base_template.html' %}
+{% load static %}
+
+{% block content %}
+            <div class="page-content fade-in-up">
+                <div class="row">
+                   
+                    <div class="col-xl-10">
+                        <div class="ibox">
+                            <div class="ibox-head">
+                                <div class="ibox-title">Loan Transaction Types | <a href="{% url 'Load_Active_loans' %}" class="btn btn-secondary">View All</a></div>
+                            </div>
+                            <div class="ibox-body">
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Description</th>
+                                            <th colspan="2">Action</th>
+                                        
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for record in records %}
+                                        <tr>
+                                            <td>{{forloop.counter}}</td>
+                                            <td>{{record.name}}</td>
+                                            <td><a href="{% url 'Load_Active_loans_Based_on_Transaction' record.pk  %}" class="btn btn-primary">View </a></td>
+                                            <td><a href="{% url 'Load_Active_loans_Based_on_Transaction_on_Institution' record.pk %}" class="btn btn-secondary">Salary Institutions</a></td>
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+             
+           
+            </div>
+  <div class="sidenav-backdrop backdrop"></div>
+    <div class="preloader-backdrop">
+        <div class="page-preloader">Loading</div>
+    </div>
+{% endblock %}
