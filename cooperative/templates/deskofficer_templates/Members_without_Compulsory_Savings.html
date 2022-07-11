@@ -10,7 +10,7 @@
             <div class="page-content fade-in-up">
                 <div class="ibox">
                     <div class="ibox-head">
-                        <div class="ibox-title">Members Without Compulsory Savings| <a href="" class="btn btn-secondary">Export</a></div>
+                        <div class="ibox-title">Members Without Compulsory Savings</div>
                     </div>
                     <div class="ibox-body">
                         <table class="table table-striped table-bordered table-hover" id="example-table" cellspacing="0" width="100%">
@@ -19,8 +19,10 @@
                                     <th>#</th>
                                     <th>Member ID</th>
                                     <th>Name</th>
-                                    <th>Salary Inst.</th>
                                     <th>Salary Code</th>
+                                    <th>Salary Inst.</th>
+                                    <th>Savings</th>
+                                    <th>Loans</th>
                                    
                                 </tr>
                             </thead>
@@ -31,7 +33,8 @@
                                     <th>Name</th>
                                     <th>Salary Code</th>
                                     <th>Salary Inst.</th>
-                                   
+                                    <th>Savings</th>
+                                    <th>Loans</th>
                                 </tr>
                             </tfoot>
                             <tbody>
@@ -42,6 +45,10 @@
                                     <td>{{member.1}}</td>
                                     <td>{{member.2}}</td>
                                     <td>{{member.3}}</td>
+                                    <td><a href="{% url 'Members_without_Compulsory_Savings_Other_Savings' member.0 %}" class="btn btn-primary">Savings</a></td> 
+                                     <td><a href="{% url 'Members_without_Compulsory_Savings_Loans' member.0 %}" class="btn btn-primary">Loans</a></td>
+                                  
+                                    
                                 
                                     
                                 </tr>

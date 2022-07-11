@@ -33,7 +33,12 @@
                                         <tr>
                                             <th>#</th>
                                             <th>Member ID</th>
-                                            <th>Name <a href="{% url 'Uploaded_Existing_loan_Done_View_Details_Upload_Guarantors_lock' loan.loan_number %}" class="btn btn-success">LOCK</a></th>
+                                            <th>Name 
+                                                {% if button_show %}
+                                                <a href="{% url 'Uploaded_Existing_loan_Done_View_Details_Upload_Guarantors_lock' loan.loan_number %}" class="btn btn-success">LOCK</a>
+                                                {% endif %}
+                                            </th>
+                                                
                                             <th>Action</th>
                                         </tr>
                                     </thead>

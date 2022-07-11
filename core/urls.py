@@ -814,7 +814,11 @@ urlpatterns = [
     path('Uploading_Existing_Savings_Discard_All/<str:pk>/', deskofficer_views.Uploading_Existing_Savings_Discard_All,name='Uploading_Existing_Savings_Discard_All'),
 
     path('Members_without_Compulsory_Savings/', deskofficer_views.Members_without_Compulsory_Savings,name='Members_without_Compulsory_Savings'),
+    path('Members_without_Compulsory_Savings_Other_Savings/<str:pk>/', deskofficer_views.Members_without_Compulsory_Savings_Other_Savings,name='Members_without_Compulsory_Savings_Other_Savings'),
+    path('Members_without_Compulsory_Savings_Loans/<str:pk>/', deskofficer_views.Members_without_Compulsory_Savings_Loans,name='Members_without_Compulsory_Savings_Loans'),
     
+    path('Duplicate_Membership_Ippis_List_load/', deskofficer_views.Duplicate_Membership_Ippis_List_load,name='Duplicate_Membership_Ippis_List_load'),
+    path('Duplicate_Membership_Ippis_Records_Delete/<str:pk>/', deskofficer_views.Duplicate_Membership_Ippis_Records_Delete,name='Duplicate_Membership_Ippis_Records_Delete'),
 
     path('Uploading_Existing_Savings_Done_List_Select_Period/', deskofficer_views.Uploading_Existing_Savings_Done_List_Select_Period,name='Uploading_Existing_Savings_Done_List_Select_Period'),
     path('Uploading_Existing_Savings_Done_List_load/<str:transaction_period>/<str:tdate>/', deskofficer_views.Uploading_Existing_Savings_Done_List_load,name='Uploading_Existing_Savings_Done_List_load'),

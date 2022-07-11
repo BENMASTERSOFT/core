@@ -11947,6 +11947,56 @@ def Individual_Capture_Delete(request,pk):
 	return HttpResponseRedirect(reverse('Individual_Capture_Delete_Search'))
 
 
+def Duplicate_Membership_Ippis_List_load(request):
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	task_array=[]
+	for task in tasks:
+		task_array.append(task.task.title)
+
+	task_enabler=TransactionEnabler.objects.filter(status="YES")
+	task_enabler_array=[]
+	for item in task_enabler:
+		task_enabler_array.append(item.title)
+
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
+	records=Members.objects.all()
+	members_array=[]
+
+	for record in records:
+		
+		if Members.objects.filter(ippis_no=record.ippis_no).count()>1:
+			queryset = Members.objects.filter(ippis_no=record.ippis_no)
+			for item in queryset:
+				members_array.append((item.member_id,item.get_full_name,item.ippis_no,item.coop_no,item.pk,item.admin.pk))
+			
+	print(members_array)
+	print("+++++++++++++++++++++++++++++++====")
+	print("+++++++++++++++++++++++++++++++====")
+	print("+++++++++++++++++++++++++++++++====")
+	print("+++++++++++++++++++++++++++++++====")
+
+	context={
+	'members_array':members_array,
+
+	'task_array':task_array,
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
+	}
+	return render(request,'deskofficer_templates/Duplicate_Membership_Ippis_List_load.html',context)
+
+
+def Duplicate_Membership_Ippis_Records_Delete(request,pk):
+	member=Members.objects.get(id=pk)
+	ippis_no= member.ippis_no
+	record=CustomUser.objects.get(id=member.admin_id)
+	record.delete()
+	MemberShipRequest.objects.filter(ippis_no=ippis_no).delete()
+	return HttpResponseRedirect(reverse('Duplicate_Membership_Ippis_List_load'))
+
 
 def Duplicate_Membership_Records_List_load(request):
 	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
@@ -12512,54 +12562,114 @@ def Members_without_Compulsory_Savings(request):
 
 
 
-def Members_without_Compulsory_Savings_export_Excel_xls(request):
-	status='TREATED'
-	response = HttpResponse(content_type='application/ms-excel')
+def Members_without_Compulsory_Savings_Other_Savings(request,pk):
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	task_array=[]
+	for task in tasks:
+		task_array.append(task.task.title)
 
-	response['Content-Disposition'] = 'attachment; filename="xmas_savings_paid.xls"'
+	task_enabler=TransactionEnabler.objects.filter(status="YES")
+	task_enabler_array=[]
+	for item in task_enabler:
+		task_enabler_array.append(item.title)
 
-	wb = xlwt.Workbook(encoding='utf-8')
-	ws = wb.add_sheet('Users Data') # this will make a sheet named Users Data
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
-	row_num = 0  # Sheet header, first row
+	member=Members.objects.get(coop_no=pk)
 
-	font_style = xlwt.XFStyle()
-	font_style.font.bold = True
+	records=SavingsUploaded.objects.filter(transaction__member=member)
+	
 
-	columns = ['Member ID', 'Name', 'Saving Number', 'Bank', 'Account Name','Account Number','Amount']
-
-	for col_num in range(len(columns)):
-		ws.write(row_num, col_num, columns[col_num], font_style) # at 0 row 0 column
-
-	font_style = xlwt.XFStyle()  # Sheet body, remaining rows
-
-	members=Members.objects.filter(status='ACTIVE')
-
-	transaction=[]
-	if  CompulsorySavings.objects.all().exists():
-		transaction = CompulsorySavings.objects.first()
-
-
-	member_array=[]
-	for member in members:
-		if SavingsUploaded.objects.filter(transaction__member=member,transaction__transaction=transaction.transaction).exists():
-			pass
-		else:
-			member_array.append((member.get_member_Id,member.get_full_name,member.ippis_no,member.salary_institution.title))
+	context={
+	'records':records,
+	'member':member,
+	'task_array':task_array,
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
+	}
+	return render(request,'deskofficer_templates/Members_without_Compulsory_Savings_Other_Savings.html',context)
 
 
+def Members_without_Compulsory_Savings_Loans(request,pk):
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	task_array=[]
+	for task in tasks:
+		task_array.append(task.task.title)
+
+	task_enabler=TransactionEnabler.objects.filter(status="YES")
+	task_enabler_array=[]
+	for item in task_enabler:
+		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
+	member=Members.objects.get(coop_no=pk)
+
+	records=LoansUploaded.objects.filter(member=member)
+	
+
+	context={
+	'records':records,
+	'member':member,
+	'task_array':task_array,
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
+	}
+	return render(request,'deskofficer_templates/Members_without_Compulsory_Savings_Loans.html',context)
 
 
-	rows = Xmas_Savings_Shortlist.objects.filter(batch=batch,payment_channel=payment,status=status).values_list('transaction__member__member_id','transaction__member__full_name','transaction__account_number','bank_account__bank','bank_account__account_name', 'bank_account__account_number', 'amount')
+# def Members_without_Compulsory_Savings_export_Excel_xls(request):
+# 	status='TREATED'
+# 	response = HttpResponse(content_type='application/ms-excel')
 
-	for row in rows:
-		row_num += 1
-		for col_num in range(len(row)):
-			ws.write(row_num, col_num, row[col_num], font_style)
-	wb.save(response)
+# 	response['Content-Disposition'] = 'attachment; filename="xmas_savings_paid.xls"'
+
+# 	wb = xlwt.Workbook(encoding='utf-8')
+# 	ws = wb.add_sheet('Users Data') # this will make a sheet named Users Data
+
+# 	row_num = 0  # Sheet header, first row
+
+# 	font_style = xlwt.XFStyle()
+# 	font_style.font.bold = True
+
+# 	columns = ['Member ID', 'Name', 'Saving Number', 'Bank', 'Account Name','Account Number','Amount']
+
+# 	for col_num in range(len(columns)):
+# 		ws.write(row_num, col_num, columns[col_num], font_style) # at 0 row 0 column
+
+# 	font_style = xlwt.XFStyle()  # Sheet body, remaining rows
+
+# 	members=Members.objects.filter(status='ACTIVE')
+
+# 	transaction=[]
+# 	if  CompulsorySavings.objects.all().exists():
+# 		transaction = CompulsorySavings.objects.first()
+
+
+# 	member_array=[]
+# 	for member in members:
+# 		if SavingsUploaded.objects.filter(transaction__member=member,transaction__transaction=transaction.transaction).exists():
+# 			pass
+# 		else:
+# 			member_array.append((member.get_member_Id,member.get_full_name,member.ippis_no,member.salary_institution.title))
+
+
+
+
+# 	rows = Xmas_Savings_Shortlist.objects.filter(batch=batch,payment_channel=payment,status=status).values_list('transaction__member__member_id','transaction__member__full_name','transaction__account_number','bank_account__bank','bank_account__account_name', 'bank_account__account_number', 'amount')
+
+# 	for row in rows:
+# 		row_num += 1
+# 		for col_num in range(len(row)):
+# 			ws.write(row_num, col_num, row[col_num], font_style)
+# 	wb.save(response)
 
 	
-	return response
+# 	return response
 
 
 
@@ -13840,13 +13950,17 @@ def Uploaded_Existing_loan_Done_View_Details_Upload_Guarantors(request,pk):
 
 	loan=LoansRepaymentBase.objects.get(loan_number=pk)
 	
+	button_show=False
 	records=LoanGuarantors.objects.filter(loan=loan)
 
+	if records:
+		button_show=True
 
 	return render(request,'deskofficer_templates/Uploaded_Existing_loan_Done_View_Details_Upload_Guarantors.html',{'form':form,'title':title,'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
 	'default_password':default_password,
 	'loan':loan,
+	'button_show':button_show,
 	'records':records,
 	})
 
