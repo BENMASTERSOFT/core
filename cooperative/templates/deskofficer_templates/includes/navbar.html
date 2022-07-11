@@ -647,19 +647,47 @@
                                         <a href="{% url 'Members_Dashboard_Search' %}">Members Dashboard</a>
                                     </li>
                                    
+                                    
+
+                                    
+
+
                                     <li>
-                                        <a href="{% url 'Standing_Orders_Transaction_List_Load' %}">Standing Orders</a>
-                                    </li>  
-                                    <li>
-                                        <a href="{% url 'Standing_Orders_Transaction_List_Load' %}">Consolidated Standing Orders</a>
+                                        <a href="javascript:;">
+                                            <span class="nav-label">Savings Transactions</span><i class="fa fa-angle-left arrow"></i></a>
+                                        <ul class="nav-3-level collapse">
+                                            
+                                            <li>
+                                                <a href="{% url 'Standing_Orders_Transaction_List_Load' %}">Standing Orders</a>
+                                            </li>  
+                                            <li>
+                                                <a href="{% url 'Standing_Order_Consolidated_Salary_Institution_list_load' %}">Consolidated Standing Orders</a>
+                                            </li>
+                                            <li>
+                                                <a href="{% url 'Transaction_adjustment_history_Search' %}">Transaction Adjustment History</a>
+                                            </li>
+                                        </ul>
+                                    </li>
+
+       <li>
+                                        <a href="javascript:;">
+                                            <span class="nav-label">Loan Transactions</span><i class="fa fa-angle-left arrow"></i></a>
+                                        <ul class="nav-3-level collapse">
+                                            <li>
+                                                <a href="javascript:;">Loans Applcations</a>
+                                            </li>
+                                            <li>
+                                                <a href="{% url 'Load_Active_loans_Transaction_List_Load' %}">Active Loans</a>
+                                            </li>
+                                            <li>
+                                                <a href="{% url 'Members_Cleared_Loans_Records' %}">Cleared Loans</a>
+                                            </li>
+                                            <li>
+                                                <a href="{% url 'Loan_Repayment_Consolidated_Salary_Institution_list_load' %}">Consolidated Loan Repayments</a>
+                                            </li>
+                                        </ul>
                                     </li>
                                     <li>
-                                        <a href="{% url 'Transaction_adjustment_history_Search' %}">Transaction Adjustment History</a>
-                                    </li>
-
-
-
-                                       <li>
                                         <a href="javascript:;">
                                             <span class="nav-label">Application Forms</span><i class="fa fa-angle-left arrow"></i></a>
                                         <ul class="nav-3-level collapse">
@@ -680,7 +708,7 @@
                                         <a href="{% url 'Cash_Deposit_Report_Date_Load' %}">Cash Deposit</a>
                                     </li>
 
-
+                             
                                     <li>
                                         <a href="javascript:;">
                                             <span class="nav-label">Norminal Roll</span><i class="fa fa-angle-left arrow"></i></a>
@@ -732,21 +760,7 @@
                                         </ul>
                                     </li>
 
-                                    <li>
-                                        <a href="javascript:;">
-                                            <span class="nav-label">Loan</span><i class="fa fa-angle-left arrow"></i></a>
-                                        <ul class="nav-3-level collapse">
-                                            <li>
-                                                <a href="javascript:;">Loans Applcations</a>
-                                            </li>
-                                            <li>
-                                                <a href="{% url 'Load_Active_loans_Transaction_List_Load' %}">Active Loans</a>
-                                            </li>
-                                            <li>
-                                                <a href="{% url 'Members_Cleared_Loans_Records' %}">Cleared Loans</a>
-                                            </li>
-                                        </ul>
-                                    </li>
+                                 
 
                                     <li>
                                         <a href="javascript:;">

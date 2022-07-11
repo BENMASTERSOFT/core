@@ -11973,11 +11973,6 @@ def Duplicate_Membership_Ippis_List_load(request):
 			for item in queryset:
 				members_array.append((item.member_id,item.get_full_name,item.ippis_no,item.coop_no,item.pk,item.admin.pk))
 			
-	print(members_array)
-	print("+++++++++++++++++++++++++++++++====")
-	print("+++++++++++++++++++++++++++++++====")
-	print("+++++++++++++++++++++++++++++++====")
-	print("+++++++++++++++++++++++++++++++====")
 
 	context={
 	'members_array':members_array,
@@ -14419,6 +14414,331 @@ def Standing_Orders_Transaction_Details_Salary_Institution_Details_Excel_Export(
 	return response
 
 
+
+def Standing_Order_Consolidated_Salary_Institution_list_load(request):
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	task_array=[]
+	for task in tasks:
+		task_array.append(task.task.title)
+
+	task_enabler=TransactionEnabler.objects.filter(status="YES")
+	task_enabler_array=[]
+	for item in task_enabler:
+		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
+	records=SalaryInstitution.objects.filter()
+	
+
+	context={
+	'records':records,
+	'task_array':task_array,
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
+	}
+	return render(request,'deskofficer_templates/Standing_Order_Consolidated_Salary_Institution_list_load.html',context)
+
+
+def Standing_Order_Consolidated_Transaction_Details(request,pk):
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	task_array=[]
+	for task in tasks:
+		task_array.append(task.task.title)
+
+	task_enabler=TransactionEnabler.objects.filter(status="YES")
+	task_enabler_array=[]
+	for item in task_enabler:
+		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
+	salary_institution=SalaryInstitution.objects.get(id=pk)
+	transactions=TransactionTypes.objects.filter(source__title='SAVINGS')
+	
+	members=Members.objects.filter(status="ACTIVE",salary_institution=salary_institution)
+	
+	columns=['#','MEMBER ID', 'NAME']
+	
+	for transaction in transactions:
+		columns.append(transaction.name)
+	
+
+	columns.append("TOTAL")
+	order_list_array=[]
+	for member in members:
+		order_array=[]
+		queryset=  StandingOrderAccounts.objects.filter(transaction__member=member,status='ACTIVE').aggregate(total_cash=Sum('amount'))
+		total_amount=queryset['total_cash']
+
+		for transaction in transactions:
+		
+			value=''
+			if StandingOrderAccounts.objects.filter(transaction__member=member,transaction__transaction=transaction,status='ACTIVE').exists():
+				record=StandingOrderAccounts.objects.get(transaction__member=member,transaction__transaction=transaction,status='ACTIVE')
+				value=record.amount
+				
+			
+			order_array.append(value)
+		
+		
+	
+		order_array.insert(0,member.coop_no)
+		order_array.insert(1,member.get_full_name)
+		order_array.append(total_amount)
+		
+		order_list_array.append(order_array)
+
+	context={
+	'columns':columns,
+	'salary_institution':salary_institution,
+	'members':members,
+	'order_list_array':order_list_array,
+	'transactions':transactions,
+	'task_array':task_array,
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
+	}
+	return render(request,'deskofficer_templates/Standing_Order_Consolidated_Transaction_Details.html',context)
+
+
+
+def export_Standing_Order_Consolidated_Transaction_Details_xls(request,pk):
+	status='TREATED'
+	response = HttpResponse(content_type='application/ms-excel')
+	salary_institution=SalaryInstitution.objects.get(id=pk)
+	response['Content-Disposition'] = 'attachment; filename="{salary_institution.title}_CONSODIDATED_SAVINGS.xls"'
+
+	wb = xlwt.Workbook(encoding='utf-8')
+	ws = wb.add_sheet('Users Data') # this will make a sheet named Users Data
+
+	row_num = 0  # Sheet header, first row
+
+	font_style = xlwt.XFStyle()
+	font_style.font.bold = True
+	
+	
+	transactions=TransactionTypes.objects.filter(source__title='SAVINGS')
+	
+	columns=['MEMBER ID', 'NAME']
+	for transaction in transactions:
+		columns.append(transaction.name)
+	columns.append("TOTAL")
+
+	# columns = ['Member ID', 'Name', 'Saving Number', 'Bank', 'Account Name','Account Number','Amount']
+
+	for col_num in range(len(columns)):
+		ws.write(row_num, col_num, columns[col_num], font_style) # at 0 row 0 column
+
+	font_style = xlwt.XFStyle()  # Sheet body, remaining rows
+
+	
+	members=Members.objects.filter(status="ACTIVE",salary_institution=salary_institution)
+	
+	
+	order_list_array=[]
+	for member in members:
+		order_array=[]
+		queryset=  StandingOrderAccounts.objects.filter(transaction__member=member,status='ACTIVE').aggregate(total_cash=Sum('amount'))
+		total_amount=queryset['total_cash']
+
+		for transaction in transactions:
+		
+			value=''
+			if StandingOrderAccounts.objects.filter(transaction__member=member,transaction__transaction=transaction,status='ACTIVE').exists():
+				record=StandingOrderAccounts.objects.get(transaction__member=member,transaction__transaction=transaction,status='ACTIVE')
+				value=record.amount
+				
+			
+			order_array.append(value)
+		
+		
+	
+		order_array.insert(0,member.coop_no)
+		order_array.insert(1,member.get_full_name)
+		order_array.append(total_amount)
+		
+		order_list_array.append(order_array)
+
+
+
+
+
+
+	# rows = Xmas_Savings_Shortlist.objects.filter(batch=batch,payment_channel=payment,status=status).values_list('transaction__member__member_id','transaction__member__full_name','transaction__account_number','bank_account__bank','bank_account__account_name', 'bank_account__account_number', 'amount')
+	rows = order_list_array
+
+	for row in rows:
+		row_num += 1
+		for col_num in range(len(row)):
+			ws.write(row_num, col_num, row[col_num], font_style)
+	wb.save(response)
+
+	return response
+
+########################################################################
+############################# CONSOLIATED LOAN REPAYMENT ###############
+#########################################################################
+def Loan_Repayment_Consolidated_Salary_Institution_list_load(request):
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	task_array=[]
+	for task in tasks:
+		task_array.append(task.task.title)
+
+	task_enabler=TransactionEnabler.objects.filter(status="YES")
+	task_enabler_array=[]
+	for item in task_enabler:
+		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
+	records=SalaryInstitution.objects.filter()
+	
+
+	context={
+	'records':records,
+	'task_array':task_array,
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
+	}
+	return render(request,'deskofficer_templates/Loan_Repayment_Consolidated_Salary_Institution_list_load.html',context)
+
+
+
+
+def Loan_Repayment_Consolidated_Transaction_Details(request,pk):
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	task_array=[]
+	for task in tasks:
+		task_array.append(task.task.title)
+
+	task_enabler=TransactionEnabler.objects.filter(status="YES")
+	task_enabler_array=[]
+	for item in task_enabler:
+		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
+	salary_institution=SalaryInstitution.objects.get(id=pk)
+	transactions=TransactionTypes.objects.filter(source__title='LOAN')
+	
+	members=Members.objects.filter(status="ACTIVE",salary_institution=salary_institution)
+	
+	columns=['#','MEMBER ID', 'NAME']
+	
+	for transaction in transactions:
+		columns.append(transaction.name)
+	
+
+	columns.append("TOTAL")
+	order_list_array=[]
+	for member in members:
+		order_array=[]
+		queryset=  LoansRepaymentBase.objects.filter(member=member,status='ACTIVE').aggregate(total_cash=Sum('repayment'))
+		total_amount=queryset['total_cash']
+
+		for transaction in transactions:
+		
+			value=''
+			if LoansRepaymentBase.objects.filter(member=member,transaction=transaction,status='ACTIVE').exists():
+				record=LoansRepaymentBase.objects.get(member=member,transaction=transaction,status='ACTIVE')
+				value=record.repayment
+			order_array.append(value)
+		
+		
+	
+		order_array.insert(0,member.coop_no)
+		order_array.insert(1,member.get_full_name)
+		order_array.append(total_amount)
+		
+		order_list_array.append(order_array)
+
+	context={
+	'columns':columns,
+	'salary_institution':salary_institution,
+	'members':members,
+	'order_list_array':order_list_array,
+	'transactions':transactions,
+	'task_array':task_array,
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
+	}
+	return render(request,'deskofficer_templates/Loan_Repayment_Consolidated_Transaction_Details.html',context)
+
+
+
+def export_Loan_Repayment_Consolidated_Transaction_Details_xls(request,pk):
+	status='TREATED'
+	response = HttpResponse(content_type='application/ms-excel')
+	salary_institution=SalaryInstitution.objects.get(id=pk)
+
+	response['Content-Disposition'] = F'attachment; filename="{salary_institution.title}_CONSODIDATED_LOAN.xls"'
+
+	wb = xlwt.Workbook(encoding='utf-8')
+	ws = wb.add_sheet('Users Data') # this will make a sheet named Users Data
+
+	row_num = 0  # Sheet header, first row
+
+	font_style = xlwt.XFStyle()
+	font_style.font.bold = True
+	
+	salary_institution=SalaryInstitution.objects.get(id=pk)
+	transactions=TransactionTypes.objects.filter(source__title='LOAN')
+	
+	columns=['MEMBER ID', 'NAME']
+	for transaction in transactions:
+		columns.append(transaction.name)
+	columns.append("TOTAL")
+
+	for col_num in range(len(columns)):
+		ws.write(row_num, col_num, columns[col_num], font_style) # at 0 row 0 column
+
+	font_style = xlwt.XFStyle()  # Sheet body, remaining rows
+
+	
+
+	members=Members.objects.filter(status="ACTIVE",salary_institution=salary_institution)
+
+	order_list_array=[]
+	for member in members:
+		order_array=[]
+		queryset=  LoansRepaymentBase.objects.filter(member=member,status='ACTIVE').aggregate(total_cash=Sum('repayment'))
+		total_amount=queryset['total_cash']
+
+		for transaction in transactions:
+		
+			value=''
+			if LoansRepaymentBase.objects.filter(member=member,transaction=transaction,status='ACTIVE').exists():
+				record=LoansRepaymentBase.objects.get(member=member,transaction=transaction,status='ACTIVE')
+				value=record.repayment
+			order_array.append(value)
+		
+		
+	
+		order_array.insert(0,member.coop_no)
+		order_array.insert(1,member.get_full_name)
+		order_array.append(total_amount)
+		
+		order_list_array.append(order_array)
+
+	# rows = Xmas_Savings_Shortlist.objects.filter(batch=batch,payment_channel=payment,status=status).values_list('transaction__member__member_id','transaction__member__full_name','transaction__account_number','bank_account__bank','bank_account__account_name', 'bank_account__account_number', 'amount')
+	rows = order_list_array
+
+	for row in rows:
+		row_num += 1
+		for col_num in range(len(row)):
+			ws.write(row_num, col_num, row[col_num], font_style)
+	wb.save(response)
+
+	return response
 
 ########################################################################
 ############################# UPDATING SALARY GROSS PAY##################
@@ -21632,7 +21952,7 @@ def TransactionAjustmentHistory_Transaction_Load(request,pk):
 		default_password="YES"
 
 	member=Members.objects.get(id=pk)
-	records=MembersAccountsDomain.objects.filter(member=member,transaction__source="SAVINGS")
+	records=MembersAccountsDomain.objects.filter(member=member,transaction__source__title="SAVINGS")
 	context={
 	'member':member,
 	'task_array':task_array,

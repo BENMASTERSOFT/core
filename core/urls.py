@@ -336,6 +336,8 @@ urlpatterns = [
     path('Commodity_Products_Manage_Update/<str:pk>/', master_views.Commodity_Products_Manage_Update,name='Commodity_Products_Manage_Update'),
     path('Commodity_Products_Manage_Remove/<str:pk>/', master_views.Commodity_Products_Manage_Remove,name='Commodity_Products_Manage_Remove'),
 
+    
+
     path('addCompanies/', master_views.addCompanies,name='addCompanies'),
     path('Manage_Companies/', master_views.Manage_Companies,name='Manage_Companies'),
     path('Manage_Companies_update/<str:pk>/', master_views.Manage_Companies_update,name='Manage_Companies_update'),
@@ -364,6 +366,8 @@ urlpatterns = [
     path('Product_Duration_Settings_Period_Load/', master_views.Product_Duration_Settings_Period_Load,name='Product_Duration_Settings_Period_Load'),
     path('Product_Duration_Settings_Service_Load/<str:period_obj>/<str:batch_obj>/<str:transaction_obj>/', master_views.Product_Duration_Settings_Service_Load,name='Product_Duration_Settings_Service_Load'),
     path('Product_Duration_Settings_Service_Delete/<str:pk>/<str:period_obj>/<str:batch_obj>/<str:transaction_obj>/', master_views.Product_Duration_Settings_Service_Delete,name='Product_Duration_Settings_Service_Delete'),
+    
+
     ###########################################
     ################## PRESIDENT################
     ############################################
@@ -1048,6 +1052,15 @@ urlpatterns = [
     path('Standing_Orders_Transaction_Details_Salary_Institution_Details/<str:pk>/<str:trans_id>/', deskofficer_views.Standing_Orders_Transaction_Details_Salary_Institution_Details,name='Standing_Orders_Transaction_Details_Salary_Institution_Details'),
     path('Standing_Orders_Transaction_Details_Salary_Institution_Details_Excel_Export/<str:pk>/<str:trans_id>/', deskofficer_views.Standing_Orders_Transaction_Details_Salary_Institution_Details_Excel_Export,name='Standing_Orders_Transaction_Details_Salary_Institution_Details_Excel_Export'),
 
+    path('Standing_Order_Consolidated_Salary_Institution_list_load/', deskofficer_views.Standing_Order_Consolidated_Salary_Institution_list_load,name='Standing_Order_Consolidated_Salary_Institution_list_load'),
+    path('Standing_Order_Consolidated_Transaction_Details/<str:pk>/', deskofficer_views.Standing_Order_Consolidated_Transaction_Details,name='Standing_Order_Consolidated_Transaction_Details'),
+    path('export_Standing_Order_Consolidated_Transaction_Details_xls/<str:pk>/', deskofficer_views.export_Standing_Order_Consolidated_Transaction_Details_xls,name='export_Standing_Order_Consolidated_Transaction_Details_xls'),
+
+    path('Loan_Repayment_Consolidated_Salary_Institution_list_load/', deskofficer_views.Loan_Repayment_Consolidated_Salary_Institution_list_load,name='Loan_Repayment_Consolidated_Salary_Institution_list_load'),
+    path('Loan_Repayment_Consolidated_Transaction_Details/<str:pk>/', deskofficer_views.Loan_Repayment_Consolidated_Transaction_Details,name='Loan_Repayment_Consolidated_Transaction_Details'),
+    path('export_Loan_Repayment_Consolidated_Transaction_Details_xls/<str:pk>/', deskofficer_views.export_Loan_Repayment_Consolidated_Transaction_Details_xls,name='export_Loan_Repayment_Consolidated_Transaction_Details_xls'),
+    
+
 
     path('membership_commodity_loan_form_sales_transaction_period_load/', deskofficer_views.membership_commodity_loan_form_sales_transaction_period_load,name='membership_commodity_loan_form_sales_transaction_period_load'),
     path('membership_commodity_loan_form_sales/<str:pk>/', deskofficer_views.membership_commodity_loan_form_sales,name='membership_commodity_loan_form_sales'),
@@ -1151,7 +1164,6 @@ urlpatterns = [
 
     path('Monthly_Deductions_All_Records_Report_Period/', deskofficer_views.Monthly_Deductions_All_Records_Report_Period,name='Monthly_Deductions_All_Records_Report_Period'),
     path('Monthly_Deductions_All_Records_Report_Deatials/<str:pk>/', deskofficer_views.Monthly_Deductions_All_Records_Report_Deatials,name='Monthly_Deductions_All_Records_Report_Deatials'),
-
 
     ###########################################################################
     ############################ SHOP ######################################
