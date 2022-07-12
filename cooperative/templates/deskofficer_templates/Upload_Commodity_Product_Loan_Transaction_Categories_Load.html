@@ -39,37 +39,30 @@
                     <div class="col-xl-10">
                         <div class="ibox">
                             <div class="ibox-head">
-                                <div class="ibox-title">Basic Table</div>
+                                <div class="ibox-title">Incomplete Transactions</div>
                             </div>
                             <div class="ibox-body">
                                 <table class="table">
                                     <thead>
                                         <tr>
                                             <th>#</th>
-                                            <th>First Name</th>
-                                            <th>Last Name</th>
-                                            <th>Username</th>
+                                            <th>Member ID</th>
+                                            <th>Name</th>
+                                            <th>Status</th>
+                                            <th>Action</th>
                                         </tr>
                                     </thead>
                                     <tbody>
+                                    {% for item in record_array %}
                                         <tr>
-                                            <td>1</td>
-                                            <td>Mark</td>
-                                            <td>Otto</td>
-                                            <td>@mdo</td>
+                                            <td>{{forloop.counter}}</td>
+                                            <td>{{item.0}}</td>
+                                            <td>{{item.1}}</td>
+                                            <td>Records({{item.2}}) </td>
+                                          
+                                            <td><a href="{% url 'Upload_Commodity_Product_Loan_Delete_Incomplete_Transactions' item.3 transaction.pk %}" class="btn btn-danger">Drop</a></td>
                                         </tr>
-                                        <tr>
-                                            <td>2</td>
-                                            <td>Jacob</td>
-                                            <td>Thornton</td>
-                                            <td>@fat</td>
-                                        </tr>
-                                        <tr>
-                                            <td>3</td>
-                                            <td>Larry</td>
-                                            <td>the Bird</td>
-                                            <td>@twitter</td>
-                                        </tr>
+                                    {% endfor %}
                                     </tbody>
                                 </table>
                             </div>

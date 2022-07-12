@@ -22857,10 +22857,21 @@ def Upload_Commodity_Product_Loan_Transaction_Categories_Load(request,pk):
 	if Staff.objects.filter(admin=request.user,default_password='YES'):
 		default_password="YES"
 
-	
+	queryset=Commodity_Loan_Upload_Transaction_Header.objects.filter(status='UNTREATED')
 	transaction=TransactionTypes.objects.get(id=pk)
+	
+	record_array=[]
 	records=Commodity_Categories.objects.filter(transaction=transaction)
+	for item in queryset:
+
+		queryset_total=Commodity_Loan_Upload_Transaction_Details.objects.filter(ticket__ticket=item.ticket,status='UNTREATED').count()
+	
+		record_array.append((item.member.coop_no,item.member.get_full_name,queryset_total,item.pk))
+	
+
 	context={
+	'record_array':record_array,
+	'queryset':queryset,
 	'transaction':transaction,
 	'records':records,
 	'task_array':task_array,
@@ -22868,6 +22879,11 @@ def Upload_Commodity_Product_Loan_Transaction_Categories_Load(request,pk):
 	'default_password':default_password,
 	}
 	return render(request,'deskofficer_templates/Upload_Commodity_Product_Loan_Transaction_Categories_Load.html',context)
+
+def Upload_Commodity_Product_Loan_Delete_Incomplete_Transactions(request,pk,trans_id):
+	record=Commodity_Loan_Upload_Transaction_Header.objects.get(id=pk)
+	record.delete()
+	return HttpResponseRedirect(reverse('Upload_Commodity_Product_Loan_Transaction_Categories_Load',args=(trans_id,)))
 
 
 def Commodity_Loan_Upload_Search(request,pk,trans_id):
@@ -22922,6 +22938,7 @@ def Commodity_Loan_Upload_List_load(request,cat_id,trans_id):
 	transaction=TransactionTypes.objects.get(id=trans_id)
 	category=Commodity_Categories.objects.get(id=cat_id)
 
+
 	if request.method == "POST":
 		if request.POST.get("title")=="":
 			messages.info(request,"Please Enter a search data")
@@ -22931,6 +22948,7 @@ def Commodity_Loan_Upload_List_load(request,cat_id,trans_id):
 		if records.count() <= 0:
 			messages.info(request,"No Record Found")
 			return HttpResponseRedirect(reverse('Commodity_Loan_Upload_Search',args=(cat_id,trans_id,)))
+
 
 		context={
 		'transaction':transaction,

@@ -1173,6 +1173,7 @@ urlpatterns = [
     path('Upload_Commodity_Product_Loan_Transaction_Sub_Categories_Load/<str:pk>/<str:cat_id>/<str:trans_id>/', deskofficer_views.Upload_Commodity_Product_Loan_Transaction_Sub_Categories_Load,name='Upload_Commodity_Product_Loan_Transaction_Sub_Categories_Load'),
     path('Upload_Commodity_Product_Loan_Transaction_Select_Company_Load/<str:pk>/<str:member_pk>/<str:return_pk>/', deskofficer_views.Upload_Commodity_Product_Loan_Transaction_Select_Company_Load,name='Upload_Commodity_Product_Loan_Transaction_Select_Company_Load'),
     
+    path('Upload_Commodity_Product_Loan_Delete_Incomplete_Transactions/<str:pk>/<str:trans_id>/', deskofficer_views.Upload_Commodity_Product_Loan_Delete_Incomplete_Transactions,name='Upload_Commodity_Product_Loan_Delete_Incomplete_Transactions'),
 
     path('Upload_Commodity_Product_Loan_Transaction_Company_Products_Load/<str:member_pk>/<str:sub_cat>/<str:comp_pk>/<str:period_pk>/<str:batch_pk>/', deskofficer_views.Upload_Commodity_Product_Loan_Transaction_Company_Products_Load,name='Upload_Commodity_Product_Loan_Transaction_Company_Products_Load'),
     path('Upload_Commodity_Product_Loan_Products_Select/<str:pk>/<str:member_pk>/<str:sub_cat>/<str:comp_pk>/<str:period_pk>/<str:batch_pk>/', deskofficer_views.Upload_Commodity_Product_Loan_Products_Select,name='Upload_Commodity_Product_Loan_Products_Select'),
