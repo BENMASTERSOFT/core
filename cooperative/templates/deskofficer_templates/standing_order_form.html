@@ -60,9 +60,10 @@
                             <div class="ibox-head">
                                 <div class="ibox-title">Selected Contributions | 
                                     {% if standing_orders.count > 0 %}
-                                    <a href="{% url 'standing_order_locked' applicant.id %}" class="btn btn-success"> LOCK ORDERS</a>
+                                    <a href="{% url 'standing_order_locked' applicant.id %}" class="btn btn-success"> LOCK ORDERS</a> 
+                                    <a href="{% url 'standing_order_unlocked' applicant.id %}" class="btn btn-success"> LOCK ORDERS</a>
                                     {% endif %}
-
+                                    |  <a href="{% url 'standing_order_selected_search' %}" class="btn btn-secondary">Back</a>
                                 </div>
                             </div>
                             <div class="ibox-body">

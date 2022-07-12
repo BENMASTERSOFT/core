@@ -669,6 +669,8 @@ def deskofficer_home(request):
 
 	member_count=Members.objects.filter(status='ACTIVE').count()
 
+	# StandingOrderAccounts.objects.all().update(status='ACTIVE',lock_status='OPEN')
+
 	# return HttpResponse("OJKJJJJJ")
 	# StandingOrderAccounts.objects.filter(amount=0).delete()
 
@@ -2807,7 +2809,7 @@ def standing_order_form(request,pk):
 
 			if StandingOrderAccounts.objects.filter(transaction=account_number).exists():
 				member=StandingOrderAccounts.objects.get(transaction=account_number)
-				if member.lock_status.title == 'OPEN':
+				if member.lock_status == 'OPEN':
 					member.amount=amount
 					member.save()
 				else:
@@ -2839,6 +2841,12 @@ def standing_order_form(request,pk):
 
 def standing_order_locked(request,pk):
 	status="LOCKED"
+	all_record_update=StandingOrderAccounts.objects.filter(transaction__member_id=pk).update(lock_status=status)
+	return HttpResponseRedirect(reverse('standing_order_form',args=(pk,)))
+
+
+def standing_order_unlocked(request,pk):
+	status="OPEN"
 	all_record_update=StandingOrderAccounts.objects.filter(transaction__member_id=pk).update(lock_status=status)
 	return HttpResponseRedirect(reverse('standing_order_form',args=(pk,)))
 
@@ -11709,19 +11717,25 @@ def Individual_Capture(request):
 	if request.method == "POST":
 		title_id=request.POST.get('title')
 		title=Titles.objects.get(id=title_id)
+		
 		dob=request.POST.get('dob')
 		chk_dob=request.POST.get('chk-dob')
+		
 		date_hired=request.POST.get('date_hired')
 		chk_fappt=request.POST.get('chk-fappt')
+		
 		file_no=request.POST.get('file_no').upper()
 		ippis_no=request.POST.get('ippis_no')
 		coop_no=request.POST.get('coop_no')
+		
 		last_name=request.POST.get('last_name').upper()
 		first_name=request.POST.get('first_name').upper()
 		middle_name=request.POST.get('middle_name').upper()
 		phone_number=request.POST.get('phone_number')
+		
 		year=request.POST.get('year_joined')
 		month=request.POST.get('month_joined')
+		
 		salary_institution_id=request.POST.get('salary_institution')
 		salary_institution=SalaryInstitution.objects.get(id=salary_institution_id)
 
@@ -11752,6 +11766,7 @@ def Individual_Capture(request):
 			return HttpResponseRedirect(reverse('Individual_Capture'))
 
 		username = first_name + last_name + str(file_no).zfill(5)
+		
 		email = first_name + str(file_no).zfill(5) + "@gmail.com"
 
 		if CustomUser.objects.filter(username=username).exists():
@@ -11808,45 +11823,45 @@ def Individual_Capture(request):
 		user_type=user_type_obj.code
 
 		
-		try:
-			user = CustomUser.objects.create_user(username=username,password=password,email=email,last_name=last_name,first_name=first_name,user_type=int(user_type))
-			user.members.applicant=record
-			user.members.member_id=member_id
-			user.members.coop_no=str(coop_no).zfill(5)
-			user.members.title=title
-			user.members.middle_name=middle_name
-			user.members.full_name=str(first_name) + ' ' + str(last_name) + ' ' + str(middle_name)
-			user.members.phone_number=phone_number
-			user.members.salary_institution=salary_institution
-			user.members.file_no=file_no
-			user.members.ippis_no=ippis_no
-			user.members.date_joined=date_joined
+		# try:
+		user = CustomUser.objects.create_user(username=username,password=password,email=email,last_name=last_name,first_name=first_name,user_type=int(user_type))
+		user.members.applicant=record
+		user.members.member_id=member_id
+		user.members.coop_no=str(coop_no).zfill(5)
+		user.members.title=title
+		user.members.middle_name=middle_name
+		user.members.full_name=str(first_name) + ' ' + str(last_name) + ' ' + str(middle_name)
+		user.members.phone_number=phone_number
+		user.members.salary_institution=salary_institution
+		user.members.file_no=file_no
+		user.members.ippis_no=ippis_no
+		user.members.date_joined=date_joined
 
-			user.members.status=status
-			user.members.savings_status=savings_status
-			user.members.loan_status=loan_status
-			user.members.shares_status=shares_status
-			user.members.welfare_status=welfare_status
+		user.members.status=status
+		user.members.savings_status=savings_status
+		user.members.loan_status=loan_status
+		user.members.shares_status=shares_status
+		user.members.welfare_status=welfare_status
 
-			user.members.date_of_first_appointment=date_hired
-			user.members.dob=dob
-			user.processed_by=processed_by
-			user.members.date_joined_status=date_joined_status
+		user.members.date_of_first_appointment=date_hired
+		user.members.dob=dob
+		user.processed_by=processed_by
+		user.members.date_joined_status=date_joined_status
 
-			if chk_fappt:
-				user.members.date_of_first_appointment_status=date_of_first_appointment_status
+		if chk_fappt:
+			user.members.date_of_first_appointment_status=date_of_first_appointment_status
 
-			if chk_dob:
-				user.members.dob_status=dob_status
+		if chk_dob:
+			user.members.dob_status=dob_status
 
-			user.save()
+		user.save()
 
 
-		except:
-			applicant.delete()
-			user.delete()
-			record.delete()
-			return HttpResponse("OK")
+		# except:
+		# 	applicant.delete()
+		# 	user.delete()
+		# 	record.delete()
+		# 	return HttpResponse("OK")
 		
 		transactions=TransactionTypes.objects.filter(~Q(source__title="LOAN") & ~Q(source__title='GENERAL') & ~Q(code='701'))
 
@@ -13884,7 +13899,8 @@ def Uploaded_Existing_Loans_Done_List_load(request,transaction_period,tdate):
 		member_array.append((query[0][13:],query[1],query[2],query[3],query[4],query[5],get_current_date(query[6]),query[7]))
 
 	context={
-	# 'records':records,
+	'tdate':tdate,
+	'transaction_period':transaction_period,
 	'member_array':member_array,
 	'title':title,
 	'task_array':task_array,
@@ -14649,8 +14665,10 @@ def Loan_Repayment_Consolidated_Transaction_Details(request,pk):
 		
 			value=''
 			if LoansRepaymentBase.objects.filter(member=member,transaction=transaction,status='ACTIVE').exists():
-				record=LoansRepaymentBase.objects.get(member=member,transaction=transaction,status='ACTIVE')
-				value=record.repayment
+				records=LoansRepaymentBase.objects.filter(member=member,transaction=transaction,status='ACTIVE')
+				value=0
+				for item in records:
+					value=float(value)+ float(item.repayment)
 			order_array.append(value)
 		
 		
@@ -14717,8 +14735,11 @@ def export_Loan_Repayment_Consolidated_Transaction_Details_xls(request,pk):
 		
 			value=''
 			if LoansRepaymentBase.objects.filter(member=member,transaction=transaction,status='ACTIVE').exists():
-				record=LoansRepaymentBase.objects.get(member=member,transaction=transaction,status='ACTIVE')
-				value=record.repayment
+				records=LoansRepaymentBase.objects.filter(member=member,transaction=transaction,status='ACTIVE')
+				value=0
+				for item in records:
+					value=float(value)+ float(item.repayment)
+		
 			order_array.append(value)
 		
 		
@@ -14740,10 +14761,76 @@ def export_Loan_Repayment_Consolidated_Transaction_Details_xls(request,pk):
 
 	return response
 
+
 ########################################################################
-############################# UPDATING SALARY GROSS PAY##################
+############################# UPDATING NORMINAL ROLL#####################
 #########################################################################
-def Updating_Salary_Grosspay_list_load(request):
+
+def Norminal_Roll_Update_Coop_Number_Search(request):
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	task_array=[]
+	for task in tasks:
+		task_array.append(task.task.title)
+
+	task_enabler=TransactionEnabler.objects.filter(status="YES")
+	task_enabler_array=[]
+	for item in task_enabler:
+		task_enabler_array.append(item.title)
+
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
+
+	title="Search Members"
+	form = searchForm(request.POST or None)
+
+	return render(request,'deskofficer_templates/Norminal_Roll_Update_Coop_Number_Search.html',{'form':form,'title':title,'task_array':task_array,
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,})
+
+
+def Norminal_Roll_Update_Coop_Number_list_load(request):
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	task_array=[]
+	for task in tasks:
+		task_array.append(task.task.title)
+
+	task_enabler=TransactionEnabler.objects.filter(status="YES")
+	task_enabler_array=[]
+	for item in task_enabler:
+		task_enabler_array.append(item.title)
+
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
+
+	title="LIST OF MEMBERS FOR COOP NUMBER UPDATE"
+	form = searchForm(request.POST)
+	status="ACTIVE"
+
+	if request.method == "POST":
+		if request.POST.get("title")=="":
+			return HttpResponseRedirect(reverse('Norminal_Roll_Update_Coop_Number_Search'))
+
+		members=searchMembers(form['title'].value(),status)
+		# members=Members.objects.filter(Q(file_no__icontains=form['title'].value()) |Q(ippis_no__icontains=form['title'].value()) |Q(phone_number__icontains=form['title'].value()) | Q(admin__first_name__icontains=form['title'].value()) | Q(admin__last_name__icontains=form['title'].value()) | Q(middle_name__icontains=form['title'].value())).filter(status=status)
+
+		context={
+		'members':members,
+		'title':title,
+		'task_array':task_array,
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
+		}
+		return render(request,'deskofficer_templates/Norminal_Roll_Update_Coop_Number.html',context)
+
+
+
+def Norminal_Roll_Update_Coop_Number_Update(request,pk):
 	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
 	task_array=[]
 	for task in tasks:
@@ -14759,25 +14846,38 @@ def Updating_Salary_Grosspay_list_load(request):
 		default_password="YES"
 
 
+	form = Norminal_Roll_Update_form(request.POST or None)
+	member=Members.objects.get(pk=pk)
 
-	status="ACTIVE"
-	salary_status='PENDING'
-	# records=Members.objects.filter(status=status).filter(Q(gender__isnull=True) | Q(gender=""))
-	records=Members.objects.filter(status=status).filter(Q(salary_status__isnull=True) | Q(salary_status=""))
+	if request.method=='POST':
 
+		coop_no=request.POST.get('coop_no').zfill(5)
+
+		
+		if Members.objects.filter(coop_no=coop_no).exclude(id=pk).exists():
+			messages.error(request,'Record with this Coo No Already Exist')
+			return HttpResponseRedirect(reverse('Norminal_Roll_Update_Coop_Number_Update', args=(pk,)))
+		member_id=member.member_id[:13]
+
+		member.coop_no=coop_no
+		member.member_id=f'{member_id}{coop_no}'
+		member.save()
+	
+		return HttpResponseRedirect(reverse('deskofficer_home'))
+
+	form.fields['coop_no'].initial= member.coop_no
+	
 	context={
-	'records':records,
+	'form':form,
+	'member':member,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
 	'default_password':default_password,
 	}
-	return render(request,'deskofficer_templates/Updating_Salary_Grosspay_list_load.html',context)
+	return render(request,'deskofficer_templates/Norminal_Roll_Update_Coop_Number_Update.html',context)
 
 
 
-########################################################################
-############################# UPDATING NORMINAL ROLL#####################
-#########################################################################
 
 def Norminal_Roll_Search(request):
 	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)

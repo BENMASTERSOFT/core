@@ -2108,6 +2108,7 @@ class Norminal_Roll_Update_form(forms.Form):
 
    file_no=forms.CharField(label="File No",max_length=50,widget=forms.TextInput(attrs={"class":"form-control"}))
    ippis_no=forms.CharField(label="IPPIS No/Non IPPIS No",max_length=50,widget=forms.TextInput(attrs={"class":"form-control"}))
+   coop_no=forms.CharField(label="Coop No",max_length=50,widget=forms.TextInput(attrs={"class":"form-control"}))
 
    net_pay_as_at = forms.DateField(label='Net Pay as at', label_suffix=" : ",
                              required=True, disabled=False,

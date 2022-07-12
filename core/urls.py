@@ -561,6 +561,7 @@ urlpatterns = [
     path('standing_order_list_load/', deskofficer_views.standing_order_list_load,name='standing_order_list_load'),
     path('standing_order_form/<str:pk>/', deskofficer_views.standing_order_form,name='standing_order_form'),
     path('standing_order_locked/<str:pk>/', deskofficer_views.standing_order_locked,name='standing_order_locked'),
+    path('standing_order_unlocked/<str:pk>/', deskofficer_views.standing_order_unlocked,name='standing_order_unlocked'),
     path('standing_order_remove/<str:pk>/', deskofficer_views.standing_order_remove,name='standing_order_remove'),
 
     path('standing_order_reactivate_account_search/', deskofficer_views.standing_order_reactivate_account_search,name='standing_order_reactivate_account_search'),
@@ -879,6 +880,11 @@ urlpatterns = [
     path('Members_Welfare_Upload_Search/', deskofficer_views.Members_Welfare_Upload_Search,name='Members_Welfare_Upload_Search'),
     path('Members_Welfare_Upload_list_load/', deskofficer_views.Members_Welfare_Upload_list_load,name='Members_Welfare_Upload_list_load'),
     path('Members_Welfare_Upload_Preview/<str:pk>/', deskofficer_views.Members_Welfare_Upload_Preview,name='Members_Welfare_Upload_Preview'),
+
+    path('Norminal_Roll_Update_Coop_Number_Search/', deskofficer_views.Norminal_Roll_Update_Coop_Number_Search,name='Norminal_Roll_Update_Coop_Number_Search'),
+    path('Norminal_Roll_Update_Coop_Number_list_load/', deskofficer_views.Norminal_Roll_Update_Coop_Number_list_load,name='Norminal_Roll_Update_Coop_Number_list_load'),
+    path('Norminal_Roll_Update_Coop_Number_Update/<str:pk>/', deskofficer_views.Norminal_Roll_Update_Coop_Number_Update,name='Norminal_Roll_Update_Coop_Number_Update'),
+    
 
     path('Norminal_Roll_Search/', deskofficer_views.Norminal_Roll_Search,name='Norminal_Roll_Search'),
     path('Norminal_Roll_Update_list_load/', deskofficer_views.Norminal_Roll_Update_list_load,name='Norminal_Roll_Update_list_load'),
