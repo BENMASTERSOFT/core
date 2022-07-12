@@ -2002,6 +2002,7 @@ def Product_Linking_Sub_Category_Load(request,period_obj,batch_obj,transaction_o
 
 
 def Product_Linking_Details(request,pk,period_pk,batch_pk,transaction_pk,company_pk,cat_pk):
+
     task_array=[]
     if not request.user.user_type == '1':
         tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
@@ -2049,12 +2050,13 @@ def Product_Linking_Details_Preview(request,comp_pk,pk,period_pk,batch_pk,transa
     company=Companies.objects.get(id=comp_pk)
     product=Commodity_Product_List.objects.get(id=pk)
 
+
     coop_price_enabled=False
     if product.sub_category.category.interest_rate_required != '1':
         coop_price_enabled=True
 
     if request.method == "POST":
-      
+       
         period=Commodity_Period.objects.get(id=period_pk)
         batch=Commodity_Period_Batch.objects.get(id=batch_pk)
 
@@ -2068,6 +2070,9 @@ def Product_Linking_Details_Preview(request,comp_pk,pk,period_pk,batch_pk,transa
                 messages.error(request,'Company Price Missing')
                 return HttpResponseRedirect(reverse('Product_Linking_Details',args=(sub_cat,period_pk,batch_pk,transaction_pk,comp_pk,cat_pk,)))
 
+        else:                
+            coop_amount=float(amount) + (float(product.sub_category.category.interest_rate)/100)*float(amount)
+        
 
         if not amount:
             messages.error(request,'Company Price Missing')
@@ -2095,23 +2100,21 @@ def Product_Linking_Details_Preview(request,comp_pk,pk,period_pk,batch_pk,transa
 
 
 def Product_UnLinking_Process(request,comp_pk,pk,period_pk, batch_pk, transaction_pk):
+
     task_array=[]
     if not request.user.user_type == '1':
         tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
         for task in tasks:
             task_array.append(task.task.title)
     product=Company_Products.objects.get(id=pk)
+    sub_cat=product.product.sub_category.pk
+    company_pk=product.company.pk
+    cat_pk=product.product.sub_category.category.pk
     product.delete()
 
     messages.success(request,"Record Deleted Successfully")
-    return  HttpResponseRedirect(reverse('Product_Linking_Details',args=(comp_pk,period_pk,batch_pk,transaction_pk,)))
-    context={
-    'task_array':task_array,
-    'company':company,
-    'records':records,
-    }
-    return render(request,'master_templates/Product_Linking_Details.html',context)
-
+    return  HttpResponseRedirect(reverse('Product_Linking_Details',args=(sub_cat,period_pk,batch_pk,transaction_pk,company_pk,cat_pk)))
+    
 
 
 def Product_Duration_Settings_Period_Load(request):
@@ -2354,6 +2357,7 @@ def Product_Price_Settings_Update(request,comp_pk,pk):
     company=Companies.objects.get(id=comp_pk)
     record=Company_Products.objects.get(id=pk)
 
+
     coop_price_enabled=False
     if record.product.sub_category.category.interest_rate_required != '1':
         coop_price_enabled=True
@@ -2365,8 +2369,10 @@ def Product_Price_Settings_Update(request,comp_pk,pk):
         coop_price=0
         if coop_price_enabled:
             coop_price=request.POST.get('coop_price')
+         
         else:
             coop_price=float(unit_cost_price) + (float(record.product.sub_category.category.interest_rate)/100)*float(unit_cost_price)
+           
 
         status=request.POST.get('status')
         record.amount=unit_cost_price

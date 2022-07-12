@@ -1,0 +1,93 @@
+{% extends 'deskofficer_templates/base_template.html' %}
+{% load static %}
+
+{% block content %}
+            <div class="page-content fade-in-up">
+                <div class="row">
+                 
+                    <div class="col-xl-6">
+                        <div class="ibox">
+                            <div class="ibox-head">
+                                <div class="ibox-title"> {{category}} |{{member.get_full_name}} | {{ticket}}</div>
+                            </div>
+                            <div class="ibox-body">
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Description</th>
+                                            <th>Action</th>
+                                    
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for record in records %}
+                                        <tr>
+                                            <td>{{forloop.counter}}</td>
+                                            <td>{{record.title}}</td>
+                                            <td><a href="{% url 'Upload_Commodity_Product_Loan_Transaction_Select_Company_Load' record.pk  member.pk transaction.pk %}" class="btn btn-primary">Select Company</a></td>
+                                 
+                                         
+                                        </tr>
+                                  {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                  <div class="row">
+                        <div class="col-xl-10">
+                        <div class="ibox">
+                            <div class="ibox-head">
+                                <div class="ibox-title">Selected Products 
+                                    {% if button_show %}| 
+
+                                    <a href="{% url 'Upload_Commodity_Product_Loan_Products_Select_Preview' ticket %}" class="btn btn-success">Preview</a>{% endif %}
+
+                                </div>
+                            </div>
+                            <div class="ibox-body">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Description</th>
+                                            <th>Quantity</th>
+                                            <th>Amount</th>
+                                            <th>Total</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for item in queryset %}
+                                        <tr>
+                                            <td>{{forloop.counter}}</td>
+                                            <td>{{item.product.product.product_name}}</td>
+                                            <td>{{item.quantity}}</td>
+                                            <td>{{item.amount}}</td>
+                                            <td>{{item.total_amount}}</td>
+                                            <td><a href="{% url 'Upload_Commodity_Product_Loan_Products_Select_Delete' item.pk category.pk transaction.pk member.pk %}" class="btn btn-danger">Delete</a></td>
+                                        </tr>
+                                    {% endfor %}
+                                    <tr>
+                                        <td colspan="2">TOTAL</td>
+                                        <td></td>
+                                        <td></td>
+                                        <td>{{total_amount}}</td>
+                                        <td></td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+              
+           
+            </div>
+  <div class="sidenav-backdrop backdrop"></div>
+    <div class="preloader-backdrop">
+        <div class="page-preloader">Loading</div>
+    </div>
+{% endblock %}

@@ -11921,12 +11921,12 @@ def Individual_Capture_Delete_List_load(request):
 	if request.method == "POST":
 		if request.POST.get("title")=="":
 			messages.info(request,"Please Enter a search data")
-			return HttpResponseRedirect(reverse('Uploading_Existing_Savings_Search'))
+			return HttpResponseRedirect(reverse('Individual_Capture_Delete_Search('))
 
 		records=Members.objects.filter(Q(file_no__icontains=form['title'].value()) |Q(ippis_no__icontains=form['title'].value()) |Q(phone_number__icontains=form['title'].value()) | Q(admin__first_name__icontains=form['title'].value()) | Q(admin__last_name__icontains=form['title'].value()) | Q(middle_name__icontains=form['title'].value())).filter(status=status)
 		if records.count() <= 0:
 			messages.info(request,"No Record Found")
-			return HttpResponseRedirect(reverse('Uploading_Existing_Savings_Search'))
+			return HttpResponseRedirect(reverse('Individual_Capture_Delete_Search('))
 
 		context={
 		'records':records,
@@ -22807,3 +22807,493 @@ def Rental_Services_Management_Process_Details(request,pk,contact):
 	'default_password':default_password,
 	}
 	return render(request,'deskofficer_templates/Rental_Services_Management_Process_Details.html',context)
+
+########################################################################
+############################ UPLOADING COMMODITY ########################
+#########################################################################
+
+def Upload_Commodity_Product_Loan_Transaction_Load(request):
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	task_array=[]
+	for task in tasks:
+		task_array.append(task.task.title)
+
+	task_enabler=TransactionEnabler.objects.filter(status="YES")
+	task_enabler_array=[]
+	for item in task_enabler:
+		task_enabler_array.append(item.title)
+
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
+	
+	records=TransactionTypes.objects.filter(category='NON-MONETARY')
+
+	context={
+	
+	'records':records,
+	'task_array':task_array,
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
+	}
+	return render(request,'deskofficer_templates/Upload_Commodity_Product_Loan_Transaction_Load.html',context)
+
+
+def Upload_Commodity_Product_Loan_Transaction_Categories_Load(request,pk):
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	task_array=[]
+	for task in tasks:
+		task_array.append(task.task.title)
+
+	task_enabler=TransactionEnabler.objects.filter(status="YES")
+	task_enabler_array=[]
+	for item in task_enabler:
+		task_enabler_array.append(item.title)
+
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
+	
+	transaction=TransactionTypes.objects.get(id=pk)
+	records=Commodity_Categories.objects.filter(transaction=transaction)
+	context={
+	'transaction':transaction,
+	'records':records,
+	'task_array':task_array,
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
+	}
+	return render(request,'deskofficer_templates/Upload_Commodity_Product_Loan_Transaction_Categories_Load.html',context)
+
+
+def Commodity_Loan_Upload_Search(request,pk,trans_id):
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	task_array=[]
+	for task in tasks:
+		task_array.append(task.task.title)
+
+	task_enabler=TransactionEnabler.objects.filter(status="YES")
+	task_enabler_array=[]
+	for item in task_enabler:
+		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
+	transaction=TransactionTypes.objects.get(id=trans_id)
+	category=Commodity_Categories.objects.get(id=pk)
+
+	title="Search Members"
+	form = searchForm(request.POST or None)
+
+	return render(request,'deskofficer_templates/Commodity_Loan_Upload_Search.html',{'form':form,'title':title,'task_array':task_array,
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
+	'transaction':transaction,
+	'category':category,
+	})
+
+
+def Commodity_Loan_Upload_List_load(request,cat_id,trans_id):
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	task_array=[]
+	for task in tasks:
+		task_array.append(task.task.title)
+
+	task_enabler=TransactionEnabler.objects.filter(status="YES")
+	task_enabler_array=[]
+	for item in task_enabler:
+		task_enabler_array.append(item.title)
+
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
+	title="LIST OF MEMBERS"
+	form = searchForm(request.POST)
+	status="ACTIVE"
+
+	transaction=TransactionTypes.objects.get(id=trans_id)
+	category=Commodity_Categories.objects.get(id=cat_id)
+
+	if request.method == "POST":
+		if request.POST.get("title")=="":
+			messages.info(request,"Please Enter a search data")
+			return HttpResponseRedirect(reverse('Commodity_Loan_Upload_Search',args=(cat_id,trans_id,)))
+
+		records=Members.objects.filter(Q(file_no__icontains=form['title'].value()) |Q(ippis_no__icontains=form['title'].value()) |Q(phone_number__icontains=form['title'].value()) | Q(admin__first_name__icontains=form['title'].value()) | Q(admin__last_name__icontains=form['title'].value()) | Q(middle_name__icontains=form['title'].value())).filter(status=status)
+		if records.count() <= 0:
+			messages.info(request,"No Record Found")
+			return HttpResponseRedirect(reverse('Commodity_Loan_Upload_Search',args=(cat_id,trans_id,)))
+
+		context={
+		'transaction':transaction,
+		'category':category,
+		'records':records,
+		'title':title,
+		'task_array':task_array,
+		'task_enabler_array':task_enabler_array,
+		'default_password':default_password,
+		}
+		return render(request,'deskofficer_templates/Commodity_Loan_Upload_List_load.html',context)
+
+
+
+
+
+def Upload_Commodity_Product_Loan_Transaction_Sub_Categories_Load(request,pk,cat_id,trans_id):
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	task_array=[]
+	for task in tasks:
+		task_array.append(task.task.title)
+
+	task_enabler=TransactionEnabler.objects.filter(status="YES")
+	task_enabler_array=[]
+	for item in task_enabler:
+		task_enabler_array.append(item.title)
+
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+	
+
+	transaction=TransactionTypes.objects.get(id=trans_id)
+	member=Members.objects.get(id=pk)
+	category=Commodity_Categories.objects.get(id=cat_id)
+	records=Commodity_Category_Sub.objects.filter(category=category)
+	
+	if Commodity_Loan_Upload_Transaction_Header.objects.filter(member=member,status='UNTREATED').exists():
+		ticket_record=Commodity_Loan_Upload_Transaction_Header.objects.first()
+		ticket=ticket_record.ticket
+	else:
+		ticket=get_ticket()
+		
+		Commodity_Loan_Upload_Transaction_Header(category=category,ticket=ticket,member=member).save()
+	
+	queryset = Commodity_Loan_Upload_Transaction_Details.objects.filter(ticket__ticket=ticket,status='UNTREATED')
+	
+	queryset_sum=Commodity_Loan_Upload_Transaction_Details.objects.filter(ticket__ticket=ticket,status='UNTREATED').aggregate(total_sum=Sum('total_amount'))
+	total_amount=queryset_sum['total_sum']
+				
+	button_show=False
+	if queryset:
+		button_show=True
+		
+	context={
+	'button_show':button_show,
+	'total_amount':total_amount,
+	'queryset':queryset,
+	'ticket':ticket,
+	'member':member,
+	'transaction':transaction,
+	'category':category,
+	'records':records,
+	'task_array':task_array,
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
+	}
+	return render(request,'deskofficer_templates/Upload_Commodity_Product_Loan_Transaction_Sub_Categories_Load.html',context)
+
+
+def Upload_Commodity_Product_Loan_Transaction_Select_Company_Load(request,pk,member_pk,return_pk):
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	task_array=[]
+	for task in tasks:
+		task_array.append(task.task.title)
+
+	task_enabler=TransactionEnabler.objects.filter(status="YES")
+	task_enabler_array=[]
+	for item in task_enabler:
+		task_enabler_array.append(item.title)
+
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+	
+	member=Members.objects.get(id=member_pk)
+	sub_category=Commodity_Category_Sub.objects.get(id=pk)
+	
+	if request.method == 'POST':
+		company_id=request.POST.get('company')
+		company=Companies.objects.get(id=company_id)
+		
+		period_id=request.POST.get('period')
+		period=Commodity_Period.objects.get(id=period_id)
+		
+
+		batch_id=request.POST.get('batch')
+		batch=Commodity_Period_Batch.objects.get(id=batch_id)
+
+		
+		return HttpResponseRedirect(reverse('Upload_Commodity_Product_Loan_Transaction_Company_Products_Load',args=(member_pk,sub_category.pk,company.pk,period.pk,batch.pk)))
+	
+	companies = Companies.objects.all()
+	periods=Commodity_Period.objects.all()
+	batches=Commodity_Period_Batch.objects.all()
+	
+	context={
+	'return_pk':return_pk,
+	'companies':companies,
+	'periods':periods,
+	'batches':batches,
+	'sub_category':sub_category,
+	'member':member,
+	'task_array':task_array,
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
+	}
+	return render(request,'deskofficer_templates/Upload_Commodity_Product_Loan_Transaction_Select_Company_Load.html',context)
+
+
+
+
+
+def Upload_Commodity_Product_Loan_Transaction_Company_Products_Load(request,member_pk,sub_cat,comp_pk,period_pk,batch_pk):
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	task_array=[]
+	for task in tasks:
+		task_array.append(task.task.title)
+
+	task_enabler=TransactionEnabler.objects.filter(status="YES")
+	task_enabler_array=[]
+	for item in task_enabler:
+		task_enabler_array.append(item.title)
+
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+	
+	member=Members.objects.get(id=member_pk)
+	sub_category=Commodity_Category_Sub.objects.get(id=sub_cat)
+	
+
+	company = Companies.objects.get(id=comp_pk)
+	period=Commodity_Period.objects.get(id=period_pk)
+	batch=Commodity_Period_Batch.objects.get(id=batch_pk)
+	
+	products=Company_Products.objects.filter(company=company,period=period,batch=batch,product__sub_category=sub_category)
+
+	context={
+	'products':products,
+	'company':company,
+	'period':period,
+	'batch':batch,
+	'sub_category':sub_category,
+	'member':member,
+	'task_array':task_array,
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
+	}
+	return render(request,'deskofficer_templates/Upload_Commodity_Product_Loan_Transaction_Company_Products_Load.html',context)
+
+
+def Upload_Commodity_Product_Loan_Products_Select(request,pk,member_pk,sub_cat,comp_pk,period_pk,batch_pk):
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	task_array=[]
+	for task in tasks:
+		task_array.append(task.task.title)
+
+	task_enabler=TransactionEnabler.objects.filter(status="YES")
+	task_enabler_array=[]
+	for item in task_enabler:
+		task_enabler_array.append(item.title)
+
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+	
+	form = Upload_Commodity_Product_Loan_Products_Select_Form(request.POST or None)
+	
+	product=Company_Products.objects.get(id=pk)
+	member=Members.objects.get(id=member_pk)
+	sub_category=Commodity_Category_Sub.objects.get(id=sub_cat)
+	company = Companies.objects.get(id=comp_pk)
+	period=Commodity_Period.objects.get(id=period_pk)
+	batch=Commodity_Period_Batch.objects.get(id=batch_pk)
+	ticket=Commodity_Loan_Upload_Transaction_Header.objects.get(member=member,status='UNTREATED')
+	tdate=get_current_date(now)
+	processed_by=CustomUser.objects.get(id=request.user.id)
+	processed_by=processed_by.username
+
+	if request.method =="POST":
+		quantity=request.POST.get('quantity')
+		if not quantity or int(quantity)<=0:
+			messages.error(request,'Quantity is Missing')
+			return HttpResponseRedirect(reverse('Upload_Commodity_Product_Loan_Products_Select',args=(pk,member_pk,sub_cat,comp_pk,period_pk,batch_pk)))
+		
+		total_amount=	float(product.coop_amount)* float(quantity)
+		company_price=	float(product.amount)* float(quantity)
+
+		if Commodity_Loan_Upload_Transaction_Details.objects.filter(ticket=ticket,product=product).exists():
+			selected_record=Commodity_Loan_Upload_Transaction_Details.objects.get(ticket=ticket,product=product)
+			selected_record.amount=product.coop_amount
+			selected_record.company_price=product.amount
+			selected_record.quantity=quantity
+			selected_record.total_amount=total_amount
+			selected_record.total_company=company_price
+			selected_record.processed_by=processed_by
+			selected_record.status="UNTREATED"
+			selected_record.save()
+		else:
+			Commodity_Loan_Upload_Transaction_Details(ticket=ticket,
+												product=product,
+												amount=product.coop_amount,
+												quantity=quantity,
+												total_amount=total_amount,
+												company_price=product.amount,
+												total_company=company_price,
+												processed_by=processed_by,
+												status="UNTREATED"
+												).save()
+		return HttpResponseRedirect(reverse('Upload_Commodity_Product_Loan_Transaction_Company_Products_Load',args=(member.pk,sub_cat,comp_pk,period_pk,batch_pk)))
+	form.fields['product'].initial=product.product.product_name
+	form.fields['amount'].initial=product.coop_amount
+
+	context={
+	'product':product,
+	'company':company,
+	'period':period,
+	'form':form,
+	'batch':batch,
+	'sub_category':sub_category,
+	'member':member,
+	'task_array':task_array,
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
+	}
+	return render(request,'deskofficer_templates/Upload_Commodity_Product_Loan_Products_Select.html',context)
+
+
+def Upload_Commodity_Product_Loan_Products_Select_Delete(request,pk,cat_id, trans_id,member_pk):
+	record=Commodity_Loan_Upload_Transaction_Details.objects.get(id=pk)
+	record.delete()
+	return HttpResponseRedirect(reverse("Upload_Commodity_Product_Loan_Transaction_Sub_Categories_Load",args=(member_pk,cat_id,trans_id)))		
+
+
+
+def Upload_Commodity_Product_Loan_Products_Select_Preview(request,pk):
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	task_array=[]
+	for task in tasks:
+		task_array.append(task.task.title)
+
+	task_enabler=TransactionEnabler.objects.filter(status="YES")
+	task_enabler_array=[]
+	for item in task_enabler:
+		task_enabler_array.append(item.title)
+
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+	
+	form = Upload_Commodity_Product_Loan_Products_Select_Preview_Form(request.POST or None)
+	tdate=get_current_date(now)
+	processed_by=CustomUser.objects.get(id=request.user.id)
+	processed_by=processed_by.username
+
+	selected_header=Commodity_Loan_Upload_Transaction_Header.objects.get(ticket=pk)
+	loan_code=selected_header.category.transaction.code
+	transaction=selected_header.category.transaction
+	member=Members.objects.get(id=selected_header.member.id)
+	my_id=member.coop_no
+
+	records=Commodity_Loan_Upload_Transaction_Details.objects.filter(ticket__ticket=pk)
+	queryset_sum=Commodity_Loan_Upload_Transaction_Details.objects.filter(ticket__ticket=pk).aggregate(total_sum=Sum('total_amount'),total_comp=Sum('total_company'))
+	total_amount=queryset_sum['total_sum']
+	total_company_price=queryset_sum['total_comp']
+
+	duration=selected_header.category.duration
+	interest_rate=selected_header.category.interest_rate
+	admin_charges=selected_header.category.admin_charges
+
+	interest = math.ceil((float(interest_rate)/100) * float(total_company_price))
+
+	admin_charge=math.ceil((float(admin_charges)/100) * float(total_amount))
+	loan_amount=float(total_amount)+ float(admin_charge)
+	repayment=math.ceil(float(loan_amount)/float(duration))
+
+	if request.method=="POST":
+		duration_new = request.POST.get('duration')
+		if duration_new or int(duration_new)>0:
+			duration=request.POST.get('duration')
+		
+		start_date_id=request.POST.get('start_date')
+		start_date=datetime.datetime.strptime(start_date_id, '%Y-%m-%d')
+		stop_date = start_date+ relativedelta(months=int(duration))
+
+		
+		balance = request.POST.get('balance')
+		if not balance or float(balance)<=0:
+			messages.error(request,'Balance is missing')
+			return HttpResponseRedirect(reverse('Upload_Commodity_Product_Loan_Products_Select_Preview',args=(pk,)))
+		
+		repayment= request.POST.get('repayment')
+		loan_number = generate_number(loan_code,my_id,now)
+
+
+		selected_header.loan_amount=loan_amount
+		selected_header.loan_number=loan_number
+		selected_header.balance=balance
+		selected_header.repayment=repayment
+		selected_header.interest_rate=interest_rate
+		selected_header.duration=duration
+		selected_header.start_date=start_date
+		selected_header.starstatust_date='TREATED'
+		selected_header.save()
+		interest_deduction="SPREAD"
+		amount_paid=float(loan_amount)-float(balance)
+
+		LoansRepaymentBase(member=member,
+							transaction=transaction,
+							loan_number=loan_number,
+							duration=duration,
+							interest_deduction=interest_deduction,
+							interest_rate=interest_rate,
+							interest=interest,
+							admin_charge=admin_charge,
+							loan_amount=loan_amount,
+							repayment=repayment,
+							amount_paid=amount_paid,
+							balance=balance,
+							start_date=start_date,
+							stop_date=stop_date,
+							schedule_status="SCHEDULED",
+							nok_name="UNKNOWN",
+							nok_Relationship="UNKNOWN",
+							nok_phone_no="UNKNOWN",
+							nok_address="UNKNOWN",
+							status="ACTIVE",
+							tdate=tdate,
+							processed_by=processed_by,
+							).save()
+		Commodity_Loan_Upload_Transaction_Details.objects.filter(ticket__ticket=pk).update(status='TREATED')
+		return HttpResponseRedirect(reverse('deskofficer_home'))
+
+	form.fields['product_cost'].initial=total_amount
+	form.fields['admin_charge'].initial=admin_charge
+	form.fields['loan_amount'].initial=loan_amount
+	form.fields['repayment'].initial=repayment  
+	form.fields['duration'].initial=duration
+	form.fields['start_date'].initial=get_current_date(now)
+	context={
+	'form':form,
+	'selected_header':selected_header,
+	'member':member,
+	'total_amount':total_amount,
+	'records':records,
+	'task_array':task_array,
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
+	}
+	return render(request,'deskofficer_templates/Upload_Commodity_Product_Loan_Products_Select_Preview.html',context)

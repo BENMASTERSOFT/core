@@ -1165,6 +1165,49 @@ urlpatterns = [
     path('Monthly_Deductions_All_Records_Report_Period/', deskofficer_views.Monthly_Deductions_All_Records_Report_Period,name='Monthly_Deductions_All_Records_Report_Period'),
     path('Monthly_Deductions_All_Records_Report_Deatials/<str:pk>/', deskofficer_views.Monthly_Deductions_All_Records_Report_Deatials,name='Monthly_Deductions_All_Records_Report_Deatials'),
 
+    
+    path('Upload_Commodity_Product_Loan_Transaction_Load/', deskofficer_views.Upload_Commodity_Product_Loan_Transaction_Load,name='Upload_Commodity_Product_Loan_Transaction_Load'),
+    path('Upload_Commodity_Product_Loan_Transaction_Categories_Load/<str:pk>/', deskofficer_views.Upload_Commodity_Product_Loan_Transaction_Categories_Load,name='Upload_Commodity_Product_Loan_Transaction_Categories_Load'),
+    path('Commodity_Loan_Upload_Search/<str:pk>/<str:trans_id>/', deskofficer_views.Commodity_Loan_Upload_Search,name='Commodity_Loan_Upload_Search'),
+    path('Commodity_Loan_Upload_List_load/<str:cat_id>/<str:trans_id>/', deskofficer_views.Commodity_Loan_Upload_List_load,name='Commodity_Loan_Upload_List_load'),
+    path('Upload_Commodity_Product_Loan_Transaction_Sub_Categories_Load/<str:pk>/<str:cat_id>/<str:trans_id>/', deskofficer_views.Upload_Commodity_Product_Loan_Transaction_Sub_Categories_Load,name='Upload_Commodity_Product_Loan_Transaction_Sub_Categories_Load'),
+    path('Upload_Commodity_Product_Loan_Transaction_Select_Company_Load/<str:pk>/<str:member_pk>/<str:return_pk>/', deskofficer_views.Upload_Commodity_Product_Loan_Transaction_Select_Company_Load,name='Upload_Commodity_Product_Loan_Transaction_Select_Company_Load'),
+    
+
+    path('Upload_Commodity_Product_Loan_Transaction_Company_Products_Load/<str:member_pk>/<str:sub_cat>/<str:comp_pk>/<str:period_pk>/<str:batch_pk>/', deskofficer_views.Upload_Commodity_Product_Loan_Transaction_Company_Products_Load,name='Upload_Commodity_Product_Loan_Transaction_Company_Products_Load'),
+    path('Upload_Commodity_Product_Loan_Products_Select/<str:pk>/<str:member_pk>/<str:sub_cat>/<str:comp_pk>/<str:period_pk>/<str:batch_pk>/', deskofficer_views.Upload_Commodity_Product_Loan_Products_Select,name='Upload_Commodity_Product_Loan_Products_Select'),
+    path('Upload_Commodity_Product_Loan_Products_Select_Delete/<str:pk>/<str:cat_id>/<str:trans_id>/<str:member_pk>/', deskofficer_views.Upload_Commodity_Product_Loan_Products_Select_Delete,name='Upload_Commodity_Product_Loan_Products_Select_Delete'),
+
+    path('Upload_Commodity_Product_Loan_Products_Select_Preview/<str:pk>/', deskofficer_views.Upload_Commodity_Product_Loan_Products_Select_Preview,name='Upload_Commodity_Product_Loan_Products_Select_Preview'),
+
+    path('Upload_Commodity_Product_Loan_Transaction_Sub_Categories_Load/<str:pk>/', deskofficer_views.Upload_Commodity_Product_Loan_Transaction_Sub_Categories_Load,name='Upload_Commodity_Product_Loan_Transaction_Sub_Categories_Load'),
+    path('Upload_Commodity_Product_Loan_Transaction_Sub_Categories_Load/<str:pk>/', deskofficer_views.Upload_Commodity_Product_Loan_Transaction_Sub_Categories_Load,name='Upload_Commodity_Product_Loan_Transaction_Sub_Categories_Load'),
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     ###########################################################################
     ############################ SHOP ######################################
     ###########################################################################

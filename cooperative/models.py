@@ -1678,7 +1678,7 @@ class Company_Products_Duration(DateObjectsModels):
 
 class Commodity_Product_List(DateObjectsModels):
     sub_category=models.ForeignKey(Commodity_Category_Sub,on_delete=models.CASCADE,blank=True,null=True)
-    category=models.CharField(max_length=255)
+    # category=models.CharField(max_length=255)
     product_name=models.CharField(max_length=255)
     product_model=models.CharField(max_length=100,blank=True,null=True)
     details=models.TextField(blank=True,null=True)
@@ -1738,10 +1738,6 @@ class Members_Commodity_Loan_Application(DateObjectsModels):
     ticket=models.CharField(max_length=255,blank=True,null=True)
     period=models.ForeignKey(Commodity_Period,on_delete=models.CASCADE,blank=True,null=True)
     batch=models.ForeignKey(Commodity_Period_Batch,on_delete=models.CASCADE,blank=True,null=True)
-    # certification_officer=models.CharField(max_length=255,blank=True,null=True)
-    # certification_status = models.CharField(max_length=20,choices=CERTIFICATION_STATUS,default='PENDING')
-    # certification_comment=models.TextField(blank=True,null=True)
-    # certification_date=models.DateField(blank=True,null=True)
     approval_officer=models.CharField(max_length=255,blank=True,null=True)
     approval_status=models.CharField(max_length=30,choices=PROCESSING_STATUS,default='UNPROCESSED')
     approval_comment=models.TextField(blank=True,null=True)
@@ -1798,6 +1794,41 @@ class Members_Commodity_Loan_Application_Guarantors(DateObjectsModels):
 
     # class Meta(DateObjectsModels.Meta):
     #     db_table="Members_Commodity_Loan_Application_Guarantors"
+
+class Commodity_Loan_Upload_Transaction_Header(DateObjectsModels):
+    member=models.ForeignKey(Members,on_delete=models.CASCADE)
+    category=models.ForeignKey(Commodity_Categories,on_delete=models.CASCADE,blank=True,null=True)
+    ticket=models.CharField(max_length=30)
+    loan_number=models.CharField(max_length=30,blank=True,null=True)
+    loan_amount= models.DecimalField(max_digits=20,decimal_places = 2,default=0)
+    balance= models.DecimalField(max_digits=20,decimal_places = 2,default=0)
+    repayment= models.DecimalField(max_digits=20,decimal_places = 2,default=0)
+    interest_rate= models.DecimalField(max_digits=20,decimal_places = 2,default=0)
+    duration= models.PositiveSmallIntegerField(validators=[MinValueValidator(0)],default=0)
+    start_date=models.DateField(blank=True,null=True)
+    status = models.CharField(max_length=20,choices=TRANSACTION_STATUS,default='UNTREATED')
+
+
+    # class Meta(DateObjectsModels.Meta):
+    #     db_table="Commodity_Loan_Upload_Transaction_Header"
+
+
+class Commodity_Loan_Upload_Transaction_Details(DateObjectsModels):
+    ticket=models.ForeignKey(Commodity_Loan_Upload_Transaction_Header,on_delete=models.CASCADE)
+    product=models.ForeignKey(Company_Products,on_delete=models.CASCADE)
+    company_price= models.DecimalField(max_digits=20,decimal_places = 2,default=0)
+    total_company= models.DecimalField(max_digits=20,decimal_places = 2,default=0)
+    amount= models.DecimalField(max_digits=20,decimal_places = 2,default=0)
+    quantity= models.PositiveSmallIntegerField(validators=[MinValueValidator(0)],default=0)
+    total_amount= models.DecimalField(max_digits=20,decimal_places = 2,default=0)
+    status = models.CharField(max_length=20,choices=TRANSACTION_STATUS,default='UNTREATED')
+
+
+    # class Meta(DateObjectsModels.Meta):
+    #     db_table="Commodity_Loan_Upload_Transaction_Details"
+
+
+
 
 
 ####################################################################

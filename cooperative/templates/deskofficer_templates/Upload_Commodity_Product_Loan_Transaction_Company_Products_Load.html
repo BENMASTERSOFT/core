@@ -1,0 +1,50 @@
+{% extends 'deskofficer_templates/base_template.html' %}
+{% load static %}
+
+{% block content %}
+            <div class="page-content fade-in-up">
+                <div class="row">
+                    {% comment %}{% url 'Upload_Commodity_Product_Loan_Transaction_Select_Company_Load' sub_category.pk member.pk return_pk %}
+                    {% endcomment %}
+                    <div class="col-xl-10">
+                        <div class="ibox">
+                            <div class="ibox-head">
+                                <div class="ibox-title">LIST OF PRODUCTS | <a href="" class="btn btn-secondary">Back</a></div>
+                            </div>
+                            <div class="ibox-body">
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Name</th>
+                                            <th>Models</th>
+                                            <th>Other Details</th>
+                                            <th>Amount</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for product in products %}
+                                        <tr>
+                                            <td>{{forloop.counter}}</td>
+                                            <td>{{product.product.product_name}}</td>
+                                            <td>{{product.product.product_model}}</td>
+                                            <td>{{product.product.details}}</td>
+                                            <td>{{product.coop_amount}}</td>
+                                            <td><a href="{% url 'Upload_Commodity_Product_Loan_Products_Select' product.pk member.pk sub_category.pk company.pk period.pk batch.pk %}" class="btn btn-primary">Add</a></td>
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+              
+           
+            </div>
+  <div class="sidenav-backdrop backdrop"></div>
+    <div class="preloader-backdrop">
+        <div class="page-preloader">Loading</div>
+    </div>
+{% endblock %}
