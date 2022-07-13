@@ -740,7 +740,7 @@ class Members(DateObjectsModels):
 
     admin=models.OneToOneField(CustomUser,on_delete=models.CASCADE)
     applicant=models.ForeignKey(MemberShipFormSalesRecord,on_delete=models.CASCADE,blank=True,null=True)
-    member_id = models.CharField(max_length=255, unique=True)
+    member_id = models.CharField(max_length=255, blank=True,null=True)
     coop_no = models.CharField(max_length=15,unique=True, default='00001')
     title=models.ForeignKey(Titles,on_delete=models.CASCADE,blank=True,null=True)
     middle_name=models.CharField(max_length=255,blank=True,null=True)

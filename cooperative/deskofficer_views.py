@@ -676,6 +676,11 @@ def deskofficer_home(request):
 
 	# members = Members.objects.all()
 	# for member in members:
+	# 	print(str(member.file_no) + " " + str(member.coop_no))
+	
+
+	# members = Members.objects.all()
+	# for member in members:
 	# 	Members.objects.filter(id=member.pk).update(coop_no=member.member_id[13:])
 	
 
@@ -11765,18 +11770,19 @@ def Individual_Capture(request):
 			messages.error(request, "Member with this cooperative number already exist")
 			return HttpResponseRedirect(reverse('Individual_Capture'))
 
-		username = first_name + last_name + str(file_no).zfill(5)
+		username = first_name + last_name + str(ippis_no).zfill(5)
 		
-		email = first_name + str(file_no).zfill(5) + "@gmail.com"
-
+		email = first_name + last_name + str(ippis_no).zfill(5) + "@gmail.com"
+		
 		if CustomUser.objects.filter(username=username).exists():
 			username=str(username) + str(ippis_no)
 			
+
+	
 		if CustomUser.objects.filter(email=email).exists():
-			email=first_name + str(file_no).zfill(5) + "@fetha.gov.ng"
-			
-
-
+			email=first_name + last_name + str(ippis_no).zfill(5) + "@fetha.gov.ng"
+		
+		
 		item=MemberShipRequest(title=title,submission_status=submission_status,
 			transaction_status=transaction_status1,
 			first_name=first_name,last_name=last_name,
@@ -11823,45 +11829,46 @@ def Individual_Capture(request):
 		user_type=user_type_obj.code
 
 		
-		# try:
-		user = CustomUser.objects.create_user(username=username,password=password,email=email,last_name=last_name,first_name=first_name,user_type=int(user_type))
-		user.members.applicant=record
-		user.members.member_id=member_id
-		user.members.coop_no=str(coop_no).zfill(5)
-		user.members.title=title
-		user.members.middle_name=middle_name
-		user.members.full_name=str(first_name) + ' ' + str(last_name) + ' ' + str(middle_name)
-		user.members.phone_number=phone_number
-		user.members.salary_institution=salary_institution
-		user.members.file_no=file_no
-		user.members.ippis_no=ippis_no
-		user.members.date_joined=date_joined
+		try:
+			user = CustomUser.objects.create_user(username=username,password=password,email=email,last_name=last_name,first_name=first_name,user_type=int(user_type))
+			user.members.applicant=record
+			user.members.member_id=member_id
+			user.members.coop_no=str(coop_no).zfill(5)
+			user.members.title=title
+			user.members.middle_name=middle_name
+			user.members.full_name=str(first_name) + ' ' + str(last_name) + ' ' + str(middle_name)
+			user.members.phone_number=phone_number
+			user.members.salary_institution=salary_institution
+			user.members.file_no=file_no
+			user.members.ippis_no=ippis_no
+			user.members.date_joined=date_joined
 
-		user.members.status=status
-		user.members.savings_status=savings_status
-		user.members.loan_status=loan_status
-		user.members.shares_status=shares_status
-		user.members.welfare_status=welfare_status
+			user.members.status=status
+			user.members.savings_status=savings_status
+			user.members.loan_status=loan_status
+			user.members.shares_status=shares_status
+			user.members.welfare_status=welfare_status
 
-		user.members.date_of_first_appointment=date_hired
-		user.members.dob=dob
-		user.processed_by=processed_by
-		user.members.date_joined_status=date_joined_status
+			user.members.date_of_first_appointment=date_hired
+			user.members.dob=dob
+			user.processed_by=processed_by
+			user.members.date_joined_status=date_joined_status
 
-		if chk_fappt:
-			user.members.date_of_first_appointment_status=date_of_first_appointment_status
+			if chk_fappt:
+				user.members.date_of_first_appointment_status=date_of_first_appointment_status
 
-		if chk_dob:
-			user.members.dob_status=dob_status
+			if chk_dob:
+				user.members.dob_status=dob_status
 
-		user.save()
+			user.save()
 
 
-		# except:
-		# 	applicant.delete()
-		# 	user.delete()
-		# 	record.delete()
-		# 	return HttpResponse("OK")
+		except:
+			applicant.delete()
+			user.delete()
+			record.delete()
+			messages.error(request,'This member is not registered for obvious reasons, please concult the Administrator')
+			return HttpResponseRedirect(reverse("Individual_Capture"))
 		
 		transactions=TransactionTypes.objects.filter(~Q(source__title="LOAN") & ~Q(source__title='GENERAL') & ~Q(code='701'))
 
@@ -23084,11 +23091,15 @@ def Upload_Commodity_Product_Loan_Transaction_Sub_Categories_Load(request,pk,cat
 
 	transaction=TransactionTypes.objects.get(id=trans_id)
 	member=Members.objects.get(id=pk)
+	
 	category=Commodity_Categories.objects.get(id=cat_id)
 	records=Commodity_Category_Sub.objects.filter(category=category)
 	
 	if Commodity_Loan_Upload_Transaction_Header.objects.filter(member=member,status='UNTREATED').exists():
-		ticket_record=Commodity_Loan_Upload_Transaction_Header.objects.first()
+		
+		ticket_record=Commodity_Loan_Upload_Transaction_Header.objects.filter(member=member,status='UNTREATED').first()
+		
+
 		ticket=ticket_record.ticket
 	else:
 		ticket=get_ticket()
@@ -23096,7 +23107,7 @@ def Upload_Commodity_Product_Loan_Transaction_Sub_Categories_Load(request,pk,cat
 		Commodity_Loan_Upload_Transaction_Header(category=category,ticket=ticket,member=member).save()
 	
 	queryset = Commodity_Loan_Upload_Transaction_Details.objects.filter(ticket__ticket=ticket,status='UNTREATED')
-	
+
 	queryset_sum=Commodity_Loan_Upload_Transaction_Details.objects.filter(ticket__ticket=ticket,status='UNTREATED').aggregate(total_sum=Sum('total_amount'))
 	total_amount=queryset_sum['total_sum']
 				
@@ -23367,7 +23378,7 @@ def Upload_Commodity_Product_Loan_Products_Select_Preview(request,pk):
 		selected_header.interest_rate=interest_rate
 		selected_header.duration=duration
 		selected_header.start_date=start_date
-		selected_header.starstatust_date='TREATED'
+		selected_header.status='TREATED'
 		selected_header.save()
 		interest_deduction="SPREAD"
 		amount_paid=float(loan_amount)-float(balance)
@@ -23396,7 +23407,7 @@ def Upload_Commodity_Product_Loan_Products_Select_Preview(request,pk):
 							processed_by=processed_by,
 							).save()
 		Commodity_Loan_Upload_Transaction_Details.objects.filter(ticket__ticket=pk).update(status='TREATED')
-		return HttpResponseRedirect(reverse('deskofficer_home'))
+		return HttpResponseRedirect(reverse('Upload_Commodity_Product_Loan_Transaction_Categories_Load',args=(transaction.pk,)))
 
 	form.fields['product_cost'].initial=total_amount
 	form.fields['admin_charge'].initial=admin_charge
@@ -23406,6 +23417,7 @@ def Upload_Commodity_Product_Loan_Products_Select_Preview(request,pk):
 	form.fields['start_date'].initial=get_current_date(now)
 	context={
 	'form':form,
+	'transaction':transaction,
 	'selected_header':selected_header,
 	'member':member,
 	'total_amount':total_amount,
@@ -23415,3 +23427,67 @@ def Upload_Commodity_Product_Loan_Products_Select_Preview(request,pk):
 	'default_password':default_password,
 	}
 	return render(request,'deskofficer_templates/Upload_Commodity_Product_Loan_Products_Select_Preview.html',context)
+
+
+def Upload_Commodity_Product_Loan_Products_Uploaded(request):
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	task_array=[]
+	for task in tasks:
+		task_array.append(task.task.title)
+
+	task_enabler=TransactionEnabler.objects.filter(status="YES")
+	task_enabler_array=[]
+	for item in task_enabler:
+		task_enabler_array.append(item.title)
+
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+	
+	
+	records=Commodity_Loan_Upload_Transaction_Header.objects.filter(status='TREATED')
+	
+	# records=Commodity_Loan_Upload_Transaction_Details.objects.filter(ticket__ticket=pk)
+
+	context={
+	
+	'records':records,
+	'task_array':task_array,
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
+	}
+	return render(request,'deskofficer_templates/Upload_Commodity_Product_Loan_Products_Uploaded.html',context)
+
+
+
+def Upload_Commodity_Product_Loan_Products_Uploaded_Details(request,pk):
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	task_array=[]
+	for task in tasks:
+		task_array.append(task.task.title)
+
+	task_enabler=TransactionEnabler.objects.filter(status="YES")
+	task_enabler_array=[]
+	for item in task_enabler:
+		task_enabler_array.append(item.title)
+
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+	
+	
+	record=Commodity_Loan_Upload_Transaction_Header.objects.get(id=pk)
+	ticket=record.ticket
+
+	records=Commodity_Loan_Upload_Transaction_Details.objects.filter(ticket__ticket=ticket)
+
+	context={
+	'record':record,
+	'records':records,
+	'task_array':task_array,
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
+	}
+	return render(request,'deskofficer_templates/Upload_Commodity_Product_Loan_Products_Uploaded_Details.html',context)

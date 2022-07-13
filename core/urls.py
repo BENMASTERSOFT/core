@@ -1190,6 +1190,8 @@ urlpatterns = [
     path('Upload_Commodity_Product_Loan_Transaction_Sub_Categories_Load/<str:pk>/', deskofficer_views.Upload_Commodity_Product_Loan_Transaction_Sub_Categories_Load,name='Upload_Commodity_Product_Loan_Transaction_Sub_Categories_Load'),
     path('Upload_Commodity_Product_Loan_Transaction_Sub_Categories_Load/<str:pk>/', deskofficer_views.Upload_Commodity_Product_Loan_Transaction_Sub_Categories_Load,name='Upload_Commodity_Product_Loan_Transaction_Sub_Categories_Load'),
 
+    path('Upload_Commodity_Product_Loan_Products_Uploaded/', deskofficer_views.Upload_Commodity_Product_Loan_Products_Uploaded,name='Upload_Commodity_Product_Loan_Products_Uploaded'),
+    path('Upload_Commodity_Product_Loan_Products_Uploaded_Details/<str:pk>/', deskofficer_views.Upload_Commodity_Product_Loan_Products_Uploaded_Details,name='Upload_Commodity_Product_Loan_Products_Uploaded_Details'),
 
 
 
