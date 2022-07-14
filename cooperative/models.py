@@ -1807,6 +1807,7 @@ class Commodity_Loan_Upload_Transaction_Header(DateObjectsModels):
     duration= models.PositiveSmallIntegerField(validators=[MinValueValidator(0)],default=0)
     start_date=models.DateField(blank=True,null=True)
     status = models.CharField(max_length=20,choices=TRANSACTION_STATUS,default='UNTREATED')
+    ledger_status = models.CharField(max_length=20,choices=PROCESSING_STATUS,default='UNPROCESSED')
 
 
     # class Meta(DateObjectsModels.Meta):

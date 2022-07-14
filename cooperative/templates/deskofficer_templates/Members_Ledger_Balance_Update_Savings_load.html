@@ -5,24 +5,19 @@
             <div class="page-content fade-in-up">
                 
                 <div class="row">
-               
-
+                    
                     <div class="col-md-8">
                         <div class="ibox">
                             <div class="ibox-head">
-                                <div class="ibox-title">SHARES UPLOAD | {{member1.get_full_name}} |  <input type="button" class="btn btn-secondary" value="Back" onclick="history.back()"/></div>
-                                
-                            </div>
-                            <div class="ibox-head">
-                                <div class="ibox-title">ACCOUNT NUMBER | {{member.account_number}}</div>
+                                <div class="ibox-title">{{ledger.member.get_full_name}} | SAVINGS LEDGER UPDATE</div>
                                 
                             </div>
                             <div class="form-group">
                                   {% if messages %}
                                     
                                       {% for message in messages %}
-                                      {% if message.tags == "error" %}
-                                      <div class="alert alert-danger" style="margin-top:10px">{{message}}</div>
+                                      {% if message.tags == "info" %}
+                                      <div class="alert alert-info" style="margin-top:10px">{{message}}</div>
                                       
                                       {% endif %}
 
@@ -30,40 +25,47 @@
                                       <div class="alert alert-success" style="margin-top:10px">{{message}}</div>
                                       
                                       {% endif %}
-                                      {% if message.tags == "info" %}
-                                      <div class="alert alert-info" style="margin-top:10px">{{message}}</div>
-                                      
-                                      {% endif %}
                                       {% endfor %}
                                   
                                   {% endif %}
                               </div>
                             <div class="ibox-body">
-                                <form class="form-horizontal" method="POST" action="" enctype="multipart/form-data" novalidate>
+                               <form class="form-horizontal" method="POST" action="" enctype="multipart/form-data" novalidate>
                                          {% csrf_token %}
                                     <div class="form-group row">
-                                        <label class="col-sm-4 col-form-label">Total Share Amount</label>
+                                        <label class="col-sm-4 col-form-label">Account Name</label>
                                         <div class="col-sm-8">
-                                           {{form.shares_amount}}
+                                           {{form.account_name}}
                                         </div>
                                     </div>
                                     <div class="form-group row">
-                                        <label class="col-sm-4 col-form-label">Unit Share Cost</label>
+                                        <label class="col-sm-4 col-form-label">Account Number</label>
                                         <div class="col-sm-8">
-                                           {{form.unit_cost}}
+                                            {{form.account_number}}
                                         </div>
                                     </div>
-                                     
                                     <div class="form-group row">
-                                        <label class="col-sm-4 col-form-label">Effective Date</label>
+                                        <label class="col-sm-4 col-form-label">Existing Balance</label>
                                         <div class="col-sm-8">
-                                           {{form.effective_date}}
+                                            {{form.exist_amount}}
                                         </div>
                                     </div>
-                                 
+                                    <div class="form-group row">
+                                        <label class="col-sm-4 col-form-label">Current Balance</label>
+                                        <div class="col-sm-8">
+                                            {{form.current_amount}}
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-sm-4 col-form-label">Balance as at</label>
+                                        <div class="col-sm-8">
+                                            {{form.balance_date}}
+                                        </div>
+                                    </div>
+                               
                                     <div class="form-group row">
                                         <div class="col-sm-8 ml-sm-auto">
-                                            <button class="btn btn-success" type="submit" name='btn-upload'>Upload</button>
+                                            <button class="btn btn-info" type="submit">Update</button>
                                         </div>
                                     </div>
                                 </form>
@@ -79,5 +81,4 @@
     <div class="preloader-backdrop">
         <div class="page-preloader">Loading</div>
     </div>
-    {% include 'cooperative/includes/emptyspace.html' %}
 {% endblock %}

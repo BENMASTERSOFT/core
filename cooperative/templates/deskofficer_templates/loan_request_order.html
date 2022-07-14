@@ -116,7 +116,7 @@
                                             <th>Duration</th>
                                             <th>Date Applied</th>
                                             <th>Batch</th>
-                                            <th>Action</th>
+                                            <th colspan="2">Action</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -130,6 +130,10 @@
                                             <td>{{loan.period}} {{loan.batch}}</td>
                                             <td>
                                                 <a href="{% url 'loan_request_order_delete' loan.pk pk %}" class="btn btn-danger">Remove</a>
+                                                
+                                            </td> 
+                                            <td>
+                                                
                                                 <a href="{% url 'loan_request_criteria_Loading'  loan.pk %}" class="btn btn-success">Criteria </a>
                                             </td>
                                         </tr>

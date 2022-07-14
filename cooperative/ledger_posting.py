@@ -1,7 +1,7 @@
 from .models import PersonalLedger
 
 
-def post_to_ledger(member,transaction,account_number,particulars,debit,credit,balance,transaction_period,status,tdate):
+def post_to_ledger(member,transaction,account_number,particulars,debit,credit,balance,transaction_period,status,tdate,processed_by):
     record=PersonalLedger(member=member,
                         transaction=transaction,
                         account_number=account_number,
@@ -11,7 +11,8 @@ def post_to_ledger(member,transaction,account_number,particulars,debit,credit,ba
                         balance=balance,
                         transaction_period=transaction_period,
                         status=status,
-                        tdate=tdate
+                        tdate=tdate,
+                        processed_by=processed_by
                         )
     record.save()
     return 0

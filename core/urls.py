@@ -872,6 +872,16 @@ urlpatterns = [
     path('Uploading_Existing_Savings_Additional_validate/<str:pk>/', deskofficer_views.Uploading_Existing_Savings_Additional_validate,name='Uploading_Existing_Savings_Additional_validate'),
     path('Uploading_Existing_Savings_Additional_delete/<str:pk>/<str:return_pk>/', deskofficer_views.Uploading_Existing_Savings_Additional_delete,name='Uploading_Existing_Savings_Additional_delete'),
 
+    path('Members_Ledger_Balance_Update_Search/', deskofficer_views.Members_Ledger_Balance_Update_Search,name='Members_Ledger_Balance_Update_Search'),
+    path('Members_Ledger_Balance_Update_list_load/', deskofficer_views.Members_Ledger_Balance_Update_list_load,name='Members_Ledger_Balance_Update_list_load'),
+    path('Members_Ledger_Balance_Update_Transaction_load/<str:pk>/', deskofficer_views.Members_Ledger_Balance_Update_Transaction_load,name='Members_Ledger_Balance_Update_Transaction_load'),
+    
+    path('Members_Ledger_Balance_Update_Savings_load/<str:pk>/', deskofficer_views.Members_Ledger_Balance_Update_Savings_load,name='Members_Ledger_Balance_Update_Savings_load'),
+    
+    path('Members_Ledger_Balance_Update_Loan_Account_List/<str:pk>/<str:member_pk>/', deskofficer_views.Members_Ledger_Balance_Update_Loan_Account_List,name='Members_Ledger_Balance_Update_Loan_Account_List'),
+    path('Members_Ledger_Balance_Update_Loan_Account_Preview/<str:pk>/<str:member_pk>/', deskofficer_views.Members_Ledger_Balance_Update_Loan_Account_Preview,name='Members_Ledger_Balance_Update_Loan_Account_Preview'),
+    
+
     path('Members_Shares_Upload_Search/', deskofficer_views.Members_Shares_Upload_Search,name='Members_Shares_Upload_Search'),
     path('Members_Shares_Upload_list_load/', deskofficer_views.Members_Shares_Upload_list_load,name='Members_Shares_Upload_list_load'),
     path('Members_Shares_Upload_Preview/<str:pk>/', deskofficer_views.Members_Shares_Upload_Preview,name='Members_Shares_Upload_Preview'),
@@ -1062,10 +1072,18 @@ urlpatterns = [
     path('Standing_Order_Consolidated_Transaction_Details/<str:pk>/', deskofficer_views.Standing_Order_Consolidated_Transaction_Details,name='Standing_Order_Consolidated_Transaction_Details'),
     path('export_Standing_Order_Consolidated_Transaction_Details_xls/<str:pk>/', deskofficer_views.export_Standing_Order_Consolidated_Transaction_Details_xls,name='export_Standing_Order_Consolidated_Transaction_Details_xls'),
 
+    path('Balance_Brought_Forward_Consolidated_Salary_Institution_list_load/', deskofficer_views.Balance_Brought_Forward_Consolidated_Salary_Institution_list_load,name='Balance_Brought_Forward_Consolidated_Salary_Institution_list_load'),
+    path('Balance_Brought_Consolidated_Transaction_Details/<str:pk>/', deskofficer_views.Balance_Brought_Consolidated_Transaction_Details,name='Balance_Brought_Consolidated_Transaction_Details'),
+    path('Balance_Brought_Consolidated_Transaction_Details_xls/<str:pk>/', deskofficer_views.Balance_Brought_Consolidated_Transaction_Details_xls,name='Balance_Brought_Consolidated_Transaction_Details_xls'),
+    
+
     path('Loan_Repayment_Consolidated_Salary_Institution_list_load/', deskofficer_views.Loan_Repayment_Consolidated_Salary_Institution_list_load,name='Loan_Repayment_Consolidated_Salary_Institution_list_load'),
     path('Loan_Repayment_Consolidated_Transaction_Details/<str:pk>/', deskofficer_views.Loan_Repayment_Consolidated_Transaction_Details,name='Loan_Repayment_Consolidated_Transaction_Details'),
     path('export_Loan_Repayment_Consolidated_Transaction_Details_xls/<str:pk>/', deskofficer_views.export_Loan_Repayment_Consolidated_Transaction_Details_xls,name='export_Loan_Repayment_Consolidated_Transaction_Details_xls'),
     
+    path('Loan_Balance_Broght_Forward_Consolidated_Salary_Institution_list_load/', deskofficer_views.Loan_Balance_Broght_Forward_Consolidated_Salary_Institution_list_load,name='Loan_Balance_Broght_Forward_Consolidated_Salary_Institution_list_load'),
+    path('Loan_Balance_Broght_Forward_Consolidated_Transaction_Details/<str:pk>/', deskofficer_views.Loan_Balance_Broght_Forward_Consolidated_Transaction_Details,name='Loan_Balance_Broght_Forward_Consolidated_Transaction_Details'),
+    path('Loan_Balance_Broght_Forward_Consolidated_Transaction_Details_xls/<str:pk>/', deskofficer_views.Loan_Balance_Broght_Forward_Consolidated_Transaction_Details_xls,name='Loan_Balance_Broght_Forward_Consolidated_Transaction_Details_xls'),
 
 
     path('membership_commodity_loan_form_sales_transaction_period_load/', deskofficer_views.membership_commodity_loan_form_sales_transaction_period_load,name='membership_commodity_loan_form_sales_transaction_period_load'),
@@ -1192,6 +1210,7 @@ urlpatterns = [
 
     path('Upload_Commodity_Product_Loan_Products_Uploaded/', deskofficer_views.Upload_Commodity_Product_Loan_Products_Uploaded,name='Upload_Commodity_Product_Loan_Products_Uploaded'),
     path('Upload_Commodity_Product_Loan_Products_Uploaded_Details/<str:pk>/', deskofficer_views.Upload_Commodity_Product_Loan_Products_Uploaded_Details,name='Upload_Commodity_Product_Loan_Products_Uploaded_Details'),
+    path('Upload_Commodity_Product_Loan_Ledger_Posting/<str:pk>/', deskofficer_views.Upload_Commodity_Product_Loan_Ledger_Posting,name='Upload_Commodity_Product_Loan_Ledger_Posting'),
 
 
 

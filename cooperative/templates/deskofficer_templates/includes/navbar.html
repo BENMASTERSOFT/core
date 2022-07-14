@@ -667,6 +667,9 @@
                                                 <a href="{% url 'Standing_Order_Consolidated_Salary_Institution_list_load' %}">Consolidated Standing Orders</a>
                                             </li>
                                             <li>
+                                                <a href="{% url 'Balance_Brought_Forward_Consolidated_Salary_Institution_list_load' %}">Consolidated Balance Brought Forward</a>
+                                            </li>
+                                            <li>
                                                 <a href="{% url 'Transaction_adjustment_history_Search' %}">Transaction Adjustment History</a>
                                             </li>
                                         </ul>
@@ -687,6 +690,9 @@
                                             </li>
                                             <li>
                                                 <a href="{% url 'Loan_Repayment_Consolidated_Salary_Institution_list_load' %}">Consolidated Loan Repayments</a>
+                                            </li>
+                                             <li>
+                                                <a href="{% url 'Loan_Balance_Broght_Forward_Consolidated_Salary_Institution_list_load' %}">Consolidated Loan Ledger Balance</a>
                                             </li>
                                         </ul>
                                     </li>
@@ -869,8 +875,11 @@
                                     <li>
                                         <a href="{% url 'Uploading_Existing_Savings_All_List_Search' %}">Revert Uploaded Savings</a>
                                     </li>
-                               <li>
+                                    <li>
                                         <a href="{% url 'Members_without_Compulsory_Savings' %}">Members Without Compulsory Savings</a>
+                                    </li> 
+                                    <li>
+                                        <a href="{% url 'Members_without_Compulsory_Savings' %}">Savings Ledger Update</a>
                                     </li>
                                 </ul>
                             </li>
@@ -906,13 +915,13 @@
                                     <li>
                                        <a href="{% url 'Upload_Commodity_Product_Loan_Products_Uploaded' %}">Already Uploaded Commodity Loans</a>
                                     </li>
-
-                                    <li>
-                                        <a href="">Revert Uploaded Loans</a>
-                                    </li>
+                                   
                                 </ul>
                             </li>
                            <li>
+                               <a href="{% url 'Members_Ledger_Balance_Update_Search' %}">Updating Ledger Balance</a>
+                            </li>
+                            <li>
                                <a href="{% url 'Members_Shares_Upload_Search' %}">Uploading Shares</a>
                             </li>
 

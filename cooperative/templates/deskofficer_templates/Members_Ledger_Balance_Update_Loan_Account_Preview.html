@@ -1,72 +1,93 @@
 {% extends 'deskofficer_templates/base_template.html' %}
 {% load static %}
-
+{% load mathfilters %}
 {% block content %}
             <div class="page-content fade-in-up">
                 
                 <div class="row">
-           
-
                     <div class="col-md-8">
                         <div class="ibox">
                             <div class="ibox-head">
-                                <div class="ibox-title">COMMODITY LOAN PREVIEW | {{member.get_full_name}}</div>
-                             
+                                <div class="ibox-title">{{member.get_full_name}} | LOAN LEDGER UPDATE</div>
+                                
                             </div>
+                            <div class="form-group">
+                                  {% if messages %}
+                                    
+                                      {% for message in messages %}
+                                      {% if message.tags == "error" %}
+                                      <div class="alert alert-danger" style="margin-top:10px">{{message}}</div>
+                                      
+                                      {% endif %}
+
+                                      {% if message.tags == "success" %}
+                                      <div class="alert alert-success" style="margin-top:10px">{{message}}</div>
+                                      
+                                      {% endif %}
+                                       {% if message.info == "info" %}
+                                      <div class="alert alert-success" style="margin-top:10px">{{message}}</div>
+                                      
+                                      {% endif %}
+                                      {% endfor %}
+                                  
+                                  {% endif %}
+                              </div>
                             <div class="ibox-body">
-                                <form class="form-horizontal" method="POST" action="" enctype="multipart/form-data" novalidate>
-                                    {% csrf_token %}
+                               <form class="form-horizontal" method="POST" action="" enctype="multipart/form-data" novalidate>
+                                         {% csrf_token %}
                                     <div class="form-group row">
-                                        <label class="col-sm-4 col-form-label">Product Cost</label>
+                                        <label class="col-sm-4 col-form-label">Loan Type</label>
                                         <div class="col-sm-8">
-                                            {{form.product_cost}}
+                                            {{form.loan_type}}
                                         </div>
                                     </div>
-                                    
                                     <div class="form-group row">
-                                        <label class="col-sm-4 col-form-label">Admin Charge</label>
+                                        <label class="col-sm-4 col-form-label">Loan Number</label>
                                         <div class="col-sm-8">
-                                             {{form.admin_charge}}
+                                            {{form.loan_number}}
                                         </div>
-                                    </div>  
+                                    </div>
                                     <div class="form-group row">
                                         <label class="col-sm-4 col-form-label">Loan Amount</label>
                                         <div class="col-sm-8">
-                                             {{form.loan_amount}}
+                                            {{form.loan_amount}}
                                         </div>
-                                    </div>  
+                                    </div>
                                     <div class="form-group row">
                                         <label class="col-sm-4 col-form-label">Balance B/Forward</label>
                                         <div class="col-sm-8">
-                                             {{form.balance}}
+                                            {{form.balance}}
                                         </div>
                                     </div>
+                                   
                                     <div class="form-group row">
+                                        
                                         <label class="col-sm-4 col-form-label">Repayment</label>
                                         <div class="col-sm-8">
-                                             {{form.repayment}}
+                                            <input type="checkbox" name="chk_repayment">
+                                            <span class="input-span" style="color:blue;">Use this Repayment in respective the duration</span>
+                                            {{form.repayment}}
                                         </div>
-                                    </div> 
+                                    </div>  
                                     <div class="form-group row">
                                         <label class="col-sm-4 col-form-label">Duration</label>
                                         <div class="col-sm-8">
-                                             {{form.duration}}
-                                        </div>
-                                    </div>   
-                                      
-                                    <div class="form-group row">
-                                        <label class="col-sm-4 col-form-label">Start Date</label>
-                                        <div class="col-sm-8">
-                                             {{form.start_date}}
+                                            {{form.duration}}
                                         </div>
                                     </div>
                                     <div class="form-group row">
-                                        <label class="col-sm-4 col-form-label">Balance as At</label>
+                                        <label class="col-sm-4 col-form-label">Laon Start Date</label>
                                         <div class="col-sm-8">
-                                             {{form.balance_date}}
+                                            {{form.start_date}}
                                         </div>
                                     </div>
-                               
+                                    <div class="form-group row">
+                                        <label class="col-sm-4 col-form-label">Balance as at</label>
+                                        <div class="col-sm-8">
+                                            {{form.balance_date}}
+                                        </div>
+                                    </div>
+                                    
                                     <div class="form-group row">
                                         <div class="col-sm-8 ml-sm-auto">
                                             <button class="btn btn-info" type="submit">Submit</button>

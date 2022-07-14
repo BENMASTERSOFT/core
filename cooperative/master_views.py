@@ -7348,6 +7348,12 @@ def Loan_request_approval_details(request,pk):
 
 
     if request.method=='POST':
+        date_approved_id=request.POST.get("date_approved")
+        date_format = '%Y-%m-%d'
+        dtObj = datetime.datetime.strptime(date_approved_id, date_format)
+        date_approved=get_current_date(dtObj)
+
+
         approval_officer=CustomUser.objects.get(id=request.user.id)
         comment=request.POST.get('comment')
         approved_amount=request.POST.get('amount')
@@ -7363,7 +7369,7 @@ def Loan_request_approval_details(request,pk):
         status=request.POST.get('approval_status')
 
 
-        approved_date= get_current_date(now)
+        approved_date= get_current_date(date_approved)
 
 
         loan_comment.approval_status=status
@@ -7377,6 +7383,7 @@ def Loan_request_approval_details(request,pk):
 
     form=MemberShipRequestAdditionalInfo_form(request.POST or None)
     form.fields['comment'].initial="Approved"
+    form.fields['date_approved'].initial=now
     context={
     'task_array':task_array,
     'loan_analysis':loan_analysis,
@@ -7434,6 +7441,11 @@ def Loan_application_approval_details(request,pk):
 
 
     if request.method=='POST':
+        date_approved_id=request.POST.get("date_approved")
+        date_format = '%Y-%m-%d'
+        dtObj = datetime.datetime.strptime(date_approved_id, date_format)
+        approved_date=get_current_date(dtObj)
+
         approval_officer=CustomUser.objects.get(id=request.user.id).username
         comment=request.POST.get('comment')
         approved_amount=request.POST.get('amount')
@@ -7445,7 +7457,7 @@ def Loan_application_approval_details(request,pk):
         status=request.POST.get('approval_status')
 
 
-        approved_date= get_current_date(now)
+   
 
         loan_comment.approval_status=status
         loan_comment.approval_comment=comment
@@ -7458,6 +7470,7 @@ def Loan_application_approval_details(request,pk):
 
     form.fields['amount'].initial=loan_comment.loan_amount
     form.fields['comment'].initial="Please Process"
+    form.fields['date_approved'].initial=get_current_date(now)
     context={
     'task_array':task_array,
     'loan_analysis':loan_analysis,

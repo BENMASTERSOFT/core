@@ -1015,6 +1015,15 @@ class MembershipRequest_form(forms.Form):
 class MemberShipRequestAdditionalInfo_form(forms.Form):
    approval_status = forms.ChoiceField(initial="APPROVED",label="Approval Status", choices=APPROVAL_STATUS,widget=forms.Select(attrs={"class":"form-control"}))
    comment= forms.CharField(widget=forms.Textarea(attrs={"rows":2, "cols":50}),required=True)
+   date_approved= forms.DateField(label='Date Approved', label_suffix=" : ",
+                             required=True, disabled=False,
+                             widget=DateInput(attrs={'class': 'form-control'}),
+                             error_messages={'required': "This field is required."})
+
+   date_applied =forms.DateField(label='Date Applied', label_suffix=" : ",
+                             required=True, disabled=False,
+                             widget=DateInput(attrs={'class': 'form-control'}),
+                             error_messages={'required': "This field is required."})
 
 
 class MemberShipRequestAdditionalAttachment_form(forms.Form):
@@ -3339,6 +3348,11 @@ class Loan_application_approval_form(forms.Form):
                               decimal_places=2, required=True,
                               disabled = False,
                               error_messages={'required': "Please Enter Amount Approved"})
+   date_approved =forms.DateField(label='Date Approved', label_suffix=" : ",
+                             required=True, disabled=False,
+                             widget=DateInput(attrs={'class': 'form-control'}),
+                             error_messages={'required': "This field is required."})
+
 
 
 class Loan_unscheduling_approval_preview_form(forms.Form):
@@ -4172,7 +4186,88 @@ class Upload_Commodity_Product_Loan_Products_Select_Preview_Form(forms.Form):
                                 widget=DateInput(attrs={'class': 'form-control'}),
                                 error_messages={'required': "This field is required."})
 
+   balance_date = forms.DateField(label='Balance Date', label_suffix=" : ",
+                                required=True, disabled=False,
+                                widget=DateInput(attrs={'class': 'form-control'}),
+                                error_messages={'required': "This field is required."})
 
+
+class Upload_Commodity_Product_Loan_Ledger_Posting_Form(forms.Form):
+   loan_amount = forms.DecimalField(initial=0,label='Loan Amount', label_suffix=" : ", min_value=0,  max_digits=20,
+                              widget=forms.NumberInput(attrs={'class': 'form-control','readonly':'readonly'}),
+                              decimal_places=2, required=True,
+                              disabled = False,
+                              error_messages={'required': "Please Enter Amount Paid"})
+   balance = forms.DecimalField(initial=0,label='Balance', label_suffix=" : ", min_value=0,  max_digits=20,
+                              widget=forms.NumberInput(attrs={'class': 'form-control','readonly':'readonly'}),
+                              decimal_places=2, required=True,
+                              disabled = False,
+                              error_messages={'required': "Please Enter Amount Paid"})
+   balance_date = forms.DateField(label='Effective Date', label_suffix=" : ",
+                                required=True, disabled=False,
+                                widget=DateInput(attrs={'class': 'form-control'}),
+                                error_messages={'required': "This field is required."})
+   loan_number = forms.IntegerField(initial=0,label='Loan Number', label_suffix=" : ", min_value=0,  required=False,
+                                 widget=forms.NumberInput(attrs={'class': 'form-control','readonly':'readonly'}),
+                                disabled = False, error_messages={'required': "Please Min Unit"})
+  
+
+class Members_Ledger_Balance_Update_Savings_load_Form(forms.Form):
+   exist_amount = forms.DecimalField(initial=0,label='Existing Amount', label_suffix=" : ", min_value=0,  max_digits=20,
+                              widget=forms.NumberInput(attrs={'class': 'form-control','readonly':'readonly'}),
+                              decimal_places=2, required=True,
+                              disabled = False,
+                              error_messages={'required': "Please Enter Amount Paid"})
+   current_amount= forms.DecimalField(initial=0,label='Current Balance', label_suffix=" : ", min_value=0,  max_digits=20,
+                              widget=forms.NumberInput(attrs={'class': 'form-control'}),
+                              decimal_places=2, required=True,
+                              disabled = False,
+                              error_messages={'required': "Please Enter Amount Paid"})
+   balance_date = forms.DateField(label='Effective Date', label_suffix=" : ",
+                                required=True, disabled=False,
+                                widget=DateInput(attrs={'class': 'form-control'}),
+                                error_messages={'required': "This field is required."})
+   account_number = forms.IntegerField(initial=0,label='Account Number', label_suffix=" : ", min_value=0,  required=False,
+                                 widget=forms.NumberInput(attrs={'class': 'form-control','readonly':'readonly'}),
+                                disabled = False, error_messages={'required': "Please Min Unit"})
+  
+   account_name=forms.CharField(label="Account Name",max_length=255,widget=forms.TextInput(attrs={"class":"form-control",'readonly':'readonly'}),required=True)
+  
+class Members_Ledger_Balance_Update_Loan_Account_Form(forms.Form):
+   loan_amount = forms.DecimalField(initial=0,label='Existing Amount', label_suffix=" : ", min_value=0,  max_digits=20,
+                              widget=forms.NumberInput(attrs={'class': 'form-control',}),
+                              decimal_places=2, required=True,
+                              disabled = False,
+                              error_messages={'required': "Please Enter Amount Paid"})
+   balance= forms.DecimalField(initial=0,label='Current Balance', label_suffix=" : ", min_value=0,  max_digits=20,
+                              widget=forms.NumberInput(attrs={'class': 'form-control'}),
+                              decimal_places=2, required=True,
+                              disabled = False,
+                              error_messages={'required': "Please Enter Amount Paid"})
+   repayment= forms.DecimalField(initial=0,label='Current Balance', label_suffix=" : ", min_value=0,  max_digits=20,
+                              widget=forms.NumberInput(attrs={'class': 'form-control'}),
+                              decimal_places=2, required=True,
+                              disabled = False,
+                              error_messages={'required': "Please Enter Amount Paid"})
+  
+
+   balance_date = forms.DateField(label='Effective Date', label_suffix=" : ",
+                                required=True, disabled=False,
+                                widget=DateInput(attrs={'class': 'form-control'}),
+                                error_messages={'required': "This field is required."})
+   start_date = forms.DateField(label='Start Date', label_suffix=" : ",
+                                required=True, disabled=False,
+                                widget=DateInput(attrs={'class': 'form-control'}),
+                                error_messages={'required': "This field is required."})
+   duration = forms.IntegerField(initial=0,label='Duration', label_suffix=" : ", min_value=0,  required=False,
+                                 widget=forms.NumberInput(attrs={'class': 'form-control'}),
+                                disabled = False, error_messages={'required': "Please Min Unit"})
+   loan_number = forms.IntegerField(initial=0,label='Loan Number', label_suffix=" : ", min_value=0,  required=False,
+                                 widget=forms.NumberInput(attrs={'class': 'form-control','readonly':'readonly'}),
+                                disabled = False, error_messages={'required': "Please Min Unit"})
+  
+   loan_type=forms.CharField(label="Account Name",max_length=255,widget=forms.TextInput(attrs={"class":"form-control",'readonly':'readonly'}),required=True)
+  
 
 
 

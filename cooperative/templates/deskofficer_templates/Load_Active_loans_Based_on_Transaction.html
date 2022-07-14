@@ -1,6 +1,7 @@
 {% extends 'deskofficer_templates/base_template.html' %}
 {% load static %}
 {% load humanize %}
+{% load mathfilters %}
 {% block custom_css %}
     <!-- PLUGINS STYLES-->
     <link href="{% static '/cooperative/assets/vendors/DataTables/datatables.min.css' %}" rel="stylesheet" />
@@ -28,6 +29,7 @@
                                     <th>Loan Number</th>
                                     <th>Loan Amount</th>
                                     <th>Amount Paid</th>
+                                    <th>Balance</th>
                               
                                     <th>Repayment</th>
                                 
@@ -40,7 +42,7 @@
                                     <th>Loan Number</th>
                                     <th>Loan Amount</th>
                                     <th>Amount Paid</th>
-                            
+                                    <th>Balance</th>
                                     <th>Repayment</th>
                      
                                 </tr>
@@ -54,6 +56,7 @@
                                     <td>{{record.loan_amount|floatformat:2|intcomma}}</td>
                                     <td>{{record.amount_paid|floatformat:2|intcomma}}</td>
                                    
+                                    <td>{{record.loan_amount|sub:record.amount_paid}}</td> 
                                     <td>{{record.repayment|floatformat:2|intcomma}}</td>
                             
                                 </tr>

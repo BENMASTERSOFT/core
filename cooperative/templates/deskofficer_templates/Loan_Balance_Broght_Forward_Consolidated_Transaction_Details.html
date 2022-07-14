@@ -1,0 +1,54 @@
+{% extends 'deskofficer_templates/base_template.html' %}
+{% load static %}
+
+{% block content %}
+            <div class="page-content fade-in-up">
+                <div class="row">
+                  
+                    <div class="col-xl-12">
+                        <div class="ibox">
+                            <div class="ibox-head">
+                                <div class="ibox-title">ACTIVE STANDING ORDER | {{transaction.name}}  <a href="{% url 'Loan_Balance_Broght_Forward_Consolidated_Transaction_Details_xls' salary_institution.pk %}" class="btn btn-secondary">Export</a></div>
+                            </div>
+                            <div class="ibox-body">
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            {% for col in columns %}
+                                            <th>{{col}}</th>
+                                            
+                                            {% endfor %}
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for record in order_list_array %}
+                                        <tr>
+                                            <td>{{forloop.counter}}</td>
+                                            <td>{{record.0 | default_if_none:"&nbsp;"}}</td>
+                                            <td>{{record.1| default_if_none:"&nbsp;"}}</td>
+                                            <td>{{record.2 | default_if_none:"&nbsp;"}}</td>
+                                            <td>{{record.3 | default_if_none:"&nbsp;"}}</td>
+                                            <td>{{record.4 | default_if_none:"&nbsp;"}}</td>
+                                            <td>{{record.5 | default_if_none:"&nbsp;"}}</td>
+                                            <td>{{record.6 | default_if_none:"&nbsp;"}}</td>
+                                            <td>{{record.7 | default_if_none:"&nbsp;"}}</td>
+                                          
+                                            
+                                          
+                                        </tr>
+                                    {% endfor %}
+                                    
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+              
+           
+            </div>
+  <div class="sidenav-backdrop backdrop"></div>
+    <div class="preloader-backdrop">
+        <div class="page-preloader">Loading</div>
+    </div>
+{% endblock %}
