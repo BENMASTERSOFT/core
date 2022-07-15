@@ -47,7 +47,7 @@
                    
                 </div>
                 <div class="row">
-                    <div class="col-xl-6">
+                    <div class="col-xl-10">
                         <div class="ibox">
                             <div class="ibox-head">
                                 <div class="ibox-title">Active Adjustment Request</div>
@@ -60,7 +60,7 @@
                                             <th>Description</th>
                                             <th>Account Number</th>
                                             <th>Amount</th>
-                                            <th></th>
+                                            <th>Action</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -71,7 +71,7 @@
                                             <td>{{record.member.account_number}}</td>
                                             <td>{{record.amount}}</td>
                                             <td>
-                                            {% if record.approval_status.title == 'PENDING' %}
+                                            {% if record.approval_status == 'PENDING' %}
                                                 <a href="{% url 'Transaction_adjustment_Transactions_Accounts_Remove' record.pk %}" class="btn btn-danger">Cancel</a>
                                            {% endif %}
 

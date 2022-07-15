@@ -4269,8 +4269,35 @@ class Members_Ledger_Balance_Update_Loan_Account_Form(forms.Form):
    loan_type=forms.CharField(label="Account Name",max_length=255,widget=forms.TextInput(attrs={"class":"form-control",'readonly':'readonly'}),required=True)
   
 
-
-
+class Manual_Ledger_Posting_Ledger_details_Form(forms.Form):
+   balance_amount = forms.DecimalField(initial=0,label='Existing Amount', label_suffix=" : ", min_value=0,  max_digits=20,
+                              widget=forms.NumberInput(attrs={'class': 'form-control','readonly':'readonly'}),
+                              decimal_places=2, required=True,
+                              disabled = False,
+                              error_messages={'required': "Please Enter Amount Paid"})
+   amount= forms.DecimalField(initial=0,label='Amount', label_suffix=" : ", min_value=0,  max_digits=20,
+                              widget=forms.NumberInput(attrs={'class': 'form-control'}),
+                              decimal_places=2, required=True,
+                              disabled = False,
+                              error_messages={'required': "Please Enter Amount Paid"})
+   period = forms.DateField(label='Transaction Date', label_suffix=" : ",
+                                required=True, disabled=False,
+                                widget=DateInput(attrs={'class': 'form-control'}),
+                                error_messages={'required': "This field is required."})
+   
+   last_transaction_period = forms.DateField(label='Last_Transaction Date', label_suffix=" : ",
+                                required=True, disabled=False,
+                                widget=DateInput(attrs={'class': 'form-control','readonly':'readonly'}),
+                                error_messages={'required': "This field is required."})
+   account_number = forms.IntegerField(initial=0,label='Account Number', label_suffix=" : ", min_value=0,  required=False,
+                                 widget=forms.NumberInput(attrs={'class': 'form-control','readonly':'readonly'}),
+                                disabled = False, error_messages={'required': "Please Min Unit"})
+  
+   transaction=forms.CharField(label="Transaction",max_length=255,widget=forms.TextInput(attrs={"class":"form-control",'readonly':'readonly'}),required=True)
+ 
+   particulars= forms.CharField(widget=forms.Textarea(attrs={"rows":2, "cols":50}),required=True)
+   
+ 
 
 # CURRENT DATE
 

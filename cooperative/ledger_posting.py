@@ -28,3 +28,13 @@ def get_ledger_balance(account_number):
     else:
         return 0
 
+
+def get_ledger_last_transaction_period(account_number):
+    # ledger=PersonalLedger.objects.filter(member=member,transaction=transaction,account_number=account_number).order_by('id').last()
+    if PersonalLedger.objects.filter(account_number=account_number).exists():
+
+        ledger=PersonalLedger.objects.filter(account_number=account_number).order_by('id').last()
+        return ledger.transaction_period
+    else:
+        return 0
+

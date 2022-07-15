@@ -570,6 +570,10 @@ urlpatterns = [
     path('standing_order_drop_account/<str:pk>/', deskofficer_views.standing_order_drop_account,name='standing_order_drop_account'),
 
 
+    path('Transaction_Adjustment_Manage/', deskofficer_views.Transaction_Adjustment_Manage,name='Transaction_Adjustment_Manage'),
+    path('export_Transaction_Adjustment_Manage_xls/', deskofficer_views.export_Transaction_Adjustment_Manage_xls,name='export_Transaction_Adjustment_Manage_xls'),
+    
+
     path('Transaction_adjustment_search/', deskofficer_views.Transaction_adjustment_search,name='Transaction_adjustment_search'),
     path('Transaction_adjustment_List_load/', deskofficer_views.Transaction_adjustment_List_load,name='Transaction_adjustment_List_load'),
     path('Transaction_adjustment_Transactions_load/<str:pk>/', deskofficer_views.Transaction_adjustment_Transactions_load,name='Transaction_adjustment_Transactions_load'),
@@ -790,6 +794,20 @@ urlpatterns = [
     path('Monthly_Deduction_Covering_Note/', deskofficer_views.Monthly_Deduction_Covering_Note,name='Monthly_Deduction_Covering_Note'),
     path('Monthly_Deduction_Covering_Note_Print/<str:print_date>/<str:transaction_period>/<str:staff1>/<str:position1>/<str:staff2>/<str:position2>/<str:account>/', deskofficer_views.Monthly_Deduction_Covering_Note_Print,name='Monthly_Deduction_Covering_Note_Print'),
 
+    path('Manual_Ledger_Posting_search/', deskofficer_views.Manual_Ledger_Posting_search,name='Manual_Ledger_Posting_search'),
+    path('Manual_Ledger_Posting_List_load/', deskofficer_views.Manual_Ledger_Posting_List_load,name='Manual_Ledger_Posting_List_load'),
+    path('Manual_Ledger_Posting_Transactions_List_load/<str:pk>/', deskofficer_views.Manual_Ledger_Posting_Transactions_List_load,name='Manual_Ledger_Posting_Transactions_List_load'),
+    path('Manual_Ledger_Posting_Ledger_details_load/<str:pk>/<str:member_pk>/', deskofficer_views.Manual_Ledger_Posting_Ledger_details_load,name='Manual_Ledger_Posting_Ledger_details_load'),
+    
+
+    path('Manual_Ledger_Posting_Reverse_search/', deskofficer_views.Manual_Ledger_Posting_Reverse_search,name='Manual_Ledger_Posting_Reverse_search'),
+    path('Manual_Ledger_Posting_Reverse_List_load/', deskofficer_views.Manual_Ledger_Posting_Reverse_List_load,name='Manual_Ledger_Posting_Reverse_List_load'),
+    path('Manual_Ledger_Posting_Transactions_Reverse_List_load/<str:pk>/', deskofficer_views.Manual_Ledger_Posting_Transactions_Reverse_List_load,name='Manual_Ledger_Posting_Transactions_Reverse_List_load'),
+    path('Manual_Ledger_Posting_Ledger_details_Reverse_load/<str:pk>/<str:member_pk>/', deskofficer_views.Manual_Ledger_Posting_Ledger_details_Reverse_load,name='Manual_Ledger_Posting_Ledger_details_Reverse_load'),
+    
+    path('Manual_Ledger_Posting_Loans_List_load/<str:pk>/<str:member_pk>/', deskofficer_views.Manual_Ledger_Posting_Loans_List_load,name='Manual_Ledger_Posting_Loans_List_load'),
+    path('Manual_Ledger_Posting_Loans_Processing_load/<str:pk>/<str:trans_id>/<str:member_pk>/', deskofficer_views.Manual_Ledger_Posting_Loans_Processing_load,name='Manual_Ledger_Posting_Loans_Processing_load'),
+
     path('upload_norminal_roll/', deskofficer_views.upload_norminal_roll,name='upload_norminal_roll'),
     path('Norminal_Roll_Preview/', deskofficer_views.Norminal_Roll_Preview,name='Norminal_Roll_Preview'),
     path('Norminal_Roll_Process/', deskofficer_views.Norminal_Roll_Process,name='Norminal_Roll_Process'),
@@ -817,6 +835,9 @@ urlpatterns = [
     path('Uploading_Existing_Savings_Preview_All/<str:pk>/', deskofficer_views.Uploading_Existing_Savings_Preview_All,name='Uploading_Existing_Savings_Preview_All'),
     path('Uploading_Existing_Savings_delete_All/<str:pk>/<str:return_pk>/', deskofficer_views.Uploading_Existing_Savings_delete_All,name='Uploading_Existing_Savings_delete_All'),
     path('Uploading_Existing_Savings_Discard_All/<str:pk>/', deskofficer_views.Uploading_Existing_Savings_Discard_All,name='Uploading_Existing_Savings_Discard_All'),
+
+    path('Unvalidated_Savings/', deskofficer_views.Unvalidated_Savings,name='Unvalidated_Savings'),
+    
 
     path('Members_without_Compulsory_Savings/', deskofficer_views.Members_without_Compulsory_Savings,name='Members_without_Compulsory_Savings'),
     path('Members_without_Compulsory_Savings_Other_Savings/<str:pk>/', deskofficer_views.Members_without_Compulsory_Savings_Other_Savings,name='Members_without_Compulsory_Savings_Other_Savings'),

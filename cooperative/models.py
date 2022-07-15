@@ -17,6 +17,11 @@ TRANSACTION_STATUS=(
     ("TREATED","TREATED")
     )
 
+MANUAL_POSTING_TYPES=(
+    ('CREDIT','CREDIT'),
+    ("DEBIT","DEBIT")
+    )
+
 PROCESSING_STATUS=(
     ("UNPROCESSED",'UNPROCESSED'),
     ("PROCESSED","PROCESSED")
@@ -1875,6 +1880,20 @@ class FailedLoanPenaltyRecords(DateObjectsModels):
     #     db_table="FailedLoanPenaltyRecords"
 
 
+   
+
+class PersonalLedgerManualPosting(DateObjectsModels):
+    transaction=models.CharField(max_length=255)
+    account_number=models.CharField(max_length=255)
+    particulars=models.CharField(max_length=255)
+    amount=models.DecimalField(max_digits=20,decimal_places = 2,default=0)
+    transaction_type=models.CharField(max_length=20,choices=MANUAL_POSTING_TYPES,default='CREDIT')
+    status=models.CharField(max_length=20,choices=TRANSACTION_STATUS,default='UNTREATED')
+    sources=models.CharField(max_length=30,default='SAVINGS')
+    # class Meta(DateObjectsModels.Meta):
+    #     db_table="PersonalLedgerSavingsPosting"
+
+
 class CashBook_Main(DateObjectsModels):
     particulars=models.CharField(max_length=255)
     debit=models.DecimalField(max_digits=20,decimal_places = 2,default=0)
@@ -1886,6 +1905,7 @@ class CashBook_Main(DateObjectsModels):
 
     # class Meta(DateObjectsModels.Meta):
     #     db_table="CashBook_Main"
+
 
 class CashBook_Shop(DateObjectsModels):
     particulars=models.CharField(max_length=255)

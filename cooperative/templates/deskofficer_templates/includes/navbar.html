@@ -101,6 +101,8 @@
                                         <a href="{% url 'Transaction_adjustment_search' %}">Place Request</a>
                                     </li>
                                     <li>
+                                        <a href="{% url 'Transaction_Adjustment_Manage' %}">Manage Adjustment Request</a>
+                                    </li><li>
                                         <a href="{% url 'Transaction_Adjustment_Approved_List_Load' %}">Process Request</a>
                                     </li>
                                 </ul>
@@ -443,12 +445,29 @@
                         <li>
                             <a href="{% url 'Monthly_Unbalanced_transactions' %}">Non Balanced Deductions</a>
                         </li>
+                        
 
 
                         </ul>
                     </li>
                 {% endif %}
 
+                <li>
+                        <a href="javascript:;"><i class="sidebar-item-icon fa fa-bar-chart"></i>
+                            <span class="nav-label">Ledger Multi Operations</span><i class="fa fa-angle-left arrow"></i></a>
+                        <ul class="nav-2-level collapse">
+                            <li>
+                                <a href="{% url 'Manual_Ledger_Posting_search' %}">Manual Ledger Posting</a>
+                            </li> 
+                           <li>
+                                <a href="{% url 'Manual_Ledger_Posting_Reverse_search' %}">Transaction Reverse</a>
+                            </li>
+
+                        </ul>
+                    </li>
+
+            
+                 
                 {% if 'BANK ACCOUNTS'  in task_array %}
                     <li>
                         <a href="javascript:;"><i class="sidebar-item-icon fa fa-bar-chart"></i>
@@ -880,6 +899,9 @@
                                     </li> 
                                     <li>
                                         <a href="{% url 'Members_without_Compulsory_Savings' %}">Savings Ledger Update</a>
+                                    </li> 
+                                    <li>
+                                        <a href="{% url 'Unvalidated_Savings' %}">Unvalidated Savings</a>
                                     </li>
                                 </ul>
                             </li>
