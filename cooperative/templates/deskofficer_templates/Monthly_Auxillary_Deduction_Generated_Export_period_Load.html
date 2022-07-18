@@ -1,0 +1,95 @@
+{% extends 'deskofficer_templates/base_template.html' %}
+{% load static %}
+
+{% block content %}
+            <div class="page-content fade-in-up">
+                   <div class="row">
+                    <div class="col-md-6">
+                        <div class="ibox">
+                            <div class="ibox-head">
+                                <div class="ibox-title">{{salary_institution.title}} Auxillary Deductions Export| {{transaction_period}}</div>
+                             
+                            </div>
+
+                            <div class="ibox-body">
+                              <form class="form-horizontal" method="POST" action="" enctype="multipart/form-data" novalidate>
+                                         {% csrf_token %}
+                                    <div class="form-group row">
+                                        <label class="col-sm-4 col-form-label">Transaction Periods</label>
+                                        <div class="col-sm-8">
+                                           {{form.transaction_period}}
+                                        </div>
+                                    </div>
+                                
+                                   
+                                    <div class="form-group row">
+                                        <div class="col-sm-8 ml-sm-auto">
+                                            <button class="btn btn-info" type="submit">Display</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                 
+                    <div class="col-xl-12">
+                        <div class="ibox">
+                            <div class="ibox-head">
+                                <div class="ibox-title"> <input type="button" class="btn btn-primary" value="Back" onclick="history.back()"/> | GENERATED SUMMARIZED TRANSACTIONS | {{salary_institution.title}} | {{transaction_period}} 
+
+                                {% if button_show %}
+                                | <a href="{% url 'AuxillarySeperation' %}">Excel Export</a>{% endif %}
+                                    </div>
+                                
+                            </div>
+
+
+                            <div class="ibox-body">
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                           <th>#</th>
+                                            <th>Member ID</th>
+                                        
+                                            <th>IPPIS NO</th>
+                                            <th>NAME</th>
+                                            <th>AMOUNT</th>
+                                             <th>DEDUCT</th>
+                                                <th>BALANCE</th>
+                                             
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for record in records %}
+                                <tr>
+                                    <td>{{forloop.counter}}</td>
+                                    <td>{{record.member.coop_no}}</td>
+                                 
+                                    <td>{{record.member.ippis_no}}</td>
+                                    <td>{{record.member.get_full_name}}</td>
+                                    <td>{{record.amount}}</td>
+                                    <td>{{record.amount_deducted}}</td>
+                                    <td>{{record.balance}}</td>
+                                   
+
+                                  
+                                </tr>
+                            {% endfor %}
+                               
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+             
+           
+            </div>
+  <div class="sidenav-backdrop backdrop"></div>
+    <div class="preloader-backdrop">
+        <div class="page-preloader">Loading</div>
+    </div>
+{% endblock %}

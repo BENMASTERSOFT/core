@@ -10,7 +10,7 @@ from django.db.models import Q
 from django.db.models import Count, Sum
 from django.db.models import  F, CharField, Value as V
 from django.db.models.functions import Concat
-from cooperative.resources import NorminalRollResource, AccountDeductionsResource
+from cooperative.resources import NorminalRollResource, AccountDeductionsResource,AuxillaryDeductionsResource
 from tablib import Dataset
 from django.template import defaultfilters
 from django.contrib import messages
@@ -44,7 +44,7 @@ from io import BytesIO
 from django.template.loader import get_template
 from xhtml2pdf import pisa
 from . utils import render_to_pdf
-
+from .monthly_transaction_reset import reset_monthly_generated_transaction
 
 
 month_list =['JANUARY','FEBRUARY','MARCH','APRIL','MAY','JUNE','JULY','AUGUST','SEPTEMBER','OCTOBER','NOVEMBER','DECEMBER']
@@ -68,6 +68,7 @@ from . report_deduction_cover import deductionCoverDateTable, addressTable,deduc
 from . Loan_Application_Issueance import loanApplicationIssueanceMainHeaderTitle,Loan_Application_Issueance_dateTable, Loan_Application_IssueanceSectionATable, \
 											Loan_Application_IssueanceSectionBTable,Loan_Application_IssueanceSectionCTable, Loan_Application_IssueanceSectionApprovalTable
 from . report_membership import _membershipMainHeaderTitle,_membershipGenHeaderTable,_membershipReceiptSection,_membershipGenBodyTable,_membershipGenFooterTable
+
 from . report_membership_deduction_order import _membershipDeductionOrderHeader, _membershipDeductionOrderGetLogoTable, _membershipDeductionOrderReceiptSection, \
 													_membershipDeductionOrderDeductionGenBodyTable,_membershipDeductionOrderGenFooterTable
 from . report_loan_application_certicate import _loanApplicationCerticateHeader, _loanApplicationCerticateGetLogoTable, _loanApplicationCerticatePersonnelSection \
@@ -669,8 +670,37 @@ def deskofficer_home(request):
 
 	member_count=Members.objects.filter(status='ACTIVE').count()
 
-	records = SavingsUploaded.objects.filter(status='UNTREATED').count()
-	print(records)
+	# records = SavingsUploaded.objects.filter(status='UNTREATED').count()
+	
+	# land=TransactionTypes.objects.get(code=104)
+	
+
+	# lands=SavingsUploaded.objects.filter(transaction__transaction__name=land.name)
+	
+	
+	# for item in lands:
+	# 	print(item.transaction.account_number[3:])
+
+	# print("==================================")
+	# print("==================================")
+
+	# other=TransactionTypes.objects.get(code=105)
+
+	# others=SavingsUploaded.objects.filter(transaction__transaction__name=other.name)
+
+	# for item in others:
+	
+
+	# 	for land in lands:
+	# 		if item.transaction.account_number[3:] in land.transaction.account_number[3:]:
+	# 			print(item.transaction.account_number[3:])
+
+	# salary_institution=SalaryInstitution.objects.get(title='IPPIS')
+	# transaction_period=TransactionPeriods.objects.get(status='ACTIVE')
+	# reset_monthly_generated_transaction(salary_institution,transaction_period.transaction_period)
+
+	# AuxillaryDeductions.objects.filter().delete()
+
 	# for record in records:
 	# 	if SavingsUploaded.objects.filter(transaction__account_number=record.transaction.account_number).count()>1:
 	# 		print(record.transaction.account_number)
@@ -701,6 +731,14 @@ def deskofficer_home(request):
 	# 			members_array.append((record[0],record[1] + ' ' + record[2] + ' ' + record[3],record[4]))
 
 	# print(members_array)
+	
+	# records=AuxillaryDeductions.objects.filter(transaction_status='TREATED')
+	# print(records)
+	# print("***************************************")
+	# print("***************************************")
+	# print("***************************************")
+	# records=AuxillaryDeductions.objects.filter(transaction_status='UNTREATED')
+	# print(records)
 	applicants=MemberShipRequest.objects.filter(transaction_status='UNTREATED',approval_status='APPROVED').count()
 
 	title="System User"
@@ -3731,13 +3769,12 @@ def Transaction_adjustment_Transactions_Accounts_Remove(request,pk):
 
 
 
-def Transaction_Adjustment_Approved_List_Load(request):
+
+def Transaction_Adjustment_Approved_View_List_Load(request):
 	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
 	task_array=[]
 	for task in tasks:
 		task_array.append(task.task.title)
-
-
 
 	task_enabler=TransactionEnabler.objects.filter(status="YES")
 	task_enabler_array=[]
@@ -3756,10 +3793,105 @@ def Transaction_Adjustment_Approved_List_Load(request):
 	'default_password':default_password,
 	'records':records,
 	}
-	return render(request,'deskofficer_templates/Transaction_Adjustment_Approved_List_Load.html',context)
+	return render(request,'deskofficer_templates/Transaction_Adjustment_Approved_View_List_Load.html',context)
 
 
-def Transaction_Adjustment_Approved_Processed(request,pk):
+
+def Transaction_Savings_Adjustment_Approved_List_search(request):
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	task_array=[]
+	for task in tasks:
+		task_array.append(task.task.title)
+
+
+
+	task_enabler=TransactionEnabler.objects.filter(status="YES")
+	task_enabler_array=[]
+	for item in task_enabler:
+		task_enabler_array.append(item.title)
+
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
+	title="Search Membership for Savings Adjustment"
+	form = searchForm(request.POST or None)
+
+	return render(request,'deskofficer_templates/Transaction_Savings_Adjustment_Approved_List_search.html',{'form':form,'title':title,'task_array':task_array,
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,})
+
+
+def Transaction_Savings_Adjustment_Approved_List_load(request):
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	task_array=[]
+	for task in tasks:
+		task_array.append(task.task.title)
+
+
+
+	task_enabler=TransactionEnabler.objects.filter(status="YES")
+	task_enabler_array=[]
+	for item in task_enabler:
+		task_enabler_array.append(item.title)
+
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
+	title="Loan Request order"
+	form = searchForm(request.POST)
+
+	if request.method == "POST":
+		if request.POST.get("title")=="":
+			return HttpResponseRedirect(reverse('Transaction_Savings_Adjustment_Approved_List_search'))
+
+		members=searchMembers(form['title'].value(),'ACTIVE')
+
+		context={
+		'members':members,
+		'title':title,
+		'task_array':task_array,
+		'task_enabler_array':task_enabler_array,
+		'default_password':default_password,
+		}
+		return render(request,'deskofficer_templates/Transaction_Savings_Adjustment_Approved_List_load.html',context)
+
+
+
+
+
+def Transaction_Savings_Adjustment_Approved_List_Detals_Load(request,pk):
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	task_array=[]
+	for task in tasks:
+		task_array.append(task.task.title)
+
+	task_enabler=TransactionEnabler.objects.filter(status="YES")
+	task_enabler_array=[]
+	for item in task_enabler:
+		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+	member=Members.objects.get(id=pk)
+	records=TransactionAjustmentRequest.objects.filter(member__member=member,approval_status='APPROVED',status='UNTREATED')
+
+	context={
+	'member':member,
+	'task_array':task_array,
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
+	'records':records,
+	}
+	return render(request,'deskofficer_templates/Transaction_Savings_Adjustment_Approved_List_Detals_Load.html',context)
+
+
+
+def Transaction_Savings_Adjustment_Approved_Processed(request,pk,member_pk):
 	tdate=get_current_date(now)
 	status='TREATED'
 	record=TransactionAjustmentRequest.objects.get(id=pk)
@@ -3778,7 +3910,7 @@ def Transaction_Adjustment_Approved_Processed(request,pk):
 		record.member.standingorderaccounts.save()
 	record.status=status
 	record.save()
-	return HttpResponseRedirect(reverse('Transaction_Adjustment_Approved_List_Load'))
+	return HttpResponseRedirect(reverse('Transaction_Savings_Adjustment_Approved_List_Detals_Load',args=(member_pk,)))
 
 
 def Transaction_Loan_adjustment_search(request):
@@ -3934,22 +4066,28 @@ def Transaction_Loan_adjustment_Transaction_Process(request,pk,loan_code):
 
 	expected_repayment=math.ceil(float(abs(balance))/float(remaining_months))
 
+	allow_reduction=False
+	if LoanLessRepaymentEnable.objects.filter(status='YES').exists():
+		allow_reduction = True
+
+	
 	if request.method =="POST":
 		purpose=request.POST.get('purpose')
 		repayment=request.POST.get('repayment')
 		amount=request.POST.get('amount')
 		effective_date=now
 
-		if float(amount) < float(expected_repayment):
-			messages.info(request,"The Amount Specified is not Allowed, you have Minimum of " + str(expected_repayment) + " to pay off this loan in " +  str(remaining_months) + " month(s) interval" )
-			return HttpResponseRedirect(reverse('Transaction_Loan_adjustment_Transaction_Preview',args=(pk,loan_code,)))
+		if allow_reduction:
+			if float(amount) < float(expected_repayment):
+				messages.info(request,"The Amount Specified is not Allowed, you have Minimum of " + str(expected_repayment) + " to pay off this loan in " +  str(remaining_months) + " month(s) interval" )
+				return HttpResponseRedirect(reverse('Transaction_Loan_adjustment_Transaction_Preview',args=(pk,loan_code,)))
 
-		if float(amount) == float(expected_repayment):
-			messages.info(request,"No Change Made in " + str(expected_repayment) + " to pay off this loan in " +  str(remaining_months) + " month(s) interval" )
-			return HttpResponseRedirect(reverse('Transaction_Loan_adjustment_Transaction_Preview',args=(pk,loan_code,)))
+			if float(amount) == float(expected_repayment):
+				messages.info(request,"No Change Made in " + str(expected_repayment) + " to pay off this loan in " +  str(remaining_months) + " month(s) interval" )
+				return HttpResponseRedirect(reverse('Transaction_Loan_adjustment_Transaction_Preview',args=(pk,loan_code,)))
 
 
-
+		
 		if TransactionLoanAjustmentRequest.objects.filter(member=loan,status='UNTREATED'):
 			messages.info(request,'You still have an Incomplete Transactions')
 			return HttpResponseRedirect(reverse('Transaction_Loan_adjustment_Transaction_Preview',args=(pk,loan_code,)))
@@ -7857,7 +7995,7 @@ def Savings_Lockup_Processing(request,pk):
 
 	lock_status='NO'
 	record=MembersAccountsDomain.objects.filter(id=pk).update(loan_lock=lock_status)
-	return HttpResponseRedirect(reverse('Savings_Lockup_List_Load'))
+	return HttpResponseRedirect(reverse('Savings_Lockup_search'))
 
 
 #########################################################
@@ -8041,7 +8179,7 @@ def Monthly_Savings_Contribution_preview(request,pk, salary_inst_key):
 		return HttpResponseRedirect(reverse('Monthly_Individual_Transactions_Load', args=(salary_inst_key)))
 
 	record_exist=False
-	if MonthlyGeneratedTransactions.objects.filter(transaction=transaction,transaction_period=transaction_period).exists():
+	if MonthlyGeneratedTransactions.objects.filter(salary_institution=salary_institution,transaction=transaction,transaction_period=transaction_period).exists():
 		record_exist=True
 
 	context={
@@ -8061,8 +8199,11 @@ def Monthly_Savings_Contribution_preview(request,pk, salary_inst_key):
 	return render(request,'deskofficer_templates/Monthly_Savings_Contribution_preview.html',context)
 
 
+
 def Monthly_Savings_Contribution_Generate(request,pk,salary_inst_key):
 	processed_by=CustomUser.objects.get(id=request.user.id)
+	processed_by=processed_by.username
+
 	tdate=get_current_date(now)
 	status='ACTIVE'
 	transaction_status='UNTREATED'
@@ -8088,13 +8229,13 @@ def Monthly_Savings_Contribution_Generate(request,pk,salary_inst_key):
 							amount=member.amount,
 							balance=0,
 							processing_status=processing_status,
-							processed_by=processed_by.username,
+							processed_by=processed_by,
 							salary_institution=salary_institution,
 							status=transaction_status,
 							tdate=tdate).save()
 
 	if MonthlyDeductionList.objects.filter(transaction_period=transaction_period,transaction=transaction).exists():
-		MonthlyGeneratedTransactions(salary_institution=salary_institution,tdate=tdate,transaction=transaction,transaction_period=transaction_period,processed_by=processed_by.username,transaction_status=transaction_status).save()
+		MonthlyGeneratedTransactions(salary_institution=salary_institution,tdate=tdate,transaction=transaction,transaction_period=transaction_period,processed_by=processed_by,transaction_status=transaction_status).save()
 
 	return HttpResponseRedirect(reverse('Monthly_Individual_Transactions_Load',args=(salary_inst_key,)))
 
@@ -8119,8 +8260,8 @@ def Monthly_loan_repayement_preview(request,pk, salary_inst_key):
 		default_password="YES"
 
 
-	# transaction_period=TransactionPeriods.objects.get(status=status)
-	# transaction_period=transaction_period.transaction_period
+	transaction_period=TransactionPeriods.objects.get(status=status)
+	transaction_period=transaction_period.transaction_period
 
 	salary_institution=SalaryInstitution.objects.get(id=salary_inst_key)
 	transaction=TransactionTypes.objects.get(id=pk)
@@ -8133,7 +8274,7 @@ def Monthly_loan_repayement_preview(request,pk, salary_inst_key):
 	context={
 	'transaction':transaction,
 	'members':members,
-	
+	'transaction_period':transaction_period,
 	'pk':pk,
 	'salary_inst_key':salary_inst_key,
 	'task_array':task_array,
@@ -8157,7 +8298,39 @@ def Monthly_loan_repayement_Generate(request,pk, salary_inst_key):
 
 	salary_institution=SalaryInstitution.objects.get(id=salary_inst_key)
 	transaction=TransactionTypes.objects.get(id=pk)
+	
+	penalty_enabler = "NO"
+	
+	if FailedLoanPenaltyEnabler.objects.all().exists():
+		penalty_enabled=FailedLoanPenaltyEnabler.objects.first()
+		if penalty_enabled.status == "YES":
+			penalty_enabler="YES"
+
+	if penalty_enabler == "YES":
+		return HttpResponse(penalty_enabler)
+
+		defaulter_duration=0
+		if FailedLoanPenaltyDuration.objects.all().exists():
+			defaulter_duration_id=FailedLoanPenaltyDuration.objects.first()
+			defaulter_duration=defaulter_duration_id.duration
+
+		defaulted_members=LoansRepaymentBase.objects.filter(transaction=transaction,status=status,member__salary_institution=salary_institution).filter(Q(balance__lt=0) and ~Q(penalty_status='DEFAULTED'))
+		
+		for item in defaulted_members:
+			expected_stop_date=item.stop_date
+			expected_stop_date=get_current_date(expected_stop_date)
+
+			new_date=transaction_period
+			grace_period=expected_stop_date + relativedelta(months=int(defaulter_duration))
+			if new_date > grace_period:
+				item.penalty_status = 'DEFAULTED'
+				item.save()
+				# print(f'SNO: {item.pk}-{item.member.get_full_name} ({item.member.coop_no}) - Expected Stop Date: {expected_stop_date} -Allowed Defult date: {expected_stop_date + relativedelta(months=int(defaulter_duration))} - Current Date: {new_date}')
+
+	# return HttpResponse("Please wait")
 	members=LoansRepaymentBase.objects.filter(transaction=transaction,status=status,member__salary_institution=salary_institution).filter(Q(balance__lt=0))
+
+	
 
 	processed_by=CustomUser.objects.get(id=request.user.id)
 	processed_by=processed_by.username
@@ -8172,12 +8345,14 @@ def Monthly_loan_repayement_Generate(request,pk, salary_inst_key):
 		return HttpResponseRedirect(reverse('Monthly_loan_repayement_preview',args=(pk, salary_inst_key)))
 
 
-	for member in members:
-		expected_stop_date=member.stop_date
-		expected_stop_date=get_current_date(expected_stop_date)
-		new_date=transaction_period
-		penalty_rate=0
 
+	for member in members:
+		# expected_stop_date=member.stop_date
+		# expected_stop_date=get_current_date(expected_stop_date)
+
+		# new_date=transaction_period
+		penalty_rate=0
+	
 		deduction_amount= float(n_transaction)*float(member.repayment)
 
 		generated_amount=0
@@ -8187,88 +8362,96 @@ def Monthly_loan_repayement_Generate(request,pk, salary_inst_key):
 		if abs(float(member.balance)) >= float(deduction_amount):
 
 			generated_amount=member.repayment
+		else:
+			generated_amount=member.balance
 
-			if new_date > expected_stop_date:
-				if member.penalty_status == 'DEFAULTED':
 
-					penalty=FailedLoanPenalty.objects.all().first()
-					penalty_rate=penalty.code
-					penalty_amount=(float(penalty_rate)/100)*float(member.balance)
+	
+		if member.penalty_status == 'DEFAULTED':
+			penalty=FailedLoanPenalty.objects.all().first()
+			penalty_rate=penalty.code
+			penalty_amount=(float(penalty_rate)/100)*float(member.balance)
 
-					ledger_balance=get_ledger_balance(member.loan_number)
+			ledger_balance=get_ledger_balance(member.loan_number)
 
-					new_ledger_balance=float(ledger_balance)+ float(penalty_amount)
-					debit=abs(penalty_amount)
-					credit=0
-					particulars="Penalty on loan with balance of " + str(abs(member.balance))
+			new_ledger_balance=float(ledger_balance)+ float(penalty_amount)
+			debit=abs(penalty_amount)
+			credit=0
+			particulars="Penalty on loan with balance of " + str(abs(member.balance))
 
-					penalty=debit
+			penalty=debit
 
-					post_to_ledger(member.member,
-								transaction,
-								member.loan_number,
-								particulars,
-								debit,
-								credit,
-								new_ledger_balance,
-								transaction_period.transaction_period,
-								status,
-								tdate,processed_by
-								)
+			post_to_ledger(member.member,
+						transaction,
+						member.loan_number,
+						particulars,
+						debit,
+						credit,
+						new_ledger_balance,
+						transaction_period,
+						status,
+						tdate,
+						processed_by
+						)
 
-					loan_date=get_current_date(member.start_date)
-					due_date=get_current_date(member.stop_date)
+			loan_date=get_current_date(member.start_date)
+			due_date=get_current_date(member.stop_date)
 
-					FailedLoanPenaltyRecords(transaction=member,
-											amount=abs(member.balance),
-											penalty=abs(penalty_amount),
-											rate=penalty_rate,
-											transaction_period=transaction_period,
+			FailedLoanPenaltyRecords(transaction=member,
+									amount=abs(member.balance),
+									penalty=abs(penalty_amount),
+									rate=penalty_rate,
+									transaction_period=transaction_period,
+									loan_date=loan_date,
+									due_date=due_date,
+									penalty_date=transaction_period,
 
-											processed_by=processed_by.username,
-											status=transaction_status,
-											tdate=tdate
-											).save()
+									processed_by=processed_by,
+									status=transaction_status,
+									tdate=tdate
+									).save()
 
-											# loan_date=member.start_date,
-											# due_date=member.stop_date,
-											# penalty_date=transaction_period,
+									# loan_date=member.start_date,
+									# due_date=member.stop_date,
+									# penalty_date=transaction_period,
 
-					member.loan_amount = float(abs(member.loan_amount)) + float(abs(penalty_amount))
-					member.penalty_amount=float(member.penalty_amount) + float(abs(penalty_amount))
-					member.balance=-(float(abs(member.balance)) + float(abs(penalty_amount)))
-					member.save()
-					generated_amount=float(generated_amount)+float(abs(penalty_amount))
-				else:
-					pass
+			member.loan_amount = float(abs(member.loan_amount)) + float(abs(penalty_amount))
+			member.penalty_amount=float(member.penalty_amount) + float(abs(penalty_amount))
+			member.balance=-(float(abs(member.balance)) + float(abs(penalty_amount)))
+			member.save()
+			generated_amount=float(generated_amount)+float(abs(penalty_amount))
+		else:
+			pass
 
-			record=MonthlyDeductionList(member=member.member,
+	
+		record=MonthlyDeductionList(member=member.member,
 
-										transaction_period=transaction_period,
-										transaction=transaction,
-										account_number=member.loan_number,
-										amount=generated_amount,
-										amount_deducted=0,
-										balance=0,
-										repayment=member.repayment,
-										penalty=penalty,
-										salary_institution=salary_institution,
-										processed_by=processed_by.username,
-										status=transaction_status,
-										tdate=tdate,
-										processing_status=processing_status
-										)
-			record.save()
+									transaction_period=transaction_period,
+									transaction=transaction,
+									account_number=member.loan_number,
+									amount=generated_amount,
+									amount_deducted=0,
+									balance=0,
+									repayment=member.repayment,
+									penalty=penalty,
+									salary_institution=salary_institution,
+									processed_by=processed_by,
+									status=transaction_status,
+									tdate=tdate,
+									processing_status=processing_status
+									)
+		record.save()
 
 
 
 	if MonthlyDeductionList.objects.filter(member__salary_institution=salary_institution,transaction_period=transaction_period,transaction=transaction).exists():
 
 
-		record=MonthlyGeneratedTransactions(salary_institution=salary_institution,tdate=tdate,transaction=transaction,transaction_period=transaction_period,processed_by=processed_by.username,transaction_status=transaction_status)
+		record=MonthlyGeneratedTransactions(salary_institution=salary_institution,tdate=tdate,transaction=transaction,transaction_period=transaction_period,processed_by=processed_by,transaction_status=transaction_status)
 		record.save()
 
 	return HttpResponseRedirect(reverse('Monthly_Individual_Transactions_Load',args=(salary_inst_key,)))
+
 
 
 
@@ -8390,7 +8573,7 @@ def Monthly_Group_Generated_Transaction(request,pk):
 	for record in records:
 		queryset=  MonthlyDeductionList.objects.filter(member__member_id=record[0],member__salary_institution=salary_institution,transaction_period=transaction_period).aggregate(total_cash=Sum('amount'))
 		total_amount=queryset['total_cash']
-		members_array.append((record[0][13:],record[2] + " " + record[3]+ " " + record[4],record[1],record[5],total_amount))
+		members_array.append((record[0][13:],f'{record[2]} {record[3]} {record[4]}',record[1],record[5],total_amount))
 
 	context={
 	'salary_institution':salary_institution,
@@ -8603,8 +8786,6 @@ def Monthly_Deduction_Main_and_Shop_Merger_Load_Main_Preview(request,pk):
 	for task in tasks:
 		task_array.append(task.task.title)
 
-
-
 	task_enabler=TransactionEnabler.objects.filter(status="YES")
 	task_enabler_array=[]
 	for item in task_enabler:
@@ -8619,6 +8800,7 @@ def Monthly_Deduction_Main_and_Shop_Merger_Load_Main_Preview(request,pk):
 	processing_status='UNPROCESSED'
 	status="ACTIVE"
 
+
 	transaction_period=TransactionPeriods.objects.get(status=status)
 	transaction_period= get_current_date(transaction_period.transaction_period)
 
@@ -8632,6 +8814,9 @@ def Monthly_Deduction_Main_and_Shop_Merger_Load_Main_Preview(request,pk):
 
 	records=MonthlyDeductionListGenerated.objects.filter(salary_institution=salary_institution,transaction_period=transaction_period,transaction_status=transaction_status)
 
+	if not records:
+		messages.error(request,'No record Found')
+		return HttpResponseRedirect(reverse('Monthly_Deduction_Main_and_Shop_Merger_Load',args=(pk,)))
 
 	if request.method == 'POST':
 		for record in records:
@@ -8739,8 +8924,11 @@ def Monthly_Deduction_Main_and_Shop_Merger_Load_Shop_Preview(request,pk):
 
 	records=MonthlyShopdeductionListGenerated.objects.filter(salary_institution=salary_institution,transaction_period=transaction_period,status=transaction_status)
 
-	if request.method == 'POST':
+	# if not records:
+	# 	messages.error(request,'No Record Found')
+	# 	return HttpResponseRedirect(reverse('Monthly_Deduction_Main_and_Shop_Merger_Load',args=(pk,)))
 
+	if request.method == 'POST':
 		for record in records:
 			MonthlyJointDeductionList(member=record.member,
 									transaction_period=transaction_period,
@@ -8988,7 +9176,7 @@ def Monthly_Deduction_excel_Export_load(request,pk):
 	transaction_period=TransactionPeriods.objects.get(status=status)
 	transaction_period= get_current_date(transaction_period.transaction_period)
 
-	records=MonthlyJointDeductionGenerated.objects.filter(salary_institution=salary_institution,transaction_period=transaction_period)
+	records=MonthlyJointDeductionGenerated.objects.filter(salary_institution=salary_institution,transaction_period=transaction_period).order_by('member__coop_no')
 
 	button_enabled=True
 	if records.count()==0:
@@ -9085,7 +9273,7 @@ def export_monthly_deductions_xls(request,pk):
 
 	font_style = xlwt.XFStyle()  # Sheet body, remaining rows
 
-	rows = MonthlyJointDeductionGenerated.objects.filter(salary_institution=salary_institution,transaction_period=transaction_period).values_list('member__member_id','member__file_no','member__ippis_no','member__full_name', 'amount')
+	rows = MonthlyJointDeductionGenerated.objects.filter(salary_institution=salary_institution,transaction_period=transaction_period).values_list('member__coop_no','member__file_no','member__ippis_no','member__full_name', 'amount').order_by('member__coop_no')
 
 	for row in rows:
 		row_num += 1
@@ -9096,8 +9284,119 @@ def export_monthly_deductions_xls(request,pk):
 	return response
 
 
+def Monthly_Deduction_Transaction_Reverse_Institution_load(request):
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	task_array=[]
+	for task in tasks:
+		task_array.append(task.task.title)
+
+	task_enabler=TransactionEnabler.objects.filter(status="YES")
+	task_enabler_array=[]
+	for item in task_enabler:
+		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
+	status="ACTIVE"
+	transaction_period=TransactionPeriods.objects.get(status=status)
+	transaction_period= get_current_date(transaction_period.transaction_period)
+
+	items=SalaryInstitution.objects.all()
+
+	context={
+	'items':items,
+	'transaction_period':transaction_period,
+	'task_array':task_array,
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
+	}
+	return render(request,'deskofficer_templates/Monthly_Deduction_Transaction_Reverse_Institution_load.html',context)
 
 
+def Monthly_Deduction_Transaction_Reverse_load(request,pk):
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	task_array=[]
+	for task in tasks:
+		task_array.append(task.task.title)
+
+	task_enabler=TransactionEnabler.objects.filter(status="YES")
+	task_enabler_array=[]
+	for item in task_enabler:
+		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
+	salary_institution=SalaryInstitution.objects.get(id=pk)
+
+	status="ACTIVE"
+	transaction_period=TransactionPeriods.objects.get(status=status)
+	trans_id=transaction_period.pk
+	transaction_period= get_current_date(transaction_period.transaction_period)
+
+	records=MonthlyJointDeductionGenerated.objects.filter(salary_institution=salary_institution,transaction_period=transaction_period).order_by('member__coop_no')
+
+	button_enabled=True
+	if records.count()==0:
+		button_enabled=False
+
+	context={
+	'transaction_period':transaction_period,
+	'records':records,
+	'trans_id':trans_id,
+	'salary_institution':salary_institution,
+	'task_array':task_array,
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
+	'button_enabled':button_enabled,
+	}
+	return render(request,'deskofficer_templates/Monthly_Deduction_Transaction_Reverse_load.html',context)
+
+
+
+def Monthly_Deduction_Transaction_Reverse_Process(request,salary_id,trans_id):
+	salary_institution=SalaryInstitution.objects.get(id=salary_id)
+	# salary_institution=SalaryInstitution.objects.get(title='GISMIS')
+	transaction_period=TransactionPeriods.objects.get(id=trans_id)
+	records=FailedLoanPenaltyRecords.objects.filter(transaction__member__salary_institution=salary_institution,transaction_period=transaction_period.transaction_period)
+	
+	processed_by=CustomUser.objects.get(id=request.user.id)
+	processed_by=processed_by.username
+	tdate=get_current_date(now)
+	for record in records:
+		# print(f'{record.transaction.loan_number} {record.transaction.member.get_full_name}')
+
+		ledger_balance=get_ledger_balance(record.transaction.loan_number)
+
+		new_ledger_balance=float(ledger_balance)+ float(record.penalty)
+		debit=0
+		credit=abs(record.penalty)
+		particulars="Reverse of Penalty on loan with balance of " + str(abs(record.amount))
+
+		penalty=credit
+
+		post_to_ledger(record.transaction.member,
+					record.transaction.transaction,
+					record.transaction.loan_number,
+					particulars,
+					debit,
+					credit,
+					new_ledger_balance,
+					transaction_period.transaction_period,
+					"ACTIVE",
+					tdate,
+					processed_by
+					)
+
+
+	FailedLoanPenaltyRecords.objects.filter(transaction__member__salary_institution=salary_institution,transaction_period=transaction_period.transaction_period).delete()
+	reset_monthly_generated_transaction(salary_institution,transaction_period.transaction_period)
+	return HttpResponseRedirect(reverse('Monthly_Deduction_Transaction_Reverse_Institution_load'))
+
+	
 def export_norminal_roll_xls(request):
 	response = HttpResponse(content_type='application/ms-excel')
 	response['Content-Disposition'] = 'attachment; filename="norminalRoll.xls"'
@@ -9678,6 +9977,907 @@ def Monthly_Unbalanced_transactions(request):
 	'default_password':default_password,
 	}
 	return render(request,'deskofficer_templates/Monthly_Unbalanced_transactions.html',context)
+
+
+
+def upload_AuxillaryDeductionsResource(request,pk):
+	tdate=get_current_date(now)
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	task_array=[]
+	for task in tasks:
+		task_array.append(task.task.title)
+
+
+
+	task_enabler=TransactionEnabler.objects.filter(status="YES")
+	task_enabler_array=[]
+	for item in task_enabler:
+		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
+	# AuxillaryDeductions.objects.all().delete()
+	# return HttpResponse("OK")
+	status="ACTIVE"
+	transaction_period=TransactionPeriods.objects.get(status=status)
+	transaction_period= get_current_date(transaction_period.transaction_period)
+
+	transaction_status='UNTREATED'
+	salary_institution=SalaryInstitution.objects.get(id=pk)
+
+	if request.method == 'POST':
+		if  AuxillaryDeductions.objects.filter(salary_institution=salary_institution,transaction_period=transaction_period).exists():
+			messages.error(request,'Account Deduction for this Period Already Imported')
+			return HttpResponseRedirect(reverse('upload_AuxillaryDeductionsResource',args=(pk,)))
+
+
+		account_deduction_resource = AuxillaryDeductionsResource()
+		dataset = Dataset()
+		new_account_deductions = request.FILES['myfile']
+
+		if not new_account_deductions.name.endswith('xls'):
+			messages.error(request,'Wrong format')
+			return HttpResponseRedirect(reverse('upload_AuxillaryDeductionsResource',args=(pk,)))
+
+		imported_data = dataset.load(new_account_deductions.read(),format='xls')
+		for data in imported_data:
+			value = AuxillaryDeductions(tdate=tdate,salary_institution=salary_institution,
+					transaction_period=transaction_period,
+					ippis_no=str(data[0])[:-2],
+					name=data[1],
+					amount=data[2],
+					coop_no=(str(data[3])[:-2]).zfill(5),
+					transaction_status=transaction_status,
+				)
+			value.save()
+
+	context={
+	'transaction_period':transaction_period,
+	'task_array':task_array,
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
+	}
+	return render(request,'deskofficer_templates/upload.html',context)
+
+
+
+
+def upload_AccountDeductionsResource(request,pk):
+	tdate=get_current_date(now)
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	task_array=[]
+	for task in tasks:
+		task_array.append(task.task.title)
+
+
+
+	task_enabler=TransactionEnabler.objects.filter(status="YES")
+	task_enabler_array=[]
+	for item in task_enabler:
+		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
+
+	status="ACTIVE"
+	transaction_period=TransactionPeriods.objects.get(status=status)
+	transaction_period= get_current_date(transaction_period.transaction_period)
+
+	transaction_status='UNTREATED'
+	salary_institution=SalaryInstitution.objects.get(id=pk)
+
+	if request.method == 'POST':
+		if  AccountDeductions.objects.filter(salary_institution=salary_institution,transaction_period=transaction_period).exists():
+			messages.error(request,'Account Deduction for this Period Already Imported')
+			return HttpResponseRedirect(reverse('upload_AccountDeductionsResource',args=(pk,)))
+
+
+		account_deduction_resource = AccountDeductionsResource()
+		dataset = Dataset()
+		new_account_deductions = request.FILES['myfile']
+
+		if not new_account_deductions.name.endswith('xls'):
+			messages.error(request,'Wrong format')
+			return HttpResponseRedirect(reverse('upload_AccountDeductionsResource',args=(pk,)))
+
+		imported_data = dataset.load(new_account_deductions.read(),format='xls')
+		for data in imported_data:
+			value = AccountDeductions(tdate=tdate,salary_institution=salary_institution,
+					transaction_period=transaction_period,
+					ippis_no=data[0],
+					name=data[1],
+					amount=data[2],
+					transaction_status=transaction_status,
+				)
+			value.save()
+
+	context={
+	'transaction_period':transaction_period,
+	'task_array':task_array,
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
+	}
+	return render(request,'deskofficer_templates/upload.html',context)
+
+
+
+
+def Monthly_Deduction_Generated_Update_Institution_Load(request):
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	task_array=[]
+	for task in tasks:
+		task_array.append(task.task.title)
+
+	task_enabler=TransactionEnabler.objects.filter(status="YES")
+	task_enabler_array=[]
+	for item in task_enabler:
+		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
+
+	status="ACTIVE"
+	transaction_period=TransactionPeriods.objects.get(status=status)
+	transaction_period= get_current_date(transaction_period.transaction_period)
+	items=SalaryInstitution.objects.all()
+
+	context={
+	'items':items,
+	'transaction_period':transaction_period,
+	'task_array':task_array,
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
+	}
+	return render(request,'deskofficer_templates/Monthly_Deduction_Generated_Update_Institution_Load.html',context)
+
+
+def Monthly_Deduction_Generated_Update_Transaction_period_Load(request,pk):
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	task_array=[]
+	for task in tasks:
+		task_array.append(task.task.title)
+
+
+
+	task_enabler=TransactionEnabler.objects.filter(status="YES")
+	task_enabler_array=[]
+	for item in task_enabler:
+		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
+	form=TransactionPeriod_form(request.POST or None)
+	salary_institution=SalaryInstitution.objects.get(id=pk)
+	records=[]
+	transaction_period=get_current_date(now)
+	button_show=False
+	if request.method == 'POST':
+		transaction_period_id = request.POST.get('transaction_period')
+		date_format = '%Y-%m-%d'
+		dtObj = datetime.datetime.strptime(transaction_period_id, date_format)
+		transaction_period=get_current_date(dtObj)
+		
+		# records=MonthlyDeductionListGenerated.objects.filter(salary_institution=salary_institution,transaction_period=transaction_period)
+		records=MonthlyDeductionListGenerated.objects.filter(salary_institution=salary_institution,transaction_period=transaction_period).order_by('member__coop_no')
+		if records:
+			button_show=True
+
+	form.fields['transaction_period'].initial=get_current_date(now)	
+	context={
+	'transaction_period':transaction_period,
+	'records':records,
+	'button_show':button_show,
+	'form':form,
+	'salary_institution':salary_institution,
+	'task_array':task_array,
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
+	}
+
+
+	return render(request,'deskofficer_templates/Monthly_Deduction_Generated_Update_Transaction_period_Load.html',context)
+
+
+
+
+
+def Monthly_Auxillary_Imported_Deduction_View_List_Institution_Load(request):
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	task_array=[]
+	for task in tasks:
+		task_array.append(task.task.title)
+
+	task_enabler=TransactionEnabler.objects.filter(status="YES")
+	task_enabler_array=[]
+	for item in task_enabler:
+		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
+
+	status="ACTIVE"
+	transaction_period=TransactionPeriods.objects.get(status=status)
+	transaction_period= get_current_date(transaction_period.transaction_period)
+	items=SalaryInstitution.objects.all()
+
+	context={
+	'items':items,
+	'transaction_period':transaction_period,
+	'task_array':task_array,
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
+	}
+	return render(request,'deskofficer_templates/Monthly_Auxillary_Imported_Deduction_View_List_Institution_Load.html',context)
+
+
+def Monthly_Auxillary_Imported_Deduction_View_List_Transaction_period_Load(request,pk):
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	task_array=[]
+	for task in tasks:
+		task_array.append(task.task.title)
+
+
+
+	task_enabler=TransactionEnabler.objects.filter(status="YES")
+	task_enabler_array=[]
+	for item in task_enabler:
+		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
+	form=TransactionPeriod_form(request.POST or None)
+	salary_institution=SalaryInstitution.objects.get(id=pk)
+	records=[]
+	transaction_period=get_current_date(now)
+
+	if request.method == 'POST':
+		transaction_period_id = request.POST.get('transaction_period')
+		date_format = '%Y-%m-%d'
+		dtObj = datetime.datetime.strptime(transaction_period_id, date_format)
+		transaction_period=get_current_date(dtObj)
+		
+		# records=MonthlyDeductionListGenerated.objects.filter(salary_institution=salary_institution,transaction_period=transaction_period)
+		records=AuxillaryDeductions.objects.filter(salary_institution=salary_institution,transaction_period=transaction_period).order_by('coop_no')
+		
+
+	form.fields['transaction_period'].initial=get_current_date(now)	
+	context={
+	'transaction_period':transaction_period,
+	'records':records,
+	'form':form,
+	'salary_institution':salary_institution,
+	'task_array':task_array,
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
+	}
+
+
+	return render(request,'deskofficer_templates/Monthly_Auxillary_Imported_Deduction_View_List_Transaction_period_Load.html',context)
+
+
+
+
+
+def Monthly_Auxillary_Deduction_Generated_Merger_Institution_Load(request):
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	task_array=[]
+	for task in tasks:
+		task_array.append(task.task.title)
+
+	task_enabler=TransactionEnabler.objects.filter(status="YES")
+	task_enabler_array=[]
+	for item in task_enabler:
+		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
+
+	status="ACTIVE"
+	transaction_period=TransactionPeriods.objects.get(status=status)
+	transaction_period= get_current_date(transaction_period.transaction_period)
+	items=SalaryInstitution.objects.all()
+
+	context={
+	'items':items,
+	'transaction_period':transaction_period,
+	'task_array':task_array,
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
+	}
+	return render(request,'deskofficer_templates/Monthly_Auxillary_Deduction_Generated_Merger_Institution_Load.html',context)
+
+
+def Monthly_Auxillary_Deduction_Generated_Merger_Transaction_period_Load(request,pk):
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	task_array=[]
+	for task in tasks:
+		task_array.append(task.task.title)
+
+
+
+	task_enabler=TransactionEnabler.objects.filter(status="YES")
+	task_enabler_array=[]
+	for item in task_enabler:
+		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
+	form=TransactionPeriod_form(request.POST or None)
+	salary_institution=SalaryInstitution.objects.get(id=pk)
+	records=[]
+	transaction_period=get_current_date(now)
+	button_show=False
+	if request.method == 'POST':
+		transaction_period_id = request.POST.get('transaction_period')
+		date_format = '%Y-%m-%d'
+		dtObj = datetime.datetime.strptime(transaction_period_id, date_format)
+		transaction_period=get_current_date(dtObj)
+		
+		
+		records=MonthlyDeductionListGenerated.objects.filter(salary_institution=salary_institution,transaction_period=transaction_period).order_by('member__coop_no')
+		if records:
+			button_show=True
+
+	form.fields['transaction_period'].initial=get_current_date(now)	
+	context={
+	'transaction_period':transaction_period,
+	'records':records,
+	'button_show':button_show,
+	'form':form,
+	'salary_institution':salary_institution,
+	'task_array':task_array,
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
+	}
+
+
+	return render(request,'deskofficer_templates/Monthly_Auxillary_Deduction_Generated_Merger_Transaction_period_Load.html',context)
+
+
+
+
+def AuxillaryMerger(request,salary_id,trans_id):
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	task_array=[]
+	for task in tasks:
+		task_array.append(task.task.title)
+
+
+
+	task_enabler=TransactionEnabler.objects.filter(status="YES")
+	task_enabler_array=[]
+	for item in task_enabler:
+		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
+	form=TransactionPeriod_form(request.POST or None)
+
+	salary_institution=SalaryInstitution.objects.get(id=salary_id)
+	transaction_period=trans_id
+	# AuxillaryDeductions.objects.filter(salary_institution=salary_institution,transaction_period=transaction_period).update(transaction_status='UNTREATED')
+	# return HttpResponse("OK")
+	records=AuxillaryDeductions.objects.filter(salary_institution=salary_institution,transaction_period=transaction_period,transaction_status='UNTREATED')
+	
+	for record in records:
+		if MonthlyDeductionListGenerated.objects.filter(member__ippis_no=record.ippis_no,salary_institution=salary_institution,transaction_period=transaction_period).exists():
+			MonthlyDeductionListGenerated.objects.filter(member__ippis_no=record.ippis_no,salary_institution=salary_institution,transaction_period=transaction_period).update(amount_deducted=record.amount,balance=F('amount')- record.amount,aux_amount=record.amount)
+			record.transaction_status='TREATED'
+			record.save()
+	
+	records=MonthlyDeductionListGenerated.objects.filter(salary_institution=salary_institution,transaction_period=transaction_period).order_by('member__coop_no')
+	record_treated=AuxillaryDeductions.objects.filter(salary_institution=salary_institution,transaction_period=transaction_period,transaction_status='TREATED')
+	record_untreated=AuxillaryDeductions.objects.filter(salary_institution=salary_institution,transaction_period=transaction_period,transaction_status='UNTREATED')
+
+	print(f'Treated Record {record_treated.count()}')
+	print(f'Untreated Record {record_untreated.count()}')
+
+
+	form.fields['transaction_period'].initial=transaction_period	
+	context={
+	'transaction_period':transaction_period,
+	'records':records,
+	'button_show':True,
+	'form':form,
+	'salary_institution':salary_institution,
+	'task_array':task_array,
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
+	}
+	return render(request,'deskofficer_templates/Monthly_Auxillary_Deduction_Generated_Merger_Transaction_period_Load.html',context)
+
+
+
+def Monthly_Auxillary_Deduction_Generated_Update_Transaction_Institution_Load(request):
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	task_array=[]
+	for task in tasks:
+		task_array.append(task.task.title)
+
+	task_enabler=TransactionEnabler.objects.filter(status="YES")
+	task_enabler_array=[]
+	for item in task_enabler:
+		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
+
+	status="ACTIVE"
+	transaction_period=TransactionPeriods.objects.get(status=status)
+	transaction_period= get_current_date(transaction_period.transaction_period)
+	items=SalaryInstitution.objects.all()
+
+	context={
+	'items':items,
+	'transaction_period':transaction_period,
+	'task_array':task_array,
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
+	}
+	return render(request,'deskofficer_templates/Monthly_Auxillary_Deduction_Generated_Update_Transaction_Institution_Load.html',context)
+
+
+
+def Monthly_Auxillary_Deduction_Generated_Update_Transaction_period_Load(request,pk):
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	task_array=[]
+	for task in tasks:
+		task_array.append(task.task.title)
+
+
+
+	task_enabler=TransactionEnabler.objects.filter(status="YES")
+	task_enabler_array=[]
+	for item in task_enabler:
+		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
+	form=TransactionPeriod_form(request.POST or None)
+	salary_institution=SalaryInstitution.objects.get(id=pk)
+	records=[]
+	transaction_period=get_current_date(now)
+	button_show=False
+	if request.method == 'POST':
+		transaction_period_id = request.POST.get('transaction_period')
+		date_format = '%Y-%m-%d'
+		dtObj = datetime.datetime.strptime(transaction_period_id, date_format)
+		transaction_period=get_current_date(dtObj)
+		
+		
+		records=MonthlyDeductionListGenerated.objects.filter(salary_institution=salary_institution,transaction_period=transaction_period).order_by('member__coop_no')
+		if records:
+			button_show=True
+
+	form.fields['transaction_period'].initial=get_current_date(now)	
+	context={
+	'transaction_period':transaction_period,
+	'records':records,
+	'button_show':button_show,
+	'form':form,
+	'salary_institution':salary_institution,
+	'task_array':task_array,
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
+	}
+
+
+	return render(request,'deskofficer_templates/Monthly_Auxillary_Deduction_Generated_Update_Transaction_period_Load.html',context)
+
+
+	
+def Monthly_Deduction_Generated_Update_Details_load(request,pk):
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	task_array=[]
+	for task in tasks:
+		task_array.append(task.task.title)
+
+	task_enabler=TransactionEnabler.objects.filter(status="YES")
+	task_enabler_array=[]
+	for item in task_enabler:
+		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
+	member=MonthlyDeductionListGenerated.objects.get(id=pk)
+	
+	salary_institution=member.member.salary_institution
+	transaction_period=member.transaction_period
+
+	records=MonthlyDeductionList.objects.filter(member=member.member,transaction_period=transaction_period)
+	
+
+	queryset=  MonthlyDeductionList.objects.filter(transaction_period=transaction_period,salary_institution=salary_institution,member=member.member).aggregate(total_cash=Sum('amount'))
+	total_amount=queryset['total_cash']
+	
+	queryset1=  StandingOrderAccounts.objects.filter(transaction__member=member.member).aggregate(total_cash=Sum('amount'))
+	total_schedule=queryset1['total_cash']
+	
+
+	record_array=[]
+	for item in records:
+		standing_order_amount=0
+		if StandingOrderAccounts.objects.filter(transaction__account_number=item.account_number).exists():
+			standing_order=StandingOrderAccounts.objects.get(transaction__account_number=item.account_number)
+			standing_order_amount=standing_order.amount
+
+		if PersonalLedger.objects.filter(account_number=item.account_number).exists():
+			ledger=PersonalLedger.objects.filter(account_number=item.account_number).last()
+
+			if item.transaction.source.title == 'SAVINGS':
+				record_array.append((ledger.transaction.name,ledger.account_number,abs(ledger.balance),standing_order_amount,item.amount,item.pk))
+			else:
+				if LoansRepaymentBase.objects.filter(loan_number=ledger.account_number).exists():
+					loan_repay = LoansRepaymentBase.objects.get(loan_number=ledger.account_number)
+					total_schedule=float(total_schedule)+float(loan_repay.repayment)
+					record_array.append((ledger.transaction.name,ledger.account_number,abs(ledger.balance),loan_repay.repayment,item.amount,item.pk))
+
+	context={
+	'total_schedule':total_schedule,
+	'total_amount':total_amount,
+	'record_array':record_array,
+	'member':member,
+	'transaction_period':transaction_period,
+	'records':records,
+	'pk':pk,
+	'salary_institution':salary_institution,
+	'task_array':task_array,
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
+	}
+	return render(request,'deskofficer_templates/Monthly_Deduction_Generated_Update_Details_load.html',context)
+
+
+
+
+def Monthly_Deduction_Generated_Update_Details_Process(request,pk):
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	task_array=[]
+	for task in tasks:
+		task_array.append(task.task.title)
+
+	task_enabler=TransactionEnabler.objects.filter(status="YES")
+	task_enabler_array=[]
+	for item in task_enabler:
+		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
+
+	form = Monthly_Deduction_Generated_Update_Details_Process_Form(request.POST or None)
+	record=MonthlyDeductionList.objects.get(id=pk)
+	member=record.member
+	transaction_period=record.transaction_period
+
+	transaction_period=record.transaction_period
+	salary_institution=record.salary_institution
+
+	if request.method=='POST':
+		chk_update=request.POST.get('chk_update')
+		amount=request.POST.get('amount')	
+		record.amount=amount
+		record.save()
+		queryset=  MonthlyDeductionList.objects.filter(transaction_period=transaction_period,salary_institution=salary_institution,member=member).aggregate(total_cash=Sum('amount'))
+		total_amount=queryset['total_cash']
+		MonthlyDeductionListGenerated.objects.filter(member=member,transaction_period=transaction_period,salary_institution=salary_institution).update(amount=total_amount,balance=F('amount')-F('amount_deducted'))
+		query=MonthlyDeductionListGenerated.objects.get(member=member,transaction_period=transaction_period,salary_institution=salary_institution)
+		return HttpResponseRedirect(reverse('Monthly_Deduction_Generated_Update_Details_load',args=(query.pk,)))
+	
+
+	form.fields['existing_amount'].initial=record.amount
+	context={
+	'transaction_period':transaction_period,
+	'member':member,
+	'record':record,
+	'form':form,
+	'salary_institution':salary_institution,
+	'task_array':task_array,
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
+	}
+	return render(request,'deskofficer_templates/Monthly_Deduction_Generated_Update_Details_Process.html',context)
+
+def Monthly_Deduction_Generated_Update_Details_Remove(request,pk):
+	
+	record=MonthlyDeductionList.objects.get(id=pk)
+	member=record.member
+	transaction_period=record.transaction_period
+	transaction_period=record.transaction_period
+	salary_institution=record.salary_institution
+	record.delete()
+	queryset=  MonthlyDeductionList.objects.filter(transaction_period=transaction_period,salary_institution=salary_institution,member=member).aggregate(total_cash=Sum('amount'))
+	total_amount=queryset['total_cash']
+	MonthlyDeductionListGenerated.objects.filter(member=member,transaction_period=transaction_period,salary_institution=salary_institution).update(amount=total_amount,balance=F('amount')-F('amount_deducted'))
+	query=MonthlyDeductionListGenerated.objects.get(member=member,transaction_period=transaction_period,salary_institution=salary_institution)
+	return HttpResponseRedirect(reverse('Monthly_Deduction_Generated_Update_Details_load',args=(query.pk,)))
+	
+
+
+def Monthly_Deduction_Generated_Update_Details_Add_Savings(request,pk,trans_id,salary_id, return_pk):
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	task_array=[]
+	for task in tasks:
+		task_array.append(task.task.title)
+
+	task_enabler=TransactionEnabler.objects.filter(status="YES")
+	task_enabler_array=[]
+	for item in task_enabler:
+		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+	member=Members.objects.get(id=pk)
+	transaction_period=trans_id
+	salary_institution=SalaryInstitution.objects.get(id=salary_id)
+	records = StandingOrderAccounts.objects.filter(transaction__member=member)
+
+	context={
+	'transaction_period':transaction_period,
+	'member':member,
+	'records':records,
+	'return_pk':return_pk,
+	'salary_institution':salary_institution,
+	'task_array':task_array,
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
+	}
+	return render(request,'deskofficer_templates/Monthly_Deduction_Generated_Update_Details_Add_Savings.html',context)
+
+
+def Monthly_Deduction_Generated_Update_Details_Add_Savings_Select(request,pk,member_pk,trans_id,salary_id,return_pk):
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	task_array=[]
+	for task in tasks:
+		task_array.append(task.task.title)
+
+	task_enabler=TransactionEnabler.objects.filter(status="YES")
+	task_enabler_array=[]
+	for item in task_enabler:
+		task_enabler_array.append(item.title)
+	tdate=get_current_date(now)
+	processed_by=CustomUser.objects.get(id=request.user.id)
+	processed_by=processed_by.username
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+	member=Members.objects.get(id=member_pk)
+	transaction_period=trans_id
+	salary_institution=SalaryInstitution.objects.get(id=salary_id)
+	record = StandingOrderAccounts.objects.get(id=pk)
+
+
+
+	if MonthlyDeductionList.objects.filter(member=member,transaction=record.transaction.transaction,transaction_period=transaction_period,salary_institution=salary_institution).exists():
+		messages.error(request,'This record already exist')
+		return HttpResponseRedirect(reverse('Monthly_Deduction_Generated_Update_Details_Add_Savings',args=(member_pk,trans_id,salary_institution.pk,return_pk)))
+
+
+	MonthlyDeductionList(member=member,transaction=record.transaction.transaction,account_number=record.transaction.account_number,transaction_period=transaction_period,salary_institution=salary_institution,amount=record.amount,tdate=tdate,processed_by=processed_by).save()
+	queryset=  MonthlyDeductionList.objects.filter(transaction_period=transaction_period,salary_institution=salary_institution,member=member).aggregate(total_cash=Sum('amount'))
+	total_amount=queryset['total_cash']
+
+	MonthlyDeductionListGenerated.objects.filter(member=member,transaction_period=transaction_period,salary_institution=salary_institution).update(amount=total_amount,balance=F('amount')-F('amount_deducted'))
+	query=MonthlyDeductionListGenerated.objects.get(member=member,transaction_period=transaction_period,salary_institution=salary_institution)
+	return HttpResponseRedirect(reverse('Monthly_Deduction_Generated_Update_Details_load',args=(return_pk,)))
+	
+	
+
+def Monthly_Deduction_Generated_Update_Details_Add_Loans(request,pk,trans_id,salary_id, return_pk):
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	task_array=[]
+	for task in tasks:
+		task_array.append(task.task.title)
+
+	task_enabler=TransactionEnabler.objects.filter(status="YES")
+	task_enabler_array=[]
+	for item in task_enabler:
+		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+	member=Members.objects.get(id=pk)
+	transaction_period=trans_id
+	salary_institution=SalaryInstitution.objects.get(id=salary_id)
+	records = LoansRepaymentBase.objects.filter(member=member,schedule_status="SCHEDULED").filter(Q(balance__lt=0))
+
+	context={
+	'transaction_period':transaction_period,
+	'member':member,
+	'records':records,
+	'return_pk':return_pk,
+	'salary_institution':salary_institution,
+	'task_array':task_array,
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
+	}
+	return render(request,'deskofficer_templates/Monthly_Deduction_Generated_Update_Details_Add_Loans.html',context)
+
+
+
+def Monthly_Deduction_Generated_Update_Details_Add_Loans_Select(request,pk,member_pk,trans_id,salary_id,return_pk):
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	task_array=[]
+	for task in tasks:
+		task_array.append(task.task.title)
+
+	task_enabler=TransactionEnabler.objects.filter(status="YES")
+	task_enabler_array=[]
+	for item in task_enabler:
+		task_enabler_array.append(item.title)
+	tdate=get_current_date(now)
+	processed_by=CustomUser.objects.get(id=request.user.id)
+	processed_by=processed_by.username
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+	member=Members.objects.get(id=member_pk)
+	transaction_period=trans_id
+	salary_institution=SalaryInstitution.objects.get(id=salary_id)
+	record = LoansRepaymentBase.objects.get(id=pk)
+
+
+
+	if MonthlyDeductionList.objects.filter(member=member,transaction=record.transaction,transaction_period=transaction_period,salary_institution=salary_institution).exists():
+		messages.error(request,'This record already exist')
+		return HttpResponseRedirect(reverse('Monthly_Deduction_Generated_Update_Details_Add_Savings',args=(member_pk,trans_id,salary_institution.pk,return_pk)))
+
+
+	MonthlyDeductionList(member=member,transaction=record.transaction,account_number=record.loan_number,transaction_period=transaction_period,salary_institution=salary_institution,amount=record.repayment,tdate=tdate,processed_by=processed_by).save()
+	queryset=  MonthlyDeductionList.objects.filter(transaction_period=transaction_period,salary_institution=salary_institution,member=member).aggregate(total_cash=Sum('amount'))
+	total_amount=queryset['total_cash']
+
+	MonthlyDeductionListGenerated.objects.filter(member=member,transaction_period=transaction_period,salary_institution=salary_institution).update(amount=total_amount,balance=F('amount')-F('amount_deducted'))
+	query=MonthlyDeductionListGenerated.objects.get(member=member,transaction_period=transaction_period,salary_institution=salary_institution)
+	return HttpResponseRedirect(reverse('Monthly_Deduction_Generated_Update_Details_load',args=(return_pk,)))
+	
+	
+
+
+
+def Monthly_Auxillary_Deduction_Generated_Export_Institution_Load(request):
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	task_array=[]
+	for task in tasks:
+		task_array.append(task.task.title)
+
+	task_enabler=TransactionEnabler.objects.filter(status="YES")
+	task_enabler_array=[]
+	for item in task_enabler:
+		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
+
+	status="ACTIVE"
+	transaction_period=TransactionPeriods.objects.get(status=status)
+	transaction_period= get_current_date(transaction_period.transaction_period)
+	items=SalaryInstitution.objects.all()
+
+	context={
+	'items':items,
+	'transaction_period':transaction_period,
+	'task_array':task_array,
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
+	}
+	return render(request,'deskofficer_templates/Monthly_Auxillary_Deduction_Generated_Export_Institution_Load.html',context)
+
+
+
+def Monthly_Auxillary_Deduction_Generated_Export_period_Load(request,pk):
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	task_array=[]
+	for task in tasks:
+		task_array.append(task.task.title)
+
+
+
+	task_enabler=TransactionEnabler.objects.filter(status="YES")
+	task_enabler_array=[]
+	for item in task_enabler:
+		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
+	form=TransactionPeriod_form(request.POST or None)
+	salary_institution=SalaryInstitution.objects.get(id=pk)
+	records=[]
+	transaction_period=get_current_date(now)
+	button_show=False
+	if request.method == 'POST':
+		transaction_period_id = request.POST.get('transaction_period')
+		date_format = '%Y-%m-%d'
+		dtObj = datetime.datetime.strptime(transaction_period_id, date_format)
+		transaction_period=get_current_date(dtObj)
+		
+		
+		records=MonthlyDeductionListGenerated.objects.filter(salary_institution=salary_institution,transaction_period=transaction_period).order_by('member__coop_no')
+		button_show=False
+		if records:
+			button_show=True
+
+	form.fields['transaction_period'].initial=get_current_date(now)	
+	context={
+	'transaction_period':transaction_period,
+	'records':records,
+	'button_show':button_show,
+	'form':form,
+	'salary_institution':salary_institution,
+	'task_array':task_array,
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
+	}
+
+
+	return render(request,'deskofficer_templates/Monthly_Auxillary_Deduction_Generated_Export_period_Load.html',context)
+
+
+
+
+def AuxillarySeperation(request):
+
+	response = HttpResponse(content_type='application/ms-excel')
+	response['Content-Disposition'] = 'attachment; filename="AuxillarySeperation.xls"'
+
+	wb = xlwt.Workbook(encoding='utf-8')
+	ws = wb.add_sheet('Users Data') # this will make a sheet named Users Data
+
+	row_num = 0  # Sheet header, first row
+
+	font_style = xlwt.XFStyle()
+	font_style.font.bold = True
+
+	columns = ['Member ID', 'IPPIS No', 'Name','Amount','Amount Deducted','Difference']
+
+	for col_num in range(len(columns)):
+		ws.write(row_num, col_num, columns[col_num], font_style) # at 0 row 0 column
+
+	font_style = xlwt.XFStyle()  # Sheet body, remaining rows
+
+	rows = MonthlyDeductionListGenerated.objects.filter(~Q(amount=F('amount_deducted'))).values_list('member__coop_no','member__ippis_no','member__full_name', 'amount', 'amount_deducted','balance').order_by('member__coop_no')
+
+	for row in rows:
+		row_num += 1
+		for col_num in range(len(row)):
+			ws.write(row_num, col_num, row[col_num], font_style)
+	wb.save(response)
+
+	return response
+
 
 
 def Monthly_Unbalanced_transactions_Processing(request,pk):
@@ -10502,7 +11702,7 @@ def Manual_Ledger_Posting_Loans_Processing_load(request,pk,trans_id,member_pk):
 
 			loan.status="INACTIVE"
 			loan.save()
-					
+
 		if loan_cleared_status:
 			PersonalLedger.objects.filter(account_number=account_number).update(status="INACTIVE")
 
@@ -12940,10 +14140,7 @@ def Uploading_Existing_Savings_validate(request,pk):
 
 	member=Members.objects.get(id=pk)
 	tdate=get_current_date(now)
-
 	if SavingsUploaded.objects.filter(transaction__member=member,status=status).exists():
-
-
 		records=SavingsUploaded.objects.filter(transaction__member=member,status=status)
 
 		for item in records:
@@ -12966,8 +14163,10 @@ def Uploading_Existing_Savings_validate(request,pk):
 			# MembersAccountsDomain.objects.exclude(id=member_selected.id).delete()
 
 			if PersonalLedger.objects.filter(member=member,transaction=transaction,account_number=account_number).exists():
-				messages.success(request,"Record Already Uploaded for this Member, Consult the Administrator")
-				return HttpResponseRedirect(reverse('Uploading_Existing_Savings_Preview',args=(pk,)))
+				item.status='TREATED'
+				item.save()
+				# messages.success(request,"Record Already Uploaded for this Member, Consult the Administrator")
+				# return HttpResponseRedirect(reverse('Uploading_Existing_Savings_Preview',args=(pk,)))
 			else:
 				post_to_ledger(
 							member,
@@ -12994,9 +14193,9 @@ def Uploading_Existing_Savings_validate(request,pk):
 				standing_order.save()
 
 
-			transaction_status='TREATED'
+		
 
-			item.status=transaction_status
+			item.status='TREATED'
 			item.save()
 
 		member.savings_status=savings_status
@@ -13103,13 +14302,8 @@ def Uploading_Existing_Savings_Preview_All(request,pk):
 	member_id=Members.objects.get(id=pk)
 
 	records=SavingsUploaded.objects.filter(transaction__member=member_id)
-	
-
 	transaction_status='UNTREATED'
 	status="ACTIVE"
-
-
-
 	context={
 	'member':member_id,
 	
@@ -13175,6 +14369,13 @@ def Unvalidated_Savings(request):
 	'default_password':default_password,
 	}
 	return render(request,'deskofficer_templates/Unvalidated_Savings.html',context)
+
+
+def Unvalidated_Savings_Delete(request,pk):
+	SavingsUploaded.objects.filter(id=pk).delete()
+	return  HttpResponseRedirect(reverse("Unvalidated_Savings"))
+
+	
 
 
 
@@ -13331,6 +14532,101 @@ def Members_without_Compulsory_Savings_Loans(request,pk):
 
 
 
+def Uploading_Existing_Savings_Done_Selected_List_Search(request):
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	task_array=[]
+	for task in tasks:
+		task_array.append(task.task.title)
+
+	task_enabler=TransactionEnabler.objects.filter(status="YES")
+	task_enabler_array=[]
+	for item in task_enabler:
+		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
+	title="Search Members for Savings Posted"
+	form = searchForm(request.POST or None)
+
+	return render(request,'deskofficer_templates/Uploading_Existing_Savings_Done_Selected_List_Search.html',{'form':form,'title':title,'task_array':task_array,
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
+	})
+
+
+
+def Uploading_Existing_Savings_Done_Selected_List_load(request):
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	task_array=[]
+	for task in tasks:
+		task_array.append(task.task.title)
+
+	task_enabler=TransactionEnabler.objects.filter(status="YES")
+	task_enabler_array=[]
+	for item in task_enabler:
+		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
+	title="LIST OF MEMBERS"
+	form = searchForm(request.POST)
+	status="ACTIVE"
+	if request.method == "POST":
+		if request.POST.get("title")=="":
+			return HttpResponseRedirect(reverse('Uploading_Existing_Savings_Done_Selected_List_Search'))
+
+		records=searchMembers(form['title'].value(),status)
+
+		context={
+		'records':records,
+		'title':title,
+		'task_array':task_array,
+		'task_enabler_array':task_enabler_array,
+		'default_password':default_password,
+		}
+		return render(request,'deskofficer_templates/Uploading_Existing_Savings_Done_Selected_List_load.html',context)
+
+
+
+
+def Uploading_Existing_Savings_Done_Selected_View_Details(request,pk):
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	task_array=[]
+	for task in tasks:
+		task_array.append(task.task.title)
+
+	task_enabler=TransactionEnabler.objects.filter(status="YES")
+	task_enabler_array=[]
+	for item in task_enabler:
+		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
+
+	member=Members.objects.get(id=pk)
+
+	records=SavingsUploaded.objects.filter(transaction__member=member)
+	
+	
+
+	context={
+	'records':records,
+	'member':member,
+	'task_array':task_array,
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
+	}
+	return render(request,'deskofficer_templates/Uploading_Existing_Savings_Done_Selected_View_Details.html',context)
+
+
+
+
 def Uploading_Existing_Savings_Done_List_Select_Period(request):
 	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
 	task_array=[]
@@ -13405,8 +14701,8 @@ def Uploading_Existing_Savings_Done_List_load(request,transaction_period,tdate):
 		t_date=get_current_date(dtObj)
 
 		queryset=SavingsUploaded.objects.filter(Q(tdate__year=t_date.year,tdate__month=t_date.month,tdate__day=t_date.day)).order_by('transaction__member__coop_no').values_list('transaction__member__member_id',
-																																												'transaction__member__admin__last_name',
-																																												'transaction__member__admin__first_name',
+																																					'transaction__member__admin__last_name',
+																																						'transaction__member__admin__first_name',
 																																												'transaction__member__middle_name',
 																																												'transaction__member__ippis_no',
 																																												'processed_by',
@@ -21934,6 +23230,51 @@ def Members_Dashboard_Search_list_load(request):
 		return render(request,'deskofficer_templates/Members_Dashboard_Search_list_load.html',context)
 
 
+def Auxillary_Savings_Deduction_Generate_Delete(request,pk,member_pk):
+	MonthlyDeductionList.objects.filter(id=pk).delete()
+	return HttpResponseRedirect(reverse('Members_Dashboard_Load',args=(member_pk,)))
+
+
+def Auxillary_Savings_Deduction_Generate(request,pk,member_pk):
+	transaction_period=TransactionPeriods.objects.get(status='ACTIVE')
+	transaction_period=transaction_period.transaction_period
+
+
+	transaction=TransactionTypes.objects.get(id=pk)
+	member=Members.objects.get(id=member_pk)
+	
+	if StandingOrderAccounts.objects.filter(transaction__member=member,transaction__transaction=transaction).exists():
+		account=StandingOrderAccounts.objects.get(transaction__member=member,transaction__transaction=transaction)
+	else:
+		messages.error(request,'Not seen')
+		return HttpResponseRedirect(reverse('Members_Dashboard_Load',args=(member.pk,)))
+
+
+	processed_by=CustomUser.objects.get(id=request.user.id)
+	processed_by=processed_by.username
+	tdate=get_current_date(now)
+	
+	if MonthlyDeductionList.objects.filter(member=member,transaction_period=transaction_period,transaction=transaction,account_number=account.transaction.account_number).exists():
+		messages.error(request,'Already in the database')
+		return HttpResponseRedirect(reverse('Members_Dashboard_Load',args=(member.pk,)))
+
+
+	MonthlyDeductionList(
+					member=member,
+					transaction_period=transaction_period,
+					transaction=transaction,
+					account_number=account.transaction.account_number,
+					amount=account.amount,
+					balance=0,
+					processing_status="UNPROCESSED",
+					processed_by=processed_by,
+					salary_institution=member.salary_institution,
+					status="UNTREATED",
+					tdate=tdate).save()
+	return HttpResponseRedirect(reverse('Members_Dashboard_Load',args=(member.pk,)))
+
+
+
 def Members_Dashboard_Load(request,pk):
 	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
 	task_array=[]
@@ -21952,6 +23293,8 @@ def Members_Dashboard_Load(request,pk):
 	if Staff.objects.filter(admin=request.user,default_password='YES'):
 		default_password="YES"
 
+
+	form=TransactionPeriod_form(request.POST or None)
 	status='UNTREATED'
 	# 
 	member=Members.objects.get(id=pk)
@@ -21980,13 +23323,33 @@ def Members_Dashboard_Load(request,pk):
 
 	orders=StandingOrderAccounts.objects.filter(transaction__member=member)
 
+	transaction_period=TransactionPeriods.objects.get(status="ACTIVE")
+	transaction_period=transaction_period.transaction_period
+	records=MonthlyDeductionList.objects.filter(member=member,transaction_period=transaction_period)
+	
+	deduction_sum=MonthlyDeductionList.objects.filter(member=member,transaction_period=transaction_period).aggregate(total=Sum('amount'))
+	
+	total_deduction=deduction_sum['total']
+	if request.method=="POST":
+		transaction_period_id=request.POST.get('transaction_period')
+		date_format = '%Y-%m-%d'
+		dtObj = datetime.datetime.strptime(transaction_period_id, date_format)
+		
+		transaction_period=get_current_date(dtObj)
+		records=MonthlyDeductionList.objects.filter(member=member,transaction_period=transaction_period)
 
+
+	form.fields['transaction_period'].initial=get_current_date(transaction_period)
 	context={
+	'total_deduction':total_deduction,
+	'transaction_period':transaction_period,
+	'records':records,
 	'total_welfare':total_welfare,
 	'queryset':queryset,
 	'savings_array':savings_array,
 	'loans':loans,
 	'member':member,
+	'form':form,
 	'orders':orders,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
@@ -21994,6 +23357,34 @@ def Members_Dashboard_Load(request,pk):
 	}
 	return render(request,'deskofficer_templates/Members_Dashboard_Load.html',context)
 
+
+def Members_Dashboard_Loan_Ledger_transaction_details(request,pk):
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	task_array=[]
+	for task in tasks:
+		task_array.append(task.task.title)
+
+
+
+	task_enabler=TransactionEnabler.objects.filter(status="YES")
+	task_enabler_array=[]
+	for item in task_enabler:
+		task_enabler_array.append(item.title)
+
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
+	records=Display_PersonalLedger_All_Records(pk)
+
+	context={
+	'records':records,
+	'task_array':task_array,
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
+	}
+	return render(request,'deskofficer_templates/Members_Dashboard_Loan_Ledger_transaction_details.html',context)
 
 
 

@@ -1,14 +1,55 @@
 {% extends 'deskofficer_templates/base_template.html' %}
 {% load static %}
-
+{% block custom_css %}
+    <!-- PLUGINS STYLES-->
+    <link href="{% static '/cooperative/assets/vendors/DataTables/datatables.min.css' %}" rel="stylesheet" />
+   {% endblock custom_css %}
 {% block content %}
+
+      
     <div class="page-content fade-in-up">
-        <div class="row">
-            <div class="col-xl-8">
+<div class="row">
+            <div class="col-xl-12">
                 <div class="ibox">
                     <div class="ibox-head">
-                        <div class="ibox-title">SAVINGS TRANSACTIONS</div>
+                        <div class="ibox-title">{{member.get_full_name}} | {{member.coop_no}} | {{member.ippis_no}} <a href="{% url 'Members_Dashboard_Search' %}" class="btn btn-secondary">Back</a></div>
                     </div>
+                
+                </div>
+            </div>
+      
+        </div>
+
+
+
+        <div class="row">
+            <div class="col-xl-12">
+                <div class="ibox">
+                    <div class="ibox-head">
+                        <div class="ibox-title">SAVINGS TRANSACTIONS  </div>
+                    </div>
+                     <div class="form-group">
+                                  {% if messages %}
+                                    
+                                      {% for message in messages %}
+                                      {% if message.tags == "error" %}
+                                      <div class="alert alert-danger" style="margin-top:10px">{{message}}</div>
+                                      
+                                      {% endif %}
+
+                                      {% if message.tags == "success" %}
+                                      <div class="alert alert-success" style="margin-top:10px">{{message}}</div>
+                                      
+                                      {% endif %}
+                                       {% if message.info == "info" %}
+                                      <div class="alert alert-success" style="margin-top:10px">{{message}}</div>
+                                      
+                                      {% endif %}
+                                      {% endfor %}
+                                  
+                                  {% endif %}
+                              </div>
+
                     <div class="ibox-body">
                         <table class="table table-striped">
                             <thead>
@@ -37,10 +78,60 @@
                     </div>
                 </div>
             </div>
-             <div class="col-xl-4">
+          =>
+        </div>
+
+        <div class="row">
+            <div class="col-xl-12">
                 <div class="ibox">
                     <div class="ibox-head">
-                        <div class="ibox-title">OTHERS TRANSACTIONS</div>
+                        <div class="ibox-title">LOAN TRANSACTIONS  </div>
+                    </div>
+                    <div class="ibox-body">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Transaction</th>
+                                    <th>Loan Number</th>
+                                    <th>loan Amount</th>
+                                    <th>Amount Paid</th>
+                                    <th>Balance</th>
+                                    <th>Repayment</th>
+                                    <th>Start Date</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            {% for loan in loans %}
+                                <tr>
+                                    <td>{{forloop.counter}}</td>
+                                    <td>{{loan.transaction.name}}</td>
+                                    <td>{{loan.loan_number}}</td>
+                                    <td>{{loan.loan_amount}}</td>
+                                    <td>{{loan.amount_paid}}</td>
+                                   
+                                    <td>({% widthratio loan.balance 1 -1 %})</td>
+                                    <td><a href="" class="btn btn-success">{{loan.repayment}}</a>
+                                    </td>
+                                    <td>{{loan.start_date}}</td>
+                                    <td><a href="{% url 'Members_Dashboard_Loan_Ledger_transaction_details' loan.loan_number %}" class="btn btn-primary">View</a></td>
+                             
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+           
+            <div class="col-xl-12">
+                <div class="ibox">
+                    <div class="ibox-head">
+                        <div class="ibox-title">OTHERS TRANSACTIONS </div>
                     </div>
                     <div class="ibox-body">
                         <table class="table table-striped">
@@ -75,6 +166,15 @@
                                    
                                     <td><a href="" class="btn btn-primary">View</a></td>
                                  
+                                </tr> 
+                                <tr>
+                                    <td>3</td>
+                                    <td>Shares</td>
+                                    <td>0.00</td>
+                                 
+                                   
+                                    <td><a href="" class="btn btn-primary">View</a></td>
+                                 
                                 </tr>
                           
                             </tbody>
@@ -83,55 +183,11 @@
                 </div>
             </div>
         </div>
-
-        <div class="row">
+        <div class="row">          
             <div class="col-xl-12">
                 <div class="ibox">
                     <div class="ibox-head">
-                        <div class="ibox-title">LOAN TRANSACTIONS</div>
-                    </div>
-                    <div class="ibox-body">
-                        <table class="table table-hover">
-                            <thead>
-                                <tr>
-                                    <th>#</th>
-                                    <th>Transaction</th>
-                                    <th>Loan Number</th>
-                                    <th>loan Amount</th>
-                                    <th>Amount Paid</th>
-                                    <th>Balance</th>
-                                    <th>Start Date</th>
-                                    <th>Stop Date</th>
-                                    <th>Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                            {% for loan in loans %}
-                                <tr>
-                                    <td>{{forloop.counter}}</td>
-                                    <td>{{loan.transaction.name}}</td>
-                                    <td>{{loan.loan_number}}</td>
-                                    <td>{{loan.loan_amount}}</td>
-                                    <td>{{loan.amount_paid}}</td>
-                                   
-                                    <td>({% widthratio loan.balance 1 -1 %})</td>
-                                    <td>{{loan.start_date}}</td>
-                                    <td>{{loan.stop_date}}</td>
-                                    <td><a href="{% url 'membership_termination_approved_transaction_details' loan.loan_number %}" class="btn btn-primary">View</a></td>
-                             
-                                </tr>
-                            {% endfor %}
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="row">          
-            <div class="col-xl-8">
-                <div class="ibox">
-                    <div class="ibox-head">
-                        <div class="ibox-title">Standing Orders</div>
+                        <div class="ibox-title">Standing Orders </div>
                     </div>
                     <div class="ibox-body">
                         <table class="table table-bordered">
@@ -142,6 +198,7 @@
                                     <th>Amount</th>
                                     <th>Effective Date</th>
                                     <th>Status</th>
+                                    <th>Action</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -152,6 +209,11 @@
                                     <td>{{item.amount}}</td>
                                     <td>{{item.updated_at|date:"D, d M, Y"}}</td>
                                     <td>{{item.status}}</td>
+                                    <td>
+                                      {% comment %}
+                                        <a href="{% url 'Auxillary_Savings_Deduction_Generate' item.transaction.transaction.pk member.pk %}" class="btn btn-primary">Generate</a>
+                                   {% endcomment %}
+                                   </td>
                                 </tr>
                             {% endfor %}
                             </tbody>
@@ -161,10 +223,105 @@
             </div>
         </div>
 
-        
+      
+        <div class="row">  
+             <div class="col-md-4">
+                        <div class="ibox">
+                            <div class="ibox-head">
+                                <div class="ibox-title">Monthly Deduction Period</div>
+                                
+                            </div>
+                            <div class="ibox-body">
+                               <form  method="POST" action="" enctype="multipart/form-data" novalidate>
+                                         {% csrf_token %}
+                                    <div class="row">
+                                        <div class="col-sm-12 form-group">
+                                            <label>Transaction Period</label>
+                                            {{form.transaction_period}}
+                                        </div>
+                                        
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <button class="btn btn-info" type="submit">Search</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+            <div class="col-xl-8">
+                <div class="ibox">
+                    <div class="ibox-head">
+                        <div class="ibox-title">Monthly Deduction | {{transaction_period}}</div>
+                    </div>
+                    <div class="ibox-body">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                   
+                                    <th>Transaction</th>
+                                    <th>Account No</th>
+                                    <th>Amount</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                               {% for record in records %}
+                                    <tr>
+                                        <td>{{forloop.counter}}</td>
+                                   
+                                        <td>{{record.transaction.name}}</td>
+                                        <td>{{record.account_number}}</td>
+                                        <td>{{record.amount}}</td>
+                                        <td>
+                                           {% comment %} <a href="{% url 'Auxillary_Savings_Deduction_Generate_Delete' record.pk member.pk %}" class="btn btn-danger">Drop</a>
+                                        {% endcomment %}
+                                       </td>
+                           
+                                    </tr>
+                                {% endfor %}
+                                <tr>
+                                    <td colspan="3"> TOTAL</td>
+                                    <td>{{total_deduction}}</td>
+                                    <td></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
+  
+    
+    <!-- BEGIN PAGA BACKDROPS-->
     <div class="sidenav-backdrop backdrop"></div>
     <div class="preloader-backdrop">
         <div class="page-preloader">Loading</div>
     </div>
-{% endblock %}
+    <!-- END PAGA BACKDROPS-->
+{% endblock content %}
+
+{% block custom_js %}
+    <!-- PAGE LEVEL PLUGINS-->
+    <script src="{% static '/cooperative//assets/vendors/DataTables/datatables.min.js' %}" type="text/javascript"></script>
+   
+    <!-- PAGE LEVEL SCRIPTS-->
+    <script type="text/javascript">
+        $(function() {
+            $('#example-table').DataTable({
+                pageLength: 10,
+                //"ajax": './assets/demo/data/table_data.json',
+                /*"columns": [
+                    { "data": "name" },
+                    { "data": "office" },
+                    { "data": "extn" },
+                    { "data": "start_date" },
+                    { "data": "salary" }
+                ]*/
+            });
+        })
+    </script>
+{% endblock custom_js %}

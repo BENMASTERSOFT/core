@@ -1,0 +1,58 @@
+{% extends 'deskofficer_templates/base_template.html' %}
+{% load static %}
+
+{% block content %}
+            <div class="page-content fade-in-up">
+               
+                <div class="row">
+                    <div class="col-xl-12">
+                        <div class="ibox">
+                            <div class="ibox-head">
+                                <div class="ibox-title">Personal Ledger Details</div>
+                            </div>
+                            <div class="ibox-body">
+                                <table class="table">
+                                    <thead class="thead-default">
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Particulars</th>
+                                            <th>Debit</th>
+                                            <th>Credit</th>
+                                            <th>Balance</th>
+                                            <th>Date</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for record in records %}
+                                        <tr>
+                                            <td>{{forloop.counter}}</td>
+                                            <td>{{record.particulars}}</td>
+                                            <td>{{record.debit}}</td>
+                                            <td>{{record.credit}}</td>
+                                            <td>
+                                            {% if record.balance < 0 %}
+                                           
+                                                ({% widthratio record.balance 1 -1 %})
+                                            {% else %}
+                                                {{record.balance}} 
+                                            {% endif %}
+                                            </td>
+                                            <td>{{record.transaction_period}}</td>
+                                         
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    
+                </div>
+               
+           
+            </div>
+  <div class="sidenav-backdrop backdrop"></div>
+    <div class="preloader-backdrop">
+        <div class="page-preloader">Loading</div>
+    </div>
+{% endblock %}

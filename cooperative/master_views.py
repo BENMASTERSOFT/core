@@ -1679,7 +1679,7 @@ def Commodity_Products_add(request,pk):
             queryset=Commodity_Product_List(sub_category=sub_category,product_name=product_name.strip(),product_model=product_model.strip(),details=details.strip(),status="ACTIVE")
             messages.success(request,'Record Submitted Successfully')
             queryset.save()
-       
+
 
         return HttpResponseRedirect(reverse('Commodity_Products_add',args=(pk,)))
     context={
@@ -1694,7 +1694,7 @@ def Commodity_Products_add(request,pk):
 def Commodity_Products_add_Delete(request,pk,return_pk):
     record=Commodity_Product_List.objects.get(id=pk)
     record.delete()
-   
+
     return HttpResponseRedirect(reverse('Commodity_Products_add',args=(return_pk,)))
 
 
@@ -1702,7 +1702,7 @@ def Commodity_Products_add_Delete(request,pk,return_pk):
 def Commodity_Products_add_Update_Category(request,pk,return_pk):
     Commodity_Product_List.objects.filter(id=pk).update(category=1)
 
-   
+
     return HttpResponseRedirect(reverse('Commodity_Products_add',args=(return_pk,)))
 
 
@@ -1767,7 +1767,7 @@ def Commodity_Products_Manage_Load(request,pk):
         for task in tasks:
             task_array.append(task.task.title)
     sub_category =Commodity_Category_Sub.objects.get(id=pk)
-    
+
     records=Commodity_Product_List.objects.filter(sub_category=sub_category)
 
     context={
@@ -1980,7 +1980,7 @@ def Product_Linking_Sub_Category_Load(request,period_obj,batch_obj,transaction_o
         tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
         for task in tasks:
             task_array.append(task.task.title)
-    
+
     company=Companies.objects.get(id=company_pk)
     period=Commodity_Period.objects.get(id=period_obj)
     batch=Commodity_Period_Batch.objects.get(id=batch_obj)
@@ -2036,7 +2036,7 @@ def Product_Linking_Details(request,pk,period_pk,batch_pk,transaction_pk,company
 
 
 def Product_Linking_Details_Preview(request,comp_pk,pk,period_pk,batch_pk,transaction_pk,cat_pk,sub_cat):
-   
+
     task_array=[]
     if not request.user.user_type == '1':
         tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
@@ -2046,7 +2046,7 @@ def Product_Linking_Details_Preview(request,comp_pk,pk,period_pk,batch_pk,transa
     processed_by=processed_by.username
 
     form=Product_Linking_Details_Preview_form(request.POST or None)
-    
+
     company=Companies.objects.get(id=comp_pk)
     product=Commodity_Product_List.objects.get(id=pk)
 
@@ -2056,7 +2056,7 @@ def Product_Linking_Details_Preview(request,comp_pk,pk,period_pk,batch_pk,transa
         coop_price_enabled=True
 
     if request.method == "POST":
-       
+
         period=Commodity_Period.objects.get(id=period_pk)
         batch=Commodity_Period_Batch.objects.get(id=batch_pk)
 
@@ -2070,9 +2070,9 @@ def Product_Linking_Details_Preview(request,comp_pk,pk,period_pk,batch_pk,transa
                 messages.error(request,'Company Price Missing')
                 return HttpResponseRedirect(reverse('Product_Linking_Details',args=(sub_cat,period_pk,batch_pk,transaction_pk,comp_pk,cat_pk,)))
 
-        else:                
+        else:
             coop_amount=float(amount) + (float(product.sub_category.category.interest_rate)/100)*float(amount)
-        
+
 
         if not amount:
             messages.error(request,'Company Price Missing')
@@ -2114,7 +2114,7 @@ def Product_UnLinking_Process(request,comp_pk,pk,period_pk, batch_pk, transactio
 
     messages.success(request,"Record Deleted Successfully")
     return  HttpResponseRedirect(reverse('Product_Linking_Details',args=(sub_cat,period_pk,batch_pk,transaction_pk,company_pk,cat_pk)))
-    
+
 
 
 def Product_Duration_Settings_Period_Load(request):
@@ -2317,7 +2317,7 @@ def Product_Price_Settings_details(request,period_obj,batch_obj,transaction_obj,
         tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
         for task in tasks:
             task_array.append(task.task.title)
-   
+
     company=Companies.objects.get(id=company_pk)
     period=Commodity_Period.objects.get(id=period_obj)
     batch=Commodity_Period_Batch.objects.get(id=batch_obj)
@@ -2325,7 +2325,7 @@ def Product_Price_Settings_details(request,period_obj,batch_obj,transaction_obj,
     category=Commodity_Categories.objects.get(id=cat_pk)
     sub_category = Commodity_Category_Sub.objects.get(id=sub_cat)
 
-  
+
     records=Company_Products.objects.filter(company=company,period=period,batch=batch,product__sub_category__category__transaction=transaction,product__sub_category=sub_category)
 
     context={
@@ -2369,10 +2369,10 @@ def Product_Price_Settings_Update(request,comp_pk,pk):
         coop_price=0
         if coop_price_enabled:
             coop_price=request.POST.get('coop_price')
-         
+
         else:
             coop_price=float(unit_cost_price) + (float(record.product.sub_category.category.interest_rate)/100)*float(unit_cost_price)
-           
+
 
         status=request.POST.get('status')
         record.amount=unit_cost_price
@@ -2382,7 +2382,7 @@ def Product_Price_Settings_Update(request,comp_pk,pk):
         record.save()
         return HttpResponseRedirect(reverse('Product_Price_Settings_details',args=(record.period_id,record.batch_id,record.product.sub_category.category.transaction_id,
                                                                                    comp_pk,record.product.sub_category.category_id,record.product.sub_category_id, )))
-                                                                           
+
 
     form.fields['product_name'].initial=record.product.product_name
     form.fields['product_model'].initial=record.product.product_model
@@ -3248,6 +3248,34 @@ def MembersCompulsorySavings_delete(request,pk):
     record.delete()
     return HttpResponseRedirect(reverse('MembersCompulsorySavings'))
 
+def CooperativeBankAccountsDesignationHeaders_Add(request):
+    task_array=[]
+    if not request.user.user_type == '1':
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
+    items= CooperativeBankAccountsDesignationHeaders.objects.all()
+    title="Add Bank Account Designation"
+    form = CooperativeBankAccountsDesignationHeaders_Add_Form(request.POST or None)
+    if request.method ==  "POST":
+        if form.is_valid():
+            title=form.cleaned_data["title"]
+            record = CooperativeBankAccountsDesignationHeaders(title=title.upper())
+            record.save()
+            messages.success(request,"Record Added Successfully")
+        return	HttpResponseRedirect(reverse('CooperativeBankAccountsDesignationHeaders_Add'))
+    context={
+    'task_array':task_array,
+    'form':form,
+    'items':items,
+    'url':'CooperativeBankAccountsDesignationHeaders_Add',
+    'button_text':"Add",
+    'title':title,
+    }
+    return render(request,'master_templates/add_single_item.html', context)
+
+
+
 
 def addState(request):
     task_array=[]
@@ -3346,7 +3374,7 @@ def BankAccounts_Designation_Process(request,pk):
     records=CooperativeBankAccountsOperationalDesignations.objects.filter(account=bank)
     if request.method == "POST":
         transaction_id=request.POST.get('transactions')
-        transaction=TransactionTypes.objects.get(id=transaction_id)
+        transaction=CooperativeBankAccountsDesignationHeaders.objects.get(id=transaction_id)
 
         CooperativeBankAccountsOperationalDesignations(account=bank,transaction=transaction,status='ACTIVE').save()
         return HttpResponseRedirect(reverse('BankAccounts_Designation_Process',args=(pk,)))
@@ -3358,6 +3386,13 @@ def BankAccounts_Designation_Process(request,pk):
     'records':records,
     }
     return render(request,'master_templates/BankAccounts_Designation_Process.html',context)
+
+
+def BankAccounts_Designation_Delete(request,pk):
+    record=CooperativeBankAccountsOperationalDesignations.objects.get(id=pk)
+    pk=record.account.pk
+    record.delete()
+    return HttpResponseRedirect(reverse('BankAccounts_Designation_Process',args=(pk,)))
 
 
 
@@ -6838,6 +6873,42 @@ def SharesUnits_Max_Min_Values(request):
     return render(request,'master_templates/SharesUnits_Max_Min_Values.html',context)
 
 
+
+def Enable_Less_Loan_Repayment_Schudule(request):
+    task_array=[]
+    if not request.user.user_type == '1':
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
+    form=Enable_Less_Loan_Repayment_Schudule_form(request.POST or None)
+
+
+    if LoanLessRepaymentEnable.objects.all().exists():
+        item=LoanLessRepaymentEnable.objects.first()
+        form.fields['status'].initial=item.status
+
+
+    if request.method=="POST":
+        status=request.POST.get('status')
+
+        if LoanLessRepaymentEnable.objects.all().exists():
+            record=LoanLessRepaymentEnable.objects.first()
+            record.status=status
+            record.save()
+
+        else:
+            record=LoanLessRepaymentEnable(status=status)
+            record.save()
+        return HttpResponseRedirect(reverse('Enable_Less_Loan_Repayment_Schudule'))
+
+    context={
+    'task_array':task_array,
+    'form':form,
+    }
+    return render(request,'master_templates/Enable_Less_Loan_Repayment_Schudule.html',context)
+
+
+
 def Loan_Number_Manager(request):
     task_array=[]
     if not request.user.user_type == '1':
@@ -6869,6 +6940,38 @@ def Loan_Number_Manager(request):
     }
     return render(request,'master_templates/Loan_Number_Manager.html',context)
 
+
+def FailedLoanPenalty_Enabler(request):
+    task_array=[]
+    if not request.user.user_type == '1':
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
+
+    form=FailedLoanPenalty_Enabler_Form(request.POST or None)
+    record=[]
+    if FailedLoanPenaltyEnabler.objects.all().count()>0:
+        record=FailedLoanPenaltyEnabler.objects.first()
+
+    if request.method=="POST":
+        status=request.POST.get('status')
+
+        if FailedLoanPenaltyEnabler.objects.all().count()>0:
+            record=FailedLoanPenaltyEnabler.objects.first()
+            record.status=status
+            record.save()
+
+        else:
+            record=FailedLoanPenaltyEnabler(status=status)
+            record.save()
+        return HttpResponseRedirect(reverse('FailedLoanPenalty_Enabler'))
+    if record:
+        form.fields['status'].initial=record.status
+    context={
+    'task_array':task_array,
+    'form':form,
+    }
+    return render(request,'master_templates/FailedLoanPenalty_Enabler.html',context)
 
 def FailedLoanPenalty_Manager(request):
     task_array=[]
@@ -6908,7 +7011,7 @@ def FailedLoanPenalty_Duration_Manager(request):
         tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
         for task in tasks:
             task_array.append(task.task.title)
-    
+
     form=FailedLoanPenalty_Duration_Manager_form(request.POST or None)
 
     if FailedLoanPenaltyDuration.objects.all().count()>0:
@@ -7457,7 +7560,7 @@ def Loan_application_approval_details(request,pk):
         status=request.POST.get('approval_status')
 
 
-   
+
 
         loan_comment.approval_status=status
         loan_comment.approval_comment=comment

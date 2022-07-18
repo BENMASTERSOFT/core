@@ -7,7 +7,7 @@
                     <div class="col-xl-12">
                         <div class="ibox">
                             <div class="ibox-head">
-                                <div class="ibox-title">Basic Table</div>
+                                <div class="ibox-title">List of Unvalidated Transactions</div>
                             </div>
                             <div class="ibox-body">
                                 <table class="table">
@@ -19,6 +19,7 @@
                                             <th>Account Number</th>
                                             <th>Balance</th>
                                             <th>Schedule</th>
+                                            <th>Action</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -30,7 +31,7 @@
                                             <td>{{record.transaction.account_number}}</td>
                                             <td>{{record.balance}}</td>
                                             <td>{{record.schedule_amount}}</td>
-                                       
+                                            <td><a href="{% url 'Unvalidated_Savings_Delete' record.pk %}" class="btn btn-danger">Drop</a></td>
                                         </tr>
                                     {% endfor %}
                                     </tbody>

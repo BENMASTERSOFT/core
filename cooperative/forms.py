@@ -435,6 +435,28 @@ class addCompaniesForm(forms.ModelForm):
 
 
 
+class CooperativeBankAccountsDesignationHeaders_Add_Form(forms.ModelForm):
+   class Meta:
+      model = CooperativeBankAccountsDesignationHeaders
+      fields=['title',]
+
+      widgets = {
+      'title': forms.TextInput(attrs={'class':'form-control','placeholder':"Enter Title"})
+      }
+
+
+   def clean_title(self):
+      title = self.cleaned_data.get('title')
+      if not title:
+         raise forms.ValidationError('This field is required')
+
+      for instance in CooperativeBankAccountsDesignationHeaders.objects.all():
+         if instance.title == title:
+            raise forms.ValidationError(str(title) + ' is already created')
+      return title
+
+
+
 class addStateForm(forms.ModelForm):
    class Meta:
       model = States
@@ -454,6 +476,8 @@ class addStateForm(forms.ModelForm):
          if instance.title == title:
             raise forms.ValidationError(str(title) + ' is already created')
       return title
+
+
 
 class addExpiringDateIntervalForm(forms.ModelForm):
    class Meta:
@@ -2241,10 +2265,10 @@ class MembersWelfare_form(forms.Form):
 class Cash_Deposit_Savings_form(forms.Form):
    bank_account_list=[]
    try:
-      bank_accounts = CooperativeBankAccounts.objects.all()
+      bank_accounts = CooperativeBankAccounts.objects.filter()
 
       for bank_account in bank_accounts:
-         small_bank_account=(bank_account.id,bank_account.account_name + '-' + bank_account.account_number + '-' + bank_account.bank.title )
+         small_bank_account=(bank_account.id,f'{bank_account.bank.title}-{bank_account.account_number}')
          bank_account_list.append(small_bank_account)
    except:
       bank_account_list=[]
@@ -2457,6 +2481,8 @@ class Loan_Number_Manager_form(forms.Form):
                      widget=forms.NumberInput(attrs={'class': 'form-control','autocomplete':'off'}),
                              disabled = False, error_messages={'required': "Please Enter Loan Number"})
 
+class Enable_Less_Loan_Repayment_Schudule_form(forms.Form):
+    status = forms.ChoiceField(label="Status", choices=YESNO,widget=forms.Select(attrs={"class":"form-control"}))
 
 
 class FailedLoanPenalty_Manager_form(forms.Form):
@@ -2465,6 +2491,10 @@ class FailedLoanPenalty_Manager_form(forms.Form):
                               decimal_places=2, required=True,
                               disabled = False,
                               error_messages={'required': "Please Enter Amount Approved"})
+
+class FailedLoanPenalty_Enabler_Form(forms.Form):
+   status = forms.ChoiceField(label="Status", choices=YESNO,widget=forms.Select(attrs={"class":"form-control"}))
+
 
 
 class FailedLoanPenalty_Duration_Manager_form(forms.Form):
@@ -3624,9 +3654,9 @@ class Manage_Departments_Processing_form(forms.Form):
 class BankAccounts_Designation_Process_form(forms.Form):
    transaction_list=[]
    try:
-      transactions = TransactionTypes.objects.all()
+      transactions = CooperativeBankAccountsDesignationHeaders.objects.all()
       for transaction in transactions:
-         small_transaction=(transaction.id,transaction.name)
+         small_transaction=(transaction.id,transaction.title)
          transaction_list.append(small_transaction)
    except:
       transaction_list=[]
@@ -4138,7 +4168,7 @@ class Uploading_Existing_Savings_Done_List_Select_Period_Form(forms.Form):
 
 class Upload_Commodity_Product_Loan_Products_Select_Form(forms.Form):
    product=forms.CharField(label="Designation",max_length=255,widget=forms.TextInput(attrs={"class":"form-control",'readonly':'readonly'}),required=True)
-  
+
    amount = forms.DecimalField(initial=0,label='Loan Amount', label_suffix=" : ", min_value=0,  max_digits=20,
                               widget=forms.NumberInput(attrs={'class': 'form-control','readonly':'readonly'}),
                               decimal_places=2, required=True,
@@ -4210,7 +4240,7 @@ class Upload_Commodity_Product_Loan_Ledger_Posting_Form(forms.Form):
    loan_number = forms.IntegerField(initial=0,label='Loan Number', label_suffix=" : ", min_value=0,  required=False,
                                  widget=forms.NumberInput(attrs={'class': 'form-control','readonly':'readonly'}),
                                 disabled = False, error_messages={'required': "Please Min Unit"})
-  
+
 
 class Members_Ledger_Balance_Update_Savings_load_Form(forms.Form):
    exist_amount = forms.DecimalField(initial=0,label='Existing Amount', label_suffix=" : ", min_value=0,  max_digits=20,
@@ -4230,9 +4260,9 @@ class Members_Ledger_Balance_Update_Savings_load_Form(forms.Form):
    account_number = forms.IntegerField(initial=0,label='Account Number', label_suffix=" : ", min_value=0,  required=False,
                                  widget=forms.NumberInput(attrs={'class': 'form-control','readonly':'readonly'}),
                                 disabled = False, error_messages={'required': "Please Min Unit"})
-  
+
    account_name=forms.CharField(label="Account Name",max_length=255,widget=forms.TextInput(attrs={"class":"form-control",'readonly':'readonly'}),required=True)
-  
+
 class Members_Ledger_Balance_Update_Loan_Account_Form(forms.Form):
    loan_amount = forms.DecimalField(initial=0,label='Existing Amount', label_suffix=" : ", min_value=0,  max_digits=20,
                               widget=forms.NumberInput(attrs={'class': 'form-control',}),
@@ -4249,7 +4279,7 @@ class Members_Ledger_Balance_Update_Loan_Account_Form(forms.Form):
                               decimal_places=2, required=True,
                               disabled = False,
                               error_messages={'required': "Please Enter Amount Paid"})
-  
+
 
    balance_date = forms.DateField(label='Effective Date', label_suffix=" : ",
                                 required=True, disabled=False,
@@ -4265,9 +4295,9 @@ class Members_Ledger_Balance_Update_Loan_Account_Form(forms.Form):
    loan_number = forms.IntegerField(initial=0,label='Loan Number', label_suffix=" : ", min_value=0,  required=False,
                                  widget=forms.NumberInput(attrs={'class': 'form-control','readonly':'readonly'}),
                                 disabled = False, error_messages={'required': "Please Min Unit"})
-  
+
    loan_type=forms.CharField(label="Account Name",max_length=255,widget=forms.TextInput(attrs={"class":"form-control",'readonly':'readonly'}),required=True)
-  
+
 
 class Manual_Ledger_Posting_Ledger_details_Form(forms.Form):
    balance_amount = forms.DecimalField(initial=0,label='Existing Amount', label_suffix=" : ", min_value=0,  max_digits=20,
@@ -4284,7 +4314,7 @@ class Manual_Ledger_Posting_Ledger_details_Form(forms.Form):
                                 required=True, disabled=False,
                                 widget=DateInput(attrs={'class': 'form-control'}),
                                 error_messages={'required': "This field is required."})
-   
+
    last_transaction_period = forms.DateField(label='Last_Transaction Date', label_suffix=" : ",
                                 required=True, disabled=False,
                                 widget=DateInput(attrs={'class': 'form-control','readonly':'readonly'}),
@@ -4292,12 +4322,25 @@ class Manual_Ledger_Posting_Ledger_details_Form(forms.Form):
    account_number = forms.IntegerField(initial=0,label='Account Number', label_suffix=" : ", min_value=0,  required=False,
                                  widget=forms.NumberInput(attrs={'class': 'form-control','readonly':'readonly'}),
                                 disabled = False, error_messages={'required': "Please Min Unit"})
-  
+
    transaction=forms.CharField(label="Transaction",max_length=255,widget=forms.TextInput(attrs={"class":"form-control",'readonly':'readonly'}),required=True)
- 
+
    particulars= forms.CharField(widget=forms.Textarea(attrs={"rows":2, "cols":50}),required=True)
-   
- 
+
+
+
+class Monthly_Deduction_Generated_Update_Details_Process_Form(forms.Form):
+   existing_amount = forms.DecimalField(initial=0,label='Existing Amount', label_suffix=" : ", min_value=0,  max_digits=20,
+                              widget=forms.NumberInput(attrs={'class': 'form-control','readonly':'readonly'}),
+                              decimal_places=2, required=True,
+                              disabled = False,
+                              error_messages={'required': "Please Enter Amount Paid"})
+   amount= forms.DecimalField(initial=0,label='Amount', label_suffix=" : ", min_value=0,  max_digits=20,
+                              widget=forms.NumberInput(attrs={'class': 'form-control'}),
+                              decimal_places=2, required=True,
+                              disabled = False,
+                              error_messages={'required': "Please Enter Amount Paid"})
+
 
 # CURRENT DATE
 

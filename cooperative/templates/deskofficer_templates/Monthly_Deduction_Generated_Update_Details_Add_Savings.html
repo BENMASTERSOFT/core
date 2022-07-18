@@ -1,0 +1,61 @@
+{% extends 'deskofficer_templates/base_template.html' %}
+{% load static %}
+
+{% block content %}
+            <div class="page-content fade-in-up">
+                <div class="row">
+                
+                    <div class="col-xl-8">
+                        <div class="ibox">
+                            <div class="ibox-head">
+                                <div class="ibox-title">Standing Order| {{member.get_full_name}}|{{member.coop_no}}</div>
+                            </div>
+                            <div class="form-group">
+                                  {% if messages %}
+                                    
+                                      {% for message in messages %}
+                                      {% if message.tags == "error" %}
+                                      <div class="alert alert-danger" style="margin-top:10px">{{message}}</div>
+                                      
+                                      {% endif %}
+
+                                      
+                                      {% endfor %}
+                                  
+                                  {% endif %}
+                              </div>
+                            <div class="ibox-body">
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Description</th>
+                                            <th>Account Number</th>
+                                            <th>Amount</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for record in records %}
+                                        <tr>
+                                            <td>{{forloop.counter}}</td>
+                                            <td>{{record.transaction.transaction.name}}</td>
+                                            <td>{{record.transaction.account_number}}</td>
+                                            <td>{{record.amount}}</td>
+                                            <td><a href="{% url 'Monthly_Deduction_Generated_Update_Details_Add_Savings_Select' record.pk member.pk transaction_period salary_institution.pk return_pk %} " class="btn btn-primary">Select</a></td>
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+              
+           
+            </div>
+  <div class="sidenav-backdrop backdrop"></div>
+    <div class="preloader-backdrop">
+        <div class="page-preloader">Loading</div>
+    </div>
+{% endblock %}

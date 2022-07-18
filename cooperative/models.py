@@ -396,6 +396,15 @@ class FailedLoanPenalty(DateObjectsModels):
     def __str__(self):
         return self.code
 
+class FailedLoanPenaltyEnabler(DateObjectsModels):
+    status = models.CharField(max_length=20,choices=YESNO,default='NO')
+    class Meta(DateObjectsModels.Meta):
+        # db_table="FailedLoanPenaltyEnabler"
+        ordering = ['id']
+
+    def __str__(self):
+        return self.status
+
 
 class FailedLoanPenaltyDuration(DateObjectsModels):
     duration = models.DecimalField(max_digits=20,decimal_places = 2)
@@ -521,6 +530,24 @@ class CooperativeBankAccounts(DateObjectsModels):
     # class Meta(DateObjectsModels.Meta):
     #     db_table="Cooperative_Bank_Accounts"
 
+class CooperativeBankAccountsDesignationHeaders(DateObjectsModels):
+    title=models.CharField(max_length=255)
+
+
+    # class Meta(DateObjectsModels.Meta):
+    #     db_table="CooperativeBankAccountsDesignationHeaders"
+
+
+class CooperativeBankAccountsOperationalDesignations(DateObjectsModels):
+    account=models.ForeignKey(CooperativeBankAccounts,on_delete=models.CASCADE)
+    transaction=models.ForeignKey(CooperativeBankAccountsDesignationHeaders,on_delete=models.CASCADE)
+    status=models.CharField(max_length=20,choices=MEMBERSHIP_STATUS,default='ACTIVE')
+
+
+
+    # class Meta(DateObjectsModels.Meta):
+    #     db_table="CooperativeBankAccountsOperationalDesignations"
+
 
 class AccountsSignatories(DateObjectsModels):
     bank=models.ForeignKey(CooperativeBankAccounts,on_delete=models.CASCADE)
@@ -598,17 +625,6 @@ class TransactionTypes(DateObjectsModels):
 
     # class Meta(DateObjectsModels.Meta):
     #     db_table="Transaction_Types"
-
-
-class CooperativeBankAccountsOperationalDesignations(DateObjectsModels):
-    account=models.ForeignKey(CooperativeBankAccounts,on_delete=models.CASCADE)
-    transaction=models.ForeignKey(TransactionTypes,on_delete=models.CASCADE)
-    status=models.CharField(max_length=20,choices=MEMBERSHIP_STATUS,default='ACTIVE')
-
-
-
-    # class Meta(DateObjectsModels.Meta):
-    #     db_table="CooperativeBankAccountsOperationalDesignations"
 
 class XmasSavingsTransactionPeriod(DateObjectsModels):
     batch=models.CharField(max_length=100)
@@ -1321,12 +1337,14 @@ class MonthlyDeductionListGenerated(DateObjectsModels):
     transaction_period=models.DateField(blank=True,null=True)
     member=models.ForeignKey(Members,on_delete=models.CASCADE)
     amount=models.DecimalField(max_digits=20,decimal_places = 2,default=0)
+    aux_amount=models.DecimalField(max_digits=20,decimal_places = 2,default=0)
     amount_deducted=models.DecimalField(max_digits=20,decimal_places = 2,default=0)
     balance=models.DecimalField(max_digits=20,decimal_places = 2,default=0)
     salary_institution=models.ForeignKey(SalaryInstitution,on_delete=models.CASCADE)
     transaction_status= models.CharField(max_length=20,choices=TRANSACTION_STATUS,default='UNTREATED')
     processing_status=models.CharField(max_length=20,choices=PROCESSING_STATUS,default='UNPROCESSED')
 
+    verification=models.CharField(max_length=20, choices=YESNO,default='NO')
 
 
     # class Meta(DateObjectsModels.Meta):
@@ -1363,6 +1381,32 @@ class AccountDeductions(DateObjectsModels):
 
     # class Meta(DateObjectsModels.Meta):
     #     db_table="Account_Deductions"
+
+class AuxillaryDeductions(DateObjectsModels):
+    salary_institution=models.ForeignKey(SalaryInstitution,on_delete=models.CASCADE)
+    transaction_period=models.DateField(blank=True,null=True)
+    coop_no=models.CharField(max_length=255)
+    ippis_no=models.CharField(max_length=255)
+    name=models.CharField(max_length=255)
+    amount=models.DecimalField(max_digits=20,decimal_places = 2,default=0)
+    transaction_status= models.CharField(max_length=20,choices=TRANSACTION_STATUS,default='UNTREATED')
+
+
+    # class Meta(DateObjectsModels.Meta):
+    #     db_table="Account_Deductions"
+
+# class AuxillaryDeductionsLeftOver(DateObjectsModels):
+#     salary_institution=models.ForeignKey(SalaryInstitution,on_delete=models.CASCADE)
+#     transaction_period=models.DateField(blank=True,null=True)
+#     coop_no=models.CharField(max_length=255)
+#     ippis_no=models.CharField(max_length=255)
+#     name=models.CharField(max_length=255)
+#     amount=models.DecimalField(max_digits=20,decimal_places = 2,default=0)
+#     transaction_status= models.CharField(max_length=20,choices=TRANSACTION_STATUS,default='UNTREATED')
+
+
+#     # class Meta(DateObjectsModels.Meta):
+#     #     db_table="AuxillaryDeductionsLeftOver"
 
 
 
@@ -1403,6 +1447,13 @@ class TransactionLoanAjustmentRequest(DateObjectsModels):
 
     # class Meta(DateObjectsModels.Meta):
     #     db_table="Transaction_Loan_Adjustment_Request"
+
+class LoanLessRepaymentEnable(DateObjectsModels):
+    status= models.CharField(max_length=30,choices=YESNO,default='NO')
+
+
+    # class Meta(DateObjectsModels.Meta):
+    #     db_table="LoanLessRepaymentEnable"
 
 
 
@@ -1880,7 +1931,7 @@ class FailedLoanPenaltyRecords(DateObjectsModels):
     #     db_table="FailedLoanPenaltyRecords"
 
 
-   
+
 
 class PersonalLedgerManualPosting(DateObjectsModels):
     transaction=models.CharField(max_length=255)
@@ -2202,13 +2253,14 @@ class MonthlyJointDeductionGenerated(DateObjectsModels):
     member=models.ForeignKey(Members,on_delete=models.CASCADE)
     transaction_period=models.DateField(blank=True,null=True)
     amount=models.DecimalField(max_digits=20,decimal_places = 2,default=0)
+
     amount_deducted=models.DecimalField(max_digits=20,decimal_places = 2,default=0)
     balance=models.DecimalField(max_digits=20,decimal_places = 2,default=0)
 
     salary_institution=models.ForeignKey(SalaryInstitution,on_delete=models.CASCADE)
     status= models.CharField(max_length=20,choices=TRANSACTION_STATUS,default='UNTREATED')
     processing_status= models.CharField(max_length=20,choices=PROCESSING_STATUS,default='UNPROCESSED')
-
+    verification=models.CharField(max_length=20, choices=YESNO,default='NO')
     # class Meta(DateObjectsModels.Meta):
     #     db_table="MonthlyJointDeductionGenerated"
 

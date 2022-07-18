@@ -111,8 +111,13 @@
                                             <td>{{record.balance}}</td>
                                             <td>{{record.schedule_amount}}</td>
                                        
-                                            <td><a href="{% url 'Uploading_Existing_Savings_delete' record.pk return_pk %}" class="btn btn-danger">Remove</a></td>
-                                        </tr>
+                                            <td>
+                                                {% if record.status == 'UNTREATED' %}
+                                                <a href="{% url 'Uploading_Existing_Savings_delete' record.pk return_pk %}" class="btn btn-danger">Remove</a>
+                                                {% endif %}
+                                            </td>
+                                                
+                                            </tr>
                                     {% endfor %}
                                     </tbody>
                                 </table>

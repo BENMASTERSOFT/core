@@ -142,12 +142,15 @@
                             <li>
                                 <a href="{% url 'Loan_Number_Manager' %}">Loan Number</a>
                             </li>
-                       
+
                             <li>
                                 <a href="javascript:;">
                                     <span class="nav-label">Loan Defaulting</span><i class="fa fa-angle-left arrow"></i></a>
                                 <ul class="nav-3-level collapse">
 
+                                    <li>
+                                        <a href="{% url 'FailedLoanPenalty_Enabler' %}">Failed Loan Penalty Enabler</a>
+                                    </li>
                                     <li>
                                         <a href="{% url 'FailedLoanPenalty_Manager' %}">Failed Loan Penalty</a>
                                     </li>
@@ -157,6 +160,9 @@
                                 </ul>
                             </li>
 
+                            <li>
+                                <a href="{% url 'Enable_Less_Loan_Repayment_Schudule' %}">Enable Less Repayment Schedule</a>
+                            </li>
                              {% endif %}
                         </ul>
                     </li>
@@ -468,6 +474,18 @@
                                             </li>
                                             <li>
                                                 <a href="{% url 'Manage_state' %}">Manage State</a>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                    <li>
+                                        <a href="javascript:;">
+                                            <span class="nav-label">Bank Account Designation Header</span><i class="fa fa-angle-left arrow"></i></a>
+                                        <ul class="nav-3-level collapse">
+                                            <li>
+                                                <a href="{% url 'CooperativeBankAccountsDesignationHeaders_Add' %}">Add Header</a>
+                                            </li>
+                                            <li>
+                                                <a href="">Manage Header</a>
                                             </li>
                                         </ul>
                                     </li>

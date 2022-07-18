@@ -5,6 +5,10 @@ from cooperative.models import AccountDeductions,NorminalRoll, Stock
 class AccountDeductionsResource(resources.ModelResource):
 	class meta:
 		model = AccountDeductions
+
+class AuxillaryDeductionsResource(resources.ModelResource):
+	class meta:
+		model = AccountDeductions
 		
 class NorminalRollResource(resources.ModelResource):
 	class meta:
