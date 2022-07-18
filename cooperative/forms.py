@@ -1034,6 +1034,12 @@ class MembershipRequest_form(forms.Form):
       department_list=[]
 
    department = forms.ChoiceField(label="Department", choices=department_list,widget=forms.Select(attrs={"class":"form-control"}))
+   
+   date_applied =forms.DateField(label='Date Applied', label_suffix=" : ",
+                             required=True, disabled=False,
+                             widget=DateInput(attrs={'class': 'form-control'}),
+                             error_messages={'required': "This field is required."})
+
 
 
 class MemberShipRequestAdditionalInfo_form(forms.Form):

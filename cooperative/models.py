@@ -689,6 +689,7 @@ class MemberShipRequest(DateObjectsModels):
     date_of_first_appointment=models.DateField(blank=True,null=True)
     dob=models.DateField(blank=True,null=True)
     next_of_kin=models.CharField(max_length=255,blank=True,null=True)
+    date_applied=models.DateField(blank=True,null=True)
 
 
     # class Meta(DateObjectsModels.Meta):

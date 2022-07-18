@@ -512,6 +512,7 @@ urlpatterns = [
     path('membership_form_sales_issue/<str:pk>/', deskofficer_views.membership_form_sales_issue,name='membership_form_sales_issue'),
     path('membership_form_sales_validation/<str:pk>/', deskofficer_views.membership_form_sales_validation,name='membership_form_sales_validation'),
 
+    path('membership_form_Approved_list_load/', deskofficer_views.membership_form_Approved_list_load,name='membership_form_Approved_list_load'),
 
 
     path('Membership_Front_Form_Print/<str:pk>/', deskofficer_views.Membership_Front_Form_Print,name='Membership_Front_Form_Print'),

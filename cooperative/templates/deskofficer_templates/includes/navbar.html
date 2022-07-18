@@ -39,6 +39,9 @@
                             <a href="{% url 'membership_request_manage_search' %}">Manage Request</a>
                         </li>
                         <li>
+                            <a href="{% url 'membership_form_Approved_list_load' %}">View Approved Membership Request</a>
+                        </li> 
+                        <li>
                             <a href="{% url 'membership_form_sales_Search' %}">Membership Form Sales</a>
                         </li>
                         <li>
@@ -348,7 +351,7 @@
                         <ul class="nav-2-level collapse">
                             <li>
                                 <a href="javascript:;">
-                                    <span class="nav-label">Cash Loans</span><i class="fa fa-angle-left arrow"></i></a>
+                                    <span class="nav-label">Project Loans</span><i class="fa fa-angle-left arrow"></i></a>
                                 <ul class="nav-3-level collapse">
                                     <li>
                                         <a href="{% url 'loan_request_search' %}">Loan Request</a>
@@ -374,6 +377,27 @@
                             </li>
 
 
+                            <li>
+                                <a href="javascript:;">
+                                    <span class="nav-label">Emergency Loans</span><i class="fa fa-angle-left arrow"></i></a>
+                                <ul class="nav-3-level collapse">
+                                  
+                                    <li>
+                                        <a href="{% url 'loan_request_approved_Issue_form_period_load' %}">Loan Form Sales</a>
+                                    </li>
+                                    <li>
+                                        <a href="{% url 'loan_application_approved_period_load' %}">Loan Application</a>
+                                    </li>
+                                    <li>
+                                        <a href="{% url 'Loan_application_processing_period_load' %}">Loan Processing</a>
+                                    </li>
+                                    <li>
+                                        <a href="{% url 'loan_request_order_discard' %}">Discard Incomplete Applications</a>
+                                    </li>
+
+
+                                </ul>
+                            </li>
                             <li>
                                 <a href="javascript:;">
                                     <span class="nav-label">Commodity Loans</span><i class="fa fa-angle-left arrow"></i></a>
@@ -1030,8 +1054,8 @@
                             </li>
                         </ul>
                     </li>
-                {% endcomment %}
-
+                
+{% endcomment %}
                 {% endif %}
             </ul>
         </div>

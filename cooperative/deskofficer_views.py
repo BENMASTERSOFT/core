@@ -848,6 +848,12 @@ def membership_request(request):
 
 	form=MembershipRequest_form(request.POST or None)
 	if request.method=="POST":
+		date_applied_id=request.POST.get('date_applied')
+		
+		date_format = '%Y-%m-%d'
+		dtObj = datetime.datetime.strptime(date_applied_id, date_format)
+		date_applied=get_current_date(dtObj)
+
 
 		tdate=get_current_date(now)
 
@@ -878,12 +884,13 @@ def membership_request(request):
 								phone_number=phone_no,
 								gender=gender,
 								department=department,
+								date_applied=date_applied,
 								processed_by=processed_by.username)
 		record.save()
 
 
 		return HttpResponseRedirect(reverse('membership_request_additional_info',args=(record.pk,)))
-
+	form.fields['date_applied'].initial=get_current_date(now)
 	context={
 	'form':form,
 	'task_array':task_array,
@@ -1722,9 +1729,9 @@ def membership_form_sales_issue(request,pk):
 	applicant=MemberShipRequest.objects.get(id=pk)
 	account=[]
 	account_name=[]
-	if CooperativeBankAccountsOperationalDesignations.objects.filter(transaction__code='100').exists():
-		account = CooperativeBankAccountsOperationalDesignations.objects.get(transaction__code='100')
-		account_name = account.account.account_name + ' - ' + str(account.account.account_number) + ' - ' + str(account.account.bank)
+	# if CooperativeBankAccountsOperationalDesignations.objects.filter(transaction__title='MEMBERSHIP REGISTRATION').exists():
+	# 	account = CooperativeBankAccountsOperationalDesignations.objects.get(transaction__code='100')
+	# 	account_name = account.account.account_name + ' - ' + str(account.account.account_number) + ' - ' + str(account.account.bank)
 
 	shares_uint_cost=0
 	if MembersShareConfigurations.objects.all().exists():
@@ -1878,6 +1885,44 @@ def membership_form_sales_validation(request,pk):
 	}
 
 	return render(request,'deskofficer_templates/membership_form_sales_validation.html',context)
+
+def membership_form_Approved_list_load(request):
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	task_array=[]
+	for task in tasks:
+		task_array.append(task.task.title)
+
+
+
+	task_enabler=TransactionEnabler.objects.filter(status="YES")
+	task_enabler_array=[]
+	for item in task_enabler:
+		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
+
+
+	applicants=MemberShipRequest.objects.filter(transaction_status='UNTREATED',approval_status='APPROVED')
+
+	# if not applicants:
+	# 	messages.error(request,'No Record Found')
+	# 	return HttpResponseRedirect(reverse('membership_form_sales_Search'))
+
+
+
+	context={
+	'applicants':applicants,
+	'task_array':task_array,
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
+	}
+	return render(request,'deskofficer_templates/membership_form_Approved_list_load.html',context)
+
+
+
 
 
 def membership_registration_applicant_search(request):
@@ -10249,7 +10294,7 @@ def Monthly_Auxillary_Imported_Deduction_View_List_Transaction_period_Load(reque
 		transaction_period=get_current_date(dtObj)
 		
 		# records=MonthlyDeductionListGenerated.objects.filter(salary_institution=salary_institution,transaction_period=transaction_period)
-		records=AuxillaryDeductions.objects.filter(salary_institution=salary_institution,transaction_period=transaction_period).order_by('coop_no')
+		records=AuxillaryDeductions.objects.filter(salary_institution=salary_institution,transaction_period=transaction_period).order_by('transaction_status','coop_no')
 		
 
 	form.fields['transaction_period'].initial=get_current_date(now)	
@@ -10504,7 +10549,7 @@ def Monthly_Deduction_Generated_Update_Details_load(request,pk):
 		default_password="YES"
 
 	member=MonthlyDeductionListGenerated.objects.get(id=pk)
-	
+
 	salary_institution=member.member.salary_institution
 	transaction_period=member.transaction_period
 
