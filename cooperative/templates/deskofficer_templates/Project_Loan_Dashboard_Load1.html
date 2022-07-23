@@ -1,0 +1,93 @@
+{% extends 'deskofficer_templates/base_template.html' %}
+{% load static %}
+
+{% block content %}
+            <div class="page-content fade-in-up">
+               
+            
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="ibox">
+                            <div class="ibox-head">
+                                <div class="ibox-title">PROJECT LOAN DASHBOARD</div>
+                            </div>
+                            <div class="ibox-body">
+                                <table class="table table-hover">
+                                    <caption>Optional table caption.</caption>
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Description</th>
+                                            <th>Action</th>
+                                            
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr class="active">
+                                            <td>1</td>
+                                            <td>Loan Request</td>
+                                            <td><a href="{% url 'loan_request_search' %}" class="btn btn-primary">Proceed</a></td>
+                                        
+                                        </tr>
+                                        <tr>
+                                            <td>2</td>
+                                            <td>Manage Loan Request</td>
+                                            <td><a href="{% url 'loan_request_manage_period_load' %}" class="btn btn-primary">Proceed</a></td>
+                                         
+                                        </tr>
+                                        <tr class="info">
+                                            <td>3</td>
+                                            <td>Loan Request Shortlist</td>
+                                            <td><a href="{% url 'loan_request_shortlisting_load' %}" class="btn btn-primary">Proceed</a></td>
+                                         
+                                        </tr>
+                                        <tr>
+                                            <td>4</td>
+                                            <td>Loan Form Sales</td>
+                                            <td><a href="{% url 'loan_request_approved_Issue_form_period_load' %}" class="btn btn-primary">Proceed</a></td>
+                                       
+                                        </tr>
+                                        <tr class="success">
+                                            <td>5</td>
+                                            <td>Loan Application</td>
+                                            <td><a href="{% url 'loan_application_approved_period_load' %}" class="btn btn-primary">Proceed</a></td>
+                                           
+                                        </tr>
+                                        <tr>
+                                            <td>6</td>
+                                            <td>Loan Application Shortlisting</td>
+                                            <td><a href="{% url 'loan_request_manage_period_load' %}" class="btn btn-primary">Proceed</a></td>
+                                           
+                                        </tr>
+                                        <tr class="warning">
+                                            <td>7</td>
+                                            <td>Loan Processing</td>
+                                            <td><a href="{% url 'Loan_application_processing_period_load' %}" class="btn btn-primary">Proceed</a></td>
+                                           
+                                        </tr>
+                                        <tr>
+                                            <td>8</td>
+                                            <td>Discard Incomplete Applications</td>
+                                            <td><a href="{% url 'loan_request_order_discard' %}" class="btn btn-primary">Proceed</a></td>
+                                         
+                                        </tr>
+                                        <tr class="danger">
+                                            <td>3</td>
+                                            <td>Larry</td>
+                                            <td>the Bird</td>
+                                           
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                   
+                </div>
+           
+            </div>
+  <div class="sidenav-backdrop backdrop"></div>
+    <div class="preloader-backdrop">
+        <div class="page-preloader">Loading</div>
+    </div>
+{% endblock %}

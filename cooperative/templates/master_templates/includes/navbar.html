@@ -733,27 +733,68 @@
                             </li>
 
                         {% endif %}
-                        {% if 'LOAN REQUEST APPROVAL' in task_array  %}
-                            <li>
-                                <a href="{% url 'loan_request_approval_period_load' %}">Loan Request</a>
-                            </li>
-                        {% endif %}
+                       
 
-                        {% if 'LOAN APPLICATION APPROVAL' in task_array %}
+                         <li>
+                        <a href="javascript:;">
+                            <span class="nav-label">Loan Approvals</span><i class="fa fa-angle-left arrow"></i></a>
+                        <ul class="nav-2-level collapse">
+                           
                             <li>
-                                <a href="{% url 'Loan_application_approval_period_load' %}">Loan Application</a>
+                                <a href="javascript:;">
+                                    <span class="nav-label">Project Loans</span><i class="fa fa-angle-left arrow"></i></a>
+                                <ul class="nav-3-level collapse">
+                                 {% if 'LOAN REQUEST APPROVAL' in task_array  %}
+                                    <li>
+                                        <a href="{% url 'loan_request_approval_period_load' %}">Loan Request</a>
+                                    </li>
+                                    {% endif %}
+                                {% if 'LOAN APPLICATION APPROVAL' in task_array %}
+                                    <li>
+                                        <a href="{% url 'Loan_application_approval_period_load' %}">Loan Application</a>
+                                    </li>
+                                 {% endif %}
+                                </ul>
                             </li>
-                        {% endif %}
+
+                            <li>
+                                <a href="javascript:;">
+                                    <span class="nav-label">Emergency Loans</span><i class="fa fa-angle-left arrow"></i></a>
+                                <ul class="nav-3-level collapse">
+                                 {% if 'LOAN APPLICATION APPROVAL' in task_array %}
+                                    <li>
+                                        <a href="{% url 'emergency_Loan_application_approval_period_load' %}">Loan Application</a>
+                                    </li>
+                                 {% endif %}
+                                </ul>
+                            </li>
+
+
+                            <li>
+                                <a href="javascript:;">
+                                    <span class="nav-label">Commodity Loans</span><i class="fa fa-angle-left arrow"></i></a>
+                                <ul class="nav-3-level collapse">
+                                     {% if 'COMMODITY LOAN APPROVAL' in task_array %}
+                                    <li>
+                                        <a href="{% url 'membership_commodity_loan_Period_approval_transaction_load' %}">Loan Application</a>
+                                    </li>
+                                 {% endif %}
+                                </ul>
+                            </li>
+                        </ul>
+                    </li>
+
+
+                            
+
+                       
                         {% if 'LOAN UNSCHEDULING APPROVAL' in task_array %}
                             <li>
                                 <a href="{% url 'Loan_unscheduling_approval_load' %}">Loan Unscheduling</a>
                             </li>
                         {% endif %}
-                          {% if 'COMMODITY LOAN APPROVAL' in task_array %}
-                            <li>
-                                <a href="{% url 'membership_commodity_loan_Period_approval_transaction_load' %}">Commodity Loan Approval</a>
-                            </li>
-                        {% endif %}
+                         
+                         
                         {% if 'MEMBERS EXCEPTIONS' in task_array %}
                             <li>
                                 <a href="{% url 'members_exclusiveness_list_load' %}">Members Exclusiveness</a>

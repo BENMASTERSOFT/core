@@ -14,7 +14,8 @@ from django.utils import timezone
 # Create your models here.
 TRANSACTION_STATUS=(
     ('UNTREATED','UNTREATED'),
-    ("TREATED","TREATED")
+    ("TREATED","TREATED"),
+    ("ARCHIVED","ARCHIVED"),
     )
 
 MANUAL_POSTING_TYPES=(
@@ -102,6 +103,11 @@ ADMIN_CHARGES=(
     ("CASH","CASH"),
     ("PERCENTAGE","PERCENTAGE")
     )
+LOAN_PATH=(
+        ('NONE','NONE'),
+        ('PROJECT','PROJECT'),
+        ('EMERGENCY','EMERGENCY')
+        )
 
 INTEREST_DEDUCTION=(
                     ("NONE","NONE"),
@@ -590,9 +596,10 @@ class Staff(DateObjectsModels):
 
 
 class TransactionTypes(DateObjectsModels):
-    CHOICES=(
-        ('NO','NO'),
-        ('YES','YES')
+    LOAN_PATH=(
+        ('NONE','NONE'),
+        ('PROJECT','PROJECT'),
+        ('EMERGENCY','EMERGENCY')
         )
     source = models.ForeignKey(TransactionSources,on_delete=models.CASCADE)
     category = models.CharField(max_length=20,choices=LOAN_CATEGORY,blank=True,null=True)
@@ -610,7 +617,7 @@ class TransactionTypes(DateObjectsModels):
     default_admin_charges= models.DecimalField(max_digits=20,decimal_places = 2,default=0)
     salary_loan_relationship= models.DecimalField(max_digits=20,decimal_places = 2,default=0)
     saving_rating= models.DecimalField(max_digits=20,decimal_places = 2,default=0)
-    savings_rate=models.CharField(default='NO',choices=CHOICES,max_length=15)
+    savings_rate=models.CharField(default='NO',choices=YESNO,max_length=15)
     guarantors= models.IntegerField(default=0)
     guarantors_gross_pay_rating= models.DecimalField(max_digits=20,decimal_places = 2,default=0)
     loan_age= models.DecimalField(max_digits=20,decimal_places = 2,default=0)
@@ -619,8 +626,9 @@ class TransactionTypes(DateObjectsModels):
     receipt_type= models.CharField(max_length=30,choices=RECEIPT_TYPES,default='NONE')
     status= models.CharField(max_length=20,choices=MEMBERSHIP_STATUS,default='ACTIVE')
     multiple_loan_status= models.CharField(max_length=20,choices=MULTIPLE_LOAN_STATUS,default='NOT ALLOWED')
-    auto_stop_savings= models.CharField(default='NO',choices=CHOICES,max_length=15)
+    auto_stop_savings= models.CharField(default='NO',choices=YESNO,max_length=15)
     form_print=models.CharField(max_length=20,choices=YESNO,default='NO')
+    loan_path=models.CharField(max_length=20,choices=LOAN_PATH,default='NONE')
 
 
     # class Meta(DateObjectsModels.Meta):
@@ -1142,23 +1150,34 @@ class LoanRequest(DateObjectsModels):
     admin_charge=models.DecimalField(max_digits=20,decimal_places = 2,default=0)
     comment=models.TextField(blank=True,null=True)
     description=models.CharField(max_length=255,blank=True,null=True)
+    receipt=models.CharField(max_length=255,blank=True,null=True)
     gross_pay=models.DecimalField(max_digits=20,decimal_places = 2,default=0)
     net_pay=models.DecimalField(max_digits=20,decimal_places = 2,default=0)
     image=models.FileField(blank=True,null=True)
-    period=models.ForeignKey(Commodity_Period,on_delete=models.CASCADE)
-    batch=models.ForeignKey(Commodity_Period_Batch,on_delete=models.CASCADE)
-    approval_officer=models.CharField(max_length=255,blank=True,null=True)
-    approval_status = models.CharField(max_length=30,choices=APPROVAL_STATUS,default='PENDING')
-    approval_comment=models.TextField(blank=True,null=True)
-    approval_date=models.DateField(blank=True,null=True)
-    approved_amount=models.DecimalField(max_digits=20,decimal_places = 2,default=0)
     transaction_status= models.CharField(max_length=20,choices=TRANSACTION_STATUS,default='UNTREATED')
     submission_status=  models.CharField(max_length=30,choices=SUBMISSION_STATUS,default='NOT SUBMITTED')
+    date_applied=models.DateField(blank=True,null=True)
+    loan_path= models.CharField(max_length=20,choices=LOAN_PATH,default='PROJECT')
+    # short_listed=  models.CharField(max_length=30,choices=YESNO,default='NO')
+    # short_listed_date=models.DateField(blank=True,null=True)
+    # short_list_by=models.CharField(max_length=255,blank=True,null=True)
 
     # class Meta(DateObjectsModels.Meta):
     #     db_table="Loan_Request"
 
 
+
+class LoanRequestShortListing(DateObjectsModels):
+    applicant=models.ForeignKey(LoanRequest,on_delete=models.CASCADE,blank=True,null=True)
+    approval_officer=models.CharField(max_length=255,blank=True,null=True)
+    approval_status = models.CharField(max_length=30,choices=APPROVAL_STATUS,default='PENDING')
+    approval_comment=models.TextField(blank=True,null=True)
+    approval_date=models.DateField(blank=True,null=True)
+    approved_amount=models.DecimalField(max_digits=20,decimal_places = 2,default=0)
+    status= models.CharField(max_length=20,choices=TRANSACTION_STATUS,default='UNTREATED')
+
+    #     db_table="LoanRequestShortListing"
+    # class Meta(DateObjectsModels.Meta):
 
 class LoanRequestAttachments(DateObjectsModels):
     applicant=models.ForeignKey(LoanRequest,on_delete=models.CASCADE,blank=True,null=True)
@@ -1181,10 +1200,15 @@ class LoanRequestSettings(DateObjectsModels):
     #     db_table="Loan_Request_Settings"
 
 class LoanFormIssuance(DateObjectsModels):
-    applicant=models.ForeignKey(LoanRequest,on_delete=models.CASCADE,blank=True,null=True)
+    member=models.ForeignKey(Members,on_delete=models.CASCADE)
+    loan=models.ForeignKey(TransactionTypes,on_delete=models.CASCADE)
+    loan_amount=models.DecimalField(max_digits=20,decimal_places = 2)
+    amount_saved=models.DecimalField(max_digits=20,decimal_places = 2)
     receipt=models.CharField(max_length=255,unique=True)
-    admin_charge=models.DecimalField(max_digits=20,decimal_places = 2)
     processing_status= models.CharField(max_length=20,choices=PROCESSING_STATUS,default='UNPROCESSED')
+    date_applied=models.DateField(blank=True,null=True)
+    date_approved=models.DateField(blank=True,null=True)
+    loan_path= models.CharField(max_length=20,choices=LOAN_PATH,default='PROJECT')
     status= models.CharField(max_length=20,choices=TRANSACTION_STATUS,default='UNTREATED')
 
     # class Meta(DateObjectsModels.Meta):
@@ -1193,30 +1217,24 @@ class LoanFormIssuance(DateObjectsModels):
 class LoanApplication(DateObjectsModels):
     applicant=models.ForeignKey(LoanFormIssuance,on_delete=models.CASCADE,blank=True,null=True)
     loan_amount=models.DecimalField(max_digits=20,decimal_places = 2)
-    approved_amount=models.DecimalField(max_digits=20,decimal_places = 2,blank=True,null=True)
     duration=models.IntegerField(default=0)
     interest=models.DecimalField(max_digits=20,decimal_places = 2,default=0)
     admin_charge=models.DecimalField(max_digits=20,decimal_places = 2,default=0)
     comment=models.TextField(blank=True,null=True)
-    description=models.CharField(max_length=255,blank=True,null=True)
+    # description=models.CharField(max_length=255,blank=True,null=True)
     gross_pay=models.DecimalField(max_digits=20,decimal_places = 2,default=0)
     net_pay=models.DecimalField(max_digits=20,decimal_places = 2,default=0)
     image=models.FileField(blank=True,null=True)
-    approval_officer=models.CharField(max_length=255,blank=True,null=True)
-    approval_status = models.CharField(max_length=30,choices=APPROVAL_STATUS,default='PENDING')
-    approval_comment=models.TextField(blank=True,null=True)
-    approval_date=models.DateField(blank=True,null=True)
     bank_account=models.ForeignKey(MembersBankAccounts,on_delete=models.CASCADE,blank=True,null=True)
     transaction_status= models.CharField(max_length=20,choices=TRANSACTION_STATUS,default='UNTREATED')
-    submission_status=  models.CharField(max_length=30,choices=SUBMISSION_STATUS,default='NOT SUBMITTED')
     nok_name=models.CharField(max_length=255,blank=True,null=True)
     nok_Relationship=models.CharField(max_length=255,blank=True,null=True)
     nok_phone_no=models.CharField(max_length=255,blank=True,null=True)
     nok_address=models.CharField(max_length=255,blank=True,null=True)
+    date_applied=models.DateField(blank=True,null=True)
 
     # class Meta(DateObjectsModels.Meta):
     #     db_table="Loan_Application"
-
 
 
 
@@ -1241,6 +1259,21 @@ class LoanApplicationSettings(DateObjectsModels):
 
     # class Meta(DateObjectsModels.Meta):
     #     db_table="Loan_Application_Settings"
+
+
+class LoanApplicationShortListing(DateObjectsModels):
+    applicant=models.ForeignKey(LoanApplication,on_delete=models.CASCADE,blank=True,null=True)
+    approval_officer=models.CharField(max_length=255,blank=True,null=True)
+    approved_amount=models.DecimalField(max_digits=20,decimal_places = 2,blank=True,null=True)
+    approval_status = models.CharField(max_length=30,choices=APPROVAL_STATUS,default='PENDING')
+    approval_comment=models.TextField(blank=True,null=True)
+    approval_date=models.DateField(blank=True,null=True)
+    loan_number=models.CharField(max_length=255,blank=True,null=True)
+    status= models.CharField(max_length=20,choices=TRANSACTION_STATUS,default='UNTREATED')
+    processing_status= models.CharField(max_length=20,choices=PROCESSING_STATUS,default='UNPROCESSED')
+ 
+    # class Meta(DateObjectsModels.Meta):
+    #     db_table="LoanApplicationShortListing"
 
 
 

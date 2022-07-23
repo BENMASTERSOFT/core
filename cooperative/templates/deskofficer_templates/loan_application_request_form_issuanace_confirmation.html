@@ -5,22 +5,18 @@
 
     <div class="page-content fade-in-up">
         <div class="alert bg-white">
-            <h4>{{applicant.applicant.member.get_full_name}} - IPPIS: {{applicant.applicant.member.ippis_no}}</h4>
-            <h6> Your Receipt No is: {{applicant.receipt}}</h6>
-            <h6> Loan Type is: {{applicant.applicant.loan.name}}</h6>
-            <p>Loan Application Form Preview and Printing</p>
-            <p>
-            	
-            
+        
+	            <h4>{{applicant.member.get_full_name}} - IPPIS: {{applicant.member.ippis_no}}</h4>
+	            <h6> Your Receipt No is: {{applicant.receipt}}</h6>
+	            <h6> Loan Type is: {{applicant.loan.name}}</h6>
+	            <p>Loan Application Form Preview and Printing</p>
+	            <p>
 
-                <a class="btn btn-success" href="{% url 'Loan_Application_Issueance_Form_Print' applicant.receipt %}" target="_blank">Loan Application Form</a>
-
-
-				
-          
-
-                <a href="{% url 'deskofficer_home'  %}" class="btn btn-secondary">Close</a>
-            </p>
+	                <a class="btn btn-success" href="{% url 'Loan_Application_Issueance_Form_Print' applicant.receipt %}" target="_blank">Loan Application Form</a>
+	                
+	                <a href="{% url 'Project_Loan_Dashboard_Load'  %}" class="btn btn-secondary">Close</a>
+	            </p>
+	        
         </div>
        
        

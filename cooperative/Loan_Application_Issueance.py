@@ -96,7 +96,7 @@ def Loan_Application_IssueanceSectionAMiddleTable(width,height,receipt_id):
 
 	res = Table([
 		['FETHA II COOPERATIVE THRIFT AND CREDIT SOCIETY LTD.'],
-		[record.applicant.loan.name],
+		[record.loan.name],
 		
 		],
 		width,
@@ -127,7 +127,7 @@ def Loan_Application_IssueanceMemberIdTable(width,height,receipt_id):
 	]
 
 	res = Table([
-		[f'COOP NO: {record.applicant.member.get_member_Id}'],
+		[f'COOP NO: {record.member.coop_no}'],
 		[f'RECEIPT NO:{record.receipt}'],
 		
 	
@@ -227,25 +227,25 @@ def Loan_Application_IssueanceSectionABodyTable(width,height,receipt_id):
 
 	
 
-	if record.applicant.member.department:
-		department=record.applicant.member.department.title
+	if record.member.department:
+		department=record.member.department.title
 	else:
 		department = '-----------------------------------------------------------------------------------------------------------------'
 	
-	if record.applicant.member.last_used_net_pay:
-		salary=f'  {record.applicant.member.last_used_net_pay}'
+	if record.member.last_used_net_pay:
+		salary=f'  {record.member.last_used_net_pay}'
 	else:
 		salary = '-----------------------------------------------------------------------------------------------------------------'
 	
-	if record.applicant.member.residential_address:
-		r_address=f'  {record.applicant.member.residential_address}'
+	if record.member.residential_address:
+		r_address=f'  {record.member.residential_address}'
 	else:
 		r_address = '-----------------------------------------------------------------------------------------------------------------'
 	
 
 
 	res = Table([
-		['Name of applicant:',record.applicant.member.get_full_name],
+		['Name of applicant:',record.member.get_full_name],
 		['Department:',department],
 		['Present Salary Grade:',salary],
 		['Residential Address:',r_address],
@@ -314,15 +314,11 @@ import locale
 def Loan_Application_IssueanceParagraphAmountApplied(receipt_id):
 	  
 	record=LoanFormIssuance.objects.get(receipt=receipt_id)
-	amount=record.applicant.loan_amount
+	amount=record.loan_amount
 	amount_converted = str(amount)[:-3]
 	p = inflect.engine()
 	amount_in_words=p.number_to_words(amount_converted).title()
-
-	amount_saved=0
-	if LoanRequestSettings.objects.filter(description='AMOUNT SAVED',applicant=record.applicant).exists():
-		amount_saved = LoanRequestSettings.objects.get(description='AMOUNT SAVED',applicant=record.applicant)
-		amount_saved = str(amount_saved.value)[1:-3]
+	amount_saved =record.amount_saved
 
 	
 	p = inflect.engine()
@@ -500,10 +496,10 @@ def __Loan_Application_IssueanceParagraphSectionCTitle():
 
 def __Loan_Application_IssueanceParagraphSectionCDeclaration(receipt_id):
 	record=LoanFormIssuance.objects.get(receipt=receipt_id)
-	guarantor_id= record.applicant.loan.guarantors
+	guarantor_id= record.loan.guarantors
 
 	guarantor=num2words(guarantor_id, to = 'year').title()
-	transaction_type =(record.applicant.loan.name).lower()
+	transaction_type =(record.loan.name).lower()
 	para1Style = ParagraphStyle('para1d')
 	para1Style.fontSize = 10
 	para1Style.alignment = TA_JUSTIFY

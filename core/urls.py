@@ -228,6 +228,7 @@ urlpatterns = [
     path('loan_salary_relationship_update/<str:pk>/', master_views.loan_salary_relationship_update,name='loan_salary_relationship_update'),
     path('loan_loan_age_update/<str:pk>/', master_views.loan_loan_age_update,name='loan_loan_age_update'),
     path('receipt_types_settings/<str:pk>/', master_views.receipt_types_settings,name='receipt_types_settings'),
+    path('loan_path_settings/<str:pk>/', master_views.loan_path_settings,name='loan_path_settings'),
 
     # path('Customized_loan_duration_update/<str:pk>/', master_views.Customized_loan_duration_update,name='Customized_loan_duration_update'),
     # path('Customized_loan_category_update/<str:pk>/', master_views.Customized_loan_category_update,name='Customized_loan_category_update'),
@@ -391,6 +392,10 @@ urlpatterns = [
     path('loan_request_approval_period_load/', master_views.loan_request_approval_period_load,name='loan_request_approval_period_load'),
     path('Loan_request_approval_details/<str:pk>/', master_views.Loan_request_approval_details,name='Loan_request_approval_details'),
 
+    path('emergency_Loan_application_approval_period_load/', master_views.emergency_Loan_application_approval_period_load,name='emergency_Loan_application_approval_period_load'),
+    path('emergency_loan_application_approval_details/<str:pk>/', master_views.emergency_loan_application_approval_details,name='emergency_loan_application_approval_details'),
+    
+
     path('Loan_application_approval_period_load/', master_views.Loan_application_approval_period_load,name='Loan_application_approval_period_load'),
     path('Loan_application_approval_details/<str:pk>/', master_views.Loan_application_approval_details,name='Loan_application_approval_details'),
 
@@ -481,7 +486,9 @@ urlpatterns = [
 
     path('Useraccount_manager/', deskofficer_views.Useraccount_manager,name='Useraccount_manager'),
 
+    path('desk_widgets_form/', deskofficer_views.desk_widgets_form,name='desk_widgets_form'),
     path('desk_basic_form/', deskofficer_views.desk_basic_form,name='desk_basic_form'),
+    
     path('desk_advanced_form/', deskofficer_views.desk_advanced_form,name='desk_advanced_form'),
     path('desk_basic_table/', deskofficer_views.desk_basic_table,name='desk_basic_table'),
     path('desk_datatable_table/', deskofficer_views.desk_datatable_table,name='desk_datatable_table'),
@@ -647,19 +654,70 @@ urlpatterns = [
     path('Members_Bank_Accounts_update_form/<str:pk>/<str:return_pk>/', deskofficer_views.Members_Bank_Accounts_update_form,name='Members_Bank_Accounts_update_form'),
     path('Members_Bank_Accounts_delete/<str:pk>/<str:return_pk>/', deskofficer_views.Members_Bank_Accounts_delete,name='Members_Bank_Accounts_delete'),
 
+    path('Emergency_Loan_Dashboard_Load/', deskofficer_views.Emergency_Loan_Dashboard_Load,name='Emergency_Loan_Dashboard_Load'),
+    path('Project_Loan_Dashboard_Load/', deskofficer_views.Project_Loan_Dashboard_Load,name='Project_Loan_Dashboard_Load'),
+    
     path('loan_request_order_discard/', deskofficer_views.loan_request_order_discard,name='loan_request_order_discard'),
     path('loan_request_order_discard_delete/<str:pk>/', deskofficer_views.loan_request_order_discard_delete,name='loan_request_order_discard_delete'),
 
+    path('Embergency_loan_Form_Issueance_search/', deskofficer_views.Embergency_loan_Form_Issueance_search,name='Embergency_loan_Form_Issueance_search'),
+    path('Embergency_loan_Form_Issueance_list_load/', deskofficer_views.Embergency_loan_Form_Issueance_list_load,name='Embergency_loan_Form_Issueance_list_load'),
+    path('Emergency_loan_Form_Issueance/<str:pk>/', deskofficer_views.Emergency_loan_Form_Issueance,name='Emergency_loan_Form_Issueance'),
+    path('Emergency_loan_Form_Issueance_delete/<str:pk>/<str:return_pk>/', deskofficer_views.Emergency_loan_Form_Issueance_delete,name='Emergency_loan_Form_Issueance_delete'),
+    
+    path('Embergency_loan_Form_Application_search/', deskofficer_views.Embergency_loan_Form_Application_search,name='Embergency_loan_Form_Application_search'),
+    path('Embergency_loan_Form_Application_list_load/', deskofficer_views.Embergency_loan_Form_Application_list_load,name='Embergency_loan_Form_Application_list_load'),
+    path('Emergency_loan_application_form_processing/<str:pk>/', deskofficer_views.Emergency_loan_application_form_processing,name='Emergency_loan_application_form_processing'),
+    path('Emergency_loan_application_preview/<str:pk>/<str:return_pk>/<str:loan_path>/', deskofficer_views.Emergency_loan_application_preview,name='Emergency_loan_application_preview'),
+    path('Emergency_Loan_application_active_list_load/', deskofficer_views.Emergency_Loan_application_active_list_load,name='Emergency_Loan_application_active_list_load'),
+    path('Emergency_Loan_application_history_period_load/', deskofficer_views.Emergency_Loan_application_history_period_load,name='Emergency_Loan_application_history_period_load'),
+    
+    path('Emergency_loan_application_form_processing_guarantor_search/<str:pk>/', deskofficer_views.Emergency_loan_application_form_processing_guarantor_search,name='Emergency_loan_application_form_processing_guarantor_search'),
+    path('Emergency_loan_application_form_processing_guarantor_add_list_load/<str:pk>/', deskofficer_views.Emergency_loan_application_form_processing_guarantor_add_list_load,name='Emergency_loan_application_form_processing_guarantor_add_list_load'),
+    path('Emergency_loan_application_form_processing_guarantor_add/<str:pk>/<str:loan_pk>/', deskofficer_views.Emergency_loan_application_form_processing_guarantor_add,name='Emergency_loan_application_form_processing_guarantor_add'),
+    path('Emergency_loan_application_form_processing_guarantor_delete/<str:pk>/<str:return_pk>/', deskofficer_views.Emergency_loan_application_form_processing_guarantor_delete,name='Emergency_loan_application_form_processing_guarantor_delete'),
+    path('Emergency_loan_application_form_processing_bank_account_delete/<str:pk>/<str:return_pk>/', deskofficer_views.Emergency_loan_application_form_processing_bank_account_delete,name='Emergency_loan_application_form_processing_bank_account_delete'),
+   
+    path('emergency_loan_application_shortlisting_list_load/', deskofficer_views.emergency_loan_application_shortlisting_list_load,name='emergency_loan_application_shortlisting_list_load'),
+    path('emergency_loan_application_shortlisting_process/<str:pk>/', deskofficer_views.emergency_loan_application_shortlisting_process,name='emergency_loan_application_shortlisting_process'),
+    path('emergency_loan_application_shortlisted_active_list_load/', deskofficer_views.emergency_loan_application_shortlisted_active_list_load,name='emergency_loan_application_shortlisted_active_list_load'),
+    path('emergency_Loan_application_processing_period_load/', deskofficer_views.emergency_Loan_application_processing_period_load,name='emergency_Loan_application_processing_period_load'),
+    path('emergency_loan_application_approved_process_preview/<str:pk>/', deskofficer_views.emergency_loan_application_approved_process_preview,name='emergency_loan_application_approved_process_preview'),
+    path('emergency_loan_application_form_issuanace_confirmation/<str:pk>/', deskofficer_views.emergency_loan_application_form_issuanace_confirmation,name='emergency_loan_application_form_issuanace_confirmation'),
+    path('emergency_Loan_application_shortlisting_KIV_period_load/', deskofficer_views.emergency_Loan_application_shortlisting_KIV_period_load,name='emergency_Loan_application_shortlisting_KIV_period_load'),
+    path('emergency_Loan_application_shortlisting_KIV_activate/<str:pk>/', deskofficer_views.emergency_Loan_application_shortlisting_KIV_activate,name='emergency_Loan_application_shortlisting_KIV_activate'),
+    path('Emergency_Loan_application_processing_confirmation/<str:pk>/', deskofficer_views.Emergency_Loan_application_processing_confirmation,name='Emergency_Loan_application_processing_confirmation'),
+    path('emergency_loan_application_reprint_search/', deskofficer_views.emergency_loan_application_reprint_search,name='emergency_loan_application_reprint_search'),
+    path('emergency_loan_application_reprint_list_load/', deskofficer_views.emergency_loan_application_reprint_list_load,name='emergency_loan_application_reprint_list_load'),
+    path('emergency_members_loan_application_history_load/<str:pk>/', deskofficer_views.emergency_members_loan_application_history_load,name='emergency_members_loan_application_history_load'),
+
+    path('emergency_loan_application_form_issue_view_load/', deskofficer_views.emergency_loan_application_form_issue_view_load,name='emergency_loan_application_form_issue_view_load'),
+    path('emergency_loan_application_form_issue_drop/<str:pk>/', deskofficer_views.emergency_loan_application_form_issue_drop,name='emergency_loan_application_form_issue_drop'),
+    path('emergency_loan_application_form_issue_history_period_load/', deskofficer_views.emergency_loan_application_form_issue_history_period_load,name='emergency_loan_application_form_issue_history_period_load'),
+    
     path('loan_request_search/', deskofficer_views.loan_request_search,name='loan_request_search'),
     path('loan_request_list_load/', deskofficer_views.loan_request_list_load,name='loan_request_list_load'),
     path('loan_request_order_delete/<str:pk>/<str:return_pk>/', deskofficer_views.loan_request_order_delete,name='loan_request_order_delete'),
     path('loan_request_order/<str:pk>/', deskofficer_views.loan_request_order,name='loan_request_order'),
     path('loan_request_criteria_Loading/<str:pk>/', deskofficer_views.loan_request_criteria_Loading,name='loan_request_criteria_Loading'),
-
-
     path('LoanRequestAttachments_delete/<str:pk>/<str:return_pk>/', deskofficer_views.LoanRequestAttachments_delete,name='LoanRequestAttachments_delete'),
-
     path('loan_request_preview/<str:pk>/', deskofficer_views.loan_request_preview,name='loan_request_preview'),
+
+
+    path('loan_request_active_load/', deskofficer_views.loan_request_active_load,name='loan_request_active_load'),
+    path('loan_request_delete_record/<str:pk>/', deskofficer_views.loan_request_delete_record,name='loan_request_delete_record'),
+    path('loan_request_archive_record/<str:pk>/', deskofficer_views.loan_request_archive_record,name='loan_request_archive_record'),
+    
+    path('loan_request_history_period_load/', deskofficer_views.loan_request_history_period_load,name='loan_request_history_period_load'),
+    path('loan_request_order_KIV/', deskofficer_views.loan_request_order_KIV,name='loan_request_order_KIV'),
+    path('loan_request_order_KIV_activate/<str:pk>/', deskofficer_views.loan_request_order_KIV_activate,name='loan_request_order_KIV_activate'),
+    
+
+    path('loan_request_shortlisting_load/', deskofficer_views.loan_request_shortlisting_load,name='loan_request_shortlisting_load'),
+    path('loan_request_shortlisting_process/<str:pk>/', deskofficer_views.loan_request_shortlisting_process,name='loan_request_shortlisting_process'),
+    path('loan_request_shortlisting_view_load/', deskofficer_views.loan_request_shortlisting_view_load,name='loan_request_shortlisting_view_load'),
+    path('loan_request_shortlisting_drop/<str:pk>/', deskofficer_views.loan_request_shortlisting_drop,name='loan_request_shortlisting_drop'),
+    
 
     path('loan_request_manage_period_load/', deskofficer_views.loan_request_manage_period_load,name='loan_request_manage_period_load'),
     path('loan_request_manage_transaction_delete/<str:pk>/', deskofficer_views.loan_request_manage_transaction_delete,name='loan_request_manage_transaction_delete'),
@@ -669,22 +727,41 @@ urlpatterns = [
     path('loan_application_request_form_issuanace_confirmation/<str:pk>/', deskofficer_views.loan_application_request_form_issuanace_confirmation,name='loan_application_request_form_issuanace_confirmation'),
     path('Loan_Application_Issueance_Form_Print/<str:pk>/', deskofficer_views.Loan_Application_Issueance_Form_Print,name='Loan_Application_Issueance_Form_Print'),
 
+    path('loan_application_request_form_issuanace_reprint_search/', deskofficer_views.loan_application_request_form_issuanace_reprint_search,name='loan_application_request_form_issuanace_reprint_search'),
+    path('loan_application_request_form_issuanace_reprint_list_load/', deskofficer_views.loan_application_request_form_issuanace_reprint_list_load,name='loan_application_request_form_issuanace_reprint_list_load'),
+    path('Members_Loan_Request_History_load/<str:pk>/', deskofficer_views.Members_Loan_Request_History_load,name='Members_Loan_Request_History_load'),
+    
+    path('Loan_application_history_period_load/', deskofficer_views.Loan_application_history_period_load,name='Loan_application_history_period_load'),
+    
     path('loan_application_approved_period_load/', deskofficer_views.loan_application_approved_period_load,name='loan_application_approved_period_load'),
     path('loan_application_form_processing/<str:pk>/', deskofficer_views.loan_application_form_processing,name='loan_application_form_processing'),
 
-    path('loan_application_form_processing_guarantor_search/<str:pk>/', deskofficer_views.loan_application_form_processing_guarantor_search,name='loan_application_form_processing_guarantor_search'),
+    path('loan_application_form_processing_guarantor_search/<str:pk>', deskofficer_views.loan_application_form_processing_guarantor_search,name='loan_application_form_processing_guarantor_search'),
     path('loan_application_form_processing_guarantor_add_list_load/<str:pk>/', deskofficer_views.loan_application_form_processing_guarantor_add_list_load,name='loan_application_form_processing_guarantor_add_list_load'),
     path('loan_application_form_processing_guarantor_add/<str:pk>/<str:loan_pk>/', deskofficer_views.loan_application_form_processing_guarantor_add,name='loan_application_form_processing_guarantor_add'),
     path('loan_application_form_processing_guarantor_delete/<str:pk>/<str:return_pk>/', deskofficer_views.loan_application_form_processing_guarantor_delete,name='loan_application_form_processing_guarantor_delete'),
 
     path('loan_application_form_processing_bank_account_delete/<str:pk>/<str:return_pk>/', deskofficer_views.loan_application_form_processing_bank_account_delete,name='loan_application_form_processing_bank_account_delete'),
-    path('loan_application_preview/<str:pk>/<str:return_pk>/', deskofficer_views.loan_application_preview,name='loan_application_preview'),
+    path('loan_application_preview/<str:pk>/<str:return_pk>/<str:loan_path>/', deskofficer_views.loan_application_preview,name='loan_application_preview'),
+
+    path('Loan_application_active_list_load/', deskofficer_views.Loan_application_active_list_load,name='Loan_application_active_list_load'),
+    
+    path('loan_application_shortlisting_list_load/', deskofficer_views.loan_application_shortlisting_list_load,name='loan_application_shortlisting_list_load'),
+    path('loan_application_shortlisting_process/<str:pk>/', deskofficer_views.loan_application_shortlisting_process,name='loan_application_shortlisting_process'),
+    path('loan_application_shortlisted_active_list_load/', deskofficer_views.loan_application_shortlisted_active_list_load,name='loan_application_shortlisted_active_list_load'),
+    path('Loan_application_shortlisting_KIV_period_load/', deskofficer_views.Loan_application_shortlisting_KIV_period_load,name='Loan_application_shortlisting_KIV_period_load'),
+    path('Loan_application_shortlisting_history_period_load/', deskofficer_views.Loan_application_shortlisting_history_period_load,name='Loan_application_shortlisting_history_period_load'),
+    path('Loan_application_shortlisting_KIV_activate/<str:pk>/', deskofficer_views.Loan_application_shortlisting_KIV_activate,name='Loan_application_shortlisting_KIV_activate'),
+    
 
     path('Loan_application_processing_period_load/', deskofficer_views.Loan_application_processing_period_load,name='Loan_application_processing_period_load'),
     path('loan_application_approved_process_preview/<str:pk>/', deskofficer_views.loan_application_approved_process_preview,name='loan_application_approved_process_preview'),
     path('Loan_application_processing_confirmation/<str:pk>/', deskofficer_views.Loan_application_processing_confirmation,name='Loan_application_processing_confirmation'),
     path('Loan_application_processing_Form_Print/<str:pk>/', deskofficer_views.Loan_application_processing_Form_Print,name='Loan_application_processing_Form_Print'),
 
+    path('loan_application_reprint_search/', deskofficer_views.loan_application_reprint_search,name='loan_application_reprint_search'),
+    path('loan_application_reprint_list_load/', deskofficer_views.loan_application_reprint_list_load,name='loan_application_reprint_list_load'),
+    path('Members_Loan_application_History_load/<str:pk>/', deskofficer_views.Members_Loan_application_History_load,name='Members_Loan_application_History_load'),
 
     path('Loan_processing_scheduling_dashboard/', deskofficer_views.Loan_processing_scheduling_dashboard,name='Loan_processing_scheduling_dashboard'),
 

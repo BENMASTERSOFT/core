@@ -24,7 +24,7 @@
                                     <th>Transaction</th>
                                     <th>Account Number</th>
                                      <th>Amount</th>
-                                    <th>Action</th>
+                                    <th colspan="2">Action</th>
                                 </tr>
                             </thead>
                             <tfoot>
@@ -36,7 +36,7 @@
                                     <th>Account Number</th>
                                     
                                      <th>Amount</th>
-                                    <th>Action</th>
+                                    <th colspan="2">Action</th>
                                 </tr>
                             </tfoot>
                             <tbody>
@@ -52,6 +52,11 @@
                                   
                                     <td>
                                        <a href="{% url 'standing_order_reactivate_account' member.pk %}" class="btn btn-primary"> Activate </a> 
+
+                                       
+                                    </td>     
+                                    <td>
+                                     
                                        <a href="{% url 'standing_order_drop_account' member.pk %}" class="btn btn-danger"> Discard </a> 
 
                                        

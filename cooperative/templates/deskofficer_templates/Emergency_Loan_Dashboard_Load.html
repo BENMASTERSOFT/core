@@ -1,0 +1,113 @@
+{% extends 'deskofficer_templates/base_template.html' %}
+{% load static %}
+
+    {% block content %}
+    <!-- Content Header (Page header) -->
+   
+     <h5 class="mb-2">EMERGENCY LOAN MANAGEMENT</h5>
+        <div class="row">
+          
+          <!-- /.col -->
+           <!-- /.col -->
+          <div class="col-md-3">
+           
+              <div class="card card-outline card-primary">
+              <div class="card-header">
+                <h3 class="card-title">Loan Issuance</h3>
+
+                <!-- /.card-tools -->
+              </div>
+              <!-- /.card-header -->
+              <div class="card-body">
+                
+                <a href="{% url 'Embergency_loan_Form_Issueance_search' %}">Proceed</a> | 
+                  <a href="{% url 'emergency_loan_application_form_issue_view_load' %}">Active</a>
+                  | <a href="{% url 'emergency_loan_application_form_issue_history_period_load' %}">History</a>
+              </div>
+              <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+          </div>
+
+          <div class="col-md-3">
+            <div class="card card-warning">
+              <div class="card-header">
+                <h3 class="card-title">Loan Application</h3>
+
+                
+                <!-- /.card-tools -->
+              </div>
+              <!-- /.card-header -->
+              <div class="card-body">
+                <a href="{% url 'Embergency_loan_Form_Application_search' %}">Proceed</a>
+                | <a href="{% url 'Emergency_Loan_application_active_list_load' %}">Active</a>
+                | <a href="{% url 'Emergency_Loan_application_history_period_load' %}">History</a>  
+          
+              </div>
+              <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+          </div>
+          <!-- /.col -->
+          <div class="col-md-3">
+            <div class="card card-success">
+
+              <div class="card-header">
+                <h3 class="card-title">Application Shortlisting</h3>
+
+                
+                <!-- /.card-tools -->
+              </div>
+              <!-- /.card-header -->
+              <div class="card-body">
+                <a href="{% url 'emergency_loan_application_shortlisting_list_load' %}">Proceed</a>
+                | <a href="{% url 'emergency_loan_application_shortlisted_active_list_load' %}">Active</a>
+                | <a href="{% url 'emergency_Loan_application_shortlisting_KIV_period_load' %}">Not Approved</a>
+              </div>
+              <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+          </div>
+          <!-- /.col -->
+          <div class="col-md-3">
+            <div class="card card-primary">
+              <div class="card-header">
+                <h3 class="card-title">Loan Processing</h3>
+              </div>
+              <div class="card-body">
+                <a href="{% url 'emergency_Loan_application_processing_period_load' %}">Proceed</a> |
+                <a href="{% url 'emergency_loan_application_reprint_search' %}">Reprint</a>
+              </div>
+              <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+          </div>
+          <!-- /.col -->
+        
+        </div>
+      
+        <div class="row">
+          <div class="col-md-3">
+            <div class="card card-danger">
+              <div class="card-header">
+                <h3 class="card-title">Discard Transaction</h3>
+              </div>
+              <div class="card-body">
+               <a href="{% url 'loan_request_order_discard' %}">Request</a> |
+               <a href="{% url 'loan_request_order_discard' %}">Applicantion</a>
+              </div>
+              <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+          </div>
+        
+        </div>
+         
+          <!-- /.col -->
+      </div>
+        <!-- /.row -->
+
+    <!-- /.content -->
+   {% endblock %} 
+
+

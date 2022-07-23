@@ -41,18 +41,7 @@
                             <div class="ibox-body">
                                 <form class="form-horizontal" method="POST" action="" enctype="multipart/form-data" novalidate>
                                     {% csrf_token %}
-                                    <div class="form-group row">
-                                        <label class="col-sm-4 col-form-label">Period</label>
-                                        <div class="col-sm-8">
-                                            {{form.period}}
-                                        </div>
-                                    </div>   
-                                    <div class="form-group row">
-                                        <label class="col-sm-4 col-form-label">Batch</label>
-                                        <div class="col-sm-8">
-                                            {{form.batch}}
-                                        </div>
-                                    </div>
+                                    
                                     <div class="form-group row">
                                         <label class="col-sm-4 col-form-label">Loan Types</label>
                                         <div class="col-sm-8">
@@ -74,7 +63,7 @@
 
 
         <div class="row">   
-            <div class="col-md-10">
+            <div class="col-md-12">
                 <div class="ibox">
                     <div class="ibox-head">
                         <div class="ibox-title">List of Applied Loans</div>
@@ -105,9 +94,9 @@
                                 {% for loan in exist_loans %}
                                 <tr>
                                     <td>{{forloop.counter}}</td>
-                                    <td>{{loan.applicant.applicant.member.get_member_Id}}</td>
+                                    <td>{{loan.applicant.applicant.member.coop_no}}</td>
                                     <td>{{loan.applicant.applicant.member.get_full_name}}</td>
-                                    <td>{{loan.loan_amount}}</td>
+                                    <td>{{loan.applicant.loan_amount}}</td>
                                     <td>{{loan.tdate}}</td>
                                  
                                     <td><a href="{% url 'Loan_application_approval_details' loan.pk %}" class="btn btn-primary">Details</a></td>

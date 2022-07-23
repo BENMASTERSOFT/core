@@ -5064,6 +5064,40 @@ def auto_stop_savings_update(request,pk):
 
 
 
+def loan_path_settings(request,pk):
+    task_array=[]
+    if not request.user.user_type == '1':
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
+    item= TransactionTypes.objects.get(id=pk)
+    title="Update Loan Path for " +  item.name
+    instructions='''
+    This page enable you to Manage Loan Path for for this loan.
+    '''
+    form = loan_path_settings_form(request.POST or None)
+
+    if request.method ==  "POST":
+        if form.is_valid():
+            loan_path=form.cleaned_data["loan_path"]
+
+            item.loan_path=loan_path
+            item.save()
+            messages.success(request,"Record Updated Successfully")
+            return  HttpResponseRedirect(reverse('loan_settings_details_load',args=(pk,)))
+
+    form.fields['loan_path'].initial=item.loan_path
+    context={
+    'task_array':task_array,
+    'form':form,
+    'instructions':instructions,
+    'url':'loan_path_settings',
+    'button_text':"Update Record",
+    'title':title,
+    }
+    return render(request,'master_templates/loan_criteria_update.html', context)
+
+
 def receipt_types_settings(request,pk):
     task_array=[]
     if not request.user.user_type == '1':
@@ -7416,16 +7450,12 @@ def loan_request_approval_period_load(request):
 
     applicants=[]
     if request.method == 'POST':
-        period_id=request.POST.get("period")
-        period = Commodity_Period.objects.get(id=period_id)
-
-        batch_id=request.POST.get('batch')
-        batch=Commodity_Period_Batch.objects.get(id=batch_id)
+        
 
         loan_id = request.POST.get('loans')
         loan = TransactionTypes.objects.get(id=loan_id)
 
-        applicants = LoanRequest.objects.filter(loan=loan,period=period,batch=batch,approval_status='PENDING',transaction_status='UNTREATED').filter(~Q(submission_status='PENDING'))
+        applicants = LoanRequestShortListing.objects.filter(applicant__loan=loan,approval_status='PENDING',status='UNTREATED')
 
     context={
     'task_array':task_array,
@@ -7444,9 +7474,10 @@ def Loan_request_approval_details(request,pk):
         for task in tasks:
             task_array.append(task.task.title)
 
-    loan_comment=LoanRequest.objects.get(id=pk)
-    loan_analysis=LoanRequestSettings.objects.filter(applicant_id=pk,category='ANALYSIS')
-    loan_summary=LoanRequestSettings.objects.filter(applicant_id=pk,category='SUMMARY')
+    loan=LoanRequestShortListing.objects.get(id=pk)
+    loan_request=LoanRequest.objects.get(id=loan.applicant_id)
+    loan_analysis=LoanRequestSettings.objects.filter(applicant=loan_request,category='ANALYSIS')
+    loan_summary=LoanRequestSettings.objects.filter(applicant=loan_request,category='SUMMARY')
 
 
 
@@ -7465,26 +7496,27 @@ def Loan_request_approval_details(request,pk):
             messages.info(request,"Amount approved cannot be less than or equal to Zero(0)")
             return HttpResponseRedirect(reverse('Loan_request_approval_details', args=(pk,)))
 
-        if float(loan_comment.loan_amount) < float(approved_amount):
+        if float(loan_request.loan_amount) < float(approved_amount):
             messages.info(request,"Amount approved cannot be more than applied Amount")
             return HttpResponseRedirect(reverse('Loan_request_approval_details', args=(pk,)))
 
         status=request.POST.get('approval_status')
 
-
+  
         approved_date= get_current_date(date_approved)
 
 
-        loan_comment.approval_status=status
-        loan_comment.approval_comment=comment
-        loan_comment.approval_date=approved_date
-        loan_comment.approval_officer=approval_officer.username
-        loan_comment.approved_amount=approved_amount
-        loan_comment.save()
+        loan.approval_status=status
+        loan.approval_comment=comment
+        loan.approval_date=approved_date
+        loan.approval_officer=approval_officer.username
+        loan.approved_amount=approved_amount
+        loan.save()
 
         return HttpResponseRedirect(reverse('loan_request_approval_period_load'))
 
     form=MemberShipRequestAdditionalInfo_form(request.POST or None)
+    form.fields['amount'].initial=loan_request.loan_amount
     form.fields['comment'].initial="Approved"
     form.fields['date_approved'].initial=now
     context={
@@ -7493,9 +7525,92 @@ def Loan_request_approval_details(request,pk):
     'loan_summary':loan_summary,
     'pk':pk,
     'form':form,
-    'loan_comment':loan_comment,
+    'loan_request':loan_request,
+    'loan_request':loan_request,
     }
     return render(request,'master_templates/Loan_request_approval_details.html',context)
+
+
+def emergency_Loan_application_approval_period_load(request):
+    task_array=[]
+    if not request.user.user_type == '1':
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
+
+    form=emergency_loan_request_order_form(request.POST or None)
+    exist_loans=[]
+    if request.method == 'POST':
+        
+        loan_id = request.POST.get('loans')
+        loan = TransactionTypes.objects.get(id=loan_id)
+
+        exist_loans = LoanApplicationShortListing.objects.filter(applicant__applicant__loan=loan,status='UNTREATED',processing_status='UNPROCESSED',approval_status='PENDING')
+
+    context={
+    'exist_loans':exist_loans,
+    'form':form,
+    'task_array':task_array,
+
+    }
+    return render(request,'master_templates/emergency_Loan_application_approval_period_load.html',context)
+
+
+
+def emergency_loan_application_approval_details(request,pk):
+    form = Loan_application_approval_form(request.POST or None)
+    task_array=[]
+    if not request.user.user_type == '1':
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
+   
+    loan=LoanApplicationShortListing.objects.get(id=pk)
+    loan_comment=LoanApplication.objects.get(id=loan.applicant.pk)
+
+    loan_analysis=LoanApplicationSettings.objects.filter(applicant_id=loan_comment.pk,category='ANALYSIS')
+    loan_summary=LoanApplicationSettings.objects.filter(applicant_id=loan_comment.pk,category='SUMMARY')
+
+
+    if request.method=='POST':
+        date_approved_id=request.POST.get("date_approved")
+        date_format = '%Y-%m-%d'
+        dtObj = datetime.datetime.strptime(date_approved_id, date_format)
+        approved_date=get_current_date(dtObj)
+
+        approval_officer=CustomUser.objects.get(id=request.user.id).username
+        comment=request.POST.get('comment')
+        approved_amount=request.POST.get('amount')
+
+        if float(loan_comment.loan_amount) < float(approved_amount):
+            messages.success(request,"Amount approved cannot be more than applied Amount")
+            return HttpResponseRedirect(reverse('emergency_loan_application_approval_details', args=(pk,)))
+
+        status=request.POST.get('approval_status')
+
+        loan.approval_status=status
+        loan.approval_comment=comment
+        loan.approval_date=approved_date
+        loan.approved_amount=approved_amount
+        loan.approval_officer=approval_officer
+        loan.save()
+
+        return HttpResponseRedirect(reverse('emergency_Loan_application_approval_period_load'))
+
+    form.fields['amount'].initial=loan_comment.loan_amount
+    form.fields['comment'].initial="Please Process"
+    form.fields['date_approved'].initial=get_current_date(now)
+    context={
+    'task_array':task_array,
+    'loan_analysis':loan_analysis,
+    'loan_summary':loan_summary,
+    'pk':pk,
+    'loan_comment':loan_comment,
+    'form':form,
+    'approval_status':APPROVAL_STATUS,
+    }
+    return render(request,'master_templates/emergency_loan_application_approval_details.html',context)
+
 
 
 def Loan_application_approval_period_load(request):
@@ -7505,20 +7620,14 @@ def Loan_application_approval_period_load(request):
         for task in tasks:
             task_array.append(task.task.title)
 
-
     form=loan_request_order_form(request.POST or None)
     exist_loans=[]
     if request.method == 'POST':
-        period_id=request.POST.get("period")
-        period = Commodity_Period.objects.get(id=period_id)
-
-        batch_id=request.POST.get('batch')
-        batch=Commodity_Period_Batch.objects.get(id=batch_id)
-
+        
         loan_id = request.POST.get('loans')
         loan = TransactionTypes.objects.get(id=loan_id)
 
-        exist_loans = LoanApplication.objects.filter(applicant__applicant__loan=loan,applicant__applicant__period=period,applicant__applicant__batch=batch,transaction_status='UNTREATED',submission_status='SUBMITTED',applicant__processing_status='PROCESSED',approval_status='PENDING')
+        exist_loans = LoanApplicationShortListing.objects.filter(applicant__applicant__loan=loan,status='UNTREATED',processing_status='UNPROCESSED',approval_status='PENDING')
 
     context={
     'exist_loans':exist_loans,
@@ -7538,9 +7647,12 @@ def Loan_application_approval_details(request,pk):
         tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
         for task in tasks:
             task_array.append(task.task.title)
-    loan_comment=LoanApplication.objects.get(id=pk)
-    loan_analysis=LoanApplicationSettings.objects.filter(applicant_id=pk,category='ANALYSIS')
-    loan_summary=LoanApplicationSettings.objects.filter(applicant_id=pk,category='SUMMARY')
+   
+    loan=LoanApplicationShortListing.objects.get(id=pk)
+    loan_comment=LoanApplication.objects.get(id=loan.applicant.pk)
+
+    loan_analysis=LoanApplicationSettings.objects.filter(applicant_id=loan_comment.pk,category='ANALYSIS')
+    loan_summary=LoanApplicationSettings.objects.filter(applicant_id=loan_comment.pk,category='SUMMARY')
 
 
     if request.method=='POST':
@@ -7555,19 +7667,19 @@ def Loan_application_approval_details(request,pk):
 
         if float(loan_comment.loan_amount) < float(approved_amount):
             messages.success(request,"Amount approved cannot be more than applied Amount")
-            return HttpResponseRedirect(reverse('Loan_request_approval_details', args=(pk,)))
+            return HttpResponseRedirect(reverse('Loan_application_approval_details', args=(pk,)))
 
         status=request.POST.get('approval_status')
 
 
 
 
-        loan_comment.approval_status=status
-        loan_comment.approval_comment=comment
-        loan_comment.approval_date=approved_date
-        loan_comment.approved_amount=approved_amount
-        loan_comment.approval_officer=approval_officer
-        loan_comment.save()
+        loan.approval_status=status
+        loan.approval_comment=comment
+        loan.approval_date=approved_date
+        loan.approved_amount=approved_amount
+        loan.approval_officer=approval_officer
+        loan.save()
 
         return HttpResponseRedirect(reverse('Loan_application_approval_period_load'))
 

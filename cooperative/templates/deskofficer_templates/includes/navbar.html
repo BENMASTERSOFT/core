@@ -18,7 +18,7 @@
 
 
 
-                <li class="heading"> <a href="{% url 'Members_Account_Creation_Search' %}">FEATURES</a>  </li>
+                <li class="heading"> <a href="{% url 'desk_widgets_form' %}">FEATURES</a>  </li>
 
                 {% if default_password == "NO" %}
 
@@ -349,55 +349,16 @@
                         <a href="javascript:;"><i class="sidebar-item-icon fa fa-sitemap"></i>
                             <span class="nav-label">Loan Manager</span><i class="fa fa-angle-left arrow"></i></a>
                         <ul class="nav-2-level collapse">
-                            <li>
-                                <a href="javascript:;">
-                                    <span class="nav-label">Project Loans</span><i class="fa fa-angle-left arrow"></i></a>
-                                <ul class="nav-3-level collapse">
-                                    <li>
-                                        <a href="{% url 'loan_request_search' %}">Loan Request</a>
-                                    </li>
-                                    <li>
-                                        <a href="{% url 'loan_request_manage_period_load' %}">Manage Request</a>
-                                    </li>
-                                    <li>
-                                        <a href="{% url 'loan_request_approved_Issue_form_period_load' %}">Loan Form Sales</a>
-                                    </li>
-                                    <li>
-                                        <a href="{% url 'loan_application_approved_period_load' %}">Loan Application</a>
-                                    </li>
-                                    <li>
-                                        <a href="{% url 'Loan_application_processing_period_load' %}">Loan Processing</a>
-                                    </li>
-                                    <li>
-                                        <a href="{% url 'loan_request_order_discard' %}">Discard Incomplete Applications</a>
-                                    </li>
-
-
-                                </ul>
+                              <li>
+                                <a href="{% url 'Project_Loan_Dashboard_Load' %}">Project Loans</a>
                             </li>
-
-
-                            <li>
-                                <a href="javascript:;">
-                                    <span class="nav-label">Emergency Loans</span><i class="fa fa-angle-left arrow"></i></a>
-                                <ul class="nav-3-level collapse">
-                                  
-                                    <li>
-                                        <a href="{% url 'loan_request_approved_Issue_form_period_load' %}">Loan Form Sales</a>
-                                    </li>
-                                    <li>
-                                        <a href="{% url 'loan_application_approved_period_load' %}">Loan Application</a>
-                                    </li>
-                                    <li>
-                                        <a href="{% url 'Loan_application_processing_period_load' %}">Loan Processing</a>
-                                    </li>
-                                    <li>
-                                        <a href="{% url 'loan_request_order_discard' %}">Discard Incomplete Applications</a>
-                                    </li>
-
-
-                                </ul>
+                           <li>
+                                <a href="{% url 'Emergency_Loan_Dashboard_Load' %}">Emergency Loans</a>
                             </li>
+                           
+
+
+                        
                             <li>
                                 <a href="javascript:;">
                                     <span class="nav-label">Commodity Loans</span><i class="fa fa-angle-left arrow"></i></a>

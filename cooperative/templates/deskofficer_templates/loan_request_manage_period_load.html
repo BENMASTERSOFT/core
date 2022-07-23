@@ -10,7 +10,7 @@
                     <div class="col-md-6">
                         <div class="ibox">
                             <div class="ibox-head">
-                                <div class="ibox-title">List of Loans  | <input type="button" class="btn btn-primary" value="Back" onclick="history.back()"/></div>
+                                <div class="ibox-title">List of Loans  | <a href="{% url 'Project_Loan_Dashboard_Load' %}" class="btn btn-secondary">Back</a></div>
                                
                             </div>
                             <div class="form-group">
@@ -37,18 +37,7 @@
                             <div class="ibox-body">
                                 <form class="form-horizontal" method="POST" action="" enctype="multipart/form-data" novalidate>
                                     {% csrf_token %}
-                                    <div class="form-group row">
-                                        <label class="col-sm-4 col-form-label">Period</label>
-                                        <div class="col-sm-8">
-                                            {{form.period}}
-                                        </div>
-                                    </div>   
-                                    <div class="form-group row">
-                                        <label class="col-sm-4 col-form-label">Batch</label>
-                                        <div class="col-sm-8">
-                                            {{form.batch}}
-                                        </div>
-                                    </div>
+                                    
                                     <div class="form-group row">
                                         <label class="col-sm-4 col-form-label">Loan Types</label>
                                         <div class="col-sm-8">
@@ -59,7 +48,7 @@
                                     
                                     <div class="form-group row">
                                         <div class="col-sm-8 ml-sm-auto">
-                                            <button class="btn btn-info" type="submit">Submit</button>
+                                            <button class="btn btn-info" type="submit">Display</button>
                                         </div>
                                     </div>
                                 </form>
@@ -73,7 +62,7 @@
                     <div class="col-xl-10">
                         <div class="ibox">
                             <div class="ibox-head">
-                                <div class="ibox-title">List Of Applied Loans</div>
+                                <div class="ibox-title">List of Applied Loans Management</div>
                             </div>
                             <div class="ibox-body">
                                 <table class="table table-bordered">
@@ -83,7 +72,7 @@
                                             <th>Description</th>
                                             <th>Amount</th>
                                             <th>Date Applied</th>
-                                            <th>Batch</th>
+                                         
                                             <th>Action</th>
                                         </tr>
                                     </thead>
@@ -94,7 +83,7 @@
                                             <td>{{loan.loan.name}}</td>
                                             <td>{{loan.loan_amount}}</td>
                                             <td>{{loan.created_at|date:"D, d M, Y"}}</td>
-                                            <td>{{loan.period}} {{loan.batch}}</td>
+                                        
                                             <td>
                                                 <a href="{% url 'loan_request_manage_transaction_delete' loan.pk  %}" class="btn btn-danger">Remove</a>
                                                 

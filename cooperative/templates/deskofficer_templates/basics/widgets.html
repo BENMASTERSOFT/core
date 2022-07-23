@@ -1,0 +1,1033 @@
+{% extends 'deskofficer_templates/base_template.html' %}
+{% load static %}
+
+{% block custom_css %}
+  <!-- Google Font: Source Sans Pro -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="{% static '/cooperative/dashboard/plugins/fontawesome-free/css/all.min.css' %}">
+  <!-- Ionicons -->
+  <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css' %}">
+  <!-- Theme style -->
+  <link rel="stylesheet" href="{% static '/cooperative/dashboard/dist/css/adminlte.min.css' %}">
+{% endblock %}
+
+<div class="wrapper">
+  <!-- Navbar -->
+
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+
+    {% block content %}
+    <!-- Content Header (Page header) -->
+   {% comment %}
+    <section class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h1>Widgets</h1>
+          </div>
+          <div class="col-sm-6">
+            <ol class="breadcrumb float-sm-right">
+              <li class="breadcrumb-item"><a href="#">Home</a></li>
+              <li class="breadcrumb-item active">Widgets</li>
+            </ol>
+          </div>
+        </div>
+      </div><!-- /.container-fluid -->
+    </section>
+    {% endcomment %}
+    <!-- Main content -->
+    <section class="content">
+      <div class="container-fluid">
+        <h5 class="mb-2">Info Box</h5>
+        {% comment %}
+        <div class="row">
+          <div class="col-md-3 col-sm-6 col-12">
+            <div class="info-box">
+              <span class="info-box-icon bg-info"><i class="far fa-envelope"></i></span>
+
+              <div class="info-box-content">
+                <span class="info-box-text">Messages</span>
+                <span class="info-box-number">1,410</span>
+              </div>
+              <!-- /.info-box-content -->
+            </div>
+            <!-- /.info-box -->
+          </div>
+          <!-- /.col -->
+          <div class="col-md-3 col-sm-6 col-12">
+            <div class="info-box">
+              <span class="info-box-icon bg-success"><i class="far fa-flag"></i></span>
+
+              <div class="info-box-content">
+                <span class="info-box-text">Bookmarks</span>
+                <span class="info-box-number">410</span>
+              </div>
+              <!-- /.info-box-content -->
+            </div>
+            <!-- /.info-box -->
+          </div>
+          <!-- /.col -->
+          <div class="col-md-3 col-sm-6 col-12">
+            <div class="info-box">
+              <span class="info-box-icon bg-warning"><i class="far fa-copy"></i></span>
+
+              <div class="info-box-content">
+                <span class="info-box-text">Uploads</span>
+                <span class="info-box-number">13,648</span>
+              </div>
+              <!-- /.info-box-content -->
+            </div>
+            <!-- /.info-box -->
+          </div>
+          <!-- /.col -->
+          <div class="col-md-3 col-sm-6 col-12">
+            <div class="info-box">
+              <span class="info-box-icon bg-danger"><i class="far fa-star"></i></span>
+
+              <div class="info-box-content">
+                <span class="info-box-text">Likes</span>
+                <span class="info-box-number">93,139</span>
+              </div>
+              <!-- /.info-box-content -->
+            </div>
+            <!-- /.info-box -->
+          </div>
+          <!-- /.col -->
+        </div>
+        {% endcomment %}
+        <!-- /.row -->
+
+        <!-- =========================================================== -->
+        {% comment %}
+        <h5 class="mb-2">Info Box With Custom Shadows <small><i>Using Bootstrap's Shadow Utility</i></small></h5>
+        <div class="row">
+          <div class="col-md-3 col-sm-6 col-12">
+            <div class="info-box shadow-none">
+              <span class="info-box-icon bg-info"><i class="far fa-envelope"></i></span>
+
+              <div class="info-box-content">
+                <span class="info-box-text">Shadows</span>
+                <span class="info-box-number">None</span>
+              </div>
+              <!-- /.info-box-content -->
+            </div>
+            <!-- /.info-box -->
+          </div>
+          <!-- /.col -->
+          <div class="col-md-3 col-sm-6 col-12">
+            <div class="info-box shadow-sm">
+              <span class="info-box-icon bg-success"><i class="far fa-flag"></i></span>
+
+              <div class="info-box-content">
+                <span class="info-box-text">Shadows</span>
+                <span class="info-box-number">Small</span>
+              </div>
+              <!-- /.info-box-content -->
+            </div>
+            <!-- /.info-box -->
+          </div>
+          <!-- /.col -->
+          <div class="col-md-3 col-sm-6 col-12">
+            <div class="info-box shadow">
+              <span class="info-box-icon bg-warning"><i class="far fa-copy"></i></span>
+
+              <div class="info-box-content">
+                <span class="info-box-text">Shadows</span>
+                <span class="info-box-number">Regular</span>
+              </div>
+              <!-- /.info-box-content -->
+            </div>
+            <!-- /.info-box -->
+          </div>
+          <!-- /.col -->
+          <div class="col-md-3 col-sm-6 col-12">
+            <div class="info-box shadow-lg">
+              <span class="info-box-icon bg-danger"><i class="far fa-star"></i></span>
+
+              <div class="info-box-content">
+                <span class="info-box-text">Shadows</span>
+                <span class="info-box-number">Large</span>
+              </div>
+              <!-- /.info-box-content -->
+            </div>
+            <!-- /.info-box -->
+          </div>
+          <!-- /.col -->
+        </div>
+        <!-- /.row -->
+      {% endcomment %}
+        <!-- =========================================================== -->
+        {% comment %}
+        <h5 class="mt-4 mb-2">Info Box With <code>bg-*</code></h5>
+        <div class="row">
+          <div class="col-md-3 col-sm-6 col-12">
+            <div class="info-box bg-info">
+              <span class="info-box-icon"><i class="far fa-bookmark"></i></span>
+
+              <div class="info-box-content">
+                <span class="info-box-text">Bookmarks</span>
+                <span class="info-box-number">41,410</span>
+
+                <div class="progress">
+                  <div class="progress-bar" style="width: 70%"></div>
+                </div>
+                <span class="progress-description">
+                  70% Increase in 30 Days
+                </span>
+              </div>
+              <!-- /.info-box-content -->
+            </div>
+            <!-- /.info-box -->
+          </div>
+          <!-- /.col -->
+          <div class="col-md-3 col-sm-6 col-12">
+            <div class="info-box bg-success">
+              <span class="info-box-icon"><i class="far fa-thumbs-up"></i></span>
+
+              <div class="info-box-content">
+                <span class="info-box-text">Likes</span>
+                <span class="info-box-number">41,410</span>
+
+                <div class="progress">
+                  <div class="progress-bar" style="width: 70%"></div>
+                </div>
+                <span class="progress-description">
+                  70% Increase in 30 Days
+                </span>
+              </div>
+              <!-- /.info-box-content -->
+            </div>
+            <!-- /.info-box -->
+          </div>
+          <!-- /.col -->
+          <div class="col-md-3 col-sm-6 col-12">
+            <div class="info-box bg-warning">
+              <span class="info-box-icon"><i class="far fa-calendar-alt"></i></span>
+
+              <div class="info-box-content">
+                <span class="info-box-text">Events</span>
+                <span class="info-box-number">41,410</span>
+
+                <div class="progress">
+                  <div class="progress-bar" style="width: 70%"></div>
+                </div>
+                <span class="progress-description">
+                  70% Increase in 30 Days
+                </span>
+              </div>
+              <!-- /.info-box-content -->
+            </div>
+            <!-- /.info-box -->
+          </div>
+          <!-- /.col -->
+          <div class="col-md-3 col-sm-6 col-12">
+            <div class="info-box bg-danger">
+              <span class="info-box-icon"><i class="fas fa-comments"></i></span>
+
+              <div class="info-box-content">
+                <span class="info-box-text">Comments</span>
+                <span class="info-box-number">41,410</span>
+
+                <div class="progress">
+                  <div class="progress-bar" style="width: 70%"></div>
+                </div>
+                <span class="progress-description">
+                  70% Increase in 30 Days
+                </span>
+              </div>
+              <!-- /.info-box-content -->
+            </div>
+            <!-- /.info-box -->
+          </div>
+          <!-- /.col -->
+        </div>
+        <!-- /.row -->
+        {% endcomment %}
+        <!-- =========================================================== -->
+        {% comment %}
+        <h5 class="mt-4 mb-2">Info Box With <code>bg-gradient-*</code></h5>
+        <div class="row">
+          <div class="col-md-3 col-sm-6 col-12">
+            <div class="info-box bg-gradient-info">
+              <span class="info-box-icon"><i class="far fa-bookmark"></i></span>
+
+              <div class="info-box-content">
+                <span class="info-box-text">Bookmarks</span>
+                <span class="info-box-number">41,410</span>
+
+                <div class="progress">
+                  <div class="progress-bar" style="width: 70%"></div>
+                </div>
+                <span class="progress-description">
+                  70% Increase in 30 Days
+                </span>
+              </div>
+              <!-- /.info-box-content -->
+            </div>
+            <!-- /.info-box -->
+          </div>
+          <!-- /.col -->
+          <div class="col-md-3 col-sm-6 col-12">
+            <div class="info-box bg-gradient-success">
+              <span class="info-box-icon"><i class="far fa-thumbs-up"></i></span>
+
+              <div class="info-box-content">
+                <span class="info-box-text">Likes</span>
+                <span class="info-box-number">41,410</span>
+
+                <div class="progress">
+                  <div class="progress-bar" style="width: 70%"></div>
+                </div>
+                <span class="progress-description">
+                  70% Increase in 30 Days
+                </span>
+              </div>
+              <!-- /.info-box-content -->
+            </div>
+            <!-- /.info-box -->
+          </div>
+          <!-- /.col -->
+          <div class="col-md-3 col-sm-6 col-12">
+            <div class="info-box bg-gradient-warning">
+              <span class="info-box-icon"><i class="far fa-calendar-alt"></i></span>
+
+              <div class="info-box-content">
+                <span class="info-box-text">Events</span>
+                <span class="info-box-number">41,410</span>
+
+                <div class="progress">
+                  <div class="progress-bar" style="width: 70%"></div>
+                </div>
+                <span class="progress-description">
+                  70% Increase in 30 Days
+                </span>
+              </div>
+              <!-- /.info-box-content -->
+            </div>
+            <!-- /.info-box -->
+          </div>
+          <!-- /.col -->
+          <div class="col-md-3 col-sm-6 col-12">
+            <div class="info-box bg-gradient-danger">
+              <span class="info-box-icon"><i class="fas fa-comments"></i></span>
+
+              <div class="info-box-content">
+                <span class="info-box-text">Comments</span>
+                <span class="info-box-number">41,410</span>
+
+                <div class="progress">
+                  <div class="progress-bar" style="width: 70%"></div>
+                </div>
+                <span class="progress-description">
+                  70% Increase in 30 Days
+                </span>
+              </div>
+              <!-- /.info-box-content -->
+            </div>
+            <!-- /.info-box -->
+          </div>
+          <!-- /.col -->
+        </div>
+        <!-- /.row -->
+      {% endcomment %}
+        <!-- =========================================================== -->
+
+        {% comment %}
+        <!-- Small Box (Stat card) -->
+        <h5 class="mb-2 mt-4">Small Box</h5>
+        <div class="row">
+          <div class="col-lg-3 col-6">
+            <!-- small card -->
+            <div class="small-box bg-info">
+              <div class="inner">
+                <h3>150</h3>
+
+                <p>New Orders</p>
+              </div>
+              <div class="icon">
+                <i class="fas fa-shopping-cart"></i>
+              </div>
+              <a href="#" class="small-box-footer">
+                More info <i class="fas fa-arrow-circle-right"></i>
+              </a>
+            </div>
+          </div>
+          <!-- ./col -->
+          <div class="col-lg-3 col-6">
+            <!-- small card -->
+            <div class="small-box bg-success">
+              <div class="inner">
+                <h3>53<sup style="font-size: 20px">%</sup></h3>
+
+                <p>Bounce Rate</p>
+              </div>
+              <div class="icon">
+                <i class="ion ion-stats-bars"></i>
+              </div>
+              <a href="#" class="small-box-footer">
+                More info <i class="fas fa-arrow-circle-right"></i>
+              </a>
+            </div>
+          </div>
+          <!-- ./col -->
+          <div class="col-lg-3 col-6">
+            <!-- small card -->
+            <div class="small-box bg-warning">
+              <div class="inner">
+                <h3>44</h3>
+
+                <p>User Registrations</p>
+              </div>
+              <div class="icon">
+                <i class="fas fa-user-plus"></i>
+              </div>
+              <a href="#" class="small-box-footer">
+                More info <i class="fas fa-arrow-circle-right"></i>
+              </a>
+            </div>
+          </div>
+          <!-- ./col -->
+          <div class="col-lg-3 col-6">
+            <!-- small card -->
+            <div class="small-box bg-danger">
+              <div class="inner">
+                <h3>65</h3>
+
+                <p>Unique Visitors</p>
+              </div>
+              <div class="icon">
+                <i class="fas fa-chart-pie"></i>
+              </div>
+              <a href="#" class="small-box-footer">
+                More info <i class="fas fa-arrow-circle-right"></i>
+              </a>
+            </div>
+          </div>
+          <!-- ./col -->
+        </div>
+        <!-- /.row -->
+     
+      
+        <!-- =========================================================== -->
+        <h4 class="mb-2 mt-4">Cards</h4>
+        <h5 class="mb-2">Abilities</h5>
+        <div class="row">
+          <div class="col-md-3">
+            <div class="card card-primary collapsed-card">
+              <div class="card-header">
+                <h3 class="card-title">Expandable</h3>
+
+                <div class="card-tools">
+                  <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-plus"></i>
+                  </button>
+                </div>
+                <!-- /.card-tools -->
+              </div>
+              <!-- /.card-header -->
+              <div class="card-body">
+                The body of the card
+              </div>
+              <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+          </div>
+          <!-- /.col -->
+          <div class="col-md-3">
+            <div class="card card-success">
+              <div class="card-header">
+                <h3 class="card-title">Collapsable</h3>
+
+                <div class="card-tools">
+                  <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i>
+                  </button>
+                </div>
+                <!-- /.card-tools -->
+              </div>
+              <!-- /.card-header -->
+              <div class="card-body">
+                The body of the card
+              </div>
+              <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+          </div>
+          <!-- /.col -->
+          <div class="col-md-3">
+            <div class="card card-warning">
+              <div class="card-header">
+                <h3 class="card-title">Removable</h3>
+
+                <div class="card-tools">
+                  <button type="button" class="btn btn-tool" data-card-widget="remove"><i class="fas fa-times"></i>
+                  </button>
+                </div>
+                <!-- /.card-tools -->
+              </div>
+              <!-- /.card-header -->
+              <div class="card-body">
+                The body of the card
+              </div>
+              <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+          </div>
+          <!-- /.col -->
+          <div class="col-md-3">
+            <div class="card card-danger">
+              <div class="card-header">
+                <h3 class="card-title">Maximizable</h3>
+
+                <div class="card-tools">
+                  <button type="button" class="btn btn-tool" data-card-widget="maximize"><i class="fas fa-expand"></i>
+                  </button>
+                </div>
+                <!-- /.card-tools -->
+              </div>
+              <!-- /.card-header -->
+              <div class="card-body">
+                The body of the card
+              </div>
+              <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+          </div>
+          <!-- /.col -->
+        </div>
+        <!-- /.row -->
+
+        <div class="row">
+          <div class="col-md-3">
+            <div class="card card-primary">
+              <div class="card-header">
+                <h3 class="card-title">Card Refresh</h3>
+
+                <div class="card-tools">
+                  <button type="button" class="btn btn-tool" data-card-widget="card-refresh" data-source="widgets.html" data-source-selector="#card-refresh-content">
+                    <i class="fas fa-sync-alt"></i>
+                  </button>
+                </div>
+                <!-- /.card-tools -->
+              </div>
+              <!-- /.card-header -->
+              <div class="card-body">
+                The body of the card
+              </div>
+              <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+            <div class="d-none" id="card-refresh-content">
+                The body of the card after card refresh
+            </div>
+          </div>
+          <!-- /.col -->
+          <div class="col-md-3">
+            <div class="card card-success">
+              <div class="card-header">
+                <h3 class="card-title">All together</h3>
+
+                <div class="card-tools">
+                  <button type="button" class="btn btn-tool" data-card-widget="card-refresh" data-source="widgets.html" data-source-selector="#card-refresh-content" data-load-on-init="false">
+                    <i class="fas fa-sync-alt"></i>
+                  </button>
+                  <button type="button" class="btn btn-tool" data-card-widget="maximize">
+                    <i class="fas fa-expand"></i>
+                  </button>
+                  <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                    <i class="fas fa-minus"></i>
+                  </button>
+                  <button type="button" class="btn btn-tool" data-card-widget="remove">
+                    <i class="fas fa-times"></i>
+                  </button>
+                </div>
+                <!-- /.card-tools -->
+              </div>
+              <!-- /.card-header -->
+              <div class="card-body">
+                The body of the card
+              </div>
+              <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+          </div>
+          <!-- /.col -->
+          <div class="col-md-3">
+            <div class="card card-warning">
+              <div class="card-header">
+                <h3 class="card-title">Loading state</h3>
+              </div>
+              <div class="card-body">
+                The body of the card
+              </div>
+              <!-- /.card-body -->
+              <!-- Loading (remove the following to stop the loading)-->
+              <div class="overlay">
+                <i class="fas fa-2x fa-sync-alt"></i>
+              </div>
+              <!-- end loading -->
+            </div>
+            <!-- /.card -->
+          </div>
+          <!-- /.col -->
+          <div class="col-md-3">
+            <div class="card card-danger">
+              <div class="card-header">
+                <h3 class="card-title">Loading state (dark)</h3>
+              </div>
+              <div class="card-body">
+                The body of the card
+              </div>
+              <!-- /.card-body -->
+              <!-- Loading (remove the following to stop the loading)-->
+              <div class="overlay dark">
+                <i class="fas fa-2x fa-sync-alt"></i>
+              </div>
+              <!-- end loading -->
+            </div>
+            <!-- /.card -->
+          </div>
+          <!-- /.col -->
+        </div>
+        <!-- /.row -->
+ 
+        <!-- =========================================================== -->
+        <h5 class="mb-2">Custom Shadows Variations <small><i>Using Bootstrap's Shadow Utility</i></small></h5>
+        <div class="row">
+          <div class="col-md-3">
+            <div class="card card-primary shadow-none">
+              <div class="card-header">
+                <h3 class="card-title">Shadow - None</h3>
+
+                <div class="card-tools">
+                  <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                    <i class="fas fa-minus"></i>
+                  </button>
+                </div>
+                <!-- /.card-tools -->
+              </div>
+              <!-- /.card-header -->
+              <div class="card-body">
+                The body of the card
+              </div>
+              <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+          </div>
+          <!-- /.col -->
+          <div class="col-md-3">
+            <div class="card card-success shadow-sm">
+              <div class="card-header">
+                <h3 class="card-title">Shadow - Small</h3>
+
+                <div class="card-tools">
+                  <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                    <i class="fas fa-minus"></i>
+                  </button>
+                </div>
+                <!-- /.card-tools -->
+              </div>
+              <!-- /.card-header -->
+              <div class="card-body">
+                The body of the card
+              </div>
+              <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+          </div>
+          <!-- /.col -->
+          <div class="col-md-3">
+            <div class="card card-warning shadow">
+              <div class="card-header">
+                <h3 class="card-title">Shadow - Regular</h3>
+
+                <div class="card-tools">
+                  <button type="button" class="btn btn-tool" data-card-widget="remove"><i class="fas fa-times"></i>
+                  </button>
+                </div>
+                <!-- /.card-tools -->
+              </div>
+              <!-- /.card-header -->
+              <div class="card-body">
+                The body of the card
+              </div>
+              <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+          </div>
+          <!-- /.col -->
+          <div class="col-md-3">
+            <div class="card card-danger shadow-lg">
+              <div class="card-header">
+                <h3 class="card-title">Shadow - Large</h3>
+
+                <div class="card-tools">
+                  <button type="button" class="btn btn-tool" data-card-widget="maximize"><i class="fas fa-expand"></i>
+                  </button>
+                </div>
+                <!-- /.card-tools -->
+              </div>
+              <!-- /.card-header -->
+              <div class="card-body">
+                The body of the card
+              </div>
+              <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+          </div>
+          <!-- /.col -->
+        </div>
+        <!-- /.row -->
+  {% endcomment %}
+        <!-- =========================================================== -->
+
+        <h5 class="mb-2">Colors Variations</h5>
+
+        <div class="row">
+          <div class="col-md-3">
+            <div class="card card-primary">
+              <div class="card-header">
+                <h3 class="card-title">Primary</h3>
+
+                <div class="card-tools">
+                  <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                    <i class="fas fa-minus"></i>
+                  </button>
+                </div>
+                <!-- /.card-tools -->
+              </div>
+              <!-- /.card-header -->
+              <div class="card-body">
+                The body of the card
+              </div>
+              <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+          </div>
+          <!-- /.col -->
+          <div class="col-md-3">
+            <div class="card card-success">
+              <div class="card-header">
+                <h3 class="card-title">Success</h3>
+
+                <div class="card-tools">
+                  <button type="button" class="btn btn-tool" data-card-widget="remove"><i class="fas fa-times"></i>
+                  </button>
+                </div>
+                <!-- /.card-tools -->
+              </div>
+              <!-- /.card-header -->
+              <div class="card-body">
+                The body of the card
+              </div>
+              <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+          </div>
+          <!-- /.col -->
+          <div class="col-md-3">
+            <div class="card card-warning">
+              <div class="card-header">
+                <h3 class="card-title">Warning</h3>
+
+                <div class="card-tools">
+                  <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                    <i class="fas fa-minus"></i>
+                  </button>
+                </div>
+                <!-- /.card-tools -->
+              </div>
+              <!-- /.card-header -->
+              <div class="card-body">
+                The body of the card
+              </div>
+              <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+          </div>
+          <!-- /.col -->
+          <div class="col-md-3">
+            <div class="card card-danger">
+              <div class="card-header">
+                <h3 class="card-title">Danger</h3>
+              </div>
+              <div class="card-body">
+                The body of the card
+              </div>
+              <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+          </div>
+          <!-- /.col -->
+        </div>
+        <!-- /.row -->
+
+        <div class="row">
+          <div class="col-md-3">
+            <div class="card card-outline card-primary">
+              <div class="card-header">
+                <h3 class="card-title">Primary Outline</h3>
+
+                <div class="card-tools">
+                  <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                    <i class="fas fa-minus"></i>
+                  </button>
+                </div>
+                <!-- /.card-tools -->
+              </div>
+              <!-- /.card-header -->
+              <div class="card-body">
+                The body of the card
+              </div>
+              <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+          </div>
+          <!-- /.col -->
+          <div class="col-md-3">
+            <div class="card card-outline card-success">
+              <div class="card-header">
+                <h3 class="card-title">Success Outline</h3>
+
+                <div class="card-tools">
+                  <button type="button" class="btn btn-tool" data-card-widget="remove"><i class="fas fa-times"></i>
+                  </button>
+                </div>
+                <!-- /.card-tools -->
+              </div>
+              <!-- /.card-header -->
+              <div class="card-body">
+                The body of the card
+              </div>
+              <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+          </div>
+          <!-- /.col -->
+          <div class="col-md-3">
+            <div class="card card-outline card-warning">
+              <div class="card-header">
+                <h3 class="card-title">Warning Outline</h3>
+
+                <div class="card-tools">
+                  <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                    <i class="fas fa-minus"></i>
+                  </button>
+                </div>
+                <!-- /.card-tools -->
+              </div>
+              <!-- /.card-header -->
+              <div class="card-body">
+                The body of the card
+              </div>
+              <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+          </div>
+          <!-- /.col -->
+          <div class="col-md-3">
+            <div class="card card-outline card-danger">
+              <div class="card-header">
+                <h3 class="card-title">Danger Outline</h3>
+              </div>
+              <div class="card-body">
+                The body of the card
+              </div>
+              <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+          </div>
+          <!-- /.col -->
+        </div>
+        <!-- /.row -->
+
+        {% comment %}
+        <div class="row">
+          <div class="col-md-3">
+            <div class="card bg-primary">
+              <div class="card-header">
+                <h3 class="card-title">Primary</h3>
+
+                <div class="card-tools">
+                  <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                    <i class="fas fa-minus"></i>
+                  </button>
+                </div>
+                <!-- /.card-tools -->
+              </div>
+              <!-- /.card-header -->
+              <div class="card-body">
+                The body of the card
+              </div>
+              <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+          </div>
+          <!-- /.col -->
+          <div class="col-md-3">
+            <div class="card bg-success">
+              <div class="card-header">
+                <h3 class="card-title">Success</h3>
+
+                <div class="card-tools">
+                  <button type="button" class="btn btn-tool" data-card-widget="remove"><i class="fas fa-times"></i>
+                  </button>
+                </div>
+                <!-- /.card-tools -->
+              </div>
+              <!-- /.card-header -->
+              <div class="card-body">
+                The body of the card
+              </div>
+              <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+          </div>
+          <!-- /.col -->
+          <div class="col-md-3">
+            <div class="card bg-warning">
+              <div class="card-header">
+                <h3 class="card-title">Warning</h3>
+
+                <div class="card-tools">
+                  <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                    <i class="fas fa-minus"></i>
+                  </button>
+                </div>
+                <!-- /.card-tools -->
+              </div>
+              <!-- /.card-header -->
+              <div class="card-body">
+                The body of the card
+              </div>
+              <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+          </div>
+          <!-- /.col -->
+          <div class="col-md-3">
+            <div class="card bg-danger">
+              <div class="card-header">
+                <h3 class="card-title">Danger</h3>
+              </div>
+              <div class="card-body">
+                The body of the card
+              </div>
+              <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+          </div>
+          <!-- /.col -->
+        </div>
+        <!-- /.row -->
+
+        <div class="row">
+          <div class="col-md-3">
+            <div class="card bg-gradient-primary">
+              <div class="card-header">
+                <h3 class="card-title">Primary Gradient</h3>
+
+                <div class="card-tools">
+                  <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                    <i class="fas fa-minus"></i>
+                  </button>
+                </div>
+                <!-- /.card-tools -->
+              </div>
+              <!-- /.card-header -->
+              <div class="card-body">
+                The body of the card
+              </div>
+              <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+          </div>
+          <!-- /.col -->
+          <div class="col-md-3">
+            <div class="card bg-gradient-success">
+              <div class="card-header">
+                <h3 class="card-title">Success Gradient</h3>
+
+                <div class="card-tools">
+                  <button type="button" class="btn btn-tool" data-card-widget="remove"><i class="fas fa-times"></i>
+                  </button>
+                </div>
+                <!-- /.card-tools -->
+              </div>
+              <!-- /.card-header -->
+              <div class="card-body">
+                The body of the card
+              </div>
+              <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+          </div>
+          <!-- /.col -->
+          <div class="col-md-3">
+            <div class="card bg-gradient-warning">
+              <div class="card-header">
+                <h3 class="card-title">Warning Gradient</h3>
+
+                <div class="card-tools">
+                  <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                    <i class="fas fa-minus"></i>
+                  </button>
+                </div>
+                <!-- /.card-tools -->
+              </div>
+              <!-- /.card-header -->
+              <div class="card-body">
+                The body of the card
+              </div>
+              <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+          </div>
+          <!-- /.col -->
+          <div class="col-md-3">
+            <div class="card bg-gradient-danger">
+              <div class="card-header">
+                <h3 class="card-title">Danger Gradient</h3>
+              </div>
+              <div class="card-body">
+                The body of the card
+              </div>
+              <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+          </div>
+          <!-- /.col -->
+        </div>
+        <!-- /.row -->
+      {% endcomment %}
+      
+     
+      </div><!-- /.container-fluid -->
+    </section>
+    <!-- /.content -->
+
+    <a id="back-to-top" href="#" class="btn btn-primary back-to-top" role="button" aria-label="Scroll to top">
+      <i class="fas fa-chevron-up"></i>
+    </a>
+ 
+
+
+  </div>
+  <!-- /.content-wrapper -->
+
+ 
+
+ {% endblock %}
+</div>
+<!-- ./wrapper -->
+
+{% block custom_js %}
+<!-- jQuery -->
+<script src="{% static '/cooperative/dashboard/plugins/jquery/jquery.min' %}"></script>
+<!-- Bootstrap 4 -->
+<script src="{% static '/cooperative/dashboard/plugins/bootstrap/js/bootstrap.bundle.min' %}"></script>
+<!-- AdminLTE App -->
+<script src="{% static '/cooperative/dashboard/dist/js/adminlte.min' %}"></script>
+<!-- AdminLTE for demo purposes -->
+<script src="{% static '/cooperative/dashboard/dist/js/demo.js' %}"></script>
+{% endblock %}

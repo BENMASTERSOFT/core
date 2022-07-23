@@ -33,6 +33,12 @@ FORM_PRINT_CHOICES =(
       ("YES", "YES"),
    )
 
+LOAN_PATH=(
+        ('NONE','NONE'),
+        ('PROJECT','PROJECT'),
+        ('EMERGENCY','EMERGENCY')
+        )
+
 TRANSACTION_STATUS=(
     ('UNTREATED','UNTREATED'),
     ("TREATED","TREATED")
@@ -74,7 +80,9 @@ LOAN_SCHEDULE_STATUS=(
         )
 APPROVAL_STATUS=(
         ('PENDING',"PENDING"),
-        ('APPROVED',"APPROVED")
+        ('APPROVED',"APPROVED"),
+        ('NOT APPROVED',"NOT APPROVED"),
+        ('KIV',"KIV")
         )
 
 
@@ -873,6 +881,9 @@ class  MultipleLoanStatus_update_form(forms.Form):
 class  auto_stop_savings_update_form(forms.Form):
    auto_stop_savings = forms.ChoiceField(label="Stop Savings", choices=FORM_PRINT_CHOICES,widget=forms.Select(attrs={"class":"form-control"}))
 
+class  loan_path_settings_form(forms.Form):
+   loan_path = forms.ChoiceField(label="Loan Path", choices=LOAN_PATH,widget=forms.Select(attrs={"class":"form-control"}))
+
 class  receipt_types_settings_form(forms.Form):
    receipt_type = forms.ChoiceField(label="Receipt Types", choices=RECEIPT_TYPES,widget=forms.Select(attrs={"class":"form-control"}))
 
@@ -1054,6 +1065,13 @@ class MemberShipRequestAdditionalInfo_form(forms.Form):
                              required=True, disabled=False,
                              widget=DateInput(attrs={'class': 'form-control'}),
                              error_messages={'required': "This field is required."})
+
+   amount = forms.DecimalField(initial=0,label='Amount', label_suffix=" : ", min_value=0,  max_digits=20,
+                              widget=forms.NumberInput(attrs={'class': 'form-control'}),
+                              decimal_places=2, required=False,
+                              disabled = False)
+
+
 
 
 class MemberShipRequestAdditionalAttachment_form(forms.Form):
@@ -1302,7 +1320,7 @@ class standing_orderform(forms.Form):
 
 
 
-class loan_request_order_form(forms.Form):
+class Emergency_loan_Application_form(forms.Form):
    duration = forms.IntegerField(initial=0,label='Payment Duration', label_suffix=" : ", min_value=0,
                               widget=forms.NumberInput(attrs={'class': 'form-control'}),
                              help_text="This value is greater than or equal to 0 & less than or equal to 100.",
@@ -1311,7 +1329,7 @@ class loan_request_order_form(forms.Form):
 
    loan_list=[]
    try:
-      loans = TransactionTypes.objects.filter(source__title='LOAN').filter(~Q(code='204') & ~Q(code='205'))
+      loans = TransactionTypes.objects.filter(source__title='LOAN',loan_path='EMERGENCY').filter(~Q(code='204') & ~Q(code='205'))
       for loan in loans:
          small_loan=(loan.id,loan.name)
          loan_list.append(small_loan)
@@ -1323,37 +1341,112 @@ class loan_request_order_form(forms.Form):
                               decimal_places=2, required=False,
                               disabled = False,
                               error_messages={'required': "Please Enter Amount"})
+   date_applied = forms.DateField(label='Date Applied', label_suffix=" : ",
+                             required=True, disabled=False,
+                             widget=DateInput(attrs={'class': 'form-control'}),
+                             error_messages={'required': "This field is required."})
 
 
+class loan_request_order_form(forms.Form):
+   duration = forms.IntegerField(initial=0,label='Payment Duration', label_suffix=" : ", min_value=0,
+                              widget=forms.NumberInput(attrs={'class': 'form-control'}),
+                             help_text="This value is greater than or equal to 0 & less than or equal to 100.",
+                             disabled = False, error_messages={'required': "Please Enter quantity."})
+
+
+   loan_list=[]
    try:
-      period_list=[]
-
-      periods=Commodity_Period.objects.all()
-
-
-      for period in periods:
-         small_period=(period.id,period.title)
-         period_list.append(small_period)
+      loans = TransactionTypes.objects.filter(source__title='LOAN',loan_path='PROJECT').filter(~Q(code='204') & ~Q(code='205'))
+      for loan in loans:
+         small_loan=(loan.id,loan.name)
+         loan_list.append(small_loan)
    except:
-      period_list=[]
+      loan_list=[]
+   loans = forms.ChoiceField(label="loans", choices=loan_list,widget=forms.Select(attrs={"class":"form-control"}))
+   amount = forms.DecimalField(initial=0,label='Amount', label_suffix=" : ", min_value=0,  max_digits=20,
+                              widget=forms.NumberInput(attrs={'class': 'form-control'}),
+                              decimal_places=2, required=False,
+                              disabled = False,
+                              error_messages={'required': "Please Enter Amount"})
+   date_applied = forms.DateField(label='Date Applied', label_suffix=" : ",
+                             required=True, disabled=False,
+                             widget=DateInput(attrs={'class': 'form-control'}),
+                             error_messages={'required': "This field is required."})
 
-   period = forms.ChoiceField(label="Periods", choices=period_list,widget=forms.Select(attrs={"class":"form-control"}))
-
-
+class loan_request_history_period_form(forms.Form):
+   loan_list=[]
    try:
-      batch_list=[]
-
-      batches=Commodity_Period_Batch.objects.all()
-
-
-      for batch in batches:
-         small_batch=(batch.id,batch.title)
-         batch_list.append(small_batch)
+      loans = TransactionTypes.objects.filter(source__title='LOAN',loan_path='PROJECT').filter(~Q(code='204') & ~Q(code='205'))
+      for loan in loans:
+         small_loan=(loan.id,loan.name)
+         loan_list.append(small_loan)
    except:
-      batch_list=[]
+      loan_list=[]
+   
+   loans = forms.ChoiceField(label="loans", choices=loan_list,widget=forms.Select(attrs={"class":"form-control"}))
+   start_date = forms.DateField(label='Start Date', label_suffix=" : ",
+                             required=True, disabled=False,
+                             widget=DateInput(attrs={'class': 'form-control'}),
+                             error_messages={'required': "This field is required."})
 
-   batch = forms.ChoiceField(label="Batches", choices=batch_list,widget=forms.Select(attrs={"class":"form-control"}))
 
+   stop_date = forms.DateField(label='Stop Date', label_suffix=" : ",
+                             required=True, disabled=False,
+                             widget=DateInput(attrs={'class': 'form-control'}),
+                             error_messages={'required': "This field is required."})
+
+
+
+
+class emergency_loan_request_order_form(forms.Form):
+   duration = forms.IntegerField(initial=0,label='Payment Duration', label_suffix=" : ", min_value=0,
+                              widget=forms.NumberInput(attrs={'class': 'form-control'}),
+                             help_text="This value is greater than or equal to 0 & less than or equal to 100.",
+                             disabled = False, error_messages={'required': "Please Enter quantity."})
+
+
+   loan_list=[]
+   try:
+      loans = TransactionTypes.objects.filter(source__title='LOAN',loan_path='EMERGENCY').filter(~Q(code='204') & ~Q(code='205'))
+      for loan in loans:
+         small_loan=(loan.id,loan.name)
+         loan_list.append(small_loan)
+   except:
+      loan_list=[]
+   loans = forms.ChoiceField(label="loans", choices=loan_list,widget=forms.Select(attrs={"class":"form-control"}))
+   amount = forms.DecimalField(initial=0,label='Amount', label_suffix=" : ", min_value=0,  max_digits=20,
+                              widget=forms.NumberInput(attrs={'class': 'form-control'}),
+                              decimal_places=2, required=False,
+                              disabled = False,
+                              error_messages={'required': "Please Enter Amount"})
+   date_applied = forms.DateField(label='Date Applied', label_suffix=" : ",
+                             required=True, disabled=False,
+                             widget=DateInput(attrs={'class': 'form-control'}),
+                             error_messages={'required': "This field is required."})
+   start_date = forms.DateField(label='Start Date', label_suffix=" : ",
+                             required=True, disabled=False,
+                             widget=DateInput(attrs={'class': 'form-control'}),
+                             error_messages={'required': "This field is required."})
+
+
+   stop_date = forms.DateField(label='Stop Date', label_suffix=" : ",
+                             required=True, disabled=False,
+                             widget=DateInput(attrs={'class': 'form-control'}),
+                             error_messages={'required': "This field is required."})
+
+
+class loan_request_shortlisting_process_form(forms.Form):
+  
+   date_applied = forms.CharField(label="Description",max_length=150,widget=forms.TextInput(attrs={"class":"form-control",'readonly':'readonly'}))
+   amount = forms.DecimalField(initial=0,label='Amount', label_suffix=" : ", min_value=0,  max_digits=20,
+                              widget=forms.NumberInput(attrs={'class': 'form-control','readonly':'readonly'}),
+                              decimal_places=2, required=False,
+                              disabled = False,
+                              error_messages={'required': "Please Enter Amount"})
+   date_shortlisted = forms.DateField(label='Date Shortlisted', label_suffix=" : ",
+                             required=True, disabled=False,
+                             widget=DateInput(attrs={'class': 'form-control'}),
+                             error_messages={'required': "This field is required."})
 
 
 
@@ -1800,6 +1893,11 @@ class loan_application_processing_form(forms.Form):
                               decimal_places=2, required=True,
                               disabled = False,
                               error_messages={'required': "Please Enter Amount"})
+
+   date_applied = forms.DateField(label='Application Date', label_suffix=" : ",
+                             required=True, disabled=False,
+                             widget=DateInput(attrs={'class': 'form-control'}),
+                             error_messages={'required': "This field is required."})
 
 
 
@@ -4421,3 +4519,6 @@ class Monthly_Deduction_Generated_Update_Details_Process_Form(forms.Form):
     #     )
 
     # sources= models.CharField(default='MAIN',choices=CHOICES,max_length=15)
+
+
+# Project_Loan_Dashboard_Load

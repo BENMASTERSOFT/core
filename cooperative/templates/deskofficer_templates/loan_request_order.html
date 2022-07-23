@@ -37,18 +37,7 @@
                             <div class="ibox-body">
                                 <form class="form-horizontal" method="POST" action="" enctype="multipart/form-data" novalidate>
                                     {% csrf_token %}
-                                    <div class="form-group row">
-                                        <label class="col-sm-4 col-form-label">Period</label>
-                                        <div class="col-sm-8">
-                                            {{form.period}}
-                                        </div>
-                                    </div>   
-                                    <div class="form-group row">
-                                        <label class="col-sm-4 col-form-label">Batch</label>
-                                        <div class="col-sm-8">
-                                            {{form.batch}}
-                                        </div>
-                                    </div>
+                                    
                                     <div class="form-group row">
                                         <label class="col-sm-4 col-form-label">Loan Types</label>
                                         <div class="col-sm-8">
@@ -65,6 +54,12 @@
                                         <label class="col-sm-4 col-form-label">Desired Duration (Zero for Default)</label>
                                         <div class="col-sm-8">
                                             {{form.duration}}
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-sm-4 col-form-label">Date Appleied</label>
+                                        <div class="col-sm-8">
+                                            {{form.date_applied}}
                                         </div>
                                     </div>
                                    
@@ -99,7 +94,8 @@
                     </div>
                 </div>
 
-                <div class="row">
+
+               <div class="row">
                    
                     <div class="col-xl-10">
                         <div class="ibox">
@@ -115,8 +111,8 @@
                                             <th>Amount</th>
                                             <th>Duration</th>
                                             <th>Date Applied</th>
-                                            <th>Batch</th>
-                                            <th colspan="2">Action</th>
+                                          
+                                            <th>Action</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -127,13 +123,9 @@
                                             <td>{{loan.loan_amount}}</td>
                                             <td>{{loan.duration}}</td>
                                             <td>{{loan.created_at|date:"D, d M, Y"}}</td>
-                                            <td>{{loan.period}} {{loan.batch}}</td>
+                                           
                                             <td>
                                                 <a href="{% url 'loan_request_order_delete' loan.pk pk %}" class="btn btn-danger">Remove</a>
-                                                
-                                            </td> 
-                                            <td>
-                                                
                                                 <a href="{% url 'loan_request_criteria_Loading'  loan.pk %}" class="btn btn-success">Criteria </a>
                                             </td>
                                         </tr>

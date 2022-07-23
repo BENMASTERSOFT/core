@@ -12,7 +12,7 @@
             <div class="col-md-6">
                 <div class="ibox">
                     <div class="ibox-head">
-                        <div class="ibox-title">LAON APPLICATION PERIODS | <input type="button" class="btn btn-primary" value="Back" onclick="history.back()"/></div>
+                        <div class="ibox-title">LAON APPLICATION PERIODS | <a href="{% url 'Project_Loan_Dashboard_Load' %}" class="btn btn-secondary"> Back</a></div>
                        
                     </div>
                     <div class="form-group">
@@ -39,18 +39,7 @@
                     <div class="ibox-body">
                         <form class="form-horizontal" method="POST" action="" enctype="multipart/form-data" novalidate>
                             {% csrf_token %}
-                            <div class="form-group row">
-                                <label class="col-sm-4 col-form-label">Period</label>
-                                <div class="col-sm-8">
-                                    {{form.period}}
-                                </div>
-                            </div>   
-                            <div class="form-group row">
-                                <label class="col-sm-4 col-form-label">Batch</label>
-                                <div class="col-sm-8">
-                                    {{form.batch}}
-                                </div>
-                            </div>
+                            
                             <div class="form-group row">
                                 <label class="col-sm-4 col-form-label">Loan Types</label>
                                 <div class="col-sm-8">
@@ -108,11 +97,11 @@
                             {% for loan in applicants %}
                                 <tr>
                                     <td>{{forloop.counter}}</td>
-                                    <td>{{loan.applicant.member.get_member_Id}}</td>
-                                    <td>{{loan.applicant.member.get_full_name}}</td>
-                                    <td>{{loan.applicant.loan_amount}}</td>
-                                    <td>{{loan.applicant.tdate}}</td>
-                                    <td>{{loan.applicant.approval_date}}</td>
+                                    <td>{{loan.member.coop_no}}</td>
+                                    <td>{{loan.member.get_full_name}}</td>
+                                    <td>{{loan.loan_amount}}</td>
+                                    <td>{{loan.date_applied}}</td>
+                                    <td>{{loan.date_approved}}</td>
                                     <td>{{loan.receipt}}</td>
                                     <td><a href="{% url 'loan_application_form_processing' loan.pk %}" class="btn btn-primary">Details</a></td>
                                 </tr>

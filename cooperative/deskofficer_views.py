@@ -271,8 +271,38 @@ def Loan_application_processing_confirmation(request,pk):
 	'task_enabler_array':task_enabler_array,
 	'default_password':default_password,
 	'applicant':applicant,
+
 	}
 	return render(request, 'deskofficer_templates/Loan_application_processing_confirmation.html',context)
+
+
+def Emergency_Loan_application_processing_confirmation(request,pk):
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	task_array=[]
+	for task in tasks:
+		task_array.append(task.task.title)
+
+
+	task_enabler=TransactionEnabler.objects.filter(status="YES")
+	task_enabler_array=[]
+	for item in task_enabler:
+		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
+
+	applicant=LoansRepaymentBase.objects.get(loan_number=pk)
+	context={
+	'task_array':task_array,
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
+	'applicant':applicant,
+
+	}
+	return render(request, 'deskofficer_templates/Emergency_Loan_application_processing_confirmation.html',context)
+
 
 
 def Loan_Application_Issueance_Form_Print(request,pk):
@@ -670,6 +700,20 @@ def deskofficer_home(request):
 
 	member_count=Members.objects.filter(status='ACTIVE').count()
 
+
+	# CashBook_Main.objects.all().delete()
+	# LoanRequest.objects.all().delete()
+	# LoanRequestShortListing.objects.all().delete()
+	# LoanRequestAttachments.objects.all().delete()
+	# LoanFormIssuance.objects.all().delete()
+	# LoanApplication.objects.all().delete()
+	# LoanApplicationGuarnators.objects.all().delete()
+	# LoanApplicationSettings.objects.all().delete()
+	# LoanApplicationShortListing.objects.all().delete()
+	# LoansRepaymentBase.objects.filter(Q(id__gte=825)).delete()
+	# PersonalLedger.objects.filter(Q(id__gte=4250)).delete()
+
+
 	# records = SavingsUploaded.objects.filter(status='UNTREATED').count()
 	
 	# land=TransactionTypes.objects.get(code=104)
@@ -756,6 +800,9 @@ def deskofficer_home(request):
 
 def desk_basic_form(request):
 	return render(request, 'deskofficer_templates/basics/basic_form1.html')
+
+def desk_widgets_form(request):
+	return render(request, 'deskofficer_templates/basics/widgets.html')
 
 def desk_advanced_form(request):
 	return render(request, 'deskofficer_templates/basics/advanced_form.html')
@@ -3905,9 +3952,6 @@ def Transaction_Savings_Adjustment_Approved_List_load(request):
 		return render(request,'deskofficer_templates/Transaction_Savings_Adjustment_Approved_List_load.html',context)
 
 
-
-
-
 def Transaction_Savings_Adjustment_Approved_List_Detals_Load(request,pk):
 	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
 	task_array=[]
@@ -4209,7 +4253,9 @@ def Transaction_Loan_adjustment_Transaction_Approved_details_Processed(request,p
 #########################################################
 ############### LOAN TRANSACTION ########################
 #########################################################
-def loan_request_order_discard(request):
+
+
+def Emergency_Loan_Dashboard_Load(request):
 	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
 	task_array=[]
 	for task in tasks:
@@ -4226,41 +4272,16 @@ def loan_request_order_discard(request):
 	if Staff.objects.filter(admin=request.user,default_password='YES'):
 		default_password="YES"
 
-
-	records = LoanRequest.objects.filter(submission_status='PENDING')
-
-
 	context={
-	'records':records,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
 	'default_password':default_password,
+
 	}
-	return render(request,'deskofficer_templates/loan_request_order_discard.html',context)
+	return render(request,'deskofficer_templates/Emergency_Loan_Dashboard_Load.html',context)
 
 
-def loan_request_order_discard_delete(request,pk):
-	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
-	task_array=[]
-	for task in tasks:
-		task_array.append(task.task.title)
-
-
-
-	task_enabler=TransactionEnabler.objects.filter(status="YES")
-	task_enabler_array=[]
-	for item in task_enabler:
-		task_enabler_array.append(item.title)
-
-	default_password="NO"
-	if Staff.objects.filter(admin=request.user,default_password='YES'):
-		default_password="YES"
-
-	LoanRequest.objects.filter(id=pk).delete()
-	return HttpResponseRedirect(reverse('loan_request_order_discard'))
-
-
-def loan_request_search(request):
+def Embergency_loan_Form_Issueance_search(request):
 	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
 	task_array=[]
 	for task in tasks:
@@ -4278,15 +4299,15 @@ def loan_request_search(request):
 	if Staff.objects.filter(admin=request.user,default_password='YES'):
 		default_password="YES"
 
-	title="Search Membership Loan Request"
+	title="Search Member For Emergency Loan"
 	form = searchForm(request.POST or None)
 
-	return render(request,'deskofficer_templates/loan_request_search.html',{'form':form,'title':title,'task_array':task_array,
+	return render(request,'deskofficer_templates/Embergency_loan_Form_Issueance_search.html',{'form':form,'title':title,'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
 	'default_password':default_password,})
 
 
-def loan_request_list_load(request):
+def Embergency_loan_Form_Issueance_list_load(request):
 
 	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
 	task_array=[]
@@ -4310,7 +4331,7 @@ def loan_request_list_load(request):
 
 	if request.method == "POST":
 		if request.POST.get("title")=="":
-			return HttpResponseRedirect(reverse('loan_request_search'))
+			return HttpResponseRedirect(reverse('Embergency_loan_Form_Issueance_search'))
 
 		members=searchMembers(form['title'].value(),'ACTIVE')
 
@@ -4321,16 +4342,14 @@ def loan_request_list_load(request):
 	'task_enabler_array':task_enabler_array,
 	'default_password':default_password,
 		}
-		return render(request,'deskofficer_templates/loan_request_list_load.html',context)
+		return render(request,'deskofficer_templates/Embergency_loan_Form_Issueance_list_load.html',context)
 
 
-def loan_request_order(request,pk):
+def Emergency_loan_Form_Issueance(request,pk):
 	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
 	task_array=[]
 	for task in tasks:
 		task_array.append(task.task.title)
-
-
 
 	task_enabler=TransactionEnabler.objects.filter(status="YES")
 	task_enabler_array=[]
@@ -4343,17 +4362,18 @@ def loan_request_order(request,pk):
 
 	submission_status="PENDING"
 	transaction_status='UNTREATED'
-	form=loan_request_order_form(request.POST or None)
+	form=Emergency_loan_Application_form(request.POST or None)
+
 	member=Members.objects.get(id=pk)
 
-	exist_loans = LoanRequest.objects.filter(member_id=member,submission_status='PENDING',transaction_status='UNTREATED',approval_status='PENDING')
-
+	exist_loans = LoanFormIssuance.objects.filter(member=member,status='UNTREATED',loan_path='EMERGENCY')
+	tdate=get_current_date(now)
 
 	loan_based_saving=[]
 	if LoanBasedSavings.objects.all().exists():
 		loan_based_saving=LoanBasedSavings.objects.all().first()
 		loan_based_code=loan_based_saving.savings.code
-		# return HttpResponse(loan_based_code)
+	
 
 	if request.method=="POST":
 		if TransactionSources.objects.filter(title='LOAN').exists():
@@ -4361,121 +4381,180 @@ def loan_request_order(request,pk):
 
 			if queryset.maximum_amount<=0:
 				messages.error(request,'Overall Maximum Loan Amount not Set')
-				return HttpResponseRedirect(reverse('loan_request_order',args=(pk,)))
+				return HttpResponseRedirect(reverse('Emergency_loan_Form_Issueance',args=(pk,)))
 
 			if queryset.salary_loan_relationship<=0:
 				messages.error(request,'Salary Loan Relationship not Set')
-				return HttpResponseRedirect(reverse('loan_request_order',args=(pk,)))
+				return HttpResponseRedirect(reverse('Emergency_loan_Form_Issueance',args=(pk,)))
 		else:
-			messages.error(request,'Please configuration Sources')
-			return HttpResponseRedirect(reverse('loan_request_order',args=(pk,)))
+			messages.error(request,'Please configure Sources')
+			return HttpResponseRedirect(reverse('Emergency_loan_Form_Issueance',args=(pk,)))
 
-		tdate=get_current_date(now)
+	
+
+	
+		category='MONETARY'
+
+		processed_by=CustomUser.objects.get(id=request.user.id)
+
+		date_applied_id=request.POST.get('date_applied')
+
+		date_format = '%Y-%m-%d'
+		dtObj = datetime.datetime.strptime(date_applied_id, date_format)
+		date_applied=get_current_date(dtObj)
+
+		loan_obj = request.POST.get("loans")
+
+		loan=TransactionTypes.objects.get(id=loan_obj)
+
+		amount = request.POST.get("amount")
+		maximum_amount = loan.maximum_amount
+		multiple_loan_status=loan.multiple_loan_status
+
+		selected_trannsaction_rate=0
+		if loan.savings_rate == "YES":
+			selected_trannsaction_rate=loan.saving_rating
+		
+			if selected_trannsaction_rate > 0:
+				percentage_amount=(float(selected_trannsaction_rate)/100)*float(amount)
+				loan_based_account_number=str(loan_based_code) + str(member.get_member_Id)
+			
+				saved_amount=0
+				if PersonalLedger.objects.filter(account_number=loan_based_account_number).exists():
+					ledger_balance=PersonalLedger.objects.filter(account_number=loan_based_account_number).last()
+					saved_amount=ledger_balance.balance
+				if not saved_amount:
+					messages.error(request,'You do not have any savings for this Amount')
+					return HttpResponseRedirect(reverse('Emergency_loan_Form_Issueance',args=(pk,)))
+
+				if float(percentage_amount) > float(saved_amount):
+					balance_remainer=float(percentage_amount)-float(saved_amount)
+					messages.error(request,'You do not have required savings for this Loan Amount, Please top up your account with ' + str(balance_remainer))
+					return HttpResponseRedirect(reverse('Emergency_loan_Form_Issueance',args=(pk,)))
+
+		duration=int(loan.duration)
 
 
-		if form.is_valid():
-			approval_status='PENDING'
-			category='MONETARY'
+		if not amount:
+			messages.error(request,'Loan Amount Missing')
+			return HttpResponseRedirect(reverse('Emergency_loan_Form_Issueance',args=(pk,)))
 
-			processed_by=CustomUser.objects.get(id=request.user.id)
+		total_loan=0
 
-			period_obj = form.cleaned_data["period"]
-			period=Commodity_Period.objects.get(id=period_obj)
+		if LoansRepaymentBase.objects.filter(member=member,transaction=loan).filter(Q(balance__lt=0)).exists():
+			if multiple_loan_status == 'NOT ALLOWED':
+				messages.info(request,"Additional Loan not allowed for the Transaction")
+				return HttpResponseRedirect(reverse('Emergency_loan_Form_Issueance', args=(pk,)))
 
-			batch_obj = form.cleaned_data["batch"]
-			batch=Commodity_Period_Batch.objects.get(id=batch_obj)
+			loans=LoansRepaymentBase.objects.filter(member=member,transaction=loan).filter(Q(balance__lt=0))
+			loans_sum=LoansRepaymentBase.objects.filter(member=member,transaction=loan).filter(Q(balance__lt=0)).aggregate(total_repayment=Sum('repayment'),total_amount=Sum('balance'))
+			total_loan=loans_sum['total_amount']
+			repayment_total=loans_sum['total_repayment']
+			grand_total=float(abs(total_loan)) + float(amount)
 
-			loan_obj = form.cleaned_data["loans"]
 
-			loan=TransactionTypes.objects.get(id=loan_obj)
+			max_amount=queryset.maximum_amount
+			salary_rate=queryset.salary_loan_relationship
 
-			amount = form.cleaned_data["amount"]
-			maximum_amount = loan.maximum_amount
-			multiple_loan_status=loan.multiple_loan_status
+			if float(grand_total) > float(max_amount):
+				amount_due = float(max_amount)-float(abs(total_loan))
+				messages.error(request,'You have Exceeded the Maximum Amount Allowed, you are qualified for '+ str(amount_due))
+				return HttpResponseRedirect(reverse('Emergency_loan_Form_Issueance', args=(pk,)))
 
-			desired_duration=request.POST.get('duration')
+		if loan.category==category:
+			if float(amount)>float(maximum_amount):
+				messages.error(request,"Amount Specified is More than " + str(maximum_amount) + " Maximum Amount allowed for this Transaction")
+				return HttpResponseRedirect(reverse('Emergency_loan_Form_Issueance', args=(pk,)))
 
-			selected_trannsaction_rate=0
-			if loan.savings_rate == "YES":
-				selected_trannsaction_rate=loan.saving_rating
-				# print(selected_trannsaction_rate)
-				# print("+++++++++++++++++++++++++++++++++++++++")
-				# print("+++++++++++++++++++++++++++++++++++++++")
-				# print("+++++++++++++++++++++++++++++++++++++++")
-				# print("+++++++++++++++++++++++++++++++++++++++")
-				if selected_trannsaction_rate > 0:
-					percentage_amount=(float(selected_trannsaction_rate)/100)*float(amount)
-					loan_based_account_number=str(loan_based_code) + str(member.get_member_Id)
-					# print(percentage_amount)
-					# print("=================================")
-					# print("=================================")
-					saved_amount=0
-					if PersonalLedger.objects.filter(account_number=loan_based_account_number).exists():
-						ledger_balance=PersonalLedger.objects.filter(account_number=loan_based_account_number).last()
-						saved_amount=ledger_balance.balance
-					if not saved_amount:
-						messages.error(request,'You do not have any savings for this Amount')
-						return HttpResponseRedirect(reverse('loan_request_order',args=(pk,)))
 
-					if float(percentage_amount) > float(saved_amount):
-						balance_remainer=float(percentage_amount)-float(saved_amount)
-						messages.error(request,'You do not have required savings for this Loan Amount, Please top up your account with ' + str(balance_remainer))
-						return HttpResponseRedirect(reverse('loan_request_order',args=(pk,)))
 
-			if desired_duration and int(desired_duration)>0:
-				if int(desired_duration) > int(loan.duration):
-					messages.error(request,'The Desired Duration cannot be greater than the Default')
-					return HttpResponseRedirect(reverse('loan_request_order',args=(pk,)))
-				else:
-					duration=desired_duration
+		apex_loan=TransactionSources.objects.get(title='LOAN')
+
+		if loan.savings_rate == 'YES':
+
+			# Computing Savings Made
+			# ==============================
+
+			if LoanBasedSavings.objects.all().exists():
+				loan_based_saving = LoanBasedSavings.objects.first()
 			else:
-				duration=int(loan.duration)
+				messages.error(request,'Loan Based Savings not Set')
+				return HttpResponseRedirect(reverse('Emergency_loan_Form_Issueance', args=(pk,)))
+
+			loans_anchored=TransactionTypes.objects.filter(savings_rate='YES')
 
 
-			if not amount:
-				messages.error(request,'Loan Amount Missing')
-				return HttpResponseRedirect(reverse('loan_request_order',args=(pk,)))
+			loans_anchored_sum=LoansRepaymentBase.objects.filter(transaction__savings_rate='YES').filter(Q(balance__lt=0) & Q(member=member)).aggregate(total_amount=Sum('balance'))
+			total_loans_anchored=loans_anchored_sum['total_amount']
+			if not total_loans_anchored:
+				total_loans_anchored=0
+		
+			expected_total_loans=abs(float(total_loans_anchored)) + float(amount)
 
-			total_loan=0
+			savings_saved=0
+			if StandingOrderAccounts.objects.filter(transaction__transaction=loan_based_saving.savings,transaction__member=member).exists():
+				account_id=StandingOrderAccounts.objects.get(transaction__transaction=loan_based_saving.savings,transaction__member=member)
 
-			if LoansRepaymentBase.objects.filter(member=member,transaction=loan).filter(Q(balance__lt=0)).exists():
-				if multiple_loan_status == 'NOT ALLOWED':
-					messages.info(request,"Additional Loan not allowed for the Transaction")
-					return HttpResponseRedirect(reverse('loan_request_order', args=(pk,)))
+				savings_saved=0
+				if PersonalLedger.objects.filter(account_number=account_id.transaction.account_number).exists():
+					savings_ledger=PersonalLedger.objects.filter(account_number=account_id.transaction.account_number).last()
+					savings_saved=savings_ledger.balance
+				else:
+					messages.error(request,'No Savings Available for Loan Based Savings')
+					return HttpResponseRedirect(reverse('Emergency_loan_Form_Issueance', args=(pk,)))
 
-				loans=LoansRepaymentBase.objects.filter(member=member,transaction=loan).filter(Q(balance__lt=0))
-				loans_sum=LoansRepaymentBase.objects.filter(member=member,transaction=loan).filter(Q(balance__lt=0)).aggregate(total_repayment=Sum('repayment'),total_amount=Sum('balance'))
-				total_loan=loans_sum['total_amount']
-				repayment_total=loans_sum['total_repayment']
-				grand_total=float(abs(total_loan)) + float(amount)
-
-
-				max_amount=queryset.maximum_amount
-				salary_rate=queryset.salary_loan_relationship
-
-				if float(grand_total) > float(max_amount):
-					amount_due = float(max_amount)-float(abs(total_loan))
-					messages.error(request,'You have Exceeded the Maximum Amount Allowed, you are qualified for '+ str(amount_due))
-					return HttpResponseRedirect(reverse('loan_request_order', args=(pk,)))
-
-			if loan.category==category:
-				if float(amount)>float(maximum_amount):
-					messages.error(request,"Amount Specified is More than " + str(maximum_amount) + " Maximum Amount allowed for this Transaction")
-					return HttpResponseRedirect(reverse('loan_request_order', args=(pk,)))
+			else:
+				messages.error(request,'No account for Loan Based Savings')
+				return HttpResponseRedirect(reverse('Emergency_loan_Form_Issueance', args=(pk,)))
 
 
-			if LoanRequest.objects.filter(member=member,loan=loan,transaction_status='UNTREATED').exists():
-				messages.error(request,"You still have Open Transaction")
-				return HttpResponseRedirect(reverse('loan_request_order', args=(pk,)))
+			loan_based_saving_rating=apex_loan.loan_based_saving
 
-			record=LoanRequest(duration=duration,period=period,batch=batch,tdate=tdate,member=member,loan_amount=amount,loan=loan,submission_status=submission_status,approval_status='PENDING',transaction_status=transaction_status,processed_by=processed_by.username)
-			record.save()
-			return HttpResponseRedirect(reverse('loan_request_order', args=(pk,)))
+			if not float(loan_based_saving_rating):
+				messages.error(request,'Loan Based Saving Rating not set')
+				return HttpResponseRedirect(reverse('Emergency_loan_Form_Issueance', args=(pk,)))
 
-		else:
-			messages.error(request,"One or more record is missing")
-			return HttpResponseRedirect(reverse('loan_request_order', args=(pk,)))
 
+			loan_saving_relationship=float(int(loan_based_saving_rating)/100) * float(expected_total_loans)
+
+			loan_savings_status=False
+		
+			if float(savings_saved) > float(loan_saving_relationship):
+				loan_savings_status=True
+
+			if not loan_savings_status:
+
+				messages.error(request,'You do not Have Expected Savings for this Loan Amount, You have  ' + str(savings_saved) + ' while you need ' + str(loan_saving_relationship) )
+				return HttpResponseRedirect(reverse('loan_request_criteria_Loading', args=(pk,)))
+			else:
+				loan_savings_status=True
+
+	
+
+		receipt_obj=AutoReceipt.objects.first()
+		receipt='C-' + str(receipt_obj.receipt).zfill(5)
+		receipt_obj.receipt=int(receipt_obj.receipt)+1
+		receipt_obj.save()
+
+		if LoanFormIssuance.objects.filter(member=member,loan=loan,status='UNTREATED').exists():
+			messages.error(request,"You still have Open Transaction")
+			return HttpResponseRedirect(reverse('Emergency_loan_Form_Issueance', args=(pk,)))
+
+		record=LoanFormIssuance(receipt=receipt,
+								loan_path='EMERGENCY',
+								date_applied=date_applied,
+								tdate=tdate,
+								member=member,
+								loan_amount=amount,
+								loan=loan,
+								amount_saved=savings_saved,
+								status=transaction_status,
+								processed_by=processed_by.username)
+		record.save()
+		return HttpResponseRedirect(reverse('emergency_loan_application_form_issuanace_confirmation', args=(receipt,)))
+
+		
+	form.fields['date_applied'].initial=get_current_date(now)
 	context={
 
 	'form':form,
@@ -4487,835 +4566,16 @@ def loan_request_order(request,pk):
 	'task_enabler_array':task_enabler_array,
 	'default_password':default_password,
 	}
-	return render(request,'deskofficer_templates/loan_request_order.html',context)
+	return render(request,'deskofficer_templates/Emergency_loan_Form_Issueance.html',context)
 
 
-
-def loan_request_order_delete(request,pk,return_pk):
-	record=LoanRequest.objects.get(id=pk)
-	LoanRequestAttachments.objects.filter(applicant=record).delete()
+def Emergency_loan_Form_Issueance_delete(request,pk,return_pk):
+	record=LoanFormIssuance.objects.get(id=pk)
 	record.delete()
-	return HttpResponseRedirect(reverse('loan_request_order', args=(return_pk,)))
+	return HttpResponseRedirect(reverse('Emergency_loan_Form_Issueance', args=(return_pk,)))
 
 
-def loan_request_criteria_Loading(request,pk):
-	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
-	task_array=[]
-	for task in tasks:
-		task_array.append(task.task.title)
-
-
-
-	task_enabler=TransactionEnabler.objects.filter(status="YES")
-	task_enabler_array=[]
-	for item in task_enabler:
-		task_enabler_array.append(item.title)
-
-	default_password="NO"
-	if Staff.objects.filter(admin=request.user,default_password='YES'):
-		default_password="YES"
-
-	applicant=LoanRequest.objects.get(id=pk)
-
-	total_savings=0
-	savings=[]
-
-	if StandingOrderAccounts.objects.filter(transaction__member_id=applicant.member_id).exists():
-
-		if CompulsorySavings.objects.all().exists():
-			compulsory_savings=CompulsorySavings.objects.first()
-			compulsory_savings_record=get_compulsory_savings(compulsory_savings.transaction,applicant.member_id)
-
-			if not compulsory_savings_record:
-				messages.error(request,'No record for Compulsary Savings')
-				return HttpResponseRedirect(reverse('loan_request_order',args=(applicant.member_id,)))
-		else:
-			messages.error(request,'Compulsary Savings Not Set')
-			return HttpResponseRedirect(reverse('loan_request_order',args=(applicant.member_id,)))
-
-		if LoanBasedSavings.objects.all().exists():
-			loan_base_savings=LoanBasedSavings.objects.first()
-			loan_base_savings_record=get_loan_based_savings(loan_base_savings.savings,applicant.member_id)
-
-
-			if not loan_base_savings_record:
-				messages.error(request,'No record for Loan Based Savings')
-				return HttpResponseRedirect(reverse('loan_request_order',args=(applicant.member_id,)))
-
-		else:
-			messages.error(request,'Loan Based Savings Not Set')
-			return HttpResponseRedirect(reverse('loan_request_order',args=(applicant.member_id,)))
-
-
-		savings = get_standing_orders(applicant.member_id)
-		total_savings=get_standing_orders_sum(applicant.member_id)
-
-	else:
-		messages.error(request,'No Available Savings Standing Order')
-		return HttpResponseRedirect(reverse('loan_request_order',args=(applicant.member_id,)))
-
-
-	total_loans=0
-	loans=[]
-
-	if LoansRepaymentBase.objects.filter(Q(balance__lt=0) & Q(member_id=applicant.member_id,status='ACTIVE')).exists():
-		loans=LoansRepaymentBase.objects.filter(Q(balance__lt=0) & Q(member_id=applicant.member_id))
-		loans_sum=LoansRepaymentBase.objects.filter(Q(balance__lt=0) & Q(member_id=applicant.member_id)).aggregate(total_amount=Sum('repayment'))
-		total_loans=loans_sum['total_amount']
-
-
-	shop_balance=0
-	shops=[]
-	if CooperativeShopLedger.objects.filter(member_id=applicant.member_id).exists():
-		shops =CooperativeShopLedger.objects.filter(Q(balance__lt=0) & Q(member_id=applicant.member_id)).order_by('-id').first()
-		shop_balance=abs(shops.balance)
-
-
-	total_debit=float(total_savings)+float(total_loans)+float(shop_balance)
-
-	attachment_form=loan_request_document_attachment_form(request.POST or None)
-
-
-	if request.method=="POST" and 'attachment' in request.POST:
-
-		description = request.POST.get("payment_as_at")
-		date_format = '%Y-%m-%d'
-		dtObj = datetime.datetime.strptime(description, date_format)
-		description=get_current_date(dtObj)
-
-		net_pay=request.POST.get('net_pay')
-		if request.FILES.get('image', False):
-			image = request.FILES['image']
-			fs=FileSystemStorage()
-			filename=fs.save(image.name,image)
-			image_url=fs.url(filename)
-		else:
-			image_url=None
-
-		if not description:
-			messages.error(request,'Description Missing')
-			return HttpResponseRedirect(reverse('loan_request_criteria_Loading',args=(pk,)))
-
-		if not net_pay or float(net_pay) == 0:
-			messages.error(request,'Net Pay Missing')
-			return HttpResponseRedirect(reverse('loan_request_criteria_Loading',args=(pk,)))
-
-		applicant.description=description
-		applicant.net_pay=net_pay
-		applicant.image=image_url
-		applicant.save()
-
-		applicant.member.last_used_net_pay=net_pay
-		applicant.member.net_pay_as_at=description
-		applicant.member.save()
-
-		return HttpResponseRedirect(reverse('loan_request_criteria_Loading',args=(pk,)))
-
-
-	# return HttpResponse("OPOOO")
-	attachment_form.fields['net_pay'].initial=applicant.member.last_used_net_pay
-	if applicant.member.net_pay_as_at:
-		attachment_form.fields['payment_as_at'].initial=applicant.member.net_pay_as_at
-	else:
-		attachment_form.fields['payment_as_at'].initial=now
-	context={
-
-
-	'applicant':applicant,
-	'savings':savings,
-	'loans':loans,
-	'shops':shops,
-	'shop_balance':shop_balance,
-	'total_debit':total_debit,
-	'pk':pk,
-	'attachment_form':attachment_form,
-	'task_array':task_array,
-	'task_enabler_array':task_enabler_array,
-	'default_password':default_password,
-	}
-	return render(request,'deskofficer_templates/loan_request_criteria_Loading.html',context)
-
-
-def LoanRequestAttachments_delete(request,pk,return_pk):
-	item=LoanRequest.objects.get(id=pk)
-
-	item.image=None
-	item.gross_pay=0
-	item.net_pay=0
-	item.description=""
-	item.save()
-	return HttpResponseRedirect(reverse('loan_request_criteria_Loading',args=(return_pk,)))
-
-
-
-def loan_request_preview(request,pk):
-	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
-	task_array=[]
-	for task in tasks:
-		task_array.append(task.task.title)
-
-
-
-	task_enabler=TransactionEnabler.objects.filter(status="YES")
-	task_enabler_array=[]
-	for item in task_enabler:
-		task_enabler_array.append(item.title)
-
-	default_password="NO"
-	if Staff.objects.filter(admin=request.user,default_password='YES'):
-		default_password="YES"
-
-	form=MemberShipRequestAdditionalInfo_form(request.POST or None)
-
-
-	apex_loan=TransactionSources.objects.get(title='LOAN')
-
-	applicant=LoanRequest.objects.get(id=pk)
-
-	net_pay=applicant.net_pay
-	loan_type=applicant.loan.name
-	loan_amount=applicant.loan_amount
-	duration = applicant.duration
-
-	membership_waver=False
-	savings_made_waver=False
-	multiple_loans_waver=False
-	salary_status_waver=False
-
-	if MembersExclusiveness.objects.filter(transaction=applicant.loan,period=applicant.period,batch=applicant.batch,processing_status='UNPROCESSED',approval_status='APPROVED').exists():
-		wavers=MembersExclusiveness.objects.filter(transaction=applicant.loan,period=applicant.period,batch=applicant.batch,processing_status='UNPROCESSED',approval_status='APPROVED')
-		for item in wavers:
-			if item.task.title == 'MEMBERSHIP AGE':
-				membership_waver=True
-			elif item.task.title == 'SAVINGS MADE':
-				multiple_loans_waver=True
-			elif item.task.title == 'SALARY STATUS':
-				salary_status_waver=True
-
-
-	loan_savings_status=False
-	loan_based_saving=[]
-	savings_saved=0
-	loan_saving_relationship=[]
-
-
-	if applicant.loan.savings_rate == 'YES':
-
-		# Computing Savings Made
-		# ==============================
-
-		if LoanBasedSavings.objects.all().exists():
-			loan_based_saving = LoanBasedSavings.objects.first()
-		else:
-			messages.error(request,'Loan Based Savings not Set')
-			return HttpResponseRedirect(reverse('loan_request_criteria_Loading', args=(pk,)))
-
-		loans_anchored=TransactionTypes.objects.filter(savings_rate='YES')
-
-
-		loans_anchored_sum=LoansRepaymentBase.objects.filter(transaction__savings_rate='YES').filter(Q(balance__lt=0) & Q(member_id=applicant.member_id)).aggregate(total_amount=Sum('balance'))
-		total_loans_anchored=loans_anchored_sum['total_amount']
-		if not total_loans_anchored:
-			total_loans_anchored=0
-
-		expected_total_loans=abs(float(total_loans_anchored)) + float(loan_amount)
-
-		savings_saved=0
-		if StandingOrderAccounts.objects.filter(transaction__transaction=loan_based_saving.savings,transaction__member=applicant.member).exists():
-			account_id=StandingOrderAccounts.objects.get(transaction__transaction=loan_based_saving.savings,transaction__member=applicant.member)
-
-			savings_saved=0
-			if PersonalLedger.objects.filter(account_number=account_id.transaction.account_number).exists():
-				savings_ledger=PersonalLedger.objects.filter(account_number=account_id.transaction.account_number).last()
-				savings_saved=savings_ledger.balance
-			else:
-				messages.error(request,'No Savings Available for Loan Based Savings')
-				return HttpResponseRedirect(reverse('loan_request_criteria_Loading', args=(pk,)))
-
-		else:
-			messages.error(request,'No account for Loan Based Savings')
-			return HttpResponseRedirect(reverse('loan_request_criteria_Loading', args=(pk,)))
-
-
-		loan_based_saving_rating=apex_loan.loan_based_saving
-
-		if not float(loan_based_saving_rating):
-			messages.error(request,'Loan Based Saving Rating not set')
-			return HttpResponseRedirect(reverse('loan_request_criteria_Loading', args=(pk,)))
-
-
-		loan_saving_relationship=float(int(loan_based_saving_rating)/100) * float(expected_total_loans)
-
-		if savings_made_waver:
-			loan_savings_status=True
-		else:
-			if float(savings_saved) > float(loan_saving_relationship):
-				loan_savings_status=True
-
-		if not loan_savings_status:
-
-			messages.error(request,'You do not Have Expected Savings for this Loan Amount, You have  ' + str(savings_saved) + ' while you need ' + str(loan_saving_relationship) )
-			return HttpResponseRedirect(reverse('loan_request_criteria_Loading', args=(pk,)))
-	else:
-		loan_savings_status=True
-
-	total_savings=0
-	total_savings=get_standing_orders_sum(applicant.member_id)
-	if total_savings==None:
-		total_savings=0
-
-
-	# Computing Outstanding Fascilities
-	# ==============================
-	total_loans=0
-	loans_sum=LoansRepaymentBase.objects.filter(Q(balance__lt=0) & Q(member_id=applicant.member_id)).aggregate(total_amount=Sum('repayment'))
-	total_loans=loans_sum['total_amount']
-	if total_loans==None:
-		total_loans=0
-
-	shop_balance=0
-	shops =CooperativeShopLedger.objects.filter(Q(balance__lt=0) & Q(member_id=applicant.member_id)).order_by('-id').first()
-	if shops:
-		shop_balance=abs(shops.balance)
-
-
-
-	total_debit=float(total_savings)+float(total_loans)+float(shop_balance)
-
-
-	balance=float(net_pay)-total_debit
-
-
-	# Computin Date Joined
-	# ==============================
-	date_joined = applicant.member.date_joined
-	now = datetime.datetime.now()
-
-	# Computing Salary Loan Relationship
-	# =============================
-	salary_loan_relationship = apex_loan.salary_loan_relationship
-
-	if not float(salary_loan_relationship):
-		messages.error(request,'Salary Loan Relationship not set')
-		return HttpResponseRedirect(reverse('loan_request_criteria_Loading', args=(pk,)))
-
-
-	salary_loan_relationship_computed= float(int(salary_loan_relationship)/100) * float(balance)
-
-
-
-	# Computinh Interest Rate
-	# ==============================
-
-	interest_rate = applicant.loan.interest_rate
-
-	if not float(interest_rate):
-		messages.error(request,'Interest Rate not set')
-		return HttpResponseRedirect(reverse('loan_request_criteria_Loading', args=(pk,)))
-
-	interest= float(int(interest_rate)/100) * float(applicant.loan_amount)
-
-
-
-
-	# Computing Maturity Age
-
-	loan_age = int(applicant.loan.loan_age)
-
-	if not int(loan_age):
-		messages.error(request,'Members Loan Age not set')
-		return HttpResponseRedirect(reverse('loan_request_criteria_Loading', args=(pk,)))
-
-
-	# Computing Member's Age
-	members_age = (now.year - date_joined.year) * 12 + (now.month - date_joined.month)
-
-	if members_age == 0:
-		d_date=get_current_date(date_joined)
-		p_date=get_current_date(now)
-		member_age_pick=str(p_date-d_date) + " DAY(s)"
-	else:
-		members_age=members_age
-		# member_age_pick=str(date_joined.day) + "MONTH(S)"
-		member_age_pick=str(members_age) + " MONTH(S)"
-
-
-
-	# Computing Interest Deduction
-	# ==============================
-	interest_deduction=applicant.loan.interest_deduction
-
-	if not interest_deduction:
-		messages.error(request,'Interest deduction source not set')
-		return HttpResponseRedirect(reverse('loan_request_criteria_Loading', args=(pk,)))
-
-
-	if interest_deduction == "SOURCE":
-		amount_scheduled = float(loan_amount)
-
-	else:
-		amount_scheduled = float(loan_amount)+ float(interest)
-
-	if int(duration) == 0:
-		messages.error(request,'Please set the Loan Duration')
-		return HttpResponseRedirect(reverse('loan_request_criteria_Loading', args=(pk,)))
-
-
-	# Computing Admin Chages
-	# ==============================
-	admin_charges_minimum = applicant.loan.admin_charges_minimum
-
-	if float(admin_charges_minimum) >= float(loan_amount):
-		admin_charge=applicant.loan.default_admin_charges
-	else:
-		if applicant.loan.admin_charges_rating == "PERCENTAGE":
-			admin_charge=(float(applicant.loan.admin_charges) / 100) * float(loan_amount)
-		else:
-			admin_charge=applicant.loan.admin_charges
-
-
-	# Computing Monthly Repayment
-	# ==============================
-	monthly_repayment=math.ceil(float(amount_scheduled)/float(duration))
-
-
-	# Computing Button Enabler
-	# ==============================
-	salary_status=True
-	if salary_status_waver:
-		salary_status=False
-	else:
-		if float(monthly_repayment)> float(salary_loan_relationship_computed):
-			salary_status=False
-
-
-	Member_Status = False
-	if membership_waver:
-		Member_Status = True
-	else:
-		if int(members_age)>int(loan_age):
-			Member_Status = True
-
-	record_array=[]
-
-	if request.method=="POST":
-
-		comment=request.POST.get("comment")
-
-		applicant.comment=comment
-		applicant.submission_status='SUBMITTED'
-		applicant.admin_charge=admin_charge
-		applicant.interest=interest
-		applicant.save()
-
-		description="NET PAY"
-		value=net_pay
-		category='ANALYSIS'
-		waver=False
-		Loan_Request_Posting(applicant,description,value,category,'UNTREATED',waver)
-
-		description="SALARY BALANCE AFTER DEDUCTIONS"
-		value=balance
-		category='ANALYSIS'
-		waver=False
-		Loan_Request_Posting(applicant,description,value,category,'UNTREATED',waver)
-
-		description=loan_type
-		value=loan_amount
-		category='ANALYSIS'
-		waver=False
-		Loan_Request_Posting(applicant,description,value,category,'UNTREATED',waver)
-
-		description="MONTHLY DEDUCTIONS"
-		value=total_savings
-		category='ANALYSIS'
-		waver=False
-		Loan_Request_Posting(applicant,description,value,category,'UNTREATED',waver)
-
-		description="MONTHLY LOAN REPAYMENTS"
-		value=total_loans
-		category='ANALYSIS'
-		waver=False
-		Loan_Request_Posting(applicant,description,value,category,'UNTREATED',waver)
-
-		description="COOPERATIVE SHOP"
-		value=shop_balance
-		category='ANALYSIS'
-		waver=False
-		Loan_Request_Posting(applicant,description,value,category,'UNTREATED',waver)
-
-		description="LOAN DURATION"
-		value=str(duration) + " MONTHS"
-		category='ANALYSIS'
-		waver=False
-		Loan_Request_Posting(applicant,description,value,category,'UNTREATED',waver)
-
-		description="SALARY LOAN RELATIONSHIP"
-		value=str(salary_loan_relationship) + "%"
-		category='ANALYSIS'
-		waver=False
-		Loan_Request_Posting(applicant,description,value,category,'UNTREATED',waver)
-
-		description="SALARY LOAN RELATIONSHIP COMPUTED"
-		value=salary_loan_relationship_computed
-		category='ANALYSIS'
-		waver=False
-		Loan_Request_Posting(applicant,description,value,category,'UNTREATED',waver)
-
-		description="MATURITY AGE"
-		value=str(loan_age) + " MONTHS"
-		category='ANALYSIS'
-		waver=False
-		Loan_Request_Posting(applicant,description,value,category,'UNTREATED',waver)
-
-		description="DATE JOINED"
-		value=date_joined
-		category='ANALYSIS'
-		waver=False
-		Loan_Request_Posting(applicant,description,value,category,'UNTREATED',waver)
-
-		description="MEMBERS AGE"
-		value=member_age_pick
-		category='ANALYSIS'
-		waver=False
-		Loan_Request_Posting(applicant,description,value,category,'UNTREATED',waver)
-
-		description="LOAN INTEREST RATE"
-		value=str(interest_rate) + "%"
-		category='ANALYSIS'
-		waver=False
-		Loan_Request_Posting(applicant,description,value,category,'UNTREATED',waver)
-
-		description="INTEREST DEDUCTION"
-		value=interest_deduction
-		category='ANALYSIS'
-		waver=False
-		Loan_Request_Posting(applicant,description,value,category,'UNTREATED',waver)
-
-		description="LOAN INTEREST"
-		value=interest
-		category='ANALYSIS'
-		waver=False
-		Loan_Request_Posting(applicant,description,value,category,'UNTREATED',waver)
-
-		description="AMOUNT SCHEDULED"
-		value=amount_scheduled
-		category='ANALYSIS'
-		waver=False
-		Loan_Request_Posting(applicant,description,value,category,'UNTREATED',waver)
-
-		description="MONTHLY REPAYMENT"
-		value= monthly_repayment
-		category='ANALYSIS'
-		waver=False
-		Loan_Request_Posting(applicant,description,value,category,'UNTREATED',waver)
-
-		description="ADMIN CHARGE"
-		value= admin_charge
-		category='ANALYSIS'
-		waver=False
-		Loan_Request_Posting(applicant,description,value,category,'UNTREATED',waver)
-
-		if loan_based_saving:
-			description="LOAN BASED SAVINGS"
-			value=loan_based_saving.savings.name
-			category='ANALYSIS'
-			waver=False
-			Loan_Request_Posting(applicant,description,value,category,'UNTREATED',waver)
-
-
-			description="AMOUNT SAVED"
-			value='#' + str(savings_saved)
-			category='ANALYSIS'
-			waver=False
-			Loan_Request_Posting(applicant,description,value,category,'UNTREATED',waver)
-
-
-			description="LOAN BASED SAVINGS RATE"
-			value=str(loan_based_saving_rating) + "%"
-			category='ANALYSIS'
-			waver=False
-			Loan_Request_Posting(applicant,description,value,category,'UNTREATED',waver)
-
-
-		description="MEMBERSHIP STATUS"
-		value=Member_Status
-		category='SUMMARY'
-		waver=membership_waver
-		Loan_Request_Posting(applicant,description,value,category,'UNTREATED',waver)
-
-		description="SALARY STATUS"
-		value=salary_status
-		category='SUMMARY'
-		waver=salary_status_waver
-		Loan_Request_Posting(applicant,description,value,category,'UNTREATED',waver)
-
-		if applicant.loan.savings_rate == "YES":
-			description="LOAN SAVINGS BASED STATUS"
-			value=loan_savings_status
-			category='SUMMARY'
-			waver=savings_made_waver
-			Loan_Request_Posting(applicant,description,value,category,'UNTREATED',waver)
-
-		return HttpResponseRedirect(reverse('loan_request_search'))
-
-	if membership_waver:
-		membership_button_enabled=True
-	else:
-		membership_button_enabled=False
-		if Member_Status == True:
-			membership_button_enabled=True
-
-	if savings_made_waver:
-		savings_made_button_enabled=True
-	else:
-		savings_made_button_enabled=False
-		if loan_savings_status == True:
-			savings_made_button_enabled=True
-
-	if salary_status_waver:
-		salary_status_button_enabled=True
-	else:
-		salary_status_button_enabled=False
-		if salary_status == True:
-			salary_status_button_enabled=True
-
-
-
-	button_enabled=False
-
-
-	# if membership_button_enabled and savings_made_button_enabled and salary_status_button_enabled:
-	if membership_button_enabled and savings_made_button_enabled and salary_status_button_enabled:
-		button_enabled=True
-	record_array.append(('Net Pay',net_pay))
-	record_array.append(('Monthly Contributions',total_savings))
-	record_array.append(('Existing Loan Monthly Repayment',total_loans))
-	record_array.append(('Cooperative Shop',shop_balance))
-	record_array.append(('Salary Balance After Deductions',balance))
-	record_array.append((loan_type,loan_amount))
-	record_array.append(('Loan Duration',str(duration) + " Month(s)"))
-	record_array.append(('Salary Loan Relationship',str(salary_loan_relationship) + "%"))
-	record_array.append(('Salary Loan Relationship Computed',salary_loan_relationship_computed))
-	record_array.append(('Maturity Age',str(loan_age) + " Month(s)"))
-	record_array.append(('Date Joined',date_joined))
-	record_array.append(('Members Age',member_age_pick))
-	record_array.append(('Loan Interest Rate',str(interest_rate) + "%"))
-	record_array.append(('Interest Deduction',interest_deduction))
-	record_array.append(('Loan Interest',interest))
-	record_array.append(('Amount Scheduled',amount_scheduled))
-	record_array.append(('Monthly Repayment',monthly_repayment))
-	record_array.append(('Admin Charge',admin_charge))
-	if loan_based_saving:
-		record_array.append(('Loan Based Savings',loan_based_saving.savings.name))
-		record_array.append(('Amount Saved (' + loan_based_saving.savings.name + ")",savings_saved))
-		record_array.append(('Loan Based Savings Rate',str(loan_based_saving_rating) + "%"))
-
-	form.fields['comment'].initial="For Your Consideration and Kind Approval"
-
-	context={
-	'record_array':record_array,
-	'form':form,
-	'savings_anchored':applicant.loan.savings_rate,
-	'membership_waver':membership_waver,
-	'salary_status_waver':salary_status_waver,
-	'savings_made_waver':savings_made_waver,
-	'multiple_loans_waver':multiple_loans_waver,
-	'applicant':applicant,
-	'pk':pk,
-	'salary_status':salary_status,
-	'Member_Status':Member_Status,
-	'loan_savings_status':loan_savings_status,
-	'button_enabled':button_enabled,
-	'task_array':task_array,
-	'task_enabler_array':task_enabler_array,
-	'default_password':default_password,
-	'savings_saved':savings_saved,
-	}
-
-	return render(request,'deskofficer_templates/loan_request_preview.html',context)
-
-
-def loan_request_manage_period_load(request):
-	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
-	task_array=[]
-	for task in tasks:
-		task_array.append(task.task.title)
-
-
-
-	task_enabler=TransactionEnabler.objects.filter(status="YES")
-	task_enabler_array=[]
-	for item in task_enabler:
-		task_enabler_array.append(item.title)
-
-	default_password="NO"
-	if Staff.objects.filter(admin=request.user,default_password='YES'):
-		default_password="YES"
-
-
-	form=loan_request_order_form(request.POST or None)
-	exist_loans=[]
-	if request.method == 'POST':
-		period_id=request.POST.get("period")
-		period = Commodity_Period.objects.get(id=period_id)
-
-		batch_id=request.POST.get('batch')
-		batch=Commodity_Period_Batch.objects.get(id=batch_id)
-
-		loan_id = request.POST.get('loans')
-		loan = TransactionTypes.objects.get(id=loan_id)
-
-		exist_loans = LoanRequest.objects.filter(loan=loan,period=period,batch=batch,submission_status='SUBMITTED',transaction_status='UNTREATED',approval_status='PENDING')
-
-	context={
-	'exist_loans':exist_loans,
-	'form':form,
-	'task_array':task_array,
-	'task_enabler_array':task_enabler_array,
-	'default_password':default_password,
-	}
-	return render(request,'deskofficer_templates/loan_request_manage_period_load.html',context)
-
-def loan_request_manage_transaction_delete(request,pk):
-	LoanRequest.objects.get(id=pk).delete()
-	return HttpResponseRedirect(reverse('loan_request_manage_period_load'))
-
-
-def loan_request_approved_Issue_form_period_load(request):
-	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
-	task_array=[]
-	for task in tasks:
-		task_array.append(task.task.title)
-
-
-
-	task_enabler=TransactionEnabler.objects.filter(status="YES")
-	task_enabler_array=[]
-	for item in task_enabler:
-		task_enabler_array.append(item.title)
-
-	default_password="NO"
-	if Staff.objects.filter(admin=request.user,default_password='YES'):
-		default_password="YES"
-
-	applicants=[]
-	form=loan_request_order_form(request.POST or None)
-
-	if request.method == 'POST':
-		period_id=request.POST.get("period")
-		period = Commodity_Period.objects.get(id=period_id)
-
-		batch_id=request.POST.get('batch')
-		batch=Commodity_Period_Batch.objects.get(id=batch_id)
-
-		loan_id = request.POST.get('loans')
-		loan = TransactionTypes.objects.get(id=loan_id)
-
-		applicants = LoanRequest.objects.filter(loan=loan,period=period,batch=batch,approval_status='APPROVED',transaction_status='UNTREATED')
-	context={
-	'form':form,
-	'applicants':applicants,
-	'task_array':task_array,
-	'task_enabler_array':task_enabler_array,
-	'default_password':default_password,
-	}
-	return render(request,'deskofficer_templates/loan_request_approved_Issue_form_period_load.html',context)
-
-
-
-def loan_request_approved_list_form_sales(request,pk):
-
-	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
-	task_array=[]
-	for task in tasks:
-		task_array.append(task.task.title)
-
-
-
-	task_enabler=TransactionEnabler.objects.filter(status="YES")
-	task_enabler_array=[]
-	for item in task_enabler:
-		task_enabler_array.append(item.title)
-
-	default_password="NO"
-	if Staff.objects.filter(admin=request.user,default_password='YES'):
-		default_password="YES"
-
-	form = loan_request_approved_list_form_sales_form(request.POST or None)
-
-	processed_by=CustomUser.objects.get(id=request.user.id)
-
-	loan=LoanRequest.objects.get(id=pk)
-	loan_amount=loan.approved_amount
-	admin_charge=loan.admin_charge
-
-	receipt_type = loan.loan.receipt_type
-
-	tdate=get_current_date(now)
-
-
-	form.fields['amount'].initial=admin_charge
-	form.fields['loan_amount'].initial=loan_amount
-
-
-	if request.method == "POST":
-
-
-
-		if receipt_type == "MANUAL":
-			receipt_no_id = request.POST.get('receipt')
-			if Receipts.objects.filter(receipt=receipt_no_id).exists():
-				receipt_obj = Receipts.objects.get(receipt=receipt_no_id)
-				receipt=receipt_obj.receipt
-			else:
-				messages.error(request,'Receipt do not exist')
-				return HttpResponseRedirect(reverse('loan_request_approved_list_form_sales',args=(pk,)))
-
-		elif receipt_type == "AUTO":
-			receipt_obj=AutoReceipt.objects.first()
-			receipt='C-' + str(receipt_obj.receipt).zfill(5)
-			receipt_obj.receipt=int(receipt_obj.receipt)+1
-			receipt_obj.save()
-		else:
-			messages.error(request,'Receipt Format No Set')
-			return HttpResponseRedirect(reverse('loan_request_approved_list_form_sales',args=(pk,)))
-
-		record = LoanFormIssuance(processing_status='UNPROCESSED',
-								tdate=tdate,
-								applicant=loan,
-								receipt=receipt,
-								admin_charge=admin_charge,
-								processed_by=processed_by.username,
-								status='UNTREATED')
-		record.save()
-
-
-		loan.transaction_status='TREATED'
-		loan.save()
-
-		if receipt_type == "MANUAL":
-			receipt_obj.status='USED'
-			receipt_obj.save()
-
-		return HttpResponseRedirect(reverse('loan_application_request_form_issuanace_confirmation',args=(receipt,)))
-
-
-	context={
-
-	'form':form,
-	'loan':loan,
-	'receipt_type':receipt_type,
-	'task_array':task_array,
-	'task_enabler_array':task_enabler_array,
-	'default_password':default_password,
-	}
-	return render(request,'deskofficer_templates/loan_request_approved_list_form_sales.html',context)
-
-
-
-def loan_application_request_form_issuanace_confirmation(request,pk):
-
+def emergency_loan_application_form_issuanace_confirmation(request,pk):
 	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
 	task_array=[]
 	for task in tasks:
@@ -5350,11 +4610,53 @@ def loan_application_request_form_issuanace_confirmation(request,pk):
 	'task_enabler_array':task_enabler_array,
 	'default_password':default_password,
 	}
-	return render(request,'deskofficer_templates/loan_application_request_form_issuanace_confirmation.html',context)
+	return render(request,'deskofficer_templates/emergency_loan_application_form_issuanace_confirmation.html',context)
 
 
-def loan_application_approved_period_load(request):
 
+def emergency_loan_application_form_issue_view_load(request):
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	task_array=[]
+	for task in tasks:
+		task_array.append(task.task.title)
+
+	task_enabler=TransactionEnabler.objects.filter(status="YES")
+	task_enabler_array=[]
+	for item in task_enabler:
+		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
+	form=emergency_loan_request_order_form(request.POST or None)
+	records=[]
+	if request.method == 'POST':
+		
+		loan_id = request.POST.get('loans')
+		loan = TransactionTypes.objects.get(id=loan_id)
+
+		records = LoanFormIssuance.objects.filter(loan=loan,status='UNTREATED',loan_path='EMERGENCY')
+
+	context={
+	'records':records,
+	'form':form,
+	'task_array':task_array,
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
+	}
+	return render(request,'deskofficer_templates/emergency_loan_application_form_issue_view_load.html',context)
+
+
+
+def emergency_loan_application_form_issue_drop(request,pk):
+	record = LoanFormIssuance.objects.get(id=pk)
+	record.delete()
+	return HttpResponseRedirect(reverse('emergency_loan_application_form_issue_view_load'))
+
+
+
+def  emergency_loan_application_form_issue_history_period_load(request):
 	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
 	task_array=[]
 	for task in tasks:
@@ -5371,41 +4673,107 @@ def loan_application_approved_period_load(request):
 	if Staff.objects.filter(admin=request.user,default_password='YES'):
 		default_password="YES"
 
-	applicants=[]
-	form=loan_request_order_form(request.POST or None)
-	period=[]
-	batch=[]
-	transaction=[]
-	loan=[]
 
+	form=emergency_loan_request_order_form(request.POST or None)
+	exist_loans=[]
 	if request.method == 'POST':
-		period_id=request.POST.get("period")
-		period = Commodity_Period.objects.get(id=period_id)
+		start_date_id=request.POST.get('start_date')
+		stop_date_id=request.POST.get('stop_date')
 
-		batch_id=request.POST.get('batch')
-		batch=Commodity_Period_Batch.objects.get(id=batch_id)
+		date_format = '%Y-%m-%d'
+		dtObj = datetime.datetime.strptime(start_date_id, date_format)
+		start_date=get_current_date(dtObj)
+		
+		dtObj = datetime.datetime.strptime(stop_date_id, date_format)
+		stop_date=get_current_date(dtObj)
+
 
 		loan_id = request.POST.get('loans')
 		loan = TransactionTypes.objects.get(id=loan_id)
 
-
-		applicants = LoanFormIssuance.objects.filter(applicant__loan=loan,applicant__period=period,applicant__batch=batch,processing_status='UNPROCESSED',status='UNTREATED')
+		exist_loans = LoanFormIssuance.objects.filter(loan_path='EMERGENCY',tdate__range=[start_date,stop_date])
+	
+	form.fields['start_date'].initial=get_current_date(now)
+	form.fields['stop_date'].initial=get_current_date(now)
 	context={
+	'exist_loans':exist_loans,
 	'form':form,
-	'period':period,
-	'batch':batch,
-	'transaction':loan,
-	'applicants':applicants,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
 	'default_password':default_password,
 	}
-	return render(request,'deskofficer_templates/loan_application_approved_period_load.html',context)
+	return render(request,'deskofficer_templates/emergency_loan_application_form_issue_history_period_load.html',context)
 
 
 
-def loan_application_form_processing(request,pk):
+
+def Embergency_loan_Form_Application_search(request):
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	task_array=[]
+	for task in tasks:
+		task_array.append(task.task.title)
+
+
+
+	task_enabler=TransactionEnabler.objects.filter(status="YES")
+	task_enabler_array=[]
+	for item in task_enabler:
+		task_enabler_array.append(item.title)
+
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
+	title="Search Member For Emergency Loan"
+	form = searchForm(request.POST or None)
+
+	return render(request,'deskofficer_templates/Embergency_loan_Form_Application_search.html',{'form':form,'title':title,'task_array':task_array,
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,})
+
+
+def Embergency_loan_Form_Application_list_load(request):
+
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	task_array=[]
+	for task in tasks:
+		task_array.append(task.task.title)
+
+
+
+	task_enabler=TransactionEnabler.objects.filter(status="YES")
+	task_enabler_array=[]
+	for item in task_enabler:
+		task_enabler_array.append(item.title)
+
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
+	title="Loan Request order"
+	form = searchForm(request.POST)
+
+	if request.method == "POST":
+		if request.POST.get("title")=="":
+			return HttpResponseRedirect(reverse('Embergency_loan_Form_Application_search'))
+
+		members=LoanFormIssuance.objects.filter(Q(member__admin__first_name__icontains=form['title'].value()) | Q(member__admin__last_name__icontains=form['title'].value()) | Q(member__middle_name__icontains=form['title'].value()) | Q(member__coop_no__icontains=form['title'].value())).filter(status='UNTREATED')
+
+		context={
+		'members':members,
+		'title':title,
+		'task_array':task_array,
+		'task_enabler_array':task_enabler_array,
+		'default_password':default_password,
+		}
+		return render(request,'deskofficer_templates/Embergency_loan_Form_Application_list_load.html',context)
+
+
+def Emergency_loan_application_form_processing(request,pk):
 	form=loan_application_processing_form(request.POST or None)
+	
 	net_form=loan_request_document_attachment_form(request.POST or None)
 
 	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
@@ -5426,13 +4794,11 @@ def loan_application_form_processing(request,pk):
 	tdate = get_current_date(now)
 
 	applicant=LoanFormIssuance.objects.get(id=pk)
-	total_guarantors=applicant.applicant.loan.guarantors
+	exist_amount = applicant.loan_amount	
+	total_guarantors=applicant.loan.guarantors
 
-	bank_accounts=MembersBankAccounts.objects.filter(member_id=applicant.applicant.member_id)
-
+	bank_accounts=MembersBankAccounts.objects.filter(member_id=applicant.member)
 	processed_by = CustomUser.objects.get(id=request.user.id)
-
-	loan_settings=LoanRequestSettings.objects.filter(applicant=applicant.applicant)
 
 	seleected_guarantors=[]
 	new_loan=[]
@@ -5456,29 +4822,28 @@ def loan_application_form_processing(request,pk):
 
 
 	if  request.method =='POST' and 'application' in request.POST:
-		exist_amount=applicant.applicant.approved_amount
 		new_amount=request.POST.get('loan_new_amount')
 
 		if float(new_amount)<=0:
 			messages.error(request,'Invalid Loan Amount Specification')
-			return HttpResponseRedirect(reverse('loan_application_form_processing', args=(pk,)))
+			return HttpResponseRedirect(reverse('Emergency_loan_application_form_processing', args=(pk,)))
 
 		if float(exist_amount) < float(new_amount):
 			messages.error(request,'You cannot apply for Amount beyond the already approved amount of ' + str(exist_amount))
-			return HttpResponseRedirect(reverse('loan_application_form_processing', args=(pk,)))
+			return HttpResponseRedirect(reverse('Emergency_loan_application_form_processing', args=(pk,)))
 
 
 		selected_trannsaction_rate=0
 		saved_amount=0
-		if applicant.applicant.loan.savings_rate == "YES":
-
-			selected_trannsaction_rate=applicant.applicant.loan.saving_rating
+		if applicant.loan.savings_rate == "YES":
+			
+			selected_trannsaction_rate=applicant.loan.saving_rating
 
 
 			if selected_trannsaction_rate > 0:
 				percentage_amount=(float(selected_trannsaction_rate)/100)*float(new_amount)
 
-				loan_based_account_number=str(loan_based_code) + str(applicant.applicant.member.get_member_Id)
+				loan_based_account_number=str(loan_based_code) + str(applicant.member.coop_no)
 
 				saved_amount=0
 				if PersonalLedger.objects.filter(account_number=loan_based_account_number).exists():
@@ -5487,40 +4852,48 @@ def loan_application_form_processing(request,pk):
 
 				if not saved_amount:
 					messages.error(request,'You do not have any savings for this Amount')
-					return HttpResponseRedirect(reverse('loan_application_form_processing',args=(pk,)))
+					return HttpResponseRedirect(reverse('Emergency_loan_application_form_processing',args=(pk,)))
 
 				if float(percentage_amount) > float(saved_amount):
 					messages.error(request,'You do not have required savings for this Amount')
-					return HttpResponseRedirect(reverse('loan_application_form_processing',args=(pk,)))
+					return HttpResponseRedirect(reverse('Emergency_loan_application_form_processing',args=(pk,)))
+
+
+		date_applied_id = request.POST.get('date_applied')
+
+		date_format = '%Y-%m-%d'
+		dtObj = datetime.datetime.strptime(date_applied_id, date_format)
+		date_applied=get_current_date(dtObj)
 
 
 
 		desired_duration=request.POST.get("duration")
 
 		if desired_duration and int(desired_duration)>0:
-			if int(desired_duration) > int(applicant.applicant.duration):
+			if int(desired_duration) > int(applicant.loan.duration):
 				messages.error(request,'The Desired Duration cannot be greater than the Default')
-				return HttpResponseRedirect(reverse('loan_application_form_processing', args=(pk,)))
+				return HttpResponseRedirect(reverse('Emergency_loan_application_form_processing', args=(pk,)))
 			else:
 				duration=desired_duration
 		else:
-			duration=int(applicant.applicant.duration)
+			duration=int(applicant.loan.duration)
 
 
 		if LoanApplication.objects.filter(applicant=applicant).exists():
 			record=LoanApplication.objects.get(applicant=applicant)
 			record.loan_amount=new_amount
 			record.save()
-			return HttpResponseRedirect(reverse('loan_application_form_processing', args=(pk,)))
+			return HttpResponseRedirect(reverse('Emergency_loan_application_form_processing', args=(pk,)))
 
-		record=LoanApplication(submission_status='PENDING',
-								transaction_status='UNTREATED',
-								approval_status='PENDING',
+
+		
+		record=LoanApplication(transaction_status='UNTREATED',
 								duration=duration,
+								date_applied=date_applied,
 								tdate=tdate,applicant=applicant,
 								loan_amount=new_amount,processed_by=processed_by.username)
 		record.save()
-		return HttpResponseRedirect(reverse('loan_application_form_processing', args=(pk,)))
+		return HttpResponseRedirect(reverse('Emergency_loan_application_form_processing', args=(pk,)))
 
 
 
@@ -5532,7 +4905,7 @@ def loan_application_form_processing(request,pk):
 		record.bank_account=account
 		record.save()
 		messages.success(request,'Bank Account Details Added Successfully')
-		return HttpResponseRedirect(reverse('loan_application_form_processing', args=(pk,)))
+		return HttpResponseRedirect(reverse('Emergency_loan_application_form_processing', args=(pk,)))
 
 
 	if request.method=='POST' and 'btn_net_pay' in request.POST:
@@ -5550,12 +4923,12 @@ def loan_application_form_processing(request,pk):
 
 		if not payment_as_at:
 			messages.error(request,'Description is Missing')
-			return HttpResponseRedirect(reverse('loan_application_form_processing', args=(pk,)))
+			return HttpResponseRedirect(reverse('Emergency_loan_application_form_processing', args=(pk,)))
 
 
 		if not net_pay or float(net_pay) <=0:
 			messages.error(request,'Net Pay Missing')
-			return HttpResponseRedirect(reverse('loan_application_form_processing', args=(pk,)))
+			return HttpResponseRedirect(reverse('Emergency_loan_application_form_processing', args=(pk,)))
 
 		record=LoanApplication.objects.get(applicant=applicant)
 		record.payment_as_at=payment_as_at
@@ -5565,23 +4938,26 @@ def loan_application_form_processing(request,pk):
 
 
 
-		record.applicant.applicant.member.last_used_net_pay=net_pay
-		record.applicant.applicant.member.net_pay_as_at=payment_as_at
-		record.applicant.applicant.member.save()
+		record.applicant.member.last_used_net_pay=net_pay
+		record.applicant.member.net_pay_as_at=payment_as_at
+		record.applicant.member.save()
 
 		messages.success(request,'Net Pay Added Successfully')
-		return HttpResponseRedirect(reverse('loan_application_form_processing', args=(pk,)))
+		return HttpResponseRedirect(reverse('Emergency_loan_application_form_processing', args=(pk,)))
 
 
-	form.fields['loan_type'].initial=applicant.applicant.loan.name
-	form.fields['loan_amount'].initial=applicant.applicant.approved_amount
-	form.fields['duration'].initial=applicant.applicant.duration
-
-	form.fields['loan_new_amount'].initial=applicant.applicant.approved_amount
-	net_form.fields['net_pay'].initial=applicant.applicant.member.last_used_net_pay
-	net_form.fields['payment_as_at'].initial=applicant.applicant.member.net_pay_as_at
+	form.fields['loan_type'].initial=applicant.loan.name
+	form.fields['loan_amount'].initial=applicant.loan_amount
+	form.fields['duration'].initial=applicant.loan.duration
+	form.fields['date_applied'].initial=get_current_date(now)
+	
+	if exist_amount:
+		form.fields['loan_new_amount'].initial=exist_amount
+	net_form.fields['net_pay'].initial=applicant.member.last_used_net_pay
+	net_form.fields['payment_as_at'].initial=applicant.member.net_pay_as_at
 	image_link=[]
-	new_loan_pk=0
+	new_loan_pk=applicant.pk
+
 	if new_loan:
 		image_link=new_loan.image
 		new_loan_pk=new_loan.pk
@@ -5594,7 +4970,6 @@ def loan_application_form_processing(request,pk):
 	'image_link':image_link,
 	'net_form':net_form,
 	'applicant':applicant,
-	'loan_settings':loan_settings,
 	'loan_pk':loan_pk,
 	'new_amount':new_amount,
 	'new_loan':new_loan,
@@ -5606,11 +4981,10 @@ def loan_application_form_processing(request,pk):
 	'default_password':default_password,
 	'return_pk':pk,
 	}
-	return render(request,'deskofficer_templates/loan_application_form_processing.html',context)
+	return render(request,'deskofficer_templates/Emergency_loan_application_form_processing.html',context)
 
 
-
-def loan_application_form_processing_guarantor_search(request,pk):
+def Emergency_loan_application_form_processing_guarantor_search(request,pk):
 	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
 	task_array=[]
 	for task in tasks:
@@ -5627,22 +5001,20 @@ def loan_application_form_processing_guarantor_search(request,pk):
 	if Staff.objects.filter(admin=request.user,default_password='YES'):
 		default_password="YES"
 
-	title="Search Membership (Only Cooperative or IPPIS No is Allowed"
+	title="Search Members"
 	form = searchForm(request.POST or None)
 	record=LoanApplication.objects.get(id=pk)
 	return_pk=record.applicant_id
-	return render(request,'deskofficer_templates/loan_application_form_processing_guarantor_search.html',{'task_array':task_array,
+	return render(request,'deskofficer_templates/Emergency_loan_application_form_processing_guarantor_search.html',{'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
 	'default_password':default_password,'form':form,'title':title,'pk':pk,'return_pk':return_pk,})
 
 
-def loan_application_form_processing_guarantor_add_list_load(request,pk):
+def Emergency_loan_application_form_processing_guarantor_add_list_load(request,pk):
 	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
 	task_array=[]
 	for task in tasks:
 		task_array.append(task.task.title)
-
-
 
 	task_enabler=TransactionEnabler.objects.filter(status="YES")
 	task_enabler_array=[]
@@ -5656,13 +5028,12 @@ def loan_application_form_processing_guarantor_add_list_load(request,pk):
 	title="Commodity Loan"
 	form = searchForm(request.POST)
 	record=LoanApplication.objects.get(id=pk)
-	member=Members.objects.get(id=record.applicant.applicant.member_id)
-	member_id=Members.objects.get(id=record.applicant.applicant.member_id)
-
+	member=Members.objects.get(id=record.applicant.member_id)
+	
 	members=[]
 	if request.method == "POST":
 		if request.POST.get("title")=="":
-			return HttpResponseRedirect(reverse('membership_commodity_loan_search'))
+			return HttpResponseRedirect(reverse('Emergency_loan_application_form_processing_guarantor_search',args=(pk,)))
 
 		members=searchGuarantorMembers(form['title'].value(),'ACTIVE',member)
 
@@ -5674,12 +5045,10 @@ def loan_application_form_processing_guarantor_add_list_load(request,pk):
 	'default_password':default_password,
 	'pk':pk,
 	}
-	return render(request,'deskofficer_templates/loan_application_form_processing_guarantor_add_list_load.html',context)
+	return render(request,'deskofficer_templates/Emergency_loan_application_form_processing_guarantor_add_list_load.html',context)
 
 
-
-
-def loan_application_form_processing_guarantor_add(request,pk,loan_pk):
+def Emergency_loan_application_form_processing_guarantor_add(request,pk,loan_pk):
 	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
 	task_array=[]
 	for task in tasks:
@@ -5698,33 +5067,31 @@ def loan_application_form_processing_guarantor_add(request,pk,loan_pk):
 
 	guarantor=Members.objects.get(id=pk)
 	applicant=LoanApplication.objects.get(id=loan_pk)
-	total_guarantors=applicant.applicant.applicant.loan.guarantors
+	total_guarantors=applicant.applicant.loan.guarantors
 
 	if LoanApplicationGuarnators.objects.filter(applicant=applicant).count() >= total_guarantors:
 		messages.info(request,'You Have added the required Guarantors')
-		return HttpResponseRedirect(reverse('loan_application_form_processing_guarantor_search',args=(loan_pk,)))
+		return HttpResponseRedirect(reverse('Emergency_loan_application_form_processing_guarantor_search',args=(loan_pk,)))
 
 	if LoanApplicationGuarnators.objects.filter(applicant=applicant,guarantor=guarantor).exists():
 		messages.info(request,'This Member is already Added as guarantor to this Applicant')
-		return HttpResponseRedirect(reverse('loan_application_form_processing_guarantor_search',args=(loan_pk,)))
+		return HttpResponseRedirect(reverse('Emergency_loan_application_form_processing_guarantor_search',args=(loan_pk,)))
 
 	LoanApplicationGuarnators(applicant=applicant,guarantor=guarantor,status='UNTREATED').save()
-	return HttpResponseRedirect(reverse('loan_application_form_processing_guarantor_search',args=(loan_pk,)))
+	return HttpResponseRedirect(reverse('Emergency_loan_application_form_processing_guarantor_search',args=(loan_pk,)))
 
 
-def loan_application_form_processing_guarantor_delete(request,pk,return_pk):
+def Emergency_loan_application_form_processing_guarantor_delete(request,pk,return_pk):
 	LoanApplicationGuarnators.objects.get(id=pk).delete()
-	return HttpResponseRedirect(reverse('loan_application_form_processing',args=(return_pk,)))
+	return HttpResponseRedirect(reverse('Emergency_loan_application_form_processing',args=(return_pk,)))
 
 
-def loan_application_form_processing_bank_account_delete(request,pk,return_pk):
+def Emergency_loan_application_form_processing_bank_account_delete(request,pk,return_pk):
 	LoanApplication.objects.filter(id=pk).update(bank_account=None)
-	return HttpResponseRedirect(reverse('loan_application_form_processing',args=(return_pk,)))
+	return HttpResponseRedirect(reverse('Emergency_loan_application_form_processing',args=(return_pk,)))
 
 
-
-
-def loan_application_preview(request,pk, return_pk):
+def Emergency_loan_application_preview(request,pk, return_pk,loan_path):
 	form=MemberShipRequestAdditionalInfo_form(request.POST or None)
 
 	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
@@ -5744,8 +5111,8 @@ def loan_application_preview(request,pk, return_pk):
 	applicant=LoanApplication.objects.get(id=pk)
 
 	nok_list=[]
-	if MembersNextOfKins.objects.filter(member=applicant.applicant.applicant.member).exists():
-		nok_record = MembersNextOfKins.objects.filter(member=applicant.applicant.applicant.member).first()
+	if MembersNextOfKins.objects.filter(member=applicant.applicant.member).exists():
+		nok_record = MembersNextOfKins.objects.filter(member=applicant.applicant.member).first()
 		nok_list.append(nok_record.name)
 		nok_list.append(nok_record.relationships.title)
 		nok_list.append(nok_record.address)
@@ -5758,13 +5125,13 @@ def loan_application_preview(request,pk, return_pk):
 		applicant.save()
 	else:
 		messages.error(request,'There is no registered Next of Kin for this Member')
-		return HttpResponseRedirect(reverse('loan_application_form_processing',args=(return_pk,)))
+		return HttpResponseRedirect(reverse('Emergency_loan_application_form_processing',args=(return_pk,)))
 
 	net_pay=applicant.net_pay
 
 	if not net_pay and float(net_pay)<=0:
 		messages.error(request,'Please add Net Pay')
-		return HttpResponseRedirect(reverse('loan_application_form_processing',args=(return_pk,)))
+		return HttpResponseRedirect(reverse('Emergency_loan_application_form_processing',args=(return_pk,)))
 
 
 	status = 'UNTREATED'
@@ -5772,20 +5139,20 @@ def loan_application_preview(request,pk, return_pk):
 	apex_loan=TransactionSources.objects.get(title='LOAN')
 	maximum_loan = apex_loan.maximum_amount
 
-	loan_type=applicant.applicant.applicant.loan.name
-	loan_amount=applicant.loan_amount
-	duration = applicant.duration
+	loan_type=applicant.applicant.loan.name
+	loan_amount=applicant.applicant.loan_amount
+	duration = applicant.applicant.loan.duration
 
 
-	admin_charges_minimum = applicant.applicant.applicant.loan.admin_charges_minimum
+	admin_charges_minimum = applicant.applicant.loan.admin_charges_minimum
 
 	if float(admin_charges_minimum) >= float(loan_amount):
-		admin_charge=applicant.applicant.applicant.loan.default_admin_charges
+		admin_charge=applicant.applicant.loan.default_admin_charges
 	else:
-		if applicant.applicant.applicant.loan.admin_charges_rating == "PERCENTAGE":
-			admin_charge=(float(applicant.applicant.applicant.loan.admin_charges) / 100) * float(loan_amount)
+		if applicant.applicant.loan.admin_charges_rating == "PERCENTAGE":
+			admin_charge=(float(applicant.applicant.loan.admin_charges) / 100) * float(loan_amount)
 		else:
-			admin_charge=applicant.applicant.applicant.loan.admin_charges
+			admin_charge=applicant.applicant.loan.admin_charges
 
 	membership_waver=False
 	savings_made_waver=False
@@ -5793,8 +5160,8 @@ def loan_application_preview(request,pk, return_pk):
 	salary_status_waver=False
 	standing_order_status =False
 
-	if MembersExclusiveness.objects.filter(transaction=applicant.applicant.applicant.loan,period=applicant.applicant.applicant.period,batch=applicant.applicant.applicant.batch,processing_status='UNPROCESSED',approval_status='APPROVED').exists():
-		wavers=MembersExclusiveness.objects.filter(transaction=applicant.applicant.applicant.loan,period=applicant.applicant.applicant.period,batch=applicant.applicant.applicant.batch,processing_status='UNPROCESSED',approval_status='APPROVED')
+	if MembersExclusiveness.objects.filter(transaction=applicant.applicant.loan,processing_status='UNPROCESSED',approval_status='APPROVED').exists():
+		wavers=MembersExclusiveness.objects.filter(transaction=applicant.applicant.loan,processing_status='UNPROCESSED',approval_status='APPROVED')
 
 		for item in wavers:
 			if item.task.title == 'MEMBERSHIP AGE':
@@ -5811,7 +5178,7 @@ def loan_application_preview(request,pk, return_pk):
 	else:
 		bank_account_status=False
 		messages.error(request,'Bank Details missing')
-		return HttpResponseRedirect(reverse('loan_application_form_processing',args=(return_pk,)))
+		return HttpResponseRedirect(reverse('Emergency_loan_application_form_processing',args=(return_pk,)))
 
 	guarantor_list=[]
 	try:
@@ -5824,30 +5191,30 @@ def loan_application_preview(request,pk, return_pk):
 	# for i in range(len(guarantor_list)):
 	# 	print(guarantor_list[i])
 
-	total_guarantors=applicant.applicant.applicant.loan.guarantors
+	total_guarantors=applicant.applicant.loan.guarantors
 
 	if int(guarantors.count())==int(total_guarantors):
 		guarnator_status=True
 	else:
 		guarnator_status=False
 		messages.error(request,'Guarantors missing')
-		return HttpResponseRedirect(reverse('loan_application_form_processing',args=(return_pk,)))
+		return HttpResponseRedirect(reverse('Emergency_loan_application_form_processing',args=(return_pk,)))
 
 	loan_savings_status=False
 	loan_based_saving=[]
 	savings_saved=0
 	loan_saving_relationship=[]
 
-	if applicant.applicant.applicant.loan.savings_rate == 'YES':
+	if applicant.applicant.loan.savings_rate == 'YES':
 		if LoanBasedSavings.objects.all().exists():
 			loan_based_saving = LoanBasedSavings.objects.first()
 		else:
 			messages.error(request,'Loan Based Savings not Set')
-			return HttpResponseRedirect(reverse('loan_application_form_processing',args=(return_pk,)))
+			return HttpResponseRedirect(reverse('Emergency_loan_application_form_processing',args=(return_pk,)))
 
 		loans_anchored=TransactionTypes.objects.filter(savings_rate='YES')
 
-		loans_anchored_sum=LoansRepaymentBase.objects.filter(transaction__savings_rate='YES').filter(Q(balance__lt=0) & Q(member_id=applicant.applicant.applicant.member_id)).aggregate(total_amount=Sum('balance'))
+		loans_anchored_sum=LoansRepaymentBase.objects.filter(transaction__savings_rate='YES').filter(Q(balance__lt=0) & Q(member_id=applicant.applicant.member_id)).aggregate(total_amount=Sum('balance'))
 		total_loans_anchored=loans_anchored_sum['total_amount']
 		if not total_loans_anchored:
 			total_loans_anchored=0
@@ -5857,24 +5224,24 @@ def loan_application_preview(request,pk, return_pk):
 
 		savings_saved=0
 
-		if StandingOrderAccounts.objects.filter(transaction__transaction=loan_based_saving.savings,transaction__member=applicant.applicant.applicant.member).exists():
-			account_id=StandingOrderAccounts.objects.get(transaction__transaction=loan_based_saving.savings,transaction__member=applicant.applicant.applicant.member)
+		if StandingOrderAccounts.objects.filter(transaction__transaction=loan_based_saving.savings,transaction__member=applicant.applicant.member).exists():
+			account_id=StandingOrderAccounts.objects.get(transaction__transaction=loan_based_saving.savings,transaction__member=applicant.applicant.member)
 
 			if PersonalLedger.objects.filter(account_number=account_id.transaction.account_number).exists():
 				savings_ledger=PersonalLedger.objects.filter(account_number=account_id.transaction.account_number).last()
 				savings_saved=savings_ledger.balance
 			else:
 				messages.error(request,'No Savings Available for Loan Based Savings')
-				return HttpResponseRedirect(reverse('loan_application_form_processing',args=(return_pk,)))
+				return HttpResponseRedirect(reverse('Emergency_loan_application_form_processing',args=(return_pk,)))
 		else:
 			messages.error(request,'No account for Loan Based Savings')
-			return HttpResponseRedirect(reverse('loan_application_form_processing',args=(return_pk,)))
+			return HttpResponseRedirect(reverse('Emergency_loan_application_form_processing',args=(return_pk,)))
 
 		loan_based_saving_rating=apex_loan.loan_based_saving
 
 		if not float(loan_based_saving_rating):
 			messages.error(request,'Loan Based Saving Rating not set')
-			return HttpResponseRedirect(reverse('loan_application_form_processing',args=(return_pk,)))
+			return HttpResponseRedirect(reverse('Emergency_loan_application_form_processing',args=(return_pk,)))
 
 
 		loan_saving_relationship=float(int(loan_based_saving_rating)/100) * float(expected_total_loans)
@@ -5888,11 +5255,11 @@ def loan_application_preview(request,pk, return_pk):
 		if not loan_savings_status:
 
 			messages.error(request,'You do not Have Expected Savings for this Loan Amount, You have  ' + str(savings_saved) + ' while you need ' + str(loan_saving_relationship) )
-			return HttpResponseRedirect(reverse('loan_application_form_processing',args=(return_pk,)))
+			return HttpResponseRedirect(reverse('Emergency_loan_application_form_processing',args=(return_pk,)))
 
 
 	total_savings=0
-	savings_sum=get_standing_orders_sum(applicant.applicant.applicant.member_id)
+	savings_sum=get_standing_orders_sum(applicant.applicant.member_id)
 	if savings_sum==None:
 		total_savings=0
 		standing_order_status=False
@@ -5902,7 +5269,7 @@ def loan_application_preview(request,pk, return_pk):
 
 	total_loans=0
 	balance_total=0
-	loans_sum=LoansRepaymentBase.objects.filter(Q(balance__lt=0) & Q(member_id=applicant.applicant.applicant.member_id)).aggregate(total_amount=Sum('repayment'),total_balance=Sum('balance'))
+	loans_sum=LoansRepaymentBase.objects.filter(Q(balance__lt=0) & Q(member_id=applicant.applicant.member_id)).aggregate(total_amount=Sum('repayment'),total_balance=Sum('balance'))
 	total_loans=loans_sum['total_amount']
 	balance_total= loans_sum['total_balance']
 	if total_loans==None:
@@ -5911,7 +5278,7 @@ def loan_application_preview(request,pk, return_pk):
 		balance_total=0
 
 	shop_balance=0
-	shops =CooperativeShopLedger.objects.filter(Q(balance__lt=0) & Q(member_id=applicant.applicant.applicant.member_id)).order_by('-id').first()
+	shops =CooperativeShopLedger.objects.filter(Q(balance__lt=0) & Q(member_id=applicant.applicant.member_id)).order_by('-id').first()
 	if shops:
 		shop_balance=abs(shops.balance)
 
@@ -5921,37 +5288,37 @@ def loan_application_preview(request,pk, return_pk):
 
 	balance=float(net_pay)-total_debit
 
-	date_joined = applicant.applicant.applicant.member.date_joined
+	date_joined = applicant.applicant.member.date_joined
 	now = datetime.datetime.now()
 
 	salary_loan_relationship = apex_loan.salary_loan_relationship
 	if not float(salary_loan_relationship):
 		messages.error(request,'Salary Loan Relationship not set')
-		return HttpResponseRedirect(reverse('loan_application_form_processing',args=(return_pk,)))
+		return HttpResponseRedirect(reverse('Emergency_loan_application_form_processing',args=(return_pk,)))
 
 
 	salary_loan_relationship_computed= float(int(salary_loan_relationship)/100) * float(balance)
 
-	interest_rate = applicant.applicant.applicant.loan.interest_rate
+	interest_rate = applicant.applicant.loan.interest_rate
 
 	if not float(interest_rate):
 		messages.error(request,'Interest Rate not set')
-		return HttpResponseRedirect(reverse('loan_application_form_processing',args=(return_pk,)))
+		return HttpResponseRedirect(reverse('Emergency_loan_application_form_processing',args=(return_pk,)))
 
 
 	interest= float(int(interest_rate)/100) * float(applicant.loan_amount)
 
-	loan_age = applicant.applicant.applicant.loan.loan_age
+	loan_age = applicant.applicant.loan.loan_age
 	if not float(loan_age):
 		messages.error(request,'Members Loan Age not set')
-		return HttpResponseRedirect(reverse('loan_application_form_processing',args=(return_pk,)))
+		return HttpResponseRedirect(reverse('Emergency_loan_application_form_processing',args=(return_pk,)))
 
 
 	members_age = (now.year - date_joined.year) * 12 + (now.month - date_joined.month)
-	interest_deduction=applicant.applicant.applicant.loan.interest_deduction
+	interest_deduction=applicant.applicant.loan.interest_deduction
 	if not interest_deduction:
 		messages.error(request,'Interest deduction source not set')
-		return HttpResponseRedirect(reverse('loan_application_form_processing',args=(return_pk,)))
+		return HttpResponseRedirect(reverse('Emergency_loan_application_form_processing',args=(return_pk,)))
 
 
 
@@ -5962,7 +5329,7 @@ def loan_application_preview(request,pk, return_pk):
 
 	if int(duration) == 0:
 		messages.error(request,'Please set the Loan Duration')
-		return HttpResponseRedirect(reverse('loan_application_form_processing',args=(return_pk,)))
+		return HttpResponseRedirect(reverse('Emergency_loan_application_form_processing',args=(return_pk,)))
 
 	monthly_repayment=math.ceil(float(amount_scheduled)/float(duration))
 
@@ -5997,7 +5364,7 @@ def loan_application_preview(request,pk, return_pk):
 		applicant.comment=comment
 		applicant.submission_status='SUBMITTED'
 		applicant.admin_charge=admin_charge
-		applicant.tdate=date_applied
+		applicant.date_applied=date_applied
 		applicant.save()
 
 		description="NET PAY"
@@ -6230,16 +5597,15 @@ def loan_application_preview(request,pk, return_pk):
 
 		applicant1=LoanFormIssuance.objects.get(id=applicant.applicant_id)
 		applicant1.processing_status='PROCESSED'
+		applicant1.status='TREATED'
 		applicant1.save()
-
-
-		return HttpResponseRedirect(reverse('loan_application_approved_period_load'))
+		return HttpResponseRedirect(reverse('Emergency_Loan_Dashboard_Load'))
 
 	compulsory_saving_status = False
 	if CompulsorySavings.objects.all().exists():
 		compulsory_saving = CompulsorySavings.objects.first()
 
-		if StandingOrderAccounts.objects.filter(transaction__member=applicant.applicant.applicant.member,transaction__transaction=compulsory_saving.transaction).exists():
+		if StandingOrderAccounts.objects.filter(transaction__member=applicant.applicant.member,transaction__transaction=compulsory_saving.transaction).exists():
 			compulsory_saving_status = True
 
 	maximum_loan_status = False
@@ -6250,10 +5616,7 @@ def loan_application_preview(request,pk, return_pk):
 
 
 	# print(maximum_loan_status)
-	# print(guarnator_status)
-	# print(bank_account_status)
-	# print(compulsory_saving_status)
-	# print(standing_order_status)
+	
 
 	if maximum_loan_status and guarnator_status and bank_account_status and compulsory_saving_status and standing_order_status:
 	# if guarnator_status and bank_account_status and compulsory_saving_status and standing_order_status:
@@ -6264,7 +5627,7 @@ def loan_application_preview(request,pk, return_pk):
 			button_enabled=False
 			if Member_Status == True:
 				button_enabled=True
-		print(f'1. {button_enabled}')
+		# print(f'1. {button_enabled}')
 
 		if savings_made_waver:
 			button_enabled=True
@@ -6272,7 +5635,7 @@ def loan_application_preview(request,pk, return_pk):
 			button_enabled=False
 			if loan_savings_status == True:
 				button_enabled=True
-		print(f'2. {button_enabled}')
+		# print(f'2. {button_enabled}')
 		
 		if salary_status_waver:
 			button_enabled=True
@@ -6281,7 +5644,7 @@ def loan_application_preview(request,pk, return_pk):
 			if salary_status == True:
 				button_enabled=True
 
-		print(f'3. {button_enabled}')
+		# print(f'3. {button_enabled}')
 	else:
 		button_enabled=False
 
@@ -6317,10 +5680,12 @@ def loan_application_preview(request,pk, return_pk):
 	form.fields['comment'].initial="FOR YOUR CONSIDERATION"
 	form.fields['date_applied'].initial=get_current_date(now)
 	context={
+	'loan_path':loan_path,
 	'form':form,
-	'savings_anchored':applicant.applicant.applicant.loan.savings_rate,
+	'savings_anchored':applicant.applicant.loan.savings_rate,
 	'record_array':record_array,
 	'membership_waver':membership_waver,
+	'applicant':applicant,
 	'pk':pk,
 	'salary_status':salary_status,
 	'Member_Status':Member_Status,
@@ -6333,10 +5698,2209 @@ def loan_application_preview(request,pk, return_pk):
 	'default_password':default_password,
 	}
 
-	return render(request,'deskofficer_templates/loan_application_preview.html',context)
+	return render(request,'deskofficer_templates/Emergency_loan_application_preview.html',context)
 
 
-def Loan_application_processing_period_load(request):
+def Emergency_Loan_application_active_list_load(request):
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	task_array=[]
+	for task in tasks:
+		task_array.append(task.task.title)
+
+
+
+	task_enabler=TransactionEnabler.objects.filter(status="YES")
+	task_enabler_array=[]
+	for item in task_enabler:
+		task_enabler_array.append(item.title)
+
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
+	
+	records = LoanApplication.objects.filter(transaction_status='UNTREATED',applicant__loan_path='EMERGENCY')
+
+	context={
+	'records':records,
+	'task_array':task_array,
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
+	}
+	return render(request,'deskofficer_templates/Emergency_Loan_application_active_list_load.html',context)
+
+
+def Emergency_Loan_application_history_period_load(request):
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	task_array=[]
+	for task in tasks:
+		task_array.append(task.task.title)
+
+
+
+	task_enabler=TransactionEnabler.objects.filter(status="YES")
+	task_enabler_array=[]
+	for item in task_enabler:
+		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
+
+	form=emergency_loan_request_order_form(request.POST or None)
+	exist_loans=[]
+	if request.method == 'POST':
+		start_date_id=request.POST.get('start_date')
+		stop_date_id=request.POST.get('stop_date')
+
+		date_format = '%Y-%m-%d'
+		dtObj = datetime.datetime.strptime(start_date_id, date_format)
+		start_date=get_current_date(dtObj)
+		
+		dtObj = datetime.datetime.strptime(stop_date_id, date_format)
+		stop_date=get_current_date(dtObj)
+
+
+		loan_id = request.POST.get('loans')
+		loan = TransactionTypes.objects.get(id=loan_id)
+
+						
+		exist_loans = LoanApplication.objects.filter(applicant__loan_path='EMERGENCY',tdate__range=[start_date,stop_date])
+	
+	form.fields['start_date'].initial=get_current_date(now)
+	form.fields['stop_date'].initial=get_current_date(now)
+	context={
+	'exist_loans':exist_loans,
+	'form':form,
+	'task_array':task_array,
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
+	}
+	return render(request,'deskofficer_templates/Emergency_Loan_application_history_period_load.html',context)
+
+
+
+def emergency_loan_application_shortlisting_list_load(request):
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	task_array=[]
+	for task in tasks:
+		task_array.append(task.task.title)
+
+
+	# LoanFormIssuance.objects.all().update(status='UNTREATED')
+	# LoanApplication.objects.all().delete()
+
+	task_enabler=TransactionEnabler.objects.filter(status="YES")
+	task_enabler_array=[]
+	for item in task_enabler:
+		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
+
+	form=emergency_loan_request_order_form(request.POST or None)
+	records=[]
+	if request.method == 'POST':
+		
+
+		loan_id = request.POST.get('loans')
+		loan = TransactionTypes.objects.get(id=loan_id)
+
+		records = LoanApplication.objects.filter(applicant__loan=loan,transaction_status='UNTREATED')
+
+	context={
+	'records':records,
+	'form':form,
+	'task_array':task_array,
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
+	}
+	return render(request,'deskofficer_templates/emergency_loan_application_shortlisting_list_load.html',context)
+
+
+def emergency_loan_application_shortlisting_process(request,pk):
+
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	task_array=[]
+	for task in tasks:
+		task_array.append(task.task.title)
+
+	task_enabler=TransactionEnabler.objects.filter(status="YES")
+	task_enabler_array=[]
+	for item in task_enabler:
+		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
+
+	form=loan_request_shortlisting_process_form(request.POST or None)
+	tdate=get_current_date(now)
+	processed_by=CustomUser.objects.get(id=request.user.id)
+	processed_by=processed_by.username
+
+	record = LoanApplication.objects.get(id=pk)
+	
+	if request.method == 'POST':
+		
+		date_shortlisted_id = request.POST.get('date_shortlisted')
+
+		date_format = '%Y-%m-%d'
+		dtObj = datetime.datetime.strptime(date_shortlisted_id, date_format)
+		date_shortlisted=get_current_date(dtObj)
+
+		LoanApplicationShortListing(tdate=tdate,applicant=record,processed_by=processed_by,status="UNTREATED",approval_status='PENDING').save()
+		LoanApplication.objects.filter(id=pk).update(transaction_status='TREATED')
+		return	HttpResponseRedirect(reverse('emergency_loan_application_shortlisting_list_load'))
+		
+
+		
+	form.fields['date_applied'].initial=get_print_date(record.date_applied)
+	form.fields['amount'].initial	=record.loan_amount
+	form.fields['date_shortlisted'].initial=get_current_date(now)	
+	context={
+	'record':record,
+	'form':form,
+	'task_array':task_array,
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
+	}
+	return render(request,'deskofficer_templates/emergency_loan_application_shortlisting_process.html',context)
+
+
+
+def emergency_loan_application_shortlisted_active_list_load(request):
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	task_array=[]
+	for task in tasks:
+		task_array.append(task.task.title)
+
+	task_enabler=TransactionEnabler.objects.filter(status="YES")
+	task_enabler_array=[]
+	for item in task_enabler:
+		task_enabler_array.append(item.title)
+
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
+	
+	records = LoanApplicationShortListing.objects.filter(approval_status='PENDING',status='UNTREATED',applicant__applicant__loan_path ="EMERGENCY")
+
+	context={
+	'records':records,
+	'task_array':task_array,
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
+	}
+	return render(request,'deskofficer_templates/emergency_loan_application_shortlisted_active_list_load.html',context)
+
+
+
+def emergency_Loan_application_shortlisting_KIV_period_load(request):
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	task_array=[]
+	for task in tasks:
+		task_array.append(task.task.title)
+
+
+
+	task_enabler=TransactionEnabler.objects.filter(status="YES")
+	task_enabler_array=[]
+	for item in task_enabler:
+		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
+
+	form=emergency_loan_request_order_form(request.POST or None)
+	exist_loans=[]
+	if request.method == 'POST':
+		start_date_id=request.POST.get('start_date')
+		stop_date_id=request.POST.get('stop_date')
+
+		date_format = '%Y-%m-%d'
+		dtObj = datetime.datetime.strptime(start_date_id, date_format)
+		start_date=get_current_date(dtObj)
+		
+		dtObj = datetime.datetime.strptime(stop_date_id, date_format)
+		stop_date=get_current_date(dtObj)
+
+
+		loan_id = request.POST.get('loans')
+		loan = TransactionTypes.objects.get(id=loan_id)
+
+					
+		exist_loans = LoanApplicationShortListing.objects.filter(~Q(approval_status='APPROVED') & ~Q(approval_status='PENDING')).filter(applicant__applicant__loan_path='EMERGENCY',tdate__range=[start_date,stop_date])
+	
+	form.fields['start_date'].initial=get_current_date(now)
+	form.fields['stop_date'].initial=get_current_date(now)
+	context={
+	'exist_loans':exist_loans,
+	'form':form,
+	'task_array':task_array,
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
+	}
+	return render(request,'deskofficer_templates/emergency_Loan_application_shortlisting_KIV_period_load.html',context)
+
+
+def emergency_Loan_application_shortlisting_KIV_activate(request,pk):
+	LoanApplicationShortListing.objects.filter(id=pk).update(approval_status='PENDING')
+	return HttpResponseRedirect(reverse('emergency_Loan_application_shortlisting_KIV_period_load'))
+
+
+
+
+
+def emergency_Loan_application_processing_period_load(request):
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	task_array=[]
+	for task in tasks:
+		task_array.append(task.task.title)
+
+	task_enabler=TransactionEnabler.objects.filter(status="YES")
+	task_enabler_array=[]
+	for item in task_enabler:
+		task_enabler_array.append(item.title)
+
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
+	form=emergency_loan_request_order_form(request.POST or None)
+
+	exist_loans=[]
+	if request.method == 'POST':
+
+		loan_id = request.POST.get('loans')
+		loan = TransactionTypes.objects.get(id=loan_id)
+
+		exist_loans = LoanApplicationShortListing.objects.filter(applicant__applicant__loan=loan,status='UNTREATED',approval_status='APPROVED')
+
+	context={
+	'exist_loans':exist_loans,
+	'form':form,
+	'task_array':task_array,
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
+	}
+	return render(request,'deskofficer_templates/emergency_Loan_application_processing_period_load.html',context)
+
+
+def emergency_loan_application_approved_process_preview(request,pk):
+
+	now = datetime.datetime.now()
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	task_array=[]
+	for task in tasks:
+		task_array.append(task.task.title)
+
+	task_enabler=TransactionEnabler.objects.filter(status="YES")
+	task_enabler_array=[]
+	for item in task_enabler:
+		task_enabler_array.append(item.title)
+
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
+	form=loan_application_approved_process_preview_form(request.POST or None)
+	transaction_period=TransactionPeriods.objects.get(status='ACTIVE')
+
+
+	processed_by=CustomUser.objects.get(id=request.user.id)
+	processed_by=processed_by.username
+	tdate=get_current_date(now)
+	
+	applicant=LoanApplicationShortListing.objects.get(id=pk)
+
+	# Application applicant ID
+	applicant1=LoanApplication.objects.get(id=applicant.applicant_id)
+	# applicant1 = applicant.applicant
+	transaction=applicant.applicant.applicant
+
+	nok_name = applicant1.nok_name
+	nok_Relationship=applicant1.nok_Relationship
+	nok_phone_no=applicant1.nok_phone_no
+	nok_address=applicant1.nok_address
+
+	guarantors = LoanApplicationGuarnators.objects.filter(applicant=applicant1)
+
+	records=LoanApplicationSettings.objects.filter(applicant=applicant1)
+
+	loan_type=transaction.loan.name
+
+
+	loan_amount=applicant.approved_amount
+	
+	duration = applicant.applicant.duration
+	admin_charge = applicant.applicant.admin_charge
+	start_date=[]
+	stop_date=[]
+
+	interest_rate = transaction.loan.interest_rate
+
+	interest= float(int(interest_rate)/100) * float(loan_amount)
+	interest_deduction=transaction.loan.interest_deduction
+
+
+	if interest_deduction== "SOURCE":
+		amount_scheduled = float(loan_amount)
+	else:
+		amount_scheduled = float(loan_amount)+ float(interest)
+
+	monthly_repayment=math.ceil(float(amount_scheduled)/float(duration))
+
+	my_id=transaction.member.get_member_Id
+	loan_code=transaction.loan.code
+
+
+	button_show = False
+
+	if request.method=="POST" and 'btn-fetch' in request.POST:
+		start_date=request.POST.get('effective_date')
+		start_date=datetime.datetime.strptime(start_date, '%Y-%m-%d')
+		stop_date = start_date+ relativedelta(months=int(duration))
+		start_date=get_current_date(start_date)
+		stop_date=get_current_date(stop_date)
+		button_show=True
+	
+
+
+	if request.method=="POST" and 'btn-process' in request.POST:
+
+		loan_number = generate_number(loan_code,my_id,now)
+		if loan_number==0:
+			messages.error(request,'Please set the loan Code')
+			return HttpResponseRedirect(reverse('emergency_loan_application_approved_process_preview',args=(pk,)))
+
+		member=transaction.member #applicant.applicant.applicant.member
+		
+		effective_date_add=request.POST.get('effective_date_add')
+	
+		if effective_date_add:
+			start_date=request.POST.get('effective_date')
+			start_date=datetime.datetime.strptime(start_date, '%Y-%m-%d')
+			stop_date = start_date+ relativedelta(months=int(duration))
+			start_date=get_current_date(start_date)
+			stop_date=get_current_date(stop_date)
+		else:
+			messages.error(request,"Please Accept the Effective Date")
+			return HttpResponseRedirect(reverse('emergency_loan_application_approved_process_preview',args=(pk,)))
+
+		# transaction=applicant.applicant.applicant.applicant.applicant.loan #applicant.applicant.applicant.applicant.loan
+		
+
+		if not nok_name:
+			messages.error(request,"No Next of Kin recorded for this Member")
+			return HttpResponseRedirect(reverse('emergency_loan_application_approved_process_preview',args=(pk,)))
+
+		particulars=transaction.loan.name + " Loan Issuance"
+		s = titlecase(particulars)
+		particulars=s
+		debit=abs(float(loan_amount)) #+float(interest))
+		credit=0
+		balance=-debit
+
+		post_to_ledger(member,
+						transaction.loan,
+						loan_number,
+						particulars,
+						debit,
+						credit,
+						balance,
+						get_current_date(now),
+						'ACTIVE',
+						tdate,processed_by)
+
+
+		ledger_balance=balance
+
+
+		cash_book_balance=main_cashbook_balance()
+
+		ledger_particulars= particulars + '(' + str(loan_number) + ')'
+		debit=0
+		credit=abs(float(loan_amount))
+		balance=float(cash_book_balance)+float(credit)
+		ref_no=get_ticket()
+		status='ACTIVE'
+		tdate=get_current_date(now)
+		source='LOAN ISSUEANCE'
+		main_cashbook_posting(ledger_particulars,debit,credit,balance,ref_no,status,tdate,processed_by,source)
+
+
+
+		particulars=  "Interest on"  + transaction.loan.name.title()
+		s = titlecase(particulars)
+		particulars=s
+		debit=abs(float(interest))
+		credit=0
+		balance=-(abs(float(ledger_balance)) + abs(float(interest)))
+
+		post_to_ledger(member,
+						transaction.loan,
+						loan_number,
+						particulars,
+						debit,
+						credit,
+						balance,
+						get_current_date(now),
+						'ACTIVE',
+						tdate,processed_by)
+
+		ledger_balance=balance
+
+		cash_book_balance=main_cashbook_balance()
+
+		ledger_particulars= particulars + '(' + str(loan_number) + ')'
+		credit=0
+		debit=abs(float(debit))
+		balance=float(cash_book_balance)-float(debit)
+		ref_no=get_ticket()
+		status='ACTIVE'
+		tdate=get_current_date(now)
+		source='LOAN ISSUEANCE'
+		main_cashbook_posting(ledger_particulars,debit,credit,balance,ref_no,status,tdate,processed_by,source)
+
+		particulars=  "Admin Charges on :  "  + transaction.loan.name.title()
+		s = titlecase(particulars)
+		particulars=s
+		debit=abs(float(admin_charge))
+		credit=0
+		balance=-(abs(float(ledger_balance)) + abs(float(admin_charge)))
+
+		post_to_ledger(member,
+						transaction.loan,
+						loan_number,
+						particulars,
+						debit,
+						credit,
+						balance,
+						get_current_date(now),
+						'ACTIVE',
+						tdate,processed_by)
+
+		ledger_balance=balance
+
+		cash_book_balance=main_cashbook_balance()
+
+		ledger_particulars= particulars + '(' + str(loan_number) + ')'
+		credit=abs(float(admin_charge))
+		debit=0
+		balance=float(cash_book_balance)+float(credit)
+		ref_no=get_ticket()
+		status='ACTIVE'
+		tdate=get_current_date(now)
+		source='LOAN ISSUEANCE'
+		main_cashbook_posting(ledger_particulars,debit,credit,balance,ref_no,status,tdate,processed_by,source)
+
+
+		particulars=  "Deduction of Admin Charges from Source 0n:  "  + transaction.loan.name.title()
+		s = titlecase(particulars)
+		particulars=s
+		debit=0
+		credit=abs(float(admin_charge))
+		balance=(float(ledger_balance) + abs(float(admin_charge)))
+
+		post_to_ledger(member,
+						transaction.loan,
+						loan_number,
+						particulars,
+						debit,
+						credit,
+						balance,
+						get_current_date(now),
+						'ACTIVE',
+						tdate,processed_by)
+
+		ledger_balance=balance
+		cash_book_balance=main_cashbook_balance()
+
+		ledger_particulars= particulars + '(' + str(loan_number) + ')'
+		debit=abs(float(admin_charge))
+		credit=0
+		balance=float(cash_book_balance)-float(debit)
+		ref_no=get_ticket()
+		status='ACTIVE'
+		tdate=get_current_date(now)
+		source='LOAN ISSUEANCE'
+		main_cashbook_posting(ledger_particulars,debit,credit,balance,ref_no,status,tdate,processed_by,source)
+
+
+		if interest_deduction == "SOURCE":
+			particulars= "Interest Deduction at source"
+			s = titlecase(particulars)
+			particulars=s
+			debit=0
+			credit=float(interest)
+			balance=-(abs(float(ledger_balance)) - float(interest))
+
+			post_to_ledger(member,
+							transaction.loan,
+							loan_number,
+							particulars,
+							debit,
+							credit,
+							balance,
+							get_current_date(now),
+							'ACTIVE',
+							tdate,processed_by)
+
+
+
+			Loans_Repayment_Base(member,
+								nok_name,
+								nok_Relationship,
+								nok_phone_no,
+								nok_address,
+								duration,
+								interest_deduction,
+								interest_rate,
+								interest,
+								admin_charge,
+								transaction.loan,
+								loan_number,
+								float(loan_amount),
+								float(monthly_repayment),
+								-float(loan_amount),
+								0,
+								start_date,
+								stop_date,
+								processed_by,
+								'ACTIVE',
+								tdate,
+								'SCHEDULED')
+
+
+			cash_book_balance=main_cashbook_balance()
+
+			ledger_particulars= particulars + '(' + str(loan_number) + ')'
+			debit=abs(float(interest))
+			credit=0
+			balance=float(cash_book_balance)-float(debit)
+			ref_no=get_ticket()
+			status='ACTIVE'
+			tdate=get_current_date(now)
+			source='LOAN ISSUEANCE'
+			main_cashbook_posting(ledger_particulars,debit,credit,balance,ref_no,status,tdate,processed_by,source)
+
+		else:
+
+			Loans_Repayment_Base(member,
+								duration,
+								interest_deduction,
+								interest_rate,
+								interest,
+								admin_charge,
+								transaction.loan,
+								loan_number,
+								float(amount_scheduled),
+								float(monthly_repayment),
+								-amount_scheduled,
+								0,
+								start_date,
+								stop_date,
+								processed_by,
+								'ACTIVE',
+								tdate,
+								'SCHEDULED')
+
+
+		loan = LoansRepaymentBase.objects.get(loan_number=loan_number)
+		for guarantor in guarantors:
+			LoanGuarantors(loan=loan,member=guarantor.guarantor).save()
+
+
+		applicant.status='TREATED'
+		applicant.save()
+
+		
+		if transaction.loan.auto_stop_savings == 'YES':
+			savings=LoanBasedSavings.objects.all()
+			if savings:
+				record=LoanBasedSavings.objects.all().first()
+				StandingOrderAccounts.objects.filter(transaction__transaction=record.savings,transaction__member=member).update(status='INACTIVE')
+
+				queryset=StandingOrderAccounts.objects.get(transaction__transaction=record.savings,transaction__member=member)
+				StandingOrderDeactivatedAccounts(transaction=queryset,status='UNTREATED',processed_by=processed_by,tdate=tdate).save()
+
+		return HttpResponseRedirect(reverse('Emergency_Loan_application_processing_confirmation',args=(loan_number,)))
+
+	form.fields['effective_date'].initial=transaction_period.transaction_period
+	context={
+	'button_show':button_show,
+	'start_date':start_date,
+	'stop_date':stop_date,
+	'loan_type':loan_type,
+	'applicant':applicant,
+	'loan_amount':loan_amount,
+	'pk':pk,
+	'duration':duration,
+	'interest_rate':interest_rate,
+	'interest_deduction':interest_deduction,
+	'interest':interest,
+	'monthly_repayment':monthly_repayment,
+	'amount_scheduled':amount_scheduled,
+	'records':records,
+	'admin_charge':admin_charge,
+	'form':form,
+	'task_array':task_array,
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
+	}
+
+	return render(request,'deskofficer_templates/emergency_loan_application_approved_process_preview.html',context)
+
+
+def emergency_loan_application_reprint_search(request):
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	task_array=[]
+	for task in tasks:
+		task_array.append(task.task.title)
+
+
+
+	task_enabler=TransactionEnabler.objects.filter(status="YES")
+	task_enabler_array=[]
+	for item in task_enabler:
+		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
+	title="Search Members for Reprint"
+	form = searchForm(request.POST or None)
+
+	return render(request,'deskofficer_templates/emergency_loan_application_reprint_search.html',{'task_array':task_array,
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,'form':form,'title':title,})
+
+def emergency_loan_application_reprint_list_load(request):
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	task_array=[]
+	for task in tasks:
+		task_array.append(task.task.title)
+
+
+
+	task_enabler=TransactionEnabler.objects.filter(status="YES")
+	task_enabler_array=[]
+	for item in task_enabler:
+		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
+	title="Loan Request Form Reprint"
+	form = searchForm(request.POST)
+	
+	members=[]
+	if request.method == "POST":
+		if request.POST.get("title")=="":
+			return HttpResponseRedirect(reverse('emergency_loan_application_reprint_search'))
+
+		members=searchMembers(form['title'].value(),'ACTIVE')
+
+	context={
+	'members':members,
+	'title':title,
+	'task_array':task_array,
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
+	
+	}
+	return render(request,'deskofficer_templates/emergency_loan_application_reprint_list_load.html',context)
+
+
+
+def emergency_members_loan_application_history_load(request,pk):
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	task_array=[]
+	for task in tasks:
+		task_array.append(task.task.title)
+
+	task_enabler=TransactionEnabler.objects.filter(status="YES")
+	task_enabler_array=[]
+	for item in task_enabler:
+		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
+	form=PersonalLedger_Transaction_Account_Load_form(request.POST or None)
+
+	applicants=[]
+	member=Members.objects.get(id=pk)
+	if request.method == 'POST':
+
+		start_date=request.POST.get('start_date')
+		stop_date=request.POST.get('stop_date')
+
+
+
+		date_format = '%Y-%m-%d'
+		tdate1 = datetime.datetime.strptime(start_date, date_format)
+		tdate2 = datetime.datetime.strptime(stop_date, date_format)
+
+		applicants=LoanApplicationShortListing.objects.filter(tdate__range=[tdate1,tdate2],applicant__applicant__member=member)
+
+	form.fields['start_date'].initial=get_current_date(now)
+	form.fields['stop_date'].initial=get_current_date(now)
+	context={
+	'form':form,
+	'member':member,
+	'applicants':applicants,
+	'task_array':task_array,
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
+	}
+	return render(request,'deskofficer_templates/emergency_members_loan_application_history_load.html',context)
+
+
+
+
+# def emergency_loan_application_discard(request):
+# 	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+# 	task_array=[]
+# 	for task in tasks:
+# 		task_array.append(task.task.title)
+
+# 	task_enabler=TransactionEnabler.objects.filter(status="YES")
+# 	task_enabler_array=[]
+# 	for item in task_enabler:
+# 		task_enabler_array.append(item.title)
+
+# 	default_password="NO"
+# 	if Staff.objects.filter(admin=request.user,default_password='YES'):
+# 		default_password="YES"
+
+
+# 	records = LoanRequest.objects.filter(submission_status='PENDING',loan_path='PROJECT')
+
+
+# 	context={
+# 	'records':records,
+# 	'task_array':task_array,
+# 	'task_enabler_array':task_enabler_array,
+# 	'default_password':default_password,
+# 	}
+# 	return render(request,'deskofficer_templates/loan_request_order_discard.html',context)
+
+
+# def emergency_loan_application_order_discard_delete(request,pk):
+# 	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+# 	task_array=[]
+# 	for task in tasks:
+# 		task_array.append(task.task.title)
+
+
+
+# 	task_enabler=TransactionEnabler.objects.filter(status="YES")
+# 	task_enabler_array=[]
+# 	for item in task_enabler:
+# 		task_enabler_array.append(item.title)
+
+# 	default_password="NO"
+# 	if Staff.objects.filter(admin=request.user,default_password='YES'):
+# 		default_password="YES"
+
+# 	LoanRequest.objects.filter(id=pk).delete()
+# 	return HttpResponseRedirect(reverse('loan_request_order_discard'))
+
+
+
+
+def Project_Loan_Dashboard_Load(request):
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	task_array=[]
+	for task in tasks:
+		task_array.append(task.task.title)
+
+
+
+	task_enabler=TransactionEnabler.objects.filter(status="YES")
+	task_enabler_array=[]
+	for item in task_enabler:
+		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
+	context={
+	'task_array':task_array,
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
+
+	}
+	return render(request,'deskofficer_templates/Project_Loan_Dashboard_Load.html',context)
+
+
+
+def loan_request_search(request):
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	task_array=[]
+	for task in tasks:
+		task_array.append(task.task.title)
+
+
+
+	task_enabler=TransactionEnabler.objects.filter(status="YES")
+	task_enabler_array=[]
+	for item in task_enabler:
+		task_enabler_array.append(item.title)
+
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
+	title="Search Membership Loan Request"
+	form = searchForm(request.POST or None)
+
+	return render(request,'deskofficer_templates/loan_request_search.html',{'form':form,'title':title,'task_array':task_array,
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,})
+
+
+def loan_request_list_load(request):
+
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	task_array=[]
+	for task in tasks:
+		task_array.append(task.task.title)
+
+
+
+	task_enabler=TransactionEnabler.objects.filter(status="YES")
+	task_enabler_array=[]
+	for item in task_enabler:
+		task_enabler_array.append(item.title)
+
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
+	title="Loan Request order"
+	form = searchForm(request.POST)
+
+	if request.method == "POST":
+		if request.POST.get("title")=="":
+			return HttpResponseRedirect(reverse('loan_request_search'))
+
+		members=searchMembers(form['title'].value(),'ACTIVE')
+
+		context={
+		'members':members,
+		'title':title,
+		'task_array':task_array,
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
+		}
+		return render(request,'deskofficer_templates/loan_request_list_load.html',context)
+
+
+def loan_request_order(request,pk):
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	task_array=[]
+	for task in tasks:
+		task_array.append(task.task.title)
+
+
+
+	task_enabler=TransactionEnabler.objects.filter(status="YES")
+	task_enabler_array=[]
+	for item in task_enabler:
+		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
+	submission_status="PENDING"
+	transaction_status='UNTREATED'
+	form=loan_request_order_form(request.POST or None)
+
+	member=Members.objects.get(id=pk)
+
+	exist_loans = LoanRequest.objects.filter(member_id=member,submission_status='PENDING',transaction_status='UNTREATED')
+
+
+	loan_based_saving=[]
+	if LoanBasedSavings.objects.all().exists():
+		loan_based_saving=LoanBasedSavings.objects.all().first()
+		loan_based_code=loan_based_saving.savings.code
+	
+
+	if request.method=="POST":
+		if TransactionSources.objects.filter(title='LOAN').exists():
+			queryset=TransactionSources.objects.get(title='LOAN')
+
+			if queryset.maximum_amount<=0:
+				messages.error(request,'Overall Maximum Loan Amount not Set')
+				return HttpResponseRedirect(reverse('loan_request_order',args=(pk,)))
+
+			if queryset.salary_loan_relationship<=0:
+				messages.error(request,'Salary Loan Relationship not Set')
+				return HttpResponseRedirect(reverse('loan_request_order',args=(pk,)))
+		else:
+			messages.error(request,'Please configure Sources')
+			return HttpResponseRedirect(reverse('loan_request_order',args=(pk,)))
+
+
+
+		tdate=get_current_date(now)
+
+
+		if form.is_valid():
+			category='MONETARY'
+
+			processed_by=CustomUser.objects.get(id=request.user.id)
+
+			date_applied_id=request.POST.get('date_applied')
+	
+			date_format = '%Y-%m-%d'
+			dtObj = datetime.datetime.strptime(date_applied_id, date_format)
+			date_applied=get_current_date(dtObj)
+
+			loan_obj = form.cleaned_data["loans"]
+
+			loan=TransactionTypes.objects.get(id=loan_obj)
+
+			amount = form.cleaned_data["amount"]
+			maximum_amount = loan.maximum_amount
+			multiple_loan_status=loan.multiple_loan_status
+
+			desired_duration=request.POST.get('duration')
+
+			selected_trannsaction_rate=0
+			if loan.savings_rate == "YES":
+				selected_trannsaction_rate=loan.saving_rating
+			
+				if selected_trannsaction_rate > 0:
+					percentage_amount=(float(selected_trannsaction_rate)/100)*float(amount)
+					loan_based_account_number=str(loan_based_code) + str(member.get_member_Id)
+				
+					saved_amount=0
+					if PersonalLedger.objects.filter(account_number=loan_based_account_number).exists():
+						ledger_balance=PersonalLedger.objects.filter(account_number=loan_based_account_number).last()
+						saved_amount=ledger_balance.balance
+					if not saved_amount:
+						messages.error(request,'You do not have any savings for this Amount')
+						return HttpResponseRedirect(reverse('loan_request_order',args=(pk,)))
+
+					if float(percentage_amount) > float(saved_amount):
+						balance_remainer=float(percentage_amount)-float(saved_amount)
+						messages.error(request,'You do not have required savings for this Loan Amount, Please top up your account with ' + str(balance_remainer))
+						return HttpResponseRedirect(reverse('loan_request_order',args=(pk,)))
+
+			if desired_duration and int(desired_duration)>0:
+				if int(desired_duration) > int(loan.duration):
+					messages.error(request,'The Desired Duration cannot be greater than the Default')
+					return HttpResponseRedirect(reverse('loan_request_order',args=(pk,)))
+				else:
+					duration=desired_duration
+			else:
+				duration=int(loan.duration)
+
+
+			if not amount:
+				messages.error(request,'Loan Amount Missing')
+				return HttpResponseRedirect(reverse('loan_request_order',args=(pk,)))
+
+			total_loan=0
+
+			if LoansRepaymentBase.objects.filter(member=member,transaction=loan).filter(Q(balance__lt=0)).exists():
+				if multiple_loan_status == 'NOT ALLOWED':
+					messages.info(request,"Additional Loan not allowed for the Transaction")
+					return HttpResponseRedirect(reverse('loan_request_order', args=(pk,)))
+
+				loans=LoansRepaymentBase.objects.filter(member=member,transaction=loan).filter(Q(balance__lt=0))
+				loans_sum=LoansRepaymentBase.objects.filter(member=member,transaction=loan).filter(Q(balance__lt=0)).aggregate(total_repayment=Sum('repayment'),total_amount=Sum('balance'))
+				total_loan=loans_sum['total_amount']
+				repayment_total=loans_sum['total_repayment']
+				grand_total=float(abs(total_loan)) + float(amount)
+
+
+				max_amount=queryset.maximum_amount
+				salary_rate=queryset.salary_loan_relationship
+
+				if float(grand_total) > float(max_amount):
+					amount_due = float(max_amount)-float(abs(total_loan))
+					messages.error(request,'You have Exceeded the Maximum Amount Allowed, you are qualified for '+ str(amount_due))
+					return HttpResponseRedirect(reverse('loan_request_order', args=(pk,)))
+
+			if loan.category==category:
+				if float(amount)>float(maximum_amount):
+					messages.error(request,"Amount Specified is More than " + str(maximum_amount) + " Maximum Amount allowed for this Transaction")
+					return HttpResponseRedirect(reverse('loan_request_order', args=(pk,)))
+
+
+			if LoanRequest.objects.filter(member=member,loan=loan,transaction_status='UNTREATED').exists():
+				messages.error(request,"You still have Open Transaction")
+				return HttpResponseRedirect(reverse('loan_request_order', args=(pk,)))
+
+			record=LoanRequest(date_applied=date_applied,duration=duration,tdate=tdate,member=member,loan_amount=amount,loan=loan,submission_status=submission_status,transaction_status=transaction_status,processed_by=processed_by.username)
+			record.save()
+			return HttpResponseRedirect(reverse('loan_request_criteria_Loading', args=(record.pk,)))
+
+		else:
+			messages.error(request,"One or more record is missing")
+			return HttpResponseRedirect(reverse('loan_request_order', args=(pk,)))
+
+	form.fields['date_applied'].initial=get_current_date(now)
+	context={
+
+	'form':form,
+
+	'member':member,
+	'exist_loans':exist_loans,
+	'pk':pk,
+	'task_array':task_array,
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
+	}
+	return render(request,'deskofficer_templates/loan_request_order.html',context)
+
+
+
+def loan_request_order_delete(request,pk,return_pk):
+	record=LoanRequest.objects.get(id=pk)
+	LoanRequestAttachments.objects.filter(applicant=record).delete()
+	record.delete()
+	return HttpResponseRedirect(reverse('loan_request_order', args=(return_pk,)))
+
+
+def loan_request_criteria_Loading(request,pk):
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	task_array=[]
+	for task in tasks:
+		task_array.append(task.task.title)
+
+
+
+	task_enabler=TransactionEnabler.objects.filter(status="YES")
+	task_enabler_array=[]
+	for item in task_enabler:
+		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
+	applicant=LoanRequest.objects.get(id=pk)
+
+	total_savings=0
+	savings=[]
+
+	if StandingOrderAccounts.objects.filter(transaction__member_id=applicant.member_id).exists():
+
+		if CompulsorySavings.objects.all().exists():
+			compulsory_savings=CompulsorySavings.objects.first()
+			compulsory_savings_record=get_compulsory_savings(compulsory_savings.transaction,applicant.member_id)
+
+			if not compulsory_savings_record:
+				messages.error(request,'No record for Compulsary Savings')
+				return HttpResponseRedirect(reverse('loan_request_order',args=(applicant.member_id,)))
+		else:
+			messages.error(request,'Compulsary Savings Not Set')
+			return HttpResponseRedirect(reverse('loan_request_order',args=(applicant.member_id,)))
+
+		if LoanBasedSavings.objects.all().exists():
+			loan_base_savings=LoanBasedSavings.objects.first()
+			loan_base_savings_record=get_loan_based_savings(loan_base_savings.savings,applicant.member_id)
+
+
+			if not loan_base_savings_record:
+				messages.error(request,'No record for Loan Based Savings')
+				return HttpResponseRedirect(reverse('loan_request_order',args=(applicant.member_id,)))
+
+		else:
+			messages.error(request,'Loan Based Savings Not Set')
+			return HttpResponseRedirect(reverse('loan_request_order',args=(applicant.member_id,)))
+
+
+		savings = get_standing_orders(applicant.member_id)
+		total_savings=get_standing_orders_sum(applicant.member_id)
+
+	else:
+		messages.error(request,'No Available Savings Standing Order')
+		return HttpResponseRedirect(reverse('loan_request_order',args=(applicant.member_id,)))
+
+
+	total_loans=0
+	loans=[]
+
+	if LoansRepaymentBase.objects.filter(Q(balance__lt=0) & Q(member_id=applicant.member_id,status='ACTIVE')).exists():
+		loans=LoansRepaymentBase.objects.filter(Q(balance__lt=0) & Q(member_id=applicant.member_id))
+		loans_sum=LoansRepaymentBase.objects.filter(Q(balance__lt=0) & Q(member_id=applicant.member_id)).aggregate(total_amount=Sum('repayment'))
+		total_loans=loans_sum['total_amount']
+
+
+	shop_balance=0
+	shops=[]
+	if CooperativeShopLedger.objects.filter(member_id=applicant.member_id).exists():
+		shops =CooperativeShopLedger.objects.filter(Q(balance__lt=0) & Q(member_id=applicant.member_id)).order_by('-id').first()
+		shop_balance=abs(shops.balance)
+
+
+	total_debit=float(total_savings)+float(total_loans)+float(shop_balance)
+
+	attachment_form=loan_request_document_attachment_form(request.POST or None)
+
+
+	if request.method=="POST" and 'attachment' in request.POST:
+
+		description = request.POST.get("payment_as_at")
+		date_format = '%Y-%m-%d'
+		dtObj = datetime.datetime.strptime(description, date_format)
+		description=get_current_date(dtObj)
+
+		net_pay=request.POST.get('net_pay')
+		if request.FILES.get('image', False):
+			image = request.FILES['image']
+			fs=FileSystemStorage()
+			filename=fs.save(image.name,image)
+			image_url=fs.url(filename)
+		else:
+			image_url=None
+
+		if not description:
+			messages.error(request,'Description Missing')
+			return HttpResponseRedirect(reverse('loan_request_criteria_Loading',args=(pk,)))
+
+		if not net_pay or float(net_pay) == 0:
+			messages.error(request,'Net Pay Missing')
+			return HttpResponseRedirect(reverse('loan_request_criteria_Loading',args=(pk,)))
+
+		applicant.description=description
+		applicant.net_pay=net_pay
+		applicant.image=image_url
+		applicant.save()
+
+		applicant.member.last_used_net_pay=net_pay
+		applicant.member.net_pay_as_at=description
+		applicant.member.save()
+
+		return HttpResponseRedirect(reverse('loan_request_criteria_Loading',args=(pk,)))
+
+
+	# return HttpResponse("OPOOO")
+	attachment_form.fields['net_pay'].initial=applicant.member.last_used_net_pay
+	if applicant.member.net_pay_as_at:
+		attachment_form.fields['payment_as_at'].initial=applicant.member.net_pay_as_at
+	else:
+		attachment_form.fields['payment_as_at'].initial=now
+	context={
+
+
+	'applicant':applicant,
+	'savings':savings,
+	'loans':loans,
+	'shops':shops,
+	'shop_balance':shop_balance,
+	'total_debit':total_debit,
+	'pk':pk,
+	'attachment_form':attachment_form,
+	'task_array':task_array,
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
+	}
+	return render(request,'deskofficer_templates/loan_request_criteria_Loading.html',context)
+
+
+def LoanRequestAttachments_delete(request,pk,return_pk):
+	item=LoanRequest.objects.get(id=pk)
+
+	item.image=None
+	item.gross_pay=0
+	item.net_pay=0
+	item.description=""
+	item.save()
+	return HttpResponseRedirect(reverse('loan_request_criteria_Loading',args=(return_pk,)))
+
+
+def loan_request_preview(request,pk):
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	task_array=[]
+	for task in tasks:
+		task_array.append(task.task.title)
+
+	task_enabler=TransactionEnabler.objects.filter(status="YES")
+	task_enabler_array=[]
+	for item in task_enabler:
+		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
+	form=MemberShipRequestAdditionalInfo_form(request.POST or None)
+
+	apex_loan=TransactionSources.objects.get(title='LOAN')
+
+	applicant=LoanRequest.objects.get(id=pk)
+
+	net_pay=applicant.net_pay
+	loan_type=applicant.loan.name
+	loan_amount=applicant.loan_amount
+	duration = applicant.duration
+
+	membership_waver=False
+	savings_made_waver=False
+	multiple_loans_waver=False
+	salary_status_waver=False
+
+	if MembersExclusiveness.objects.filter(transaction=applicant.loan,processing_status='UNPROCESSED',approval_status='APPROVED').exists():
+		wavers=MembersExclusiveness.objects.filter(transaction=applicant.loan,processing_status='UNPROCESSED',approval_status='APPROVED')
+		for item in wavers:
+			if item.task.title == 'MEMBERSHIP AGE':
+				membership_waver=True
+			elif item.task.title == 'SAVINGS MADE':
+				multiple_loans_waver=True
+			elif item.task.title == 'SALARY STATUS':
+				salary_status_waver=True
+
+
+	loan_savings_status=False
+	loan_based_saving=[]
+	savings_saved=0
+	loan_saving_relationship=[]
+
+
+	if applicant.loan.savings_rate == 'YES':
+
+		# Computing Savings Made
+		# ==============================
+
+		if LoanBasedSavings.objects.all().exists():
+			loan_based_saving = LoanBasedSavings.objects.first()
+		else:
+			messages.error(request,'Loan Based Savings not Set')
+			return HttpResponseRedirect(reverse('loan_request_criteria_Loading', args=(pk,)))
+
+		loans_anchored=TransactionTypes.objects.filter(savings_rate='YES')
+
+
+		loans_anchored_sum=LoansRepaymentBase.objects.filter(transaction__savings_rate='YES').filter(Q(balance__lt=0) & Q(member_id=applicant.member_id)).aggregate(total_amount=Sum('balance'))
+		total_loans_anchored=loans_anchored_sum['total_amount']
+		if not total_loans_anchored:
+			total_loans_anchored=0
+
+		expected_total_loans=abs(float(total_loans_anchored)) + float(loan_amount)
+
+		savings_saved=0
+		if StandingOrderAccounts.objects.filter(transaction__transaction=loan_based_saving.savings,transaction__member=applicant.member).exists():
+			account_id=StandingOrderAccounts.objects.get(transaction__transaction=loan_based_saving.savings,transaction__member=applicant.member)
+
+			savings_saved=0
+			if PersonalLedger.objects.filter(account_number=account_id.transaction.account_number).exists():
+				savings_ledger=PersonalLedger.objects.filter(account_number=account_id.transaction.account_number).last()
+				savings_saved=savings_ledger.balance
+			else:
+				messages.error(request,'No Savings Available for Loan Based Savings')
+				return HttpResponseRedirect(reverse('loan_request_criteria_Loading', args=(pk,)))
+
+		else:
+			messages.error(request,'No account for Loan Based Savings')
+			return HttpResponseRedirect(reverse('loan_request_criteria_Loading', args=(pk,)))
+
+
+		loan_based_saving_rating=apex_loan.loan_based_saving
+
+		if not float(loan_based_saving_rating):
+			messages.error(request,'Loan Based Saving Rating not set')
+			return HttpResponseRedirect(reverse('loan_request_criteria_Loading', args=(pk,)))
+
+
+		loan_saving_relationship=float(int(loan_based_saving_rating)/100) * float(expected_total_loans)
+
+		if savings_made_waver:
+			loan_savings_status=True
+		else:
+			if float(savings_saved) > float(loan_saving_relationship):
+				loan_savings_status=True
+
+		if not loan_savings_status:
+
+			messages.error(request,'You do not Have Expected Savings for this Loan Amount, You have  ' + str(savings_saved) + ' while you need ' + str(loan_saving_relationship) )
+			return HttpResponseRedirect(reverse('loan_request_criteria_Loading', args=(pk,)))
+	else:
+		loan_savings_status=True
+
+	total_savings=0
+	total_savings=get_standing_orders_sum(applicant.member_id)
+	if total_savings==None:
+		total_savings=0
+
+
+	# Computing Outstanding Fascilities
+	# ==============================
+	total_loans=0
+	loans_sum=LoansRepaymentBase.objects.filter(Q(balance__lt=0) & Q(member_id=applicant.member_id)).aggregate(total_amount=Sum('repayment'))
+	total_loans=loans_sum['total_amount']
+	if total_loans==None:
+		total_loans=0
+
+	shop_balance=0
+	shops =CooperativeShopLedger.objects.filter(Q(balance__lt=0) & Q(member_id=applicant.member_id)).order_by('-id').first()
+	if shops:
+		shop_balance=abs(shops.balance)
+
+
+
+	total_debit=float(total_savings)+float(total_loans)+float(shop_balance)
+
+
+	balance=float(net_pay)-total_debit
+
+
+	# Computin Date Joined
+	# ==============================
+	date_joined = applicant.member.date_joined
+	now = datetime.datetime.now()
+
+	# Computing Salary Loan Relationship
+	# =============================
+	salary_loan_relationship = apex_loan.salary_loan_relationship
+
+	if not float(salary_loan_relationship):
+		messages.error(request,'Salary Loan Relationship not set')
+		return HttpResponseRedirect(reverse('loan_request_criteria_Loading', args=(pk,)))
+
+
+	salary_loan_relationship_computed= float(int(salary_loan_relationship)/100) * float(balance)
+
+
+
+	# Computinh Interest Rate
+	# ==============================
+
+	interest_rate = applicant.loan.interest_rate
+
+	if not float(interest_rate):
+		messages.error(request,'Interest Rate not set')
+		return HttpResponseRedirect(reverse('loan_request_criteria_Loading', args=(pk,)))
+
+	interest= float(int(interest_rate)/100) * float(applicant.loan_amount)
+
+	# Computing Maturity Age
+
+	loan_age = int(applicant.loan.loan_age)
+
+	if not int(loan_age):
+		messages.error(request,'Members Loan Age not set')
+		return HttpResponseRedirect(reverse('loan_request_criteria_Loading', args=(pk,)))
+
+
+	# Computing Member's Age
+	members_age = (now.year - date_joined.year) * 12 + (now.month - date_joined.month)
+
+	if members_age == 0:
+		d_date=get_current_date(date_joined)
+		p_date=get_current_date(now)
+		member_age_pick=str(p_date-d_date) + " DAY(s)"
+	else:
+		members_age=members_age
+		# member_age_pick=str(date_joined.day) + "MONTH(S)"
+		member_age_pick=str(members_age) + " MONTH(S)"
+
+
+
+	# Computing Interest Deduction
+	# ==============================
+	interest_deduction=applicant.loan.interest_deduction
+
+	if not interest_deduction:
+		messages.error(request,'Interest deduction source not set')
+		return HttpResponseRedirect(reverse('loan_request_criteria_Loading', args=(pk,)))
+
+
+	if interest_deduction == "SOURCE":
+		amount_scheduled = float(loan_amount)
+
+	else:
+		amount_scheduled = float(loan_amount)+ float(interest)
+
+	if int(duration) == 0:
+		messages.error(request,'Please set the Loan Duration')
+		return HttpResponseRedirect(reverse('loan_request_criteria_Loading', args=(pk,)))
+
+
+	# Computing Admin Chages
+	# ==============================
+	admin_charges_minimum = applicant.loan.admin_charges_minimum
+
+	if float(admin_charges_minimum) >= float(loan_amount):
+		admin_charge=applicant.loan.default_admin_charges
+	else:
+		if applicant.loan.admin_charges_rating == "PERCENTAGE":
+			admin_charge=(float(applicant.loan.admin_charges) / 100) * float(loan_amount)
+		else:
+			admin_charge=applicant.loan.admin_charges
+
+
+	# Computing Monthly Repayment
+	# ==============================
+	monthly_repayment=math.ceil(float(amount_scheduled)/float(duration))
+
+
+	# Computing Button Enabler
+	# ==============================
+	salary_status=True
+	if salary_status_waver:
+		salary_status=False
+	else:
+		if float(monthly_repayment)> float(salary_loan_relationship_computed):
+			salary_status=False
+
+
+	Member_Status = False
+	if membership_waver:
+		Member_Status = True
+	else:
+		if int(members_age)>int(loan_age):
+			Member_Status = True
+
+	record_array=[]
+
+	if request.method=="POST":
+
+		comment=request.POST.get("comment")
+
+		applicant.comment=comment
+		applicant.submission_status='SUBMITTED'
+		applicant.short_listed='NO'
+		applicant.admin_charge=admin_charge
+		applicant.interest=interest
+		applicant.save()
+
+		description="NET PAY"
+		value=net_pay
+		category='ANALYSIS'
+		waver=False
+		Loan_Request_Posting(applicant,description,value,category,'UNTREATED',waver)
+
+		description="SALARY BALANCE AFTER DEDUCTIONS"
+		value=balance
+		category='ANALYSIS'
+		waver=False
+		Loan_Request_Posting(applicant,description,value,category,'UNTREATED',waver)
+
+		description=loan_type
+		value=loan_amount
+		category='ANALYSIS'
+		waver=False
+		Loan_Request_Posting(applicant,description,value,category,'UNTREATED',waver)
+
+		description="MONTHLY DEDUCTIONS"
+		value=total_savings
+		category='ANALYSIS'
+		waver=False
+		Loan_Request_Posting(applicant,description,value,category,'UNTREATED',waver)
+
+		description="MONTHLY LOAN REPAYMENTS"
+		value=total_loans
+		category='ANALYSIS'
+		waver=False
+		Loan_Request_Posting(applicant,description,value,category,'UNTREATED',waver)
+
+		description="COOPERATIVE SHOP"
+		value=shop_balance
+		category='ANALYSIS'
+		waver=False
+		Loan_Request_Posting(applicant,description,value,category,'UNTREATED',waver)
+
+		description="LOAN DURATION"
+		value=str(duration) + " MONTHS"
+		category='ANALYSIS'
+		waver=False
+		Loan_Request_Posting(applicant,description,value,category,'UNTREATED',waver)
+
+		description="SALARY LOAN RELATIONSHIP"
+		value=str(salary_loan_relationship) + "%"
+		category='ANALYSIS'
+		waver=False
+		Loan_Request_Posting(applicant,description,value,category,'UNTREATED',waver)
+
+		description="SALARY LOAN RELATIONSHIP COMPUTED"
+		value=salary_loan_relationship_computed
+		category='ANALYSIS'
+		waver=False
+		Loan_Request_Posting(applicant,description,value,category,'UNTREATED',waver)
+
+		description="MATURITY AGE"
+		value=str(loan_age) + " MONTHS"
+		category='ANALYSIS'
+		waver=False
+		Loan_Request_Posting(applicant,description,value,category,'UNTREATED',waver)
+
+		description="DATE JOINED"
+		value=date_joined
+		category='ANALYSIS'
+		waver=False
+		Loan_Request_Posting(applicant,description,value,category,'UNTREATED',waver)
+
+		description="MEMBERS AGE"
+		value=member_age_pick
+		category='ANALYSIS'
+		waver=False
+		Loan_Request_Posting(applicant,description,value,category,'UNTREATED',waver)
+
+		description="LOAN INTEREST RATE"
+		value=str(interest_rate) + "%"
+		category='ANALYSIS'
+		waver=False
+		Loan_Request_Posting(applicant,description,value,category,'UNTREATED',waver)
+
+		description="INTEREST DEDUCTION"
+		value=interest_deduction
+		category='ANALYSIS'
+		waver=False
+		Loan_Request_Posting(applicant,description,value,category,'UNTREATED',waver)
+
+		description="LOAN INTEREST"
+		value=interest
+		category='ANALYSIS'
+		waver=False
+		Loan_Request_Posting(applicant,description,value,category,'UNTREATED',waver)
+
+		description="AMOUNT SCHEDULED"
+		value=amount_scheduled
+		category='ANALYSIS'
+		waver=False
+		Loan_Request_Posting(applicant,description,value,category,'UNTREATED',waver)
+
+		description="MONTHLY REPAYMENT"
+		value= monthly_repayment
+		category='ANALYSIS'
+		waver=False
+		Loan_Request_Posting(applicant,description,value,category,'UNTREATED',waver)
+
+		description="ADMIN CHARGE"
+		value= admin_charge
+		category='ANALYSIS'
+		waver=False
+		Loan_Request_Posting(applicant,description,value,category,'UNTREATED',waver)
+
+		if loan_based_saving:
+			description="LOAN BASED SAVINGS"
+			value=loan_based_saving.savings.name
+			category='ANALYSIS'
+			waver=False
+			Loan_Request_Posting(applicant,description,value,category,'UNTREATED',waver)
+
+
+			description="AMOUNT SAVED"
+			value='#' + str(savings_saved)
+			category='ANALYSIS'
+			waver=False
+			Loan_Request_Posting(applicant,description,value,category,'UNTREATED',waver)
+
+
+			description="LOAN BASED SAVINGS RATE"
+			value=str(loan_based_saving_rating) + "%"
+			category='ANALYSIS'
+			waver=False
+			Loan_Request_Posting(applicant,description,value,category,'UNTREATED',waver)
+
+
+		description="MEMBERSHIP STATUS"
+		value=Member_Status
+		category='SUMMARY'
+		waver=membership_waver
+		Loan_Request_Posting(applicant,description,value,category,'UNTREATED',waver)
+
+		description="SALARY STATUS"
+		value=salary_status
+		category='SUMMARY'
+		waver=salary_status_waver
+		Loan_Request_Posting(applicant,description,value,category,'UNTREATED',waver)
+
+		if applicant.loan.savings_rate == "YES":
+			description="LOAN SAVINGS BASED STATUS"
+			value=loan_savings_status
+			category='SUMMARY'
+			waver=savings_made_waver
+			Loan_Request_Posting(applicant,description,value,category,'UNTREATED',waver)
+
+		return HttpResponseRedirect(reverse('Project_Loan_Dashboard_Load'))
+
+	if membership_waver:
+		membership_button_enabled=True
+	else:
+		membership_button_enabled=False
+		if Member_Status == True:
+			membership_button_enabled=True
+
+	if savings_made_waver:
+		savings_made_button_enabled=True
+	else:
+		savings_made_button_enabled=False
+		if loan_savings_status == True:
+			savings_made_button_enabled=True
+
+	if salary_status_waver:
+		salary_status_button_enabled=True
+	else:
+		salary_status_button_enabled=False
+		if salary_status == True:
+			salary_status_button_enabled=True
+
+
+
+	button_enabled=False
+
+
+	# if membership_button_enabled and savings_made_button_enabled and salary_status_button_enabled:
+	if membership_button_enabled and savings_made_button_enabled and salary_status_button_enabled:
+		button_enabled=True
+	record_array.append(('Net Pay',net_pay))
+	record_array.append(('Monthly Contributions',total_savings))
+	record_array.append(('Existing Loan Monthly Repayment',total_loans))
+	record_array.append(('Cooperative Shop',shop_balance))
+	record_array.append(('Salary Balance After Deductions',balance))
+	record_array.append((loan_type,loan_amount))
+	record_array.append(('Loan Duration',str(duration) + " Month(s)"))
+	record_array.append(('Salary Loan Relationship',str(salary_loan_relationship) + "%"))
+	record_array.append(('Salary Loan Relationship Computed',salary_loan_relationship_computed))
+	record_array.append(('Maturity Age',str(loan_age) + " Month(s)"))
+	record_array.append(('Date Joined',date_joined))
+	record_array.append(('Members Age',member_age_pick))
+	record_array.append(('Loan Interest Rate',str(interest_rate) + "%"))
+	record_array.append(('Interest Deduction',interest_deduction))
+	record_array.append(('Loan Interest',interest))
+	record_array.append(('Amount Scheduled',amount_scheduled))
+	record_array.append(('Monthly Repayment',monthly_repayment))
+	record_array.append(('Admin Charge',admin_charge))
+	if loan_based_saving:
+		record_array.append(('Loan Based Savings',loan_based_saving.savings.name))
+		record_array.append(('Amount Saved (' + loan_based_saving.savings.name + ")",savings_saved))
+		record_array.append(('Loan Based Savings Rate',str(loan_based_saving_rating) + "%"))
+
+	form.fields['comment'].initial="For Your Consideration and Kind Approval"
+
+	context={
+	'record_array':record_array,
+	'form':form,
+	'savings_anchored':applicant.loan.savings_rate,
+	'membership_waver':membership_waver,
+	'salary_status_waver':salary_status_waver,
+	'savings_made_waver':savings_made_waver,
+	'multiple_loans_waver':multiple_loans_waver,
+	'applicant':applicant,
+	'pk':pk,
+	'salary_status':salary_status,
+	'Member_Status':Member_Status,
+	'loan_savings_status':loan_savings_status,
+	'button_enabled':button_enabled,
+	'task_array':task_array,
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
+	'savings_saved':savings_saved,
+	}
+
+	return render(request,'deskofficer_templates/loan_request_preview.html',context)
+
+
+
+
+def loan_request_active_load(request):
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	task_array=[]
+	for task in tasks:
+		task_array.append(task.task.title)
+
+
+
+	task_enabler=TransactionEnabler.objects.filter(status="YES")
+	task_enabler_array=[]
+	for item in task_enabler:
+		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
+	records= LoanRequest.objects.filter(loan_path='PROJECT',transaction_status='UNTREATED')
+	if not records:
+
+		return HttpResponseRedirect(reverse('Project_Loan_Dashboard_Load'))
+	context={
+	'records':records,
+
+	'task_array':task_array,
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
+	}
+	return render(request,'deskofficer_templates/loan_request_active_load.html',context)
+
+
+
+def loan_request_delete_record(request,pk):
+	LoanRequest.objects.filter(id=pk).delete()
+	return HttpResponseRedirect(reverse('loan_request_active_load'))
+	
+
+def loan_request_archive_record(request,pk):
+	LoanRequest.objects.filter(id=pk).update(transaction_status='ARCHIVED')
+	return HttpResponseRedirect(reverse('loan_request_active_load'))
+	
+
+###########################################################################
+########################## Loading History Loan request #####################
+############################################################################
+
+
+def loan_request_history_period_load(request):
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	task_array=[]
+	for task in tasks:
+		task_array.append(task.task.title)
+
+
+
+	task_enabler=TransactionEnabler.objects.filter(status="YES")
+	task_enabler_array=[]
+	for item in task_enabler:
+		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
+
+	form=loan_request_history_period_form(request.POST or None)
+	exist_loans=[]
+	if request.method == 'POST':
+		start_date_id=request.POST.get('start_date')
+		stop_date_id=request.POST.get('stop_date')
+
+		date_format = '%Y-%m-%d'
+		dtObj = datetime.datetime.strptime(start_date_id, date_format)
+		start_date=get_current_date(dtObj)
+		
+		dtObj = datetime.datetime.strptime(stop_date_id, date_format)
+		stop_date=get_current_date(dtObj)
+
+
+		loan_id = request.POST.get('loans')
+		loan = TransactionTypes.objects.get(id=loan_id)
+
+		exist_loans = LoanRequest.objects.filter(loan_path='PROJECT',tdate__range=[start_date,stop_date])
+	
+	form.fields['start_date'].initial=get_current_date(now)
+	form.fields['stop_date'].initial=get_current_date(now)
+	context={
+	'exist_loans':exist_loans,
+	'form':form,
+	'task_array':task_array,
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
+	}
+	return render(request,'deskofficer_templates/loan_request_history_period_load.html',context)
+
+
+
+
+def loan_request_manage_period_load(request):
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	task_array=[]
+	for task in tasks:
+		task_array.append(task.task.title)
+
+
+
+	task_enabler=TransactionEnabler.objects.filter(status="YES")
+	task_enabler_array=[]
+	for item in task_enabler:
+		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
+
+	form=loan_request_order_form(request.POST or None)
+	exist_loans=[]
+	if request.method == 'POST':
+		
+
+		loan_id = request.POST.get('loans')
+		loan = TransactionTypes.objects.get(id=loan_id)
+
+		exist_loans = LoanRequest.objects.filter(loan=loan,submission_status='SUBMITTED',transaction_status='UNTREATED',loan_path='PROJECT')
+
+	context={
+	'exist_loans':exist_loans,
+	'form':form,
+	'task_array':task_array,
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
+	}
+	return render(request,'deskofficer_templates/loan_request_manage_period_load.html',context)
+
+def loan_request_manage_transaction_delete(request,pk):
+	LoanRequest.objects.get(id=pk).delete()
+	return HttpResponseRedirect(reverse('loan_request_manage_period_load'))
+
+
+
+def loan_request_shortlisting_load(request):
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	task_array=[]
+	for task in tasks:
+		task_array.append(task.task.title)
+
+	task_enabler=TransactionEnabler.objects.filter(status="YES")
+	task_enabler_array=[]
+	for item in task_enabler:
+		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
+	form=loan_request_order_form(request.POST or None)
+	exist_loans=[]
+	if request.method == 'POST':
+		
+		loan_id = request.POST.get('loans')
+		loan = TransactionTypes.objects.get(id=loan_id)
+
+		exist_loans = LoanRequest.objects.filter(loan=loan,submission_status='SUBMITTED',transaction_status='UNTREATED',loan_path='PROJECT')
+
+	context={
+	'exist_loans':exist_loans,
+	'form':form,
+	'task_array':task_array,
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
+	}
+	return render(request,'deskofficer_templates/loan_request_shortlisting_load.html',context)
+
+
+def loan_request_shortlisting_process(request,pk):
+
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	task_array=[]
+	for task in tasks:
+		task_array.append(task.task.title)
+
+	task_enabler=TransactionEnabler.objects.filter(status="YES")
+	task_enabler_array=[]
+	for item in task_enabler:
+		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
+
+	form=loan_request_shortlisting_process_form(request.POST or None)
+	tdate=get_current_date(now)
+	processed_by=CustomUser.objects.get(id=request.user.id)
+	processed_by=processed_by.username
+
+	record = LoanRequest.objects.get(id=pk)
+	
+	if request.method == 'POST':
+		
+		date_shortlisted_id = request.POST.get('date_shortlisted')
+
+		date_format = '%Y-%m-%d'
+		dtObj = datetime.datetime.strptime(date_shortlisted_id, date_format)
+		date_shortlisted=get_current_date(dtObj)
+
+		LoanRequestShortListing(tdate=tdate,applicant=record,processed_by=processed_by,status="UNTREATED",approval_status='PENDING').save()
+		LoanRequest.objects.filter(id=pk).update(transaction_status='TREATED')
+		return	HttpResponseRedirect(reverse('loan_request_shortlisting_load'))
+		
+
+		
+	form.fields['date_applied'].initial=get_print_date(record.date_applied)
+	form.fields['amount'].initial	=record.loan_amount
+	form.fields['date_shortlisted'].initial=get_current_date(now)	
+	context={
+	'record':record,
+	'form':form,
+	'task_array':task_array,
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
+	}
+	return render(request,'deskofficer_templates/loan_request_shortlisting_process.html',context)
+
+	
+def loan_request_shortlisting_view_load(request):
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	task_array=[]
+	for task in tasks:
+		task_array.append(task.task.title)
+
+	task_enabler=TransactionEnabler.objects.filter(status="YES")
+	task_enabler_array=[]
+	for item in task_enabler:
+		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
+	form=loan_request_order_form(request.POST or None)
+	records=[]
+	if request.method == 'POST':
+		
+		loan_id = request.POST.get('loans')
+		loan = TransactionTypes.objects.get(id=loan_id)
+
+		records = LoanRequestShortListing.objects.filter(applicant__loan=loan,status='UNTREATED',approval_status='PENDING')
+
+	context={
+	'records':records,
+	'form':form,
+	'task_array':task_array,
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
+	}
+	return render(request,'deskofficer_templates/loan_request_shortlisting_view_load.html',context)
+
+
+
+def loan_request_shortlisting_drop(request,pk):
+	record = LoanRequestShortListing.objects.get(id=pk)
+	LoanRequest.objects.filter(id=record.applicant_id).update(transaction_status='UNTREATED')
+	record.delete()
+	return HttpResponseRedirect(reverse('loan_request_shortlisting_view_load'))
+
+
+def loan_request_order_KIV(request):
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	task_array=[]
+	for task in tasks:
+		task_array.append(task.task.title)
+
+	task_enabler=TransactionEnabler.objects.filter(status="YES")
+	task_enabler_array=[]
+	for item in task_enabler:
+		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
+
+	records = LoanRequestShortListing.objects.filter(approval_status='KIV',applicant__loan_path='PROJECT')
+
+
+	context={
+	'records':records,
+	'task_array':task_array,
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
+	}
+	return render(request,'deskofficer_templates/loan_request_order_KIV.html',context)
+
+
+def loan_request_order_KIV_activate(request,pk):
+	record = LoanRequestShortListing.objects.filter(id=pk).update(approval_status='PENDING')
+	return HttpResponseRedirect(reverse('loan_request_order_KIV'))
+	
+
+def loan_request_order_discard(request):
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	task_array=[]
+	for task in tasks:
+		task_array.append(task.task.title)
+
+	task_enabler=TransactionEnabler.objects.filter(status="YES")
+	task_enabler_array=[]
+	for item in task_enabler:
+		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
+
+	records = LoanRequest.objects.filter(submission_status='PENDING',loan_path='PROJECT')
+
+
+	context={
+	'records':records,
+	'task_array':task_array,
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
+	}
+	return render(request,'deskofficer_templates/loan_request_order_discard.html',context)
+
+
+def loan_request_order_discard_delete(request,pk):
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	task_array=[]
+	for task in tasks:
+		task_array.append(task.task.title)
+
+
+
+	task_enabler=TransactionEnabler.objects.filter(status="YES")
+	task_enabler_array=[]
+	for item in task_enabler:
+		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
+	LoanRequest.objects.filter(id=pk).delete()
+	return HttpResponseRedirect(reverse('loan_request_order_discard'))
+
+
+def loan_request_approved_Issue_form_period_load(request):
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	task_array=[]
+	for task in tasks:
+		task_array.append(task.task.title)
+
+	task_enabler=TransactionEnabler.objects.filter(status="YES")
+	task_enabler_array=[]
+	for item in task_enabler:
+		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
+	applicants=[]
+	form=loan_request_order_form(request.POST or None)
+
+	if request.method == 'POST':
+	
+		loan_id = request.POST.get('loans')
+		loan = TransactionTypes.objects.get(id=loan_id)
+
+		applicants = LoanRequestShortListing.objects.filter(applicant__loan=loan,approval_status='APPROVED',status='UNTREATED')
+	context={
+	'form':form,
+	'applicants':applicants,
+	'task_array':task_array,
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
+	}
+	return render(request,'deskofficer_templates/loan_request_approved_Issue_form_period_load.html',context)
+
+
+
+def loan_request_approved_list_form_sales(request,pk):
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	task_array=[]
+	for task in tasks:
+		task_array.append(task.task.title)
+
+	task_enabler=TransactionEnabler.objects.filter(status="YES")
+	task_enabler_array=[]
+	for item in task_enabler:
+		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
+	form = loan_request_approved_list_form_sales_form(request.POST or None)
+	processed_by=CustomUser.objects.get(id=request.user.id)
+
+	loan=LoanRequestShortListing.objects.get(id=pk)
+	loan_amount=loan.approved_amount
+	admin_charge=loan.applicant.admin_charge
+	receipt_type = loan.applicant.loan.receipt_type
+
+	date_applied=loan.applicant.date_applied
+	date_approved=loan.approval_date
+
+	amount_saved=0
+	if LoanRequestSettings.objects.filter(description='AMOUNT SAVED',applicant=loan.applicant).exists():
+		amount_saved = LoanRequestSettings.objects.get(description='AMOUNT SAVED',applicant=loan.applicant)
+		amount_saved = str(amount_saved.value)[1:-3]
+
+	member=loan.applicant.member
+
+	tdate=get_current_date(now)
+	form.fields['amount'].initial=admin_charge
+	form.fields['loan_amount'].initial=loan_amount
+
+	if request.method == "POST":
+
+		if receipt_type == "MANUAL":
+			receipt_no_id = request.POST.get('receipt')
+			if Receipts.objects.filter(receipt=receipt_no_id).exists():
+				receipt_obj = Receipts.objects.get(receipt=receipt_no_id)
+				receipt=receipt_obj.receipt
+			else:
+				messages.error(request,'Receipt do not exist')
+				return HttpResponseRedirect(reverse('loan_request_approved_list_form_sales',args=(pk,)))
+
+		elif receipt_type == "AUTO":
+			receipt_obj=AutoReceipt.objects.first()
+			receipt='C-' + str(receipt_obj.receipt).zfill(5)
+			receipt_obj.receipt=int(receipt_obj.receipt)+1
+			receipt_obj.save()
+		else:
+			messages.error(request,'Receipt Format No Set')
+			return HttpResponseRedirect(reverse('loan_request_approved_list_form_sales',args=(pk,)))
+
+		record = LoanFormIssuance(processing_status='UNPROCESSED',
+								tdate=tdate,
+								loan=loan.applicant.loan,
+								member=member,
+								date_applied=date_applied,
+								date_approved=date_approved,
+								loan_amount=loan_amount,
+								amount_saved=amount_saved,
+								receipt=receipt,
+								processed_by=processed_by.username,
+								status='UNTREATED',
+								loan_path="PROJECT")
+		record.save()
+
+		loan.status='TREATED'
+		loan.save()
+
+		loan.applicant.receipt=receipt
+		loan.applicant.save()
+
+		if receipt_type == "MANUAL":
+			receipt_obj.status='USED'
+			receipt_obj.save()
+
+		return HttpResponseRedirect(reverse('loan_application_request_form_issuanace_confirmation',args=(receipt,)))
+	context={
+	'form':form,
+	'loan':loan,
+	'receipt_type':receipt_type,
+	'task_array':task_array,
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
+	}
+	return render(request,'deskofficer_templates/loan_request_approved_list_form_sales.html',context)
+
+
+
+def loan_application_request_form_issuanace_confirmation(request,pk):
 	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
 	task_array=[]
 	for task in tasks:
@@ -6356,19 +7920,1442 @@ def Loan_application_processing_period_load(request):
 
 	form=loan_request_order_form(request.POST or None)
 
-	exist_loans=[]
+	applicant = LoanFormIssuance.objects.get(receipt=pk)
+
+	if request.method == 'POST':
+		pass
+
+	context={
+	'form':form,
+	# 'period':period,
+	# 'batch':batch,
+	# 'transaction':loan,
+	'applicant':applicant,
+	'task_array':task_array,
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
+	}
+	return render(request,'deskofficer_templates/loan_application_request_form_issuanace_confirmation.html',context)
+
+
+def loan_application_request_form_issuanace_reprint_search(request):
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	task_array=[]
+	for task in tasks:
+		task_array.append(task.task.title)
+
+
+
+	task_enabler=TransactionEnabler.objects.filter(status="YES")
+	task_enabler_array=[]
+	for item in task_enabler:
+		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
+	title="Search Members for Reprint"
+	form = searchForm(request.POST or None)
+
+	return render(request,'deskofficer_templates/loan_application_request_form_issuanace_reprint_search.html',{'task_array':task_array,
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,'form':form,'title':title,})
+
+
+def loan_application_request_form_issuanace_reprint_list_load(request):
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	task_array=[]
+	for task in tasks:
+		task_array.append(task.task.title)
+
+	task_enabler=TransactionEnabler.objects.filter(status="YES")
+	task_enabler_array=[]
+	for item in task_enabler:
+		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
+	title="Loan Request Form Reprint"
+	form = searchForm(request.POST)
+	
+	members=[]
+	if request.method == "POST":
+		if request.POST.get("title")=="":
+			return HttpResponseRedirect(reverse('loan_application_request_form_issuanace_reprint_search'))
+		
+		members=LoanFormIssuance.objects.filter(Q(member__admin__first_name__icontains=form['title'].value()) | Q(member__admin__last_name__icontains=form['title'].value()) | Q(member__middle_name__icontains=form['title'].value()) | Q(member__coop_no__icontains=form['title'].value()))
+	context={
+	'members':members,
+	'title':title,
+	'task_array':task_array,
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
+	
+	}
+	return render(request,'deskofficer_templates/loan_application_request_form_issuanace_reprint_list_load.html',context)
+
+
+
+def Members_Loan_Request_History_load(request,pk):
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	task_array=[]
+	for task in tasks:
+		task_array.append(task.task.title)
+
+	task_enabler=TransactionEnabler.objects.filter(status="YES")
+	task_enabler_array=[]
+	for item in task_enabler:
+		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
+	form=PersonalLedger_Transaction_Account_Load_form(request.POST or None)
+
+	applicants=[]
+	member=Members.objects.get(coop_no=pk)
 	if request.method == 'POST':
 
-		period_id=request.POST.get("period")
-		period = Commodity_Period.objects.get(id=period_id)
+		start_date=request.POST.get('start_date')
+		stop_date=request.POST.get('stop_date')
 
-		batch_id=request.POST.get('batch')
-		batch=Commodity_Period_Batch.objects.get(id=batch_id)
+
+
+		date_format = '%Y-%m-%d'
+		tdate1 = datetime.datetime.strptime(start_date, date_format)
+		tdate2 = datetime.datetime.strptime(stop_date, date_format)
+
+		applicants=LoanFormIssuance.objects.filter(loan_path='PROJECT',tdate__range=[tdate1,tdate2],member=member)
+
+	form.fields['start_date'].initial=get_current_date(now)
+	form.fields['stop_date'].initial=get_current_date(now)
+	context={
+	'form':form,
+	'member':member,
+	'applicants':applicants,
+	'task_array':task_array,
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
+	}
+	return render(request,'deskofficer_templates/Members_Loan_Request_History_load.html',context)
+
+
+def loan_application_approved_period_load(request):
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	task_array=[]
+	for task in tasks:
+		task_array.append(task.task.title)
+
+
+
+	task_enabler=TransactionEnabler.objects.filter(status="YES")
+	task_enabler_array=[]
+	for item in task_enabler:
+		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
+	applicants=[]
+	form=loan_request_order_form(request.POST or None)
+
+	transaction=[]
+	loan=[]
+
+	if request.method == 'POST':
+	
+		loan_id = request.POST.get('loans')
+		loan = TransactionTypes.objects.get(id=loan_id)
+
+
+		applicants = LoanFormIssuance.objects.filter(loan=loan,status='UNTREATED',loan_path='PROJECT')
+	context={
+	'form':form,
+	
+	'transaction':loan,
+	'applicants':applicants,
+	'task_array':task_array,
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
+	}
+	return render(request,'deskofficer_templates/loan_application_approved_period_load.html',context)
+
+def loan_application_form_processing(request,pk):
+	form=loan_application_processing_form(request.POST or None)
+	
+	net_form=loan_request_document_attachment_form(request.POST or None)
+
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	task_array=[]
+	for task in tasks:
+		task_array.append(task.task.title)
+
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
+	task_enabler=TransactionEnabler.objects.filter(status="YES")
+	task_enabler_array=[]
+	for item in task_enabler:
+		task_enabler_array.append(item.title)
+
+	tdate = get_current_date(now)
+
+	applicant=LoanFormIssuance.objects.get(id=pk)
+	record_exist=[]
+	if LoanRequestShortListing.objects.filter(applicant__receipt=applicant.receipt).exists():
+		record_exist = LoanRequestShortListing.objects.get(applicant__receipt=applicant.receipt)
+	
+	total_guarantors=applicant.loan.guarantors
+
+	bank_accounts=MembersBankAccounts.objects.filter(member_id=applicant.member)
+
+	processed_by = CustomUser.objects.get(id=request.user.id)
+
+	loan_settings=LoanRequestSettings.objects.filter(applicant__receipt=applicant.receipt)
+
+	seleected_guarantors=[]
+	new_loan=[]
+	new_amount=0
+	loan_pk=0
+
+
+	loan_based_saving=[]
+	if LoanBasedSavings.objects.all().exists():
+		loan_based_saving=LoanBasedSavings.objects.all().first()
+		loan_based_code=loan_based_saving.savings.code
+
+
+	if LoanApplication.objects.filter(applicant=applicant).exists():
+		new_loan=LoanApplication.objects.get(applicant=applicant)
+
+		new_amount=new_loan.loan_amount
+		loan_pk=new_loan.pk
+
+		seleected_guarantors=LoanApplicationGuarnators.objects.filter(applicant=new_loan)
+
+
+	if  request.method =='POST' and 'application' in request.POST:
+		exist_amount=record_exist.approved_amount
+		new_amount=request.POST.get('loan_new_amount')
+
+		if float(new_amount)<=0:
+			messages.error(request,'Invalid Loan Amount Specification')
+			return HttpResponseRedirect(reverse('loan_application_form_processing', args=(pk,)))
+
+		if float(exist_amount) < float(new_amount):
+			messages.error(request,'You cannot apply for Amount beyond the already approved amount of ' + str(exist_amount))
+			return HttpResponseRedirect(reverse('loan_application_form_processing', args=(pk,)))
+
+
+		selected_trannsaction_rate=0
+		saved_amount=0
+		if applicant.loan.savings_rate == "YES":
+			
+			selected_trannsaction_rate=applicant.loan.saving_rating
+
+
+			if selected_trannsaction_rate > 0:
+				percentage_amount=(float(selected_trannsaction_rate)/100)*float(new_amount)
+
+				loan_based_account_number=str(loan_based_code) + str(applicant.member.coop_no)
+
+				saved_amount=0
+				if PersonalLedger.objects.filter(account_number=loan_based_account_number).exists():
+					ledger_balance=PersonalLedger.objects.filter(account_number=loan_based_account_number).last()
+					saved_amount=ledger_balance.balance
+
+				if not saved_amount:
+					messages.error(request,'You do not have any savings for this Amount')
+					return HttpResponseRedirect(reverse('loan_application_form_processing',args=(pk,)))
+
+				if float(percentage_amount) > float(saved_amount):
+					messages.error(request,'You do not have required savings for this Amount')
+					return HttpResponseRedirect(reverse('loan_application_form_processing',args=(pk,)))
+
+
+		date_applied_id = request.POST.get('date_applied')
+
+		date_format = '%Y-%m-%d'
+		dtObj = datetime.datetime.strptime(date_applied_id, date_format)
+		date_applied=get_current_date(dtObj)
+
+
+
+		desired_duration=request.POST.get("duration")
+
+		if desired_duration and int(desired_duration)>0:
+			if int(desired_duration) > int(applicant.loan.duration):
+				messages.error(request,'The Desired Duration cannot be greater than the Default')
+				return HttpResponseRedirect(reverse('loan_application_form_processing', args=(pk,)))
+			else:
+				duration=desired_duration
+		else:
+			duration=int(applicant.loan.duration)
+
+
+		if LoanApplication.objects.filter(applicant=applicant).exists():
+			record=LoanApplication.objects.get(applicant=applicant)
+			record.loan_amount=new_amount
+			record.save()
+			return HttpResponseRedirect(reverse('loan_application_form_processing', args=(pk,)))
+
+
+		
+		record=LoanApplication(transaction_status='UNTREATED',
+								duration=duration,
+								date_applied=date_applied,
+								tdate=tdate,applicant=applicant,
+								loan_amount=new_amount,processed_by=processed_by.username)
+		record.save()
+		return HttpResponseRedirect(reverse('loan_application_form_processing', args=(pk,)))
+
+
+
+	if request.method=='POST' and 'btn_account' in request.POST:
+		account_id=request.POST.get('account')
+		account=MembersBankAccounts.objects.get(id=account_id)
+
+		record=LoanApplication.objects.get(applicant=applicant)
+		record.bank_account=account
+		record.save()
+		messages.success(request,'Bank Account Details Added Successfully')
+		return HttpResponseRedirect(reverse('loan_application_form_processing', args=(pk,)))
+
+
+	if request.method=='POST' and 'btn_net_pay' in request.POST:
+		payment_as_at=request.POST.get('payment_as_at')
+		net_pay=request.POST.get('net_pay')
+
+		if request.FILES.get('image', False):
+			image = request.FILES['image']
+			fs=FileSystemStorage()
+			filename=fs.save(image.name,image)
+			image_url=fs.url(filename)
+
+		else:
+			image_url=None
+
+		if not payment_as_at:
+			messages.error(request,'Description is Missing')
+			return HttpResponseRedirect(reverse('loan_application_form_processing', args=(pk,)))
+
+
+		if not net_pay or float(net_pay) <=0:
+			messages.error(request,'Net Pay Missing')
+			return HttpResponseRedirect(reverse('loan_application_form_processing', args=(pk,)))
+
+		record=LoanApplication.objects.get(applicant=applicant)
+		record.payment_as_at=payment_as_at
+		record.net_pay=net_pay
+		record.image=image_url
+		record.save()
+
+
+
+		record.applicant.member.last_used_net_pay=net_pay
+		record.applicant.member.net_pay_as_at=payment_as_at
+		record.applicant.member.save()
+
+		messages.success(request,'Net Pay Added Successfully')
+		return HttpResponseRedirect(reverse('loan_application_form_processing', args=(pk,)))
+
+
+	form.fields['loan_type'].initial=applicant.loan.name
+	form.fields['loan_amount'].initial=applicant.loan_amount
+	form.fields['duration'].initial=applicant.loan.duration
+	form.fields['date_applied'].initial=get_current_date(now)
+
+	form.fields['loan_new_amount'].initial=record_exist.approved_amount
+	net_form.fields['net_pay'].initial=applicant.member.last_used_net_pay
+	net_form.fields['payment_as_at'].initial=applicant.member.net_pay_as_at
+	image_link=[]
+	new_loan_pk=0
+	if new_loan:
+		image_link=new_loan.image
+		new_loan_pk=new_loan.pk
+
+	if LoanApplication.objects.filter(applicant=applicant).exists():
+		form.fields['loan_new_amount'].initial=new_amount
+
+	context={
+	'form':form,
+	'image_link':image_link,
+	'net_form':net_form,
+	'applicant':applicant,
+	'loan_settings':loan_settings,
+	'loan_pk':loan_pk,
+	'new_amount':new_amount,
+	'new_loan':new_loan,
+	'new_loan_pk':new_loan_pk,
+	'bank_accounts':bank_accounts,
+	'seleected_guarantors':seleected_guarantors,
+	'task_array':task_array,
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
+	'return_pk':pk,
+	}
+	return render(request,'deskofficer_templates/loan_application_form_processing.html',context)
+
+def loan_application_form_processing_guarantor_search(request,pk):
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	task_array=[]
+	for task in tasks:
+		task_array.append(task.task.title)
+
+
+
+	task_enabler=TransactionEnabler.objects.filter(status="YES")
+	task_enabler_array=[]
+	for item in task_enabler:
+		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
+	title="Search Members for Gaurantors"
+	form = searchForm(request.POST or None)
+	record=LoanApplication.objects.get(id=pk)
+	return_pk=record.applicant_id
+	return render(request,'deskofficer_templates/loan_application_form_processing_guarantor_search.html',{'task_array':task_array,
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,'form':form,'title':title,'pk':pk,'return_pk':return_pk,})
+
+def loan_application_form_processing_guarantor_add_list_load(request,pk):
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	task_array=[]
+	for task in tasks:
+		task_array.append(task.task.title)
+
+
+
+	task_enabler=TransactionEnabler.objects.filter(status="YES")
+	task_enabler_array=[]
+	for item in task_enabler:
+		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
+	title="Commodity Loan"
+	form = searchForm(request.POST)
+	record=LoanApplication.objects.get(id=pk)
+	member=Members.objects.get(id=record.applicant.member_id)
+	
+	members=[]
+	if request.method == "POST":
+		if request.POST.get("title")=="":
+			return HttpResponseRedirect(reverse('loan_application_form_processing_guarantor_search'))
+
+		members=searchGuarantorMembers(form['title'].value(),'ACTIVE',member)
+
+	context={
+	'members':members,
+	'title':title,
+	'task_array':task_array,
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
+	'pk':pk,
+	}
+	return render(request,'deskofficer_templates/loan_application_form_processing_guarantor_add_list_load.html',context)
+
+def loan_application_form_processing_guarantor_add(request,pk,loan_pk):
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	task_array=[]
+	for task in tasks:
+		task_array.append(task.task.title)
+
+
+
+	task_enabler=TransactionEnabler.objects.filter(status="YES")
+	task_enabler_array=[]
+	for item in task_enabler:
+		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
+	guarantor=Members.objects.get(id=pk)
+	applicant=LoanApplication.objects.get(id=loan_pk)
+	total_guarantors=applicant.applicant.loan.guarantors
+
+	if LoanApplicationGuarnators.objects.filter(applicant=applicant).count() >= total_guarantors:
+		messages.info(request,'You Have added the required Guarantors')
+		return HttpResponseRedirect(reverse('loan_application_form_processing_guarantor_search',args=(loan_pk,)))
+
+	if LoanApplicationGuarnators.objects.filter(applicant=applicant,guarantor=guarantor).exists():
+		messages.info(request,'This Member is already Added as guarantor to this Applicant')
+		return HttpResponseRedirect(reverse('loan_application_form_processing_guarantor_search',args=(loan_pk,)))
+
+	LoanApplicationGuarnators(applicant=applicant,guarantor=guarantor,status='UNTREATED').save()
+	return HttpResponseRedirect(reverse('loan_application_form_processing_guarantor_search',args=(loan_pk,)))
+
+def loan_application_form_processing_guarantor_delete(request,pk,return_pk):
+	LoanApplicationGuarnators.objects.get(id=pk).delete()
+	return HttpResponseRedirect(reverse('loan_application_form_processing',args=(return_pk,)))
+
+
+def loan_application_form_processing_bank_account_delete(request,pk,return_pk):
+	LoanApplication.objects.filter(id=pk).update(bank_account=None)
+	return HttpResponseRedirect(reverse('loan_application_form_processing',args=(return_pk,)))
+
+
+def loan_application_preview(request,pk, return_pk,loan_path):
+	form=MemberShipRequestAdditionalInfo_form(request.POST or None)
+
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	task_array=[]
+	for task in tasks:
+		task_array.append(task.task.title)
+
+	task_enabler=TransactionEnabler.objects.filter(status="YES")
+	task_enabler_array=[]
+	for item in task_enabler:
+		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
+	applicant=LoanApplication.objects.get(id=pk)
+
+	nok_list=[]
+	if MembersNextOfKins.objects.filter(member=applicant.applicant.member).exists():
+		nok_record = MembersNextOfKins.objects.filter(member=applicant.applicant.member).first()
+		nok_list.append(nok_record.name)
+		nok_list.append(nok_record.relationships.title)
+		nok_list.append(nok_record.address)
+		nok_list.append(nok_record.phone_number)
+
+		applicant.nok_name=nok_record.name
+		applicant.nok_Relationship=nok_record.relationships.title
+		applicant.nok_address=nok_record.address
+		applicant.nok_phone_no=nok_record.phone_number
+		applicant.save()
+	else:
+		messages.error(request,'There is no registered Next of Kin for this Member')
+		return HttpResponseRedirect(reverse('loan_application_form_processing',args=(return_pk,)))
+
+	net_pay=applicant.net_pay
+
+	if not net_pay and float(net_pay)<=0:
+		messages.error(request,'Please add Net Pay')
+		return HttpResponseRedirect(reverse('loan_application_form_processing',args=(return_pk,)))
+
+
+	status = 'UNTREATED'
+
+	apex_loan=TransactionSources.objects.get(title='LOAN')
+	maximum_loan = apex_loan.maximum_amount
+
+	loan_type=applicant.applicant.loan.name
+	loan_amount=applicant.applicant.loan_amount
+	duration = applicant.applicant.loan.duration
+
+
+	admin_charges_minimum = applicant.applicant.loan.admin_charges_minimum
+
+	if float(admin_charges_minimum) >= float(loan_amount):
+		admin_charge=applicant.applicant.loan.default_admin_charges
+	else:
+		if applicant.applicant.loan.admin_charges_rating == "PERCENTAGE":
+			admin_charge=(float(applicant.applicant.loan.admin_charges) / 100) * float(loan_amount)
+		else:
+			admin_charge=applicant.applicant.loan.admin_charges
+
+	membership_waver=False
+	savings_made_waver=False
+	multiple_loans_waver=False
+	salary_status_waver=False
+	standing_order_status =False
+
+	if MembersExclusiveness.objects.filter(transaction=applicant.applicant.loan,processing_status='UNPROCESSED',approval_status='APPROVED').exists():
+		wavers=MembersExclusiveness.objects.filter(transaction=applicant.applicant.loan,processing_status='UNPROCESSED',approval_status='APPROVED')
+
+		for item in wavers:
+			if item.task.title == 'MEMBERSHIP AGE':
+				membership_waver=True
+			elif item.task.title == 'SAVINGS MADE':
+				savings_made_waver=True
+			elif item.task.title == 'SALARY STATUS':
+				salary_status_waver=True
+
+
+	bank_account=LoanApplication.objects.exclude(Q(bank_account__isnull=True)).filter(id=pk)
+	if bank_account:
+		bank_account_status=True
+	else:
+		bank_account_status=False
+		messages.error(request,'Bank Details missing')
+		return HttpResponseRedirect(reverse('loan_application_form_processing',args=(return_pk,)))
+
+	guarantor_list=[]
+	try:
+		guarantors=LoanApplicationGuarnators.objects.filter(applicant=applicant)
+		for guarantor in guarantors:
+			small_guarantor=(guarantor.id,guarantor.guarantor.admin.first_name + " " + guarantor.guarantor.admin.last_name + " " + guarantor.guarantor.middle_name)
+			guarantor_list.append(small_guarantor[1])
+	except:
+		guarantor_list=[]
+	# for i in range(len(guarantor_list)):
+	# 	print(guarantor_list[i])
+
+	total_guarantors=applicant.applicant.loan.guarantors
+
+	if int(guarantors.count())==int(total_guarantors):
+		guarnator_status=True
+	else:
+		guarnator_status=False
+		messages.error(request,'Guarantors missing')
+		return HttpResponseRedirect(reverse('loan_application_form_processing',args=(return_pk,)))
+
+	loan_savings_status=False
+	loan_based_saving=[]
+	savings_saved=0
+	loan_saving_relationship=[]
+
+	if applicant.applicant.loan.savings_rate == 'YES':
+		if LoanBasedSavings.objects.all().exists():
+			loan_based_saving = LoanBasedSavings.objects.first()
+		else:
+			messages.error(request,'Loan Based Savings not Set')
+			return HttpResponseRedirect(reverse('loan_application_form_processing',args=(return_pk,)))
+
+		loans_anchored=TransactionTypes.objects.filter(savings_rate='YES')
+
+		loans_anchored_sum=LoansRepaymentBase.objects.filter(transaction__savings_rate='YES').filter(Q(balance__lt=0) & Q(member_id=applicant.applicant.member_id)).aggregate(total_amount=Sum('balance'))
+		total_loans_anchored=loans_anchored_sum['total_amount']
+		if not total_loans_anchored:
+			total_loans_anchored=0
+
+		expected_total_loans=abs(float(total_loans_anchored)) + float(loan_amount)
+
+
+		savings_saved=0
+
+		if StandingOrderAccounts.objects.filter(transaction__transaction=loan_based_saving.savings,transaction__member=applicant.applicant.member).exists():
+			account_id=StandingOrderAccounts.objects.get(transaction__transaction=loan_based_saving.savings,transaction__member=applicant.applicant.member)
+
+			if PersonalLedger.objects.filter(account_number=account_id.transaction.account_number).exists():
+				savings_ledger=PersonalLedger.objects.filter(account_number=account_id.transaction.account_number).last()
+				savings_saved=savings_ledger.balance
+			else:
+				messages.error(request,'No Savings Available for Loan Based Savings')
+				return HttpResponseRedirect(reverse('loan_application_form_processing',args=(return_pk,)))
+		else:
+			messages.error(request,'No account for Loan Based Savings')
+			return HttpResponseRedirect(reverse('loan_application_form_processing',args=(return_pk,)))
+
+		loan_based_saving_rating=apex_loan.loan_based_saving
+
+		if not float(loan_based_saving_rating):
+			messages.error(request,'Loan Based Saving Rating not set')
+			return HttpResponseRedirect(reverse('loan_application_form_processing',args=(return_pk,)))
+
+
+		loan_saving_relationship=float(int(loan_based_saving_rating)/100) * float(expected_total_loans)
+		if savings_made_waver:
+			loan_savings_status=True
+		else:
+
+			if float(savings_saved) >= float(loan_saving_relationship):
+				loan_savings_status=True
+
+		if not loan_savings_status:
+
+			messages.error(request,'You do not Have Expected Savings for this Loan Amount, You have  ' + str(savings_saved) + ' while you need ' + str(loan_saving_relationship) )
+			return HttpResponseRedirect(reverse('loan_application_form_processing',args=(return_pk,)))
+
+
+	total_savings=0
+	savings_sum=get_standing_orders_sum(applicant.applicant.member_id)
+	if savings_sum==None:
+		total_savings=0
+		standing_order_status=False
+	else:
+		total_savings=savings_sum
+		standing_order_status=True
+
+	total_loans=0
+	balance_total=0
+	loans_sum=LoansRepaymentBase.objects.filter(Q(balance__lt=0) & Q(member_id=applicant.applicant.member_id)).aggregate(total_amount=Sum('repayment'),total_balance=Sum('balance'))
+	total_loans=loans_sum['total_amount']
+	balance_total= loans_sum['total_balance']
+	if total_loans==None:
+		total_loans=0
+	if balance_total == None:
+		balance_total=0
+
+	shop_balance=0
+	shops =CooperativeShopLedger.objects.filter(Q(balance__lt=0) & Q(member_id=applicant.applicant.member_id)).order_by('-id').first()
+	if shops:
+		shop_balance=abs(shops.balance)
+
+
+	total_debit=float(total_savings)+float(total_loans)+float(shop_balance)
+
+
+	balance=float(net_pay)-total_debit
+
+	date_joined = applicant.applicant.member.date_joined
+	now = datetime.datetime.now()
+
+	salary_loan_relationship = apex_loan.salary_loan_relationship
+	if not float(salary_loan_relationship):
+		messages.error(request,'Salary Loan Relationship not set')
+		return HttpResponseRedirect(reverse('loan_application_form_processing',args=(return_pk,)))
+
+
+	salary_loan_relationship_computed= float(int(salary_loan_relationship)/100) * float(balance)
+
+	interest_rate = applicant.applicant.loan.interest_rate
+
+	if not float(interest_rate):
+		messages.error(request,'Interest Rate not set')
+		return HttpResponseRedirect(reverse('loan_application_form_processing',args=(return_pk,)))
+
+
+	interest= float(int(interest_rate)/100) * float(applicant.loan_amount)
+
+	loan_age = applicant.applicant.loan.loan_age
+	if not float(loan_age):
+		messages.error(request,'Members Loan Age not set')
+		return HttpResponseRedirect(reverse('loan_application_form_processing',args=(return_pk,)))
+
+
+	members_age = (now.year - date_joined.year) * 12 + (now.month - date_joined.month)
+	interest_deduction=applicant.applicant.loan.interest_deduction
+	if not interest_deduction:
+		messages.error(request,'Interest deduction source not set')
+		return HttpResponseRedirect(reverse('loan_application_form_processing',args=(return_pk,)))
+
+
+
+	if interest_deduction == "SOURCE":
+		amount_scheduled = float(loan_amount)
+	else:
+		amount_scheduled = float(loan_amount)+ float(interest)
+
+	if int(duration) == 0:
+		messages.error(request,'Please set the Loan Duration')
+		return HttpResponseRedirect(reverse('loan_application_form_processing',args=(return_pk,)))
+
+	monthly_repayment=math.ceil(float(amount_scheduled)/float(duration))
+
+	salary_status=True
+	if salary_status_waver:
+		salary_status=False
+	else:
+		if float(monthly_repayment)> float(salary_loan_relationship_computed):
+			salary_status=False
+
+	Member_Status = False
+	if membership_waver:
+		Member_Status = True
+	else:
+		if int(members_age)>int(loan_age):
+			Member_Status = True
+
+
+
+	record_array=[]
+
+	if request.method=="POST":
+		date_applied_id = request.POST.get('date_applied')
+
+		date_format = '%Y-%m-%d'
+		dtObj = datetime.datetime.strptime(date_applied_id, date_format)
+		date_applied=get_current_date(dtObj)
+
+
+
+		comment=request.POST.get("comment")
+		applicant.comment=comment
+		applicant.submission_status='SUBMITTED'
+		applicant.admin_charge=admin_charge
+		applicant.date_applied=date_applied
+		applicant.save()
+
+		description="NET PAY"
+		value=net_pay
+		category='ANALYSIS'
+		waver=0
+		tag=0
+		Loan_Application_Posting(applicant,description,value,category,'UNTREATED',tag,waver)
+
+
+		description="SALARY BALANCE AFTER DEDUCTIONS"
+		value=balance
+		category='ANALYSIS'
+		waver=0
+		tag=0
+		Loan_Application_Posting(applicant,description,value,category,'UNTREATED',tag,waver)
+
+		description=loan_type
+		value=loan_amount
+		category='ANALYSIS'
+		waver=0
+		tag=0
+		Loan_Application_Posting(applicant,description,value,category,'UNTREATED',tag,waver)
+
+		description="MONTHLY DEDUCTIONS"
+		value=total_savings
+		category='ANALYSIS'
+		waver=0
+		tag=0
+		Loan_Application_Posting(applicant,description,value,category,'UNTREATED',tag,waver)
+
+		description="OUTSTANDING MONTHLY LOAN REPAYMENTS"
+		value='{0:.2f}'.format(total_loans)
+		category='ANALYSIS'
+		waver=0
+		tag=0
+		Loan_Application_Posting(applicant,description,value,category,'UNTREATED',tag,waver)
+
+		description="COOPERATIVE SHOP"
+		value=shop_balance
+		category='ANALYSIS'
+		waver=0
+		tag=0
+		Loan_Application_Posting(applicant,description,value,category,'UNTREATED',tag,waver)
+
+		description="LOAN DURATION"
+		value=str(duration) + " MONTHS"
+		category='ANALYSIS'
+		waver=0
+		tag=0
+		Loan_Application_Posting(applicant,description,value,category,'UNTREATED',tag,waver)
+
+
+		description="SALARY LOAN RELATIONSHIP"
+		value=str(salary_loan_relationship) + "%"
+		category='ANALYSIS'
+		waver=0
+		tag=0
+		Loan_Application_Posting(applicant,description,value,category,'UNTREATED',tag,waver)
+
+
+		description="SALARY LOAN RELATIONSHIP COMPUTED"
+		value=salary_loan_relationship_computed
+		category='ANALYSIS'
+		waver=0
+		tag=0
+		Loan_Application_Posting(applicant,description,value,category,'UNTREATED',tag,waver)
+
+		description="MATURITY AGE"
+		value=str(loan_age) + " MONTHS"
+		category='ANALYSIS'
+		waver=0
+		tag=0
+		Loan_Application_Posting(applicant,description,value,category,'UNTREATED',tag,waver)
+
+
+		description="DATE JOINED"
+		value=date_joined
+		category='ANALYSIS'
+		waver=0
+		tag=0
+		Loan_Application_Posting(applicant,description,value,category,'UNTREATED',tag,waver)
+
+		description="MEMBER AGE"
+		value=str(members_age) + "MONTH(S)"
+		category='ANALYSIS'
+		waver=0
+		tag=0
+		Loan_Application_Posting(applicant,description,value,category,'UNTREATED',tag,waver)
+
+		description="LOAN INTEREST RATE"
+		value=str(interest_rate) + "%"
+		category='ANALYSIS'
+		waver=0
+		tag=0
+		Loan_Application_Posting(applicant,description,value,category,'UNTREATED',tag,waver)
+
+
+		description="INTEREST DEDUCTION"
+		value=interest_deduction
+		category='ANALYSIS'
+		waver=0
+		tag=0
+		Loan_Application_Posting(applicant,description,value,category,'UNTREATED',tag,waver)
+
+
+		description="LOAN INTEREST"
+		value=interest
+		category='ANALYSIS'
+		waver=0
+		tag=0
+		Loan_Application_Posting(applicant,description,value,category,'UNTREATED',tag,waver)
+
+		description="AMOUNT SCHEDULED"
+		value=amount_scheduled
+		category='ANALYSIS'
+		waver=0
+		tag=0
+		Loan_Application_Posting(applicant,description,value,category,'UNTREATED',tag,waver)
+
+
+		description="MONTHLY REPAYMENT"
+		value=round(float(monthly_repayment),2)
+		category='ANALYSIS'
+		waver=0
+		tag=0
+		Loan_Application_Posting(applicant,description,value,category,'UNTREATED',tag,waver)
+
+		if savings_saved:
+			description="LOAN BASED SAVINGS"
+			value=loan_based_saving.savings.name
+			category='ANALYSIS'
+			waver=0
+			tag=0
+			Loan_Application_Posting(applicant,description,value,category,'UNTREATED',tag,waver)
+
+			description="SAVED AMOUNT"
+			value=savings_saved
+			category='ANALYSIS'
+			waver=0
+			tag=0
+			Loan_Application_Posting(applicant,description,value,category,'UNTREATED',tag,waver)
+
+			description="LOAN BASED SAVINGS RATE"
+			value=str(loan_based_saving_rating) + "%"
+			category='ANALYSIS'
+			waver=0
+			tag=0
+			Loan_Application_Posting(applicant,description,value,category,'UNTREATED',tag,waver)
+
+		description="GUARANTORS"
+		value=guarantor_list
+		category='ANALYSIS'
+		waver=0
+		tag=0
+		Loan_Application_Posting(applicant,description,value,category,'UNTREATED',tag,waver)
+
+
+		description="NEXT OF KIN"
+		value=nok_list
+		category='ANALYSIS'
+		waver=0
+		tag=0
+		Loan_Application_Posting(applicant,description,value,category,'UNTREATED',tag,waver)
+
+
+
+		description="BANK DETAILS"
+		value=applicant.bank_account.account_name + " - " + applicant.bank_account.account_number + ' - ' + applicant.bank_account.bank.title
+		category='ANALYSIS'
+		waver=0
+		tag=0
+		Loan_Application_Posting(applicant,description,value,category,'UNTREATED',tag,waver)
+
+		description="ADMIN CHARGES"
+		value=admin_charge
+		waver=0
+		tag=0
+		category='ANALYSIS'
+		Loan_Application_Posting(applicant,description,value,category,'UNTREATED',tag,waver)
+
+		description="MEMBER STATUS"
+		value=Member_Status
+		waver=membership_waver
+		tag=0
+		if value:
+			tag=1
+		category='ANALYSIS'
+		Loan_Application_Posting(applicant,description,value,category,'UNTREATED',tag,waver)
+
+		description="SALARY STATUS"
+		value=salary_status
+		waver=salary_status_waver
+		tag=0
+		if value:
+			tag=1
+		category='SUMMARY'
+		Loan_Application_Posting(applicant,description,value,category,'UNTREATED',tag,waver)
+
+		if savings_saved:
+			description="LOAN SAVINGS BASED STATUS"
+			value=loan_savings_status
+			waver=savings_made_waver
+			tag=0
+			if value:
+				tag=1
+			category='SUMMARY'
+			Loan_Application_Posting(applicant,description,value,category,'UNTREATED',tag,waver)
+
+
+		description="Bank Account Status"
+		value=bank_account_status
+		waver=0
+		tag=0
+		if value:
+			tag=1
+		category='SUMMARY'
+		Loan_Application_Posting(applicant,description,value,category,'UNTREATED',tag,waver)
+
+		description="Guarantors Status"
+		value=guarnator_status
+		waver=0
+		tag=0
+		if value:
+			tag=1
+		category='SUMMARY'
+		Loan_Application_Posting(applicant,description,value,category,'UNTREATED',tag,waver)
+
+
+
+		applicant1=LoanFormIssuance.objects.get(id=applicant.applicant_id)
+		applicant1.processing_status='PROCESSED'
+		applicant1.status='TREATED'
+		applicant1.save()
+
+		if loan_path == "PROJECT":
+			return HttpResponseRedirect(reverse('loan_application_approved_period_load'))
+		else:
+			return HttpResponseRedirect(reverse('Emergency_Loan_Dashboard_Load'))
+
+	compulsory_saving_status = False
+	if CompulsorySavings.objects.all().exists():
+		compulsory_saving = CompulsorySavings.objects.first()
+
+		if StandingOrderAccounts.objects.filter(transaction__member=applicant.applicant.member,transaction__transaction=compulsory_saving.transaction).exists():
+			compulsory_saving_status = True
+
+	maximum_loan_status = False
+	compound_loan =float(abs(balance_total)) + float(applicant.loan_amount)
+
+	if float(compound_loan)<= float(maximum_loan):
+		maximum_loan_status =True
+
+
+	# print(maximum_loan_status)
+	
+
+	if maximum_loan_status and guarnator_status and bank_account_status and compulsory_saving_status and standing_order_status:
+	# if guarnator_status and bank_account_status and compulsory_saving_status and standing_order_status:
+
+		if membership_waver:
+			button_enabled=True
+		else:
+			button_enabled=False
+			if Member_Status == True:
+				button_enabled=True
+		# print(f'1. {button_enabled}')
+
+		if savings_made_waver:
+			button_enabled=True
+		else:
+			button_enabled=False
+			if loan_savings_status == True:
+				button_enabled=True
+		# print(f'2. {button_enabled}')
+		
+		if salary_status_waver:
+			button_enabled=True
+		else:
+			button_enabled=False
+			if salary_status == True:
+				button_enabled=True
+
+		# print(f'3. {button_enabled}')
+	else:
+		button_enabled=False
+
+	record_array.append(("Net Pay",net_pay))
+	record_array.append(("Salary Balance After Deductions",balance))
+	record_array.append((loan_type,loan_amount))
+	record_array.append(('Monthly Contributions',total_savings))
+	record_array.append(('Loan Monthly Repayment',total_loans))
+	record_array.append(('Cooperative Shop',shop_balance))
+	record_array.append(('Loan Duration',str(duration) + " Months"))
+	record_array.append(('Salary Loan Relationshipp',salary_loan_relationship))
+	record_array.append(('Salary Loan Relationship Computed',salary_loan_relationship_computed))
+	record_array.append(('Maturity Age',str(loan_age)[:-3] + " Months"))
+	record_array.append(('Date Joined',date_joined))
+	record_array.append(('Members Age',str(members_age) + " Months"))
+	record_array.append(('Loan Interest Rate',str(interest_rate) + "%"))
+	record_array.append(('Interest Deduction',interest_deduction))
+	record_array.append(('Loan Interest','=N=' +str(interest)))
+	record_array.append(('Amount Scheduled','=N=' +str(amount_scheduled)))
+	record_array.append(('Monthly Repayment',"=N=" + str(monthly_repayment)))
+	record_array.append(('Admin Charges',"=N=" + str(admin_charge)))
+
+	if savings_saved:
+		record_array.append(('Loan Based Savings',loan_based_saving.savings.name))
+		record_array.append(('Saved Amount (' + str(loan_based_saving.savings.name) +")",savings_saved))
+		record_array.append(('Loan Based Savings Rate',str(loan_based_saving_rating) + "%"))
+
+	record_array.append(('Guarantors',guarantor_list))
+
+	record_array.append(('Bank Details',applicant.bank_account.account_name + " - " + str(applicant.bank_account.account_number) + ' - ' +  applicant.bank_account.bank.title))
+	record_array.append(('Next of Kin',f'{nok_list[0]}, {nok_list[1]}, {nok_list[2]}'))
+
+	form.fields['comment'].initial="FOR YOUR CONSIDERATION"
+	form.fields['date_applied'].initial=get_current_date(now)
+	context={
+	'loan_path':loan_path,
+	'form':form,
+	'savings_anchored':applicant.applicant.loan.savings_rate,
+	'record_array':record_array,
+	'membership_waver':membership_waver,
+	'applicant':applicant,
+	'pk':pk,
+	'salary_status':salary_status,
+	'Member_Status':Member_Status,
+	'loan_savings_status':loan_savings_status,
+	'button_enabled':button_enabled,
+	'guarnator_status':guarnator_status,
+	'bank_account_status':bank_account_status,
+	'task_array':task_array,
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
+	}
+
+	return render(request,'deskofficer_templates/loan_application_preview.html',context)
+
+
+def Loan_application_active_list_load(request):
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	task_array=[]
+	for task in tasks:
+		task_array.append(task.task.title)
+
+
+
+	task_enabler=TransactionEnabler.objects.filter(status="YES")
+	task_enabler_array=[]
+	for item in task_enabler:
+		task_enabler_array.append(item.title)
+
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
+	
+	records = LoanApplication.objects.filter(transaction_status='UNTREATED',applicant__loan_path='PROJECT')
+
+	context={
+	'records':records,
+	'task_array':task_array,
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
+	}
+	return render(request,'deskofficer_templates/Loan_application_active_list_load.html',context)
+
+
+def Loan_application_history_period_load(request):
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	task_array=[]
+	for task in tasks:
+		task_array.append(task.task.title)
+
+
+
+	task_enabler=TransactionEnabler.objects.filter(status="YES")
+	task_enabler_array=[]
+	for item in task_enabler:
+		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
+
+	form=loan_request_history_period_form(request.POST or None)
+	exist_loans=[]
+	if request.method == 'POST':
+		start_date_id=request.POST.get('start_date')
+		stop_date_id=request.POST.get('stop_date')
+
+		date_format = '%Y-%m-%d'
+		dtObj = datetime.datetime.strptime(start_date_id, date_format)
+		start_date=get_current_date(dtObj)
+		
+		dtObj = datetime.datetime.strptime(stop_date_id, date_format)
+		stop_date=get_current_date(dtObj)
+
 
 		loan_id = request.POST.get('loans')
 		loan = TransactionTypes.objects.get(id=loan_id)
 
-		exist_loans = LoanApplication.objects.filter(applicant__applicant__loan=loan,applicant__applicant__period=period,applicant__applicant__batch=batch,transaction_status='UNTREATED',submission_status='SUBMITTED',applicant__processing_status='PROCESSED',approval_status='APPROVED')
+						
+		exist_loans = LoanApplication.objects.filter(applicant__loan_path='PROJECT',tdate__range=[start_date,stop_date])
+	
+	form.fields['start_date'].initial=get_current_date(now)
+	form.fields['stop_date'].initial=get_current_date(now)
+	context={
+	'exist_loans':exist_loans,
+	'form':form,
+	'task_array':task_array,
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
+	}
+	return render(request,'deskofficer_templates/Loan_application_history_period_load.html',context)
+
+
+
+
+def loan_application_shortlisting_list_load(request):
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	task_array=[]
+	for task in tasks:
+		task_array.append(task.task.title)
+
+
+	# LoanFormIssuance.objects.all().update(status='UNTREATED')
+	# LoanApplication.objects.all().delete()
+
+	task_enabler=TransactionEnabler.objects.filter(status="YES")
+	task_enabler_array=[]
+	for item in task_enabler:
+		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
+
+	form=loan_request_order_form(request.POST or None)
+	records=[]
+	if request.method == 'POST':
+		
+
+		loan_id = request.POST.get('loans')
+		loan = TransactionTypes.objects.get(id=loan_id)
+
+		records = LoanApplication.objects.filter(applicant__loan=loan,transaction_status='UNTREATED')
+
+	context={
+	'records':records,
+	'form':form,
+	'task_array':task_array,
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
+	}
+	return render(request,'deskofficer_templates/loan_application_shortlisting_list_load.html',context)
+
+
+
+def loan_application_shortlisting_process(request,pk):
+
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	task_array=[]
+	for task in tasks:
+		task_array.append(task.task.title)
+
+	task_enabler=TransactionEnabler.objects.filter(status="YES")
+	task_enabler_array=[]
+	for item in task_enabler:
+		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
+
+	form=loan_request_shortlisting_process_form(request.POST or None)
+	tdate=get_current_date(now)
+	processed_by=CustomUser.objects.get(id=request.user.id)
+	processed_by=processed_by.username
+
+	record = LoanApplication.objects.get(id=pk)
+	
+	if request.method == 'POST':
+		
+		date_shortlisted_id = request.POST.get('date_shortlisted')
+
+		date_format = '%Y-%m-%d'
+		dtObj = datetime.datetime.strptime(date_shortlisted_id, date_format)
+		date_shortlisted=get_current_date(dtObj)
+
+		LoanApplicationShortListing(tdate=tdate,applicant=record,processed_by=processed_by,status="UNTREATED",approval_status='PENDING').save()
+		LoanApplication.objects.filter(id=pk).update(transaction_status='TREATED')
+		return	HttpResponseRedirect(reverse('loan_application_shortlisting_list_load'))
+		
+
+		
+	form.fields['date_applied'].initial=get_print_date(record.date_applied)
+	form.fields['amount'].initial	=record.loan_amount
+	form.fields['date_shortlisted'].initial=get_current_date(now)	
+	context={
+	'record':record,
+	'form':form,
+	'task_array':task_array,
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
+	}
+	return render(request,'deskofficer_templates/loan_application_shortlisting_process.html',context)
+
+
+
+def loan_application_shortlisted_active_list_load(request):
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	task_array=[]
+	for task in tasks:
+		task_array.append(task.task.title)
+
+	task_enabler=TransactionEnabler.objects.filter(status="YES")
+	task_enabler_array=[]
+	for item in task_enabler:
+		task_enabler_array.append(item.title)
+
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
+	
+	records = LoanApplicationShortListing.objects.filter(approval_status='PENDING',status='UNTREATED',applicant__applicant__loan_path ="PROJECT")
+
+	context={
+	'records':records,
+	'task_array':task_array,
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
+	}
+	return render(request,'deskofficer_templates/loan_application_shortlisted_active_list_load.html',context)
+
+
+
+def Loan_application_shortlisting_KIV_period_load(request):
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	task_array=[]
+	for task in tasks:
+		task_array.append(task.task.title)
+
+
+
+	task_enabler=TransactionEnabler.objects.filter(status="YES")
+	task_enabler_array=[]
+	for item in task_enabler:
+		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
+
+	form=loan_request_history_period_form(request.POST or None)
+	exist_loans=[]
+	if request.method == 'POST':
+		start_date_id=request.POST.get('start_date')
+		stop_date_id=request.POST.get('stop_date')
+
+		date_format = '%Y-%m-%d'
+		dtObj = datetime.datetime.strptime(start_date_id, date_format)
+		start_date=get_current_date(dtObj)
+		
+		dtObj = datetime.datetime.strptime(stop_date_id, date_format)
+		stop_date=get_current_date(dtObj)
+
+
+		loan_id = request.POST.get('loans')
+		loan = TransactionTypes.objects.get(id=loan_id)
+
+					
+		exist_loans = LoanApplicationShortListing.objects.filter(~Q(approval_status='APPROVED') & ~Q(approval_status='PENDING')).filter(applicant__applicant__loan_path='PROJECT',tdate__range=[start_date,stop_date])
+	
+	form.fields['start_date'].initial=get_current_date(now)
+	form.fields['stop_date'].initial=get_current_date(now)
+	context={
+	'exist_loans':exist_loans,
+	'form':form,
+	'task_array':task_array,
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
+	}
+	return render(request,'deskofficer_templates/Loan_application_shortlisting_KIV_period_load.html',context)
+
+
+def Loan_application_shortlisting_KIV_activate(request,pk):
+	LoanApplicationShortListing.objects.filter(id=pk).update(approval_status='PENDING')
+	return HttpResponseRedirect(reverse('Loan_application_shortlisting_KIV_period_load'))
+
+def Loan_application_shortlisting_history_period_load(request):
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	task_array=[]
+	for task in tasks:
+		task_array.append(task.task.title)
+
+
+
+	task_enabler=TransactionEnabler.objects.filter(status="YES")
+	task_enabler_array=[]
+	for item in task_enabler:
+		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
+
+	form=loan_request_history_period_form(request.POST or None)
+	exist_loans=[]
+	if request.method == 'POST':
+		start_date_id=request.POST.get('start_date')
+		stop_date_id=request.POST.get('stop_date')
+
+		date_format = '%Y-%m-%d'
+		dtObj = datetime.datetime.strptime(start_date_id, date_format)
+		start_date=get_current_date(dtObj)
+		
+		dtObj = datetime.datetime.strptime(stop_date_id, date_format)
+		stop_date=get_current_date(dtObj)
+
+
+		loan_id = request.POST.get('loans')
+		loan = TransactionTypes.objects.get(id=loan_id)
+
+						
+		exist_loans = LoanApplicationShortListing.objects.filter(applicant__applicant__loan_path='PROJECT',tdate__range=[start_date,stop_date])
+	
+	form.fields['start_date'].initial=get_current_date(now)
+	form.fields['stop_date'].initial=get_current_date(now)
+	context={
+	'exist_loans':exist_loans,
+	'form':form,
+	'task_array':task_array,
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
+	}
+	return render(request,'deskofficer_templates/Loan_application_shortlisting_history_period_load.html',context)
+
+
+def Loan_application_processing_period_load(request):
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	task_array=[]
+	for task in tasks:
+		task_array.append(task.task.title)
+
+	task_enabler=TransactionEnabler.objects.filter(status="YES")
+	task_enabler_array=[]
+	for item in task_enabler:
+		task_enabler_array.append(item.title)
+
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
+	form=loan_request_order_form(request.POST or None)
+
+	exist_loans=[]
+	if request.method == 'POST':
+
+		loan_id = request.POST.get('loans')
+		loan = TransactionTypes.objects.get(id=loan_id)
+
+		exist_loans = LoanApplicationShortListing.objects.filter(applicant__applicant__loan_path='PROJECT',applicant__applicant__loan=loan,status='UNTREATED',approval_status='APPROVED')
 
 	context={
 	'exist_loans':exist_loans,
@@ -6378,6 +9365,482 @@ def Loan_application_processing_period_load(request):
 	'default_password':default_password,
 	}
 	return render(request,'deskofficer_templates/Loan_application_processing_period_load.html',context)
+
+
+def loan_application_approved_process_preview(request,pk):
+
+	now = datetime.datetime.now()
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	task_array=[]
+	for task in tasks:
+		task_array.append(task.task.title)
+
+	task_enabler=TransactionEnabler.objects.filter(status="YES")
+	task_enabler_array=[]
+	for item in task_enabler:
+		task_enabler_array.append(item.title)
+
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
+	form=loan_application_approved_process_preview_form(request.POST or None)
+	transaction_period=TransactionPeriods.objects.get(status='ACTIVE')
+
+
+	processed_by=CustomUser.objects.get(id=request.user.id)
+	processed_by=processed_by.username
+	tdate=get_current_date(now)
+	
+	applicant=LoanApplicationShortListing.objects.get(id=pk)
+
+	# Application applicant ID
+	applicant1=LoanApplication.objects.get(id=applicant.applicant_id)
+	# applicant1 = applicant.applicant
+	transaction=applicant.applicant.applicant
+
+	nok_name = applicant1.nok_name
+	nok_Relationship=applicant1.nok_Relationship
+	nok_phone_no=applicant1.nok_phone_no
+	nok_address=applicant1.nok_address
+
+	guarantors = LoanApplicationGuarnators.objects.filter(applicant=applicant1)
+
+	records=LoanApplicationSettings.objects.filter(applicant=applicant1)
+
+	loan_type=transaction.loan.name
+
+
+	loan_amount=applicant.approved_amount
+	
+	duration = applicant.applicant.duration
+	admin_charge = applicant.applicant.admin_charge
+	start_date=[]
+	stop_date=[]
+
+	interest_rate = transaction.loan.interest_rate
+
+	interest= float(int(interest_rate)/100) * float(loan_amount)
+	interest_deduction=transaction.loan.interest_deduction
+
+
+	if interest_deduction== "SOURCE":
+		amount_scheduled = float(loan_amount)
+	else:
+		amount_scheduled = float(loan_amount)+ float(interest)
+
+	monthly_repayment=math.ceil(float(amount_scheduled)/float(duration))
+
+	my_id=transaction.member.get_member_Id
+	loan_code=transaction.loan.code
+
+
+	button_show = False
+
+	if request.method=="POST" and 'btn-fetch' in request.POST:
+		start_date=request.POST.get('effective_date')
+		start_date=datetime.datetime.strptime(start_date, '%Y-%m-%d')
+		stop_date = start_date+ relativedelta(months=int(duration))
+		start_date=get_current_date(start_date)
+		stop_date=get_current_date(stop_date)
+		button_show=True
+	
+
+
+	if request.method=="POST" and 'btn-process' in request.POST:
+
+		loan_number = generate_number(loan_code,my_id,now)
+		if loan_number==0:
+			messages.error(request,'Please set the loan Code')
+			return HttpResponseRedirect(reverse('loan_application_approved_process_preview',args=(pk,)))
+
+		member=transaction.member #applicant.applicant.applicant.member
+		
+		effective_date_add=request.POST.get('effective_date_add')
+	
+		if effective_date_add:
+			start_date=request.POST.get('effective_date')
+			start_date=datetime.datetime.strptime(start_date, '%Y-%m-%d')
+			stop_date = start_date+ relativedelta(months=int(duration))
+			start_date=get_current_date(start_date)
+			stop_date=get_current_date(stop_date)
+		else:
+			messages.error(request,"Please Accept the Effective Date")
+			return HttpResponseRedirect(reverse('loan_application_approved_process_preview',args=(pk,)))
+
+		# transaction=applicant.applicant.applicant.applicant.applicant.loan #applicant.applicant.applicant.applicant.loan
+		
+
+		if not nok_name:
+			messages.error(request,"No Next of Kin recorded for this Member")
+			return HttpResponseRedirect(reverse('loan_application_approved_process_preview',args=(pk,)))
+
+		particulars=transaction.loan.name + " Loan Issuance"
+		s = titlecase(particulars)
+		particulars=s
+		debit=abs(float(loan_amount)) #+float(interest))
+		credit=0
+		balance=-debit
+
+		post_to_ledger(member,
+						transaction.loan,
+						loan_number,
+						particulars,
+						debit,
+						credit,
+						balance,
+						get_current_date(now),
+						'ACTIVE',
+						tdate,processed_by)
+
+
+		ledger_balance=balance
+
+
+		cash_book_balance=main_cashbook_balance()
+
+		ledger_particulars= particulars + '(' + str(loan_number) + ')'
+		debit=0
+		credit=abs(float(loan_amount))
+		balance=float(cash_book_balance)+float(credit)
+		ref_no=get_ticket()
+		status='ACTIVE'
+		tdate=get_current_date(now)
+		source='LOAN ISSUEANCE'
+		main_cashbook_posting(ledger_particulars,debit,credit,balance,ref_no,status,tdate,processed_by,source)
+
+
+
+		particulars=  "Interest on"  + transaction.loan.name.title()
+		s = titlecase(particulars)
+		particulars=s
+		debit=abs(float(interest))
+		credit=0
+		balance=-(abs(float(ledger_balance)) + abs(float(interest)))
+
+		post_to_ledger(member,
+						transaction.loan,
+						loan_number,
+						particulars,
+						debit,
+						credit,
+						balance,
+						get_current_date(now),
+						'ACTIVE',
+						tdate,processed_by)
+
+		ledger_balance=balance
+
+		cash_book_balance=main_cashbook_balance()
+
+		ledger_particulars= particulars + '(' + str(loan_number) + ')'
+		credit=0
+		debit=abs(float(debit))
+		balance=float(cash_book_balance)-float(debit)
+		ref_no=get_ticket()
+		status='ACTIVE'
+		tdate=get_current_date(now)
+		source='LOAN ISSUEANCE'
+		main_cashbook_posting(ledger_particulars,debit,credit,balance,ref_no,status,tdate,processed_by,source)
+
+		particulars=  "Admin Charges on :  "  + transaction.loan.name.title()
+		s = titlecase(particulars)
+		particulars=s
+		debit=abs(float(admin_charge))
+		credit=0
+		balance=-(abs(float(ledger_balance)) + abs(float(admin_charge)))
+
+		post_to_ledger(member,
+						transaction.loan,
+						loan_number,
+						particulars,
+						debit,
+						credit,
+						balance,
+						get_current_date(now),
+						'ACTIVE',
+						tdate,processed_by)
+
+		ledger_balance=balance
+
+		cash_book_balance=main_cashbook_balance()
+
+		ledger_particulars= particulars + '(' + str(loan_number) + ')'
+		credit=abs(float(admin_charge))
+		debit=0
+		balance=float(cash_book_balance)+float(credit)
+		ref_no=get_ticket()
+		status='ACTIVE'
+		tdate=get_current_date(now)
+		source='LOAN ISSUEANCE'
+		main_cashbook_posting(ledger_particulars,debit,credit,balance,ref_no,status,tdate,processed_by,source)
+
+
+		particulars=  "Deduction of Admin Charges from Source 0n:  "  + transaction.loan.name.title()
+		s = titlecase(particulars)
+		particulars=s
+		debit=0
+		credit=abs(float(admin_charge))
+		balance=(float(ledger_balance) + abs(float(admin_charge)))
+
+		post_to_ledger(member,
+						transaction.loan,
+						loan_number,
+						particulars,
+						debit,
+						credit,
+						balance,
+						get_current_date(now),
+						'ACTIVE',
+						tdate,processed_by)
+
+		ledger_balance=balance
+		cash_book_balance=main_cashbook_balance()
+
+		ledger_particulars= particulars + '(' + str(loan_number) + ')'
+		debit=abs(float(admin_charge))
+		credit=0
+		balance=float(cash_book_balance)-float(debit)
+		ref_no=get_ticket()
+		status='ACTIVE'
+		tdate=get_current_date(now)
+		source='LOAN ISSUEANCE'
+		main_cashbook_posting(ledger_particulars,debit,credit,balance,ref_no,status,tdate,processed_by,source)
+
+
+		if interest_deduction == "SOURCE":
+			particulars= "Interest Deduction at source"
+			s = titlecase(particulars)
+			particulars=s
+			debit=0
+			credit=float(interest)
+			balance=-(abs(float(ledger_balance)) - float(interest))
+
+			post_to_ledger(member,
+							transaction.loan,
+							loan_number,
+							particulars,
+							debit,
+							credit,
+							balance,
+							get_current_date(now),
+							'ACTIVE',
+							tdate,processed_by)
+
+
+
+			Loans_Repayment_Base(member,
+								nok_name,
+								nok_Relationship,
+								nok_phone_no,
+								nok_address,
+								duration,
+								interest_deduction,
+								interest_rate,
+								interest,
+								admin_charge,
+								transaction.loan,
+								loan_number,
+								float(loan_amount),
+								float(monthly_repayment),
+								-float(loan_amount),
+								0,
+								start_date,
+								stop_date,
+								processed_by,
+								'ACTIVE',
+								tdate,
+								'SCHEDULED')
+
+
+			cash_book_balance=main_cashbook_balance()
+
+			ledger_particulars= particulars + '(' + str(loan_number) + ')'
+			debit=abs(float(interest))
+			credit=0
+			balance=float(cash_book_balance)-float(debit)
+			ref_no=get_ticket()
+			status='ACTIVE'
+			tdate=get_current_date(now)
+			source='LOAN ISSUEANCE'
+			main_cashbook_posting(ledger_particulars,debit,credit,balance,ref_no,status,tdate,processed_by,source)
+
+		else:
+
+			Loans_Repayment_Base(member,
+								duration,
+								interest_deduction,
+								interest_rate,
+								interest,
+								admin_charge,
+								transaction.loan,
+								loan_number,
+								float(amount_scheduled),
+								float(monthly_repayment),
+								-amount_scheduled,
+								0,
+								start_date,
+								stop_date,
+								processed_by,
+								'ACTIVE',
+								tdate,
+								'SCHEDULED')
+
+
+		loan = LoansRepaymentBase.objects.get(loan_number=loan_number)
+		for guarantor in guarantors:
+			LoanGuarantors(loan=loan,member=guarantor.guarantor).save()
+
+
+		applicant.status='TREATED'
+		applicant.loan_number=loan_number
+		applicant.save()
+
+		
+		if transaction.loan.auto_stop_savings == 'YES':
+			savings=LoanBasedSavings.objects.all()
+			if savings:
+				record=LoanBasedSavings.objects.all().first()
+				StandingOrderAccounts.objects.filter(transaction__transaction=record.savings,transaction__member=member).update(status='INACTIVE')
+
+				queryset=StandingOrderAccounts.objects.get(transaction__transaction=record.savings,transaction__member=member)
+				StandingOrderDeactivatedAccounts(transaction=queryset,status='UNTREATED',processed_by=processed_by,tdate=tdate).save()
+
+		return HttpResponseRedirect(reverse('Loan_application_processing_confirmation',args=(loan_number,)))
+
+	form.fields['effective_date'].initial=transaction_period.transaction_period
+	context={
+	'button_show':button_show,
+	'start_date':start_date,
+	'stop_date':stop_date,
+	'loan_type':loan_type,
+	'applicant':applicant,
+	'loan_amount':loan_amount,
+	'pk':pk,
+	'duration':duration,
+	'interest_rate':interest_rate,
+	'interest_deduction':interest_deduction,
+	'interest':interest,
+	'monthly_repayment':monthly_repayment,
+	'amount_scheduled':amount_scheduled,
+	'records':records,
+	'admin_charge':admin_charge,
+	'form':form,
+	'task_array':task_array,
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
+	}
+
+	return render(request,'deskofficer_templates/loan_application_approved_process_preview.html',context)
+
+
+def loan_application_reprint_search(request):
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	task_array=[]
+	for task in tasks:
+		task_array.append(task.task.title)
+
+
+
+	task_enabler=TransactionEnabler.objects.filter(status="YES")
+	task_enabler_array=[]
+	for item in task_enabler:
+		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
+	title="Search Members for Reprint"
+	form = searchForm(request.POST or None)
+
+	return render(request,'deskofficer_templates/loan_application_reprint_search.html',{'task_array':task_array,
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,'form':form,'title':title,})
+
+def loan_application_reprint_list_load(request):
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	task_array=[]
+	for task in tasks:
+		task_array.append(task.task.title)
+
+
+
+	task_enabler=TransactionEnabler.objects.filter(status="YES")
+	task_enabler_array=[]
+	for item in task_enabler:
+		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
+	title="Loan Request Form Reprint"
+	form = searchForm(request.POST)
+	
+	members=[]
+	if request.method == "POST":
+		if request.POST.get("title")=="":
+			return HttpResponseRedirect(reverse('loan_application_reprint_search'))
+
+		members=searchMembers(form['title'].value(),'ACTIVE')
+
+	context={
+	'members':members,
+	'title':title,
+	'task_array':task_array,
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
+	
+	}
+	return render(request,'deskofficer_templates/loan_application_reprint_list_load.html',context)
+
+
+
+def Members_Loan_application_History_load(request,pk):
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	task_array=[]
+	for task in tasks:
+		task_array.append(task.task.title)
+
+	task_enabler=TransactionEnabler.objects.filter(status="YES")
+	task_enabler_array=[]
+	for item in task_enabler:
+		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
+	form=PersonalLedger_Transaction_Account_Load_form(request.POST or None)
+
+	applicants=[]
+	member=Members.objects.get(id=pk)
+	if request.method == 'POST':
+
+		start_date=request.POST.get('start_date')
+		stop_date=request.POST.get('stop_date')
+
+
+
+		date_format = '%Y-%m-%d'
+		tdate1 = datetime.datetime.strptime(start_date, date_format)
+		tdate2 = datetime.datetime.strptime(stop_date, date_format)
+
+		applicants=LoanApplicationShortListing.objects.filter(tdate__range=[tdate1,tdate2],applicant__applicant__member=member)
+
+	form.fields['start_date'].initial=get_current_date(now)
+	form.fields['stop_date'].initial=get_current_date(now)
+	context={
+	'form':form,
+	'member':member,
+	'applicants':applicants,
+	'task_array':task_array,
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
+	}
+	return render(request,'deskofficer_templates/Members_Loan_application_History_load.html',context)
 
 
 def Loan_processing_scheduling_dashboard(request):
@@ -6445,8 +9908,6 @@ def Loan_processing_scheduling_based_on_date(request):
 	for task in tasks:
 		task_array.append(task.task.title)
 
-
-
 	task_enabler=TransactionEnabler.objects.filter(status="YES")
 	task_enabler_array=[]
 	for item in task_enabler:
@@ -6488,376 +9949,6 @@ def Loan_processing_scheduling_based_on_date_processed(request,pk):
 	return HttpResponseRedirect(reverse('Loan_processing_scheduling_based_on_date'))
 
 
-
-
-def loan_application_approved_process_preview(request,pk):
-
-	now = datetime.datetime.now()
-	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
-	task_array=[]
-	for task in tasks:
-		task_array.append(task.task.title)
-
-	task_enabler=TransactionEnabler.objects.filter(status="YES")
-	task_enabler_array=[]
-	for item in task_enabler:
-		task_enabler_array.append(item.title)
-
-
-	default_password="NO"
-	if Staff.objects.filter(admin=request.user,default_password='YES'):
-		default_password="YES"
-
-	form=loan_application_approved_process_preview_form(request.POST or None)
-	transaction_period=TransactionPeriods.objects.get(status='ACTIVE')
-
-
-	processed_by=CustomUser.objects.get(id=request.user.id)
-	processed_by=processed_by.username
-	tdate=get_current_date(now)
-	applicant=LoanApplication.objects.get(id=pk)
-
-	nok_name = applicant.nok_name
-	nok_Relationship=applicant.nok_Relationship
-	nok_phone_no=applicant.nok_phone_no
-	nok_address=applicant.nok_address
-
-	guarantors = LoanApplicationGuarnators.objects.filter(applicant=applicant)
-
-	records=LoanApplicationSettings.objects.filter(applicant=applicant)
-
-	loan_type=applicant.applicant.applicant.loan.name
-
-	loan_amount=applicant.approved_amount
-	duration = applicant.duration
-	admin_charge = applicant.admin_charge
-	start_date=[]
-	stop_date=[]
-
-	interest_rate = applicant.applicant.applicant.loan.interest_rate
-	interest= float(int(interest_rate)/100) * float(applicant.loan_amount)
-	interest_deduction=applicant.applicant.applicant.loan.interest_deduction
-
-	if interest_deduction== "SOURCE":
-		amount_scheduled = float(loan_amount)
-	else:
-		amount_scheduled = float(loan_amount)+ float(interest)
-
-	monthly_repayment=math.ceil(float(amount_scheduled)/float(duration))
-
-	my_id=applicant.applicant.applicant.member.get_member_Id
-	loan_code=applicant.applicant.applicant.loan.code
-
-	button_show = False
-
-	if request.method=="POST" and 'btn-fetch' in request.POST:
-		# effective_date_add=request.POST.get('effective_date_add')
-		# if effective_date_add:
-		start_date=request.POST.get('effective_date')
-		start_date=datetime.datetime.strptime(start_date, '%Y-%m-%d')
-		stop_date = start_date+ relativedelta(months=int(duration))
-		start_date=get_current_date(start_date)
-		stop_date=get_current_date(stop_date)
-		button_show=True
-		# 	# form.fields['effective_date_add'].initial=True
-		# else:
-		# 	messages.error(request,"Please Accept the Effective Date")
-		# 	return HttpResponseRedirect(reverse('loan_application_approved_process_preview',args=(pk,)))
-
-
-
-	if request.method=="POST" and 'btn-process' in request.POST:
-		loan_number = generate_number(loan_code,my_id,now)
-		if loan_number==0:
-			messages.error(request,'Please set the loan Code')
-			return HttpResponseRedirect(reverse('loan_application_approved_process_preview',args=(pk,)))
-
-		form_print=request.POST.get('status')
-		member=applicant.applicant.applicant.member
-		effective_date_add=request.POST.get('effective_date_add')
-
-		if effective_date_add:
-			start_date=request.POST.get('effective_date')
-			start_date=datetime.datetime.strptime(start_date, '%Y-%m-%d')
-			stop_date = start_date+ relativedelta(months=int(duration))
-			start_date=get_current_date(start_date)
-			stop_date=get_current_date(stop_date)
-		else:
-			messages.error(request,"Please Accept the Effective Date")
-			return HttpResponseRedirect(reverse('loan_application_approved_process_preview',args=(pk,)))
-
-		transaction=applicant.applicant.applicant.loan
-
-		if not nok_name:
-			messages.error(request,"No Next of Kin recorded for this Member")
-			return HttpResponseRedirect(reverse('loan_application_approved_process_preview',args=(pk,)))
-
-		particulars=transaction.name + " Loan Issuance"
-		s = titlecase(particulars)
-		particulars=s
-		debit=abs(float(loan_amount)) #+float(interest))
-		credit=0
-		balance=-debit
-
-		post_to_ledger(member,
-						transaction,
-						loan_number,
-						particulars,
-						debit,
-						credit,
-						balance,
-						get_current_date(now),
-						'ACTIVE',
-						tdate,processed_by)
-
-
-		ledger_balance=balance
-
-		cash_book_balance=main_cashbook_balance()
-
-		ledger_particulars= particulars + '(' + str(loan_number) + ')'
-		debit=0
-		credit=abs(float(loan_amount))
-		balance=float(cash_book_balance)+float(credit)
-		ref_no=get_ticket()
-		status='ACTIVE'
-		tdate=get_current_date(now)
-		source='LOAN ISSUEANCE'
-		main_cashbook_posting(ledger_particulars,debit,credit,balance,ref_no,status,tdate,processed_by,source)
-
-
-
-		particulars=  "Interest on"  + transaction.name.title()
-		s = titlecase(particulars)
-		particulars=s
-		debit=abs(float(interest))
-		credit=0
-		balance=-(abs(float(ledger_balance)) + abs(float(interest)))
-
-		post_to_ledger(member,
-						transaction,
-						loan_number,
-						particulars,
-						debit,
-						credit,
-						balance,
-						get_current_date(now),
-						'ACTIVE',
-						tdate,processed_by)
-
-		ledger_balance=balance
-
-		cash_book_balance=main_cashbook_balance()
-
-		ledger_particulars= particulars + '(' + str(loan_number) + ')'
-		credit=0
-		debit=abs(float(debit))
-		balance=float(cash_book_balance)-float(debit)
-		ref_no=get_ticket()
-		status='ACTIVE'
-		tdate=get_current_date(now)
-		source='LOAN ISSUEANCE'
-		main_cashbook_posting(ledger_particulars,debit,credit,balance,ref_no,status,tdate,processed_by,source)
-
-
-
-
-		particulars=  "Admin Charges on :  "  + transaction.name.title()
-		s = titlecase(particulars)
-		particulars=s
-		debit=abs(float(admin_charge))
-		credit=0
-		balance=-(abs(float(ledger_balance)) + abs(float(admin_charge)))
-
-		post_to_ledger(member,
-						transaction,
-						loan_number,
-						particulars,
-						debit,
-						credit,
-						balance,
-						get_current_date(now),
-						'ACTIVE',
-						tdate,processed_by)
-
-		ledger_balance=balance
-
-		cash_book_balance=main_cashbook_balance()
-
-		ledger_particulars= particulars + '(' + str(loan_number) + ')'
-		credit=abs(float(admin_charge))
-		debit=0
-		balance=float(cash_book_balance)+float(credit)
-		ref_no=get_ticket()
-		status='ACTIVE'
-		tdate=get_current_date(now)
-		source='LOAN ISSUEANCE'
-		main_cashbook_posting(ledger_particulars,debit,credit,balance,ref_no,status,tdate,processed_by,source)
-
-
-		particulars=  "Deduction of Admin Charges from Source 0n:  "  + transaction.name.title()
-		s = titlecase(particulars)
-		particulars=s
-		debit=0
-		credit=abs(float(admin_charge))
-		balance=(float(ledger_balance) + abs(float(admin_charge)))
-
-		post_to_ledger(member,
-						transaction,
-						loan_number,
-						particulars,
-						debit,
-						credit,
-						balance,
-						get_current_date(now),
-						'ACTIVE',
-						tdate,processed_by)
-
-		ledger_balance=balance
-		cash_book_balance=main_cashbook_balance()
-
-		ledger_particulars= particulars + '(' + str(loan_number) + ')'
-		debit=abs(float(admin_charge))
-		credit=0
-		balance=float(cash_book_balance)-float(debit)
-		ref_no=get_ticket()
-		status='ACTIVE'
-		tdate=get_current_date(now)
-		source='LOAN ISSUEANCE'
-		main_cashbook_posting(ledger_particulars,debit,credit,balance,ref_no,status,tdate,processed_by,source)
-
-
-		if interest_deduction == "SOURCE":
-			particulars= "Interest Deduction at source"
-			s = titlecase(particulars)
-			particulars=s
-			debit=0
-			credit=float(interest)
-			balance=-(abs(float(ledger_balance)) - float(interest))
-
-			post_to_ledger(member,
-							transaction,
-							loan_number,
-							particulars,
-							debit,
-							credit,
-							balance,
-							get_current_date(now),
-							'ACTIVE',
-							tdate,processed_by)
-
-
-
-			Loans_Repayment_Base(member,
-								nok_name,
-								nok_Relationship,
-								nok_phone_no,
-								nok_address,
-								duration,
-								interest_deduction,
-								interest_rate,
-								interest,
-								admin_charge,
-								transaction,
-								loan_number,
-								float(loan_amount),
-								float(monthly_repayment),
-								-float(loan_amount),
-								0,
-								start_date,
-								stop_date,
-								processed_by,
-								'ACTIVE',
-								tdate,
-								'SCHEDULED')
-
-
-			cash_book_balance=main_cashbook_balance()
-
-			ledger_particulars= particulars + '(' + str(loan_number) + ')'
-			debit=abs(float(interest))
-			credit=0
-			balance=float(cash_book_balance)-float(debit)
-			ref_no=get_ticket()
-			status='ACTIVE'
-			tdate=get_current_date(now)
-			source='LOAN ISSUEANCE'
-			main_cashbook_posting(ledger_particulars,debit,credit,balance,ref_no,status,tdate,processed_by,source)
-
-		else:
-
-			Loans_Repayment_Base(member,
-								duration,
-								interest_deduction,
-								interest_rate,
-								interest,
-								admin_charge,
-								transaction,
-								loan_number,
-								float(amount_scheduled),
-								float(monthly_repayment),
-								-amount_scheduled,
-								0,
-								start_date,
-								stop_date,
-								processed_by,
-								'ACTIVE',
-								tdate,
-								'SCHEDULED')
-
-
-		loan = LoansRepaymentBase.objects.get(loan_number=loan_number)
-		for guarantor in guarantors:
-			LoanGuarantors(loan=loan,member=guarantor.guarantor).save()
-
-		applicant.transaction_status='TREATED'
-		applicant.save()
-
-		if applicant.applicant.applicant.loan.auto_stop_savings == 'YES':
-			savings=LoanBasedSavings.objects.all()
-			if savings:
-				record=LoanBasedSavings.objects.all().first()
-				StandingOrderAccounts.objects.filter(transaction__transaction=record.savings,transaction__member=member).update(status='INACTIVE')
-
-				queryset=StandingOrderAccounts.objects.get(transaction__transaction=record.savings,transaction__member=member)
-				StandingOrderDeactivatedAccounts(transaction=queryset,status='UNTREATED',processed_by=processed_by.username,tdate=tdate).save()
-
-
-
-
-		return HttpResponseRedirect(reverse('Loan_application_processing_confirmation',args=(loan_number,)))
-
-
-
-
-
-
-	form.fields['effective_date'].initial=transaction_period.transaction_period
-
-
-	context={
-	'button_show':button_show,
-	'start_date':start_date,
-	'stop_date':stop_date,
-	'loan_type':loan_type,
-	'applicant':applicant,
-	'loan_amount':loan_amount,
-	'pk':pk,
-	'duration':duration,
-	'interest_rate':interest_rate,
-	'interest_deduction':interest_deduction,
-	'interest':interest,
-	'monthly_repayment':monthly_repayment,
-	'amount_scheduled':amount_scheduled,
-	'records':records,
-	'admin_charge':admin_charge,
-	'form':form,
-	'task_array':task_array,
-	'task_enabler_array':task_enabler_array,
-	'default_password':default_password,
-	}
-
-	return render(request,'deskofficer_templates/loan_application_approved_process_preview.html',context)
 
 
 

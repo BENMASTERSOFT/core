@@ -1,0 +1,53 @@
+{% extends 'deskofficer_templates/base_template.html' %}
+{% load static %}
+
+{% block content %}
+            <div class="page-content fade-in-up">
+                <div class="row">
+                   
+                    <div class="col-xl-12">
+                        <div class="ibox">
+                            <div class="ibox-head">
+                                <div class="ibox-title">LIST OF ACTIVE LOAN REQUEST | <a href="{% url 'Project_Loan_Dashboard_Load' %}" class="btn btn-secondary">Back</a></div>
+                            </div>
+                           
+                            <div class="ibox-body">
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Member ID</th>
+                                            <th>Name</th>
+                                            <th>Description</th>
+                                            <th>Amount</th>
+                                            <th>Date</th>
+                                            <th colspan="2">Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for record in records %}
+                                        <tr>
+                                            <td>{{forloop.counter}}</td>
+                                            <td>{{record.member.coop_no}}</td>
+                                            <td>{{record.member.get_full_name}}</td>
+                                            <td>{{record.loan.name}}</td>
+                                            <td>{{record.loan_amount}}</td>
+                                            <td>{{record.date_applied}}</td>
+                                            <td><a href="{% url 'loan_request_delete_record' record.pk %}" class="btn btn-danger">Drop</a></td>
+                                            <td><a href="{% url 'loan_request_archive_record' record.pk %}" class="btn btn-danger">Archive</a></td>
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+               
+           
+            </div>
+  <div class="sidenav-backdrop backdrop"></div>
+    <div class="preloader-backdrop">
+        <div class="page-preloader">Loading</div>
+    </div>
+{% endblock %}

@@ -1,0 +1,82 @@
+{% extends 'deskofficer_templates/base_template.html' %}
+{% load static %}
+
+{% block content %}
+            <div class="page-content fade-in-up">
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="ibox">
+                            <div class="ibox-head">
+                                <div class="ibox-title">Transaction Period Selection | {{member.get_full_name}} | {{member.coop_no}}</div>
+                                
+                            </div>
+                            <div class="ibox-body">
+                                <form class="form-horizontal" method="POST" action="" enctype="multipart/form-data" novalidate>
+                                         {% csrf_token %}
+                                    <div class="row">
+                                        <div class="col-sm-6 form-group">
+                                            <label>Start Date</label>
+                                            {{form.start_date}}
+                                        </div>
+                                        <div class="col-sm-6 form-group">
+                                            <label>End Date</label>
+                                            {{form.stop_date}}
+                                        </div>
+                                    </div>
+                                   
+                                    <div class="form-group">
+                                        <button class="btn btn-secondary" type="submit">Display</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+             <div class="row">                 
+                    <div class="col-xl-12">
+                        <div class="ibox">
+                            <div class="ibox-head">
+                                <div class="ibox-title">Transaction History</div>
+                            </div>
+                            <div class="ibox-body">
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Description</th>
+                                            <th>Amount Applied</th>
+                                            <th>Date Applied</th>
+                                            <th>Amount Approved</th>
+                                            <th>Date Approved</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for item in applicants %}
+                                        <tr>
+                                            <td>{{forloop.counter}}</td>
+                                            <td>{{item.loan.name}}</td>
+                                            <td>{{item.loan_amount}}</td>
+                                            <td>{{item.date_applied}}</td>
+                                            <td>{{item.loan_amount}}</td>
+                                            <td>{{item.date_approved}}</td>
+                                            <td><a href="{% url 'loan_application_request_form_issuanace_confirmation' item.receipt %}" class="btn btn-secondary">Print</a></td>
+                                        
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+
+
+    <div class="sidenav-backdrop backdrop"></div>
+    <div class="preloader-backdrop">
+        <div class="page-preloader">Loading</div>
+    </div>
+{% endblock %}
