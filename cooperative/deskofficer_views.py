@@ -1776,9 +1776,10 @@ def membership_form_sales_issue(request,pk):
 	applicant=MemberShipRequest.objects.get(id=pk)
 	account=[]
 	account_name=[]
-	# if CooperativeBankAccountsOperationalDesignations.objects.filter(transaction__title='MEMBERSHIP REGISTRATION').exists():
-	# 	account = CooperativeBankAccountsOperationalDesignations.objects.get(transaction__code='100')
-	# 	account_name = account.account.account_name + ' - ' + str(account.account.account_number) + ' - ' + str(account.account.bank)
+	if CooperativeBankAccountsOperationalDesignations.objects.filter(transaction__title='MEMBERSHIP REGISTRATION').exists():
+		return HttpResponse("oodjdjdjdj")
+		account = CooperativeBankAccountsOperationalDesignations.objects.get(transaction__code='100')
+		account_name = account.account.account_name + ' - ' + str(account.account.account_number) + ' - ' + str(account.account.bank)
 
 	shares_uint_cost=0
 	if MembersShareConfigurations.objects.all().exists():
@@ -15350,8 +15351,246 @@ def members_exclusiveness_approved_processed(request,pk):
 
 
 #########################################################
+############### COOPERATIVE BANK INFO#####################
+#########################################################
+def Cooperative_Bank_Account_Dashboard(request):
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	task_array=[]
+	for task in tasks:
+		task_array.append(task.task.title)
+
+
+
+	task_enabler=TransactionEnabler.objects.filter(status="YES")
+	task_enabler_array=[]
+	for item in task_enabler:
+		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
+	approval_status="PENDING"
+	status='UNTREATED'
+
+
+	context={
+	'task_array':task_array,
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
+	}
+	return render(request,'deskofficer_templates/Cooperative_Bank_Account_Dashboard.html',context)
+
+def CooperativeBankAccounts_add_Deskoffice(request):
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	task_array=[]
+	for task in tasks:
+		task_array.append(task.task.title)
+
+
+
+	task_enabler=TransactionEnabler.objects.filter(status="YES")
+	task_enabler_array=[]
+	for item in task_enabler:
+		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+	
+	form=CooperativeBankAccounts_form(request.POST or None)
+	banks=CooperativeBankAccounts.objects.all()
+	if request.method == 'POST':
+		bank_id=request.POST.get('bank')
+		bank=Banks.objects.get(id=bank_id)
+
+		account_type=request.POST.get('account_type')
+
+		account_name=request.POST.get('account_name')
+		account_number=request.POST.get('account_number')
+		sort_code=request.POST.get('sort_code')
+
+		if CooperativeBankAccounts.objects.filter(bank=bank,account_number=account_number).exists():
+			messages.error(request,'This account Number is already in Use')
+			return HttpResponseRedirect(reverse('CooperativeBankAccounts_add_Deskoffice'))
+
+		record=CooperativeBankAccounts(bank=bank,account_type=account_type,account_name=account_name,account_number=account_number,sort_code=sort_code)
+		record.save()
+
+		messages.success(request,"Record Added Successfully")
+		return HttpResponseRedirect(reverse('CooperativeBankAccounts_add_Deskoffice'))
+
+	context={
+	'task_array':task_array,
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
+	'form':form,
+	'banks':banks,
+	}
+	return render(request,'deskofficer_templates/CooperativeBankAccounts_add_Deskoffice.html',context)
+
+
+def CooperativeBankAccounts_Deskoffice_Remove(request,pk):
+    record=CooperativeBankAccounts.objects.get(id=pk)
+    record.delete()
+    return HttpResponseRedirect(reverse('CooperativeBankAccounts_add_Deskoffice'))
+
+
+def CooperativeBankAccounts_Update_Deskoffice(request,pk):
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	task_array=[]
+	for task in tasks:
+		task_array.append(task.task.title)
+
+	task_enabler=TransactionEnabler.objects.filter(status="YES")
+	task_enabler_array=[]
+	for item in task_enabler:
+		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
+	form=CooperativeBankAccounts_form(request.POST or None)
+	record=CooperativeBankAccounts.objects.get(id=pk)
+
+	form.fields['account_name'].initial=record.account_name
+	form.fields['account_number'].initial=record.account_number
+	form.fields['bank'].initial=record.bank.id
+	form.fields['account_type'].initial=record.account_type
+	form.fields['sort_code'].initial=record.sort_code
+	if request.method=="POST":
+		bank_id=request.POST.get('bank')
+		bank=Banks.objects.get(id=bank_id)
+
+		account_type= request.POST.get('account_type')
+		account_name=request.POST.get('account_name')
+		account_number=request.POST.get('account_number')
+		sort_code=request.POST.get('sort_code')
+
+		record.bank=bank
+		record.account_type=account_type
+		record.account_name=account_name
+		record.account_number=account_number
+		record.sort_code=sort_code
+		record.save()
+		return HttpResponseRedirect(reverse('CooperativeBankAccounts_add_Deskoffice'))
+	context={
+	'task_array':task_array,
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
+	'form':form,
+	}
+	return render(request,'deskofficer_templates/CooperativeBankAccounts_Update_Deskoffice.html',context)
+
+
+def BankAccounts_Designation_Deskoffice_List_Load(request):
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	task_array=[]
+	for task in tasks:
+		task_array.append(task.task.title)
+
+	task_enabler=TransactionEnabler.objects.filter(status="YES")
+	task_enabler_array=[]
+	for item in task_enabler:
+		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
+	banks=CooperativeBankAccounts.objects.all()
+
+	context={
+	'task_array':task_array,
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
+	'banks':banks,
+	}
+	return render(request,'deskofficer_templates/BankAccounts_Designation_Deskoffice_List_Load.html',context)
+
+
+def BankAccounts_Designation_Process_Deskoffice(request,pk):
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	task_array=[]
+	for task in tasks:
+		task_array.append(task.task.title)
+
+
+
+	task_enabler=TransactionEnabler.objects.filter(status="YES")
+	task_enabler_array=[]
+	for item in task_enabler:
+		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
+	form=BankAccounts_Designation_Process_form(request.POST or None)
+	bank=CooperativeBankAccounts.objects.get(id=pk)
+
+
+	records=CooperativeBankAccountsOperationalDesignations.objects.filter(account=bank)
+	if request.method == "POST":
+		transaction_id=request.POST.get('transactions')
+		transaction=CooperativeBankAccountsDesignationHeaders.objects.get(id=transaction_id)
+
+		CooperativeBankAccountsOperationalDesignations(account=bank,transaction=transaction,status='ACTIVE').save()
+		return HttpResponseRedirect(reverse('BankAccounts_Designation_Process_Deskoffice',args=(pk,)))
+
+	context={
+	'task_array':task_array,
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
+	'bank':bank,
+	'form':form,
+	'records':records,
+	}
+	return render(request,'deskofficer_templates/BankAccounts_Designation_Process_Deskoffice.html',context)
+
+
+def BankAccounts_Designation_Deskoffice_Delete(request,pk):
+    record=CooperativeBankAccountsOperationalDesignations.objects.get(id=pk)
+    pk=record.account.pk
+    record.delete()
+    return HttpResponseRedirect(reverse('BankAccounts_Designation_Process_Deskoffice',args=(pk,)))
+
+
+#########################################################
 ############### MEMBERS BANK INFO#####################
 #########################################################
+def Members_Bank_Account_Dashboard_Load(request):
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	task_array=[]
+	for task in tasks:
+		task_array.append(task.task.title)
+
+
+
+	task_enabler=TransactionEnabler.objects.filter(status="YES")
+	task_enabler_array=[]
+	for item in task_enabler:
+		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
+	approval_status="PENDING"
+	status='UNTREATED'
+
+
+	context={
+
+
+	'task_array':task_array,
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
+	}
+	return render(request,'deskofficer_templates/Members_Bank_Account_Dashboard_Load.html',context)
+
+
 
 def MembersBankAccounts_list_search(request):
 	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)

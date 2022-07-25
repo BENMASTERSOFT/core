@@ -1177,6 +1177,7 @@ class membership_form_sales_issue_form(forms.Form):
                              widget=DateInput(attrs={'class': 'form-control'}),
                              error_messages={'required': "This field is required."})
 
+
 class CooperativeBankAccounts_form(forms.Form):
    account_name = forms.CharField(label="Payment Reference",max_length=255,required=True,widget=forms.TextInput(attrs={"class":"form-control"}))
    account_number =  forms.CharField(label="Account Number",max_length=10,required=True,widget=forms.TextInput(attrs={"class":"form-control"}))

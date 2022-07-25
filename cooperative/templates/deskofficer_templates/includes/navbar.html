@@ -18,7 +18,7 @@
 
 
 
-                <li class="heading"> <a href="{% url 'desk_widgets_form' %}">FEATURES</a>  </li>
+                <li class="heading"> FEATURES </li>
 
                 {% if default_password == "NO" %}
 
@@ -513,10 +513,10 @@
                             <span class="nav-label">Bank Accounts</span><i class="fa fa-angle-left arrow"></i></a>
                         <ul class="nav-2-level collapse">
                             <li>
-                                <a href="{% url 'MembersBankAccounts_list_search' %}">Add Account</a>
+                                <a href="{% url 'Members_Bank_Account_Dashboard_Load' %}">Members Bank Accounts</a>
                             </li>
                             <li>
-                                <a href="{% url 'Members_Bank_Accounts_edit_search' %}">Manage Accounts</a>
+                                <a href="{% url 'Cooperative_Bank_Account_Dashboard' %}">Cooperative  Bank Accounts</a>
                             </li>
 
                         </ul>

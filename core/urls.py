@@ -639,7 +639,16 @@ urlpatterns = [
 
     path('Transaction_Loan_adjustment_Transaction_Approved_List_Load/', deskofficer_views.Transaction_Loan_adjustment_Transaction_Approved_List_Load,name='Transaction_Loan_adjustment_Transaction_Approved_List_Load'),
     path('Transaction_Loan_adjustment_Transaction_Approved_details_Processed/<str:pk>/', deskofficer_views.Transaction_Loan_adjustment_Transaction_Approved_details_Processed,name='Transaction_Loan_adjustment_Transaction_Approved_details_Processed'),
+    
+    path('Cooperative_Bank_Account_Dashboard/', deskofficer_views.Cooperative_Bank_Account_Dashboard,name='Cooperative_Bank_Account_Dashboard'),
+    path('CooperativeBankAccounts_add_Deskoffice/', deskofficer_views.CooperativeBankAccounts_add_Deskoffice,name='CooperativeBankAccounts_add_Deskoffice'),
+    path('CooperativeBankAccounts_Deskoffice_Remove/<str:pk>/', deskofficer_views.CooperativeBankAccounts_Deskoffice_Remove,name='CooperativeBankAccounts_Deskoffice_Remove'),
+    path('CooperativeBankAccounts_Update_Deskoffice/<str:pk>/', deskofficer_views.CooperativeBankAccounts_Update_Deskoffice,name='CooperativeBankAccounts_Update_Deskoffice'),
+    path('BankAccounts_Designation_Deskoffice_List_Load/', deskofficer_views.BankAccounts_Designation_Deskoffice_List_Load,name='BankAccounts_Designation_Deskoffice_List_Load'),
+    path('BankAccounts_Designation_Process_Deskoffice/<str:pk>/', deskofficer_views.BankAccounts_Designation_Process_Deskoffice,name='BankAccounts_Designation_Process_Deskoffice'),
+    path('BankAccounts_Designation_Deskoffice_Delete/<str:pk>/', deskofficer_views.BankAccounts_Designation_Deskoffice_Delete,name='BankAccounts_Designation_Deskoffice_Delete'),
 
+    path('Members_Bank_Account_Dashboard_Load/', deskofficer_views.Members_Bank_Account_Dashboard_Load,name='Members_Bank_Account_Dashboard_Load'),
     path('MembersBankAccounts_list_search/', deskofficer_views.MembersBankAccounts_list_search,name='MembersBankAccounts_list_search'),
     path('MembersBankAccounts_list_load/', deskofficer_views.MembersBankAccounts_list_load,name='MembersBankAccounts_list_load'),
     path('Members_Bank_Accounts/<str:pk>/', deskofficer_views.Members_Bank_Accounts,name='Members_Bank_Accounts'),
