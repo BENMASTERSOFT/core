@@ -8,7 +8,7 @@
                     <div class="col-xl-10">
                         <div class="ibox">
                             <div class="ibox-head">
-                                <div class="ibox-title">Personal Ledger Details</div>
+                                <div class="ibox-title">{{member.member.get_full_name}} | Personal Ledger Details | <a href="{% url 'Members_Dashboard_Load' member.member_id %}">Back</a> </div>
                             </div>
                             <div class="ibox-body">
                                 <table class="table">

@@ -1072,6 +1072,26 @@ class MemberShipRequestAdditionalInfo_form(forms.Form):
                               disabled = False)
 
 
+class loan_request_active_update_form(forms.Form):
+   savings = forms.DecimalField(initial=0,label='Savings Amount', label_suffix=" : ", min_value=0,  max_digits=20,
+                              widget=forms.NumberInput(attrs={'class': 'form-control'}),
+                              decimal_places=2, required=False,
+                              disabled = False)
+   loan_amount = forms.DecimalField(initial=0,label='Loan Amount', label_suffix=" : ", min_value=0,  max_digits=20,
+                                 widget=forms.NumberInput(attrs={'class': 'form-control'}),
+                                 decimal_places=2, required=False,
+                                 disabled = False)
+   applied_amount = forms.DecimalField(initial=0,label='Applied Amount', label_suffix=" : ", min_value=0,  max_digits=20,
+                                 widget=forms.NumberInput(attrs={'class': 'form-control'}),
+                                 decimal_places=2, required=False,
+                                 disabled = False)
+   
+   net_pay = forms.DecimalField(initial=0,label='Net Pay', label_suffix=" : ", min_value=0,  max_digits=20,
+                                 widget=forms.NumberInput(attrs={'class': 'form-control'}),
+                              decimal_places=2, required=False,
+                              disabled = False)
+
+
 
 
 class MemberShipRequestAdditionalAttachment_form(forms.Form):
@@ -1177,6 +1197,16 @@ class membership_form_sales_issue_form(forms.Form):
                              widget=DateInput(attrs={'class': 'form-control'}),
                              error_messages={'required': "This field is required."})
 
+
+   account_list=[]
+   try:
+      accounts = CooperativeBankAccountsOperationalDesignations.objects.filter(transaction__title='MEMBERSHIP REGISTRATION')
+      for account in accounts:
+         small_account=(account.id,f'{account.account.account_name}-{account.account.account_number}-{account.account.bank.title}')
+         account_list.append(small_account)
+   except:
+      account_list=[]
+   account_name = forms.ChoiceField(label="account", choices=account_list,widget=forms.Select(attrs={"class":"form-control"}))
 
 class CooperativeBankAccounts_form(forms.Form):
    account_name = forms.CharField(label="Payment Reference",max_length=255,required=True,widget=forms.TextInput(attrs={"class":"form-control"}))
@@ -1444,6 +1474,18 @@ class loan_request_shortlisting_process_form(forms.Form):
                               decimal_places=2, required=False,
                               disabled = False,
                               error_messages={'required': "Please Enter Amount"})
+  
+   net_pay = forms.DecimalField(initial=0,label='Net Pay', label_suffix=" : ", min_value=0,  max_digits=20,
+                              widget=forms.NumberInput(attrs={'class': 'form-control','readonly':'readonly'}),
+                              decimal_places=2, required=False,
+                              disabled = False,
+                              error_messages={'required': "Please Enter Amount"})
+   savings = forms.DecimalField(initial=0,label='Savings', label_suffix=" : ", min_value=0,  max_digits=20,
+                              widget=forms.NumberInput(attrs={'class': 'form-control','readonly':'readonly'}),
+                              decimal_places=2, required=False,
+                              disabled = False,
+                              error_messages={'required': "Please Enter Amount"})
+   
    date_shortlisted = forms.DateField(label='Date Shortlisted', label_suffix=" : ",
                              required=True, disabled=False,
                              widget=DateInput(attrs={'class': 'form-control'}),
@@ -1904,6 +1946,7 @@ class loan_application_processing_form(forms.Form):
 
 class members_exclusiveness_request_register_form(forms.Form):
    purpose=forms.CharField(label="Purpose",max_length=150,widget=forms.TextInput(attrs={"class":"form-control"}), required=True)
+  
    exceptable_list=[]
    try:
       exceptables = ExceptableCriterias.objects.all()
@@ -1912,7 +1955,7 @@ class members_exclusiveness_request_register_form(forms.Form):
          exceptable_list.append(small_exceptable)
    except:
       exceptable_list=[]
-   exceptables = forms.ChoiceField(label="Exceptables", choices=exceptable_list,widget=forms.Select(attrs={"class":"form-control"}))
+   task = forms.ChoiceField(label="Exceptables", choices=exceptable_list,widget=forms.Select(attrs={"class":"form-control"}))
 
    transaction_list=[]
    try:

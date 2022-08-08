@@ -5,7 +5,7 @@
             <div class="page-content fade-in-up">
                 
                 <div class="row">
-                    <div class="col-md-6">
+                    <div class="col-md-10">
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="ibox">
@@ -35,23 +35,13 @@
                                                 </div>
                                             </div>
                                             <div class="form-group row">
-                                                <label class="col-sm-2 col-form-label">Period</label>
-                                                <div class="col-sm-10">
-                                                    {{form.period}}
-                                                </div>
-                                            </div>                                    
-                                            <div class="form-group row">
-                                                <label class="col-sm-2 col-form-label">Batch</label>
-                                                <div class="col-sm-10">
-                                                    {{form.batch}}
-                                                </div>
-                                            </div>   
-                                            <div class="form-group row">
                                                 <label class="col-sm-2 col-form-label">Task</label>
                                                 <div class="col-sm-10">
-                                                    {{form.exceptables}}
+                                                    {{form.task}}
                                                 </div>
                                             </div>
+                                            
+                                         
                                             <div class="form-group row">
                                                 <label class="col-sm-2 col-form-label">State Reasons</label>
                                                 <div class="col-sm-10">
@@ -88,8 +78,8 @@
                                             <th>#</th>
                                             <th>Transaction</th>
                                             <th>Purpose</th>
-                                            <th>Batch</th>
                                             <th>Task</th>
+                                            
                                             <th>Action</th>
                                            
                                         </tr>
@@ -100,8 +90,8 @@
                                             <td>{{forloop.counter}}</td>
                                             <td>{{item.transaction.name}}</td>
                                             <td>{{item.purpose}}</td>
-                                            <td>{{item.period.title}} {{item.batch.title}}</td>
                                             <td>{{item.task.title}}</td>
+                                          
                                             <td><a href="{% url 'members_wavers_request_delete' item.pk return_pk %}" class="btn btn-danger">Remove</a></td>
                                            
                                         </tr>

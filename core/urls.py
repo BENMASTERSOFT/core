@@ -679,6 +679,7 @@ urlpatterns = [
     path('Emergency_loan_application_form_processing/<str:pk>/', deskofficer_views.Emergency_loan_application_form_processing,name='Emergency_loan_application_form_processing'),
     path('Emergency_loan_application_preview/<str:pk>/<str:return_pk>/<str:loan_path>/', deskofficer_views.Emergency_loan_application_preview,name='Emergency_loan_application_preview'),
     path('Emergency_Loan_application_active_list_load/', deskofficer_views.Emergency_Loan_application_active_list_load,name='Emergency_Loan_application_active_list_load'),
+    path('Emergency_Loan_application_active_drop/<str:pk>/', deskofficer_views.Emergency_Loan_application_active_drop,name='Emergency_Loan_application_active_drop'),
     path('Emergency_Loan_application_history_period_load/', deskofficer_views.Emergency_Loan_application_history_period_load,name='Emergency_Loan_application_history_period_load'),
     
     path('Emergency_loan_application_form_processing_guarantor_search/<str:pk>/', deskofficer_views.Emergency_loan_application_form_processing_guarantor_search,name='Emergency_loan_application_form_processing_guarantor_search'),
@@ -716,6 +717,7 @@ urlpatterns = [
     path('loan_request_active_load/', deskofficer_views.loan_request_active_load,name='loan_request_active_load'),
     path('loan_request_delete_record/<str:pk>/', deskofficer_views.loan_request_delete_record,name='loan_request_delete_record'),
     path('loan_request_archive_record/<str:pk>/', deskofficer_views.loan_request_archive_record,name='loan_request_archive_record'),
+    path('loan_request_active_update/<str:pk>/', deskofficer_views.loan_request_active_update,name='loan_request_active_update'),
     
     path('loan_request_history_period_load/', deskofficer_views.loan_request_history_period_load,name='loan_request_history_period_load'),
     path('loan_request_order_KIV/', deskofficer_views.loan_request_order_KIV,name='loan_request_order_KIV'),

@@ -27,6 +27,7 @@
                                     <th>Issued Date</th>
                            
                                     <th>Receipt No</th>
+                                    <th>Action</th>
                               
                              
                                 </tr>
@@ -41,6 +42,7 @@
                                     <th>Issued Date</th>
                             
                                     <th>Receipt No</th>
+                                    <th>Action</th>
                                  
                              
                                 </tr>
@@ -56,7 +58,7 @@
                                     <td>{{loan.applicant.tdate}}</td>
                             
                                     <td>{{loan.applicant.receipt}}</td>
-                                    
+                                    <td><a href="{% url 'Emergency_Loan_application_active_drop' loan.pk %}">Drop</a></td>
                                 </tr>
                                  {% endfor %}
                                

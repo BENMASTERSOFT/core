@@ -5,10 +5,10 @@
             <div class="page-content fade-in-up">
                 
                 <div class="row">    
-                    <div class="col-md-6">
+                    <div class="col-md-8">
                         <div class="ibox">
                             <div class="ibox-head">
-                                <div class="ibox-title">{{title}} | {{member.get_full_name}} |  <input type="button" class="btn btn-secondary" value="Back" onclick="history.back()"/></div>
+                                <div class="ibox-title">{{title}} | {{member.get_full_name}} |  <a href="{% url 'Members_Next_Of_Kins_search' %}">Back</a></div>
                                 
                             </div>
                             <div class="form-group">
