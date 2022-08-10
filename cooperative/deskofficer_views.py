@@ -783,6 +783,7 @@ def deskofficer_home(request):
 	# print("***************************************")
 	# records=AuxillaryDeductions.objects.filter(transaction_status='UNTREATED')
 	# print(records)
+	
 	applicants=MemberShipRequest.objects.filter(transaction_status='UNTREATED',approval_status='APPROVED').count()
 
 	title="System User"
@@ -13196,7 +13197,7 @@ def upload_AuxillaryDeductionsResource(request,pk):
 		for data in imported_data:
 			value = AuxillaryDeductions(tdate=tdate,salary_institution=salary_institution,
 					transaction_period=transaction_period,
-					ippis_no=str(data[0])[:-2],
+					ippis_no=str(data[0]),
 					name=data[1],
 					amount=data[2],
 					coop_no=(str(data[3])[:-2]).zfill(5),
@@ -13330,6 +13331,7 @@ def Monthly_Deduction_Generated_Update_Transaction_period_Load(request,pk):
 	records=[]
 	transaction_period=get_current_date(now)
 	button_show=False
+	
 	if request.method == 'POST':
 		transaction_period_id = request.POST.get('transaction_period')
 		date_format = '%Y-%m-%d'
@@ -13352,12 +13354,7 @@ def Monthly_Deduction_Generated_Update_Transaction_period_Load(request,pk):
 	'task_enabler_array':task_enabler_array,
 	'default_password':default_password,
 	}
-
-
 	return render(request,'deskofficer_templates/Monthly_Deduction_Generated_Update_Transaction_period_Load.html',context)
-
-
-
 
 
 def Monthly_Auxillary_Imported_Deduction_View_List_Institution_Load(request):
@@ -25628,6 +25625,129 @@ def commodity_loan_trending_products(request):
 	}
 	return render(request,'deskofficer_templates/commodity_loan_trending_products.html',context)
 
+def commodity_loan_invoicing_dashboard_load(request):
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	task_array=[]
+	for task in tasks:
+		task_array.append(task.task.title)
+
+
+
+	task_enabler=TransactionEnabler.objects.filter(status="YES")
+	task_enabler_array=[]
+	for item in task_enabler:
+		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
+	# records =TransactionTypes.objects.filter(category='NON-MONETARY')
+	context={
+	'task_array':task_array,
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
+	# 'records':records,
+	# 'transaction':transaction,
+	}
+	return render(request,'deskofficer_templates/commodity_loan_invoicing_dashboard_load.html',context)
+
+def commodity_loan_custom_invoicing_search(request):
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	task_array=[]
+	for task in tasks:
+		task_array.append(task.task.title)
+
+
+
+	task_enabler=TransactionEnabler.objects.filter(status="YES")
+	task_enabler_array=[]
+	for item in task_enabler:
+		task_enabler_array.append(item.title)
+
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
+	title="Search Member For Custom Invoicing Loan"
+	form = searchForm(request.POST or None)
+
+	return render(request,'deskofficer_templates/commodity_loan_custom_invoicing_search.html',{'form':form,'title':title,'task_array':task_array,
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,})
+
+
+def commodity_loan_custom_invoicing_list_load(request):
+
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	task_array=[]
+	for task in tasks:
+		task_array.append(task.task.title)
+
+
+
+	task_enabler=TransactionEnabler.objects.filter(status="YES")
+	task_enabler_array=[]
+	for item in task_enabler:
+		task_enabler_array.append(item.title)
+
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
+	title="Loan Request order"
+	form = searchForm(request.POST)
+
+	if request.method == "POST":
+		if request.POST.get("title")=="":
+			return HttpResponseRedirect(reverse('commodity_loan_custom_invoicing_search'))
+
+		members=searchMembers(form['title'].value(),'ACTIVE')
+
+		context={
+		'members':members,
+		'title':title,
+		'task_array':task_array,
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
+		}
+		return render(request,'deskofficer_templates/commodity_loan_custom_invoicing_list_load.html',context)
+
+
+
+def commodity_loan_custom_invoicing_processing(request,pk):
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	task_array=[]
+	for task in tasks:
+		task_array.append(task.task.title)
+
+
+
+	task_enabler=TransactionEnabler.objects.filter(status="YES")
+	task_enabler_array=[]
+	for item in task_enabler:
+		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+	form=commodity_loan_custom_invoicing_processing_Form(request.POST or None)
+	member =Members.objects.get(id=pk)
+	records=Commodity_Loan_Invoicing_Products_Selection_Temp.objects.filter(member=member)
+
+	if request.method == 'POST':
+		return HttpResponse("OKKKSSS")
+	context={
+	'task_array':task_array,
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
+	'records':records,
+	'member':member,
+	'form':form,
+	}
+	return render(request,'deskofficer_templates/commodity_loan_custom_invoicing_processing.html',context)
 
 def commodity_loan_trending_products_load(request,pk):
 	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)

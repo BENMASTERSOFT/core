@@ -1920,6 +1920,18 @@ class Commodity_Loan_Upload_Transaction_Details(DateObjectsModels):
     #     db_table="Commodity_Loan_Upload_Transaction_Details"
 
 
+class Commodity_Loan_Invoicing_Products_Selection_Temp(DateObjectsModels):
+    member=models.ForeignKey(Members,on_delete=models.CASCADE)
+    product=models.TextField()
+    rate= models.DecimalField(max_digits=20,decimal_places = 2,default=0)
+    quantity= models.PositiveSmallIntegerField(validators=[MinValueValidator(0)],default=0)
+    total= models.DecimalField(max_digits=20,decimal_places = 2,default=0)
+   
+
+    # class Meta(DateObjectsModels.Meta):
+    #     db_table="Commodity_Loan_Invoicing_Products_Selection_Temp"
+
+
 
 
 
@@ -2004,6 +2016,8 @@ class CashBook_Shop(DateObjectsModels):
 
     # class Meta(DateObjectsModels.Meta):
     #     db_table="CashBook_Shop"
+
+
 
 
 ####################################################################

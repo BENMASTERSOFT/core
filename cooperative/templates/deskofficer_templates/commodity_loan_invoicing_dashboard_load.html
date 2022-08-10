@@ -1,0 +1,59 @@
+{% extends 'deskofficer_templates/base_template.html' %}
+{% load static %}
+
+    {% block content %}
+    <!-- Content Header (Page header) -->
+   
+     <h5 class="mb-2">COMMODITY LOAN INVOICING</h5>
+        <div class="row">          
+          <!-- /.col -->
+           <!-- /.col -->
+          <div class="col-md-3">           
+            <div class="card card-success">
+              <div class="card-header">
+                <h3 class="card-title">Custom Invoice</h3>
+
+                  <!-- /.card-tools -->
+              </div>
+              <!-- /.card-header -->
+              <div class="card-body">
+                
+                <a href="{% url 'commodity_loan_custom_invoicing_search' %}">Proceed</a> | 
+                  <a href="#">Active</a>
+                  | <a href="#">History</a>
+              </div>
+              <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+          </div>
+
+          <div class="col-md-3">
+           <div class="card card-primary">
+              <div class="card-header">
+                <h3 class="card-title">Normal Invoice</h3>
+
+                
+                <!-- /.card-tools -->
+              </div>
+              <!-- /.card-header -->
+              <div class="card-body">
+                <a href="{% url 'Embergency_loan_Form_Application_search' %}">Proceed</a>
+                | <a href="{% url 'Emergency_Loan_application_active_list_load' %}">Active</a>
+                | <a href="{% url 'Emergency_Loan_application_history_period_load' %}">History</a>  
+          
+              </div>
+              <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+          </div>
+          <!-- /.col -->
+        </div>
+      
+       
+         
+   
+
+    <!-- /.content -->
+   {% endblock %} 
+
+

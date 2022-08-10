@@ -4489,7 +4489,18 @@ class Monthly_Deduction_Generated_Update_Details_Process_Form(forms.Form):
                               disabled = False,
                               error_messages={'required': "Please Enter Amount Paid"})
 
-
+class commodity_loan_custom_invoicing_processing_Form(forms.Form):
+   quantity = forms.IntegerField(initial=0,label='Quantity', label_suffix=" : ", min_value=0,  required=False,
+                                 widget=forms.NumberInput(attrs={'class': 'form-control'}),
+                                disabled = False, error_messages={'required': "Please Min Unit"})
+   
+   description= forms.CharField(widget=forms.Textarea(attrs={"rows":2, "cols":50}),required=True)
+   rate = forms.DecimalField(initial=0,label='Rate', label_suffix=" : ", min_value=0,  max_digits=20,
+                              widget=forms.NumberInput(attrs={'class': 'form-control'}),
+                              decimal_places=2, required=True,
+                              disabled = False,
+                              error_messages={'required': "Please Enter Amount Paid"})
+  
 # CURRENT DATE
 
 # class Rental_Products_List_Load_Form(forms.Form):

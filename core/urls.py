@@ -1261,6 +1261,10 @@ urlpatterns = [
     path('commodity_loan_trending_products_load/<str:pk>/', deskofficer_views.commodity_loan_trending_products_load,name='commodity_loan_trending_products_load'),
     path('commodity_loan_trending_products_details/<str:pk>/', deskofficer_views.commodity_loan_trending_products_details,name='commodity_loan_trending_products_details'),
 
+    path('commodity_loan_invoicing_dashboard_load/', deskofficer_views.commodity_loan_invoicing_dashboard_load,name='commodity_loan_invoicing_dashboard_load'),
+    path('commodity_loan_custom_invoicing_search/', deskofficer_views.commodity_loan_custom_invoicing_search,name='commodity_loan_custom_invoicing_search'),
+    path('commodity_loan_custom_invoicing_list_load/', deskofficer_views.commodity_loan_custom_invoicing_list_load,name='commodity_loan_custom_invoicing_list_load'),
+    path('commodity_loan_custom_invoicing_processing/<str:pk>/', deskofficer_views.commodity_loan_custom_invoicing_processing,name='commodity_loan_custom_invoicing_processing'),
 
     path('trending_products_member_Search/', deskofficer_views.trending_products_member_Search,name='trending_products_member_Search'),
     path('trending_products_member_list_load/', deskofficer_views.trending_products_member_list_load,name='trending_products_member_list_load'),
