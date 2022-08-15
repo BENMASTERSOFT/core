@@ -1,0 +1,91 @@
+{% extends 'deskofficer_templates/base_template.html' %}
+{% load static %}
+
+{% block content %}
+            <div class="page-content fade-in-up">
+                
+                <div class="row">
+                  <div class="col-md-7">
+                        <div class="ibox">
+                            <div class="ibox-head">
+                                <div class="ibox-title">Commodity Loan Processing | </div>
+                                
+                            </div>
+                            <div class="ibox-body">
+                               <form class="form-horizontal" method="POST" action="" enctype="multipart/form-data" novalidate>
+                                    {% csrf_token %}
+                                    <div class="form-group row">
+                                        <label class="col-sm-4 col-form-label">Product Name</label>
+                                        <div class="col-sm-8">
+                                            {{form.description}}
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-sm-4 col-form-label">Product Model</label>
+                                        <div class="col-sm-8">
+                                           {{form.model}}
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-sm-4 col-form-label">Other Details</label>
+                                        <div class="col-sm-8">
+                                           {{form.details}}
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-sm-4 col-form-label">Cost Price</label>
+                                        <div class="col-sm-8">
+                                           {{form.amount}}
+                                        </div>
+                                    </div>    
+                                    <div class="form-group row">
+                                        <label class="col-sm-4 col-form-label">Duration</label>
+                                        <div class="col-sm-8">
+                                           {{form.duration}}
+                                        </div>
+                                    </div>     
+                                    <div class="form-group row">
+                                        <label class="col-sm-4 col-form-label">Monthly Repayment</label>
+                                        <div class="col-sm-8">
+                                           {{form.repayment}}
+                                        </div>
+                                    </div>     
+                                     <div class="form-group row">
+                                        <label class="col-sm-4 col-form-label">Receipt No</label>
+                                        <div class="col-sm-8">
+                                           {{form.receipt}}
+                                        </div>
+                                    </div>    
+                                     <div class="form-group row">
+                                        <label class="col-sm-4 col-form-label">Serial No</label>
+                                        <div class="col-sm-8">
+                                           {{form.serial_no}}
+                                        </div>
+                                    </div>     
+                                        
+                                    <div class="form-group row">
+                                        <label class="col-sm-4 col-form-label">Effective Date</label>
+                                        <div class="col-sm-8">
+                                           {{form.effective_date}}
+                                        </div>
+                                    </div>
+                                   
+                                    <div class="form-group row">
+                                        <div class="col-sm-8 ml-sm-auto">
+                                            <button class="btn btn-info" type="submit">Submit</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+
+
+    <div class="sidenav-backdrop backdrop"></div>
+    <div class="preloader-backdrop">
+        <div class="page-preloader">Loading</div>
+    </div>
+{% endblock %}

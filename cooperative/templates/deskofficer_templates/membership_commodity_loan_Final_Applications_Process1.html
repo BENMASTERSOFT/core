@@ -7,7 +7,7 @@
         <div class="col-xl-12">
             <div class="ibox">
                 <div class="ibox-head">
-                    <div class="ibox-title">List of Items Selected and Approved</div>
+                    <div class="ibox-title">List of Items Selected and Approved | <a href="{% url 'membership_commodity_loan_Final_Applications' %}">Back</a></div>
                 </div>
                 <div class="ibox-body">
                     <table class="table">
@@ -19,6 +19,7 @@
                                 <th>Other Details</th>
                                 <th>Quantity</th>
                                 <th>Amount</th>
+                                <th>Interest</th>
                                 <th>Admin Charge</th>
                                 <th>Action</th>
                             </tr>
@@ -32,8 +33,9 @@
                                 <td>{{record.product.product.details}}</td>
                                 <td>{{record.quantity}}</td>
                                 <td>{{record.coop_price}}</td>
+                                <td>{{record.interest}}</td>
                                 <td>{{record.admin_charges}}</td>
-                                <td></td>
+                                <td><a href="{% url 'membership_commodity_loan_Final_Applications_Process_Preview' record.pk %}">Process</a></td>
                               
                             </tr>
                         {% endfor %}

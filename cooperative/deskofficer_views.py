@@ -14,7 +14,7 @@ from cooperative.resources import NorminalRollResource, AccountDeductionsResourc
 from tablib import Dataset
 from django.template import defaultfilters
 from django.contrib import messages
-
+from . auto_receipt_manager import get_receipt
 from datetime import datetime
 from datetime import date
 import datetime
@@ -58,7 +58,7 @@ from django.http import FileResponse
 import io
 from reportlab.pdfgen import canvas
 from reportlab.lib.units import inch
-from reportlab.lib.pagesizes import letter, A4, landscape
+from reportlab.lib.pagesizes import letter, A4, landscape, A5
 from reportlab.lib.styles import ParagraphStyle, getSampleStyleSheet
 from reportlab.lib.enums import TA_JUSTIFY, TA_LEFT, TA_CENTER, TA_RIGHT
 from . program import  generatePDF
@@ -75,6 +75,140 @@ from . report_loan_application_certicate import _loanApplicationCerticateHeader,
 												,_loanApplicationCerticateMembershipGenFooterTable,_loanApplicationCerticateGenSignatureTable,_loanApplicationCerticateGenGurantorTable,_loanApplicationCerticateGenBodyTable, _loanApplicationCerticateGenNextOfKinTable
 
 from . report_commodity_trending_product import _trendingProductHeader, _trendingProductGetLogoTable, _trendingProductBodyTable
+from . report_commodity_loan_custom_invoicing_processing_Receipt_SectionA import _commodity_temporary_invoice_original, _commodity_temporary_invoice_duplicate
+from . report_commodity_loan_processing_main_receipt import _commodity_main_invoice_original
+
+def commodity_loan_processing_Receipt_Print(request,pk):
+	record=Members_Commodity_Loan_Application.objects.get(loan_number=pk)
+	operator=request.user.username
+	buf = io.BytesIO()
+
+	# pdf = canvas.Canvas(buf, pagesize = A4)
+	pdf = canvas.Canvas(buf, pagesize = landscape(A4))
+	pdf.setTitle("FETHA II CTCS")
+
+	# for font in pdf.getAvailableFonts():
+	# 	print(font)
+
+
+	# width, height = A4
+	width, height =landscape(A4)
+
+	widthList = [
+		width * 1 / 100,
+		width * 48 / 100,
+		width * 2 / 100,
+		width * 48 / 100,
+		width * 1 / 100,
+	
+	]
+	heightList = [
+			height * 5 / 100,
+			height * 90 / 100,
+		
+			height * 5 / 100,
+		
+		]
+
+
+	mainTable = Table([
+			['','','','',''],
+			['',_commodity_main_invoice_original(widthList[1],heightList[1],record.receipt),'',_commodity_main_invoice_original(widthList[3],heightList[1],record.receipt),''],
+			['','','','',''],
+			
+		],
+		colWidths= widthList,
+		rowHeights= heightList
+		)
+
+	mainTable.setStyle([
+		# ('GRID', (0, 0), (-1, -1), 1, 'red'),
+		('TEXTCOLOR',(0,0),(0,0),'black'),
+		('FONTSIZE', (0,0), (0,0), 16),
+		('FONTNAME', (0,0), (0,0), 'Helvetica-Bold'),
+		('BACKCOLOR', (0,0), (-1,-1), 'grey'),
+
+		('ALIGN', (0,0), (0,-1), 'CENTER'),
+		('VALIGN', (0,0), (0,-1), 'MIDDLE'),
+
+
+		('LEFTPADDING', (0, 0), (0, 2), 0),
+		('BOTTOMPADDING', (0, 0), (-1, -1), 0),
+		])
+
+	mainTable.wrapOn(pdf, 0, 0)
+	mainTable.drawOn(pdf, 0, 0)
+	pdf.showPage()
+	pdf.save()
+
+	buf.seek(0)
+
+	# Return something
+	# return FileResponse(buf, as_attachment=True, filename='venue.pdf')
+	return HttpResponse(buf,   content_type='application/pdf')
+
+
+
+
+def commodity_loan_custom_invoicing_processing_Receipt_Print(request,pk):
+	record=Members_Commodity_Loan_Application.objects.get(receipt=pk)
+	operator=request.user.username
+	buf = io.BytesIO()
+
+	pdf = canvas.Canvas(buf, pagesize = A4)
+	# pdf = canvas.Canvas(buf, pagesize = landscape(A4))
+	pdf.setTitle("FETHA II CTCS")
+
+	# for font in pdf.getAvailableFonts():
+	# 	print(font)
+
+
+	width, height = A4
+	# width, height =landscape(A4)
+
+	heightList = [
+		height * 49 / 100,
+		height * 2 / 100,
+		height * 49 / 100,
+	
+	]
+
+
+	mainTable = Table([
+			[_commodity_temporary_invoice_original(width,heightList[0],record.receipt)],
+			['========================================================================================================='],
+			[_commodity_temporary_invoice_duplicate(width,heightList[2],record.receipt)], #
+		
+		],
+		colWidths= width,
+		rowHeights= heightList
+		)
+
+	mainTable.setStyle([
+		# ('GRID', (0, 0), (-1, -1), 1, 'red'),
+		('TEXTCOLOR',(0,0),(0,0),'black'),
+		('FONTSIZE', (0,0), (0,0), 16),
+		('FONTNAME', (0,0), (0,0), 'Helvetica-Bold'),
+
+		('ALIGN', (0,0), (0,-1), 'CENTER'),
+		('VALIGN', (0,0), (0,-1), 'MIDDLE'),
+
+
+		('LEFTPADDING', (0, 0), (0, 2), 0),
+		('BOTTOMPADDING', (0, 0), (-1, -1), 0),
+		])
+
+	mainTable.wrapOn(pdf, 0, 0)
+	mainTable.drawOn(pdf, 0, 0)
+	pdf.showPage()
+	pdf.save()
+
+	buf.seek(0)
+
+	# Return something
+	# return FileResponse(buf, as_attachment=True, filename='venue.pdf')
+	return HttpResponse(buf,   content_type='application/pdf')
+
 
 
 def commodity_trending_product_Print(request,pk):
@@ -1859,7 +1993,7 @@ def membership_form_sales_issue(request,pk):
 				return HttpResponseRedirect(reverse('membership_form_sales_issue',args=(pk,)))
 		else:
 			receipt_id=AutoReceipt.objects.first()
-			receipt='C-' + str(receipt_id.receipt).zfill(5)
+			receipt= str(receipt_id.receipt).zfill(5)
 
 
 		if request.FILES.get('image', False):
@@ -4499,7 +4633,7 @@ def Emergency_loan_Form_Issueance(request,pk):
 				return HttpResponseRedirect(reverse('loan_request_order', args=(pk,)))
 
 		receipt_obj=AutoReceipt.objects.first()
-		receipt='C-' + str(receipt_obj.receipt).zfill(5)
+		receipt= str(receipt_obj.receipt).zfill(5)
 		receipt_obj.receipt=int(receipt_obj.receipt)+1
 		receipt_obj.save()
 
@@ -7892,7 +8026,7 @@ def loan_request_approved_list_form_sales(request,pk):
 
 		elif receipt_type == "AUTO":
 			receipt_obj=AutoReceipt.objects.first()
-			receipt='C-' + str(receipt_obj.receipt).zfill(5)
+			receipt= str(receipt_obj.receipt).zfill(5)
 			receipt_obj.receipt=int(receipt_obj.receipt)+1
 			receipt_obj.save()
 		else:
@@ -10181,6 +10315,33 @@ def loan_unscheduling_request_transaction_processing_details(request,pk):
 ############## MEMBERSHIP COMMODITY LOAN SEARCH ############
 ############################################################
 
+def Commodity_Loan_Dashboard_Load(request):
+	form=loan_unscheduling_request_transaction_processing_details_form(request.POST or None)
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	task_array=[]
+	for task in tasks:
+		task_array.append(task.task.title)
+
+	task_enabler=TransactionEnabler.objects.filter(status="YES")
+	task_enabler_array=[]
+	for item in task_enabler:
+		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
+	
+	context={
+	'task_array':task_array,
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
+	}
+	return render(request,'deskofficer_templates/Commodity_Loan_Dashboard_Load.html',context)
+
+
+
+
 def membership_commodity_loan_search(request):
 	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
 	task_array=[]
@@ -10261,9 +10422,11 @@ def membership_commodity_loan_Company_load(request,pk,period_pk,batch_pk,transac
 	title="Commodity Loan"
 	member=Members.objects.get(id=pk)
 	transaction=TransactionTypes.objects.get(id=transaction_pk)
+	
 	period=Commodity_Period.objects.get(id=period_pk)
 	batch=Commodity_Period_Batch.objects.get(id=batch_pk)
-	records=Company_Products.objects.filter(batch=batch,period=period,product__category__transaction=transaction).order_by('company_id').values_list('company_id','company__title').distinct()
+	
+	records=Company_Products.objects.filter(batch=batch,period=period,product__sub_category__category__transaction=transaction).order_by('company_id').values_list('company_id','company__title').distinct()
 
 	company_array = []
 	for index, d in enumerate(records):
@@ -10314,13 +10477,13 @@ def membership_commodity_loan_Company_products(request,return_pk,period_pk,batch
 
 	company=Companies.objects.get(id=pk)
 
-	if not Company_Products.objects.filter(company=company,period=period,batch=batch,product__category__transaction=transaction,status=stock_status).exists():
+	if not Company_Products.objects.filter(company=company,period=period,batch=batch,product__sub_category__category__transaction=transaction,status=stock_status).exists():
 		messages.error(request,'No Available Records')
 		return HttpResponseRedirect(reverse('membership_commodity_loan_Company_load', args=(return_pk,period.pk, batch.pk, transaction.pk)))
 
-	records=Company_Products.objects.filter(company=company,period=period,batch=batch,product__category__transaction=transaction,status=stock_status)
+	records=Company_Products.objects.filter(company=company,period=period,batch=batch,product__sub_category__category__transaction=transaction,status=stock_status)
 
-	queryset=Members_Commodity_Loan_Products_Selection.objects.filter(product__batch=batch,product__period=period,product__company=company, member=member,status=status).order_by("-product__product__category__duration")
+	queryset=Members_Commodity_Loan_Products_Selection.objects.filter(product__batch=batch,product__period=period,product__company=company, member=member,status=status).order_by("-product__product__sub_category__category__duration")
 
 	querysum=Members_Commodity_Loan_Products_Selection.objects.filter(product__batch=batch,product__period=period,product__company=company, member=member,status=status).aggregate(total_coop=Sum('coop_price'),total_comp=Sum('company_price'),total_interest=Sum('interest'),total_admin_charge=Sum('admin_charges'))
 
@@ -10383,7 +10546,7 @@ def membership_commodity_loan_Company_products_details(request,comp_pk,pk, membe
 	company=Companies.objects.get(id=comp_pk)
 	product=Company_Products.objects.get(id=pk)
 
-	record=Commodity_Categories.objects.get(id=product.product.category_id)
+	record=Commodity_Categories.objects.get(id=product.product.sub_category.category_id)
 
 	interest=0
 	coop_price=0
@@ -10483,7 +10646,7 @@ def membership_commodity_loan_Company_products_delete(request,pk,mem_pk,period_p
 
 
 
-def membership_commodity_loan_Company_products_proceed(request,mem_pk,comp_pk,period_pk,batch_pk,transaction_pk):
+def membership_commodity_loan_Company_products_proceed(request,pk,mem_pk,comp_pk,period_pk,batch_pk,transaction_pk):
 	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
 	task_array=[]
 	for task in tasks:
@@ -10517,13 +10680,10 @@ def membership_commodity_loan_Company_products_proceed(request,mem_pk,comp_pk,pe
 	member=Members.objects.get(id=mem_pk)
 	company=Companies.objects.get(id=comp_pk)
 
+	queryset=Members_Commodity_Loan_Products_Selection.objects.get(id=pk)
 
-	records=Company_Products.objects.filter(company=company,period=period,batch=batch,product__category__transaction=transaction,status=stock_status)
-
-	queryset=Members_Commodity_Loan_Products_Selection.objects.filter(product__batch=batch,product__period=period,product__company=company, member=member,status=status).order_by("-product__product__category__duration")
-
-	querysum=Members_Commodity_Loan_Products_Selection.objects.filter(product__batch=batch,product__period=period,product__company=company, member=member,status=status).aggregate(total_coop=Sum('coop_price'),total_comp=Sum('company_price'),total_interest=Sum('interest'),total_admin_charge=Sum('admin_charges'))
-
+	
+	
 	if CompulsorySavings.objects.all().exists():
 		compulsory_savings_id=CompulsorySavings.objects.first()
 
@@ -10547,22 +10707,12 @@ def membership_commodity_loan_Company_products_proceed(request,mem_pk,comp_pk,pe
 
 	if LoanBasedSavings.objects.all().exists():
 		loan_based_savings_id=LoanBasedSavings.objects.first()
-
+		loan_based_account_number=f'{loan_based_savings_id.savings.code}{member.coop_no}'
 	else:
 		messages.error(request,"Loan Based Savings Not Set")
 		return HttpResponseRedirect(reverse('membership_commodity_loan_Company_products',args=(member.pk,period.pk,batch.pk,transaction.pk,company.pk)))
-
-	loan_based_saving_total=0
-	loan_based_savings =StandingOrderAccounts.objects.filter(transaction__member=member,transaction__transaction=loan_based_savings_id.savings)
-
-
-	if loan_based_savings:
-		loan_based_saving_sum=StandingOrderAccounts.objects.filter(transaction__member=member,transaction__transaction=loan_based_savings_id.savings).aggregate(total_amount=Sum('amount'))
-		loan_based_saving_total=loan_based_saving_sum['total_amount']
-	else:
-		messages.error(request,"No Available Savings")
-		return HttpResponseRedirect(reverse('membership_commodity_loan_Company_products',args=(member.pk,period.pk,batch.pk,transaction.pk,company.pk)))
-
+	loan_based_saving_total=get_ledger_balance(loan_based_account_number)
+	
 
 	standing_order_total=0
 	standing_orders =StandingOrderAccounts.objects.filter(transaction__member=member)
@@ -10583,14 +10733,14 @@ def membership_commodity_loan_Company_products_proceed(request,mem_pk,comp_pk,pe
 		loan_total=loan_sum['total_amount']
 
 
-	# total_debit=float(standing_order_total) + float(loan_total)
+	total_debit=float(standing_order_total) + float(loan_total)
 
-	total_coop=querysum['total_coop']
-	total_comp=querysum['total_comp']
-	total_interest=querysum['total_interest']
-	total_admin_charge=querysum['total_admin_charge']
+	total_coop=queryset.coop_price
+	total_comp=queryset.company_price
+	total_interest=queryset.interest
+	total_admin_charge=queryset.admin_charges
 
-	selected_Duration=queryset[0].duration
+	selected_Duration=queryset.duration
 	monthly_repayment=math.ceil(float(total_coop)/float(selected_Duration))
 
 
@@ -10603,9 +10753,16 @@ def membership_commodity_loan_Company_products_proceed(request,mem_pk,comp_pk,pe
 		if ticket == 'a':
 			messages.error(request,"Default Ticket Id not set")
 			return HttpResponseRedirect(reverse('membership_commodity_loan_Company_products_proceed',args=(mem_pk,comp_pk,period_pk,batch_pk,transaction_pk)))
+		
+		# receipt_obj=AutoReceipt.objects.first()
+		# receipt= str(receipt_obj.receipt).zfill(5)
+		# receipt_obj.receipt=int(receipt_obj.receipt)+1
+		# receipt_obj.save()
+		receipt=get_receipt()
+		# return HttpResponse(f'{queryset.member.coop_no}')
 
-
-		applicant=Members_Commodity_Loan_Application(ticket=ticket,member=queryset[0],
+		applicant=Members_Commodity_Loan_Application(ticket=ticket, #receipt=receipt,
+											member=queryset,
 											company_price=total_comp,
 											coop_price=total_coop,
 											interest=total_interest,
@@ -10617,12 +10774,14 @@ def membership_commodity_loan_Company_products_proceed(request,mem_pk,comp_pk,pe
 											tdate=tdate,
 											period=period,
 											loans=loan_total,
-											savings=standing_order_total,
+											savings=loan_based_saving_total,
+											standing_order=standing_order_total,
 											batch=batch,
 											approval_status=approval_status,
 											submission_status=submission_status,
 											)
 		applicant.save()
+	
 
 		for item in standing_orders:
 			description=item.transaction.transaction.name
@@ -10647,7 +10806,7 @@ def membership_commodity_loan_Company_products_proceed(request,mem_pk,comp_pk,pe
 
 	'button_enabled':button_enabled,
 	'company':company,
-	'records':records,
+	# 'records':records,
 	'member':member,
 	'queryset':queryset,
 	'form':form,
@@ -10658,9 +10817,10 @@ def membership_commodity_loan_Company_products_proceed(request,mem_pk,comp_pk,pe
 	'selected_Duration':selected_Duration,
 	'monthly_repayment':monthly_repayment,
 	'total_admin_charge':total_admin_charge,
-	# 'standing_orders':standing_orders,
-	# 'loans':loans,
+	'standing_order_total':standing_order_total,
+	'loan_total':loan_total,
 	'transaction_type':transaction_type,
+	'loan_based_saving_total':loan_based_saving_total,
 	'period':period,
 	'batch':batch,
 	'transaction':transaction,
@@ -10742,8 +10902,8 @@ def membership_commodity_loan_Company_products_net_pay_Settings(request,member_p
 	status='UNTREATED'
 
 
-	if Members_Commodity_Loan_Application.objects.filter(member__product__product__category__transaction=transaction,batch=batch,period=period,member__member=member,status=status,approval_status=approval_status,submission_status=submission_status).exists():
-		applicant=Members_Commodity_Loan_Application.objects.get(member__product__product__category__transaction=transaction,batch=batch,period=period,member__member=member,status=status,approval_status=approval_status,submission_status=submission_status)
+	if Members_Commodity_Loan_Application.objects.filter(member__product__product__sub_category__category__transaction=transaction,batch=batch,period=period,member__member=member,status=status,approval_status=approval_status,submission_status=submission_status).exists():
+		applicant=Members_Commodity_Loan_Application.objects.get(member__product__product__sub_category__category__transaction=transaction,batch=batch,period=period,member__member=member,status=status,approval_status=approval_status,submission_status=submission_status)
 		if applicant.net_pay and float(applicant.net_pay)>0:
 			net_pay=applicant.net_pay
 		else:
@@ -10841,7 +11001,7 @@ def membership_commodity_loan_application_submit(request,member_pk,period_pk,bat
 	transaction.submission_status = submission_status1
 	transaction.save()
 	messages.success(request,'Net Pay Updated Successfully')
-	return HttpResponseRedirect(reverse('deskofficer_home'))
+	return HttpResponseRedirect(reverse('membership_commodity_loan_search'))
 
 
 
@@ -10878,7 +11038,7 @@ def membership_commodity_loan_Period__manage_transaction_load(request):
 		submission_status="SUBMITTED"
 		status='UNTREATED'
 		approval_status='PENDING'
-		applicants=Members_Commodity_Loan_Application.objects.filter(approval_status=approval_status,period=period,batch=batch,member__product__product__category__transaction=transaction,submission_status=submission_status,status=status)
+		applicants=Members_Commodity_Loan_Application.objects.filter(approval_status=approval_status,period=period,batch=batch,member__product__product__sub_category__category__transaction=transaction,submission_status=submission_status,status=status)
 
 	context={
 	'task_array':task_array,
@@ -11055,8 +11215,8 @@ def membership_commodity_loan_Company_products_net_pay_SettingsB(request,pk,retu
 		transaction.save()
 		return HttpResponseRedirect(reverse('membership_commodity_loan_Dashboard_load',args=(transaction.pk,return_pk,)))
 
-	form.fields['period'].initial=now
-	form.fields['net_pay'].initial=transaction.net_pay
+	form.fields['period'].initial=member.net_pay_as_at
+	form.fields['net_pay'].initial=member.last_used_net_pay
 	context={
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
@@ -11083,7 +11243,7 @@ def membership_commodity_loan_application_submitB(request,pk,return_pk):
 	applicant.submission_status=submission_status
 	applicant.save()
 
-	return HttpResponseRedirect(reverse('deskofficer_home'))
+	return HttpResponseRedirect(reverse('membership_commodity_loan_search'))
 
 
 
@@ -16828,7 +16988,7 @@ def Norminal_Roll_Process(request):
 	for applicant in applicants:
 
 		receipt_obj=AutoReceipt.objects.first()
-		receipt='C-' + str(receipt_obj.receipt.zfill(5))
+		receipt= str(receipt_obj.receipt.zfill(5))
 
 		record=MemberShipFormSalesRecord(date_paid=approved_date,cashbook_status=cashbook_status,tdate=tdate,applicant=applicant,receipt=receipt,processed_by=processed_by.username,status=transaction_status)
 		record.save()
@@ -17027,7 +17187,7 @@ def Individual_Capture(request):
 
 
 		receipt_obj=AutoReceipt.objects.first()
-		receipt='C-' + str(receipt_obj.receipt.zfill(5))
+		receipt= str(receipt_obj.receipt.zfill(5))
 
 		record=MemberShipFormSalesRecord(cashbook_status=cashbook_status,tdate=tdate,applicant=applicant,receipt=receipt,processed_by=processed_by,status=transaction_status1,date_paid=tdate)
 		record.save()
@@ -21926,7 +22086,7 @@ def Members_Share_Purchase_Request_Process_View(request,pk):
 				return HttpResponseRedirect(reverse('Members_Share_Purchase_Request_Process_View', args=(pk,)))
 		else:
 			receipt_obj=AutoReceipt.objects.first()
-			receipt='C-' + str(receipt_obj.receipt).zfill(5)
+			receipt= str(receipt_obj.receipt).zfill(5)
 			receipt_obj.receipt=int(receipt_obj.receipt)+1
 			receipt_obj.save()
 
@@ -22327,7 +22487,7 @@ def Cash_Deposit_Shares_Preview(request,pk):
 				return HttpResponseRedirect(reverse('Cash_Deposit_Shares_Preview', args=(pk,)))
 		else:
 			receipt_obj=AutoReceipt.objects.first()
-			receipt='C-' + str(receipt_obj.receipt).zfill(5)
+			receipt= str(receipt_obj.receipt).zfill(5)
 			receipt_obj.receipt=int(receipt_obj.receipt)+1
 			receipt_obj.save()
 
@@ -22549,7 +22709,7 @@ def Cash_Deposit_Welfare_Preview(request,pk):
 				return HttpResponseRedirect(reverse('Cash_Deposit_Welfare_Preview', args=(pk,)))
 		else:
 			receipt_obj=AutoReceipt.objects.first()
-			receipt='C-' + str(receipt_obj.receipt).zfill(5)
+			receipt= str(receipt_obj.receipt).zfill(5)
 			receipt_obj.receipt=int(receipt_obj.receipt)+1
 			receipt_obj.save()
 
@@ -22783,7 +22943,7 @@ def Cash_Deposit_Savings_Preview(request,pk):
 				return HttpResponseRedirect(reverse('Cash_Deposit_Savings_Preview', args=(pk,)))
 		else:
 			receipt_obj=AutoReceipt.objects.first()
-			receipt='C-' + str(receipt_obj.receipt).zfill(5)
+			receipt= str(receipt_obj.receipt).zfill(5)
 			receipt_obj.receipt=int(receipt_obj.receipt)+1
 			receipt_obj.save()
 
@@ -25314,6 +25474,568 @@ def membership_termination_Disbursement_Processing_Transfer(request,pk,payment):
 ###################################################################
 ###################################################################
 
+def membership_commodity_loan_Shortlisting_transaction_period_load(request):
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	task_array=[]
+	for task in tasks:
+		task_array.append(task.task.title)
+
+
+
+	task_enabler=TransactionEnabler.objects.filter(status="YES")
+	task_enabler_array=[]
+	for item in task_enabler:
+		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
+	form=Product_Linking_Period_Load_form(request.POST or None)
+
+	short_listed='NO'
+	status='UNTREATED'
+	applicants=[]
+
+	transaction=[]
+	if request.method == 'POST':
+		period_id = request.POST.get('period')
+		period = Commodity_Period.objects.get(id=period_id)
+
+		batch_id = request.POST.get("batch")
+		batch = Commodity_Period_Batch.objects.get(id=batch_id)
+
+		transaction_id = request.POST.get('transaction')
+		transaction = TransactionTypes.objects.get(id=transaction_id)
+
+		applicants=Members_Commodity_Loan_Application.objects.filter(member__product__product__sub_category__category__transaction=transaction,batch=batch,period=period,short_listed=short_listed,status=status)
+		transaction=transaction.name
+
+
+	context={
+	'task_array':task_array,
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
+
+	'form':form,
+
+	'applicants':applicants,
+	'transaction':transaction,
+	}
+	return render(request,'deskofficer_templates/membership_commodity_loan_Shortlisting_transaction_period_load.html',context)
+
+
+
+def membership_commodity_loan_Shortlisting(request,pk):
+	applicants=Members_Commodity_Loan_Application.objects.filter(id=pk).update(short_listed='YES')
+	return HttpResponseRedirect(reverse('membership_commodity_loan_form_sales_transaction_period_load'))
+
+def membership_commodity_loan_Shortlisted_transaction_period_load(request):
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	task_array=[]
+	for task in tasks:
+		task_array.append(task.task.title)
+
+
+
+	task_enabler=TransactionEnabler.objects.filter(status="YES")
+	task_enabler_array=[]
+	for item in task_enabler:
+		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
+	form=Product_Linking_Period_Load_form(request.POST or None)
+
+	short_listed='YES'
+	status='UNTREATED'
+	applicants=[]
+
+	transaction=[]
+	if request.method == 'POST':
+		period_id = request.POST.get('period')
+		period = Commodity_Period.objects.get(id=period_id)
+
+		batch_id = request.POST.get("batch")
+		batch = Commodity_Period_Batch.objects.get(id=batch_id)
+
+		transaction_id = request.POST.get('transaction')
+		transaction = TransactionTypes.objects.get(id=transaction_id)
+
+		applicants=Members_Commodity_Loan_Application.objects.filter(approval_status='PENDING',member__product__product__sub_category__category__transaction=transaction,batch=batch,period=period,short_listed=short_listed,status=status)
+		transaction=transaction.name
+
+
+	context={
+	'task_array':task_array,
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
+
+	'form':form,
+
+	'applicants':applicants,
+	'transaction':transaction,
+	}
+	return render(request,'deskofficer_templates/membership_commodity_loan_Shortlisted_transaction_period_load.html',context)
+
+
+def membership_commodity_loan_Shortlisted_History_transaction_period_load(request):
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	task_array=[]
+	for task in tasks:
+		task_array.append(task.task.title)
+
+
+
+	task_enabler=TransactionEnabler.objects.filter(status="YES")
+	task_enabler_array=[]
+	for item in task_enabler:
+		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
+	form=Product_Linking_Period_Load_form(request.POST or None)
+
+	short_listed='YES'
+
+	applicants=[]
+
+	transaction=[]
+
+	form.fields['start_date'].initial=get_current_date(now)
+	form.fields['stop_date'].initial=get_current_date(now)
+
+	if request.method == 'POST':
+		# return HttpResponse("OKKKKK")
+		start_date_id=request.POST.get('start_date')
+		start_date=datetime.datetime.strptime(start_date_id, '%Y-%m-%d')
+		start_date=get_current_date(start_date)
+
+		stop_date_id=request.POST.get('stop_date')
+		stop_date=datetime.datetime.strptime(stop_date_id, '%Y-%m-%d')
+		stop_date=get_current_date(stop_date)
+	
+		period_id = request.POST.get('period')
+		period = Commodity_Period.objects.get(id=period_id)
+
+		batch_id = request.POST.get("batch")
+		batch = Commodity_Period_Batch.objects.get(id=batch_id)
+
+		transaction_id = request.POST.get('transaction')
+		transaction = TransactionTypes.objects.get(id=transaction_id)
+
+		
+		applicants=Members_Commodity_Loan_Application.objects.filter(tdate__range=[start_date,stop_date],member__product__product__sub_category__category__transaction=transaction,batch=batch,period=period,short_listed=short_listed)
+		transaction=transaction.name
+
+	
+	context={
+	'task_array':task_array,
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
+
+	'form':form,
+
+	'applicants':applicants,
+	'transaction':transaction,
+	}
+	return render(request,'deskofficer_templates/membership_commodity_loan_Shortlisted_History_transaction_period_load.html',context)
+
+
+def membership_commodity_loan_Form_Sales_Reprint_transaction_period_load(request):
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	task_array=[]
+	for task in tasks:
+		task_array.append(task.task.title)
+
+
+
+	task_enabler=TransactionEnabler.objects.filter(status="YES")
+	task_enabler_array=[]
+	for item in task_enabler:
+		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
+	form=Product_Linking_Period_Load_form(request.POST or None)
+
+	short_listed='YES'
+
+	applicants=[]
+
+	transaction=[]
+
+	form.fields['start_date'].initial=get_current_date(now)
+	form.fields['stop_date'].initial=get_current_date(now)
+
+	if request.method == 'POST':
+		# return HttpResponse("OKKKKK")
+		start_date_id=request.POST.get('start_date')
+		start_date=datetime.datetime.strptime(start_date_id, '%Y-%m-%d')
+		start_date=get_current_date(start_date)
+
+		stop_date_id=request.POST.get('stop_date')
+		stop_date=datetime.datetime.strptime(stop_date_id, '%Y-%m-%d')
+		stop_date=get_current_date(stop_date)
+	
+		period_id = request.POST.get('period')
+		period = Commodity_Period.objects.get(id=period_id)
+
+		batch_id = request.POST.get("batch")
+		batch = Commodity_Period_Batch.objects.get(id=batch_id)
+
+		transaction_id = request.POST.get('transaction')
+		transaction = TransactionTypes.objects.get(id=transaction_id)
+
+		
+		applicants=Members_Commodity_Loan_Application_Form_Sales.objects.filter(tdate__range=[start_date,stop_date],applicant__member__product__product__sub_category__category__transaction=transaction,applicant__batch=batch,applicant__period=period)
+		transaction=transaction.name
+
+	
+	context={
+	'task_array':task_array,
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
+
+	'form':form,
+
+	'applicants':applicants,
+	'transaction':transaction,
+	}
+	return render(request,'deskofficer_templates/membership_commodity_loan_Form_Sales_Reprint_transaction_period_load.html',context)
+
+
+def membership_commodity_loan_Final_Applications_Process(request,pk):
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	task_array=[]
+	for task in tasks:
+		task_array.append(task.task.title)
+
+
+
+	task_enabler=TransactionEnabler.objects.filter(status="YES")
+	task_enabler_array=[]
+	for item in task_enabler:
+		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
+	# Members_Commodity_Loan_Application_Form_Sales.objects.all().delete()
+	# Members_Commodity_Loan_Products_Selection.objects.all().delete()
+	# form=membership_commodity_loan_Final_Applications_Process_Form(request.POST or None)
+
+	applicant=Members_Commodity_Loan_Application_Form_Sales.objects.get(id=pk)
+	member_id=applicant.applicant.member.member_id
+
+	member=applicant.applicant.member.member
+
+	period=applicant.applicant.period
+	batch=applicant.applicant.batch
+	records=Members_Commodity_Loan_Application_Form_Sales.objects.filter(applicant__member__member=member,applicant__period=period,applicant__batch=batch)
+
+	context={
+	'task_array':task_array,
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
+	'records':records,
+	'applicant':applicant,
+	# 'form':form,
+	}
+	return render(request,'deskofficer_templates/membership_commodity_loan_Final_Applications_Process.html',context)
+
+
+
+
+def membership_commodity_loan_Final_Applications_Process_Complete(request,pk):
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	task_array=[]
+	for task in tasks:
+		task_array.append(task.task.title)
+
+
+	task_enabler=TransactionEnabler.objects.filter(status="YES")
+	task_enabler_array=[]
+	for item in task_enabler:
+		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
+	form=membership_commodity_loan_Final_Applications_Process_Form(request.POST or None)
+
+	# applicant=Members_Commodity_Loan_Application_Form_Sales.objects.get(id=pk)
+	# member_id=applicant.applicant.member.member_id
+
+	# member=applicant.applicant.member.member
+
+	# period=applicant.applicant.period
+	# batch=applicant.applicant.batch
+	record=Members_Commodity_Loan_Products_Selection.objects.get(id=pk)
+
+
+	context={
+	'task_array':task_array,
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
+	'record':record,
+	'form':form,
+	}
+	return render(request,'deskofficer_templates/membership_commodity_loan_Final_Applications_Process_Complete.html',context)
+
+
+
+def membership_commodity_loan_Final_Applications_Process_Add_Guarantors(request,member_pk,pk):
+	applicant=Members_Commodity_Loan_Application_Form_Sales.objects.get(id=pk)
+	max_guarantor=applicant.applicant.member.product.product.category.guarantors
+	member=Members.objects.get(id=member_pk)
+
+	if Members_Commodity_Loan_Application_Guarantors.objects.filter(applicant=applicant).count() >= int(max_guarantor):
+		messages.info(request,"You have exceeded the maximum Guarantors Allowed")
+		return HttpResponseRedirect(reverse('membership_commodity_loan_Final_Applications_Process',args=(pk,)))
+
+	if Members_Commodity_Loan_Application_Guarantors.objects.filter(applicant=applicant,guarantor=member).exists():
+		messages.error(request,'This Member already added as Guarantor')
+		return HttpResponseRedirect(reverse('membership_commodity_loan_Final_Applications_Process',args=(pk,)))
+
+
+	Members_Commodity_Loan_Application_Guarantors(applicant=applicant,guarantor=member).save()
+	return HttpResponseRedirect(reverse('membership_commodity_loan_Final_Applications_Process',args=(pk,)))
+
+
+
+def membership_commodity_loan_Final_Applications_Delete(request,pk,return_pk):
+	Members_Commodity_Loan_Application_Guarantors.objects.get(id=pk).delete()
+	messages.info(request,"Receod Deleted Successfully")
+	return HttpResponseRedirect(reverse('membership_commodity_loan_Final_Applications_Process',args=(return_pk,)))
+
+
+
+def membership_commodity_loan_Final_Applications_Process_Preview(request,pk):
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	task_array=[]
+	for task in tasks:
+		task_array.append(task.task.title)
+
+
+
+	task_enabler=TransactionEnabler.objects.filter(status="YES")
+	task_enabler_array=[]
+	for item in task_enabler:
+		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
+	form=Members_Commodity_Loan_Application_Form_Sales_Form(request.POST or None)
+	applicant=Members_Commodity_Loan_Application_Form_Sales.objects.get(id=pk)
+
+
+
+	if request.method == 'POST':	
+		# max_guarantor=applicant.applicant.member.product.product.category.guarantors
+
+
+		transaction=applicant.applicant.member.product.product.sub_category.category.transaction
+		period=applicant.applicant.period
+		batch=applicant.applicant.batch
+
+		# date_duration = Company_Products_Duration.objects.get(product=applicant.applicant.member.product.product.category,period=period,batch=batch)
+		# start_date=date_duration.start_date
+		# stop_date=date_duration.stop_date
+		
+		tdate=get_current_date(now)
+
+		schedule_status='UNSCHEDULED'
+		status="ACTIVE"
+		processed_by=CustomUser.objects.get(id=request.user.id)
+		processed_by=processed_by.username
+
+		member=applicant.applicant.member.member
+
+		my_id=member.coop_no
+
+		if MembersNextOfKins.objects.filter(member=member).exists():
+			NOK = MembersNextOfKins.objects.filter(member=member)
+			nok_name=NOK.name
+			nok_Relationship=NOK.relationships.title
+			nok_phone_no=NOK.phone_number
+			nok_address=NOK.address
+		else:
+			nok_name="UNKNOWN"
+			nok_Relationship="UNKNOWN"
+			nok_phone_no="UNKNOWN"
+			nok_address="UNKNOWN"
+
+		loan_amount=applicant.applicant.coop_price
+		duration=applicant.applicant.duration
+		repayment=applicant.applicant.repayment
+		amount_paid=0
+		balance=-float(loan_amount)
+		interest_rate=applicant.applicant.member.product.product.sub_category.category.interest_rate
+		interest=applicant.applicant.interest
+		admin_charge=applicant.applicant.admin_charge
+		
+
+		
+		interest_deduction = "SPREAD"
+		processed_by=CustomUser.objects.get(id=request.user.id)
+		
+
+
+		start_date=request.POST.get('effective_date')
+		date_format = '%Y-%m-%d'
+		dtObj = datetime.datetime.strptime(start_date, date_format)
+		start_date=get_current_date(dtObj)
+
+
+
+		stop_date= get_current_date(start_date + relativedelta(months=int(duration)))
+	
+		# if max_guarantor:
+		# 	max_guarantor=applicant.applicant.member.product.product.category.guarantors
+		# 	if Members_Commodity_Loan_Application_Guarantors.objects.filter(applicant=applicant).count() < int(max_guarantor):
+		# 		messages.info(request,"You Do Not Have the Required Number of Guarantors Needed for this Fascilities")
+		# 		return HttpResponseRedirect(reverse('membership_commodity_loan_Final_Applications_Process',args=(pk,)))
+
+		loan_code=transaction.code
+		if LoanNumber.objects.all().count() == 0:
+			messages.error(request,"Loan Number not Set")
+			return HttpResponseRedirect(reverse('membership_commodity_loan_Final_Applications_Process',args=(pk,)))
+
+		loan_number = generate_number(loan_code,my_id,now)
+
+		applicant.applicant.serial_no=request.POST.get('serial_no')
+		applicant.applicant.loan_number=loan_number
+		applicant.applicant.save()
+
+		# Loans_Repayment_Base(
+		# 		member,
+		# 		nok_name,
+  #               nok_Relationship,
+  #               nok_phone_no,
+  #               nok_address,
+		# 		duration,
+		# 		interest_deduction,
+  #           	interest_rate, #load please
+  #           	interest, #load
+  #           	admin_charge, #load
+		# 		transaction,
+		# 		loan_number,
+		# 		loan_amount,
+		# 		repayment,
+		# 		balance,
+		# 		amount_paid,
+		# 		start_date,
+		# 		stop_date,
+		# 		processed_by,
+		# 		status,
+		# 		tdate,
+		# 		schedule_status
+		# 		)
+		
+
+		debit=applicant.applicant.company_price
+		credit=0
+		balance = -float(debit)
+		particulars= applicant.applicant.member.product.product.sub_category.category.title + " ISSUANCE"
+
+		# post_to_ledger(member,
+		# 				transaction,
+		# 				loan_number,
+		# 				particulars,
+		# 				debit,
+		# 				credit,
+		# 				balance,
+		# 				get_current_date(now),
+		# 				status,
+		# 				tdate,processed_by)
+		
+
+		if float(applicant.applicant.interest)>0:
+			ledger_balance=get_ledger_balance(loan_number)
+
+			debit=applicant.applicant.interest
+			credit=0
+			balance = -float(debit) + float(ledger_balance)
+			particulars=  "INTEREST ON " + applicant.applicant.member.product.product.sub_category.category.title
+
+			post_to_ledger(member,
+							transaction,
+							loan_number,
+							particulars,
+							debit,
+							credit,
+							balance,
+							get_current_date(now),
+							status,
+							tdate,processed_by)
+
+		status1='TREATED'
+		applicant.status=status1
+		# applicant.save()
+
+		return HttpResponseRedirect(reverse('membership_commodity_loan_processing_validation',args=(loan_number,)))
+	
+	form.fields['description'].initial=applicant.applicant.member.product.product.product_name
+	form.fields['model'].initial=applicant.applicant.member.product.product.product_model
+	form.fields['details'].initial=applicant.applicant.member.product.product.details
+	form.fields['amount'].initial=applicant.applicant.coop_price
+	form.fields['repayment'].initial=applicant.applicant.repayment
+	form.fields['receipt'].initial=applicant.receipt
+	form.fields['duration'].initial=applicant.applicant.duration
+	form.fields['effective_date'].initial=applicant.applicant.effective_date
+
+	context={
+	'task_array':task_array,
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
+	'applicant':applicant,
+	'form':form,
+	}
+	return render(request,'deskofficer_templates/membership_commodity_loan_Final_Applications_Process_Preview.html',context)
+
+
+
+
+def membership_commodity_loan_processing_validation(request,pk):
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	task_array=[]
+	for task in tasks:
+		task_array.append(task.task.title)
+
+
+
+	task_enabler=TransactionEnabler.objects.filter(status="YES")
+	task_enabler_array=[]
+	for item in task_enabler:
+		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
+	applicant=Members_Commodity_Loan_Application.objects.get(loan_number=pk)
+	context={
+	'task_array':task_array,
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
+	'applicant':applicant,
+	
+	}
+	return render(request,'deskofficer_templates/membership_commodity_loan_processing_validation.html',context)
+
+
+
 def membership_commodity_loan_form_sales_transaction_period_load(request):
 	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
 	task_array=[]
@@ -25333,8 +26055,9 @@ def membership_commodity_loan_form_sales_transaction_period_load(request):
 
 	form=Product_Linking_Period_Load_form(request.POST or None)
 
-	approval_status='APPROVED'
+	short_listed='YES'
 	status='UNTREATED'
+
 	applicants=[]
 
 	transaction=[]
@@ -25348,7 +26071,7 @@ def membership_commodity_loan_form_sales_transaction_period_load(request):
 		transaction_id = request.POST.get('transaction')
 		transaction = TransactionTypes.objects.get(id=transaction_id)
 
-		applicants=Members_Commodity_Loan_Application.objects.filter(member__product__product__category__transaction=transaction,batch=batch,period=period,approval_status=approval_status,status=status)
+		applicants=Members_Commodity_Loan_Application.objects.filter(approval_status='APPROVED',member__product__product__sub_category__category__transaction=transaction,batch=batch,period=period,short_listed=short_listed,status=status)
 		transaction=transaction.name
 
 
@@ -25363,8 +26086,6 @@ def membership_commodity_loan_form_sales_transaction_period_load(request):
 	'transaction':transaction,
 	}
 	return render(request,'deskofficer_templates/membership_commodity_loan_form_sales_transaction_period_load.html',context)
-
-
 
 
 
@@ -25388,32 +26109,39 @@ def membership_commodity_loan_form_sales(request,pk):
 	applicant=Members_Commodity_Loan_Application.objects.get(pk=pk)
 
 	if request.method == "POST" and 'admin-charge' in request.POST:
-		form_print= request.POST.get('form_print')
+		date_format = '%Y-%m-%d'
 
-		Members_Commodity_Loan_Application_Form_Sales(applicant=applicant,
-									tdate=get_current_date(now),
-									processed_by=CustomUser.objects.get(id=request.user.id),
-									status='UNTREATED').save()
-		applicant.status='TREATED'
-		applicant.save()
+		effective_date_id=request.POST.get('effective_date')
+		dtObj = datetime.datetime.strptime(effective_date_id, date_format)
+		effective_date=get_current_date(dtObj)
 
-		if form_print == 'NO':
-			print("NO Printing")
-			return HttpResponseRedirect(reverse('membership_commodity_loan_form_sales_transaction_period_load'))
-		elif form_print == 'YES':
-			print("Printing")
-			return HttpResponseRedirect(reverse('membership_commodity_loan_form_sales_transaction_period_load'))
+		
+		
+		if 	Members_Commodity_Loan_Application_Form_Sales.objects.filter(applicant=applicant).exists():
+			pass
+		else:
+			receipt= get_receipt()
 
+			Members_Commodity_Loan_Application_Form_Sales(applicant=applicant,receipt=receipt,
+										tdate=get_current_date(now),
+										processed_by=CustomUser.objects.get(id=request.user.id),
+										status='UNTREATED').save()
+			applicant.effective_date=effective_date
+			applicant.receipt=receipt
+			applicant.status='TREATED'
+			applicant.save()
 
-
+		
+	
+		return HttpResponseRedirect(reverse('membership_commodity_loan_form_sales_validation',args=(receipt,)))
 
 
 	form.fields['amount'].initial = applicant.coop_price
-	# form.fields['interest'].initial = applicant.interest
+	form.fields['effective_date'].initial = get_current_date(now)
 	form.fields['admin_charges'].initial = applicant.admin_charge
 	form.fields['duration'].initial = applicant.duration
 	form.fields['repayment'].initial = applicant.repayment
-	form.fields['form_print'].initial = applicant.member.product.product.category.transaction.form_print
+	form.fields['form_print'].initial = applicant.member.product.product.sub_category.category.transaction.form_print
 	context={
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
@@ -25423,6 +26151,38 @@ def membership_commodity_loan_form_sales(request,pk):
 	'form':form,
 	}
 	return render(request,'deskofficer_templates/membership_commodity_loan_form_sales.html',context)
+
+
+def membership_commodity_loan_form_sales_validation(request,pk):
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	task_array=[]
+	for task in tasks:
+		task_array.append(task.task.title)
+
+
+	task_enabler=TransactionEnabler.objects.filter(status="YES")
+	task_enabler_array=[]
+	for item in task_enabler:
+		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
+	record=Members_Commodity_Loan_Application.objects.get(receipt=pk)
+
+	
+
+
+	context={
+	'record':record,
+	'task_array':task_array,
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
+	}
+
+	return render(request,'deskofficer_templates/membership_commodity_loan_form_sales_validation.html',context)
+
 
 
 def membership_commodity_loan_form_sales_process(request,pk,payment):
@@ -25486,7 +26246,7 @@ def membership_commodity_loan_form_sales_process(request,pk,payment):
 			elif recceipt_type == "AUTO":
 
 				receipt_obj=AutoReceipt.objects.first()
-				receipt='C-' + str(receipt_obj.receipt).zfill(5)
+				receipt= str(receipt_obj.receipt).zfill(5)
 				receipt_obj.receipt=int(receipt_obj.receipt)+1
 				receipt_obj.save()
 
@@ -25582,7 +26342,7 @@ def membership_commodity_loan_Final_Applications(request):
 		transaction_id = request.POST.get('transaction')
 		transaction = TransactionTypes.objects.get(id=transaction_id)
 
-		applicants=Members_Commodity_Loan_Application_Form_Sales.objects.filter(applicant__member__product__product__category__transaction=transaction,applicant__batch=batch,applicant__period=period,status=status)
+		applicants=Members_Commodity_Loan_Application_Form_Sales.objects.filter(applicant__member__product__product__sub_category__category__transaction=transaction,applicant__batch=batch,applicant__period=period,status=status)
 		transaction=transaction.name
 
 
@@ -25624,6 +26384,8 @@ def commodity_loan_trending_products(request):
 	# 'transaction':transaction,
 	}
 	return render(request,'deskofficer_templates/commodity_loan_trending_products.html',context)
+
+
 
 def commodity_loan_invoicing_dashboard_load(request):
 	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
@@ -25723,8 +26485,6 @@ def commodity_loan_custom_invoicing_processing(request,pk):
 	for task in tasks:
 		task_array.append(task.task.title)
 
-
-
 	task_enabler=TransactionEnabler.objects.filter(status="YES")
 	task_enabler_array=[]
 	for item in task_enabler:
@@ -25735,10 +26495,17 @@ def commodity_loan_custom_invoicing_processing(request,pk):
 		default_password="YES"
 	form=commodity_loan_custom_invoicing_processing_Form(request.POST or None)
 	member =Members.objects.get(id=pk)
-	records=Commodity_Loan_Invoicing_Products_Selection_Temp.objects.filter(member=member)
+	records=Commodity_Loan_Invoicing_Products_Selection_Temp.objects.filter(member=member,status='UNTREATED')
+	
 
 	if request.method == 'POST':
-		return HttpResponse("OKKKSSS")
+		company=request.POST.get("company")
+		transaction=request.POST.get("transaction")
+		period=request.POST.get("period")
+		batch=request.POST.get("batch")		
+		
+		return HttpResponseRedirect(reverse('commodity_loan_custom_invoicing_processing_products_list',args=(member.pk, company,transaction,period,batch,)))
+	
 	context={
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
@@ -25748,6 +26515,208 @@ def commodity_loan_custom_invoicing_processing(request,pk):
 	'form':form,
 	}
 	return render(request,'deskofficer_templates/commodity_loan_custom_invoicing_processing.html',context)
+
+
+def commodity_loan_custom_invoicing_processing_products_list(request,member, company,transaction,period,batch):
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	task_array=[]
+	for task in tasks:
+		task_array.append(task.task.title)
+
+	task_enabler=TransactionEnabler.objects.filter(status="YES")
+	task_enabler_array=[]
+	for item in task_enabler:
+		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
+	company=Companies.objects.get(id=company)
+	transaction =TransactionTypes.objects.get(id=transaction)
+	member =Members.objects.get(id=member)
+	period=Commodity_Period.objects.get(id=period)
+	batch=Commodity_Period_Batch.objects.get(id=batch)
+
+	records=Company_Products.objects.filter(company=company,
+											product__sub_category__category__transaction=transaction,
+											period=period,batch=batch
+											)
+	context={
+	'task_array':task_array,
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
+	'records':records,
+	'company':company,
+	'transaction':transaction,
+	'member':member,
+	'period':period,
+	'batch':batch,
+	}
+	return render(request,'deskofficer_templates/commodity_loan_custom_invoicing_processing_products_list.html',context)
+
+
+
+def commodity_loan_custom_invoicing_processing_products_preview(request,pk,member, company,transaction,period,batch):
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	task_array=[]
+	for task in tasks:
+		task_array.append(task.task.title)
+
+	task_enabler=TransactionEnabler.objects.filter(status="YES")
+	task_enabler_array=[]
+	for item in task_enabler:
+		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
+	company=Companies.objects.get(id=company)
+	transaction =TransactionTypes.objects.get(id=transaction)
+	member =Members.objects.get(id=member)
+	period=Commodity_Period.objects.get(id=period)
+	batch=Commodity_Period_Batch.objects.get(id=batch)
+	form = commodity_loan_custom_invoicing_processing_Form(request.POST or None)
+	record=Company_Products.objects.get(id=pk)
+
+	duration=record.product.sub_category.category.duration
+	tdate=get_current_date(now)
+	processed_by=CustomUser.objects.get(id=request.user.id)
+
+	if request.method == 'POST':
+		date_format = '%Y-%m-%d'
+
+		effective_date_id=request.POST.get('effective_date')
+		dtObj = datetime.datetime.strptime(effective_date_id, date_format)
+		effective_date=get_current_date(dtObj)
+
+		
+		quantity=request.POST.get('quantity')
+		
+		if not quantity or float(quantity) <=0:
+			messages.error(request,'Quantity is Missing')
+			return HttpResponseRedirect(reverse('commodity_loan_custom_invoicing_processing_products_preview',args=(pk,member.pk, company.pk,transaction.pk,period.pk,batch.pk)))
+		
+		total=float(quantity)*float(record.coop_amount)
+		size=record.product.product_model
+		description = f'{record.product.product_name}, {record.product.details}'
+		
+	
+		repayment=math.ceil(float(total)/float(duration))
+		if Commodity_Loan_Invoicing_Products_Selection_Temp.objects.filter(member=member,description=description).exists():
+			Commodity_Loan_Invoicing_Products_Selection_Temp.objects.filter(member=member,description=description).update(quantity=quantity,
+																													total=float(total),processed_by=processed_by.username)
+			return HttpResponseRedirect(reverse('commodity_loan_custom_invoicing_processing_products_list',args=(member.pk, company.pk,transaction.pk,period.pk,batch.pk)))
+
+
+		Commodity_Loan_Invoicing_Products_Selection_Temp(member=member,
+															quantity=quantity,
+															description=description,
+															size=size,
+															duration=duration,
+															repayment=repayment,
+															rate=record.coop_amount,
+															tdate=tdate,
+															effective_date=effective_date,
+															total=float(total),
+															processed_by=processed_by.username).save()
+		return HttpResponseRedirect(reverse('commodity_loan_custom_invoicing_processing_products_list',args=(member.pk, company.pk,transaction.pk,period.pk,batch.pk)))
+
+	form.fields['description'].initial=record.product.product_name
+	form.fields['model'].initial=record.product.product_model
+	form.fields['details'].initial=record.product.details
+	form.fields['rate'].initial=record.coop_amount
+	form.fields['effective_date'].initial=now
+	context={
+	'task_array':task_array,
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
+	'record':record,
+	'company':company,
+	'transaction':transaction,
+	'form':form,
+	'member':member,
+	'period':f'{period.title} {batch.title}',
+	}
+	return render(request,'deskofficer_templates/commodity_loan_custom_invoicing_processing_products_preview.html',context)
+
+
+
+def commodity_loan_custom_invoicing_processing_drop(request,pk):
+	record=Commodity_Loan_Invoicing_Products_Selection_Temp.objects.get(id=pk)
+	member=record.member
+	record.delete()
+	return HttpResponseRedirect(reverse('commodity_loan_custom_invoicing_processing',args=(member.pk,)))
+	
+
+def commodity_loan_custom_invoicing_processing_validation(request,pk):
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	task_array=[]
+	for task in tasks:
+		task_array.append(task.task.title)
+
+
+	task_enabler=TransactionEnabler.objects.filter(status="YES")
+	task_enabler_array=[]
+	for item in task_enabler:
+		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
+	record=Commodity_Loan_Invoicing_Products_Selection_Temp.objects.get(id=pk)
+
+	receipt_obj=AutoReceipt.objects.first()
+	receipt= str(receipt_obj.receipt).zfill(5)
+	receipt_obj.receipt=int(receipt_obj.receipt)+1
+	receipt_obj.save()
+
+	record.receipt=receipt
+	record.status="TREATED"
+	record.save()
+
+	context={
+	'record':record,
+	'task_array':task_array,
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
+	}
+
+	return render(request,'deskofficer_templates/commodity_loan_custom_invoicing_processing_validation.html',context)
+
+
+
+
+def commodity_loan_custom_invoicing_active_list_load(request):
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	task_array=[]
+	for task in tasks:
+		task_array.append(task.task.title)
+
+	task_enabler=TransactionEnabler.objects.filter(status="YES")
+	task_enabler_array=[]
+	for item in task_enabler:
+		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
+	
+	records=Commodity_Loan_Invoicing_Products_Selection_Temp.objects.filter(status='UNTREATED')
+	# print(records)
+	context={
+	'task_array':task_array,
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
+	'records':records,
+	
+	}
+	return render(request,'deskofficer_templates/commodity_loan_custom_invoicing_active_list_load.html',context)
+
+
 
 def commodity_loan_trending_products_load(request,pk):
 	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
@@ -25870,263 +26839,6 @@ def trending_products_member_list_load(request):
 		return render(request,'deskofficer_templates/trending_products_member_list_load.html',context)
 
 
-
-
-def membership_commodity_loan_Final_Applications_Process(request,pk):
-	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
-	task_array=[]
-	for task in tasks:
-		task_array.append(task.task.title)
-
-
-
-	task_enabler=TransactionEnabler.objects.filter(status="YES")
-	task_enabler_array=[]
-	for item in task_enabler:
-		task_enabler_array.append(item.title)
-
-	default_password="NO"
-	if Staff.objects.filter(admin=request.user,default_password='YES'):
-		default_password="YES"
-
-	form=searchForm(request.POST or None)
-
-	applicant=Members_Commodity_Loan_Application_Form_Sales.objects.get(id=pk)
-	member_id=applicant.applicant.member.member_id
-
-	member=applicant.applicant.member.member
-
-	period=applicant.applicant.period
-	batch=applicant.applicant.batch
-	records=Members_Commodity_Loan_Products_Selection.objects.filter(member_id=member.id,product__period=period,product__batch=batch)
-
-
-
-	context={
-	'task_array':task_array,
-	'task_enabler_array':task_enabler_array,
-	'default_password':default_password,
-	'records':records,
-	'applicant':applicant,
-	'form':form,
-	}
-	return render(request,'deskofficer_templates/membership_commodity_loan_Final_Applications_Process.html',context)
-
-
-def membership_commodity_loan_Final_Applications_Process1(request,pk):
-	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
-	task_array=[]
-	for task in tasks:
-		task_array.append(task.task.title)
-
-
-
-	task_enabler=TransactionEnabler.objects.filter(status="YES")
-	task_enabler_array=[]
-	for item in task_enabler:
-		task_enabler_array.append(item.title)
-
-	default_password="NO"
-	if Staff.objects.filter(admin=request.user,default_password='YES'):
-		default_password="YES"
-
-	form=searchForm(request.POST or None)
-
-	applicant=Members_Commodity_Loan_Application_Form_Sales.objects.get(id=pk)
-
-
-	transaction=applicant.applicant.member.product.product.category.transaction
-	period=applicant.applicant.period
-	batch=applicant.applicant.batch
-
-	max_guarantor=applicant.applicant.member.product.product.category.guarantors
-
-	guarnator_status=True
-	if not max_guarantor or int(max_guarantor)<=0:
-		guarnator_status=False
-
-	guarantors=Members_Commodity_Loan_Application_Guarantors.objects.filter(applicant=applicant)
-
-	button_show=True
-	if int(max_guarantor)== int(guarantors.count()):
-		button_show=False
-
-	button_enabled=False
-	if guarantors:
-		button_enabled=True
-
-	if request.method == "POST" and 'btn-search' in request.POST:
-		title=request.POST.get('title')
-		members=Members.objects.exclude(id=applicant.applicant.member.member.id).filter(member_id__icontains=title,status='ACTIVE')
-		context={
-		'task_array':task_array,
-		'task_enabler_array':task_enabler_array,
-	'default_password':default_password,
-		'members':members,
-		'pk':pk,
-		}
-		return render(request,'deskofficer_templates/membership_commodity_loan_Final_Applications_Process_Add_Guarantors.html',context)
-
-
-	if request.method == "POST" and 'btn-process' in request.POST:
-		return HttpResponseRedirect(reverse('membership_commodity_loan_Final_Applications_Process',args=(pk,)))
-
-	context={
-	'task_array':task_array,
-	'task_enabler_array':task_enabler_array,
-	'default_password':default_password,
-	'guarnator_status':guarnator_status,
-	'guarantors':guarantors,
-	'button_enabled':button_enabled,
-	'applicant':applicant,
-	'form':form,
-	'button_show':button_show,
-	}
-	return render(request,'deskofficer_templates/membership_commodity_loan_Final_Applications_Process.html',context)
-
-
-
-def membership_commodity_loan_Final_Applications_Process_Add_Guarantors(request,member_pk,pk):
-	applicant=Members_Commodity_Loan_Application_Form_Sales.objects.get(id=pk)
-	max_guarantor=applicant.applicant.member.product.product.category.guarantors
-	member=Members.objects.get(id=member_pk)
-
-	if Members_Commodity_Loan_Application_Guarantors.objects.filter(applicant=applicant).count() >= int(max_guarantor):
-		messages.info(request,"You have exceeded the maximum Guarantors Allowed")
-		return HttpResponseRedirect(reverse('membership_commodity_loan_Final_Applications_Process',args=(pk,)))
-
-	if Members_Commodity_Loan_Application_Guarantors.objects.filter(applicant=applicant,guarantor=member).exists():
-		messages.error(request,'This Member already added as Guarantor')
-		return HttpResponseRedirect(reverse('membership_commodity_loan_Final_Applications_Process',args=(pk,)))
-
-
-	Members_Commodity_Loan_Application_Guarantors(applicant=applicant,guarantor=member).save()
-	return HttpResponseRedirect(reverse('membership_commodity_loan_Final_Applications_Process',args=(pk,)))
-
-
-
-def membership_commodity_loan_Final_Applications_Delete(request,pk,return_pk):
-	Members_Commodity_Loan_Application_Guarantors.objects.get(id=pk).delete()
-	messages.info(request,"Receod Deleted Successfully")
-	return HttpResponseRedirect(reverse('membership_commodity_loan_Final_Applications_Process',args=(return_pk,)))
-
-
-
-def membership_commodity_loan_Final_Applications_Process_Submit(request,pk):
-	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
-	task_array=[]
-	for task in tasks:
-		task_array.append(task.task.title)
-
-
-
-	task_enabler=TransactionEnabler.objects.filter(status="YES")
-	task_enabler_array=[]
-	for item in task_enabler:
-		task_enabler_array.append(item.title)
-
-	default_password="NO"
-	if Staff.objects.filter(admin=request.user,default_password='YES'):
-		default_password="YES"
-
-	applicant=Members_Commodity_Loan_Application_Form_Sales.objects.get(id=pk)
-	max_guarantor=applicant.applicant.member.product.product.category.guarantors
-
-
-	transaction=applicant.applicant.member.product.product.category.transaction
-	period=applicant.applicant.period
-	batch=applicant.applicant.batch
-
-	date_duration = Company_Products_Duration.objects.get(product=applicant.applicant.member.product.product.category,period=period,batch=batch)
-	start_date=date_duration.start_date
-	stop_date=date_duration.stop_date
-	tdate=get_current_date(now)
-
-
-	schedule_status='UNSCHEDULED'
-	status="ACTIVE"
-	processed_by=CustomUser.objects.get(id=request.user.id)
-	processed_by=processed_by.username
-
-	member=applicant.applicant.member.member
-	my_id=member.get_member_Id
-
-	loan_amount=applicant.applicant.coop_price
-	duration=applicant.applicant.duration
-	repayment=applicant.applicant.repayment
-	amount_paid=0
-	balance=-float(loan_amount)
-
-	interest_deduction = "SPREAD"
-	processed_by=CustomUser.objects.get(id=request.user.id)
-
-	if max_guarantor:
-		max_guarantor=applicant.applicant.member.product.product.category.guarantors
-		if Members_Commodity_Loan_Application_Guarantors.objects.filter(applicant=applicant).count() < int(max_guarantor):
-			messages.info(request,"You Do Not Have the Required Number of Guarantors Needed for this Fascilities")
-			return HttpResponseRedirect(reverse('membership_commodity_loan_Final_Applications_Process',args=(pk,)))
-
-	loan_code=transaction.code
-	if LoanNumber.objects.all().count() == 0:
-		messages.error(request,"Loan Number not Set")
-		return HttpResponseRedirect(reverse('membership_commodity_loan_Final_Applications_Process',args=(pk,)))
-
-	loan_number = generate_number(loan_code,my_id,now)
-
-
-	Loans_Repayment_Base(member,
-						transaction,
-						loan_number,
-						loan_amount,
-						repayment,
-						balance,
-						amount_paid,
-						start_date,
-						stop_date,
-						processed_by,
-						status,
-						tdate,
-						schedule_status)
-
-	debit=applicant.applicant.company_price
-	credit=0
-	balance = -float(debit)
-	particulars= applicant.applicant.member.product.product.category.title + " ISSUANCE"
-
-	post_to_ledger(member,
-					transaction,
-					loan_number,
-					particulars,
-					debit,
-					credit,
-					balance,
-					get_current_date(now),
-					status,
-					tdate,processed_by)
-
-	ledger_balance=get_ledger_balance(loan_number)
-
-	debit=applicant.applicant.interest
-	credit=0
-	balance = -float(debit) + float(ledger_balance)
-	particulars=  "INTEREST ON " + applicant.applicant.member.product.product.category.title
-
-	post_to_ledger(member,
-					transaction,
-					loan_number,
-					particulars,
-					debit,
-					credit,
-					balance,
-					get_current_date(now),
-					status,
-					tdate,processed_by)
-
-	status1='TREATED'
-	applicant.status=status1
-	applicant.save()
-
-	return HttpResponseRedirect(reverse('membership_commodity_loan_Final_Applications'))
 
 
 

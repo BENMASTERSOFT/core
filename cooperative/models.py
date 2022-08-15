@@ -1827,6 +1827,9 @@ class Members_Commodity_Loan_Application(DateObjectsModels):
     repayment= models.DecimalField(max_digits=20,decimal_places = 2,default=0)
     comments=models.TextField(blank=True,null=True)
     ticket=models.CharField(max_length=255,blank=True,null=True)
+    serial_no=models.CharField(max_length=255,blank=True,null=True)
+    receipt=models.CharField(max_length=255,blank=True,null=True)
+    loan_number=models.CharField(max_length=255,blank=True,null=True)
     period=models.ForeignKey(Commodity_Period,on_delete=models.CASCADE,blank=True,null=True)
     batch=models.ForeignKey(Commodity_Period_Batch,on_delete=models.CASCADE,blank=True,null=True)
     approval_officer=models.CharField(max_length=255,blank=True,null=True)
@@ -1837,8 +1840,11 @@ class Members_Commodity_Loan_Application(DateObjectsModels):
     net_pay_as_at=models.DateField(blank=True,null=True)
     image=models.FileField(blank=True,null=True)
     loans = models.DecimalField(max_digits=20,decimal_places = 2,default=0)
+    effective_date=models.DateField(blank=True,null=True)
     savings = models.DecimalField(max_digits=20,decimal_places = 2,default=0)
+    standing_order = models.DecimalField(max_digits=20,decimal_places = 2,default=0)
     submission_status=models.CharField(max_length=20,choices=SUBMISSION_STATUS,default="NOT SUBMITTED")
+    short_listed=  models.CharField(max_length=30,choices=YESNO,default='NO')
     status= models.CharField(max_length=20,choices=TRANSACTION_STATUS,default='UNTREATED')
 
     @property
@@ -1867,7 +1873,7 @@ class Members_Commodity_Loan_Application_Settings(DateObjectsModels):
 
 class Members_Commodity_Loan_Application_Form_Sales(DateObjectsModels):
     applicant=models.ForeignKey(Members_Commodity_Loan_Application,on_delete=models.CASCADE)
-    # receipt=models.CharField(max_length=255,blank=True,null=True)
+    receipt=models.CharField(max_length=255,blank=True,null=True)
     status = models.CharField(max_length=20,choices=TRANSACTION_STATUS,default='UNTREATED')
 
 
@@ -1922,11 +1928,16 @@ class Commodity_Loan_Upload_Transaction_Details(DateObjectsModels):
 
 class Commodity_Loan_Invoicing_Products_Selection_Temp(DateObjectsModels):
     member=models.ForeignKey(Members,on_delete=models.CASCADE)
-    product=models.TextField()
+    description=models.TextField()
     rate= models.DecimalField(max_digits=20,decimal_places = 2,default=0)
     quantity= models.PositiveSmallIntegerField(validators=[MinValueValidator(0)],default=0)
+    duration= models.PositiveSmallIntegerField(validators=[MinValueValidator(0)],default=0)
     total= models.DecimalField(max_digits=20,decimal_places = 2,default=0)
-   
+    repayment= models.DecimalField(max_digits=20,decimal_places = 2,default=0)
+    size=models.CharField(max_length=255,blank=True,null=True)
+    receipt=models.CharField(max_length=255,blank=True,null=True)
+    effective_date=models.DateField(blank=True,null=True)
+    status = models.CharField(max_length=20,choices=TRANSACTION_STATUS,default='UNTREATED')
 
     # class Meta(DateObjectsModels.Meta):
     #     db_table="Commodity_Loan_Invoicing_Products_Selection_Temp"

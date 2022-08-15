@@ -93,7 +93,7 @@
                                     <td>{{record.applicant.repayment}}</td>
                                     <td>{{record.receipt}}</td>
                                    
-                                    <td><a href="{% url 'membership_commodity_loan_Final_Applications_Process' record.pk %}" class="btn btn-primary">Process</a></td>
+                                    <td><a href="{% url 'membership_commodity_loan_Final_Applications_Process_Preview' record.pk %}" class="btn btn-primary">Preview</a></td>
                             {% endfor %}
                                 
                             </tbody>

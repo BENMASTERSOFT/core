@@ -86,11 +86,7 @@
                     <div class="col-xl-12">
                         <div class="ibox">
                             <div class="ibox-head">
-                                <div class="ibox-title">SELECTED PRODUCTS | 
-                                    {% if button_enabled %}
-                                    <a href="{% url 'membership_commodity_loan_Company_products_proceed' member.pk company.pk period.pk batch.pk transaction.pk %}" class="btn btn-success">Proceed</a>
-
-                                   {% endif %}
+                                <div class="ibox-title">SELECTED PRODUCTS 
                                </div>
                             </div>
                             <div class="ibox-body">
@@ -99,9 +95,9 @@
                                         <tr>
                                             <th>#</th>
                                             <th>Product Name</th>
-                                            <th>Model</th>
+                                         
                                             <th>Quantity</th>
-                                            <th>Unit Price</th>
+                                       
                                             <th>Comp Price</th>
                                             {% if item.product.product.category.interest_rate_required %}{% endif %}
                                             <th>Int.Rate</th>
@@ -110,7 +106,7 @@
                                             <th>Coop Price</th>
                                             <th>Admin Charge</th>
                                             <th>Duration</th>
-                                            <th>Action</th>
+                                            <th colspan="2">Action</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -118,9 +114,9 @@
                                         <tr>
                                             <td>{{forloop.counter}}</td>
                                             <td>{{item.product.product.product_name}}</td>
-                                            <td>{{item.product.product.product_model}}</td>
+                              
                                             <td>{{item.quantity}}</td>
-                                            <td>{{item.product.amount}}</td>
+                                            
                                             <td>{{item.company_price}}</td>
                                            
                                             <td> 
@@ -133,11 +129,17 @@
                                             <td>{{item.coop_price}}</td>
                                             <td>{{item.admin_charges}}</td>
                                             <td>{{item.duration}}</td>
-                                            <td><a href="{% url 'membership_commodity_loan_Company_products_delete' item.pk member.pk  period.pk batch.pk transaction.pk company.pk %}" class="btn btn-danger">Remove</a></td>  
+                                            <td>
+                                                <a href="{% url 'membership_commodity_loan_Company_products_delete' item.pk member.pk  period.pk batch.pk transaction.pk company.pk %}">Remove</a>
+                                            </td>    
+                                            <td>
+                                                <a href="{% url 'membership_commodity_loan_Company_products_proceed' item.pk member.pk company.pk period.pk batch.pk transaction.pk %}">Proceed</a>
+                                              
+                                            </td>  
                                         </tr>
                                     {% endfor %}
                                     <tr>
-                                        <td colspan="5">Summary</td>
+                                        <td colspan="3">Summary</td>
                                         <td>{{total_comp|default_if_none:"&nbsp;"}}</td>
                                         <td></td>
                                         <td>{{total_interest|default_if_none:"&nbsp;"}}</td>

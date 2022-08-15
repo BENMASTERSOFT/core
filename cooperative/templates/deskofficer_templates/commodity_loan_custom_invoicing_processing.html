@@ -8,27 +8,34 @@
                     <div class="col-md-8">
                         <div class="ibox">
                             <div class="ibox-head">
-                                <div class="ibox-title">Commodity Invoicing |{{member.get_full_name}} | {{member.coop_no}}</div>
+                                <div class="ibox-title">Commodity Invoicing |{{member.get_full_name}} | {{member.coop_no}} | <a href="{% url 'commodity_loan_invoicing_dashboard_load' %}">Back</a></div>
                               
                             </div>
                             <div class="ibox-body">
-                                <form class="form-horizontal">
+                                 <form class="form-horizontal" method="POST" action="" enctype="multipart/form-data" novalidate>
+                                         {% csrf_token %}
                                     <div class="form-group row">
-                                        <label class="col-sm-4 col-form-label">Quantity</label>
+                                        <label class="col-sm-4 col-form-label">Company</label>
                                         <div class="col-sm-8">
-                                            {{form.quantity}}
+                                            {{form.company}}
                                         </div>
                                     </div>
                                     <div class="form-group row">
-                                        <label class="col-sm-4 col-form-label">Description</label>
+                                        <label class="col-sm-4 col-form-label">Transaction Type</label>
                                         <div class="col-sm-8">
-                                           {{form.description}}
+                                           {{form.transaction}}
                                         </div>
                                     </div>
                                     <div class="form-group row">
-                                        <label class="col-sm-4 col-form-label">Rate</label>
+                                        <label class="col-sm-4 col-form-label">Period</label>
                                         <div class="col-sm-8">
-                                            {{form.rate}}
+                                            {{form.period}}
+                                        </div>
+                                    </div>  
+                                    <div class="form-group row">
+                                        <label class="col-sm-4 col-form-label">Batch</label>
+                                        <div class="col-sm-8">
+                                            {{form.batch}}
                                         </div>
                                     </div>
                                    
@@ -59,7 +66,7 @@
                                             <th>Description</th>
                                             <th>Rate</th>
                                             <th>Amount</th>
-                                            <th>Action</th>
+                                            <th colspan="2">Action</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -69,8 +76,8 @@
                                             <td>{{record.quantity}}</td>
                                             <td>{{record.description}}</td>
                                             <td>{{record.rate}}</td>
-                                            <td>{{record.amount}}</td>
-                                            <td><a href="">Drop</a></td>
+                                            <td>{{record.total}}</td>
+                                            <td><a href="{% url 'commodity_loan_custom_invoicing_processing_drop' record.pk %}">Drop</a></td><td><a href="{% url 'commodity_loan_custom_invoicing_processing_validation' record.pk %}" class="btn btn-success">Process</a></td>
                                         </tr>
                                     {% endfor %}
                                     </tbody>

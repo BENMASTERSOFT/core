@@ -7774,7 +7774,7 @@ def membership_commodity_loan_Period_approval_transaction_load(request):
         batch_id =request.POST.get('batch')
         batch= Commodity_Period_Batch.objects.get(id=batch_id)
 
-        applicants=Members_Commodity_Loan_Application.objects.filter(approval_status="PENDING",period=period,batch=batch,member__product__product__category__transaction=transaction,submission_status='SUBMITTED',status='UNTREATED')
+        applicants=Members_Commodity_Loan_Application.objects.filter(short_listed='YES',approval_status="PENDING",period=period,batch=batch,member__product__product__sub_category__category__transaction=transaction,submission_status='SUBMITTED',status='UNTREATED')
 
     context={
     'task_array':task_array,
