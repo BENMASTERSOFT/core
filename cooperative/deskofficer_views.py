@@ -11110,7 +11110,7 @@ def membership_commodity_loan_Period_Transactions_load(request,pk):
 
 	applicants=Members_Commodity_Loan_Application.objects.filter(member__member=member,submission_status=submission_status)
 
-
+	#about to post
 	if request.method == "POST":
 		transaction_id=request.POST.get('transaction')
 		transaction=TransactionTypes.objects.get(id=transaction_id)
@@ -11144,8 +11144,6 @@ def membership_commodity_loan_Dashboard_load(request,pk,return_pk):
 	task_array=[]
 	for task in tasks:
 		task_array.append(task.task.title)
-
-
 
 	task_enabler=TransactionEnabler.objects.filter(status="YES")
 	task_enabler_array=[]
@@ -25914,34 +25912,34 @@ def membership_commodity_loan_Final_Applications_Process_Preview(request,pk):
 
 		loan_number = generate_number(loan_code,my_id,now)
 
-		applicant.applicant.serial_no=request.POST.get('serial_no')
+		# applicant.applicant.serial_no=request.POST.get('serial_no')
 		applicant.applicant.loan_number=loan_number
 		applicant.applicant.save()
 
-		# Loans_Repayment_Base(
-		# 		member,
-		# 		nok_name,
-  #               nok_Relationship,
-  #               nok_phone_no,
-  #               nok_address,
-		# 		duration,
-		# 		interest_deduction,
-  #           	interest_rate, #load please
-  #           	interest, #load
-  #           	admin_charge, #load
-		# 		transaction,
-		# 		loan_number,
-		# 		loan_amount,
-		# 		repayment,
-		# 		balance,
-		# 		amount_paid,
-		# 		start_date,
-		# 		stop_date,
-		# 		processed_by,
-		# 		status,
-		# 		tdate,
-		# 		schedule_status
-		# 		)
+		Loans_Repayment_Base(
+				member,
+				nok_name,
+                nok_Relationship,
+                nok_phone_no,
+                nok_address,
+				duration,
+				interest_deduction,
+            	interest_rate, #load please
+            	interest, #load
+            	admin_charge, #load
+				transaction,
+				loan_number,
+				loan_amount,
+				repayment,
+				balance,
+				amount_paid,
+				start_date,
+				stop_date,
+				processed_by,
+				status,
+				tdate,
+				schedule_status
+				)
 		
 
 		debit=applicant.applicant.company_price
@@ -25949,16 +25947,16 @@ def membership_commodity_loan_Final_Applications_Process_Preview(request,pk):
 		balance = -float(debit)
 		particulars= applicant.applicant.member.product.product.sub_category.category.title + " ISSUANCE"
 
-		# post_to_ledger(member,
-		# 				transaction,
-		# 				loan_number,
-		# 				particulars,
-		# 				debit,
-		# 				credit,
-		# 				balance,
-		# 				get_current_date(now),
-		# 				status,
-		# 				tdate,processed_by)
+		post_to_ledger(member,
+						transaction,
+						loan_number,
+						particulars,
+						debit,
+						credit,
+						balance,
+						get_current_date(now),
+						status,
+						tdate,processed_by)
 		
 
 		if float(applicant.applicant.interest)>0:
@@ -25982,9 +25980,9 @@ def membership_commodity_loan_Final_Applications_Process_Preview(request,pk):
 
 		status1='TREATED'
 		applicant.status=status1
-		# applicant.save()
+		applicant.save()
 
-		return HttpResponseRedirect(reverse('membership_commodity_loan_processing_validation',args=(loan_number,)))
+		return HttpResponseRedirect(reverse('Commodity_Loan_Dashboard_Load'))
 	
 	form.fields['description'].initial=applicant.applicant.member.product.product.product_name
 	form.fields['model'].initial=applicant.applicant.member.product.product.product_model
@@ -26024,7 +26022,7 @@ def membership_commodity_loan_processing_validation(request,pk):
 	if Staff.objects.filter(admin=request.user,default_password='YES'):
 		default_password="YES"
 
-	applicant=Members_Commodity_Loan_Application.objects.get(loan_number=pk)
+	applicant=Members_Commodity_Loan_Application.objects.get(receipt=pk)
 	context={
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,

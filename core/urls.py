@@ -353,7 +353,9 @@ urlpatterns = [
     path('Product_Linking_Company_Load/<str:period_obj>/<str:batch_obj>/<str:transaction_obj>/', master_views.Product_Linking_Company_Load,name='Product_Linking_Company_Load'),
     path('Product_Linking_Category_Load/<str:period_obj>/<str:batch_obj>/<str:transaction_obj>/<str:company_pk>/', master_views.Product_Linking_Category_Load,name='Product_Linking_Category_Load'),
     path('Product_Linking_Sub_Category_Load/<str:period_obj>/<str:batch_obj>/<str:transaction_obj>/<str:company_pk>/<str:cat_pk>/', master_views.Product_Linking_Sub_Category_Load,name='Product_Linking_Sub_Category_Load'),
+    path('Product_Linking_Sub_Category_Load_All/<str:period_obj>/<str:batch_obj>/<str:transaction_obj>/<str:company_pk>/', master_views.Product_Linking_Sub_Category_Load_All,name='Product_Linking_Sub_Category_Load_All'),
 
+    path('Product_Linking_Details_Preview_All/<str:comp_pk>/<str:pk>/<str:period_pk>/<str:batch_pk>/<str:transaction_pk>/', master_views.Product_Linking_Details_Preview_All,name='Product_Linking_Details_Preview_All'),
 
 
     path('Product_Linking_Details/<str:pk>/<str:period_pk>/<str:batch_pk>/<str:transaction_pk>/<str:company_pk>/<str:cat_pk>/', master_views.Product_Linking_Details,name='Product_Linking_Details'),

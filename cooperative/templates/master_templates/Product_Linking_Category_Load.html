@@ -4,11 +4,11 @@
 {% block content %}
             <div class="page-content fade-in-up">
                 <div class="row">
-                    
+                 
                     <div class="col-xl-6">
                         <div class="ibox">
                             <div class="ibox-head">
-                                <div class="ibox-title">{{tramsaction.name}} | Categories</div>
+                                <div class="ibox-title">{{transaction.name}} | Categories | <a href="{% url 'Product_Linking_Sub_Category_Load_All'  period.pk batch.pk transaction.pk company.pk  %}">Load All</a> </div>
                             </div>
                             <div class="ibox-body">
                                 <table class="table table-bordered">

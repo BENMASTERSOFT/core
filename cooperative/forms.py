@@ -3163,8 +3163,8 @@ class Manage_Commodity_Categories_Optional_properties_Form(forms.Form):
 
 
 class Commodity_Products_add_Form(forms.Form):
-   product_name=forms.CharField(label="Product Name",max_length=30,widget=forms.TextInput(attrs={"class":"form-control"}),required=True)
-   product_model=forms.CharField(label="Product Name",max_length=30,widget=forms.TextInput(attrs={"class":"form-control"}),required=True)
+   product_name=forms.CharField(label="Product Name",max_length=200,widget=forms.TextInput(attrs={"class":"form-control"}),required=True)
+   product_model=forms.CharField(label="Product Name",max_length=200,widget=forms.TextInput(attrs={"class":"form-control"}),required=True)
    details= forms.CharField(widget=forms.Textarea(attrs={"rows":2, "cols":57}))
    unit_cost_price = forms.DecimalField(initial=0,label='Unit Cost Price', label_suffix=" : ",
                               widget=forms.NumberInput(attrs={'class': 'form-control'}),
