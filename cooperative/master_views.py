@@ -1770,7 +1770,7 @@ def Commodity_Products_Manage_Load(request,pk):
             task_array.append(task.task.title)
     sub_category =Commodity_Category_Sub.objects.get(id=pk)
 
-    records=Commodity_Product_List.objects.filter(sub_category=sub_category)
+    records=Commodity_Product_List.objects.filter(sub_category=sub_category).order_by('product_name')
 
     context={
     'task_array':task_array,
@@ -2096,6 +2096,34 @@ def Product_Linking_Details_Preview_All(request,comp_pk,pk,period_pk,batch_pk,tr
     'coop_price_enabled':coop_price_enabled,
     }
     return render(request,'master_templates/Product_Linking_Details_Preview_All.html',context)
+
+
+def Product_Linking_Available_Product_Load_All(request,period_obj,batch_obj,transaction_obj,company_pk):
+    task_array=[]
+    if not request.user.user_type == '1':
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
+
+    company=Companies.objects.get(id=company_pk)
+    period=Commodity_Period.objects.get(id=period_obj)
+    batch=Commodity_Period_Batch.objects.get(id=batch_obj)
+    transaction=TransactionTypes.objects.get(id=transaction_obj)
+   
+  
+    linked_records = Company_Products.objects.filter(company=company,period=period,batch=batch).order_by('product__product_name')
+
+ 
+    context={
+    'task_array':task_array,
+    'company':company,
+    'period':period,
+    'batch':batch,
+    'transaction':transaction,
+
+    'linked_records':linked_records,
+    }
+    return render(request,'master_templates/Product_Linking_Available_Product_Load_All.html',context)
 
 
 

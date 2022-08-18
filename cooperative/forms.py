@@ -3052,7 +3052,7 @@ class Members_Credit_sales_Cash_Deposit_Details_form(forms.Form):
                                  widget=forms.NumberInput(attrs={'class': 'form-control'}),
                                  decimal_places=2, required=True,
                                  disabled = False)
-   receipt=forms.CharField(label="receipt",max_length=30,widget=forms.TextInput(attrs={"class":"form-control",}),required=False)
+   receipt=forms.CharField(label="receipt",max_length=250,widget=forms.TextInput(attrs={"class":"form-control",}),required=False)
 
 class Cash_Deposit_Summary_form(forms.Form):
    current_date = forms.DateField(label='Date', label_suffix=" : ",
@@ -3088,11 +3088,11 @@ class Termination_Sources_upload_form(forms.Form):
 
 
 class Manage_Commodity_Categories_Title_Update_form(forms.Form):
-   title=forms.CharField(label="Title",max_length=30,widget=forms.TextInput(attrs={"class":"form-control",}),required=True)
+   title=forms.CharField(label="Title",max_length=250,widget=forms.TextInput(attrs={"class":"form-control",}),required=True)
 
 
 class addCommodityCategoryForm(forms.Form):
-   title=forms.CharField(label="Title",max_length=30,widget=forms.TextInput(attrs={"class":"form-control",}),required=True)
+   title=forms.CharField(label="Title",max_length=250,widget=forms.TextInput(attrs={"class":"form-control",}),required=True)
    interest_deductions = forms.ChoiceField(label="Interest Deductions", choices=INTEREST_DEDUCTION,widget=forms.Select(attrs={"class":"form-control"}))
    duration = forms.IntegerField(label='Duration', label_suffix=" : ",
                   widget=forms.NumberInput(attrs={'class': 'form-control','autocomplete':'off'}),
@@ -3182,8 +3182,8 @@ class Commodity_Products_add_Form(forms.Form):
 
 
 class Commodity_Products_Update_Form(forms.Form):
-   product_name=forms.CharField(label="Product Name",max_length=30,widget=forms.TextInput(attrs={"class":"form-control"}),required=True)
-   product_model=forms.CharField(label="Product Name",max_length=30,widget=forms.TextInput(attrs={"class":"form-control"}),required=True)
+   product_name=forms.CharField(label="Product Name",max_length=250,widget=forms.TextInput(attrs={"class":"form-control"}),required=True)
+   product_model=forms.CharField(label="Product Name",max_length=250,widget=forms.TextInput(attrs={"class":"form-control"}),required=True)
    details= forms.CharField(widget=forms.Textarea(attrs={"rows":2, "cols":57}))
    unit_cost_price = forms.DecimalField(initial=0,label='Unit Cost Price', label_suffix=" : ",
                               widget=forms.NumberInput(attrs={'class': 'form-control'}),
@@ -3195,8 +3195,8 @@ class Commodity_Products_Update_Form(forms.Form):
 
 
 class Commodity_Products_Price_Update_Form(forms.Form):
-   product_name=forms.CharField(label="Product Name",max_length=30,widget=forms.TextInput(attrs={"class":"form-control",'readonly':'readonly'}),required=True)
-   product_model=forms.CharField(label="Product Name",max_length=30,widget=forms.TextInput(attrs={"class":"form-control",'readonly':'readonly'}),required=True)
+   product_name=forms.CharField(label="Product Name",max_length=250,widget=forms.TextInput(attrs={"class":"form-control",'readonly':'readonly'}),required=True)
+   product_model=forms.CharField(label="Product Name",max_length=250,widget=forms.TextInput(attrs={"class":"form-control",'readonly':'readonly'}),required=True)
    details= forms.CharField(widget=forms.Textarea(attrs={"rows":2, "cols":57,'readonly':'readonly'}))
    unit_cost_price = forms.DecimalField(initial=0,label='Unit Cost Price', label_suffix=" : ",
                               widget=forms.NumberInput(attrs={'class': 'form-control'}),
@@ -3235,8 +3235,8 @@ class membership_commodity_loan_Company_products_process_Form(forms.Form):
 
 
 class Dedicated_Commodity_Product_List_Add_Form1(forms.Form):
-   product_name=forms.CharField(label="Product Name",max_length=30,widget=forms.TextInput(attrs={"class":"form-control"}),required=True)
-   details=forms.CharField(label="Details",max_length=30,widget=forms.TextInput(attrs={"class":"form-control"}),required=True)
+   product_name=forms.CharField(label="Product Name",max_length=250,widget=forms.TextInput(attrs={"class":"form-control"}),required=True)
+   details=forms.CharField(label="Details",max_length=250,widget=forms.TextInput(attrs={"class":"form-control"}),required=True)
    unit_cost_price = forms.DecimalField(initial=0,label='Unit Cost Price', label_suffix=" : ",
                               widget=forms.NumberInput(attrs={'class': 'form-control'}),
                               decimal_places=2, required=True,
@@ -3245,13 +3245,13 @@ class Dedicated_Commodity_Product_List_Add_Form1(forms.Form):
                               widget=forms.NumberInput(attrs={'class': 'form-control'}),
                               decimal_places=2, required=True,
                               disabled = False)
-   tyear=forms.CharField(label="Year",max_length=30,widget=forms.TextInput(attrs={"class":"form-control"}),required=True)
-   period=forms.CharField(label="Period",max_length=30,widget=forms.TextInput(attrs={"class":"form-control",'readonly':'readonly'}),required=True)
+   tyear=forms.CharField(label="Year",max_length=250,widget=forms.TextInput(attrs={"class":"form-control"}),required=True)
+   period=forms.CharField(label="Period",max_length=250,widget=forms.TextInput(attrs={"class":"form-control",'readonly':'readonly'}),required=True)
 
 
 class Dedicated_Commodity_Product_List_Add_Form(forms.Form):
-   product_name=forms.CharField(label="Product Name",max_length=30,widget=forms.TextInput(attrs={"class":"form-control",'readonly':'readonly'}),required=True)
-   details=forms.CharField(label="Details",max_length=30,widget=forms.TextInput(attrs={"class":"form-control",'readonly':'readonly'}),required=True)
+   product_name=forms.CharField(label="Product Name",max_length=250,widget=forms.TextInput(attrs={"class":"form-control",'readonly':'readonly'}),required=True)
+   details=forms.CharField(label="Details",max_length=250,widget=forms.TextInput(attrs={"class":"form-control",'readonly':'readonly'}),required=True)
    unit_cost_price = forms.DecimalField(initial=0,label='Unit Cost Price', label_suffix=" : ",
                               widget=forms.NumberInput(attrs={'class': 'form-control'}),
                               decimal_places=2, required=True,
@@ -3260,14 +3260,14 @@ class Dedicated_Commodity_Product_List_Add_Form(forms.Form):
                               widget=forms.NumberInput(attrs={'class': 'form-control'}),
                               decimal_places=2, required=True,
                               disabled = False)
-   tyear=forms.CharField(label="Year",max_length=30,widget=forms.TextInput(attrs={"class":"form-control"}),required=True)
-   period=forms.CharField(label="Period",max_length=30,widget=forms.TextInput(attrs={"class":"form-control",'readonly':'readonly'}),required=True)
+   tyear=forms.CharField(label="Year",max_length=250,widget=forms.TextInput(attrs={"class":"form-control"}),required=True)
+   period=forms.CharField(label="Period",max_length=250,widget=forms.TextInput(attrs={"class":"form-control",'readonly':'readonly'}),required=True)
 
 
 
 class Essential_Commodity_Product_Select_Form(forms.Form):
-   product_name=forms.CharField(label="Product Name",max_length=30,widget=forms.TextInput(attrs={"class":"form-control",'readonly':'readonly'}),required=True)
-   details=forms.CharField(label="Details",max_length=30,widget=forms.TextInput(attrs={"class":"form-control",'readonly':'readonly'}),required=True)
+   product_name=forms.CharField(label="Product Name",max_length=250,widget=forms.TextInput(attrs={"class":"form-control",'readonly':'readonly'}),required=True)
+   details=forms.CharField(label="Details",max_length=250,widget=forms.TextInput(attrs={"class":"form-control",'readonly':'readonly'}),required=True)
    unit_price = forms.DecimalField(initial=0,label='Unit Cost Price', label_suffix=" : ",
                               widget=forms.NumberInput(attrs={'class': 'form-control','readonly':'readonly'}),
                               decimal_places=2, required=True,
@@ -3907,7 +3907,7 @@ class Xmas_Savings_Default_Transfer_Account_form(forms.Form):
    transaction = forms.ChoiceField(label="Transactions", choices=transaction_list,widget=forms.Select(attrs={"class":"form-control"}))
 
 class TransactionEnabler_Form(forms.Form):
-   title=forms.CharField(label="Title",max_length=30,widget=forms.TextInput(attrs={"class":"form-control",}),required=True)
+   title=forms.CharField(label="Title",max_length=250,widget=forms.TextInput(attrs={"class":"form-control",}),required=True)
 
    task_visible = forms.ChoiceField(label="Task Visible", choices=YESNO,widget=forms.Select(attrs={"class":"form-control"}))
 

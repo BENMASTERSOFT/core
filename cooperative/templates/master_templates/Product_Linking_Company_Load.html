@@ -17,7 +17,7 @@
                                         <tr>
                                             <th>#</th>
                                             <th>Title</th>
-                                            <th>Action</th>
+                                            <th colspan="2">Action</th>
                                       
                                         </tr>
                                     </thead>
@@ -28,7 +28,9 @@
                                             <td>{{company.title}}</td>
                                             
                                             <td>
-                                                <a href="{% url 'Product_Linking_Category_Load' period.pk batch.pk transaction.pk company.pk  %}" class="btn btn-success">Select</a>  </td>
+                                                <a href="{% url 'Product_Linking_Category_Load' period.pk batch.pk transaction.pk company.pk  %}" class="btn btn-success">Select</a>  </td> 
+                                                <td>
+                                                <a href="{% url 'Product_Linking_Available_Product_Load_All' period.pk batch.pk transaction.pk company.pk  %}" class="btn btn-primary">Availble Products</a>  </td>
                                         </tr>
                                     {% endfor %}
                                     </tbody>

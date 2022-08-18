@@ -135,7 +135,7 @@
 
                 {% endif %}
 
-                {% if 'SAVINGS SUSPENSE'  in task_array %}
+                {% if 'SAVINGS SUSPENSE'  in task_array %} 
                 <li>
                     <a href="javascript:;"><i class="sidebar-item-icon fa fa-edit"></i>
                         <span class="nav-label">Savings Suspense</span><i class="fa fa-angle-left arrow"></i></a>
@@ -153,11 +153,12 @@
                         <li>
                             <a href="{% url 'Standing_Order_Suspension_Transaction_Activation_Approval_Processing_Load' %}">Process Suspense Release</a>
                         </li>
+                        
 
                     </ul>
                 </li>
-                {% endif %}
-                {% if 'LOAN SCHEDULE' in task_array %}
+               {% endif %}
+                {% if 'LOAN SCHEDULE' in task_array %} 
                 <li>
                     <a href="javascript:;"><i class="sidebar-item-icon fa fa-edit"></i>
                         <span class="nav-label">Manage Loan Scedule</span><i class="fa fa-angle-left arrow"></i></a>
@@ -169,10 +170,14 @@
                         <li>
                             <a href="{% url 'loan_unscheduling_request_transaction_processing' %}">Process Unschedule Request</a>
                         </li>
-
+                        <li>
+                            <a href="{% url 'Loan_processing_scheduling_all_unscheduled' %}">Loan Scheduling</a>
+                        </li> <li>
+                            <a href="{% url 'Loan_processing_scheduling_based_on_date' %}">Date Based Scheduling</a>
+                        </li>
                     </ul>
                 </li>
-                {% endif %}
+               {% endif %}
                 {% if 'CASH DEPOSIT' in task_array %}
                     <li>
                         <a href="javascript:;"><i class="sidebar-item-icon fa fa-edit"></i>
@@ -323,7 +328,10 @@
                  {% endif %}
 
 
-                {% if 'MEMBERS WAVERS'  in task_array and 'MEMBERS WAVERS' in task_enabler_array  %}{% endif %}
+                 {% comment %}     {% if 'MEMBERS WAVERS'  in task_array and 'MEMBERS WAVERS' in task_enabler_array  %}
+                 {% endcomment %}
+
+                {% if 'MEMBERS WAVERS'  in task_array  %}
 
 
                     <li>
@@ -339,7 +347,7 @@
                             </ul>
                     </li>
 
-
+                {% endif %}
                 
 
 
@@ -358,36 +366,6 @@
                             <li>
                                 <a href="{% url 'Commodity_Loan_Dashboard_Load' %}">Commodity Loans</a>
                             </li>
-                           
-
-
-                        
-                            <li>
-                                <a href="javascript:;">
-                                    <span class="nav-label">Commodity Loans</span><i class="fa fa-angle-left arrow"></i></a>
-                                <ul class="nav-3-level collapse">
-                                    <li>
-                                        <a href="{% url 'Commodity_Loan_Dashboard_Load' %}">Commodity Request</a>
-                                    </li>
-                                    <li>
-                                        <a href="{% url 'membership_commodity_loan_Period__manage_transaction_load' %}">Manage Request</a>
-                                    </li>
-                                    <li>
-                                        <a href="{% url 'membership_commodity_loan_form_sales_transaction_period_load' %}">Form Issuance</a>
-                                    </li>
-                                    <li>
-                                        <a href="{% url 'membership_commodity_loan_Final_Applications' %}">Process Applications</a>
-                                    </li>
-                                   <li>
-                                        <a href="{% url 'commodity_loan_trending_products' %}">Trending Commodity</a>
-                                    </li>
-                                    <li>
-                                        <a href="{% url 'commodity_loan_invoicing_dashboard_load' %}">Invoicing Manager</a>
-                                    </li>
-
-                                </ul>
-                            </li>
-
 
                         </ul>
                     </li>
@@ -497,6 +475,7 @@
 
                 {% endif %}
 
+                {% if 'LEDGER MULTI OPERATIONS'  in task_array %}
                 <li>
                         <a href="javascript:;"><i class="sidebar-item-icon fa fa-bar-chart"></i>
                             <span class="nav-label">Ledger Multi Operations</span><i class="fa fa-angle-left arrow"></i></a>
@@ -510,7 +489,7 @@
 
                         </ul>
                     </li>
-
+                {% endif %}
 
                  
                 {% if 'BANK ACCOUNTS'  in task_array %}
@@ -587,7 +566,7 @@
 
                 {% endif %}
 
-                {% if 'MONTH END TRANSACTION'  in task_array %}
+                {% if 'MONTH END TRANSACTION'  in task_array %} 
                     <li>
                         <a href="javascript:;"><i class="sidebar-item-icon fa fa-sitemap"></i>
                             <span class="nav-label">Month End Transactions</span><i class="fa fa-angle-left arrow"></i></a>
@@ -605,7 +584,7 @@
 
                         </ul>
                     </li>
-                 {% endif %}
+                {% endif %}
                 {% if 'YEAR END TRANSACTION'  in task_array %}
                 <li>
                     <a href="javascript:;"><i class="sidebar-item-icon fa fa-sitemap"></i>
@@ -734,7 +713,7 @@
                                         </ul>
                                     </li>
 
-       <li>
+                                        <li>
                                         <a href="javascript:;">
                                             <span class="nav-label">Loan Transactions</span><i class="fa fa-angle-left arrow"></i></a>
                                         <ul class="nav-3-level collapse">

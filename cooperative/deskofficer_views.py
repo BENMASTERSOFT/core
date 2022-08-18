@@ -10066,6 +10066,7 @@ def Loan_processing_scheduling_all_unscheduled(request):
 	}
 	return render(request,'deskofficer_templates/Loan_processing_scheduling_all_unscheduled.html',context)
 
+
 def Loan_processing_scheduling_all_unscheduled_processed(request,pk):
 
 	LoansRepaymentBase.objects.filter(id=pk).update(schedule_status='SCHEDULED')
@@ -10310,6 +10311,29 @@ def loan_unscheduling_request_transaction_processing_details(request,pk):
 	return render(request,'deskofficer_templates/loan_unscheduling_request_transaction_processing_details.html',context)
 
 
+def loan_unscheduling_request_transaction_processing(request):
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	task_array=[]
+	for task in tasks:
+		task_array.append(task.task.title)
+
+	task_enabler=TransactionEnabler.objects.filter(status="YES")
+	task_enabler_array=[]
+	for item in task_enabler:
+		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
+	records=LoanUnschedulingRequest.objects.filter(approval_status='APPROVED',status='UNTREATED')
+	context={
+	'records':records,
+	'task_array':task_array,
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
+	}
+	return render(request,'deskofficer_templates/loan_unscheduling_request_transaction_processing.html',context)
 
 ############################################################
 ############## MEMBERSHIP COMMODITY LOAN SEARCH ############
@@ -10481,7 +10505,7 @@ def membership_commodity_loan_Company_products(request,return_pk,period_pk,batch
 		messages.error(request,'No Available Records')
 		return HttpResponseRedirect(reverse('membership_commodity_loan_Company_load', args=(return_pk,period.pk, batch.pk, transaction.pk)))
 
-	records=Company_Products.objects.filter(company=company,period=period,batch=batch,product__sub_category__category__transaction=transaction,status=stock_status)
+	records=Company_Products.objects.filter(company=company,period=period,batch=batch,product__sub_category__category__transaction=transaction,status=stock_status).order_by('product__product_name')
 
 	queryset=Members_Commodity_Loan_Products_Selection.objects.filter(product__batch=batch,product__period=period,product__company=company, member=member,status=status).order_by("-product__product__sub_category__category__duration")
 
