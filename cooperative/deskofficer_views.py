@@ -11162,6 +11162,14 @@ def membership_commodity_loan_Period_Transactions_load(request,pk):
 	return render(request,'deskofficer_templates/membership_commodity_loan_Period_Transactions_load.html',context)
 
 
+def membership_commodity_loan_Period_Transactions_drop(request,pk,member_pk):
+	applicant=Members_Commodity_Loan_Application.objects.get(id=pk)
+
+	applicant.delete()
+	return HttpResponseRedirect(reverse('membership_commodity_loan_Period_Transactions_load',args=(member_pk,)))
+
+
+
 
 def membership_commodity_loan_Dashboard_load(request,pk,return_pk):
 	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
@@ -13794,8 +13802,6 @@ def Monthly_Auxillary_Deduction_Generated_Update_Transaction_period_Load(request
 	for task in tasks:
 		task_array.append(task.task.title)
 
-
-
 	task_enabler=TransactionEnabler.objects.filter(status="YES")
 	task_enabler_array=[]
 	for item in task_enabler:
@@ -13811,15 +13817,13 @@ def Monthly_Auxillary_Deduction_Generated_Update_Transaction_period_Load(request
 	transaction_period=get_current_date(now)
 	button_show=False
 	if request.method == 'POST':
+		status=request.POST.get('status')
 		transaction_period_id = request.POST.get('transaction_period')
 		date_format = '%Y-%m-%d'
 		dtObj = datetime.datetime.strptime(transaction_period_id, date_format)
 		transaction_period=get_current_date(dtObj)
 
-
-		records=MonthlyDeductionListGenerated.objects.filter(salary_institution=salary_institution,transaction_period=transaction_period).order_by('member__coop_no')
-		if records:
-			button_show=True
+		return HttpResponseRedirect(reverse('Monthly_Auxillary_Deduction_Generated_Update_Transaction_List_Load',args=(transaction_period,salary_institution.pk,status)))
 
 	form.fields['transaction_period'].initial=get_current_date(now)
 	context={
@@ -13835,6 +13839,54 @@ def Monthly_Auxillary_Deduction_Generated_Update_Transaction_period_Load(request
 
 
 	return render(request,'deskofficer_templates/Monthly_Auxillary_Deduction_Generated_Update_Transaction_period_Load.html',context)
+
+
+def Monthly_Auxillary_Deduction_Generated_Update_Transaction_List_Load(request,trans_id,salary_id,status):
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	task_array=[]
+	for task in tasks:
+		task_array.append(task.task.title)
+
+
+	task_enabler=TransactionEnabler.objects.filter(status="YES")
+	task_enabler_array=[]
+	for item in task_enabler:
+		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
+	# return HttpResponse(trans_id)
+	transaction_period=trans_id
+	button_show=False
+	records=[]
+	salary_institution=SalaryInstitution.objects.get(id=salary_id)
+	if status=='ALL RECORDS':
+		records=MonthlyDeductionListGenerated.objects.filter(salary_institution=salary_institution,transaction_period=transaction_period).order_by('member__coop_no')
+	
+	elif status == 'GREATER':
+		records=MonthlyDeductionListGenerated.objects.filter(Q(salary_institution=salary_institution,transaction_period=transaction_period) & Q(balance__gt=0) ).order_by('member__coop_no')
+	
+	elif status == 'LESS':
+		records=MonthlyDeductionListGenerated.objects.filter(Q(salary_institution=salary_institution,transaction_period=transaction_period) & Q(balance__lt=0) ).order_by('member__coop_no')
+
+
+	if records:
+		button_show=True
+
+	context={
+	'transaction_period':transaction_period,
+	'records':records,
+	'button_show':button_show,
+	'salary_institution':salary_institution,
+	'task_array':task_array,
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
+	}
+
+
+	return render(request,'deskofficer_templates/Monthly_Auxillary_Deduction_Generated_Update_Transaction_List_Load.html',context)
 
 
 
@@ -17115,6 +17167,7 @@ def Individual_Capture(request):
 
 	form=Individual_Capture_Form(request.POST or None)
 	if request.method == "POST":
+		
 		title_id=request.POST.get('title')
 		title=Titles.objects.get(id=title_id)
 
@@ -17224,46 +17277,46 @@ def Individual_Capture(request):
 		user_type=user_type_obj.code
 
 
-		try:
-			user = CustomUser.objects.create_user(username=username,password=password,email=email,last_name=last_name,first_name=first_name,user_type=int(user_type))
-			user.members.applicant=record
-			user.members.member_id=member_id
-			user.members.coop_no=str(coop_no).zfill(5)
-			user.members.title=title
-			user.members.middle_name=middle_name
-			user.members.full_name=str(first_name) + ' ' + str(last_name) + ' ' + str(middle_name)
-			user.members.phone_number=phone_number
-			user.members.salary_institution=salary_institution
-			user.members.file_no=file_no
-			user.members.ippis_no=ippis_no
-			user.members.date_joined=date_joined
+		# try:
+		user = CustomUser.objects.create_user(username=username,password=password,email=email,last_name=last_name,first_name=first_name,user_type=int(user_type))
+		user.members.applicant=record
+		user.members.member_id=member_id
+		user.members.coop_no=str(coop_no).zfill(5)
+		user.members.title=title
+		user.members.middle_name=middle_name
+		user.members.full_name=str(first_name) + ' ' + str(last_name) + ' ' + str(middle_name)
+		user.members.phone_number=phone_number
+		user.members.salary_institution=salary_institution
+		user.members.file_no=file_no
+		user.members.ippis_no=ippis_no
+		user.members.date_joined=date_joined
 
-			user.members.status=status
-			user.members.savings_status=savings_status
-			user.members.loan_status=loan_status
-			user.members.shares_status=shares_status
-			user.members.welfare_status=welfare_status
+		user.members.status=status
+		user.members.savings_status=savings_status
+		user.members.loan_status=loan_status
+		user.members.shares_status=shares_status
+		user.members.welfare_status=welfare_status
 
-			user.members.date_of_first_appointment=date_hired
-			user.members.dob=dob
-			user.processed_by=processed_by
-			user.members.date_joined_status=date_joined_status
+		user.members.date_of_first_appointment=date_hired
+		user.members.dob=dob
+		user.processed_by=processed_by
+		user.members.date_joined_status=date_joined_status
 
-			if chk_fappt:
-				user.members.date_of_first_appointment_status=date_of_first_appointment_status
+		if chk_fappt:
+			user.members.date_of_first_appointment_status=date_of_first_appointment_status
 
-			if chk_dob:
-				user.members.dob_status=dob_status
+		if chk_dob:
+			user.members.dob_status=dob_status
 
-			user.save()
+		user.save()
 
 
-		except:
-			applicant.delete()
-			user.delete()
-			record.delete()
-			messages.error(request,'This member is not registered for obvious reasons, please concult the Administrator')
-			return HttpResponseRedirect(reverse("Individual_Capture"))
+		# except:
+		# 	applicant.delete()
+		# 	user.delete()
+		# 	record.delete()
+		# 	messages.error(request,'This member is not registered for obvious reasons, please concult the Administrator')
+		# 	return HttpResponseRedirect(reverse("Individual_Capture"))
 
 		transactions=TransactionTypes.objects.filter(~Q(source__title="LOAN") & ~Q(source__title='GENERAL') & ~Q(code='701'))
 
@@ -21136,13 +21189,17 @@ def Members_Ledger_Balance_Update_Savings_load(request,pk):
 																								particulars=particulars
 																								)
 		return HttpResponseRedirect(reverse('Members_Ledger_Balance_Update_Transaction_load', args=(ledger.member.pk,)))
-
-
+	
+	byear = "2022"
+	bmonth = "06"
+	bday = "30"
+	bdate = date(int(byear), int(bmonth), int(bday))
+	
 	form.fields['account_name'].initial=ledger.transaction.name
 	form.fields['account_number'].initial=ledger.account_number
 	form.fields['exist_amount'].initial=abs(ledger.balance)
 	form.fields['current_amount'].initial=abs(ledger.balance)
-	form.fields['balance_date'].initial=ledger.transaction_period
+	form.fields['balance_date'].initial=get_current_date(bdate)
 	context={
 		'form':form,
 		'ledger':ledger,
@@ -25521,19 +25578,11 @@ def membership_commodity_loan_Shortlisting_transaction_period_load(request):
 
 	transaction=[]
 	if request.method == 'POST':
-		period_id = request.POST.get('period')
-		period = Commodity_Period.objects.get(id=period_id)
-
-		batch_id = request.POST.get("batch")
-		batch = Commodity_Period_Batch.objects.get(id=batch_id)
-
-		transaction_id = request.POST.get('transaction')
-		transaction = TransactionTypes.objects.get(id=transaction_id)
-
-		applicants=Members_Commodity_Loan_Application.objects.filter(member__product__product__sub_category__category__transaction=transaction,batch=batch,period=period,short_listed=short_listed,status=status)
-		transaction=transaction.name
-
-
+		period_id = request.POST.get('period')		
+		batch_id = request.POST.get("batch")		
+		trans_id = request.POST.get('transaction')
+		
+		return HttpResponseRedirect(reverse('membership_commodity_loan_Shortlisting_transaction_list_load',args=(period_id, batch_id, trans_id)))
 	context={
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
@@ -25546,11 +25595,63 @@ def membership_commodity_loan_Shortlisting_transaction_period_load(request):
 	}
 	return render(request,'deskofficer_templates/membership_commodity_loan_Shortlisting_transaction_period_load.html',context)
 
+def membership_commodity_loan_Shortlisting_transaction_list_load(request,period_id, batch_id, trans_id):
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	task_array=[]
+	for task in tasks:
+		task_array.append(task.task.title)
+
+	task_enabler=TransactionEnabler.objects.filter(status="YES")
+	task_enabler_array=[]
+	for item in task_enabler:
+		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
+	short_listed='NO'
+	status='UNTREATED'
+	applicants=[]
+
+	transaction=[]
+	
+
+	period = Commodity_Period.objects.get(id=period_id)
+
+	batch = Commodity_Period_Batch.objects.get(id=batch_id)
+
+	transaction = TransactionTypes.objects.get(id=trans_id)
+
+	applicants=Members_Commodity_Loan_Application.objects.filter(member__product__product__sub_category__category__transaction=transaction,batch=batch,period=period,short_listed=short_listed,status=status)
+	transaction=transaction.name
+
+
+	context={
+	'task_array':task_array,
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
+	'applicants':applicants,
+	'transaction':transaction,
+	'period':period,
+	'batch':batch,
+	'trans_id':trans_id,
+	}
+	return render(request,'deskofficer_templates/membership_commodity_loan_Shortlisting_transaction_list_load.html',context)
+
 
 
 def membership_commodity_loan_Shortlisting(request,pk):
-	applicants=Members_Commodity_Loan_Application.objects.filter(id=pk).update(short_listed='YES')
-	return HttpResponseRedirect(reverse('membership_commodity_loan_form_sales_transaction_period_load'))
+	applicant=Members_Commodity_Loan_Application.objects.get(id=pk)
+	applicant.short_listed='YES'
+	applicant.save()
+	return HttpResponseRedirect(reverse('membership_commodity_loan_Shortlisting_transaction_list_load',args=(applicant.period_id,applicant.batch_id,applicant.member.product.product.sub_category.category.transaction_id)))
+
+
+def membership_commodity_loan_Shortlisting_All(request,period_id,batch_id,trans_id):
+	applicants=Members_Commodity_Loan_Application.objects.filter(member__product__product__sub_category__category__transaction_id=trans_id,batch_id=batch_id,period_id=period_id).update(short_listed='YES')
+	
+	return HttpResponseRedirect(reverse('membership_commodity_loan_Shortlisting_transaction_list_load',args=(period_id,batch_id,trans_id)))
 
 def membership_commodity_loan_Shortlisted_transaction_period_load(request):
 	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)

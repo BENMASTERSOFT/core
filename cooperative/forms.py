@@ -2007,6 +2007,15 @@ class members_exclusiveness_request_approval_process_form(forms.Form):
 
 
 class TransactionPeriod_form(forms.Form):
+   CHOICES=(
+      ('ALL RECORDS','ALL RECORDS'),
+      ('GREATER','GREATER'),
+      ('LESS','LESS'),
+
+      )
+   status = forms.ChoiceField(label="Status", choices=CHOICES,widget=forms.Select(attrs={"class":"form-control"}))
+
+
 
    transaction_period = forms.DateField(label='Approval Date', label_suffix=" : ",
                              required=True, disabled=False,

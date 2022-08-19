@@ -408,6 +408,7 @@ urlpatterns = [
 
 
     path('membership_commodity_loan_Period_approval_transaction_load/', master_views.membership_commodity_loan_Period_approval_transaction_load,name='membership_commodity_loan_Period_approval_transaction_load'),
+    path('membership_commodity_loan_Period_approval_transaction_list_load/<str:period_id>/<str:batch_id>/<str:trans_id>/', master_views.membership_commodity_loan_Period_approval_transaction_list_load,name='membership_commodity_loan_Period_approval_transaction_list_load'),
     path('membership_commodity_loan_Period_approval_transaction_details/<str:pk>/', master_views.membership_commodity_loan_Period_approval_transaction_details,name='membership_commodity_loan_Period_approval_transaction_details'),
 
 
@@ -915,6 +916,7 @@ urlpatterns = [
     path('Monthly_Auxillary_Deduction_Generated_Merger_Transaction_period_Load/<str:pk>/', deskofficer_views.Monthly_Auxillary_Deduction_Generated_Merger_Transaction_period_Load,name='Monthly_Auxillary_Deduction_Generated_Merger_Transaction_period_Load'),
 
     path('Monthly_Auxillary_Deduction_Generated_Update_Transaction_Institution_Load/', deskofficer_views.Monthly_Auxillary_Deduction_Generated_Update_Transaction_Institution_Load,name='Monthly_Auxillary_Deduction_Generated_Update_Transaction_Institution_Load'),
+    path('Monthly_Auxillary_Deduction_Generated_Update_Transaction_List_Load/<str:trans_id>/<str:salary_id>/<str:status>/', deskofficer_views.Monthly_Auxillary_Deduction_Generated_Update_Transaction_List_Load,name='Monthly_Auxillary_Deduction_Generated_Update_Transaction_List_Load'),
     path('Monthly_Auxillary_Deduction_Generated_Update_Transaction_period_Load/<str:pk>/', deskofficer_views.Monthly_Auxillary_Deduction_Generated_Update_Transaction_period_Load,name='Monthly_Auxillary_Deduction_Generated_Update_Transaction_period_Load'),
 
     path('Monthly_Auxillary_Deduction_Generated_Export_Institution_Load/', deskofficer_views.Monthly_Auxillary_Deduction_Generated_Export_Institution_Load,name='Monthly_Auxillary_Deduction_Generated_Export_Institution_Load'),
@@ -1206,6 +1208,7 @@ urlpatterns = [
     path('membership_commodity_loan_list_load/', deskofficer_views.membership_commodity_loan_list_load,name='membership_commodity_loan_list_load'),
     path('membership_commodity_loan_Period_Transactions_load/<str:pk>/', deskofficer_views.membership_commodity_loan_Period_Transactions_load,name='membership_commodity_loan_Period_Transactions_load'),
     path('membership_commodity_loan_Company_load/<str:pk>/<str:period_pk>/<str:batch_pk>/<str:transaction_pk>/', deskofficer_views.membership_commodity_loan_Company_load,name='membership_commodity_loan_Company_load'),
+    path('membership_commodity_loan_Period_Transactions_drop/<str:pk>/<str:member_pk>/', deskofficer_views.membership_commodity_loan_Period_Transactions_drop,name='membership_commodity_loan_Period_Transactions_drop'),
 
 
 
@@ -1257,6 +1260,9 @@ urlpatterns = [
     path('Loan_Balance_Broght_Forward_Consolidated_Transaction_Details_xls/<str:pk>/', deskofficer_views.Loan_Balance_Broght_Forward_Consolidated_Transaction_Details_xls,name='Loan_Balance_Broght_Forward_Consolidated_Transaction_Details_xls'),
 
     path('membership_commodity_loan_Shortlisting_transaction_period_load/', deskofficer_views.membership_commodity_loan_Shortlisting_transaction_period_load,name='membership_commodity_loan_Shortlisting_transaction_period_load'),
+    path('membership_commodity_loan_Shortlisting_transaction_list_load/<str:period_id>/<str:batch_id>/<str:trans_id>/', deskofficer_views.membership_commodity_loan_Shortlisting_transaction_list_load,name='membership_commodity_loan_Shortlisting_transaction_list_load'),
+    path('membership_commodity_loan_Shortlisting_All/<str:period_id>/<str:batch_id>/<str:trans_id>/', deskofficer_views.membership_commodity_loan_Shortlisting_All,name='membership_commodity_loan_Shortlisting_All'),
+
     path('membership_commodity_loan_Shortlisting/<str:pk>/', deskofficer_views.membership_commodity_loan_Shortlisting,name='membership_commodity_loan_Shortlisting'),
     path('membership_commodity_loan_Shortlisted_transaction_period_load/', deskofficer_views.membership_commodity_loan_Shortlisted_transaction_period_load,name='membership_commodity_loan_Shortlisted_transaction_period_load'),
     path('membership_commodity_loan_Shortlisted_History_transaction_period_load/', deskofficer_views.membership_commodity_loan_Shortlisted_History_transaction_period_load,name='membership_commodity_loan_Shortlisted_History_transaction_period_load'),

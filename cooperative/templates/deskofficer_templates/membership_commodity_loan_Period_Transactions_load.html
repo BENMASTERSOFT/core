@@ -5,8 +5,6 @@
             <div class="page-content fade-in-up">
                 
                 <div class="row">
-                   
-
                     <div class="col-md-7">
                         <div class="ibox">
                             <div class="ibox-head">
@@ -62,7 +60,7 @@
                                             <th>Duration</th>
                                             <th>Period</th>
                                             <th>Batch</th>
-                                            <th>Action</th>
+                                            <th colspan="2">Action</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -75,7 +73,10 @@
                                             <td>{{item.duration}}</td>
                                             <td>{{item.period.title}}</td>
                                             <td>{{item.batch.title}}</td>
-                                            <td><a href="{% url 'membership_commodity_loan_Dashboard_load' item.pk member.pk %}" class="btn btn-success">Load</a></td>
+                                            <td><a href="{% url 'membership_commodity_loan_Dashboard_load' item.pk member.pk %}" class="btn btn-success">Load</a>
+
+                                            <a href="{% url 'membership_commodity_loan_Period_Transactions_drop' item.pk member.pk %}" class="btn btn-danger">Drop</a>
+                                            </td>
                                     
                                         </tr>
                                 {% endfor %}
