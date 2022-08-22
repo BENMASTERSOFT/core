@@ -15,10 +15,13 @@ def reset_monthly_generated_transaction(salary_institution,transaction_period):
 	MonthlyGroupGeneratedTransactions.objects.filter(transaction_period=transaction_period,salary_institution=salary_institution).delete()
 	MonthlyDeductionListGenerated.objects.filter(transaction_period=transaction_period,salary_institution=salary_institution).delete()
 
-
 	MonthlyJointDeductionList.objects.filter(transaction_period=transaction_period,salary_institution=salary_institution).delete()
 	MonthlyJointDeductionGeneratedTransactions.objects.filter(transaction_period=transaction_period,salary_institution=salary_institution).delete()
 	MonthlyJointDeductionGenerated.objects.filter(transaction_period=transaction_period,salary_institution=salary_institution).delete()
+	
+	AccountDeductions.objects.filter(transaction_period=transaction_period,salary_institution=salary_institution).delete()
+	AuxillaryDeductions.objects.filter(transaction_period=transaction_period,salary_institution=salary_institution).delete()
+	
 
 
 	return 0

@@ -30,7 +30,8 @@
                                     <th>AMOUNT</th>
                                     <th>DEDUCT</th>
                                     <th>BALANCE</th>
-                                    <th>ACTION</th>
+                                    <th></th>
+                                    <th></th>
                                 </tr>
                             </thead>
                             <tfoot>
@@ -43,7 +44,8 @@
                                     <th>AMOUNT</th>
                                     <th>DEDUCT</th>
                                     <th>BALANCE</th>
-                                    <th>ACTION</th>
+                                    <th></th>
+                                    <th></th>
                                 </tr>
                             </tfoot>
                             <tbody>
@@ -66,7 +68,7 @@
                                         {% endif %}
                                         </td>   
 
-                                      
+                                      <td><a href="{% url 'Monthly_Auxillary_Deduction_Generated_Update_Transaction_List_Rectified' record.pk trans_id salary_id status %}" class="">Rectified</a></td>
                                     </tr>
                                 {% endfor %}
                                 

@@ -8,11 +8,12 @@
             <h4>{{record.member.get_full_name}} | {{record.receipt}}</h4>
             <p>Temporary Receipt Preview and Printing</p>
             <p>
-                <a class="btn btn-success" href="{% url 'commodity_loan_custom_invoicing_processing_Receipt_Print' record.receipt %}" target="_blank">Receipt Print</a>
+                <a class="btn btn-success" href="{% url 'commodity_loan_processing_Receipt_Print' record.loan_number %}" target="_blank">Receipt Print</a>
 				 	
-				
+				{% comment %}{% url 'commodity_loan_custom_invoicing_processing' record.member.pk  %}
+				{% endcomment %}
 
-                <a href="{% url 'commodity_loan_custom_invoicing_processing' record.member.pk  %}" class="btn btn-secondary">Close</a>
+                <a href="{% url 'Commodity_Loan_Dashboard_Load' %}" class="btn btn-secondary">Close</a>
             </p>
         </div>
        

@@ -22,7 +22,8 @@
                                     <th>Department</th>
                                     <th>Date Applied</th>
                                   
-                                    <th>Action</th>
+                                    <th></th>
+                                    <th></th>
                                 </tr>
                             </thead>
                             <tfoot>
@@ -33,7 +34,8 @@
                                     <th>Department</th>
                                     <th>Date Applied</th>
                                    
-                                    <th>Action</th>
+                                    <th></th>
+                                    <th></th>
                                 </tr>
                             </tfoot>
                             <tbody>
@@ -51,7 +53,8 @@
                                     <td>
                                         <a href="{% url 'membership_request_approval_info' member.pk %}" class="btn btn-secondary">Details</a> 
 
-                                       
+                                    </td>
+                                    <td>
                                         <a href="{% url 'MemberShipRequest_approval_submit' member.pk %}" class="btn btn-success">Process</a>
                                     </td>
                                     

@@ -1303,6 +1303,7 @@ class LoansRepaymentBase(DateObjectsModels):
     nok_phone_no=models.CharField(max_length=255,blank=True,null=True)
     nok_address=models.CharField(max_length=255,blank=True,null=True)
     penalty_status=models.CharField(max_length=20,choices=PENALTY_STATUS,default='NORMAL')
+    completed=  models.CharField(max_length=30,choices=YESNO,default='NO')
 
     # class Meta(DateObjectsModels.Meta):
     #     db_table="Loans_Repayment_Base"
@@ -1380,6 +1381,7 @@ class MonthlyDeductionListGenerated(DateObjectsModels):
     processing_status=models.CharField(max_length=20,choices=PROCESSING_STATUS,default='UNPROCESSED')
 
     verification=models.CharField(max_length=20, choices=YESNO,default='NO')
+    rectified=models.CharField(max_length=20, choices=YESNO,default='NO')
 
 
     # class Meta(DateObjectsModels.Meta):
@@ -1409,6 +1411,7 @@ class AccountDeductions(DateObjectsModels):
     salary_institution=models.ForeignKey(SalaryInstitution,on_delete=models.CASCADE)
     transaction_period=models.DateField(blank=True,null=True)
     ippis_no=models.CharField(max_length=255)
+    # ippis_no1=models.CharField(max_length=255)
     name=models.CharField(max_length=255)
     amount=models.DecimalField(max_digits=20,decimal_places = 2,default=0)
     transaction_status= models.CharField(max_length=20,choices=TRANSACTION_STATUS,default='UNTREATED')
@@ -1942,6 +1945,24 @@ class Commodity_Loan_Invoicing_Products_Selection_Temp(DateObjectsModels):
     # class Meta(DateObjectsModels.Meta):
     #     db_table="Commodity_Loan_Invoicing_Products_Selection_Temp"
 
+
+class Members_Commodity_Loan_Completed_Transactions(DateObjectsModels):
+    member=models.ForeignKey(Members,on_delete=models.CASCADE)
+    product_name=models.CharField(max_length=255)
+    product_model=models.CharField(max_length=100,blank=True,null=True)
+    details=models.TextField(blank=True,null=True)
+    quantity= models.PositiveSmallIntegerField(validators=[MinValueValidator(0)],default=0)
+    duration= models.PositiveSmallIntegerField(validators=[MinValueValidator(0)],default=0)
+    loan_amount=models.DecimalField(max_digits=20,decimal_places = 2,default=0)
+    amount_paid=models.DecimalField(max_digits=20,decimal_places = 2,default=0)
+    serial_no=models.CharField(max_length=255,blank=True,null=True)
+    loan_number=models.CharField(max_length=255,blank=True,null=True)
+    receipt=models.CharField(max_length=255,blank=True,null=True)
+    start_date=models.DateField(blank=True,null=True)
+   
+   
+    # class Meta(DateObjectsModels.Meta):
+    #     db_table="Members_Commodity_Loan_Completed_Transactions"
 
 
 

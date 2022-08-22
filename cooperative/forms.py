@@ -4512,88 +4512,41 @@ class Monthly_Deduction_Generated_Update_Details_Process_Form(forms.Form):
                               error_messages={'required': "Please Enter Amount Paid"})
 
 class commodity_loan_custom_invoicing_processing_Form(forms.Form):
+   description=forms.CharField(label="Description",max_length=255,widget=forms.TextInput(attrs={"class":"form-control"}),required=True)
+   model=forms.CharField(label="Product Model",max_length=255,widget=forms.TextInput(attrs={"class":"form-control"}),required=True)
+   details=forms.CharField(label="Details",max_length=255,widget=forms.TextInput(attrs={"class":"form-control"}),required=True)
+   receipt=forms.CharField(label="Receipt",max_length=255,widget=forms.TextInput(attrs={"class":"form-control"}),required=True)
+   amount = forms.DecimalField(initial=0,label='Amount', label_suffix=" : ", min_value=0,  max_digits=20,
+                              widget=forms.NumberInput(attrs={'class': 'form-control'}),
+                              decimal_places=2, required=True,
+                              disabled = False,
+                              error_messages={'required': "Please Enter Amount Paid"})
+   repayment = forms.DecimalField(initial=0,label='Repayment', label_suffix=" : ", min_value=0,  max_digits=20,
+                              widget=forms.NumberInput(attrs={'class': 'form-control'}),
+                              decimal_places=2, required=True,
+                              disabled = False,
+                              error_messages={'required': "Please Enter Amount Paid"})
+   amount_paid = forms.DecimalField(initial=0,label='Amount Paid', label_suffix=" : ", min_value=0,  max_digits=20,
+                              widget=forms.NumberInput(attrs={'class': 'form-control'}),
+                              decimal_places=2, required=True,
+                              disabled = False,
+                              error_messages={'required': "Please Enter Amount Paid"})
+   
+   quantity = forms.IntegerField(initial=0,label='Quantity', label_suffix=" : ", min_value=0,  required=False,
+                                 widget=forms.NumberInput(attrs={'class': 'form-control'}),
+                                disabled = False, error_messages={'required': "Please Min Unit"})
+
+   receipt=forms.CharField(label="Receipt No",max_length=255,widget=forms.TextInput(attrs={"class":"form-control"}),required=True)
+   serial_no=forms.CharField(label="Serial No",max_length=255,widget=forms.TextInput(attrs={"class":"form-control"}),required=True)
    effective_date = forms.DateField(label='Effective Date', label_suffix=" : ",
                                 required=True, disabled=False,
                                 widget=DateInput(attrs={'class': 'form-control'}),
                                 error_messages={'required': "This field is required."})
-
-   try:
-      company_list=[]
-
-      companies=Companies.objects.filter()
-
-
-      for company in companies:
-         small_company=(company.id,company.title)
-         company_list.append(small_company)
-   except:
-      company_list=[]
-
-   company = forms.ChoiceField(label="companies", choices=company_list,widget=forms.Select(attrs={"class":"form-control"}))
-
-   try:
-      transaction_list=[]
-
-      transactions=TransactionTypes.objects.filter(category="NON-MONETARY")
-
-
-      for transaction in transactions:
-         small_transaction=(transaction.id,transaction.name)
-         transaction_list.append(small_transaction)
-   except:
-      transaction_list=[]
-
-   transaction = forms.ChoiceField(label="Transactions", choices=transaction_list,widget=forms.Select(attrs={"class":"form-control"}))
-
-
-   try:
-      period_list=[]
-
-      periods=Commodity_Period.objects.all()
-
-
-      for period in periods:
-         small_period=(period.id,period.title)
-         period_list.append(small_period)
-   except:
-      period_list=[]
-
-   period = forms.ChoiceField(label="Periods", choices=period_list,widget=forms.Select(attrs={"class":"form-control"}))
-
-
-   try:
-      batch_list=[]
-
-      batches=Commodity_Period_Batch.objects.all()
-
-
-      for batch in batches:
-         small_batch=(batch.id,batch.title)
-         batch_list.append(small_batch)
-   except:
-      batch_list=[]
-
-   batch = forms.ChoiceField(label="Batches", choices=batch_list,widget=forms.Select(attrs={"class":"form-control"}))
-
-
-
-
-
-
-   quantity = forms.IntegerField(initial=0,label='Quantity', label_suffix=" : ", min_value=0,  required=False,
+   duration = forms.IntegerField(initial=0,label='Duration', label_suffix=" : ", min_value=0,  required=False,
                                  widget=forms.NumberInput(attrs={'class': 'form-control'}),
                                 disabled = False, error_messages={'required': "Please Min Unit"})
-   
   
-   description=forms.CharField(label="Description",max_length=255,widget=forms.TextInput(attrs={"class":"form-control",'readonly':'readonly'}),required=True)
-   model=forms.CharField(label="Product Model",max_length=255,widget=forms.TextInput(attrs={"class":"form-control",'readonly':'readonly'}),required=True)
-   details=forms.CharField(label="Details",max_length=255,widget=forms.TextInput(attrs={"class":"form-control",'readonly':'readonly'}),required=True)
 
-   rate = forms.DecimalField(initial=0,label='Rate', label_suffix=" : ", min_value=0,  max_digits=20,
-                              widget=forms.NumberInput(attrs={'class': 'form-control','readonly':'readonly'}),
-                              decimal_places=2, required=True,
-                              disabled = False,
-                              error_messages={'required': "Please Enter Amount Paid"})
 
 class Members_Commodity_Loan_Application_Form_Sales_Form(forms.Form):
    description=forms.CharField(label="Description",max_length=255,widget=forms.TextInput(attrs={"class":"form-control",'readonly':'readonly'}),required=True)
@@ -4609,15 +4562,34 @@ class Members_Commodity_Loan_Application_Form_Sales_Form(forms.Form):
                               decimal_places=2, required=True,
                               disabled = False,
                               error_messages={'required': "Please Enter Amount Paid"})
+   amount_paid = forms.DecimalField(initial=0,label='Amount Paid', label_suffix=" : ", min_value=0,  max_digits=20,
+                              widget=forms.NumberInput(attrs={'class': 'form-control','readonly':'readonly'}),
+                              decimal_places=2, required=True,
+                              disabled = False,
+                              error_messages={'required': "Please Enter Amount Paid"})
+   
+
    receipt=forms.CharField(label="Receipt No",max_length=255,widget=forms.TextInput(attrs={"class":"form-control",'readonly':'readonly'}),required=True)
    serial_no=forms.CharField(label="Serial No",max_length=255,widget=forms.TextInput(attrs={"class":"form-control"}),required=True)
    effective_date = forms.DateField(label='Effective Date', label_suffix=" : ",
                                 required=True, disabled=False,
-                                widget=DateInput(attrs={'class': 'form-control'}),
+                                widget=DateInput(attrs={'class': 'form-control','readonly':'readonly'}),
                                 error_messages={'required': "This field is required."})
    duration = forms.IntegerField(initial=0,label='Duration', label_suffix=" : ", min_value=0,  required=False,
                                  widget=forms.NumberInput(attrs={'class': 'form-control','readonly':'readonly'}),
                                 disabled = False, error_messages={'required': "Please Min Unit"})
+  
+
+class search_with_date_Form(forms.Form):
+   start_date = forms.DateField(label='Start Date', label_suffix=" : ",
+                                required=True, disabled=False,
+                                widget=DateInput(attrs={'class': 'form-control'}),
+                                error_messages={'required': "This field is required."})
+  
+   stop_date = forms.DateField(label='Stop Date', label_suffix=" : ",
+                                required=True, disabled=False,
+                                widget=DateInput(attrs={'class': 'form-control'}),
+                                error_messages={'required': "This field is required."})
   
 
 

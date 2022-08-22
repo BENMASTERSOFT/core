@@ -3,12 +3,42 @@
 
 {% block content %}
             <div class="page-content fade-in-up">
-               
+                               <div class="row">
+                    <div class="col-md-6">
+                        <div class="ibox">
+                            <div class="ibox-head">
+                                <div class="ibox-title">Transaction Period | <a href="{% url 'Members_Dashboard_Load_Savings_Ledger' member.member_id %}">Back</a></div>
+                                
+                            </div>
+                            <div class="ibox-body">
+                                <form class="form-horizontal" method="POST" action="">
+                                    {% csrf_token %}
+                                    <div class="row">
+                                        <div class="col-sm-6 form-group">
+                                            <label>Start Date</label>
+                                            {{form.start_date}}
+                                        </div>
+                                        <div class="col-sm-6 form-group">
+                                            <label>Stop Date</label>
+                                           {{form.stop_date}}
+                                        </div>
+                                    </div>
+                                
+                                    <div class="form-group">
+                                        <button class="btn btn-secondary" type="submit">Submit</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+                 
+                </div>
                 <div class="row">
                     <div class="col-xl-10">
                         <div class="ibox">
                             <div class="ibox-head">
-                                <div class="ibox-title">{{member.member.get_full_name}} | Personal Ledger Details | <a href="{% url 'Members_Dashboard_Load' member.member_id %}">Back</a> </div>
+                                <div class="ibox-title">{{member.member.get_full_name}} | Personal Ledger Details | <a href="{% url 'Members_Dashboard_Load_Savings_Ledger' member.member_id %}">Back</a> </div>
                             </div>
                             <div class="ibox-body">
                                 <table class="table">

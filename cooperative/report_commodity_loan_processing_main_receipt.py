@@ -33,7 +33,7 @@ def path_relative_to_file(base_file_path, relative_path):
 
 
 def _commodity_main_invoice_original(width,height,receipt):
-	record=Members_Commodity_Loan_Application.objects.get(receipt=receipt)
+	record=Members_Commodity_Loan_Completed_Transactions.objects.get(receipt=receipt)
 	heightList=[
 	height*8 / 100,
 	height*10 / 100,
@@ -302,14 +302,14 @@ def _commodityCustomerSectionDetailsContainer(width,height,receipt):
 	return res
 
 def _commodityCustomerSectionDetails(width,height,receipt):
-	record=Members_Commodity_Loan_Application.objects.get(receipt=receipt)
-	name=record.member.member.get_full_name
+	record=Members_Commodity_Loan_Completed_Transactions.objects.get(receipt=receipt)
+	name=record.member.get_full_name
 
-	phone_number=record.member.member.phone_number
+	phone_number=record.member.phone_number
 
 	residential_address=[]
-	if record.member.member.residential_address:
-		residential_address=record.member.member.residential_address
+	if record.member.residential_address:
+		residential_address=record.member.residential_address
 	
 
 	widthList=[
@@ -390,7 +390,7 @@ def _commodityCustomerSectionDateContainer(width,height,receipt):
 	return res
 
 def _commodityCustomerSectionDate(width,height,receipt):
-	record=Members_Commodity_Loan_Application.objects.get(receipt=receipt)
+	record=Members_Commodity_Loan_Completed_Transactions.objects.get(receipt=receipt)
 	tdate=get_current_date(record.tdate)
 
 	widthList=[
@@ -436,7 +436,7 @@ def _commodityCustomerSectionDate(width,height,receipt):
 
 
 def _commodity_main_invoice_details(width,height,receipt):
-	record=Members_Commodity_Loan_Application.objects.get(receipt=receipt)
+	record=Members_Commodity_Loan_Completed_Transactions.objects.get(receipt=receipt)
 	heightList=[
 	height*70 / 100,
 	height*15 / 100,
@@ -487,7 +487,7 @@ def _commodity_main_invoice_details(width,height,receipt):
 
 
 def _commodity_main_invoice_details_analysis(width,height,receipt):
-	record=Members_Commodity_Loan_Application.objects.get(receipt=receipt)
+	record=Members_Commodity_Loan_Completed_Transactions.objects.get(receipt=receipt)
 	widthList=[
 	width*7 / 100,
 	width*63 / 100,
@@ -508,11 +508,14 @@ def _commodity_main_invoice_details_analysis(width,height,receipt):
 	height*10/100,
 	]
 
+	p_model=[]
+	if record.product_model:
+		p_model = record.product_model
 	res = Table([
 		['QTY','DESCRIPTION','RATE','AMOUNT(=N=)'],
-		[record.member.quantity,record.member.product.product.product_name,'',record.member.coop_price],
-		['',f'Model: {record.member.product.product.product_model}','',''],
-		['',f'Size: {record.member.product.product.details}','',''],
+		['',record.product_name,'',record.amount_paid],
+		['',f'Model: {p_model}','',''],
+		['',f'Size: {record.details}','',''],
 		['','','',''],
 		['',f'Serial No:: {record.serial_no}','',''],
 		['','','',''],
@@ -594,7 +597,7 @@ def _commodity_main_invoice_details_legend(width, height,receipt):
 
 
 def _commodity_main_invoice_details_legendTable(width,height,receipt):
-	record=Members_Commodity_Loan_Application.objects.get(receipt=receipt)
+	record=Members_Commodity_Loan_Completed_Transactions.objects.get(receipt=receipt)
 	heightList = [
 	height * 34 / 100,
 	height * 33 / 100,
@@ -608,8 +611,8 @@ def _commodity_main_invoice_details_legendTable(width,height,receipt):
 	
 	res = Table([
 		
-		['TOTAL',record.coop_price],
-		['DEPOSIT',record.coop_price],
+		['TOTAL',record.amount_paid],
+		['DEPOSIT',record.amount_paid],
 		['BALANCE',0.00],
 			
 		],
@@ -638,7 +641,7 @@ def _commodity_main_invoice_details_legendTable(width,height,receipt):
 
 
 def _commodity_main_invoice_numbertoWords(width, height,receipt):
-	record=Members_Commodity_Loan_Application.objects.get(receipt=receipt)
+	record=Members_Commodity_Loan_Completed_Transactions.objects.get(receipt=receipt)
 	height=height-5
 	width=width-10
 
@@ -657,8 +660,8 @@ def _commodity_main_invoice_numbertoWords(width, height,receipt):
 	para1Style.textColor = colors.HexColor('#000')
 
 
-	words=str(record.coop_price)[:-3]
-	word1=str(record.coop_price)[-2:]
+	words=str(record.amount_paid)[:-3]
+	word1=str(record.amount_paid)[-2:]
 
 	words = str(inflector.number_to_words(int(words))).title()
 	word1 = str(inflector.number_to_words(int(word1))).title()

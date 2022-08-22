@@ -37,7 +37,8 @@
                                     <th>Member ID</th>
                                     <th>Name</th>
                                     <th>Loan Number</th>
-                                    <th>Action</th>
+                                    <th></th>
+                                    <th></th>
                                    
                                 </tr>
                             </thead>
@@ -47,7 +48,8 @@
                                     <th>Member ID</th>
                                     <th>Name</th>
                                     <th>Loan Number</th>
-                                    <th colspan="2">Action</th>
+                                    <th></th>
+                                    <th></th>
                                    
                                 </tr>
                             </tfoot>
@@ -61,8 +63,10 @@
                                     <td><a href="{% url 'Upload_Commodity_Product_Loan_Products_Uploaded_Details' record.pk %}" class="btn btn-primary">Details</a></td> 
                                     <td>
                                         {% if record.ledger_status == 'UNPROCESSED' %}
-                                        <a href="{% url 'Upload_Commodity_Product_Loan_Ledger_Posting' record.pk %}" class="btn btn-success">Ledger</a></td>
-                                        {% endif %}
+                                        <a href="{% url 'Upload_Commodity_Product_Loan_Ledger_Posting' record.pk %}" class="btn btn-success">Ledger</a>
+                                    {% endif %}
+                                </td>
+                                        
                                     
                                 </tr>
                             {% endfor %}

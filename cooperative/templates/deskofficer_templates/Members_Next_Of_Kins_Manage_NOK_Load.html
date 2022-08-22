@@ -5,12 +5,12 @@
             <div class="page-content fade-in-up">
                 <div class="row">
                     
-                    <div class="col-xl-8">
+                    <div class="col-xl-10">
                         <div class="ibox">
                             <div class="ibox-head">
                                 <div class="ibox-title">List of Next of Kins | {{member.admin.first_name}} {{member.admin.last_name}} {{member.get_middle_name}} | 
                                  <a href="{% url 'MembersNextOfKins_lock' member.pk %}" class="btn btn-success">LOCK</a>
-                                 |<input type="button" class="btn btn-secondary" value="Back" onclick="history.back()"/>
+                                 |<a href="{% url 'Members_Next_Of_Kins_Manage_search' %}">Back</a>
 
                              </div>
                             </div>
@@ -23,6 +23,7 @@
                                             <th>Address</th>
                                             <th>Phone</th>
                                             <th>Relationship</th>
+                                            <th>Status</th>
                                             <th>Action</th>
                                         </tr>
                                     </thead>
@@ -34,6 +35,7 @@
                                             <td>{{nok.address}}</td>
                                             <td>{{nok.phone_number}}</td>
                                             <td>{{nok.relationships}}</td>
+                                            <td><a href="{% url 'Members_Next_Of_Kins_Manage_NOK_Tossle' nok.pk %}">{{nok.status}}</a></td>
                                             <td>
                                             {% if nok.lock_status == 'OPEN' %}
                                                 <a href="{% url 'Members_Next_Of_Kins_Manage_NOK_Update' nok.pk member_id %}" class="btn btn-success">Update</a>

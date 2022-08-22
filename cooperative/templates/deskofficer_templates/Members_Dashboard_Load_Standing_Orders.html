@@ -1,0 +1,53 @@
+{% extends 'deskofficer_templates/base_template.html' %}
+{% load static %}
+
+{% block content %}
+            <div class="page-content fade-in-up">
+                <div class="row">
+                    <div class="col-xl-8">
+                        <div class="ibox">
+                            <div class="ibox-head">
+                                <div class="ibox-title">{{member.get_full_name}} | {{member.coop_no}} | Standing Orders | <a href="{% url 'Members_Dashboard_Load' member.pk %}">Back</a></div>
+                            </div>
+                            <div class="ibox-body">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                             <th>#</th>
+                                            <th>Description</th>
+                                            <th>Amount</th>
+                                            <th>Effective Date</th>
+                                            <th>Status</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for item in orders %}
+                                <tr>
+                                    <td>{{forloop.counter}}</td>
+                                    <td>{{item.transaction.transaction.name}}</td>
+                                    <td>{{item.amount}}</td>
+                                    <td>{{item.updated_at|date:"D, d M, Y"}}</td>
+                                    <td>{{item.status}}</td>
+                                    <td>
+                                      {% comment %}   
+                                        <a href="{% url 'Auxillary_Savings_Deduction_Generate' item.transaction.transaction.pk member.pk %}" class="btn btn-primary">Generate</a>
+                                {% endcomment %}
+                                   </td>
+                                </tr>
+                            {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                   
+                </div>
+              
+           
+            </div>
+  <div class="sidenav-backdrop backdrop"></div>
+    <div class="preloader-backdrop">
+        <div class="page-preloader">Loading</div>
+    </div>
+{% endblock %}

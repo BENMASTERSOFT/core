@@ -12,7 +12,7 @@
             <div class="col-md-12">
                 <div class="ibox">
                     <div class="ibox-head">
-                        <div class="ibox-title">LIST OF APPLICANTS | {{transaction.name}} | {{period.title}}-{{batch.title}} | <a href="{% url 'membership_commodity_loan_Period_approval_transaction_load' %}">Back</a></div>
+                        <div class="ibox-title">LIST OF APPLICANTS | {{transaction.name}} | {{period.title}}-{{batch.title}} | <a href="{% url 'membership_commodity_loan_Period_approval_transaction_list_Approve_all' period.pk batch.pk transaction.pk %}" class="btn btn-success">Approve All</a> | <a href="{% url 'membership_commodity_loan_Period_approval_transaction_load' %}">Back</a></div>
                     </div>
                     <div class="ibox-body">
                         <table class="table table-striped table-bordered table-hover" id="example-table" cellspacing="0" width="100%">

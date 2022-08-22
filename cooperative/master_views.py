@@ -7931,6 +7931,39 @@ def membership_commodity_loan_Period_approval_transaction_list_load(request,peri
     }
     return render(request,'master_templates/membership_commodity_loan_Period_approval_transaction_list_load.html',context)
 
+def membership_commodity_loan_Period_approval_transaction_list_Approve_all(request,period_id,batch_id,trans_id):
+    task_array=[]
+    if not request.user.user_type == '1':
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
+  
+    form =membership_commodity_loan_Period_approval_transaction_details_form(request.POST or None)
+
+    processed_by=CustomUser.objects.get(id=request.user.id)
+    transaction = TransactionTypes.objects.get(id=trans_id)
+    period=Commodity_Period.objects.get(id=period_id)
+    batch= Commodity_Period_Batch.objects.get(id=batch_id)
+
+    if request.method == 'POST':
+        approval_date=get_current_date(now)
+        approval_comment=request.POST.get("comment")
+        approval_status=request.POST.get("approval_status")
+
+        Members_Commodity_Loan_Application.objects.filter(short_listed='YES',approval_status="PENDING",period=period,batch=batch,member__product__product__sub_category__category__transaction=transaction,submission_status='SUBMITTED',status='UNTREATED').update(approval_date=approval_date,approval_status=approval_status,approval_comment=approval_comment,approval_officer=processed_by.username)
+
+        return HttpResponseRedirect(reverse('membership_commodity_loan_Period_approval_transaction_list_load',args=(period_id,batch_id,trans_id,)))
+
+    form.fields['comment'].initial = "Approved"
+    context={
+    'task_array':task_array,
+    'transaction':transaction,
+    'period':period,
+    'batch':batch,
+    'form':form,
+    }
+    return render(request,'master_templates/membership_commodity_loan_Period_approval_transaction_list_Approve_all.html',context)
+
 
 
 
