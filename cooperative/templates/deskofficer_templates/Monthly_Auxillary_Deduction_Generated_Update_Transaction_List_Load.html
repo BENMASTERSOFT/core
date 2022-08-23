@@ -15,7 +15,7 @@
                 <div class="ibox">
                     <div class="ibox-head">
                           <div class="ibox-title"> <input type="button" class="btn btn-primary" value="Back" onclick="history.back()"/> | GENERATED SUMMARIZED TRANSACTIONS | {{salary_institution.title}} | {{transaction_period}} 
-                                
+                              | <a href="{% url 'Monthly_Auxillary_Deduction_Generated_Update_Transaction_period_Load' salary_institution.pk %}">Back</a>  
                                 </div>
                     </div>
                     <div class="ibox-body">
@@ -62,9 +62,9 @@
                                         <td>
 
                                         {% if record.amount == record.amount_deducted %}
-                                            <a href="{% url 'Monthly_Deduction_Generated_Update_Details_load'  record.pk  %} " class="btn btn-primary">Details</a>
+                                            <a href="{% url 'Monthly_Deduction_Generated_Update_Details_load'  record.pk  status %} " class="btn btn-primary">Details</a>
                                             {% else %}
-                                                <a href="{% url 'Monthly_Deduction_Generated_Update_Details_load'  record.pk  %} " class="btn btn-danger">Details</a>
+                                                <a href="{% url 'Monthly_Deduction_Generated_Update_Details_load'  record.pk status %} " class="btn btn-danger">Details</a>
                                         {% endif %}
                                         </td>   
 

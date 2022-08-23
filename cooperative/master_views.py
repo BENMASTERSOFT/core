@@ -7931,6 +7931,7 @@ def membership_commodity_loan_Period_approval_transaction_list_load(request,peri
     }
     return render(request,'master_templates/membership_commodity_loan_Period_approval_transaction_list_load.html',context)
 
+
 def membership_commodity_loan_Period_approval_transaction_list_Approve_all(request,period_id,batch_id,trans_id):
     task_array=[]
     if not request.user.user_type == '1':

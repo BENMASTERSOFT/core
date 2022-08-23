@@ -62,9 +62,9 @@
                                     <td>{{record.loan_number}}</td>
                                     <td><a href="{% url 'Upload_Commodity_Product_Loan_Products_Uploaded_Details' record.pk %}" class="btn btn-primary">Details</a></td> 
                                     <td>
-                                        {% if record.ledger_status == 'UNPROCESSED' %}
-                                        <a href="{% url 'Upload_Commodity_Product_Loan_Ledger_Posting' record.pk %}" class="btn btn-success">Ledger</a>
-                                    {% endif %}
+                                        
+                                        <a href="{% url 'Upload_Commodity_Product_Loan_Products_Uploaded_Delete' record.pk %}" class="btn btn-danger">Drop</a>
+                                  
                                 </td>
                                         
                                     

@@ -1831,6 +1831,8 @@ class Members_Commodity_Loan_Application(DateObjectsModels):
     comments=models.TextField(blank=True,null=True)
     ticket=models.CharField(max_length=255,blank=True,null=True)
     serial_no=models.CharField(max_length=255,blank=True,null=True)
+    phone_no1=models.CharField(max_length=255,blank=True,null=True)
+    phone_no2=models.CharField(max_length=255,blank=True,null=True)
     receipt=models.CharField(max_length=255,blank=True,null=True)
     loan_number=models.CharField(max_length=255,blank=True,null=True)
     period=models.ForeignKey(Commodity_Period,on_delete=models.CASCADE,blank=True,null=True)
@@ -1956,6 +1958,8 @@ class Members_Commodity_Loan_Completed_Transactions(DateObjectsModels):
     loan_amount=models.DecimalField(max_digits=20,decimal_places = 2,default=0)
     amount_paid=models.DecimalField(max_digits=20,decimal_places = 2,default=0)
     serial_no=models.CharField(max_length=255,blank=True,null=True)
+    phone_no1=models.CharField(max_length=255,blank=True,null=True)
+    phone_no2=models.CharField(max_length=255,blank=True,null=True)
     loan_number=models.CharField(max_length=255,blank=True,null=True)
     receipt=models.CharField(max_length=255,blank=True,null=True)
     start_date=models.DateField(blank=True,null=True)
@@ -1963,6 +1967,16 @@ class Members_Commodity_Loan_Completed_Transactions(DateObjectsModels):
    
     # class Meta(DateObjectsModels.Meta):
     #     db_table="Members_Commodity_Loan_Completed_Transactions"
+
+
+class Members_Commodity_Receipt_Phone_no(DateObjectsModels):
+    name=models.CharField(max_length=100,blank=True,null=True)
+    phone_no=models.CharField(max_length=100,blank=True,null=True)
+    status=models.CharField(max_length=20,choices=MEMBERSHIP_STATUS,default='INACTIVE')
+   
+   
+    # class Meta(DateObjectsModels.Meta):
+    #     db_table="Members_Commodity_Receipt_Phone_no"
 
 
 

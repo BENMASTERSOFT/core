@@ -3503,7 +3503,8 @@ class membership_commodity_loan_Period_approval_transaction_details_form(forms.F
 
 
 class membership_commodity_loan_form_sales_transaction_form(forms.Form):
-
+   phone_no1=forms.CharField(label="phone No",max_length=255,widget=forms.TextInput(attrs={"class":"form-control"}),required=True)
+   phone_no2=forms.CharField(label="phone No",max_length=255,widget=forms.TextInput(attrs={"class":"form-control"}),required=True)
    form_print = forms.ChoiceField(label="Form Print", choices=YESNO,widget=forms.Select(attrs={"class":"form-control"}))
    channel = forms.ChoiceField(label="Payment Channels", choices=CHANNELS,widget=forms.Select(attrs={"class":"form-control"}))
 
@@ -4538,6 +4539,8 @@ class commodity_loan_custom_invoicing_processing_Form(forms.Form):
 
    receipt=forms.CharField(label="Receipt No",max_length=255,widget=forms.TextInput(attrs={"class":"form-control"}),required=True)
    serial_no=forms.CharField(label="Serial No",max_length=255,widget=forms.TextInput(attrs={"class":"form-control"}),required=True)
+   phone_no1=forms.CharField(label="phone No",max_length=255,widget=forms.TextInput(attrs={"class":"form-control"}),required=True)
+   phone_no2=forms.CharField(label="phone No",max_length=255,widget=forms.TextInput(attrs={"class":"form-control"}),required=True)
    effective_date = forms.DateField(label='Effective Date', label_suffix=" : ",
                                 required=True, disabled=False,
                                 widget=DateInput(attrs={'class': 'form-control'}),

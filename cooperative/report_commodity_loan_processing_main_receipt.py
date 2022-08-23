@@ -61,7 +61,7 @@ def _commodity_main_invoice_original(width,height,receipt):
 
 	res = Table([
 		[_invoiceHeader()],
-		[_commodityMainReceiptLogoTable(width,heightList[1])],
+		[_commodityMainReceiptLogoTable(width,heightList[1],record.receipt)],
 		[_commodityMainReceiptCaption(width,heightList[2],record.receipt)],
 		[_commodityCustomerSection(width,heightList[3],record.receipt)],
 		[_commodity_main_invoice_details(width,heightList[4],record.receipt)],
@@ -114,12 +114,14 @@ def _invoiceHeader():
 
 
 	para1 = Paragraph(line1,para1Style)
-	para2 = Paragraph(f'<u><b>Motto:</b></u> United we Stand',para2Style)
+	para2 = Paragraph(f'Alone we can do little; together we can do so much',para2Style)
+	# para2 = Paragraph(f'Together ordinary people can achieve extraordinary results',para2Style)
 	paraList = [para1,para2]
 	return paraList
 
 
-def _commodityMainReceiptLogoTable(width, height):
+def _commodityMainReceiptLogoTable(width, height,receipt):
+	record=Members_Commodity_Loan_Completed_Transactions.objects.get(receipt=receipt)
 	widthList = [
 		width * 30 / 100,
 		width * 40 / 100,
@@ -160,10 +162,30 @@ def _commodityMainReceiptLogoTable(width, height):
 
 	para4Style.fontName='Helvetica'
 	para4Style.textColor = colors.HexColor('#000')
+
+
 	
 	line4 =Paragraph('Ebonyi State.',para4Style)
 
 	paraList = [line1,line2,line3,line4]
+
+	para5Style = ParagraphStyle('para5d')
+	para5Style.fontSize = 10
+	para5Style.alignment = TA_LEFT
+	para5Style.spaceAfter = 3
+	para5Style.fontName='Helvetica'
+	para5Style.textColor = colors.HexColor('#000')
+	
+	paraList1=[]
+	line5=Paragraph("")
+	line6=Paragraph("")
+	if record.phone_no1:
+		line5 =Paragraph(record.phone_no1,para5Style)
+		
+	if record.phone_no2:
+		line6 =Paragraph(record.phone_no2,para5Style)
+	
+	paraList1=[line5,line6]
 
 	img1='COOPLOGO.png'
 	leftImagePath=path_relative_to_file(__file__, f'../static/logo/{img1}')
@@ -171,7 +193,7 @@ def _commodityMainReceiptLogoTable(width, height):
 	leftImg = Image(leftImagePath, leftImageWidth, height-15, kind = 'proportional')
 
 	res = Table([
-		[paraList,leftImg,'Phone Numbers']
+		[paraList,leftImg,paraList1]
 		],
 		widthList,
 		height
@@ -204,19 +226,29 @@ def _commodityMainReceiptCaption(width,height,receipt):
 	width*30 / 100,
 	]
 
+	para1Style = ParagraphStyle('para1d')
+	# para1Style.fontSize = 10
+	# para1Style.alignment = TA_LEFT
+
+	# para1Style.fontName='Helvetica-Bold'
+	# para1Style.textColor = colors.HexColor('#000')
+
+	text=f'NO: <b>{receipt}</b>'
+	line1 =Paragraph(text,para1Style)
 	res = Table([
-		['','Cash/Credit Sales Invoice',f'NO: {receipt}'],
+		['','Cash/Credit Sales Invoice',line1],
 		],
 		widthList,
 		height
 		)
 	
+	color = colors.toColor('rgba(0, 115, 153, 0.5)')
 	res.setStyle([
 		('GRID', (1, 0), (1, 0), 1, 'red'),
 
 		# ('LEFTPADDING', (0, 0), (-1, -1), 0),
 		# ('LEFTPADDING', (0, 0), (0, 0), 5),
-		# ('BOTTOMPADDING', (0, 0), (0, 0), 5),
+		('BACKGROUND', (1, 0), (1, 0), color),
 
 		# ('BOTTOMPADDING', (-1, -1), (-1, -1), 25),
 		('RIGHTPADDING', (-1, 0), (-1, 0), 30),
@@ -331,20 +363,23 @@ def _commodityCustomerSectionDetails(width,height,receipt):
 		widthList,
 		heightList
 		)
-	
+
+	color = colors.toColor('rgba(0, 115, 153, 0.9)')
 	res.setStyle([
 		('GRID', (0, 0), (-1, -1), 1, 'red'),
 
 		# ('LEFTPADDING', (0, 0), (-1, -1), 0),
 		('LEFTPADDING', (0, 0), (0, -1), 5),
-		# ('BOTTOMPADDING', (0, 0), (0, 0), 5),
-
+		
 		# ('BOTTOMPADDING', (-1, -1), (-1, -1), 25),
 		('RIGHTPADDING', (0, 0), (-1, -1), 0),
 		
 		('FONTSIZE', (0, 0), (-1, -1), 10),
 		('FONTNAME', (0, 0), (-1, -1), 'Helvetica'),
 		('FONTNAME', (0, 0), (0, -1), 'Helvetica-Bold'),
+
+		('BACKGROUND', (0, 0), (0, -1), color),
+		('TEXTCOLOR', (0, 0), (0, -1), 'white'),
 
 		# ('ALIGN',(1, 0), (1, 0), 'CENTER' ),
 		# ('ALIGN',(-1, 0), (-1, 0), 'RIGHT' ),
@@ -413,6 +448,7 @@ def _commodityCustomerSectionDate(width,height,receipt):
 		heightList
 		)
 	
+	color = colors.toColor('rgba(0, 115, 153, 0.9)')
 	res.setStyle([
 		('GRID', (0, 0), (-1, -1), 1, 'red'),
 
@@ -426,6 +462,8 @@ def _commodityCustomerSectionDate(width,height,receipt):
 		('FONTSIZE', (0, 0), (-1, -1), 10),
 		('FONTNAME', (0, 0), (-1, -1), 'Helvetica'),
 		('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+		('BACKGROUND', (0, 0), (-1, 0), color),
+		('TEXTCOLOR', (0, 0), (-1, 0), 'white'),
 
 		# ('ALIGN',(1, 0), (1, 0), 'CENTER' ),
 		# ('ALIGN',(-1, 0), (-1, 0), 'RIGHT' ),
@@ -513,7 +551,7 @@ def _commodity_main_invoice_details_analysis(width,height,receipt):
 		p_model = record.product_model
 	res = Table([
 		['QTY','DESCRIPTION','RATE','AMOUNT(=N=)'],
-		['',record.product_name,'',record.amount_paid],
+		[record.quantity,record.product_name,'',record.amount_paid],
 		['',f'Model: {p_model}','',''],
 		['',f'Size: {record.details}','',''],
 		['','','',''],
@@ -526,16 +564,20 @@ def _commodity_main_invoice_details_analysis(width,height,receipt):
 		widthList,
 		heightList
 		)
-	
+	color = colors.toColor('rgba(0, 115, 153, 0.9)')
+	color1 = colors.toColor('rgba(0, 115, 153, 0.01)')
 	res.setStyle([
-		('GRID', (0, 0), (-1, -1), 1, 'red'),
+		('GRID', (0, 0), (-1, -1), 0.2, 'red'),
 
 		# ('LEFTPADDING', (0, 0), (-1, -1), 0),
 		# ('LEFTPADDING', (0, 0), (0, 0), 5),
 		# ('BOTTOMPADDING', (0, 0), (0, 0), 5),
 
-		# ('BOTTOMPADDING', (-1, -1), (-1, -1), 25),
-		# ('RIGHTPADDING', (-1, 0), (-1, 0), 30),
+		('ROWBACKGROUNDS', (0, 1), (-1, -1),  [
+			'beige',color1
+			]),
+		('BACKGROUND', (0, 0), (-1, 0), color),
+		('TEXTCOLOR', (0, 0), (-1, 0), 'white'),
 		
 		('FONTSIZE', (0, 0), (-1, -1), 10),
 		('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
@@ -709,13 +751,15 @@ def _commodity_main_invoiceSignatureTable(width,height):
 	style.fontName = 'Helvetica-Bold'
 	style.fontSize = 8
 	style.spaceAfter = 0
+
+	style.textColor= 'white'
 	style.alignment = TA_LEFT
 
 
 	style1 = ParagraphStyle('titlesign1')
-	style1.fontName = 'Helvetica'
+	style1.fontName = 'Helvetica-Bold'
 	style1.fontSize = 8
-	# style1.spaceAfter = 3
+	style1.textColor= 'white'
 	style1.alignment = TA_LEFT
 
 
@@ -740,7 +784,7 @@ def _commodity_main_invoiceSignatureTable(width,height):
 	widthList,
 	height)
 
-
+	color = colors.toColor('rgba(0, 115, 153, 0.9)')
 	res.setStyle([
 	# ('GRID', (0, 0), (-1, -1), 10, 'red'),
 
@@ -749,9 +793,10 @@ def _commodity_main_invoiceSignatureTable(width,height):
 	('BOTTOMPADDING', (0, 0), (-1, -1), 3),
 
 	# ('LINEABOVE', (0,0), (0,0), 3, 'red'),
-	# ('BACKGROUND', (0, 0), (-1, -1), color),
 
-	# ('TEXTCOLOR', (0, 0), (-1, -1), 'white'),
+
+	('BACKGROUND', (0, 0), (-1, -1),  color),
+	
 
 	('ALIGN', (0, 0), (-1, -1), 'CENTER'),
 	# ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),

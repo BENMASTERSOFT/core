@@ -297,16 +297,27 @@ def _commodityReceiptTitleTable(width, height):
 
 def _commodityReceiptBodyTable(width,height,receipt):
 	record=Members_Commodity_Loan_Application.objects.get(receipt=receipt)
+	
+	phone1=''
+	phone2=''
+	if record.phone_no1:
+		phone1=record.phone_no1
+
+	if record.phone_no2:
+		phone2=record.phone_no2
+
 	heightList = [
-	height * 11 / 100,
-	height * 11 / 100,
-	height * 11 / 100,
-	height * 11 / 100,
-	height * 11 / 100,
-	height * 11 / 100,
-	height * 11 / 100,
-	height * 11 / 100,
-	height * 11 / 100,
+	height * 9 / 100,
+	height * 9 / 100,
+	height * 9 / 100,
+	height * 9 / 100,
+	height * 9 / 100,
+	height * 9 / 100,
+	height * 9 / 100,
+	height * 9 / 100,
+	height * 9 / 100,
+	height * 9 / 100,
+	height * 9 / 100,
 	height * 1 / 100,
 	
 	
@@ -331,6 +342,7 @@ def _commodityReceiptBodyTable(width,height,receipt):
 
 	res = Table([
 		
+		['','DESCRIPTION:','VALUES',''],
 		['','NAME:',record.member.member.get_full_name,''],
 		['','DEPT:',department,''],
 		['','CTCS NO:',record.member.member.coop_no,''],
@@ -340,26 +352,33 @@ def _commodityReceiptBodyTable(width,height,receipt):
 		['','AMOUNT:',record.coop_price,''],
 		['','MONTHLY PAYMENT:',record.repayment,''],
 		['','EFFECTIVE DATE:',effective_date,''],
-		['','','',''],
+		['','CONTACTS',f'{phone1}, {phone2}'],
+		['','',''],
 	
 		
 		],
 		widthList,
 		heightList
 		)
-
+	color = colors.toColor('rgba(0, 115, 153, 0.9)')
+	color1 = colors.toColor('rgba(0, 115, 153, 0.01)')
 	res.setStyle([
 		# ('GRID', (1, 1), (1, -1), 1, 'red'),
 		('INNERGRID', (0, 0), (-1, -1), .9, 'grey'),
 		('FONTSIZE', (0,0), (-1,-1), 11),
 		('FONTNAME', (1, 0), (1, -1), 'Helvetica-Bold'),
+		('FONTNAME', (2, 0), (2, 0), 'Helvetica-Bold'),
+		('ROWBACKGROUNDS', (1, 1), (-2, -2),  [
+			'beige',color1
+			]),
 
 		('ALIGN', (0,0), (-1,-1), 'LEFT'),
 		('VALIGN', (0,0), (-1,-1), 'MIDDLE'),
 
 		('LINEABOVE', (0,0), (-1,0), 1, 'red'),
 		('LINEBELOW', (0,0), (-1,0), 1, 'red'),
-		# ('RIGHTPADDING', (3,0), (-1,-1), 20),
+		('BACKGROUND', (1,0), (-2,0), color),
+		('TEXTCOLOR', (1,0), (-2,0), 'white'),
 
 
 		])
@@ -367,145 +386,6 @@ def _commodityReceiptBodyTable(width,height,receipt):
 
 	return res
 
-
-def _loanApplicationCerticatePersonnelSection(width,height,pk):
-	applicant=LoansRepaymentBase.objects.get(loan_number=pk)
-	heightList=[
-		height * 30 / 100,
-		height * 70 / 100,
-		
-	]
-	para1Style = ParagraphStyle('para1d')
-	para1Style.fontSize = 12
-	para1Style.alignment = TA_CENTER
-	
-	para1Style.fontName='Helvetica'
-	para1Style.textColor = colors.HexColor('#000')
-
-	para1=Paragraph(f"""<u><b>SECTION A</b>(Personnal Data)</u>""",para1Style)
-	
-
-	res = Table([
-		[para1],
-		[_loanApplicationCerticatePersonnelBodyTable(width,heightList[1],pk)],
-		],
-		width-27,
-		heightList,
-		)
-	res.setStyle([
-		('GRID', (0, 0), (-1, -1), .8, 'grey'),
-		('LEFTPADDING', (0, 0), (-1, -1), 0),
-		('BOTTOMPADDING', (0, 0), (-1, -1), 0),
-		('BOTTOMPADDING', (0, 0), (0, 0), 5),
-
-		# ('INNERGRID', (0, 0), (-1, -1), .5, 'grey'),
-
-		# ('LINEABOVE', (0,0), (-1,0), 1, 'red'),
-		# ('LINEBELOW', (0,0), (-1,0), 1, 'red'),
-		# ('LINEBELOW', (1,3), (1,3), 1, color),
-		
-		])
-	return res
-
-
-def _loanApplicationCerticatePersonnelBodyTable(width, height,pk):
-	applicant=LoansRepaymentBase.objects.get(loan_number=pk)
-	widthList = [
-		width * 5 / 100,
-		width * 10 / 100,
-		width * 80 / 100,
-	]
-
-	heightList=[
-	height * 50 /100,
-	height * 50 /100,
-	]
-	res = Table([
-		['','NAME:',applicant.member.get_full_name],
-		['','COOP. NO:',applicant.member.member_id],
-
-		],
-		widthList,
-		heightList
-		)
-	
-	res.setStyle([
-	# ('GRID', (0, 0), (-1, -1), 1, 'red'),
-	('FONTNAME', (1,0), (1,-1), 'Helvetica-Bold'),
-	('LINEBELOW', (0,0), (-1,-1), .8, 'grey'),
-	
-	])
-	return res
-
-
-
-def _loanApplicationCerticateGenBodyTable(width, height,pk):
-	applicant=LoansRepaymentBase.objects.get(loan_number=pk)
-	widthList = [
-		width * 5 / 100,
-		width * 25 / 100,
-		width * 65 / 100,
-	]
-
-	heightList=[
-	height * 10 /100,
-	height * 9 /100,
-	height * 9 /100,
-	height * 9 /100,
-	height * 9 /100,
-	height * 9 /100,
-	height * 9 /100,
-	height * 9 /100,
-	height * 9 /100,
-	height * 9 /100,
-	height * 9 /100,
-	
-	]
-	# [_genPriceListTable(width,heightList[1])],
-
-	res = Table([
-		['','LOAN NUMBER',applicant.loan_number],
-		['','LOAN TYPE',applicant.transaction.name],
-		['','DURATION',f'{applicant.duration} Month(s)'],
-		['','START DATE',get_print_date(applicant.start_date)],
-		['','STOP DATE',get_print_date(applicant.stop_date)],
-		['','LOAN AMOUNT',f'=N={applicant.loan_amount}'],
-		['','MONTHLY REPAYMENT',f'=N={applicant.repayment}'],
-		['','IINTEREST DEDUCTION',applicant.interest_deduction],
-		['','INTEREST AMOUNT',f'=N={applicant.interest}'],
-		['','IINTEREST RATE',f'{applicant.interest_rate}%'],
-		['','ADMIN CHARGES',f'=N={applicant.admin_charge}'],
-		],
-		widthList,
-		heightList
-		)
-	
-	res.setStyle([
-	('GRID', (0, 0), (-1, -1), .6, 'grey'),
-	# ('INNERGRID', (0, 0), (-1, -1), .5, 'grey'),
-	('LINEBELOW', (0,-1), (-1,-1), 1, 'grey'),
-	# ('RIGHTPADDING', (0, 0), (-1, -1), 20),
-	# ('LEFTPADDING', (0, 0), (-1, -1), 0),
-	# ('LEFTPADDING', (0, 0), (0, 0), 15),
-	# ('LEFTPADDING', (0, 1), (1, 1), 15),
-
-	# ('BOTTOMPADDING', (0, 0), (-1, -1), 0),
-	# ('BOTTOMPADDING', (0, 0), (0, 0), 1),
-	# ('BOTTOMPADDING', (0, -1), (-1, -1), 60),
-
-	# ('BACKGROUND', (0, 0), (-1, -1), color),
-
-
-	('FONTNAME', (1,0), (1,-1), 'Helvetica-Bold'),
-
-	# ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
-	# ('VALIGN', (0, 0), (0, -1), 'BOTTOM'),
-	# ('VALIGN', (-1, 0), (-1, -1), 'TOP'),
-	("ROWBACKGROUNDS", (0,1), (-1,-1), [
-			'antiquewhite', 'beige' #, colors.grey
-			])
-	])
-	return res
 
 
 
@@ -541,18 +421,20 @@ def _commodityCerticateGenSignatureTable(width,height):
 	width,
 	height)
 
+	color = colors.toColor('rgba(0, 115, 153, 0.5)')
 
 	res.setStyle([
 	# ('GRID', (0, 0), (-1, -1), 10, 'red'),
 
-	('TOPPADDING', (0, 0), (-1, -1), 100),
+	('TOPPADDING', (0, 0), (-1, -1), 150),
+	# ('LEFTPADDING', (0, 0), (-1, -1), 100),
 
 	('BOTTOMPADDING', (0, 0), (-1, -1), 0),
 
 	# ('LINEABOVE', (0,0), (0,0), 3, 'red'),
-	# ('BACKGROUND', (0, 0), (-1, -1), color),
 
-	# ('TEXTCOLOR', (0, 0), (-1, -1), 'white'),
+
+	# ('BACKGROUND', (0, 0), (-1, -1), color),
 
 	('ALIGN', (0, 0), (-1, -1), 'CENTER'),
 	# ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),

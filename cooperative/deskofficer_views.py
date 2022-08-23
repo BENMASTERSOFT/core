@@ -18,6 +18,7 @@ from . auto_receipt_manager import get_receipt
 from datetime import datetime
 from datetime import date
 import datetime
+from reportlab.lib import colors
 
 from django.utils.dateparse import parse_date
 from dateutil.relativedelta import relativedelta
@@ -123,13 +124,13 @@ def commodity_loan_processing_Receipt_Print(request,pk):
 		colWidths= widthList,
 		rowHeights= heightList
 		)
-
+	color = colors.toColor('rgba(0, 115, 153, 0.1)')
 	mainTable.setStyle([
 		# ('GRID', (0, 0), (-1, -1), 1, 'red'),
 		('TEXTCOLOR',(0,0),(0,0),'black'),
 		('FONTSIZE', (0,0), (0,0), 16),
 		('FONTNAME', (0,0), (0,0), 'Helvetica-Bold'),
-		('BACKCOLOR', (0,0), (-1,-1), 'grey'),
+		('BACKGROUND', (0,0), (-1,-1), color),
 
 		('ALIGN', (0,0), (0,-1), 'CENTER'),
 		('VALIGN', (0,0), (0,-1), 'MIDDLE'),
@@ -155,7 +156,7 @@ def commodity_loan_processing_Receipt_Print(request,pk):
 
 def commodity_loan_custom_invoicing_processing_Receipt_Print(request,pk):
 
-	record=Members_Commodity_Loan_Completed_Transactions.objects.get(receipt=pk)
+	record=Members_Commodity_Loan_Application.objects.get(receipt=pk)
 	operator=request.user.username
 	buf = io.BytesIO()
 
@@ -188,6 +189,7 @@ def commodity_loan_custom_invoicing_processing_Receipt_Print(request,pk):
 		rowHeights= heightList
 		)
 
+	color = colors.toColor('rgba(0, 115, 153, 0.11)')
 	mainTable.setStyle([
 		# ('GRID', (0, 0), (-1, -1), 1, 'red'),
 		('TEXTCOLOR',(0,0),(0,0),'black'),
@@ -196,7 +198,7 @@ def commodity_loan_custom_invoicing_processing_Receipt_Print(request,pk):
 
 		('ALIGN', (0,0), (0,-1), 'CENTER'),
 		('VALIGN', (0,0), (0,-1), 'MIDDLE'),
-
+		('BACKGROUND', (0,0), (-1,-1), color),
 
 		('LEFTPADDING', (0, 0), (0, 2), 0),
 		('BOTTOMPADDING', (0, 0), (-1, -1), 0),
@@ -13806,6 +13808,7 @@ def Monthly_Auxillary_Deduction_Generated_Update_Transaction_period_Load(request
 
 	form.fields['transaction_period'].initial=get_current_date(now)
 	context={
+	'salary_institution':salary_institution,
 	'transaction_period':transaction_period,
 	'records':records,
 	'button_show':button_show,
@@ -13856,6 +13859,7 @@ def Monthly_Auxillary_Deduction_Generated_Update_Transaction_List_Load(request,t
 
 	context={
 	'transaction_period':transaction_period,
+	'status':status,
 	'records':records,
 	'button_show':button_show,
 	'salary_institution':salary_institution,
@@ -13878,7 +13882,73 @@ def Monthly_Auxillary_Deduction_Generated_Update_Transaction_List_Rectified(requ
 	
 
 
-def Monthly_Deduction_Generated_Update_Details_load(request,pk):
+# def Monthly_Deduction_Generated_Update_Details_load(request, pk, status):
+# 	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+# 	task_array=[]
+# 	for task in tasks:
+# 		task_array.append(task.task.title)
+
+# 	task_enabler=TransactionEnabler.objects.filter(status="YES")
+# 	task_enabler_array=[]
+# 	for item in task_enabler:
+# 		task_enabler_array.append(item.title)
+
+# 	default_password="NO"
+# 	if Staff.objects.filter(admin=request.user,default_password='YES'):
+# 		default_password="YES"
+
+# 	member=MonthlyDeductionListGenerated.objects.get(id=pk)
+
+# 	salary_institution=member.member.salary_institution
+# 	transaction_period=member.transaction_period
+
+# 	records=MonthlyDeductionList.objects.filter(member=member.member,transaction_period=transaction_period)
+
+# 	# return HttpResponse(records.count())
+# 	queryset=  MonthlyDeductionList.objects.filter(transaction_period=transaction_period,salary_institution=salary_institution,member=member.member).aggregate(total_cash=Sum('amount'))
+# 	total_amount=queryset['total_cash']
+
+# 	queryset1=  StandingOrderAccounts.objects.filter(transaction__member=member.member).aggregate(total_cash=Sum('amount'))
+# 	total_schedule=queryset1['total_cash']
+
+
+# 	record_array=[]
+# 	for item in records:
+# 		standing_order_amount=0
+		
+# 		if StandingOrderAccounts.objects.filter(transaction__account_number=item.account_number).exists():
+# 			standing_order=StandingOrderAccounts.objects.get(transaction__account_number=item.account_number)
+# 			standing_order_amount=standing_order.amount
+
+# 		if PersonalLedger.objects.filter(account_number=item.account_number).exists():
+# 			ledger=PersonalLedger.objects.filter(account_number=item.account_number).last()
+
+# 			if item.transaction.source.title == 'SAVINGS':
+# 				record_array.append((ledger.transaction.name,ledger.account_number,abs(ledger.balance),standing_order_amount,item.amount,item.pk))
+# 			else:
+# 				if LoansRepaymentBase.objects.filter(loan_number=ledger.account_number).exists():
+# 					loan_repay = LoansRepaymentBase.objects.get(loan_number=ledger.account_number)
+# 					total_schedule=float(total_schedule)+float(loan_repay.repayment)
+# 					record_array.append((ledger.transaction.name,ledger.account_number,abs(ledger.balance),loan_repay.repayment,item.amount,item.pk))
+
+# 	context={
+# 	'total_schedule':total_schedule,
+# 	'total_amount':total_amount,
+# 	'record_array':record_array,
+# 	'status':status,
+# 	'member':member,
+# 	'member_pk':pk,
+# 	'transaction_period':transaction_period,
+# 	'records':records,
+# 	'pk':pk,
+# 	'salary_institution':salary_institution,
+# 	'task_array':task_array,
+# 	'task_enabler_array':task_enabler_array,
+# 	'default_password':default_password,
+# 	}
+# 	return render(request,'deskofficer_templates/Monthly_Deduction_Generated_Update_Details_load.html',context)
+
+def Monthly_Deduction_Generated_Update_Details_load(request, pk, status):
 	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
 	task_array=[]
 	for task in tasks:
@@ -13926,12 +13996,15 @@ def Monthly_Deduction_Generated_Update_Details_load(request,pk):
 					loan_repay = LoansRepaymentBase.objects.get(loan_number=ledger.account_number)
 					total_schedule=float(total_schedule)+float(loan_repay.repayment)
 					record_array.append((ledger.transaction.name,ledger.account_number,abs(ledger.balance),loan_repay.repayment,item.amount,item.pk))
-
+		else:
+			record_array.append((standing_order.transaction.transaction.name,standing_order.transaction.account_number,abs(standing_order.amount),standing_order_amount,item.amount,item.pk))
 	context={
 	'total_schedule':total_schedule,
 	'total_amount':total_amount,
 	'record_array':record_array,
+	'status':status,
 	'member':member,
+	'member_pk':pk,
 	'transaction_period':transaction_period,
 	'records':records,
 	'pk':pk,
@@ -13941,6 +14014,7 @@ def Monthly_Deduction_Generated_Update_Details_load(request,pk):
 	'default_password':default_password,
 	}
 	return render(request,'deskofficer_templates/Monthly_Deduction_Generated_Update_Details_load.html',context)
+
 
 
 
@@ -13978,7 +14052,7 @@ def Monthly_Deduction_Generated_Update_Details_Process(request,pk):
 		total_amount=queryset['total_cash']
 		MonthlyDeductionListGenerated.objects.filter(member=member,transaction_period=transaction_period,salary_institution=salary_institution).update(amount=total_amount,balance=F('amount')-F('amount_deducted'))
 		query=MonthlyDeductionListGenerated.objects.get(member=member,transaction_period=transaction_period,salary_institution=salary_institution)
-		return HttpResponseRedirect(reverse('Monthly_Deduction_Generated_Update_Details_load',args=(query.pk,)))
+		return HttpResponseRedirect(reverse('Monthly_Deduction_Generated_Update_Details_load',args=(query.pk,'LESS')))
 
 
 	form.fields['existing_amount'].initial=record.amount
@@ -14006,7 +14080,7 @@ def Monthly_Deduction_Generated_Update_Details_Remove(request,pk):
 	total_amount=queryset['total_cash']
 	MonthlyDeductionListGenerated.objects.filter(member=member,transaction_period=transaction_period,salary_institution=salary_institution).update(amount=total_amount,balance=F('amount')-F('amount_deducted'))
 	query=MonthlyDeductionListGenerated.objects.get(member=member,transaction_period=transaction_period,salary_institution=salary_institution)
-	return HttpResponseRedirect(reverse('Monthly_Deduction_Generated_Update_Details_load',args=(query.pk,)))
+	return HttpResponseRedirect(reverse('Monthly_Deduction_Generated_Update_Details_load',args=(query.pk,'LESS')))
 
 
 
@@ -14077,7 +14151,7 @@ def Monthly_Deduction_Generated_Update_Details_Add_Savings_Select(request,pk,mem
 
 	MonthlyDeductionListGenerated.objects.filter(member=member,transaction_period=transaction_period,salary_institution=salary_institution).update(amount=total_amount,balance=F('amount')-F('amount_deducted'))
 	query=MonthlyDeductionListGenerated.objects.get(member=member,transaction_period=transaction_period,salary_institution=salary_institution)
-	return HttpResponseRedirect(reverse('Monthly_Deduction_Generated_Update_Details_load',args=(return_pk,)))
+	return HttpResponseRedirect(reverse('Monthly_Deduction_Generated_Update_Details_load',args=(return_pk,'LESS')))
 
 
 
@@ -14136,7 +14210,7 @@ def Monthly_Deduction_Generated_Update_Details_Add_Loans_Select(request,pk,membe
 	salary_institution=SalaryInstitution.objects.get(id=salary_id)
 	record = LoansRepaymentBase.objects.get(id=pk)
 
-	queryset=MonthlyDeductionList.objects.get(member=member,transaction=record.transaction,transaction_period=transaction_period,salary_institution=salary_institution,account_number=record.loan_number)
+	# queryset=MonthlyDeductionList.objects.get(member=member,transaction=record.transaction,transaction_period=transaction_period,salary_institution=salary_institution,account_number=record.loan_number)
 
 	# return HttpResponse(queryset.transaction_period)
 	if MonthlyDeductionList.objects.filter(member=member,transaction=record.transaction,transaction_period=transaction_period,salary_institution=salary_institution,account_number=record.loan_number).exists():
@@ -14151,7 +14225,7 @@ def Monthly_Deduction_Generated_Update_Details_Add_Loans_Select(request,pk,membe
 
 	MonthlyDeductionListGenerated.objects.filter(member=member,transaction_period=transaction_period,salary_institution=salary_institution).update(amount=total_amount,balance=F('amount')-F('amount_deducted'))
 	query=MonthlyDeductionListGenerated.objects.get(member=member,transaction_period=transaction_period,salary_institution=salary_institution)
-	return HttpResponseRedirect(reverse('Monthly_Deduction_Generated_Update_Details_load',args=(return_pk,)))
+	return HttpResponseRedirect(reverse('Monthly_Deduction_Generated_Update_Details_load',args=(return_pk,'LESS')))
 
 
 
@@ -18989,7 +19063,7 @@ def Uploading_Existing_Loans_validate(request,pk):
 					StandingOrderAccounts.objects.filter(transaction__transaction=record.savings,transaction__member=member).update(status=status2)
 					queryset=StandingOrderAccounts.objects.get(transaction__transaction=record.savings,transaction__member=member)
 					MembersAccountsDomain.objects.filter(account_number=queryset.transaction.account_number).update(loan_lock=loan_lock)
-					StandingOrderDeactivatedAccounts(transaction=queryset,status=status,processed_by=processed_by.username,tdate=tdate).save()
+					StandingOrderDeactivatedAccounts(transaction=queryset,status=status,processed_by=processed_by,tdate=tdate).save()
 		messages.success(request,"Record Validated Successfully")
 
 
@@ -25768,7 +25842,7 @@ def membership_commodity_loan_Shortlisting_transaction_list_load(request,period_
 
 	transaction = TransactionTypes.objects.get(id=trans_id)
 
-	applicants=Members_Commodity_Loan_Application.objects.filter(member__product__product__sub_category__category__transaction=transaction,batch=batch,period=period,short_listed=short_listed,status=status)
+	applicants=Members_Commodity_Loan_Application.objects.filter(member__product__product__sub_category__category__transaction=transaction,batch=batch,period=period,short_listed=short_listed,status=status,approval_status='PENDING')
 	transaction=transaction.name
 
 
@@ -26333,7 +26407,7 @@ def membership_commodity_loan_form_sales_transaction_period_load(request):
 
 		transaction_id = request.POST.get('transaction')
 		transaction = TransactionTypes.objects.get(id=transaction_id)
-
+		# Members_Commodity_Loan_Application.objects.filter(approval_status='APPROVED',member__product__product__sub_category__category__transaction=transaction,batch=batch,period=period,short_listed=short_listed,status='TREATED').update(status=status)
 		applicants=Members_Commodity_Loan_Application.objects.filter(approval_status='APPROVED',member__product__product__sub_category__category__transaction=transaction,batch=batch,period=period,short_listed=short_listed,status=status)
 		transaction=transaction.name
 
@@ -26371,17 +26445,38 @@ def membership_commodity_loan_form_sales(request,pk):
 	form=membership_commodity_loan_form_sales_transaction_form(request.POST or None)
 	applicant=Members_Commodity_Loan_Application.objects.get(pk=pk)
 
+
+	phones=Members_Commodity_Receipt_Phone_no.objects.filter(status='ACTIVE')[:2]
+	phone1=[]
+	phone2=[]
+
+	if phones.count()>1:
+
+		phone1=phones[0].phone_no
+		phone2=phones[1].phone_no
+	
+	elif phones.count()==1:
+		phone1=phones[0].phone_no
+		
+
+
 	if request.method == "POST" and 'admin-charge' in request.POST:
 		date_format = '%Y-%m-%d'
 
 		effective_date_id=request.POST.get('effective_date')
 		dtObj = datetime.datetime.strptime(effective_date_id, date_format)
 		effective_date=get_current_date(dtObj)
-
+		phone1=request.POST.get('phone_no1')
+		phone2=request.POST.get('phone_no2')
 		
+
+		if not phone1 and not phone2:
+			messages.error(request,'Phone Number Missing, atleast one Phone number is needed')
+			return HttpResponseRedirect(reverse('membership_commodity_loan_form_sales',args=(pk,)))
 		
 		if 	Members_Commodity_Loan_Application_Form_Sales.objects.filter(applicant=applicant).exists():
-			pass
+			queryset=Members_Commodity_Loan_Application_Form_Sales.objects.filter(applicant=applicant).first()
+			receipt=queryset.receipt
 		else:
 			receipt= get_receipt()
 
@@ -26389,16 +26484,20 @@ def membership_commodity_loan_form_sales(request,pk):
 										tdate=get_current_date(now),
 										processed_by=CustomUser.objects.get(id=request.user.id),
 										status='UNTREATED').save()
-			applicant.effective_date=effective_date
-			applicant.receipt=receipt
-			applicant.status='TREATED'
-			applicant.save()
+		applicant.effective_date=effective_date
+		applicant.receipt=receipt
+		applicant.phone_no1=phone1
+		applicant.phone_no2=phone2
+		applicant.status='TREATED'
+		applicant.save()
 
 		
 	
 		return HttpResponseRedirect(reverse('membership_commodity_loan_form_sales_validation',args=(receipt,)))
 
 
+	form.fields['phone_no1'].initial = phone1
+	form.fields['phone_no2'].initial = phone2
 	form.fields['amount'].initial = applicant.coop_price
 	form.fields['effective_date'].initial = get_current_date(now)
 	form.fields['admin_charges'].initial = applicant.admin_charge
@@ -27021,7 +27120,20 @@ def commodity_loan_custom_invoicing_processing_products_preview(request,pk):
 	
 	
 	member =Members.objects.get(id=pk)
+	phones=Members_Commodity_Receipt_Phone_no.objects.filter(status='ACTIVE')[:2]
+	phone1=[]
+	phone2=[]
+
+	if phones.count()>1:
+
+		phone1=phones[0].phone_no
+		phone2=phones[1].phone_no
 	
+	elif phones.count()==1:
+		phone1=phones[0].phone_no
+		
+
+
 	form = commodity_loan_custom_invoicing_processing_Form(request.POST or None)
 	
 	tdate=get_current_date(now)
@@ -27041,9 +27153,15 @@ def commodity_loan_custom_invoicing_processing_products_preview(request,pk):
 		product_name=request.POST.get('description')
 		product_model=request.POST.get('model')
 		product_details=request.POST.get('details')
+		phone1=request.POST.get('phone_no1')
+		phone2=request.POST.get('phone_no2')
 		
 		if not product_name:
 			messages.error(request,'Product Name is Missing')
+			return HttpResponseRedirect(reverse('commodity_loan_custom_invoicing_processing_products_preview',args=(pk,)))
+		
+		if not phone1 and not phone2:
+			messages.error(request,'Phone Number Missing, atleast one Phone number is needed')
 			return HttpResponseRedirect(reverse('commodity_loan_custom_invoicing_processing_products_preview',args=(pk,)))
 		
 		if not product_model:
@@ -27094,6 +27212,8 @@ def commodity_loan_custom_invoicing_processing_products_preview(request,pk):
 
 		loan_number = generate_number('205',member.coop_no,now)
 		queryset= Members_Commodity_Loan_Completed_Transactions(member=member,
+															phone_no1=phone1,
+															phone_no2=phone2,
 															product_name=product_name,
 															product_model=product_model,
 															details=product_details,
@@ -27113,6 +27233,8 @@ def commodity_loan_custom_invoicing_processing_products_preview(request,pk):
 	
 	form.fields['effective_date'].initial=get_current_date(now)
 	form.fields['quantity'].initial=1
+	form.fields['phone_no1'].initial=phone1
+	form.fields['phone_no2'].initial=phone2
 	context={
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
@@ -30815,12 +30937,12 @@ def Upload_Commodity_Product_Loan_Transaction_Select_Company_Load(request,pk,mem
 		batch=Commodity_Period_Batch.objects.get(id=batch_id)
 
 
-		return HttpResponseRedirect(reverse('Upload_Commodity_Product_Loan_Transaction_Company_Products_Load',args=(member_pk,sub_category.pk,company.pk,period.pk,batch.pk)))
+		return HttpResponseRedirect(reverse('Upload_Commodity_Product_Loan_Transaction_Company_Products_Load',args=(member_pk,sub_category.pk,company.pk,period.pk,batch.pk,return_pk)))
 
 	companies = Companies.objects.all()
 	periods=Commodity_Period.objects.all()
 	batches=Commodity_Period_Batch.objects.all()
-
+	# return HttpResponse(return_pk)
 	context={
 	'return_pk':return_pk,
 	'companies':companies,
@@ -30838,7 +30960,7 @@ def Upload_Commodity_Product_Loan_Transaction_Select_Company_Load(request,pk,mem
 
 
 
-def Upload_Commodity_Product_Loan_Transaction_Company_Products_Load(request,member_pk,sub_cat,comp_pk,period_pk,batch_pk):
+def Upload_Commodity_Product_Loan_Transaction_Company_Products_Load(request,member_pk,sub_cat,comp_pk,period_pk,batch_pk,return_pk):
 	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
 	task_array=[]
 	for task in tasks:
@@ -30865,7 +30987,7 @@ def Upload_Commodity_Product_Loan_Transaction_Company_Products_Load(request,memb
 	products=Company_Products.objects.filter(company=company,period=period,batch=batch,product__sub_category=sub_category)
 
 	context={
-	# 'return_pk':return_pk,
+	'return_pk':return_pk,
 	'products':products,
 	'company':company,
 	'period':period,
@@ -31001,6 +31123,8 @@ def Upload_Commodity_Product_Loan_Products_Select_Preview(request,pk):
 	admin_charges=selected_header.category.admin_charges
 
 	interest = math.ceil((float(interest_rate)/100) * float(total_company_price))
+	if not admin_charges:
+		admin_charges=0
 
 	admin_charge=math.ceil((float(admin_charges)/100) * float(total_amount))
 	loan_amount=float(total_amount)+ float(admin_charge)
@@ -31141,6 +31265,14 @@ def Upload_Commodity_Product_Loan_Products_Uploaded(request):
 	}
 	return render(request,'deskofficer_templates/Upload_Commodity_Product_Loan_Products_Uploaded.html',context)
 
+
+def Upload_Commodity_Product_Loan_Products_Uploaded_Delete(request,pk):
+	record=Commodity_Loan_Upload_Transaction_Header.objects.get(id=pk)
+	loan_number=record.loan_number
+	PersonalLedger.objects.filter(account_number=loan_number).delete()
+	LoansRepaymentBase.objects.filter(loan_number=loan_number).delete()
+	record.delete()
+	return HttpResponseRedirect(reverse('Upload_Commodity_Product_Loan_Products_Uploaded'))
 
 
 def Upload_Commodity_Product_Loan_Products_Uploaded_Details(request,pk):
