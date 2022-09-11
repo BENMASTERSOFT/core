@@ -1,0 +1,58 @@
+{% extends 'deskofficer_templates/base_template.html' %}
+{% load static %}
+
+{% block content %}
+            <div class="page-content fade-in-up">
+                <div class="row">
+                    
+                    <div class="col-xl-12">
+                        <div class="ibox">
+                            <div class="ibox-head">
+                                <div class="ibox-title">LIST OF TRANSFERED WRONGFUL DEDUCTIONS | <a href="{% url 'Monthly_Deductions_IncomingTransactions' %}">Back</a></div>
+                            </div>
+                            <div class="ibox-body">
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th></th>
+                                            <th colspan="2">SOURCES</th>
+                                            <th colspan="2">DESTINATION</th>
+                                            <th></th>
+                                            <th></th>
+                                        </tr>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>IPPIS NO</th>
+                                            <th>NAME</th>
+                                            <th>IPPIS NO</th>
+                                            <th>NAME</th>
+                                            <th>AMOUNT</th>
+                                            <th>ACTION</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for record in records %}
+                                        <tr>
+                                            <td>{{forloop.counter}}</td>
+                                            <td>{{record.source.ippis_no}}</td>
+                                            <td>{{record.source.name}}</td>
+                                            <td>{{record.member.ippis_no}}</td>
+                                            <td>{{record.member.get_full_name}}</td>
+                                            <td>{{record.balance}}</td>
+                                            <td><a href="{% url 'Monthly_Deductions_Cash_Transfer_Source_Load' record.pk %}" class="btn btn-success btn-rounded">Load</a></td>
+                                           
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+             
+            </div>
+  <div class="sidenav-backdrop backdrop"></div>
+    <div class="preloader-backdrop">
+        <div class="page-preloader">Loading</div>
+    </div>
+{% endblock %}

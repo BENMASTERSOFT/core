@@ -3172,6 +3172,10 @@ class Manage_Commodity_Categories_Optional_properties_Form(forms.Form):
 
 
 class Commodity_Products_add_Form(forms.Form):
+   no_in_pack = forms.IntegerField(initial=1,label='No in Pack', label_suffix=" : ",
+                  widget=forms.NumberInput(attrs={'class': 'form-control','autocomplete':'off'}),
+                  disabled = False)
+
    product_name=forms.CharField(label="Product Name",max_length=200,widget=forms.TextInput(attrs={"class":"form-control"}),required=True)
    product_model=forms.CharField(label="Product Name",max_length=200,widget=forms.TextInput(attrs={"class":"form-control"}),required=True)
    details= forms.CharField(widget=forms.Textarea(attrs={"rows":2, "cols":57}))
@@ -3191,6 +3195,9 @@ class Commodity_Products_add_Form(forms.Form):
 
 
 class Commodity_Products_Update_Form(forms.Form):
+   no_in_pack = forms.IntegerField(initial=1,label='No in Pack', label_suffix=" : ",
+                  widget=forms.NumberInput(attrs={'class': 'form-control','autocomplete':'off'}),
+                  disabled = False)
    product_name=forms.CharField(label="Product Name",max_length=250,widget=forms.TextInput(attrs={"class":"form-control"}),required=True)
    product_model=forms.CharField(label="Product Name",max_length=250,widget=forms.TextInput(attrs={"class":"form-control"}),required=True)
    details= forms.CharField(widget=forms.Textarea(attrs={"rows":2, "cols":57}))
@@ -3382,7 +3389,118 @@ class Product_Linking_Period_Load_form(forms.Form):
    try:
       transaction_list=[]
 
-      transactions=TransactionTypes.objects.filter(category="NON-MONETARY")
+      # transactions=TransactionTypes.objects.filter(Q(category="NON-MONETARY") & Q(code='205'))
+      transactions=TransactionTypes.objects.filter(Q(category="NON-MONETARY"))
+
+
+      for transaction in transactions:
+         small_transaction=(transaction.id,transaction.name)
+         transaction_list.append(small_transaction)
+   except:
+      transaction_list=[]
+
+   transaction = forms.ChoiceField(label="Transactions", choices=transaction_list,widget=forms.Select(attrs={"class":"form-control"}))
+
+
+   try:
+      period_list=[]
+
+      periods=Commodity_Period.objects.all()
+
+
+      for period in periods:
+         small_period=(period.id,period.title)
+         period_list.append(small_period)
+   except:
+      period_list=[]
+
+   period = forms.ChoiceField(label="Periods", choices=period_list,widget=forms.Select(attrs={"class":"form-control"}))
+
+
+   try:
+      batch_list=[]
+
+      batches=Commodity_Period_Batch.objects.all()
+
+
+      for batch in batches:
+         small_batch=(batch.id,batch.title)
+         batch_list.append(small_batch)
+   except:
+      batch_list=[]
+
+   batch = forms.ChoiceField(label="Batches", choices=batch_list,widget=forms.Select(attrs={"class":"form-control"}))
+
+class Product_Linking_Period_Load_form(forms.Form):
+   start_date = forms.DateField(label='Start Date', label_suffix=" : ",
+                             required=True, disabled=False,
+                             widget=DateInput(attrs={'class': 'form-control'}),
+                             error_messages={'required': "This field is required."})
+   stop_date = forms.DateField(label='Stop Date', label_suffix=" : ",
+                             required=True, disabled=False,
+                             widget=DateInput(attrs={'class': 'form-control'}),
+                             error_messages={'required': "This field is required."})
+
+   try:
+      transaction_list=[]
+
+      # transactions=TransactionTypes.objects.filter(Q(category="NON-MONETARY") & Q(code='205'))
+      transactions=TransactionTypes.objects.filter(Q(category="NON-MONETARY"))
+
+
+      for transaction in transactions:
+         small_transaction=(transaction.id,transaction.name)
+         transaction_list.append(small_transaction)
+   except:
+      transaction_list=[]
+
+   transaction = forms.ChoiceField(label="Transactions", choices=transaction_list,widget=forms.Select(attrs={"class":"form-control"}))
+
+
+   try:
+      period_list=[]
+
+      periods=Commodity_Period.objects.all()
+
+
+      for period in periods:
+         small_period=(period.id,period.title)
+         period_list.append(small_period)
+   except:
+      period_list=[]
+
+   period = forms.ChoiceField(label="Periods", choices=period_list,widget=forms.Select(attrs={"class":"form-control"}))
+
+
+   try:
+      batch_list=[]
+
+      batches=Commodity_Period_Batch.objects.all()
+
+
+      for batch in batches:
+         small_batch=(batch.id,batch.title)
+         batch_list.append(small_batch)
+   except:
+      batch_list=[]
+
+   batch = forms.ChoiceField(label="Batches", choices=batch_list,widget=forms.Select(attrs={"class":"form-control"}))
+
+
+class membership_essential_commodity_loan_Period_Transactions_load_form(forms.Form):
+   start_date = forms.DateField(label='Start Date', label_suffix=" : ",
+                             required=True, disabled=False,
+                             widget=DateInput(attrs={'class': 'form-control'}),
+                             error_messages={'required': "This field is required."})
+   stop_date = forms.DateField(label='Stop Date', label_suffix=" : ",
+                             required=True, disabled=False,
+                             widget=DateInput(attrs={'class': 'form-control'}),
+                             error_messages={'required': "This field is required."})
+
+   try:
+      transaction_list=[]
+
+      transactions=TransactionTypes.objects.filter(Q(category="NON-MONETARY") & Q(code='204'))
 
 
       for transaction in transactions:
@@ -3870,6 +3988,16 @@ class Xmas_Savings_Shortlisting_form(forms.Form):
       batch_list=[]
 
    batch = forms.ChoiceField(label="Batches", choices=batch_list,widget=forms.Select(attrs={"class":"form-control"}))
+
+
+   start_point = forms.IntegerField(initial=0,label='Start Point', label_suffix=" : ", min_value=1,  required=False,
+                                 widget=forms.NumberInput(attrs={'class': 'form-control'}),
+                                disabled = False, error_messages={'required': "Please Expiry Quantity"})
+
+   stop_point = forms.IntegerField(initial=0,label='Stop Point', label_suffix=" : ", min_value=1,  required=False,
+                                 widget=forms.NumberInput(attrs={'class': 'form-control'}),
+                                disabled = False, error_messages={'required': "Please Expiry Quantity"})
+
 
 class Xmas_Savings_Shortlisting_Export_form(forms.Form):
    CHOICES=(
@@ -4594,6 +4722,90 @@ class search_with_date_Form(forms.Form):
                                 widget=DateInput(attrs={'class': 'form-control'}),
                                 error_messages={'required': "This field is required."})
   
+
+class monthly_wrongful_deduction_members_transaction_load_Form(forms.Form):
+   source=forms.CharField(label="Source",max_length=255,widget=forms.TextInput(attrs={"class":"form-control",'readonly':'readonly'}),required=True)
+   recipient=forms.CharField(label="Recipient",max_length=255,widget=forms.TextInput(attrs={"class":"form-control",'readonly':'readonly'}),required=True)
+   amount = forms.DecimalField(initial=0,label='Amount', label_suffix=" : ", min_value=0,  max_digits=20,
+                              widget=forms.NumberInput(attrs={'class': 'form-control','readonly':'readonly'}),
+                              decimal_places=2, required=True,
+                              disabled = False,
+                              error_messages={'required': "Please Enter Amount Paid"})
+
+
+class Monthly_Deductions_Cash_Transfer_Source_Load_Savings_Update_Form(forms.Form):
+   account_number=forms.CharField(label="Loan Number",max_length=255,widget=forms.TextInput(attrs={"class":"form-control",'readonly':'readonly'}),required=True)
+   description=forms.CharField(label="description",max_length=255,widget=forms.TextInput(attrs={"class":"form-control",'readonly':'readonly'}),required=True)
+   particulars= forms.CharField(widget=forms.Textarea(attrs={"rows":2, "cols":50}),required=True)
+   balance = forms.DecimalField(initial=0,label='Balance', label_suffix=" : ", min_value=0,  max_digits=20,
+                              widget=forms.NumberInput(attrs={'class': 'form-control','readonly':'readonly'}),
+                              decimal_places=2, required=True,
+                              disabled = False,
+                              error_messages={'required': "Please Enter Amount Paid"})
+   amount = forms.DecimalField(initial=0,label='Amount', label_suffix=" : ", min_value=0,  max_digits=20,
+                              widget=forms.NumberInput(attrs={'class': 'form-control','readonly':'readonly'}),
+                              decimal_places=2, required=True,
+                              disabled = False,
+                              error_messages={'required': "Please Enter Amount Paid"})
+
+   repayment = forms.DecimalField(initial=0,label='Repayment', label_suffix=" : ", min_value=0,  max_digits=20,
+                              widget=forms.NumberInput(attrs={'class': 'form-control','readonly':'readonly'}),
+                              decimal_places=2, required=True,
+                              disabled = False,
+                              error_messages={'required': "Please Enter Amount Paid"})
+
+
+class Monthly_Deductions_Cash_Transfer_Source_Load_Loan_Update_Form(forms.Form):
+   loan_number=forms.CharField(label="Loan Number",max_length=255,widget=forms.TextInput(attrs={"class":"form-control",'readonly':'readonly'}),required=True)
+   description=forms.CharField(label="description",max_length=255,widget=forms.TextInput(attrs={"class":"form-control",'readonly':'readonly'}),required=True)
+   particulars= forms.CharField(widget=forms.Textarea(attrs={"rows":2, "cols":50}),required=True)
+   balance = forms.DecimalField(initial=0,label='Balance', label_suffix=" : ", min_value=0,  max_digits=20,
+                              widget=forms.NumberInput(attrs={'class': 'form-control','readonly':'readonly'}),
+                              decimal_places=2, required=True,
+                              disabled = False,
+                              error_messages={'required': "Please Enter Amount Paid"})
+   amount = forms.DecimalField(initial=0,label='Amount', label_suffix=" : ", min_value=0,  max_digits=20,
+                              widget=forms.NumberInput(attrs={'class': 'form-control','readonly':'readonly'}),
+                              decimal_places=2, required=True,
+                              disabled = False,
+                              error_messages={'required': "Please Enter Amount Paid"})
+   repayment = forms.DecimalField(initial=0,label='Repayment', label_suffix=" : ", min_value=0,  max_digits=20,
+                              widget=forms.NumberInput(attrs={'class': 'form-control','readonly':'readonly'}),
+                              decimal_places=2, required=True,
+                              disabled = False,
+                              error_messages={'required': "Please Enter Amount Paid"})
+
+
+class membership_essential_commodity_loan_Company_products_selections_update_Form(forms.Form):
+  product_name=forms.CharField(label="description",max_length=255,widget=forms.TextInput(attrs={"class":"form-control",'readonly':'readonly'}),required=True)
+  existing_quantity = forms.IntegerField(initial=0,label='Quantity', label_suffix=" : ", min_value=0,  required=False,
+                                 widget=forms.NumberInput(attrs={'class': 'form-control','readonly':'readonly'}),
+                                disabled = False, error_messages={'required': "Please Min Unit"})
+ 
+  new_quantity = forms.IntegerField(initial=0,label='Quantity', label_suffix=" : ", min_value=0,  required=False,
+                                 widget=forms.NumberInput(attrs={'class': 'form-control'}),
+                                disabled = False, error_messages={'required': "Please Min Unit"})
+ 
+   
+class Monthly_Deductions_Transaction_Period_Institution_load_Form(forms.Form):
+   transaction_period = forms.DateField(label='Transaction Period', label_suffix=" : ",
+                                required=True, disabled=False,
+                                widget=DateInput(attrs={'class': 'form-control'}),
+                                error_messages={'required': "This field is required."})
+  
+   salary_institution_list=[]
+   try:
+      salary_institutions = SalaryInstitution.objects.all().order_by('rank')
+      for salary_institution in salary_institutions:
+         small_salary_institution=(salary_institution.id,salary_institution.title)
+         salary_institution_list.append(small_salary_institution)
+   except:
+      salary_institution_list=[]
+   salary_institution = forms.ChoiceField(label="Salary Institution", choices=salary_institution_list,widget=forms.Select(attrs={"class":"form-control"}))
+     
+
+class Norminal_Roll_Without_Phone_Number_Update_Form(forms.Form):
+    phone_number=forms.CharField(label="description",max_length=255,widget=forms.TextInput(attrs={"class":"form-control"}),required=True)
 
 
 # CURRENT DATE

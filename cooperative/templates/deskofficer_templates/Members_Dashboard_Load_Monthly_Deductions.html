@@ -9,7 +9,7 @@
       
     <div class="page-content fade-in-up">      
         <div class="row">  
-             <div class="col-md-6">
+             <div class="col-md-7">
                         <div class="ibox">
                             <div class="ibox-head">
                                 <div class="ibox-title">{{member.get_full_name}} | {{member.coop_no}} | {{member.ippis_no}} <a href="{% url 'Members_Dashboard_Load' member.pk %}" class="btn btn-secondary">Back</a></div>
@@ -35,7 +35,7 @@
                     </div>
         </div>
          <div class="row"> 
-            <div class="col-xl-10">
+            <div class="col-xl-12">
                 <div class="ibox">
                     <div class="ibox-head">
                         <div class="ibox-title">Monthly Deduction | {{transaction_period}}</div>
@@ -48,8 +48,9 @@
                                    
                                     <th>Transaction</th>
                                     <th>Account No</th>
-                                    <th>Amount</th>
-                                    <th>Action</th>
+                                    <th>Amount Generated</th>
+                                    <th>Amount Deducted</th>
+                               
                                 </tr>
                             </thead>
                             <tbody>
@@ -60,17 +61,16 @@
                                         <td>{{record.transaction.name}}</td>
                                         <td>{{record.account_number}}</td>
                                         <td>{{record.amount}}</td>
-                                        <td>
-                                           {% comment %} <a href="{% url 'Auxillary_Savings_Deduction_Generate_Delete' record.pk member.pk %}" class="btn btn-danger">Drop</a>
-                                        {% endcomment %}
-                                       </td>
+                                        <td>{{record.amount_deducted}}</td>
+                                       
                            
                                     </tr>
                                 {% endfor %}
                                 <tr>
                                     <td colspan="3"> TOTAL</td>
+                                    <td>{{generated_amount}}</td>
                                     <td>{{total_deduction}}</td>
-                                    <td></td>
+                                   
                                 </tr>
                             </tbody>
                         </table>

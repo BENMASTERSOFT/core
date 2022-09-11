@@ -1665,20 +1665,23 @@ def Commodity_Products_add(request,pk):
     records=Commodity_Product_List.objects.filter(sub_category=sub_category)
 
     if request.method=="POST":
+        no_in_pack = request.POST.get('no_in_pack')
+        if not no_in_pack or int(no_in_pack)==0:
+            no_in_pack=1
+
         product_name = request.POST.get('product_name').upper()
         product_model = request.POST.get('product_model').upper()
         details = request.POST.get('details').upper()
         if Commodity_Product_List.objects.filter(product_name=product_name).exists():
-            # Commodity_Product_List.objects.filter(product_name=product_name).delete()
-            # return HttpResponse("ok")
+           
             Commodity_Product_List.objects.filter(product_name=product_name).update(sub_category=sub_category,
-            product_name=product_name.strip(),
-            product_model=product_model.strip(),
-            details=details.strip(),
-            status="ACTIVE",category=0)
+                                                                                    product_name=product_name.strip(),
+                                                                                    product_model=product_model.strip(),
+                                                                                    details=details.strip(),
+                                                                                    status="ACTIVE",category=0,no_in_pack=no_in_pack)
             messages.success(request,'Record Updated Successfully')
         else:
-            queryset=Commodity_Product_List(sub_category=sub_category,product_name=product_name.strip(),product_model=product_model.strip(),details=details.strip(),status="ACTIVE")
+            queryset=Commodity_Product_List(sub_category=sub_category,product_name=product_name.strip(),product_model=product_model.strip(),details=details.strip(),no_in_pack=no_in_pack,status="ACTIVE")
             messages.success(request,'Record Submitted Successfully')
             queryset.save()
 
@@ -1794,12 +1797,14 @@ def Commodity_Products_Manage_Update(request,pk):
         product_name=request.POST.get('product_name')
         product_model=request.POST.get('product_model')
         details=request.POST.get('details')
+        no_in_pack=request.POST.get('no_in_pack')
         status = request.POST.get('status')
 
 
         record.product_name=product_name.upper()
         record.product_model=product_model.upper()
         record.details=details.upper()
+        record.no_in_pack=no_in_pack
         record.status=status
         record.save()
         messages.success(request,'Record Updated Successfully')
@@ -1808,6 +1813,7 @@ def Commodity_Products_Manage_Update(request,pk):
     form.fields['product_name'].initial = record.product_name
     form.fields['product_model'].initial = record.product_model
     form.fields['details'].initial = record.details
+    form.fields['no_in_pack'].initial = record.no_in_pack
     form.fields['status'].initial = record.status
 
     context={
@@ -3954,8 +3960,10 @@ def Manage_Commodity_Categories_Core_properties(request,pk):
     if request.method == 'POST' and 'btn-interest' in request.POST:
         interest_rate_required = request.POST.get('interest_rate_required')
         record.interest_rate_required=interest_rate_required
+
         record.interest_rate=0
         record.save()
+       
         return HttpResponseRedirect(reverse('Manage_Commodity_Categories_Core_properties',args=(pk,)))
 
     if request.method == 'POST' and 'btn-admin' in request.POST:
@@ -4036,7 +4044,7 @@ def Manage_Commodity_Categories_Update(request,pk):
 
             interest_rate = request.POST.get('interest_rate')
 
-            if interest_rate <= "0":
+            if interest_rate < "0":
                 messages.error(request,'Interest Rate is Missing')
                 return HttpResponseRedirect(reverse('Manage_Commodity_Categories_Update',args=(pk,)))
 
@@ -4045,7 +4053,7 @@ def Manage_Commodity_Categories_Update(request,pk):
 
 
             admin_charges = request.POST.get('admin_charges')
-            if admin_charges <= "0":
+            if admin_charges < "0":
                 messages.error(request,'Admin Charge is Missing')
                 return HttpResponseRedirect(reverse('Manage_Commodity_Categories_Update',args=(pk,)))
 
@@ -4053,12 +4061,12 @@ def Manage_Commodity_Categories_Update(request,pk):
         if record.guarantor_required == '1':
             guarantors = request.POST.get('guarantors')
 
-            if guarantors <= "0":
+            if guarantors < "0":
                 messages.error(request,'Guarantor is Missing')
                 return HttpResponseRedirect(reverse('Manage_Commodity_Categories_Update',args=(pk,)))
 
         loan_age = request.POST.get('loan_age')
-        if loan_age <= "0":
+        if loan_age < "0":
             messages.error(request,'Loan Age is Missing')
             return HttpResponseRedirect(reverse('Manage_Commodity_Categories_Update',args=(pk,)))
 
@@ -5854,7 +5862,6 @@ def loan_settings_non_monetary_Sub_Categories_Preview(request,pk):
 
 
 def loan_settings_non_monetary_Sub_Categories_Update(request,pk):
-
     record = Commodity_Category_Sub.objects.get(id=pk)
     return_pk=record.category.pk
     if record.status == 'ACTIVE':
@@ -5863,6 +5870,7 @@ def loan_settings_non_monetary_Sub_Categories_Update(request,pk):
         record.status = 'ACTIVE'
     record.save()
     return HttpResponseRedirect(reverse('loan_settings_non_monetary_Sub_Categories_Preview',args=(return_pk,)))
+
 
 def loan_settings_non_monetary_list_load(request):
     task_array=[]
@@ -5893,8 +5901,6 @@ def loan_settings_non_monetary_Categories_load(request,pk):
     return render(request, 'master_templates/loan_settings_non_monetary_Categories_load.html',context)
 
 
-
-
 def loan_settings_non_monetary_settings(request,pk):
     record = Commodity_Categories.objects.get(id=pk)
     task_array=[]
@@ -5908,9 +5914,6 @@ def loan_settings_non_monetary_settings(request,pk):
     'record':record,
     }
     return render(request,'master_templates/loan_settings_non_monetary_settings.html',context)
-
-
-
 
 
 def non_monetary_oan_guarantors_update(request,pk):
@@ -6027,7 +6030,6 @@ def Non_Monetary_MultipleLoanStatus_update(request,pk):
     return render(request,'master_templates/loan_criteria_update.html', context)
 
 
-
 def non_monetary_loan_duration_update(request,pk):
     task_array=[]
     if not request.user.user_type == '1':
@@ -6136,8 +6138,6 @@ def non_monetary_loan_interest_rate_update(request,pk):
     return render(request,'master_templates/loan_criteria_update.html', context)
 
 
-
-
 def non_monetary_loan_admin_charges_rate_update(request,pk):
     task_array=[]
     if not request.user.user_type == '1':
@@ -6177,8 +6177,6 @@ def non_monetary_loan_admin_charges_rate_update(request,pk):
     return render(request,'master_templates/loan_criteria_update.html', context)
 
 
-
-
 def non_monetary_loan_admin_charges_update(request,pk):
     task_array=[]
     if not request.user.user_type == '1':
@@ -6215,44 +6213,6 @@ def non_monetary_loan_admin_charges_update(request,pk):
     }
     return render(request,'master_templates/loan_criteria_update.html', context)
 
-
-
-# def non_monetary_loan_form_print_update(request,pk):
-#     task_array=[]
-#     if not request.user.user_type == '1':
-#         tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
-#         for task in tasks:
-#             task_array.append(task.task.title)
-#     item= Commodity_Categories.objects.get(id=pk)
-#     title="Update Loan Form Print  for " +  item.title
-#     instructions='''
-#     This page enable you to set the minimum loan amount
-#     upon which there would be flat rate in cash of Admin Charges.
-#     '''
-#     form = loan_form_print_form(request.POST or None)
-
-#     if request.method ==  "POST":
-#         form = loan_form_print_form(request.POST)
-#         if form.is_valid():
-#             form_print=form.cleaned_data["form_print"]
-
-#             record = Commodity_Categories.objects.get(id=pk)
-#             record.form_print=form_print
-#             record.save()
-#             messages.success(request,"Record Updated Successfully")
-#             return  HttpResponseRedirect(reverse('loan_settings_non_monetary_settings',args=(pk,)))
-
-#     form.fields['form_print'].initial=item.form_print
-#     context={
-#     'task_array':task_array,
-#     'form':form,
-#     'instructions':instructions,
-#     'url':'non_monetary_loan_form_print_update',
-#     'button_text':"Update Record",
-#     'title':title,
-#      'item':item,
-#     }
-#     return render(request,'master_templates/loan_criteria_update.html', context)
 
 
 def non_monetary_loan_receipt_type_update(request,pk):
@@ -6331,435 +6291,8 @@ def non_monetary_loan_loan_age_update(request,pk):
 
 
 ####################################################################
-###################### CUSTOMIZED COMMODITY LOAN SETTINGS ##########
-####################################################################
-# def Customized_Commodity_Loan_Settings(request):
-#     task_array=[]
-#     if not request.user.user_type == '1':
-#         tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
-#         for task in tasks:
-#             task_array.append(task.task.title)
-#     transaction=TransactionTypes.objects.get(code='206')
-#     context={
-#     'task_array':task_array,
-#     'transaction':transaction,
-#     }
-#     return render(request,'master_templates/Customized_Commodity_Loan_Settings.html',context)
-
-
-# def Customized_loan_guarantors_update(request,pk):
-#     task_array=[]
-#     if not request.user.user_type == '1':
-#         tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
-#         for task in tasks:
-#             task_array.append(task.task.title)
-#     item= TransactionTypes.objects.get(id=pk)
-#     title="Update Loan Guarnators for " +  item.name
-#     instructions='''
-#     This page enable you to set the total number of Gaurantors
-#     needed to access this loan.
-#     '''
-#     form = loan_guarantors_update_form(request.POST or None)
-
-#     if request.method ==  "POST":
-#         form = loan_guarantors_update_form(request.POST)
-#         if form.is_valid():
-#             guarantors=form.cleaned_data["guarantors"]
-#             record = TransactionTypes.objects.get(id=pk)
-#             record.guarantors=guarantors
-#             record.save()
-#             messages.success(request,"Record Updated Successfully")
-#             return  HttpResponseRedirect(reverse('Customized_Commodity_Loan_Settings'))
-
-#     form.fields['guarantors'].initial=item.guarantors
-#     context={
-#     'task_array':task_array,
-#     'form':form,
-#     'instructions':instructions,
-#     'url':'loan_guarantors_update',
-#     'button_text':"Update Record",
-#     'title':title,
-#      'item':item,
-#     }
-#     return render(request,'master_templates/loan_criteria_update.html', context)
-
-
-# def Customized_loan_form_print_update(request,pk):
-#     task_array=[]
-#     if not request.user.user_type == '1':
-#         tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
-#         for task in tasks:
-#             task_array.append(task.task.title)
-#     item= TransactionTypes.objects.get(id=pk)
-#     title="Update Loan Form Print  for " +  item.name
-#     instructions='''
-#     This page enable you to set if Form should be Printed out Automatically.
-#     '''
-#     form = loan_form_print_form(request.POST or None)
-
-#     if request.method ==  "POST":
-#         form = loan_form_print_form(request.POST)
-#         if form.is_valid():
-#             form_print=form.cleaned_data["form_print"]
-
-#             record = TransactionTypes.objects.get(id=pk)
-#             record.form_print=form_print
-#             record.save()
-#             messages.success(request,"Record Updated Successfully")
-#             return  HttpResponseRedirect(reverse('Customized_Commodity_Loan_Settings'))
-
-#     form.fields['form_print'].initial=item.form_print.id
-#     context={
-#     'task_array':task_array,
-#     'form':form,
-#     'instructions':instructions,
-#     'url':'Customized__loan_form_print_update',
-#     'button_text':"Update Record",
-#     'title':title,
-#      'item':item,
-#     }
-#     return render(request,'master_templates/loan_criteria_update.html', context)
-
-# def Customized_receipt_type_update(request,pk):
-#     task_array=[]
-#     if not request.user.user_type == '1':
-#         tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
-#         for task in tasks:
-#             task_array.append(task.task.title)
-#     item= TransactionTypes.objects.get(id=pk)
-#     title="Update Receipt Type for " +  item.name
-#     instructions='''
-#     This page enable you to set the Receipt Type.
-#     '''
-#     form = loan_Receipt_type_update_form(request.POST or None)
-
-#     if request.method ==  "POST":
-#         form = loan_Receipt_type_update_form(request.POST)
-#         if form.is_valid():
-#             receipt_type_id=form.cleaned_data["receipt_type"]
-#             receipt_type=ReceiptTypes.objects.get(id=receipt_type_id)
-#             record = TransactionTypes.objects.get(id=pk)
-#             record.receipt_type=receipt_type
-#             record.save()
-#             messages.success(request,"Record Updated Successfully")
-#             return  HttpResponseRedirect(reverse('Customized_Commodity_Loan_Settings'))
-
-#     form.fields['receipt_type'].initial=item.receipt_type
-#     context={
-#     'task_array':task_array,
-#     'form':form,
-#     'instructions':instructions,
-#     'url':'Customized_receipt_type_update',
-#     'button_text':"Update Record",
-#     'title':title,
-#      'item':item,
-#     }
-#     return render(request,'master_templates/loan_criteria_update.html', context)
-
-
-
-
-# def Customized_loan_category_update(request,pk):
-#     task_array=[]
-#     if not request.user.user_type == '1':
-#         tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
-#         for task in tasks:
-#             task_array.append(task.task.title)
-#     item= TransactionTypes.objects.get(id=pk)
-#     title="Update Loan Category for " +  item.name
-#     instructions='''
-#     This page enable you to set whether a loan is monetary or Not.
-#     '''
-#     form = loan_category_update_form(request.POST or None)
-
-#     if request.method ==  "POST":
-#         form = loan_category_update_form(request.POST)
-#         if form.is_valid():
-#             category_id=form.cleaned_data["category"]
-#             category=LoanCategory.objects.get(id=category_id)
-#             record = TransactionTypes.objects.get(id=pk)
-#             record.category=category
-#             record.save()
-#             messages.success(request,"Record Updated Successfully")
-#             return  HttpResponseRedirect(reverse('Customized_Commodity_Loan_Settings'))
-
-#     form.fields['category'].initial=item.category
-#     context={
-#     'task_array':task_array,
-#     'form':form,
-#     'instructions':instructions,
-#     'url':'loan_category_update',
-#     'button_text':"Update Record",
-#     'title':title,
-#      'item':item,
-#     }
-#     return render(request,'master_templates/loan_criteria_update.html', context)
-
-
-# def Customized_loan_duration_update(request,pk):
-#     task_array=[]
-#     if not request.user.user_type == '1':
-#         tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
-#         for task in tasks:
-#             task_array.append(task.task.title)
-#     item= TransactionTypes.objects.get(id=pk)
-#     title="Update Loan Duration for " +  item.name
-#     instructions='''
-#     This page enable you to set the duration of Loans.
-#     '''
-#     form = loan_duration_update_form(request.POST or None)
-
-#     if request.method ==  "POST":
-#         form = loan_duration_update_form(request.POST)
-#         if form.is_valid():
-#             duration=form.cleaned_data["duration"]
-#             record = TransactionTypes.objects.get(id=pk)
-#             record.duration=duration
-#             record.save()
-#             messages.success(request,"Record Updated Successfully")
-#             return  HttpResponseRedirect(reverse('Customized_Commodity_Loan_Settings'))
-
-#     form.fields['duration'].initial=item.duration
-#     context={
-#     'task_array':task_array,
-#     'form':form,
-#     'instructions':instructions,
-#     'url':'loan_duration_update',
-#     'button_text':"Update Record",
-#     'title':title,
-#      'item':item,
-#     }
-#     return render(request,'master_templates/loan_criteria_update.html', context)
-
-
-# def Customized_loan_name_update(request,pk):
-#     task_array=[]
-#     if not request.user.user_type == '1':
-#         tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
-#         for task in tasks:
-#             task_array.append(task.task.title)
-#     item= TransactionTypes.objects.get(id=pk)
-#     title="Update Loan Description for " +  item.name
-#     instructions='''
-#     This page enable you to modify the Title of Loans.
-#     '''
-#     form = loan_name_update_form(request.POST or None)
-
-#     if request.method ==  "POST":
-#         form = loan_name_update_form(request.POST)
-#         if form.is_valid():
-#             name=form.cleaned_data["name"]
-#             record = TransactionTypes.objects.get(id=pk)
-#             record.name=name
-#             record.save()
-#             messages.success(request,"Record Updated Successfully")
-#             return  HttpResponseRedirect(reverse('Customized_Commodity_Loan_Settings'))
-
-#     form.fields['name'].initial=item.name
-#     context={
-#     'task_array':task_array,
-#     'form':form,
-#     'instructions':instructions,
-#     'url':'loan_name_update',
-#     'button_text':"Update Record",
-#     'title':title,
-#     'item':item,
-#     }
-#     return render(request,'master_templates/loan_criteria_update.html', context)
-
-
-# def Customized_loan_interest_rate_update(request,pk):
-#     task_array=[]
-#     if not request.user.user_type == '1':
-#         tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
-#         for task in tasks:
-#             task_array.append(task.task.title)
-#     item= TransactionTypes.objects.get(id=pk)
-#     title="Update Loan Interest Rate  for " +  item.name
-#     instructions='''
-#     This page enable you to set the interest rate of Loans.
-#     '''
-
-#     form = loan_interest_rate_update_form(request.POST or None)
-
-#     if request.method ==  "POST":
-#         form = loan_interest_rate_update_form(request.POST)
-#         if form.is_valid():
-#             interest_rate=form.cleaned_data["interest_rate"]
-#             record = TransactionTypes.objects.get(id=pk)
-#             record.interest_rate=interest_rate
-#             record.save()
-#             messages.success(request,"Record Updated Successfully")
-#             return  HttpResponseRedirect(reverse('Customized_Commodity_Loan_Settings'))
-#     form.fields['interest_rate'].initial=item.interest_rate
-#     context={
-#     'task_array':task_array,
-#     'form':form,
-#     'instructions':instructions,
-#     'url':'loan_interest_rate_update',
-#     'button_text':"Update Record",
-#     'title':title,
-#     'item':item,
-#     }
-#     return render(request,'master_templates/loan_criteria_update.html', context)
-
-
-
-# def Customized_loan_rank_update_update(request,pk):
-#     task_array=[]
-#     if not request.user.user_type == '1':
-#         tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
-#         for task in tasks:
-#             task_array.append(task.task.title)
-#     item= TransactionTypes.objects.get(id=pk)
-#     title="Update Loan Rank  for " +  item.name
-#     instructions='''
-#     This page enable you to set the order in which
-#     monthly deduction shall flow fro the bulk deduction.
-#     '''
-
-#     form = loan_rank_update_form(request.POST or None)
-
-#     if request.method ==  "POST":
-#         form = loan_rank_update_form(request.POST)
-#         if form.is_valid():
-#             rank=form.cleaned_data["rank"]
-#             record = TransactionTypes.objects.get(id=pk)
-#             record.rank=rank
-#             record.save()
-#             messages.success(request,"Record Updated Successfully")
-#             return  HttpResponseRedirect(reverse('Customized_Commodity_Loan_Settings'))
-
-#     form.fields['rank'].initial=item.rank
-#     context={
-#     'task_array':task_array,
-#     'form':form,
-#     'instructions':instructions,
-#     'url':'loan_rank_update_update',
-#     'button_text':"Update Record",
-#     'title':title,
-#     'item':item,
-#     }
-#     return render(request,'master_templates/loan_criteria_update.html', context)
-
-
-# def Customized_loan_admin_charges_rate_update(request,pk):
-#     task_array=[]
-#     if not request.user.user_type == '1':
-#         tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
-#         for task in tasks:
-#             task_array.append(task.task.title)
-#     item= TransactionTypes.objects.get(id=pk)
-#     title="Update Loan Rank  for " +  item.name
-#     instructions='''
-#     This page enable you to set whether admin charge is Cash or a
-#     percentage of amount requested for loan.
-#     '''
-#     form = loan_admin_charges_rate_update_form(request.POST or None)
-
-#     if request.method ==  "POST":
-#         form = loan_admin_charges_rate_update_form(request.POST)
-#         if form.is_valid():
-#             admin_charge_id=form.cleaned_data["admin_charges_rating"]
-#             admin_charges_rating=AdminCharges.objects.get(id=admin_charge_id)
-#             record = TransactionTypes.objects.get(id=pk)
-#             record.admin_charges_rating=admin_charges_rating
-#             record.save()
-#             messages.success(request,"Record Updated Successfully")
-#             return  HttpResponseRedirect(reverse('Customized_Commodity_Loan_Settings'))
-
-#     form.fields['admin_charges_rating'].initial=item.admin_charges_rating
-#     context={
-#     'task_array':task_array,
-#     'form':form,
-#     'instructions':instructions,
-#     'url':'loan_admin_charges_rate_update',
-#     'button_text':"Update Record",
-#     'title':title,
-#     'item':item,
-#     }
-#     return render(request,'master_templates/loan_criteria_update.html', context)
-
-
-# def Customized_loan_admin_charges_update(request,pk):
-#     task_array=[]
-#     if not request.user.user_type == '1':
-#         tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
-#         for task in tasks:
-#             task_array.append(task.task.title)
-#     item= TransactionTypes.objects.get(id=pk)
-#     title="Update Loan Admin Charges  for " +  item.name
-#     instructions='''
-#     This page enable you to set the percentage rating of
-#     the Admin charge if it percentage based.
-#     '''
-#     form = loan_admin_charges_update_form(request.POST or None)
-
-#     if request.method ==  "POST":
-#         form = loan_admin_charges_update_form(request.POST)
-#         if form.is_valid():
-#             admin_charges=form.cleaned_data["admin_charges"]
-#             record = TransactionTypes.objects.get(id=pk)
-#             record.admin_charges=admin_charges
-#             record.save()
-#             messages.success(request,"Record Updated Successfully")
-#             return  HttpResponseRedirect(reverse('Customized_Commodity_Loan_Settings'))
-
-#     form.fields['admin_charges'].initial=item.admin_charges
-#     context={
-#     'task_array':task_array,
-#     'form':form,
-#     'instructions':instructions,
-#     'url':'loan_admin_charges_update',
-#     'button_text':"Update Record",
-#     'title':title,
-#      'item':item,
-#     }
-#     return render(request,'master_templates/loan_criteria_update.html', context)
-
-
-# def Customized_loan_loan_age_update(request,pk):
-#     task_array=[]
-#     if not request.user.user_type == '1':
-#         tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
-#         for task in tasks:
-#             task_array.append(task.task.title)
-#     item= TransactionTypes.objects.get(id=pk)
-#     title="Update Loan Age  for " +  item.name
-#     instructions='''
-#     This page enable you to set the number of months one has to a member before
-#     Such person can access this loan.
-#     '''
-#     form = loan_loan_age_update_form(request.POST or None)
-
-#     if request.method ==  "POST":
-#         form = loan_loan_age_update_form(request.POST)
-#         if form.is_valid():
-#             loan_age=form.cleaned_data["loan_age"]
-#             record = TransactionTypes.objects.get(id=pk)
-#             record.loan_age=loan_age
-#             record.save()
-#             messages.success(request,"Record Updated Successfully")
-#             return  HttpResponseRedirect(reverse('Customized_Commodity_Loan_Settings'))
-
-#     form.fields['loan_age'].initial=item.loan_age
-#     context={
-#     'task_array':task_array,
-#     'form':form,
-#     'instructions':instructions,
-#     'url':'loan_loan_age_update',
-#     'button_text':"Update Record",
-#     'title':title,
-#      'item':item,
-#     }
-#     return render(request,'master_templates/loan_criteria_update.html', context)
-
-
-####################################################################
 ###################### APPROVABLE TRANSACTION ######################
 ####################################################################
-
-
 
 def membership_price_settings_load(request):
     task_array=[]
@@ -6901,6 +6434,7 @@ def TransactionEnabler_Add(request):
     'records':records,
     }
     return render(request,'master_templates/TransactionEnabler_Add.html',context)
+
 
 def TransactionEnabler_Manage(request):
     task_array=[]
@@ -7575,13 +7109,10 @@ def loan_request_approval_period_load(request):
     form=loan_request_order_form(request.POST or None)
 
     applicants=[]
-    if request.method == 'POST':
-        
+    if request.method == 'POST':   
 
         loan_id = request.POST.get('loans')
-        loan = TransactionTypes.objects.get(id=loan_id)
-
-        applicants = LoanRequestShortListing.objects.filter(applicant__loan=loan,approval_status='PENDING',status='UNTREATED')
+        return HttpResponseRedirect(reverse('loan_request_application_approval_period_load',args=(loan_id,)))
 
     context={
     'task_array':task_array,
@@ -7589,6 +7120,30 @@ def loan_request_approval_period_load(request):
     'form':form,
     }
     return render(request,'master_templates/loan_request_approval_period_load.html',context)
+
+def loan_request_application_approval_period_load(request,pk):
+    task_array=[]
+    if not request.user.user_type == '1':
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)    # return HttpResponse(current_user.cash_withdrawal_approval)
+
+
+
+    form=loan_request_order_form(request.POST or None)
+
+    applicants=[]
+ 
+    loan = TransactionTypes.objects.get(id=pk)
+
+    applicants = LoanRequestShortListing.objects.filter(applicant__loan=loan,approval_status='PENDING',status='UNTREATED')
+
+    context={
+    'task_array':task_array,
+    'applicants':applicants,
+    'form':form,
+    }
+    return render(request,'master_templates/loan_request_application_approval_period_load.html',context)
 
 
 
@@ -7602,6 +7157,7 @@ def Loan_request_approval_details(request,pk):
 
     loan=LoanRequestShortListing.objects.get(id=pk)
     loan_request=LoanRequest.objects.get(id=loan.applicant_id)
+    transaction_type=loan_request.loan.id
     loan_analysis=LoanRequestSettings.objects.filter(applicant=loan_request,category='ANALYSIS')
     loan_summary=LoanRequestSettings.objects.filter(applicant=loan_request,category='SUMMARY')
 
@@ -7639,7 +7195,7 @@ def Loan_request_approval_details(request,pk):
         loan.approved_amount=approved_amount
         loan.save()
 
-        return HttpResponseRedirect(reverse('loan_request_approval_period_load'))
+        return HttpResponseRedirect(reverse('loan_request_application_approval_period_load',args=(transaction_type,)))
 
     form=MemberShipRequestAdditionalInfo_form(request.POST or None)
     form.fields['amount'].initial=loan_request.loan_amount

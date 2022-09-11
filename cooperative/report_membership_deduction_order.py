@@ -180,14 +180,17 @@ def _membershipDeductionOrderDeductionGenBodyTable(width, height,pk):
 	]
 
 	# [_genPriceListTable(width,heightList[1])],
-
+	widthList=[
+	width*90/100,
+	width*0/100,
+	]
 	res = Table([
-		[_membershipDeductionOrderDeductionPersonalDataParagraph(pk)],
-		[_membershipDeductionOrderGenPriceListTable(width,heightList[1])],
-		[_membershipDeductionOrderGenSignatureTable(width,heightList[2])],
+		[_membershipDeductionOrderDeductionPersonalDataParagraph(pk),''],
+		[_membershipDeductionOrderGenPriceListTable(width,heightList[1]),''],
+		[_membershipDeductionOrderGenSignatureTable(width,heightList[2]),''],
 
 		],
-		width,
+		widthList,
 		heightList
 		)
 	
@@ -236,8 +239,8 @@ def _membershipDeductionOrderDeductionPersonalDataParagraph(pk):
 
 
 	para1=Paragraph(f"I,<u> <b> {record.applicant.last_name} {record.applicant.first_name} {record.applicant.middle_name}</b> </u> of the Department of <u><b>{department}</b></u>, <b>Alex  Ekwueme Federal university Hospital, Abakaliki</b> hereby give my consent to be saving",paraStyle)
-	para2=Paragraph("the sum of ____________________________________________________________________________",paraStyle)
-	para3=Paragraph("(__________________) with effect from ____________________________________________________",paraStyle)
+	para2=Paragraph("the sum of ____________________________________________________________________",paraStyle)
+	para3=Paragraph("(__________________) with effect from _________________________________________",paraStyle)
 
 	paraList = [para1,para2,para3]
 
@@ -292,16 +295,19 @@ def _membershipDeductionOrderGenPricesTable(width, height):
 
 		matrix.append(data)
 	
+	matrix.append(("TOTAL",''))
+	
 	
 
 	widthList = [
+		width * 40 / 100,
 		width * 50 / 100,
-		width * 50 / 100,
+		width * 10 / 100,
 		
 
 	]
 	rowCount = len(matrix)
-	res = Table(matrix, widthList, height / rowCount)
+	res = Table(matrix, widthList, height / rowCount,'')
 
 
 	color = colors.toColor('rgba(0, 115, 153, 0.9)')

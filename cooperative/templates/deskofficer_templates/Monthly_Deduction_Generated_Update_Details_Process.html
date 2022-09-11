@@ -7,10 +7,10 @@
                 <div class="row">
                 
 
-                    <div class="col-md-6">
+                    <div class="col-md-8">
                         <div class="ibox">
                             <div class="ibox-head">
-                                <div class="ibox-title">{{member.get_full_name}} | {{record.transaction.name}}</div>
+                                <div class="ibox-title">{{member.get_full_name}} | {{record.transaction.name}} | <a href="{% url 'Monthly_Deduction_Generated_Update_Details_load' member_pk status %}">Back</a></div>
                                 
                             </div>
                             

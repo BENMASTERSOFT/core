@@ -57,45 +57,7 @@
                     </div>
                 </div>
 
-                <div class="row">
-                   
-                    <div class="col-xl-10">
-                        <div class="ibox">
-                            <div class="ibox-head">
-                                <div class="ibox-title">List of Applied Loans Management</div>
-                            </div>
-                            <div class="ibox-body">
-                                <table class="table table-bordered">
-                                    <thead>
-                                        <tr>
-                                            <th>#</th>
-                                            <th>Description</th>
-                                            <th>Amount</th>
-                                            <th>Date Applied</th>
-                                         
-                                            <th>Action</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {% for loan in exist_loans %}
-                                        <tr>
-                                            <td>{{forloop.counter}}</td>
-                                            <td>{{loan.loan.name}}</td>
-                                            <td>{{loan.loan_amount}}</td>
-                                            <td>{{loan.created_at|date:"D, d M, Y"}}</td>
-                                        
-                                            <td>
-                                                <a href="{% url 'loan_request_manage_transaction_delete' loan.pk  %}" class="btn btn-danger">Remove</a>
-                                                
-                                            </td>
-                                        </tr>
-                                        {% endfor %}
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+
             </div>
             
 

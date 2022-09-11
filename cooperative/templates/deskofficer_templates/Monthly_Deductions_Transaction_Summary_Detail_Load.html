@@ -1,0 +1,57 @@
+{% extends 'deskofficer_templates/base_template.html' %}
+{% load static %}
+
+{% block content %}
+            <div class="page-content fade-in-up">
+               
+                <div class="row">
+                   
+                    <div class="col-xl-10">
+                        <div class="ibox">
+                            <div class="ibox-head">
+                                <div class="ibox-title">Main and Shop Transactions Modules</div>
+                            </div>
+                            <div class="ibox-body">
+                                <table class="table table-bordered">
+                                    <thead class="thead-default">
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Transaction</th>
+                                            <th>Amount Generated</th>
+                                            <th>Amount Deducted</th>
+                                            <th>Difference</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for item in records %}
+                                        <tr>
+                                            <td>{{forloop.counter}}</td>
+                                            <td>{{item.transaction}}</td>
+                                            <td>{{item.amount}}</td>
+                                            <td>{{item.amount_deducted}}</td>
+                                            <td>{{item.balance}}</td>
+                                            <td>
+                                            {% if item.transaction == 'MAIN' %}
+                                                <a href="{% url 'Monthly_Deductions_Transaction_Summary_Detail_Branch_Details' member.pk salary_institution.pk transaction_period %}">View</a>
+                                            {% else %}
+                                                <a href="{% url 'Monthly_Deductions_Transaction_Summary_Detail_Branch_Details' member.pk salary_institution.pk transaction_period %}">View</a>
+                                            {% endif %}
+                                            
+
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+               
+            </div>
+  <div class="sidenav-backdrop backdrop"></div>
+    <div class="preloader-backdrop">
+        <div class="page-preloader">Loading</div>
+    </div>
+{% endblock %}

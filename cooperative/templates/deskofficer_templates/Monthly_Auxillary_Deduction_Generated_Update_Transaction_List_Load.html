@@ -15,8 +15,8 @@
                 <div class="ibox">
                     <div class="ibox-head">
                           <div class="ibox-title"> <input type="button" class="btn btn-primary" value="Back" onclick="history.back()"/> | GENERATED SUMMARIZED TRANSACTIONS | {{salary_institution.title}} | {{transaction_period}} 
-                              | <a href="{% url 'Monthly_Auxillary_Deduction_Generated_Update_Transaction_period_Load' salary_institution.pk %}">Back</a>  
-                                </div>
+                               | <a href="{% url 'Monthly_Auxillary_Deduction_Generated_Update_Transaction_List_Load_Export' transaction_period salary_institution.pk status %}" class="btn btn-secondary">Export</a> | <a href="{% url 'Monthly_Auxillary_Deduction_Generated_Update_Transaction_period_Load' salary_institution.pk %}">Back</a>  
+                              </div>
                     </div>
                     <div class="ibox-body">
                         <table class="table table-striped table-bordered table-hover" id="example-table" cellspacing="0" width="100%">
@@ -52,7 +52,7 @@
                                 {% for record in records %}
                                     <tr>
                                         <td>{{forloop.counter}}</td>
-                                        <td>{{record.member.coop_no}}</td>
+                                        <td> <a href="{% url 'Monthly_Auxillary_Deduction_Generated_Update_Transaction_List_Delete' record.pk trans_id salary_id status %}">{{record.member.coop_no}}</a></td>
                                      
                                         <td>{{record.member.ippis_no}}</td>
                                         <td>{{record.member.get_full_name}}</td>
@@ -62,9 +62,11 @@
                                         <td>
 
                                         {% if record.amount == record.amount_deducted %}
-                                            <a href="{% url 'Monthly_Deduction_Generated_Update_Details_load'  record.pk  status %} " class="btn btn-primary">Details</a>
-                                            {% else %}
-                                                <a href="{% url 'Monthly_Deduction_Generated_Update_Details_load'  record.pk status %} " class="btn btn-danger">Details</a>
+                                            <a href="{% url 'Monthly_Deduction_Generated_Update_Details_load'  record.pk  status %}" class="btn btn-success">Details</a>
+                                            {% elif record.amount < record.amount_deducted %}
+                                                <a href="{% url 'Monthly_Deduction_Generated_Update_Details_load'  record.pk status %}" class="btn btn-danger">Details</a>
+                                            {% elif record.amount > record.amount_deducted %}
+                                             <a href="{% url 'Monthly_Deduction_Generated_Update_Details_load'  record.pk status %}" class="btn btn-primary">Details</a>
                                         {% endif %}
                                         </td>   
 

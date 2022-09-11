@@ -8,8 +8,8 @@
                         <div class="ibox">
                             <div class="ibox-head">
                                 <div class="ibox-title">{{member.member.get_full_name}}| {{member.member.coop_no}} | Deduction Details
-                                |<a href="{% url 'Monthly_Deduction_Generated_Update_Details_Add_Savings' member.member.pk transaction_period salary_institution.pk member.pk %}" class="btn btn-primary">Add Savings</a>
-                                |<a href="{% url 'Monthly_Deduction_Generated_Update_Details_Add_Loans' member.member.pk transaction_period salary_institution.pk member.pk %}" class="btn btn-secondary">Add Loans</a> 
+                                |<a href="{% url 'Monthly_Deduction_Generated_Update_Details_Add_Savings' member.member.pk transaction_period salary_institution.pk member.pk status %}" class="btn btn-primary">Add Savings</a>
+                                |<a href="{% url 'Monthly_Deduction_Generated_Update_Details_Add_Loans' member.member.pk transaction_period salary_institution.pk member.pk status %}" class="btn btn-secondary">Add Loans</a> 
                                 | <a href="{% url 'Monthly_Auxillary_Deduction_Generated_Update_Transaction_List_Load' transaction_period salary_institution.pk status %}">Back</a>
                                 </div>
                                 
@@ -61,7 +61,7 @@
                                           
                                             <td>
                                             
-                                                <a href="{% url 'Monthly_Deduction_Generated_Update_Details_Process' record.5 %}" class="btn btn-primary">Update</a>
+                                                <a href="{% url 'Monthly_Deduction_Generated_Update_Details_Process' record.5 member_pk status %}" class="btn btn-primary">Update</a>
                                              
                                             </td> 
                                             <td>

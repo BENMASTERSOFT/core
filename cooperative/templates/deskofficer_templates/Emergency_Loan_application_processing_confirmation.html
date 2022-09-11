@@ -15,7 +15,8 @@
 
                 <a class="btn btn-success" href="{% url 'Loan_application_processing_Form_Print' applicant.loan_number %}" target="_blank">Loan Application Certiicate</a>
                
-                <a href="{% url 'Emergency_Loan_Dashboard_Load'  %}" class="btn btn-secondary">Close</a>
+                <a href="{% url 'Emergency_Loan_Dashboard_Load'  %}" class="btn btn-secondary">Close</a> 
+                <a href="{% url 'emergency_Loan_application_processing_records_load' applicant.transaction.pk %}" class="btn btn-primary">Back</a>
              
             </p>
         </div>

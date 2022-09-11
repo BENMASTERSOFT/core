@@ -6,7 +6,7 @@
                     <img src="{% static '/cooperative/assets/img/admin-avatar.png' %}" width="45px" />
                 </div>
                 <div class="admin-info">
-                    <div class="font-strong"> {{request.user}}</div><small>Desk Office</small>
+                    <div class="font-strong">{{request.user}}  </div><small>Desk Office</small>
                 </div>
             </div>
             <ul class="side-menu metismenu">
@@ -16,7 +16,27 @@
                     </a>
                 </li>
 
-
+                <li class="heading" style="color:greenyellow;"> FREQUENTLY USED </li>
+               {% if  'CONTROL PANEL' in task_array %}
+                <li>
+                    <a href="{% url 'control_panel' %}" style="color:yellow;">Control Panel</a>
+                </li>
+                {% endif %}
+                <li>
+                    <a href="{% url 'Members_Dashboard_Search' %}" style="color:yellow;">Members Dashboard</a>
+                </li>
+                <li>
+                    <a href="{% url 'membership_request' %}" style="color:yellow;">Membership Request</a>
+                </li> 
+                <li>
+                    <a href="{% url 'membership_form_sales_Search' %}" style="color:yellow;">Membership Form Sales</a>
+                </li> 
+                <li>
+                    <a href="{% url 'membership_registration_applicant_search' %}" style="color:yellow;">Membership Registration</a>
+                </li> 
+                <li>
+                    <a href="{% url 'Norminal_Roll_List_Load' %}" style="color:yellow;">Norminal Roll</a>
+                </li> 
 
                 <li class="heading"> FEATURES </li>
 
@@ -30,22 +50,22 @@
 
                         <li>
                             {% url 'membership_request' as membership_request %}
-                            <a href="{{ membership_request }}" class="nav-link {% if request.path == membership_request %} active {% endif %}">New Member Request</a>
+                            <a href="{{ membership_request }}" class="nav-link {% if request.path == membership_request %} active {% endif %}" style="color:lightyellow;">New Member Request</a>
                         </li>
                         <li>
-                            <a href="{% url 'membership_request_complete_search' %}">Complete Request</a>
+                            <a href="{% url 'membership_request_complete_search' %}" style="color:lightyellow;">Complete Request</a>
                         </li>
                           <li>
-                            <a href="{% url 'membership_request_manage_search' %}">Manage Request</a>
+                            <a href="{% url 'membership_request_manage_search' %}" style="color:lightyellow;">Manage Request</a>
                         </li>
                         <li>
-                            <a href="{% url 'membership_form_Approved_list_load' %}">View Approved Membership Request</a>
+                            <a href="{% url 'membership_form_Approved_list_load' %}" style="color:lightyellow;">View Approved Membership Request</a>
                         </li> 
                         <li>
-                            <a href="{% url 'membership_form_sales_Search' %}">Membership Form Sales</a>
+                            <a href="{% url 'membership_form_sales_Search' %}" style="color:lightyellow;">Membership Form Sales</a>
                         </li>
                         <li>
-                            <a href="{% url 'membership_registration_applicant_search' %}">Membership Registration</a>
+                            <a href="{% url 'membership_registration_applicant_search' %}" style="color:lightyellow;">Membership Registration</a>
                         </li>
                     </ul>
                 </li>
@@ -57,13 +77,16 @@
                     <ul class="nav-2-level collapse">
 
                         <li>
-                            <a href="{% url 'Members_Account_Creation_preview_all' %}">All Members Account Creations</a>
+                            <a href="{% url 'Members_Account_Creation_preview_all' %}" style="color:lightyellow;">All Members Account Creations</a>
                         </li>
                         <li>
-                            <a href="{% url 'Members_Account_Creation_Search' %}">Single Account Creations</a>
+                            <a href="{% url 'Members_Account_Creation_Search' %}" style="color:lightyellow;">Single Account Creations</a>
                         </li>
                         <li>
-                            <a href="{% url 'Members_Multiple_Account_Creation_preview' %}">Multiple Account Creations</a>
+                            <a href="{% url 'Members_Multiple_Account_Creation_preview' %}" style="color:lightyellow;">Multiple Account Creations</a>
+                        </li>
+                        <li>
+                            <a href="{% url 'Members_Account_Without_Balance_Brought_Forward' %}" style="color:lightyellow;">Account Without Balanace B/F</a>
                         </li>
                     </ul>
                 </li>
@@ -78,13 +101,13 @@
                         <ul class="nav-2-level collapse">
 
                             <li>
-                                <a href="{% url 'standing_order_list_load' %}">Group Standing Orders</a>
+                                <a href="{% url 'standing_order_list_load' %}" style="color:lightyellow;">Group Standing Orders</a>
                             </li>
                             <li>
-                                <a href="{% url 'standing_order_selected_search' %}">Selected Standing Order</a>
+                                <a href="{% url 'standing_order_selected_search' %}" style="color:lightyellow;">Selected Standing Order</a>
                             </li>
                             <li>
-                                <a href="{% url 'standing_order_reactivate_account_search' %}">Reactivate Standing Order</a>
+                                <a href="{% url 'standing_order_reactivate_account_search' %}" style="color:lightyellow;">Reactivate Standing Order</a>
                             </li>
 
                         </ul>
@@ -98,37 +121,37 @@
                         <ul class="nav-2-level collapse">
                            <li>
                                 <a href="javascript:;">
-                                    <span class="nav-label">Savings Adjustment</span><i class="fa fa-angle-left arrow"></i></a>
+                                    <span class="nav-label" style="color:greenyellow;">Savings Adjustment</span><i class="fa fa-angle-left arrow"></i></a>
                                 <ul class="nav-3-level collapse">
                                     <li>
-                                        <a href="{% url 'Transaction_adjustment_search' %}">Place Request</a>
+                                        <a href="{% url 'Transaction_adjustment_search' %}" style="color:lightyellow;">Place Request</a>
                                     </li>
                                     <li>
-                                        <a href="{% url 'Transaction_Adjustment_Manage' %}">Manage Adjustment Request</a>
+                                        <a href="{% url 'Transaction_Adjustment_Manage' %}" style="color:lightyellow;">Manage Adjustment Request</a>
                                     </li>
                                     <li>
-                                        <a href="{% url 'Transaction_Adjustment_Approved_View_List_Load' %}">View Approved List</a>
+                                        <a href="{% url 'Transaction_Adjustment_Approved_View_List_Load' %}" style="color:lightyellow;">View Approved List</a>
                                     </li>  
                                     <li>
-                                        <a href="{% url 'Transaction_Savings_Adjustment_Approved_List_search' %}">Process Request</a>
+                                        <a href="{% url 'Transaction_Savings_Adjustment_Approved_List_search' %}" style="color:lightyellow;">Process Request</a>
                                     </li>
                                 </ul>
                             </li>
 
                             <li>
                                 <a href="javascript:;">
-                                    <span class="nav-label">Loan Adjustment</span><i class="fa fa-angle-left arrow"></i></a>
+                                    <span class="nav-label" style="color:greenyellow;">Loan Adjustment</span><i class="fa fa-angle-left arrow"></i></a>
                                 <ul class="nav-3-level collapse">
                                     <li>
-                                        <a href="{% url 'Transaction_Loan_adjustment_search' %}">Place Request</a>
+                                        <a href="{% url 'Transaction_Loan_adjustment_search' %}" style="color:lightyellow;">Place Request</a>
                                     </li>
                                     <li>
-                                        <a href="{% url 'Transaction_Loan_adjustment_Transaction_Approved_List_Load' %}">Process Request</a>
+                                        <a href="{% url 'Transaction_Loan_adjustment_Transaction_Approved_List_Load' %}" style="color:lightyellow;">Process Request</a>
                                     </li>
                                 </ul>
                             </li>
                             <li>
-                                <a href="{% url 'Savings_Lockup_search' %}">Unlocking Savings</a>
+                                <a href="{% url 'Savings_Lockup_search' %}" style="color:lightyellow;">Unlocking Savings</a>
                             </li>
                         </ul>
                     </li>
@@ -142,16 +165,16 @@
                     <ul class="nav-2-level collapse">
 
                         <li>
-                            <a href="{% url 'Standing_Order_Suspension_search' %}">Suspense Request</a>
+                            <a href="{% url 'Standing_Order_Suspension_search' %}" style="color:lightyellow;">Suspense Request</a>
                         </li>
                         <li>
-                            <a href="{% url 'Standing_Order_Suspension_Transaction_Approval_Processing_Load' %}">Process Suspense</a>
+                            <a href="{% url 'Standing_Order_Suspension_Transaction_Approval_Processing_Load' %}" style="color:lightyellow;">Process Suspense</a>
                         </li>
                         <li>
-                            <a href="{% url 'Standing_Order_Suspension_Transaction_Releasing_search' %}">Suspense Release Request</a>
+                            <a href="{% url 'Standing_Order_Suspension_Transaction_Releasing_search' %}" style="color:lightyellow;">Suspense Release Request</a>
                         </li>
                         <li>
-                            <a href="{% url 'Standing_Order_Suspension_Transaction_Activation_Approval_Processing_Load' %}">Process Suspense Release</a>
+                            <a href="{% url 'Standing_Order_Suspension_Transaction_Activation_Approval_Processing_Load' %}" style="color:lightyellow;">Process Suspense Release</a>
                         </li>
                         
 
@@ -165,15 +188,15 @@
                     <ul class="nav-2-level collapse">
 
                         <li>
-                            <a href="{% url 'loan_unscheduling_request_search' %}">Unschedule Request</a>
+                            <a href="{% url 'loan_unscheduling_request_search' %}" style="color:lightyellow;">Unschedule Request</a>
                         </li>
                         <li>
-                            <a href="{% url 'loan_unscheduling_request_transaction_processing' %}">Process Unschedule Request</a>
+                            <a href="{% url 'loan_unscheduling_request_transaction_processing' %}" style="color:lightyellow;">Process Unschedule Request</a>
                         </li>
                         <li>
-                            <a href="{% url 'Loan_processing_scheduling_all_unscheduled' %}">Loan Scheduling</a>
+                            <a href="{% url 'Loan_processing_scheduling_all_unscheduled' %}" style="color:lightyellow;">Loan Scheduling</a>
                         </li> <li>
-                            <a href="{% url 'Loan_processing_scheduling_based_on_date' %}">Date Based Scheduling</a>
+                            <a href="{% url 'Loan_processing_scheduling_based_on_date' %}" style="color:lightyellow;">Date Based Scheduling</a>
                         </li>
                     </ul>
                 </li>
@@ -185,16 +208,16 @@
                         <ul class="nav-2-level collapse">
 
                             <li>
-                                <a href="{% url 'Cash_Deposit_Savings_Search' %}">Savings</a>
+                                <a href="{% url 'Cash_Deposit_Savings_Search' %}" style="color:lightyellow;">Savings</a>
                             </li>
                             <li>
-                                <a href="{% url 'Cash_Deposit_Loans_Search' %}">Loan</a>
+                                <a href="{% url 'Cash_Deposit_Loans_Search' %}" style="color:lightyellow;">Loan</a>
                             </li>
                             <li>
-                                <a href="{% url 'Cash_Deposit_Welfare_Search' %}">Welfare</a>
+                                <a href="{% url 'Cash_Deposit_Welfare_Search' %}" style="color:lightyellow;">Welfare</a>
                             </li>
                             <li>
-                                <a href="{% url 'Cash_Deposit_Shares_Search' %}">Shares</a>
+                                <a href="{% url 'Cash_Deposit_Shares_Search' %}" style="color:lightyellow;">Shares</a>
                             </li>
 
                         </ul>
@@ -206,17 +229,17 @@
                             <span class="nav-label">Cash Withdrawal</span><i class="fa fa-angle-left arrow"></i></a>
                         <ul class="nav-2-level collapse">
                             <li>
-                                <a href="{% url 'Cash_Withdrawal_Search' %}">Withdrawal Request</a>
+                                <a href="{% url 'Cash_Withdrawal_Search' %}" style="color:lightyellow;">Withdrawal Request</a>
                             </li>
 
                             <li>
-                                <a href="{% url 'Cash_Withdrawal_Transactions_Request_Status_list_Search' %}">Request Status</a>
+                                <a href="{% url 'Cash_Withdrawal_Transactions_Request_Status_list_Search' %}" style="color:lightyellow;">Request Status</a>
                             </li>
                             <li>
-                                <a href="{% url 'Cash_Withdrawal_Transactions_All_Uncleared_list_Load' %}">All Uncleared Request</a>
+                                <a href="{% url 'Cash_Withdrawal_Transactions_All_Uncleared_list_Load' %}" style="color:lightyellow;">All Uncleared Request</a>
                             </li>
                            <li>
-                                <a href="{% url 'Cash_Withdrawal_Transactions_Approved_list_Search' %}">Approved Withrawal Request</a>
+                                <a href="{% url 'Cash_Withdrawal_Transactions_Approved_list_Search' %}" style="color:lightyellow;">Approved Withrawal Request</a>
                             </li>
 
                         </ul>
@@ -228,23 +251,23 @@
                             <span class="nav-label">XMAS Savings Transactions</span><i class="fa fa-angle-left arrow"></i></a>
                         <ul class="nav-2-level collapse">
                             <li>
-                                <a href="{% url 'Xmas_Savings_Shortlisting_list_Load' %}">Xmas Savings Shortlisting</a>
+                                <a href="{% url 'Xmas_Savings_Shortlisting_list_Load' %}" style="color:lightyellow;">Xmas Savings Shortlisting</a>
                             </li>
                             <li>
-                                <a href="{% url 'Xmas_Savings_Shortlisting_Filter_Batch_Load' %}">Filter XMAS Records </a>
+                                <a href="{% url 'Xmas_Savings_Shortlisting_Filter_Batch_Load' %}" style="color:lightyellow;">Filter XMAS Records </a>
                             </li>
                             <li>
-                                <a href="{% url 'Xmas_Savings_Shortlisting_Account_Linkage_Batch_Load' %}">XMAS Account Linkage </a>
+                                <a href="{% url 'Xmas_Savings_Shortlisting_Account_Linkage_Batch_Load' %}" style="color:lightyellow;">XMAS Account Linkage </a>
                             </li>
                             <li>
-                                <a href="{% url 'Xmas_Savings_Shortlisting_Export_Batch_Load' %}">Export XMAS Records </a>
+                                <a href="{% url 'Xmas_Savings_Shortlisting_Export_Batch_Load' %}" style="color:lightyellow;">Export XMAS Records </a>
 
                             </li>
                             <li>
-                                <a href="{% url 'Xmas_Savings_Shortlisting_Processing_Batch_Load' %}">Process XMAS Records </a>
+                                <a href="{% url 'Xmas_Savings_Shortlisting_Processing_Batch_Load' %}" style="color:lightyellow;">Process XMAS Records </a>
                             </li>
                             <li>
-                                <a href="{% url 'Xmas_Savings_Shortlisting_Ledger_Posting_Batch_Load' %}">XMAS Ledger Posting </a>
+                                <a href="{% url 'Xmas_Savings_Shortlisting_Ledger_Posting_Batch_Load' %}" style="color:lightyellow;">XMAS Ledger Posting </a>
                             </li>
                         </ul>
                     </li>
@@ -257,10 +280,13 @@
                             <span class="nav-label">Personnel Info</span><i class="fa fa-angle-left arrow"></i></a>
                         <ul class="nav-2-level collapse">
                            <li>
-                                <a href="{% url 'Norminal_Roll_Search' %}">Norminal Roll</a>
+                                <a href="{% url 'Norminal_Roll_Search' %}" style="color:lightyellow;">Norminal Roll</a>
                             </li>
                             <li>
-                                <a href="{% url 'Norminal_Roll_Update_Coop_Number_Search' %}">Update Cooperative Number</a>
+                                <a href="{% url 'Norminal_Roll_Without_Phone_Number_List_Load' %}" style="color:lightyellow;">Update Cooperative Number</a>
+                            </li>
+                            <li>
+                                <a href="{% url 'Norminal_Roll_Update_Coop_Number_Search' %}" style="color:lightyellow;">Without Phone Number</a>
                             </li>
                         </ul>
                     </li>
@@ -276,10 +302,10 @@
                                         <span class="nav-label">Initial Shares Record</span><i class="fa fa-angle-left arrow"></i></a>
                                     <ul class="nav-3-level collapse">
                                         <li>
-                                            <a href="{% url 'Members_Initial_Shares_update_Search' %}">Update Request</a>
+                                            <a href="{% url 'Members_Initial_Shares_update_Search' %}" style="color:lightyellow;">Update Request</a>
                                         </li>
                                         <li>
-                                            <a href="{% url 'Members_Initial_Shares_update_approved_list_load' %}">Process Update Request</a>
+                                            <a href="{% url 'Members_Initial_Shares_update_approved_list_load' %}" style="color:lightyellow;">Process Update Request</a>
                                          </li>
 
                                      </ul>
@@ -291,13 +317,13 @@
                                         <span class="nav-label">Shares Requesition</span><i class="fa fa-angle-left arrow"></i></a>
                                     <ul class="nav-3-level collapse">
                                         <li>
-                                            <a href="{% url 'Members_Share_Purchase_Request_Search' %}">Request for Shares</a>
+                                            <a href="{% url 'Members_Share_Purchase_Request_Search' %}" style="color:lightyellow;">Request for Shares</a>
                                         </li>
                                         <li>
-                                            <a href="{% url 'Members_Share_Purchase_Request_Manage_Search' %}">Manage Request</a>
+                                            <a href="{% url 'Members_Share_Purchase_Request_Manage_Search' %}" style="color:lightyellow;">Manage Request</a>
                                          </li>
                                         <li>
-                                            <a href="{% url 'Members_Share_Purchase_Request_Process' %}">Process Request</a>
+                                            <a href="{% url 'Members_Share_Purchase_Request_Process' %}" style="color:lightyellow;">Process Request</a>
                                         </li>
                                      </ul>
                                 </li>
@@ -314,13 +340,13 @@
                         <ul class="nav-2-level collapse">
 
                             <li>
-                                <a href="{% url 'Members_Next_Of_Kins_search' %}">Add Next of Kin</a>
+                                <a href="{% url 'Members_Next_Of_Kins_search' %}" style="color:lightyellow;">Add Next of Kin</a>
                             </li>
                             <li>
-                                <a href="{% url 'Members_Next_Of_Kins_Manage_search' %}">Manage Next of Kin</a>
+                                <a href="{% url 'Members_Next_Of_Kins_Manage_search' %}" style="color:lightyellow;">Manage Next of Kin</a>
                             </li>
                             <li>
-                                <a href="{% url 'Members_Without_Next_of_Kin_list_load' %}">Members Without NOK</a>
+                                <a href="{% url 'Members_Without_Next_of_Kin_list_load' %}" style="color:lightyellow;">Members Without NOK</a>
                             </li>
 
                         </ul>
@@ -339,10 +365,10 @@
                             <span class="nav-label">Members Wavers</span><i class="fa fa-angle-left arrow"></i></a>
                         <ul class="nav-2-level collapse">
                            <li>
-                                <a href="{% url 'members_wavers_request_search' %}">Place Request</a>
+                                <a href="{% url 'members_wavers_request_search' %}" style="color:lightyellow;">Place Request</a>
                             </li>
                             <li>
-                                <a href="javascript:;">Manage Request</a>
+                                <a href="javascript:;" style="color:lightyellow;">Manage Request</a>
                             </li>
                             </ul>
                     </li>
@@ -358,13 +384,13 @@
                             <span class="nav-label">Loan Manager</span><i class="fa fa-angle-left arrow"></i></a>
                         <ul class="nav-2-level collapse">
                               <li>
-                                <a href="{% url 'Project_Loan_Dashboard_Load' %}">Project Loans</a>
+                                <a href="{% url 'Project_Loan_Dashboard_Load' %}" style="color:lightyellow;">Project Loans</a>
                             </li>
                            <li>
-                                <a href="{% url 'Emergency_Loan_Dashboard_Load' %}">Emergency Loans</a>
+                                <a href="{% url 'Emergency_Loan_Dashboard_Load' %}" style="color:lightyellow;">Emergency Loans</a>
                             </li>
                             <li>
-                                <a href="{% url 'Commodity_Loan_Dashboard_Load' %}">Commodity Loans</a>
+                                <a href="{% url 'Commodity_Loan_Dashboard_Load' %}" style="color:lightyellow;">Commodity Loans</a>
                             </li>
 
                         </ul>
@@ -379,44 +405,53 @@
                             <span class="nav-label">Monthly Deductions</span><i class="fa fa-angle-left arrow"></i></a>
                         <ul class="nav-2-level collapse">
                             <li>
-                                <a href="{% url 'TransactionPeriodManager' %}">Transaction Period Manager</a>
+                                <a href="{% url 'TransactionPeriodManager' %}" style="color:lightyellow;">Transaction Period Manager</a>
+                            </li>
+                            <li>
+                                <a href="{% url 'Monthly_Deductions_OutgoingTransactions' %}" style="color:lightyellow;">Outgoing Transactions</a>
                             </li>
                                    
+                           
+
+
                             <li>
                                 <a href="javascript:;">
                                     <span class="nav-label">Outgoing Transactions</span><i class="fa fa-angle-left arrow"></i></a>
                                 <ul class="nav-3-level collapse">
                                      
                                     <li>
-                                        <a href="{% url 'Monthly_Deduction_Salary_Institution_Load' %}">Individual Transactions</a>
+                                        <a href="{% url 'Monthly_Deduction_Salary_Institution_Load' %}" style="color:lightyellow;">Individual Transactions</a>
                                     </li>
                                     <li>
-                                        <a href="{% url 'Monthly_Group_transaction_Institution_Load' %}">Group Transactions</a>
+                                        <a href="{% url 'Monthly_Group_transaction_Institution_Load' %}" style="color:lightyellow;">Group Transactions</a>
                                     </li>
                                     <li>
-                                        <a href="{% url 'Monthly_Deduction_Main_and_Shop_Merger_Institution_load' %}">Main and Shop Merger</a>
+                                        <a href="{% url 'Monthly_Deduction_Main_and_Shop_Merger_Institution_load' %}" style="color:lightyellow;">Main and Shop Merger</a>
                                     </li> 
                                     <li>
-                                        <a href="{% url 'Monthly_Deduction_Transaction_Reverse_Institution_load' %}">Reverse Generated Transactions</a>
+                                        <a href="{% url 'Monthly_Deduction_Transaction_Reverse_Institution_load' %}" style="color:lightyellow;">Reverse Generated Transactions</a>
                                     </li>
 
                                     <li>
-                                        <a href="{% url 'Monthly_Deduction_excel_Export_Institution_Load' %}">Exporting To Excel</a>
+                                        <a href="{% url 'Monthly_Deduction_excel_Export_Institution_Load' %}" style="color:lightyellow;">Exporting To Excel</a>
                                     </li>
 
 
                                 </ul>
                             </li>
 
+                            <li>
+                                <a href="{% url 'Monthly_Deductions_IncomingTransactions' %}">Incoming Transactions</a>
+                            </li>
+                           
 
+                           {% comment %}
                             <li>
                                 <a href="javascript:;">
                                     <span class="nav-label">Incoming Transactions</span><i class="fa fa-angle-left arrow"></i></a>
                                 <ul class="nav-3-level collapse">
                                     
-                                    <li>
-                                        <a href="{% url 'Monthly_Account_deduction_Excel_import_Institution_Load' %}">Import Account Deductions</a>
-                                    </li>
+                                   
 
 
                                     <li>
@@ -441,27 +476,28 @@
 
                                 </ul>
                             </li>
+                            {% endcomment %}
                             <li>
                                 <a href="javascript:;">
                                     <span class="nav-label">Auxillary Transactions</span><i class="fa fa-angle-left arrow"></i></a>
                                 <ul class="nav-3-level collapse">
                                     
                                     <li>
-                                        <a href="{% url 'Monthly_Deduction_Generated_Update_Institution_Load' %}">Import Account Deductions</a>
+                                        <a href="{% url 'Monthly_Deduction_Generated_Update_Institution_Load' %}" style="color:lightyellow;">Import Account Deductions</a>
                                     </li>
                                     <li>
-                                        <a href="{% url 'Monthly_Auxillary_Imported_Deduction_View_List_Institution_Load' %}">View Imported  Deductions</a>
+                                        <a href="{% url 'Monthly_Auxillary_Imported_Deduction_View_List_Institution_Load' %}" style="color:lightyellow;">View Imported  Deductions</a>
                                     </li>
 
 
                                     <li>
-                                        <a href="{% url 'Monthly_Auxillary_Deduction_Generated_Merger_Institution_Load' %}">Merging Transactions</a>
+                                        <a href="{% url 'Monthly_Auxillary_Deduction_Generated_Merger_Institution_Load' %}" style="color:lightyellow;">Merging Transactions</a>
                                     </li>
                                      <li>
-                                        <a href="{% url 'Monthly_Auxillary_Deduction_Generated_Update_Transaction_Institution_Load' %}">Auxillary Transaction Update</a>
+                                        <a href="{% url 'Monthly_Auxillary_Deduction_Generated_Update_Transaction_Institution_Load' %}" style="color:lightyellow;">Auxillary Transaction Update</a>
                                     </li>
                                     <li>
-                                        <a href="{% url 'Monthly_Auxillary_Deduction_Generated_Export_Institution_Load' %}">Export Auxillary Transaction</a>
+                                        <a href="{% url 'Monthly_Auxillary_Deduction_Generated_Export_Institution_Load' %}" style="color:lightyellow;">Export Auxillary Transaction</a>
                                     </li>
                                     
 
@@ -481,10 +517,10 @@
                             <span class="nav-label">Ledger Multi Operations</span><i class="fa fa-angle-left arrow"></i></a>
                         <ul class="nav-2-level collapse">
                             <li>
-                                <a href="{% url 'Manual_Ledger_Posting_search' %}">Manual Ledger Posting</a>
+                                <a href="{% url 'Manual_Ledger_Posting_search' %}" style="color:lightyellow;">Manual Ledger Posting</a>
                             </li> 
                            <li>
-                                <a href="{% url 'Manual_Ledger_Posting_Reverse_search' %}">Transaction Reverse</a>
+                                <a href="{% url 'Manual_Ledger_Posting_Reverse_search' %}" style="color:lightyellow;">Transaction Reverse</a>
                             </li>
 
                         </ul>
@@ -498,10 +534,10 @@
                             <span class="nav-label">Bank Accounts</span><i class="fa fa-angle-left arrow"></i></a>
                         <ul class="nav-2-level collapse">
                             <li>
-                                <a href="{% url 'Members_Bank_Account_Dashboard_Load' %}">Members Bank Accounts</a>
+                                <a href="{% url 'Members_Bank_Account_Dashboard_Load' %}" style="color:lightyellow;">Members Bank Accounts</a>
                             </li>
                             <li>
-                                <a href="{% url 'Cooperative_Bank_Account_Dashboard' %}">Cooperative  Bank Accounts</a>
+                                <a href="{% url 'Cooperative_Bank_Account_Dashboard' %}" style="color:lightyellow;">Cooperative  Bank Accounts</a>
                             </li>
 
                         </ul>
@@ -513,13 +549,13 @@
                             <span class="nav-label">Rental Services</span><i class="fa fa-angle-left arrow"></i></a>
                         <ul class="nav-2-level collapse">
                             <li>
-                                <a href="{% url 'Rental_Services_Category_List_Load' %}">Service Booking</a>
+                                <a href="{% url 'Rental_Services_Category_List_Load' %}" style="color:lightyellow;">Service Booking</a>
                             </li>
                             <li>
-                                <a href="{% url 'Rental_Services_Unpaid_Bill' %}">Unpaid Bills</a>
+                                <a href="{% url 'Rental_Services_Unpaid_Bill' %}" style="color:lightyellow;">Unpaid Bills</a>
                             </li>
                             <li>
-                                <a href="{% url 'Rental_Services_Management' %}">Manage Booking</a>
+                                <a href="{% url 'Rental_Services_Management' %}" style="color:lightyellow;">Manage Booking</a>
                             </li>
 
 
@@ -532,14 +568,14 @@
                         <span class="nav-label">Daily Transactions Summary</span><i class="fa fa-angle-left arrow"></i></a>
                     <ul class="nav-2-level collapse">
                          <li>
-                            <a href="javascript:;">Membership Form Sales</a>
+                            <a href="javascript:;" style="color:lightyellow;">Membership Form Sales</a>
                         </li>
 
                          <li>
-                            <a href="javascript:;">Loan Form Sales</a>
+                            <a href="javascript:;" style="color:lightyellow;">Loan Form Sales</a>
                         </li>
                         <li>
-                            <a href="javascript:;">Cash Deposit</a>
+                            <a href="javascript:;" style="color:lightyellow;">Cash Deposit</a>
                         </li>
 
                     </ul>
@@ -551,14 +587,14 @@
                             <span class="nav-label">Day End Transactions</span><i class="fa fa-angle-left arrow"></i></a>
                         <ul class="nav-2-level collapse">
                              <li>
-                                <a href="{% url 'MemberShipFormSalesSummary' %}">Membership Form Sales</a>
+                                <a href="{% url 'MemberShipFormSalesSummary' %}" style="color:lightyellow;">Membership Form Sales</a>
                             </li>
 
                              <li>
-                                <a href="{% url 'Cash_Deposit_Report_Date_Load' %}">Loan Form Sales</a>
+                                <a href="{% url 'Cash_Deposit_Report_Date_Load' %}" style="color:lightyellow;">Loan Form Sales</a>
                             </li>
                             <li>
-                                <a href="{% url 'Cash_Deposit_Report_Date_Load' %}">Cash Deposit</a>
+                                <a href="{% url 'Cash_Deposit_Report_Date_Load' %}" style="color:lightyellow;">Cash Deposit</a>
                             </li>
 
                         </ul>
@@ -613,19 +649,19 @@
                         <ul class="nav-2-level collapse">
 
                             <li>
-                                <a href="{% url 'membership_termination_search' %}">Termination Request</a>
+                                <a href="{% url 'membership_termination_search' %}" style="color:lightyellow;">Termination Request</a>
                             </li>
                              <li>
-                                <a href="{% url 'membership_termination_approved_list_processing_list_load' %}">Termination Processing</a>
+                                <a href="{% url 'membership_termination_approved_list_processing_list_load' %}" style="color:lightyellow;">Termination Processing</a>
                             </li>
                             <li>
-                                <a href="{% url 'membership_termination_maturity_date_exception_search' %}">Maturity Date Exception</a>
+                                <a href="{% url 'membership_termination_maturity_date_exception_search' %}" style="color:lightyellow;">Maturity Date Exception</a>
                             </li>
                             <li>
-                                <a href="{% url 'membership_termination_maturity_date_exception_approved_list_load' %}">Maturity Exception Processing</a>
+                                <a href="{% url 'membership_termination_maturity_date_exception_approved_list_load' %}" style="color:lightyellow;">Maturity Exception Processing</a>
                             </li>
                             <li>
-                                <a href="{% url 'membership_termination_Disbursement_Processing_list_Load' %}">Termination Fund Disbursement</a>
+                                <a href="{% url 'membership_termination_Disbursement_Processing_list_Load' %}" style="color:lightyellow;">Termination Fund Disbursement</a>
                             </li>
                         </ul>
                     </li>
@@ -639,7 +675,7 @@
                         <ul class="nav-2-level collapse">
                         {% if 'SHOP CREDIT SALES APPROVALS'  in task_array  %}
                             <li>
-                               <a href="{% url 'members_credit_purchase_approval' %}">Shop Credit Sales</a>
+                               <a href="{% url 'members_credit_purchase_approval' %}" style="color:lightyellow;">Shop Credit Sales</a>
                             </li>
 
                         {% endif %}
@@ -649,7 +685,7 @@
 
                         {% if 'SHARE UPDATE APPROVAL'  in task_array %}
                             <li>
-                               <a href="{% url 'Initial_Shares_Update_List_Load' %}">Initial Share Update</a>
+                               <a href="{% url 'Initial_Shares_Update_List_Load' %}" style="color:lightyellow;">Initial Share Update</a>
                             </li>
                         {% endif %}
 
@@ -660,20 +696,20 @@
                               {% if 'TRANSACTION ADJUSTMENT APPROVAL'  in task_array %}
 
                                    <li>
-                                       <a href="{% url 'Transaction_Adjustment_Approval_list_Load' %}">Standing Order Adjustment</a>
+                                       <a href="{% url 'Transaction_Adjustment_Approval_list_Load' %}" style="color:lightyellow;">Standing Order Adjustment</a>
                                     </li>
                                     <li>
-                                        <a href="{% url 'Transaction_Loan_Adjustment_Approval_list_Load' %}">Loans Repayment Adjustment</a>
+                                        <a href="{% url 'Transaction_Loan_Adjustment_Approval_list_Load' %}" style="color:lightyellow;">Loans Repayment Adjustment</a>
                                     </li>
 
 
                                 {% endif %}
                                 {% if 'STANDING ORDER SUSPENSION APPROVAL'  in task_array %}
                                     <li>
-                                        <a href="{% url 'Standing_Order_Suspension_Transaction_Approval_Load' %}">Standing Order Suspension</a>
+                                        <a href="{% url 'Standing_Order_Suspension_Transaction_Approval_Load' %}" style="color:lightyellow;">Standing Order Suspension</a>
                                     </li>
                                     <li>
-                                        <a href="{% url 'Standing_Order_Suspension_Transaction_Releasing_Approval_Load' %}">Standing Order Activation</a>
+                                        <a href="{% url 'Standing_Order_Suspension_Transaction_Releasing_Approval_Load' %}" style="color:lightyellow;">Standing Order Activation</a>
                                     </li>
                                 {% endif %}
 
@@ -690,7 +726,7 @@
                                     <span class="nav-label">General Reports</span><i class="fa fa-angle-left arrow"></i></a>
                                 <ul class="nav-2-level collapse">
                                      <li>
-                                        <a href="{% url 'Members_Dashboard_Search' %}">Members Dashboard</a>
+                                        <a href="{% url 'Members_Dashboard_Search' %}" style="color:lightyellow;">Members Dashboard</a>
                                     </li>                           
                                     
                                     <li>
@@ -699,16 +735,16 @@
                                         <ul class="nav-3-level collapse">
                                             
                                             <li>
-                                                <a href="{% url 'Standing_Orders_Transaction_List_Load' %}">Standing Orders</a>
+                                                <a href="{% url 'Standing_Orders_Transaction_List_Load' %}" style="color:lightyellow;">Standing Orders</a>
                                             </li>  
                                             <li>
-                                                <a href="{% url 'Standing_Order_Consolidated_Salary_Institution_list_load' %}">Consolidated Standing Orders</a>
+                                                <a href="{% url 'Standing_Order_Consolidated_Salary_Institution_list_load' %}" style="color:lightyellow;">Consolidated Standing Orders</a>
                                             </li>
                                             <li>
-                                                <a href="{% url 'Balance_Brought_Forward_Consolidated_Salary_Institution_list_load' %}">Consolidated Balance Brought Forward</a>
+                                                <a href="{% url 'Balance_Brought_Forward_Consolidated_Salary_Institution_list_load' %}" style="color:lightyellow;">Consolidated Balance Brought Forward</a>
                                             </li>
                                             <li>
-                                                <a href="{% url 'Transaction_adjustment_history_Search' %}">Transaction Adjustment History</a>
+                                                <a href="{% url 'Transaction_adjustment_history_Search' %}" style="color:lightyellow;">Transaction Adjustment History</a>
                                             </li>
                                         </ul>
                                     </li>
@@ -718,19 +754,19 @@
                                             <span class="nav-label">Loan Transactions</span><i class="fa fa-angle-left arrow"></i></a>
                                         <ul class="nav-3-level collapse">
                                             <li>
-                                                <a href="javascript:;">Loans Applcations</a>
+                                                <a href="javascript:;" style="color:lightyellow;">Loans Applcations</a>
                                             </li>
                                             <li>
-                                                <a href="{% url 'Load_Active_loans_Transaction_List_Load' %}">Active Loans</a>
+                                                <a href="{% url 'Load_Active_loans_Transaction_List_Load' %}" style="color:lightyellow;">Active Loans</a>
                                             </li>
                                             <li>
-                                                <a href="{% url 'Members_Cleared_Loans_Records' %}">Cleared Loans</a>
+                                                <a href="{% url 'Members_Cleared_Loans_Records' %}" style="color:lightyellow;">Cleared Loans</a>
                                             </li>
                                             <li>
-                                                <a href="{% url 'Loan_Repayment_Consolidated_Salary_Institution_list_load' %}">Consolidated Loan Repayments</a>
+                                                <a href="{% url 'Loan_Repayment_Consolidated_Salary_Institution_list_load' %}" style="color:lightyellow;">Consolidated Loan Repayments</a>
                                             </li>
                                              <li>
-                                                <a href="{% url 'Loan_Balance_Broght_Forward_Consolidated_Salary_Institution_list_load' %}">Consolidated Loan Ledger Balance</a>
+                                                <a href="{% url 'Loan_Balance_Broght_Forward_Consolidated_Salary_Institution_list_load' %}" style="color:lightyellow;">Consolidated Loan Ledger Balance</a>
                                             </li>
                                         </ul>
                                     </li>
@@ -739,10 +775,10 @@
                                             <span class="nav-label">Application Forms</span><i class="fa fa-angle-left arrow"></i></a>
                                         <ul class="nav-3-level collapse">
                                             <li>
-                                                <a href="{% url 'MemberShipFormSales_Report_individual_Search' %}">Individual Records</a>
+                                                <a href="{% url 'MemberShipFormSales_Report_individual_Search' %}" style="color:lightyellow;">Individual Records</a>
                                             </li>
                                             <li>
-                                                <a href="{% url 'MemberShipFormSalesReport' %}">General Records</a>
+                                                <a href="{% url 'MemberShipFormSalesReport' %}" style="color:lightyellow;">General Records</a>
                                             </li>
 
                                         </ul>
@@ -761,10 +797,10 @@
                                             <span class="nav-label">Norminal Roll</span><i class="fa fa-angle-left arrow"></i></a>
                                         <ul class="nav-3-level collapse">
                                             <li>
-                                                <a href="{% url 'Norminal_Roll_List_Load' %}">Comprehensive List</a>
+                                                <a href="{% url 'Norminal_Roll_List_Load' %}" style="color:lightyellow;">Comprehensive List</a>
                                             </li>
                                             <li>
-                                                <a href="{% url 'Norminal_Roll_By_Institution_Load' %}">Based on Institutions</a>
+                                                <a href="{% url 'Norminal_Roll_By_Institution_Load' %}" style="color:lightyellow;">Based on Institutions</a>
                                             </li>
 
                                         </ul>
@@ -774,7 +810,7 @@
 
                                     
                                     <li>
-                                        <a href="{% url 'PersonalLedger_Selected_Search' %}">Personal Ledger</a>
+                                        <a href="{% url 'PersonalLedger_Selected_Search' %}" style="color:lightyellow;">Personal Ledger</a>
                                     </li>
 
 
@@ -783,10 +819,10 @@
                                             <span class="nav-label">Welfare Package</span><i class="fa fa-angle-left arrow"></i></a>
                                         <ul class="nav-3-level collapse">
                                             <li>
-                                                <a href="{% url 'Members_Welfare_Report_Search' %}">Individual Records</a>
+                                                <a href="{% url 'Members_Welfare_Report_Search' %}" style="color:lightyellow;">Individual Records</a>
                                             </li>
                                             <li>
-                                                <a href="{% url 'Members_Welfare_Report_General_Records' %}">General Records</a>
+                                                <a href="{% url 'Members_Welfare_Report_General_Records' %}" style="color:lightyellow;">General Records</a>
                                             </li>
 
                                         </ul>
@@ -796,13 +832,13 @@
                                             <span class="nav-label">Shares Package</span><i class="fa fa-angle-left arrow"></i></a>
                                         <ul class="nav-3-level collapse">
                                             <li>
-                                                <a href="{% url 'Members_Initial_Shares_Reports_Load' %}">Initial Share Records</a>
+                                                <a href="{% url 'Members_Initial_Shares_Reports_Load' %}" style="color:lightyellow;">Initial Share Records</a>
                                             </li>
                                              <li>
-                                                <a href="{% url 'Members_Individual_Shares_Report_Search' %}">Individual Share Records</a>
+                                                <a href="{% url 'Members_Individual_Shares_Report_Search' %}" style="color:lightyellow;">Individual Share Records</a>
                                             </li>
                                             <li>
-                                                <a href="{% url 'Members_General_Shares_Report_List_Load' %}">General Records</a>
+                                                <a href="{% url 'Members_General_Shares_Report_List_Load' %}" style="color:lightyellow;">General Records</a>
                                             </li>
                                         </ul>
                                     </li>
@@ -814,12 +850,12 @@
                                             <span class="nav-label">Covering Notes</span><i class="fa fa-angle-left arrow"></i></a>
                                         <ul class="nav-3-level collapse">
                                             <li>
-                                                <a href="{% url 'Monthly_Deduction_Covering_Note' %}">Monthly Deductions</a>
+                                                <a href="{% url 'Monthly_Deduction_Covering_Note' %}" style="color:lightyellow;">Monthly Deductions</a>
                                             </li>
 
                                         </ul>
                                     </li>
-                                     <li class="heading">MONTHLY DEDUCTIONS</li>
+                                     <li class="heading" style="color:lightyellow;">MONTHLY DEDUCTIONS</li>
 
 
                                     <li>
@@ -827,10 +863,10 @@
                                             <span class="nav-label">Monthly Deduction</span><i class="fa fa-angle-left arrow"></i></a>
                                         <ul class="nav-3-level collapse">
                                             <li>
-                                                <a href="{% url 'Monthly_Deductions_All_Records_Report_Period' %}">Grouped Records</a>
+                                                <a href="{% url 'Monthly_Deductions_All_Records_Report_Period' %}" style="color:lightyellow;">Grouped Records</a>
                                             </li>
                                             <li>
-                                                <a href="{% url 'Monthly_Deductions_Report_Search' %}">Selected Records</a>
+                                                <a href="{% url 'Monthly_Deductions_Report_Search' %}" style="color:lightyellow;">Selected Records</a>
                                             </li>
 
                                         </ul>
@@ -840,13 +876,13 @@
                                             <span class="nav-label">Wrongful Deductions</span><i class="fa fa-angle-left arrow"></i></a>
                                         <ul class="nav-3-level collapse">
                                             <li>
-                                                <a href="{% url 'Over_Deductions_report' %}">Over Deductions</a>
+                                                <a href="{% url 'Over_Deductions_report' %}" style="color:lightyellow;">Over Deductions</a>
                                             </li>
                                             <li>
-                                                <a href="{% url 'Under_Deductions_report' %}">Under Deductions</a>
+                                                <a href="{% url 'Under_Deductions_report' %}" style="color:lightyellow;">Under Deductions</a>
                                             </li>
                                             <li>
-                                               <a href="{% url 'Non_Members_Deductions_report' %}">Non Member Deductions</a>
+                                               <a href="{% url 'Non_Members_Deductions_report' %}" style="color:lightyellow;">Non Member Deductions</a>
                                             </li>
 
                                         </ul>
@@ -877,16 +913,16 @@
                                         <a href="{% url 'Norminal_Roll_Preview' %}">Process Norminal Roll</a>
                                      </li>{% endcomment %}
                                      <li>
-                                        <a href="{% url 'Individual_Capture' %}">Individual Record Capture</a>
+                                        <a href="{% url 'Individual_Capture' %}" style="color:lightyellow;">Individual Record Capture</a>
                                      </li>
                                      <li>
-                                        <a href="{% url 'Duplicate_Membership_Records_List_load' %}">Duplicate Membership Records</a>
+                                        <a href="{% url 'Duplicate_Membership_Records_List_load' %}" style="color:lightyellow;">Duplicate Membership Records</a>
                                      </li> 
                                       <li>
-                                        <a href="{% url 'Duplicate_Membership_Ippis_List_load' %}">Duplicate IPPIS Records</a>
+                                        <a href="{% url 'Duplicate_Membership_Ippis_List_load' %}" style="color:lightyellow;">Duplicate IPPIS Records</a>
                                      </li>
                                      <li>
-                                        <a href="{% url 'Individual_Capture_Delete_Search' %}">Delete Registered Member</a>
+                                        <a href="{% url 'Individual_Capture_Delete_Search' %}" style="color:lightyellow;">Delete Registered Member</a>
                                      </li>
                                    
 
@@ -902,28 +938,28 @@
                                 <ul class="nav-3-level collapse">
                                    
                                     <li>
-                                        <a href="{% url 'Uploading_Existing_Savings_Search' %}">Selected Savings Upload</a>
+                                        <a href="{% url 'Uploading_Existing_Savings_Search' %}" style="color:lightyellow;">Selected Savings Upload</a>
                                     </li>
                                     <li>
-                                        <a href="{% url 'Uploading_Existing_Savings_Additional_search' %}">Additional Savings</a>
+                                        <a href="{% url 'Uploading_Existing_Savings_Additional_search' %}" style="color:lightyellow;">Additional Savings</a>
                                     </li> 
                                     <li>
-                                        <a href="{% url 'Uploading_Existing_Savings_Done_List_Select_Period' %}">General Savings Uploaded</a>
+                                        <a href="{% url 'Uploading_Existing_Savings_Done_List_Select_Period' %}" style="color:lightyellow;">General Savings Uploaded</a>
                                     </li>
                                      <li>
-                                        <a href="{% url 'Uploading_Existing_Savings_Done_Selected_List_Search' %}">Selected Savings Uploaded</a>
+                                        <a href="{% url 'Uploading_Existing_Savings_Done_Selected_List_Search' %}" style="color:lightyellow;">Selected Savings Uploaded</a>
                                     </li>
                                     
 
                                     <li>
-                                        <a href="{% url 'Uploading_Existing_Savings_All_List_Search' %}">Revert Uploaded Savings</a>
+                                        <a href="{% url 'Uploading_Existing_Savings_All_List_Search' %}" style="color:lightyellow;">Revert Uploaded Savings</a>
                                     </li>
                                     <li>
-                                        <a href="{% url 'Members_without_Compulsory_Savings' %}">Members Without Compulsory Savings</a>
+                                        <a href="{% url 'Members_without_Compulsory_Savings' %}" style="color:lightyellow;">Members Without Compulsory Savings</a>
                                     </li> 
                                  
                                     <li>
-                                        <a href="{% url 'Unvalidated_Savings' %}">Unvalidated Savings</a>
+                                        <a href="{% url 'Unvalidated_Savings' %}" style="color:lightyellow;">Unvalidated Savings</a>
                                     </li>
                                 </ul>
                             </li>
@@ -933,17 +969,17 @@
                                     <span class="nav-label">Monetary Loans</span><i class="fa fa-angle-left arrow"></i></a>
                                 <ul class="nav-3-level collapse">
                                     <li>
-                                       <a href="{% url 'Uploading_Existing_Loans_Search' %}">Uploading Loans</a>
+                                       <a href="{% url 'Uploading_Existing_Loans_Search' %}" style="color:lightyellow;">Uploading Loans</a>
                                     </li>
                                     <li>
-                                       <a href="{% url 'Uploading_Existing_Additional_Loans_Search' %}">Additional Loan</a>
+                                       <a href="{% url 'Uploading_Existing_Additional_Loans_Search' %}" style="color:lightyellow;">Additional Loan</a>
                                     </li>
                                     <li>
-                                       <a href="{% url 'Uploade_Existing_Loan_Period_load' %}">Already Uploaded Loans</a>
+                                       <a href="{% url 'Uploade_Existing_Loan_Period_load' %}" style="color:lightyellow;">Already Uploaded Loans</a>
                                     </li>
 
                                     <li>
-                                        <a href="{% url 'Uploaded_Existing_Loan_Revert_Search' %}">Revert Uploaded Loans</a>
+                                        <a href="{% url 'Uploaded_Existing_Loan_Revert_Search' %}" style="color:lightyellow;">Revert Uploaded Loans</a>
                                     </li> 
                                     
                                 </ul>
@@ -953,24 +989,24 @@
                                     <span class="nav-label">Non Monetary Loans</span><i class="fa fa-angle-left arrow"></i></a>
                                 <ul class="nav-3-level collapse">
                                     <li>
-                                       <a href="{% url 'Upload_Commodity_Product_Loan_Transaction_Load' %}">Upload Commodity Loans</a>
+                                       <a href="{% url 'Upload_Commodity_Product_Loan_Transaction_Load' %}" style="color:lightyellow;">Upload Commodity Loans</a>
                                     </li>
                                     
                                     <li>
-                                       <a href="{% url 'Upload_Commodity_Product_Loan_Products_Uploaded' %}">Already Uploaded Commodity Loans</a>
+                                       <a href="{% url 'Upload_Commodity_Product_Loan_Products_Uploaded' %}" style="color:lightyellow;">Already Uploaded Commodity Loans</a>
                                     </li>
                                    
                                 </ul>
                             </li>
                            <li>
-                               <a href="{% url 'Members_Ledger_Balance_Update_Search' %}">Updating Ledger Balance</a>
+                               <a href="{% url 'Members_Ledger_Balance_Update_Search' %}" style="color:lightyellow;">Updating Ledger Balance</a>
                             </li>
                             <li>
-                               <a href="{% url 'Members_Shares_Upload_Search' %}">Uploading Shares</a>
+                               <a href="{% url 'Members_Shares_Upload_Search' %}" style="color:lightyellow;">Uploading Shares</a>
                             </li>
 
                             <li>
-                               <a href="{% url 'Members_Welfare_Upload_Search' %}">Uploading Welfare</a>
+                               <a href="{% url 'Members_Welfare_Upload_Search' %}" style="color:lightyellow;">Uploading Welfare</a>
                             </li>
 
                         </ul>

@@ -1,0 +1,82 @@
+{% extends 'deskofficer_templates/base_template.html' %}
+{% load static %}
+
+{% block content %}
+            <div class="page-content fade-in-up">
+                <div class="row">
+                    
+                    <div class="col-xl-8">
+                        <div class="ibox">
+                            <div class="ibox-head">
+                                <div class="ibox-title">SAVINGS TYPES | {{record.member.get_full_name}} | {{record.member.coop_no}} | <a href="{% url 'Monthly_Deductions_Cash_Transfer_Source_Load' record.pk %}">Back</a></div>
+                            </div>
+                            <div class="ibox-body">
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Description</th>
+                                            <th>Account Number</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for item in records %}
+                                        <tr>
+                                            <td>{{forloop.counter}}</td>
+                                            <td>{{item.transaction.name}}</td>
+                                            <td>{{item.account_number}}</td>
+                                            <td><a href="{% url 'Monthly_Deductions_Cash_Transfer_Source_Load_Savings_Update' record.pk item.account_number %}">Load</a></td>
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>  
+                <div class="row">
+                    
+                    <div class="col-xl-8">
+                        <div class="ibox">
+                            <div class="ibox-head">
+                                <div class="ibox-title">MONTHLY DEDUCTIONS | {{record.transaction_period}}</div>
+                            </div>
+                            <div class="ibox-body">
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Description</th>
+                                            <th>Account Number</th>
+                                            <th>Amount</th>
+                                            <th>Amount Deducted</th>
+                                            
+                                         
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for item in queryset %}
+                                        <tr>
+                                            <td>{{forloop.counter}}</td>
+                                            <td>{{item.transaction.name}}</td>
+                                            <td>{{item.account_number}}</td>
+                                            <td>{{item.amount}}</td>
+                                            <td>{{item.amount_deducted}}</td>
+                                            
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+              
+           
+            </div>
+  <div class="sidenav-backdrop backdrop"></div>
+    <div class="preloader-backdrop">
+        <div class="page-preloader">Loading</div>
+    </div>
+{% endblock %}

@@ -9,7 +9,7 @@ def generalMemberSearch(frm,status):
 
 
 def searchMembers(frm,status):
-	records=Members.objects.filter(Q(member_id__icontains=frm) | Q(ippis_no__icontains=frm)  | Q(admin__first_name__icontains=frm) | Q(admin__last_name__icontains=frm) | Q(middle_name__icontains=frm)).filter(status=status)
+	records=Members.objects.filter(Q(coop_no__icontains=frm) | Q(ippis_no__icontains=frm)  | Q(admin__first_name__icontains=frm) | Q(admin__last_name__icontains=frm) | Q(middle_name__icontains=frm)).filter(status=status).order_by('coop_no')
 
 	return records
 

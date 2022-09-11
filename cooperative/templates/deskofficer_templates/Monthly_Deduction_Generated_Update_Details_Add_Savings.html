@@ -8,7 +8,7 @@
                     <div class="col-xl-8">
                         <div class="ibox">
                             <div class="ibox-head">
-                                <div class="ibox-title">Standing Order| {{member.get_full_name}}|{{member.coop_no}}</div>
+                                <div class="ibox-title">Standing Order| {{member.get_full_name}}|{{member.coop_no}} | <a href="{% url 'Monthly_Deduction_Generated_Update_Details_load' return_pk status %}">Back</a></div>
                             </div>
                             <div class="form-group">
                                   {% if messages %}
@@ -42,7 +42,7 @@
                                             <td>{{record.transaction.transaction.name}}</td>
                                             <td>{{record.transaction.account_number}}</td>
                                             <td>{{record.amount}}</td>
-                                            <td><a href="{% url 'Monthly_Deduction_Generated_Update_Details_Add_Savings_Select' record.pk member.pk transaction_period salary_institution.pk return_pk %} " class="btn btn-primary">Select</a></td>
+                                            <td><a href="{% url 'Monthly_Deduction_Generated_Update_Details_Add_Savings_Select' record.pk member.pk transaction_period salary_institution.pk return_pk status %} " class="btn btn-primary">Select</a></td>
                                         </tr>
                                     {% endfor %}
                                     </tbody>
@@ -52,7 +52,28 @@
                     </div>
                 </div>
               
-           
+             <div class="row btn-list-mrg-5">
+                    <div class="col-md-12">
+                        <div class="ibox">
+                            <div class="ibox-head">
+                                <div class="ibox-title">Other Tasks</div>
+                                
+                            </div>
+                            <div class="ibox-body">
+                                <p>Please Use Default Windows Back Command </p>
+                                <a href="{% url 'standing_order_form' member.pk %}" class="btn btn-warning">Standing Order</a>
+                                <a href="{% url 'Uploading_Existing_Savings_Additional_Preview' member.pk %}" class="btn btn-primary">Fresh Balance B/F</a>
+                                <a href="{% url 'Uploading_Existing_Savings_Additional_Preview' member.pk %}" class="btn btn-success">Additional Balance B/F</a>
+                                <a  href="{% url 'Members_Ledger_Balance_Update_Transaction_load' member.pk %}" class="btn btn-info">Ledger Update</a>
+                              
+                                <a href="{% url 'Uploading_Existing_Savings_Preview_All' member.pk %}" class="btn btn-danger">Reverse Savings</a>
+                             
+                             <a  href="" class="btn btn-info">Drop Standing Order</a>
+                            </div>
+                        </div>
+                    </div>
+                   
+                </div>
             </div>
   <div class="sidenav-backdrop backdrop"></div>
     <div class="preloader-backdrop">

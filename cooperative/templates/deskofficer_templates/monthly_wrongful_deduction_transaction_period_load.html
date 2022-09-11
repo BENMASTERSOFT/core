@@ -13,6 +13,28 @@
                                 </div>
                                 
                             </div>
+                             <div class="form-group">
+                                  {% if messages %}
+                                    
+                                      {% for message in messages %}
+                                      {% if message.tags == "error" %}
+                                      <div class="alert alert-danger" style="margin-top:10px">{{message}}</div>
+                                      
+                                      {% endif %}
+
+                                      {% if message.tags == "success" %}
+                                      <div class="alert alert-success" style="margin-top:10px">{{message}}</div>
+                                      
+                                      {% endif %}
+                                       {% if message.info == "info" %}
+                                      <div class="alert alert-success" style="margin-top:10px">{{message}}</div>
+                                      
+                                      {% endif %}
+                                      {% endfor %}
+                                  
+                                  {% endif %}
+                              </div>
+
                             <div class="ibox-body">
                                  <form class="form-horizontal" method="POST" action="" enctype="multipart/form-data" novalidate>
                                     {% csrf_token %}
@@ -36,7 +58,7 @@
 
              <div class="row">
                     
-                    <div class="col-xl-8">
+                    <div class="col-xl-10">
                         <div class="ibox">
                             <div class="ibox-head">
                                 <div class="ibox-title">LIST OF WRONGFUL FOR THE MONTH</div>
@@ -51,7 +73,7 @@
                                             <th>Name</th>
                                             <th>Amount</th>
                                             <th>Status</th>
-                                            <th>Action</th>
+                                            <th colspan="2">Action</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -65,10 +87,14 @@
                                             
                                             <td>
                                                 {% if record.transaction_status == "UNTREATED" %}
-                                                <a href="" class="btn btn-primary">Process</a>
+                                                <a href="{% url 'monthly_wrongful_deduction_members_transaction_search' record.pk %}" class="btn btn-success btn-rounded">Member</a>
                                                 {% endif %}
                                             </td>
-                                                
+                                            <td>
+                                                {% if record.transaction_status == "UNTREATED" %}
+                                                <a href="" class="btn btn-primary btn-rounded">Non Member</a>
+                                                {% endif %}
+                                            </td>                          
                                         </tr>
                                     {% endfor %}
                                         </tr>

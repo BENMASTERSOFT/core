@@ -10,7 +10,7 @@
                             <div class="col-md-12">
                                 <div class="ibox">
                                         <div class="ibox-head">
-                                            <div class="ibox-title">Loan    Application |  <input type="button" class="btn btn-primary" value="Back" onclick="history.back()"/>
+                                            <div class="ibox-title">Loan    Application |  <a href="{% url 'loan_application_approved_transaction_period_load' applicant.loan.pk %}">Back</a>
                                             </div>
                                         </div> <div class="ibox-head">
                                             <div class="ibox-title"> {{applicant.member.coop_no}} - {{applicant.member.get_full_name}}
@@ -192,7 +192,7 @@
                             <div class="col-md-12">
                                 <div class="ibox">
                                     <div class="ibox-head">
-                                        <div class="ibox-title">Bank Account Details</div>
+                                        <div class="ibox-title">Bank Account Details | <a href="{% url 'Members_Bank_Accounts' applicant.member.pk %}">Register Bank Account</a></div>
                                         
                                     </div>
                                     <div class="ibox-body">
@@ -294,15 +294,15 @@
                             <div class="col-md-12">
                                 <div class="ibox">
                                     <div class="ibox-head">
-                                        <div class="ibox-title">Loan Application Preview</div>
+                                        <div class="ibox-title">Loan Application Preview | <a href="{% url 'addMembersNextOfKins' applicant.member.pk %}">Register Next of Kin</a></div>
                                         
                                     </div>
                                     <div class="ibox-body">
-                                        <form class="form-horizontal">                                  <div class="form-group row">
-                                                <div class="col-sm-10 ml-sm-auto">
-                                                   
-
-                                                   
+                                        <form class="form-horizontal" method="POST" action="{% url 'loan_application_preview' loan_pk return_pk 'PROJECT' %}" enctype="multipart/form-data" novalidate>
+                                         {% csrf_token %}
+                                         
+                                            <div class="form-group row">
+                                                <div class="col-sm-10 ml-sm-auto">                                                                                       
                                                     <a href="{% url 'loan_application_preview' loan_pk return_pk 'PROJECT' %}" class="btn btn-success">Preview</a>
                                                     
                                                 </div>

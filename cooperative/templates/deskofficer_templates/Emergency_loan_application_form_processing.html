@@ -90,7 +90,7 @@
                             <div class="col-md-12">
                                 <div class="ibox">
                                     <div class="ibox-head">
-                                        <div class="ibox-title">Bank Account Details</div>
+                                        <div class="ibox-title">Bank Account Details | <a href="{% url 'Members_Bank_Accounts' applicant.member.pk %}">Add Account</a></div>
                                         
                                     </div>
                                     <div class="ibox-body">
@@ -264,9 +264,9 @@
                             <div class="col-md-12">
                                 <div class="ibox">
                                     <div class="ibox-head">
-                                        <div class="ibox-title">Loan Application Preview</div>
+                                        <div class="ibox-title">Loan Application Preview | <a href="{% url 'addMembersNextOfKins' applicant.member.pk %}">Add Next of Kin</a></div>
                                         
-                                    </div>
+                                    </div> 
                                     <div class="ibox-body">
                                         <form class="form-horizontal">                                  <div class="form-group row">
                                                 <div class="col-sm-10 ml-sm-auto">

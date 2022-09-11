@@ -59,6 +59,7 @@ urlpatterns = [
     path('User_Task_Manager_Update_desk_office/<str:pk>/', master_views.User_Task_Manager_Update_desk_office,name='User_Task_Manager_Update_desk_office'),
 
     path('General_Tasks_Manager/', master_views.General_Tasks_Manager,name='General_Tasks_Manager'),
+    
     path('trending_commodity_signatories/', master_views.trending_commodity_signatories,name='trending_commodity_signatories'),
     path('trending_commodity_signatories_delete/<str:pk>/', master_views.trending_commodity_signatories_delete,name='trending_commodity_signatories_delete'),
 
@@ -71,11 +72,13 @@ urlpatterns = [
     path('Desk_Office_Users/', master_views.Desk_Office_Users,name='Desk_Office_Users'),
     path('Desk_Office_Tasks_Preview/<str:pk>/', master_views.Desk_Office_Tasks_Preview,name='Desk_Office_Tasks_Preview'),
     path('Desk_Office_Tasks_Remove/<str:pk>/', master_views.Desk_Office_Tasks_Remove,name='Desk_Office_Tasks_Remove'),
+   
     # path('Desk_Office_Tasks/<str:pk>/', master_views.Desk_Office_Tasks,name='Desk_Office_Tasks'),
 
     path('Shop_Users/', master_views.Shop_Users,name='Shop_Users'),
     path('Shop_Users_Tasks_Preview/<str:pk>/', master_views.Shop_Users_Tasks_Preview,name='Shop_Users_Tasks_Preview'),
     path('Shop_Users_Tasks_Remove/<str:pk>/', master_views.Shop_Users_Tasks_Remove,name='Shop_Users_Tasks_Remove'),
+   
     path('Shop_Tasks/<str:pk>/', master_views.Shop_Tasks,name='Shop_Tasks'),
 
 
@@ -393,6 +396,7 @@ urlpatterns = [
     path('MemberShipRequest_approval_submit/<str:pk>/', master_views.MemberShipRequest_approval_submit,name='MemberShipRequest_approval_submit'),
 
     path('loan_request_approval_period_load/', master_views.loan_request_approval_period_load,name='loan_request_approval_period_load'),
+    path('loan_request_application_approval_period_load/<str:pk>/', master_views.loan_request_application_approval_period_load,name='loan_request_application_approval_period_load'),
     path('Loan_request_approval_details/<str:pk>/', master_views.Loan_request_approval_details,name='Loan_request_approval_details'),
 
     path('emergency_Loan_application_approval_period_load/', master_views.emergency_Loan_application_approval_period_load,name='emergency_Loan_application_approval_period_load'),
@@ -488,10 +492,30 @@ urlpatterns = [
     # path('render_pdf_view/', deskofficer_views.render_pdf_view,name='render_pdf_view'),
 
     path('deskofficer_home/', deskofficer_views.deskofficer_home,name='deskofficer_home'),
+    path('control_panel/', deskofficer_views.control_panel,name='control_panel'),
 
     path('Useraccount_manager/', deskofficer_views.Useraccount_manager,name='Useraccount_manager'),
 
-    path('desk_widgets_form/', deskofficer_views.desk_widgets_form,name='desk_widgets_form'),
+    path('Desk_General_Tasks_Manager/', deskofficer_views.Desk_General_Tasks_Manager,name='Desk_General_Tasks_Manager'),
+  
+    path('Desk_Executive_Users/', deskofficer_views.Desk_Executive_Users,name='Desk_Executive_Users'),
+    path('Desk_Executive_Users_Tasks_Preview/<str:pk>/', deskofficer_views.Desk_Executive_Users_Tasks_Preview,name='Desk_Executive_Users_Tasks_Preview'),
+    path('Desk_Executive_Users_Tasks_Remove/<str:pk>/', deskofficer_views.Desk_Executive_Users_Tasks_Remove,name='Desk_Executive_Users_Tasks_Remove'),
+
+
+    path('Desk_Desk_Office_Users/', deskofficer_views.Desk_Desk_Office_Users,name='Desk_Desk_Office_Users'),
+    path('Desk_Desk_Office_Tasks_Preview/<str:pk>/', deskofficer_views.Desk_Desk_Office_Tasks_Preview,name='Desk_Desk_Office_Tasks_Preview'),
+    path('Desk_Desk_Office_Tasks_Remove/<str:pk>/', deskofficer_views.Desk_Desk_Office_Tasks_Remove,name='Desk_Desk_Office_Tasks_Remove'),
+   
+ 
+    path('Desk_Shop_Users/', deskofficer_views.Desk_Shop_Users,name='Desk_Shop_Users'),
+    path('Desk_Shop_Users_Tasks_Preview/<str:pk>/', deskofficer_views.Desk_Shop_Users_Tasks_Preview,name='Desk_Shop_Users_Tasks_Preview'),
+    path('Desk_Shop_Users_Tasks_Remove/<str:pk>/', deskofficer_views.Desk_Shop_Users_Tasks_Remove,name='Desk_Shop_Users_Tasks_Remove'),
+   
+    path('desk_trending_commodity_signatories/', deskofficer_views.desk_trending_commodity_signatories,name='desk_trending_commodity_signatories'),
+    path('desk_trending_commodity_signatories_delete/<str:pk>/', deskofficer_views.desk_trending_commodity_signatories_delete,name='desk_trending_commodity_signatories_delete'),
+
+
     path('desk_basic_form/', deskofficer_views.desk_basic_form,name='desk_basic_form'),
     path('desk_basic_card/', deskofficer_views.desk_basic_card,name='desk_basic_card'),
     
@@ -499,6 +523,85 @@ urlpatterns = [
     path('desk_basic_table/', deskofficer_views.desk_basic_table,name='desk_basic_table'),
     path('desk_datatable_table/', deskofficer_views.desk_datatable_table,name='desk_datatable_table'),
     # path('desk_form_validation/', deskofficer_views.desk_form_validation,name='desk_form_validation'),
+
+
+    path('desk_addCompanies/', deskofficer_views.desk_addCompanies,name='desk_addCompanies'),
+    path('desk_Manage_Companies/', deskofficer_views.desk_Manage_Companies,name='desk_Manage_Companies'),
+    path('desk_Manage_Companies_update/<str:pk>/', deskofficer_views.desk_Manage_Companies_update,name='desk_Manage_Companies_update'),
+    path('desk_Delete_Companies/<str:pk>/', deskofficer_views.desk_Delete_Companies,name='desk_Delete_Companies'),
+
+
+    path('desk_addCommodityCategory/', deskofficer_views.desk_addCommodityCategory,name='desk_addCommodityCategory'),
+    path('desk_addCommodityCategorySub/<str:pk>/', deskofficer_views.desk_addCommodityCategorySub,name='desk_addCommodityCategorySub'),
+    path('desk_Manage_Commodity_Sub_Categories_Delete/<str:pk>/', deskofficer_views.desk_Manage_Commodity_Sub_Categories_Delete,name='desk_Manage_Commodity_Sub_Categories_Delete'),
+
+    path('desk_Manage_Commodity_Categories_Core_properties_Transactions_Load/', deskofficer_views.desk_Manage_Commodity_Categories_Core_properties_Transactions_Load,name='desk_Manage_Commodity_Categories_Core_properties_Transactions_Load'),
+    path('desk_Manage_Commodity_Categories_Core_Values/<str:pk>/', deskofficer_views.desk_Manage_Commodity_Categories_Core_Values,name='desk_Manage_Commodity_Categories_Core_Values'),
+
+    path('desk_Manage_Commodity_Categories_Peripherals_Transactions_Load/', deskofficer_views.desk_Manage_Commodity_Categories_Peripherals_Transactions_Load,name='desk_Manage_Commodity_Categories_Peripherals_Transactions_Load'),
+    path('desk_Manage_Commodity_Categories_Peripherals/<str:pk>/', deskofficer_views.desk_Manage_Commodity_Categories_Peripherals,name='desk_Manage_Commodity_Categories_Peripherals'),
+
+    path('desk_Manage_Commodity_Categories_Delete/<str:pk>/', deskofficer_views.desk_Manage_Commodity_Categories_Delete,name='desk_Manage_Commodity_Categories_Delete'),
+    path('desk_Manage_Commodity_Categories_Title_Update/<str:pk>/', deskofficer_views.desk_Manage_Commodity_Categories_Title_Update,name='desk_Manage_Commodity_Categories_Title_Update'),
+
+    path('desk_Manage_Commodity_Categories_Core_properties/<str:pk>/', deskofficer_views.desk_Manage_Commodity_Categories_Core_properties,name='desk_Manage_Commodity_Categories_Core_properties'),
+    path('desk_Manage_Commodity_Categories_Update/<str:pk>/', deskofficer_views.desk_Manage_Commodity_Categories_Update,name='desk_Manage_Commodity_Categories_Update'),
+
+    path('desk_Commodity_Products_Manage_Transactions_Load/', deskofficer_views.desk_Commodity_Products_Manage_Transactions_Load,name='desk_Commodity_Products_Manage_Transactions_Load'),
+    path('desk_Commodity_Products_Manage_Category_Load/<str:pk>/', deskofficer_views.desk_Commodity_Products_Manage_Category_Load,name='desk_Commodity_Products_Manage_Category_Load'),
+    path('desk_Commodity_Products_Manage_Sub_Category_Load/<str:pk>/', deskofficer_views.desk_Commodity_Products_Manage_Sub_Category_Load,name='desk_Commodity_Products_Manage_Sub_Category_Load'),
+
+
+    path('desk_Commodity_Products_Manage_Load/<str:pk>/', deskofficer_views.desk_Commodity_Products_Manage_Load,name='desk_Commodity_Products_Manage_Load'),
+    path('desk_Commodity_Products_Manage_Update/<str:pk>/', deskofficer_views.desk_Commodity_Products_Manage_Update,name='desk_Commodity_Products_Manage_Update'),
+    path('desk_Commodity_Products_Manage_Remove/<str:pk>/', deskofficer_views.desk_Commodity_Products_Manage_Remove,name='desk_Commodity_Products_Manage_Remove'),
+
+
+    path('desk_Commodity_Products_Add_Transactions_Load/', deskofficer_views.desk_Commodity_Products_Add_Transactions_Load,name='desk_Commodity_Products_Add_Transactions_Load'),
+    path('desk_Commodity_Products_add_Delete/<str:pk>/<str:return_pk>/', deskofficer_views.desk_Commodity_Products_add_Delete,name='desk_Commodity_Products_add_Delete'),
+    path('desk_Commodity_Products_add_Update_Category/<str:pk>/<str:return_pk>/', deskofficer_views.desk_Commodity_Products_add_Update_Category,name='desk_Commodity_Products_add_Update_Category'),
+
+    path('desk_Commodity_Products_Add_Transactions_Categories_Load/<str:pk>/', deskofficer_views.desk_Commodity_Products_Add_Transactions_Categories_Load,name='desk_Commodity_Products_Add_Transactions_Categories_Load'),
+    path('desk_Commodity_Products_Add_Transactions_Sub_Categories_Load/<str:pk>/', deskofficer_views.desk_Commodity_Products_Add_Transactions_Sub_Categories_Load,name='desk_Commodity_Products_Add_Transactions_Sub_Categories_Load'),
+
+    path('desk_Commodity_Products_add/<str:pk>/', deskofficer_views.desk_Commodity_Products_add,name='desk_Commodity_Products_add'),
+    path('desk_Manage_Commodity_Categories_Delete/<str:pk>/', deskofficer_views.desk_Manage_Commodity_Categories_Delete,name='desk_Manage_Commodity_Categories_Delete'),
+    path('desk_Manage_Commodity_Categories_Title_Update/<str:pk>/', deskofficer_views.desk_Manage_Commodity_Categories_Title_Update,name='desk_Manage_Commodity_Categories_Title_Update'),
+
+
+    path('desk_Product_Linking_Period_Load/', deskofficer_views.desk_Product_Linking_Period_Load,name='desk_Product_Linking_Period_Load'),
+    path('desk_Product_Linking_Company_Load/<str:period_obj>/<str:batch_obj>/<str:transaction_obj>/', deskofficer_views.desk_Product_Linking_Company_Load,name='desk_Product_Linking_Company_Load'),
+    path('desk_Product_Linking_Category_Load/<str:period_obj>/<str:batch_obj>/<str:transaction_obj>/<str:company_pk>/', deskofficer_views.desk_Product_Linking_Category_Load,name='desk_Product_Linking_Category_Load'),
+    path('desk_Product_Linking_Sub_Category_Load/<str:period_obj>/<str:batch_obj>/<str:transaction_obj>/<str:company_pk>/<str:cat_pk>/', deskofficer_views.desk_Product_Linking_Sub_Category_Load,name='desk_Product_Linking_Sub_Category_Load'),
+    path('desk_Product_Linking_Sub_Category_Load_All/<str:period_obj>/<str:batch_obj>/<str:transaction_obj>/<str:company_pk>/', deskofficer_views.desk_Product_Linking_Sub_Category_Load_All,name='desk_Product_Linking_Sub_Category_Load_All'),
+    path('desk_Product_Linking_Available_Product_Load_All/<str:period_obj>/<str:batch_obj>/<str:transaction_obj>/<str:company_pk>/', deskofficer_views.desk_Product_Linking_Available_Product_Load_All,name='desk_Product_Linking_Available_Product_Load_All'),
+
+    path('desk_Product_Linking_Details_Preview_All/<str:comp_pk>/<str:pk>/<str:period_pk>/<str:batch_pk>/<str:transaction_pk>/', deskofficer_views.desk_Product_Linking_Details_Preview_All,name='desk_Product_Linking_Details_Preview_All'),
+
+
+    path('desk_Product_Linking_Details/<str:pk>/<str:period_pk>/<str:batch_pk>/<str:transaction_pk>/<str:company_pk>/<str:cat_pk>/', deskofficer_views.desk_Product_Linking_Details,name='desk_Product_Linking_Details'),
+    path('desk_Product_Linking_Details_Preview/<str:comp_pk>/<str:pk>/<str:period_pk>/<str:batch_pk>/<str:transaction_pk>/<str:cat_pk>/<str:sub_cat>/', deskofficer_views.desk_Product_Linking_Details_Preview,name='desk_Product_Linking_Details_Preview'),
+    path('desk_Product_UnLinking_Process/<str:comp_pk>/<str:pk>/<str:period_pk>/<str:batch_pk>/<str:transaction_pk>/', deskofficer_views.desk_Product_UnLinking_Process,name='desk_Product_UnLinking_Process'),
+    path('desk_Product_UnLinking_Process1/<str:comp_pk>/<str:pk>/<str:period_pk>/<str:batch_pk>/<str:transaction_pk>/', deskofficer_views.desk_Product_UnLinking_Process1,name='desk_Product_UnLinking_Process1'),
+
+    path('desk_Product_Settings_Period_Load/', deskofficer_views.desk_Product_Settings_Period_Load,name='desk_Product_Settings_Period_Load'),
+    path('desk_Product_Price_Settings_Company_Load/<str:period_obj>/<str:batch_obj>/<str:transaction_obj>/', deskofficer_views.desk_Product_Price_Settings_Company_Load,name='desk_Product_Price_Settings_Company_Load'),
+    path('desk_Product_Price_Settings_Category_Load/<str:period_obj>/<str:batch_obj>/<str:transaction_obj>/<str:company_pk>/', deskofficer_views.desk_Product_Price_Settings_Category_Load,name='desk_Product_Price_Settings_Category_Load'),
+    path('desk_Product_Price_Settings_Sub_Category_Load/<str:period_obj>/<str:batch_obj>/<str:transaction_obj>/<str:company_pk>/<str:cat_pk>/', deskofficer_views.desk_Product_Price_Settings_Sub_Category_Load,name='desk_Product_Price_Settings_Sub_Category_Load'),
+
+    path('desk_Product_Price_Settings_details/<str:period_obj>/<str:batch_obj>/<str:transaction_obj>/<str:company_pk>/<str:cat_pk>/<str:sub_cat>/', deskofficer_views.desk_Product_Price_Settings_details,name='desk_Product_Price_Settings_details'),
+    path('desk_Product_Price_Settings_Update/<str:comp_pk>/<str:pk>/', deskofficer_views.desk_Product_Price_Settings_Update,name='desk_Product_Price_Settings_Update'),
+
+
+    path('desk_Product_Duration_Settings_Period_Load/', deskofficer_views.desk_Product_Duration_Settings_Period_Load,name='desk_Product_Duration_Settings_Period_Load'),
+    path('desk_Product_Duration_Settings_Service_Load/<str:period_obj>/<str:batch_obj>/<str:transaction_obj>/', deskofficer_views.desk_Product_Duration_Settings_Service_Load,name='desk_Product_Duration_Settings_Service_Load'),
+    path('desk_Product_Duration_Settings_Service_Delete/<str:pk>/<str:period_obj>/<str:batch_obj>/<str:transaction_obj>/', deskofficer_views.desk_Product_Duration_Settings_Service_Delete,name='desk_Product_Duration_Settings_Service_Delete'),
+
+
+    path('desk_CooperativeBankAccounts_add/', deskofficer_views.desk_CooperativeBankAccounts_add,name='desk_CooperativeBankAccounts_add'),
+    path('desk_CooperativeBankAccounts_Remove/<str:pk>/', deskofficer_views.desk_CooperativeBankAccounts_Remove, name='desk_CooperativeBankAccounts_Remove'),
+    path('desk_CooperativeBankAccounts_Update/<str:pk>/', deskofficer_views.desk_CooperativeBankAccounts_Update, name='desk_CooperativeBankAccounts_Update'),
+
 
     path('membership_request/', deskofficer_views.membership_request,name='membership_request'),
     path('membership_request_complete_search/', deskofficer_views.membership_request_complete_search,name='membership_request_complete_search'),
@@ -570,7 +673,10 @@ urlpatterns = [
 
     path('Members_Multiple_Account_Creation_preview/', deskofficer_views.Members_Multiple_Account_Creation_preview,name='Members_Multiple_Account_Creation_preview'),
     path('Members_Multiple_Account_Creation_process/', deskofficer_views.Members_Multiple_Account_Creation_process,name='Members_Multiple_Account_Creation_process'),
-
+    path('Members_Account_Without_Balance_Brought_Forward/', deskofficer_views.Members_Account_Without_Balance_Brought_Forward,name='Members_Account_Without_Balance_Brought_Forward'),
+    path('Members_Account_Without_Balance_Brought_Forward_View/<str:pk>/', deskofficer_views.Members_Account_Without_Balance_Brought_Forward_View,name='Members_Account_Without_Balance_Brought_Forward_View'),
+    path('Members_Account_Without_Balance_Brought_Forward_View_Treated/<str:pk>/', deskofficer_views.Members_Account_Without_Balance_Brought_Forward_View_Treated,name='Members_Account_Without_Balance_Brought_Forward_View_Treated'),
+    
     path('Members_account_details_list/<str:pk>/', deskofficer_views.Members_account_details_list,name='Members_account_details_list'),
 
     path('standing_order_selected_search/', deskofficer_views.standing_order_selected_search,name='standing_order_selected_search'),
@@ -695,9 +801,12 @@ urlpatterns = [
     path('Emergency_loan_application_form_processing_bank_account_delete/<str:pk>/<str:return_pk>/', deskofficer_views.Emergency_loan_application_form_processing_bank_account_delete,name='Emergency_loan_application_form_processing_bank_account_delete'),
    
     path('emergency_loan_application_shortlisting_list_load/', deskofficer_views.emergency_loan_application_shortlisting_list_load,name='emergency_loan_application_shortlisting_list_load'),
+    path('emergency_loan_application_shortlisting_records_load/<str:pk>/', deskofficer_views.emergency_loan_application_shortlisting_records_load,name='emergency_loan_application_shortlisting_records_load'),
+    path('loan_application_shortlisting_records_load/<str:pk>/', deskofficer_views.loan_application_shortlisting_records_load,name='loan_application_shortlisting_records_load'),
     path('emergency_loan_application_shortlisting_process/<str:pk>/', deskofficer_views.emergency_loan_application_shortlisting_process,name='emergency_loan_application_shortlisting_process'),
     path('emergency_loan_application_shortlisted_active_list_load/', deskofficer_views.emergency_loan_application_shortlisted_active_list_load,name='emergency_loan_application_shortlisted_active_list_load'),
     path('emergency_Loan_application_processing_period_load/', deskofficer_views.emergency_Loan_application_processing_period_load,name='emergency_Loan_application_processing_period_load'),
+    path('emergency_Loan_application_processing_records_load/<str:pk>/', deskofficer_views.emergency_Loan_application_processing_records_load,name='emergency_Loan_application_processing_records_load'),
     path('emergency_loan_application_approved_process_preview/<str:pk>/', deskofficer_views.emergency_loan_application_approved_process_preview,name='emergency_loan_application_approved_process_preview'),
     path('emergency_loan_application_form_issuanace_confirmation/<str:pk>/', deskofficer_views.emergency_loan_application_form_issuanace_confirmation,name='emergency_loan_application_form_issuanace_confirmation'),
     path('emergency_Loan_application_shortlisting_KIV_period_load/', deskofficer_views.emergency_Loan_application_shortlisting_KIV_period_load,name='emergency_Loan_application_shortlisting_KIV_period_load'),
@@ -731,15 +840,19 @@ urlpatterns = [
     
 
     path('loan_request_shortlisting_load/', deskofficer_views.loan_request_shortlisting_load,name='loan_request_shortlisting_load'),
+    path('loan_request_shortlisting_application_Load/<str:pk>/', deskofficer_views.loan_request_shortlisting_application_Load,name='loan_request_shortlisting_application_Load'),
     path('loan_request_shortlisting_process/<str:pk>/', deskofficer_views.loan_request_shortlisting_process,name='loan_request_shortlisting_process'),
     path('loan_request_shortlisting_view_load/', deskofficer_views.loan_request_shortlisting_view_load,name='loan_request_shortlisting_view_load'),
+    path('loan_request_shortlisting_records_load/<str:pk>/', deskofficer_views.loan_request_shortlisting_records_load,name='loan_request_shortlisting_records_load'),
     path('loan_request_shortlisting_drop/<str:pk>/', deskofficer_views.loan_request_shortlisting_drop,name='loan_request_shortlisting_drop'),
     
 
     path('loan_request_manage_period_load/', deskofficer_views.loan_request_manage_period_load,name='loan_request_manage_period_load'),
+    path('loan_request_manage_records_load/<str:pk>/', deskofficer_views.loan_request_manage_records_load,name='loan_request_manage_records_load'),
     path('loan_request_manage_transaction_delete/<str:pk>/', deskofficer_views.loan_request_manage_transaction_delete,name='loan_request_manage_transaction_delete'),
 
     path('loan_request_approved_Issue_form_period_load/', deskofficer_views.loan_request_approved_Issue_form_period_load,name='loan_request_approved_Issue_form_period_load'),
+    path('loan_request_approved_Issue_form_transactions_load/<str:pk>/', deskofficer_views.loan_request_approved_Issue_form_transactions_load,name='loan_request_approved_Issue_form_transactions_load'),
     path('loan_request_approved_list_form_sales/<str:pk>/', deskofficer_views.loan_request_approved_list_form_sales,name='loan_request_approved_list_form_sales'),
     path('loan_application_request_form_issuanace_confirmation/<str:pk>/', deskofficer_views.loan_application_request_form_issuanace_confirmation,name='loan_application_request_form_issuanace_confirmation'),
     path('Loan_Application_Issueance_Form_Print/<str:pk>/', deskofficer_views.Loan_Application_Issueance_Form_Print,name='Loan_Application_Issueance_Form_Print'),
@@ -751,6 +864,7 @@ urlpatterns = [
     path('Loan_application_history_period_load/', deskofficer_views.Loan_application_history_period_load,name='Loan_application_history_period_load'),
     
     path('loan_application_approved_period_load/', deskofficer_views.loan_application_approved_period_load,name='loan_application_approved_period_load'),
+    path('loan_application_approved_transaction_period_load/<str:pk>/', deskofficer_views.loan_application_approved_transaction_period_load,name='loan_application_approved_transaction_period_load'),
     path('loan_application_form_processing/<str:pk>/', deskofficer_views.loan_application_form_processing,name='loan_application_form_processing'),
 
     path('loan_application_form_processing_guarantor_search/<str:pk>', deskofficer_views.loan_application_form_processing_guarantor_search,name='loan_application_form_processing_guarantor_search'),
@@ -772,6 +886,7 @@ urlpatterns = [
     
 
     path('Loan_application_processing_period_load/', deskofficer_views.Loan_application_processing_period_load,name='Loan_application_processing_period_load'),
+    path('Loan_application_processing_records_load/<str:pk>/', deskofficer_views.Loan_application_processing_records_load,name='Loan_application_processing_records_load'),
     path('loan_application_approved_process_preview/<str:pk>/', deskofficer_views.loan_application_approved_process_preview,name='loan_application_approved_process_preview'),
     path('Loan_application_processing_confirmation/<str:pk>/', deskofficer_views.Loan_application_processing_confirmation,name='Loan_application_processing_confirmation'),
     path('Loan_application_processing_Form_Print/<str:pk>/', deskofficer_views.Loan_application_processing_Form_Print,name='Loan_application_processing_Form_Print'),
@@ -905,22 +1020,28 @@ urlpatterns = [
     path('Monthly_Deduction_Generated_Update_Institution_Load/', deskofficer_views.Monthly_Deduction_Generated_Update_Institution_Load,name='Monthly_Deduction_Generated_Update_Institution_Load'),
     path('Monthly_Deduction_Generated_Update_Transaction_period_Load/<str:pk>/', deskofficer_views.Monthly_Deduction_Generated_Update_Transaction_period_Load,name='Monthly_Deduction_Generated_Update_Transaction_period_Load'),
     path('Monthly_Deduction_Generated_Update_Details_load/<str:pk>/<str:status>/', deskofficer_views.Monthly_Deduction_Generated_Update_Details_load,name='Monthly_Deduction_Generated_Update_Details_load'),
-    path('Monthly_Deduction_Generated_Update_Details_Process/<str:pk>/', deskofficer_views.Monthly_Deduction_Generated_Update_Details_Process,name='Monthly_Deduction_Generated_Update_Details_Process'),
+    path('Monthly_Deduction_Generated_Update_Details_Process/<str:pk>/<str:member_pk>/<str:status>/', deskofficer_views.Monthly_Deduction_Generated_Update_Details_Process,name='Monthly_Deduction_Generated_Update_Details_Process'),
     path('Monthly_Deduction_Generated_Update_Details_Remove/<str:pk>/', deskofficer_views.Monthly_Deduction_Generated_Update_Details_Remove,name='Monthly_Deduction_Generated_Update_Details_Remove'),
 
-    path('Monthly_Deduction_Generated_Update_Details_Add_Savings/<str:pk>/<str:trans_id>/<str:salary_id>/<str:return_pk>/', deskofficer_views.Monthly_Deduction_Generated_Update_Details_Add_Savings,name='Monthly_Deduction_Generated_Update_Details_Add_Savings'),
-    path('Monthly_Deduction_Generated_Update_Details_Add_Savings_Select/<str:pk>/<str:member_pk>/<str:trans_id>/<str:salary_id>/<str:return_pk>/', deskofficer_views.Monthly_Deduction_Generated_Update_Details_Add_Savings_Select,name='Monthly_Deduction_Generated_Update_Details_Add_Savings_Select'),
+    path('Monthly_Deduction_Generated_Update_Details_Add_Savings/<str:pk>/<str:trans_id>/<str:salary_id>/<str:return_pk>/<str:status>/', deskofficer_views.Monthly_Deduction_Generated_Update_Details_Add_Savings,name='Monthly_Deduction_Generated_Update_Details_Add_Savings'),
+    path('Monthly_Deduction_Generated_Update_Details_Add_Savings_Select/<str:pk>/<str:member_pk>/<str:trans_id>/<str:salary_id>/<str:return_pk>/<str:status>/', deskofficer_views.Monthly_Deduction_Generated_Update_Details_Add_Savings_Select,name='Monthly_Deduction_Generated_Update_Details_Add_Savings_Select'),
 
-    path('Monthly_Deduction_Generated_Update_Details_Add_Loans/<str:pk>/<str:trans_id>/<str:salary_id>/<str:return_pk>/', deskofficer_views.Monthly_Deduction_Generated_Update_Details_Add_Loans,name='Monthly_Deduction_Generated_Update_Details_Add_Loans'),
+    path('Monthly_Deduction_Generated_Update_Details_Add_Loans/<str:pk>/<str:trans_id>/<str:salary_id>/<str:return_pk>/<str:status>/', deskofficer_views.Monthly_Deduction_Generated_Update_Details_Add_Loans,name='Monthly_Deduction_Generated_Update_Details_Add_Loans'),
     path('Monthly_Deduction_Generated_Update_Details_Add_Loans_Select/<str:pk>/<str:member_pk>/<str:trans_id>/<str:salary_id>/<str:return_pk>/', deskofficer_views.Monthly_Deduction_Generated_Update_Details_Add_Loans_Select,name='Monthly_Deduction_Generated_Update_Details_Add_Loans_Select'),
 
+    path('Monthly_Deductions_Transaction_Period_Institution_load/', deskofficer_views.Monthly_Deductions_Transaction_Period_Institution_load,name='Monthly_Deductions_Transaction_Period_Institution_load'),
+    path('Monthly_Deductions_Transaction_Summary_Load/<str:period_pk>/<str:salary_pk>/', deskofficer_views.Monthly_Deductions_Transaction_Summary_Load,name='Monthly_Deductions_Transaction_Summary_Load'),
+    path('Monthly_Deductions_Transaction_Summary_Detail_Load/<str:pk>/<str:salary_pk>/<str:period_pk>/', deskofficer_views.Monthly_Deductions_Transaction_Summary_Detail_Load,name='Monthly_Deductions_Transaction_Summary_Detail_Load'),
+    path('Monthly_Deductions_Transaction_Summary_Detail_Branch_Details/<str:pk>/<str:salary_pk>/<str:period_pk>/', deskofficer_views.Monthly_Deductions_Transaction_Summary_Detail_Branch_Details,name='Monthly_Deductions_Transaction_Summary_Detail_Branch_Details'),
 
     path('Monthly_Auxillary_Deduction_Generated_Merger_Institution_Load/', deskofficer_views.Monthly_Auxillary_Deduction_Generated_Merger_Institution_Load,name='Monthly_Auxillary_Deduction_Generated_Merger_Institution_Load'),
     path('Monthly_Auxillary_Deduction_Generated_Merger_Transaction_period_Load/<str:pk>/', deskofficer_views.Monthly_Auxillary_Deduction_Generated_Merger_Transaction_period_Load,name='Monthly_Auxillary_Deduction_Generated_Merger_Transaction_period_Load'),
 
     path('Monthly_Auxillary_Deduction_Generated_Update_Transaction_Institution_Load/', deskofficer_views.Monthly_Auxillary_Deduction_Generated_Update_Transaction_Institution_Load,name='Monthly_Auxillary_Deduction_Generated_Update_Transaction_Institution_Load'),
     path('Monthly_Auxillary_Deduction_Generated_Update_Transaction_List_Load/<str:trans_id>/<str:salary_id>/<str:status>/', deskofficer_views.Monthly_Auxillary_Deduction_Generated_Update_Transaction_List_Load,name='Monthly_Auxillary_Deduction_Generated_Update_Transaction_List_Load'),
+    path('Monthly_Auxillary_Deduction_Generated_Update_Transaction_List_Load_Export/<str:trans_id>/<str:salary_id>/<str:status>/', deskofficer_views.Monthly_Auxillary_Deduction_Generated_Update_Transaction_List_Load_Export,name='Monthly_Auxillary_Deduction_Generated_Update_Transaction_List_Load_Export'),
     path('Monthly_Auxillary_Deduction_Generated_Update_Transaction_List_Rectified/<str:pk>/<str:trans_id>/<str:salary_id>/<str:status>/', deskofficer_views.Monthly_Auxillary_Deduction_Generated_Update_Transaction_List_Rectified,name='Monthly_Auxillary_Deduction_Generated_Update_Transaction_List_Rectified'),
+    path('Monthly_Auxillary_Deduction_Generated_Update_Transaction_List_Delete/<str:pk>/<str:trans_id>/<str:salary_id>/<str:status>/', deskofficer_views.Monthly_Auxillary_Deduction_Generated_Update_Transaction_List_Delete,name='Monthly_Auxillary_Deduction_Generated_Update_Transaction_List_Delete'),
     path('Monthly_Auxillary_Deduction_Generated_Update_Transaction_period_Load/<str:pk>/', deskofficer_views.Monthly_Auxillary_Deduction_Generated_Update_Transaction_period_Load,name='Monthly_Auxillary_Deduction_Generated_Update_Transaction_period_Load'),
 
     path('Monthly_Auxillary_Deduction_Generated_Export_Institution_Load/', deskofficer_views.Monthly_Auxillary_Deduction_Generated_Export_Institution_Load,name='Monthly_Auxillary_Deduction_Generated_Export_Institution_Load'),
@@ -932,9 +1053,27 @@ urlpatterns = [
     path('AuxillarySeperation/', deskofficer_views.AuxillarySeperation,name='AuxillarySeperation'),
 
     path('monthly_wrongful_deduction_transaction_period_load/', deskofficer_views.monthly_wrongful_deduction_transaction_period_load,name='monthly_wrongful_deduction_transaction_period_load'),
+    path('monthly_wrongful_deduction_members_transaction_search/<str:pk>/', deskofficer_views.monthly_wrongful_deduction_members_transaction_search,name='monthly_wrongful_deduction_members_transaction_search'),
+    path('monthly_wrongful_deduction_members_transaction_List_load/<str:pk>/', deskofficer_views.monthly_wrongful_deduction_members_transaction_List_load,name='monthly_wrongful_deduction_members_transaction_List_load'),
+    path('monthly_wrongful_deduction_members_transaction_load/<str:pk>/<member_pk>/', deskofficer_views.monthly_wrongful_deduction_members_transaction_load,name='monthly_wrongful_deduction_members_transaction_load'),
+    path('Monthly_Deductions_IncomingTransactions/', deskofficer_views.Monthly_Deductions_IncomingTransactions,name='Monthly_Deductions_IncomingTransactions'),
+    path('Monthly_Deductions_Incoming_Transactions_Complete/', deskofficer_views.Monthly_Deductions_Incoming_Transactions_Complete,name='Monthly_Deductions_Incoming_Transactions_Complete'),
+    
+    path('Monthly_Deductions_OutgoingTransactions/', deskofficer_views.Monthly_Deductions_OutgoingTransactions,name='Monthly_Deductions_OutgoingTransactions'),
+    
+
+    path('Monthly_Deductions_Cash_Transfer_Source_Load/<str:pk>/', deskofficer_views.Monthly_Deductions_Cash_Transfer_Source_Load,name='Monthly_Deductions_Cash_Transfer_Source_Load'),
+    
+    path('Monthly_Deductions_Cash_Transfer_Source_Load_Loan/<str:pk>/', deskofficer_views.Monthly_Deductions_Cash_Transfer_Source_Load_Loan,name='Monthly_Deductions_Cash_Transfer_Source_Load_Loan'),
+    path('Monthly_Deductions_Cash_Transfer_Source_Load_Loan_Update/<str:pk>/<str:account_id>/', deskofficer_views.Monthly_Deductions_Cash_Transfer_Source_Load_Loan_Update,name='Monthly_Deductions_Cash_Transfer_Source_Load_Loan_Update'),
+    
+    path('Monthly_Deductions_Cash_Transfer_Source_Load_Savings/<str:pk>/', deskofficer_views.Monthly_Deductions_Cash_Transfer_Source_Load_Savings,name='Monthly_Deductions_Cash_Transfer_Source_Load_Savings'),
+    path('Monthly_Deductions_Cash_Transfer_Source_Load_Savings_Update/<str:pk>/<str:account_id>/', deskofficer_views.Monthly_Deductions_Cash_Transfer_Source_Load_Savings_Update,name='Monthly_Deductions_Cash_Transfer_Source_Load_Savings_Update'),
+
     path('Monthly_Unbalanced_transactions/', deskofficer_views.Monthly_Unbalanced_transactions,name='Monthly_Unbalanced_transactions'),
     path('Monthly_Unbalanced_transactions_Processing/<str:pk>/', deskofficer_views.Monthly_Unbalanced_transactions_Processing,name='Monthly_Unbalanced_transactions_Processing'),
     path('Monthly_Unbalanced_transactions_Processing_Savings/<str:pk>/', deskofficer_views.Monthly_Unbalanced_transactions_Processing_Savings,name='Monthly_Unbalanced_transactions_Processing_Savings'),
+    path('Monthly_Unbalanced_transactions_Processing_Loans/<str:pk>/', deskofficer_views.Monthly_Unbalanced_transactions_Processing_Loans,name='Monthly_Unbalanced_transactions_Processing_Loans'),
 
     path('Monthly_deduction_ledger_posting_preview/', deskofficer_views.Monthly_deduction_ledger_posting_preview,name='Monthly_deduction_ledger_posting_preview'),
 
@@ -1076,6 +1215,10 @@ urlpatterns = [
     path('Norminal_Roll_Update/<str:pk>/', deskofficer_views.Norminal_Roll_Update,name='Norminal_Roll_Update'),
     path('Member_delete/<str:pk>/', deskofficer_views.Member_delete,name='Member_delete'),
 
+    path('Norminal_Roll_Without_Phone_Number_List_Load/', deskofficer_views.Norminal_Roll_Without_Phone_Number_List_Load,name='Norminal_Roll_Without_Phone_Number_List_Load'),
+    path('Norminal_Roll_Without_Phone_Number_Update/<str:pk>/', deskofficer_views.Norminal_Roll_Without_Phone_Number_Update,name='Norminal_Roll_Without_Phone_Number_Update'),
+    
+
     path('Members_Share_Purchase_Request_Search/', deskofficer_views.Members_Share_Purchase_Request_Search,name='Members_Share_Purchase_Request_Search'),
     path('Members_Share_Purchase_Request_list_load/', deskofficer_views.Members_Share_Purchase_Request_list_load,name='Members_Share_Purchase_Request_list_load'),
     path('Members_Share_Purchase_Request_View/<str:pk>/', deskofficer_views.Members_Share_Purchase_Request_View,name='Members_Share_Purchase_Request_View'),
@@ -1216,6 +1359,39 @@ urlpatterns = [
     path('membership_termination_Disbursement_Processing_Transfer/<str:pk>/<str:payment>/', deskofficer_views.membership_termination_Disbursement_Processing_Transfer,name='membership_termination_Disbursement_Processing_Transfer'),
 
     path('Commodity_Loan_Dashboard_Load/', deskofficer_views.Commodity_Loan_Dashboard_Load,name='Commodity_Loan_Dashboard_Load'),
+    path('membership_essential_commodity_loan_Period_Transactions_load/', deskofficer_views.membership_essential_commodity_loan_Period_Transactions_load,name='membership_essential_commodity_loan_Period_Transactions_load'),
+    path('membership_essential_commodity_loan_Company_load/<str:period_pk>/<str:batch_pk>/<str:transaction_pk>/', deskofficer_views.membership_essential_commodity_loan_Company_load,name='membership_essential_commodity_loan_Company_load'),
+    path('membership_essential_commodity_loan_search/<str:period_id>/<str:batch_id>/<str:transaction_id>/<str:company_id>/', deskofficer_views.membership_essential_commodity_loan_search,name='membership_essential_commodity_loan_search'),
+    
+    path('membership_essential_commodity_loan_list_load/<str:period_id>/<str:batch_id>/<str:transaction_id>/<str:company_id>/', deskofficer_views.membership_essential_commodity_loan_list_load,name='membership_essential_commodity_loan_list_load'),
+    path('membership_essential_commodity_loan_Company_products/<str:member_pk>/<str:period_pk>/<str:batch_pk>/<str:transaction_pk>/<str:company_pk>/', deskofficer_views.membership_essential_commodity_loan_Company_products,name='membership_essential_commodity_loan_Company_products'),
+    path('membership_essential_commodity_loan_Company_products_details/<str:comp_pk>/<str:pk>/<str:member_pk>/<str:period_pk>/<str:batch_pk>/<str:transaction_pk>/', deskofficer_views.membership_essential_commodity_loan_Company_products_details,name='membership_essential_commodity_loan_Company_products_details'),
+    
+    path('membership_essential_commodity_loan_Company_products_details_Delete/<str:pk>/<str:return_pk>/<str:period_pk>/<str:batch_pk>/<str:transaction_pk>/<str:company_pk>/', deskofficer_views.membership_essential_commodity_loan_Company_products_details_Delete,name='membership_essential_commodity_loan_Company_products_details_Delete'),
+   
+    path('membership_essential_commodity_loan_Company_products_details_Selection_Completed/<str:member_pk>/<str:period_pk>/<str:batch_pk>/<str:transaction_pk>/<str:company_pk>/', deskofficer_views.membership_essential_commodity_loan_Company_products_details_Selection_Completed,name='membership_essential_commodity_loan_Company_products_details_Selection_Completed'),
+    
+    path('membership_essential_commodity_loan_selections_active_Period_Transactions_load_product/', deskofficer_views.membership_essential_commodity_loan_selections_active_Period_Transactions_load_product,name='membership_essential_commodity_loan_selections_active_Period_Transactions_load_product'),
+    path('membership_essential_commodity_loan_selections_active_products_load/<str:period_id>/<str:batch_id>/', deskofficer_views.membership_essential_commodity_loan_selections_active_products_load,name='membership_essential_commodity_loan_selections_active_products_load'),
+    path('membership_essential_commodity_loan_selections_active_products_xls/<str:period_id>/<str:batch_id>/', deskofficer_views.membership_essential_commodity_loan_selections_active_products_xls,name='membership_essential_commodity_loan_selections_active_products_xls'),
+    
+    path('membership_essential_commodity_loan_selections_products_details/<str:period_id>/<str:batch_id>/<str:product_id>/', deskofficer_views.membership_essential_commodity_loan_selections_products_details,name='membership_essential_commodity_loan_selections_products_details'),
+    path('membership_essential_commodity_loan_selections_products_details_Update/<str:pk>/<str:period_id>/<str:batch_id>/<str:product_id>/', deskofficer_views.membership_essential_commodity_loan_selections_products_details_Update,name='membership_essential_commodity_loan_selections_products_details_Update'),
+    path('membership_essential_commodity_loan_selections_products_details_Delete/<str:pk>/<str:period_id>/<str:batch_id>/<str:product_id>/', deskofficer_views.membership_essential_commodity_loan_selections_products_details_Delete,name='membership_essential_commodity_loan_selections_products_details_Delete'),
+    
+    path('membership_essential_commodity_loan_selections_products_details_price_Update/<str:period_id>/<str:batch_id>/<str:product_id>/', deskofficer_views.membership_essential_commodity_loan_selections_products_details_price_Update,name='membership_essential_commodity_loan_selections_products_details_price_Update'),
+
+    path('membership_essential_commodity_loan_selections_active_Period_Transactions_load/', deskofficer_views.membership_essential_commodity_loan_selections_active_Period_Transactions_load,name='membership_essential_commodity_loan_selections_active_Period_Transactions_load'),
+    path('membership_essential_commodity_loan_Company_products_selections_active/<str:period_pk>/<str:batch_pk>/', deskofficer_views.membership_essential_commodity_loan_Company_products_selections_active,name='membership_essential_commodity_loan_Company_products_selections_active'),
+    path('membership_essential_commodity_loan_Company_products_selections_delete_all/<str:pk>/<str:period_pk>/<str:batch_pk>/', deskofficer_views.membership_essential_commodity_loan_Company_products_selections_delete_all,name='membership_essential_commodity_loan_Company_products_selections_delete_all'),
+    path('membership_essential_commodity_loan_Company_products_selections_delete_all_confirmation/<str:pk>/<str:period_pk>/<str:batch_pk>/', deskofficer_views.membership_essential_commodity_loan_Company_products_selections_delete_all_confirmation,name='membership_essential_commodity_loan_Company_products_selections_delete_all_confirmation'),
+    path('membership_essential_commodity_loan_Company_products_selections_details/<str:pk>/', deskofficer_views.membership_essential_commodity_loan_Company_products_selections_details,name='membership_essential_commodity_loan_Company_products_selections_details'),
+    path('membership_essential_commodity_loan_Company_products_selections_update/<str:pk>/', deskofficer_views.membership_essential_commodity_loan_Company_products_selections_update,name='membership_essential_commodity_loan_Company_products_selections_update'),
+    path('membership_essential_commodity_loan_Company_products_selections_delete/<str:pk>/', deskofficer_views.membership_essential_commodity_loan_Company_products_selections_delete,name='membership_essential_commodity_loan_Company_products_selections_delete'),
+
+    path('membership_essential_commodity_loan_Company_products_selections_comprehensive_list_Transactions_Period/', deskofficer_views.membership_essential_commodity_loan_Company_products_selections_comprehensive_list_Transactions_Period,name='membership_essential_commodity_loan_Company_products_selections_comprehensive_list_Transactions_Period'),
+    path('membership_essential_commodity_loan_Company_products_selections_comprehensive_list/<str:period_pk>/<str:batch_pk>/', deskofficer_views.membership_essential_commodity_loan_Company_products_selections_comprehensive_list,name='membership_essential_commodity_loan_Company_products_selections_comprehensive_list'),
+    
     path('membership_commodity_loan_search/', deskofficer_views.membership_commodity_loan_search,name='membership_commodity_loan_search'),
     path('membership_commodity_loan_list_load/', deskofficer_views.membership_commodity_loan_list_load,name='membership_commodity_loan_list_load'),
     path('membership_commodity_loan_Period_Transactions_load/<str:pk>/', deskofficer_views.membership_commodity_loan_Period_Transactions_load,name='membership_commodity_loan_Period_Transactions_load'),

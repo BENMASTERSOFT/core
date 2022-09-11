@@ -1,0 +1,81 @@
+{% extends 'deskofficer_templates/base_template.html' %}
+{% load static %}
+
+{% block content %}
+    <div class="page-content fade-in-up">
+      <div class="row">
+            <div class="col-md-4">
+                
+                <div class="ibox">
+                    <div class="ibox-head">
+                        <div class="ibox-title"> {{record.title}}</div>
+                    </div>
+                   
+                </div>
+            </div>
+        </div>
+
+
+        <div class="row">
+            <div class="col-md-4">
+
+                <div class="ibox">
+                    <div class="ibox-head">
+                        <div class="ibox-title">Interest Rate Required </div>
+                    </div>
+                    <div class="ibox-body">
+                        <form class="form-inline" method="POST" action="">
+                            {% csrf_token %}
+                            <label class="sr-only">Interest Rate Required</label>
+                            {{interest_rate_form.interest_rate_required}}
+                            
+                            <button class="btn btn-success" type="submit" name='btn-interest'>Update</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-4">
+                <div class="ibox">
+                    <div class="ibox-head">
+                        <div class="ibox-title">Admin Charges Required</div>
+                    </div>
+                    <div class="ibox-body">
+                        <form class="form-inline" method="POST" action="">
+                            {% csrf_token %}
+                            <label class="sr-only">Admin Charges Required</label>
+                           {{admin_charges_form.admin_charges_required}}
+                            
+                            <button class="btn btn-success" type="submit" name='btn-admin'>Update</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+                <div class="ibox">
+                    <div class="ibox-head">
+                        <div class="ibox-title">Guarantor Required</div>
+                    </div>
+                    <div class="ibox-body">
+                        <form class="form-inline" method="POST" action="">
+                            {% csrf_token %}
+                            <label class="sr-only">Guarantor Required</label>
+                            {{guarantor_form.guarantor_required}}
+                            
+                            <button class="btn btn-success" type="submit" name='btn-guarantor'>Update</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="sidenav-backdrop backdrop"></div>
+    <div class="preloader-backdrop">
+        <div class="page-preloader">Loading</div>
+    </div>
+{% endblock %}

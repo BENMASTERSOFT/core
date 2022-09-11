@@ -1,0 +1,72 @@
+{% extends 'deskofficer_templates/base_template.html' %}
+{% load static %}
+
+{% block content %}
+            <div class="page-content fade-in-up">
+                <div class="row">
+                    <div class="col-xl-12">
+                        <div class="ibox">
+                            <div class="ibox-head">
+                                <div class="ibox-title">PRODUCT REQUEST DETAILS | {{product_id}} | <a href="{% url 'membership_essential_commodity_loan_selections_products_details_price_Update' period.pk batch.pk product_id %}">Price Update</a> | 
+                                    {% if product.coop_amount %}
+
+                                        #{{product.coop_amount}} 
+                                    {% else %}
+                                     #0.00
+
+                                    {% endif %}
+                                    | <a href="{% url 'membership_essential_commodity_loan_selections_active_products_load' period.pk batch.pk %}">Back</a></div>
+                            </div>
+                            <div class="ibox-body">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Member ID</th>
+                                            <th>Member Name</th>
+                                            <th>Quantity</th>
+                                            <th>Cost</th>
+                                            <th colspan="2">Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for record in records %}
+                                        <tr>
+                                            <td>{{forloop.counter}}</td>
+                                            <td>{{record.member.coop_no}}</td>
+                                            <td>{{record.member.get_full_name}}</td>
+                                            <td>{{record.quantity}}</td>
+                                            <td>{{record.coop_price}}</td>
+                                            <td>
+                                                {% if record.status == 'UNTREATED' %}
+                                                <a href="{% url 'membership_essential_commodity_loan_selections_products_details_Update' record.pk period.pk batch.pk product_id %}" class="btn btn-primary">Update</a>
+                                                {% else %}
+                                                    Treated
+                                                {% endif %}
+
+                                            </td>
+                                            <td>
+                                              {% if record.status == 'UNTREATED' %}
+                                                <a href="{% url 'membership_essential_commodity_loan_selections_products_details_Delete' record.pk period.pk batch.pk product_id  %}" class="btn btn-danger">Remove</a>
+                                                {% else %}
+                                                    Treated
+                                                {% endif %}
+                                            </td>
+                                        
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                  
+                </div>
+              
+           
+            </div>
+  <div class="sidenav-backdrop backdrop"></div>
+    <div class="preloader-backdrop">
+        <div class="page-preloader">Loading</div>
+    </div>
+{% endblock %}

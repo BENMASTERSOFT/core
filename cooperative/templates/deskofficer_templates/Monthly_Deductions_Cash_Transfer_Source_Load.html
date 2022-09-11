@@ -1,0 +1,50 @@
+{% extends 'deskofficer_templates/base_template.html' %}
+{% load static %}
+
+{% block content %}
+            <div class="page-content fade-in-up">
+                <div class="row">
+                    <div class="col-xl-8">
+                        <div class="ibox">
+                            <div class="ibox-head">
+                                <div class="ibox-title">CASH TRANSFER SOURCES | {{record.member.get_full_name}}|{{record.member.coop_no}} | <a href="{% url 'Monthly_Deductions_Incoming_Transactions_Complete' %}">Back</a></div>
+                            </div>
+                            <div class="ibox-body">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Description</th>
+                                            <th>Action</th>
+                                           
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>1</td>
+                                            <td>Savings</td>
+                                              <td><a href="{% url 'Monthly_Deductions_Cash_Transfer_Source_Load_Savings' record.pk %}">Preview</a></td>
+                                           
+                                        </tr>
+                                        <tr>
+                                            <td>2</td>
+                                            <td>Loan</td>
+                                            <td><a href="{% url 'Monthly_Deductions_Cash_Transfer_Source_Load_Loan' record.pk %}">Preview</a></td>
+                                         
+                                        </tr>
+                                        
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    
+                </div>
+             
+           
+            </div>
+  <div class="sidenav-backdrop backdrop"></div>
+    <div class="preloader-backdrop">
+        <div class="page-preloader">Loading</div>
+    </div>
+{% endblock %}

@@ -1,0 +1,96 @@
+{% extends 'deskofficer_templates/base_template.html' %}
+{% load static %}
+
+{% block content %}
+            <div class="page-content fade-in-up">
+                
+                <div class="row">
+                   
+
+                    <div class="col-md-6">
+                        <div class="ibox">
+                            <div class="ibox-head">
+                                <div class="ibox-title">Posting To Loan | <a href="{% url 'Monthly_Unbalanced_transactions'  %}">Back</a> </div>
+                               
+                            </div>
+                            <div class="ibox-body">
+                            <form class="form-horizontal" method="POST" action="" enctype="multipart/form-data" novalidate>
+                                    {% csrf_token %}
+                                    <div class="form-group row">
+                                        <label class="col-sm-2 col-form-label">Amount</label>
+                                        <div class="col-sm-10">
+                                            <input class="form-control" type="number" name="amount"value="{{member.balance}}" readonly="true">
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-sm-2 col-form-label">Loans</label>
+                                        <div class="col-sm-10">
+                                           <select class="form-control" name="account_type">
+                                          {% for account in accounts %}
+                                            <option value={{account.id }}> {{account.transaction.name}}-{{account.loan_number}} </option>
+
+                                            {% endfor %}
+                                        </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <div class="col-sm-10 ml-sm-auto">
+                                            <button class="btn btn-info" name="btn_fetch" type="submit">Fetch Details</button>
+                                         {% if account_number_status %}
+                                            <button class="btn btn-success" name="btn_submit" type="submit">Submit</button>
+                                        {% endif %}
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                     <div class="row">
+                   
+                    <div class="col-xl-10">
+                        <div class="ibox">
+                            <div class="ibox-head">
+                                <div class="ibox-title">Personal Ledger Details</div>
+                            </div>
+                            <div class="ibox-body">
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Particulars</th>
+                                            <th>Debit</th>
+                                            <th>Credit</th>
+                                            <th>Balance</th>
+                                            <th>Transaction Period</th>
+                                            <th>Date Posted</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for item in ledger %}
+                                        <tr>
+                                            <td>{{forloop.counter}}</td>
+                                            <td>{{item.particulars}}</td>
+                                            <td>{{item.debit}}</td>
+                                            <td>{{item.credit}}</td>
+                                            <td>{{item.balance}}</td>
+                                            <td>{{item.transaction_period}}</td>
+                                            <td>{{item.tdate}}</td>
+                                         
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+
+
+    <div class="sidenav-backdrop backdrop"></div>
+    <div class="preloader-backdrop">
+        <div class="page-preloader">Loading</div>
+    </div>
+{% endblock %}

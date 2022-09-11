@@ -1,0 +1,139 @@
+{% extends 'deskofficer_templates/base_template.html' %}
+{% load static %}
+
+{% block content %}
+            <div class="page-content fade-in-up">
+                
+                <h4 class="m-b-20 font-strong">INCOMING MONTHLY DEDUCTIONS</h4>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="card-deck">
+                            <div class="card">
+                                <a href="{% url 'Monthly_Account_deduction_Excel_import_Institution_Load' %}">
+                                <img class="card-img-top" src="{% static '/cooperative/assets/img/image.png' %}" />
+                                <div class="card-body">
+                               
+                                    <div class="text-muted card-subtitle">Import Account Deductions</div>
+                                    <div>Details</div>
+                                </div>
+                                <div class="card-footer">
+                                    <a href="{% url 'Monthly_Account_deduction_Excel_import_Institution_Load' %}" class="text-info"><i class="fa fa-star"></i> Load</a>
+                                    <span class="pull-right text-muted font-13"></span>
+                                </div></a>
+                            </div>
+                            <div class="card">
+                                <a href="{% url 'Monthly_Account_deduction_Processing_Institution_Load' %}">
+                                <img class="card-img-top" src="{% static '/cooperative/assets/img/image.png' %}" />
+                                <div class="card-body">
+                               
+                                    <div class="text-muted card-subtitle">Process Account Deductions</div>
+                                    <div>Details</div>
+                                </div>
+                                <div class="card-footer">
+                                    <a href="{% url 'Monthly_Account_deduction_Processing_Institution_Load' %}" class="text-info"><i class="fa fa-star"></i> Load</a>
+                                    <span class="pull-right text-muted font-13"></span>
+                                </div>
+                                </a>
+                            </div>
+                            <div class="card">
+                                <a href="{% url 'Monthly_Account_Main_and_Shop_Deductions_Separations' %}">
+                                <img class="card-img-top" src="{% static '/cooperative/assets/img/image.png' %}" />
+                                <div class="card-body">
+                                
+                                    <div class="text-muted card-subtitle">Main and Shop Separations</div>
+                                    <div>Details</div>
+                                </div>
+                                <div class="card-footer">
+                                    <a href="{% url 'Monthly_Account_Main_and_Shop_Deductions_Separations' %}" class="text-info"><i class="fa fa-star"></i> Load</a>
+                                    <span class="pull-right text-muted font-13"></span>
+                                </div>
+                                </a>
+                            </div>
+                            <div class="card">
+                                <a href="{% url 'Monthly_Main_Account_deductions_Separations' %}">
+                                <img class="card-img-top" src="{% static '/cooperative/assets/img/image.png' %}" />
+                                <div class="card-body">
+                                
+                                    <div class="text-muted card-subtitle">Main Deductions Separations</div>
+                                    <div>Details</div>
+                                </div>
+                                <div class="card-footer">
+                                    <a href="{% url 'Monthly_Main_Account_deductions_Separations' %}" class="text-info"><i class="fa fa-star"></i> Load</a>
+                                    <span class="pull-right text-muted font-13"></span>
+                                </div>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div><br>
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="card-deck">
+                            <div class="card">
+                                <a href="{% url 'Monthly_deduction_ledger_posting_preview' %}">
+                                <img class="card-img-top" src="{% static '/cooperative/assets/img/image.png' %}" />
+                                <div class="card-body">
+                               
+                                     <div class="text-muted card-subtitle">Deductions Ledger Posting</div>
+                                    <div>Details</div>
+                                </div>
+                                <div class="card-footer">
+                                    <a href="{% url 'Monthly_deduction_ledger_posting_preview' %}" class="text-info"><i class="fa fa-star"></i> Load</a>
+                                    <span class="pull-right text-muted font-13"></span>
+                                </div>
+                                </a>
+                            </div>
+                            
+                            <div class="card">
+                                <a href="{% url 'monthly_wrongful_deduction_transaction_period_load' %}">
+                                <img class="card-img-top" src="{% static '/cooperative/assets/img/image.png' %}" />
+                                <div class="card-body">
+                                
+                                    <div class="text-muted card-subtitle">Monthly Wrongful Deductions</div>
+                                    <div>Details</div>
+                                </div>
+                                <div class="card-footer">
+                                    <a href="{% url 'monthly_wrongful_deduction_transaction_period_load' %}" class="text-info"><i class="fa fa-star"></i> Load</a>
+                                    <span class="pull-right text-muted font-13"><a href="{% url 'Monthly_Deductions_Incoming_Transactions_Complete'%}">Complete Transfer</a></span>
+                                </div>
+                                </a>
+                            </div>
+                            <div class="card">
+                                <a href="{% url 'Monthly_Unbalanced_transactions' %}">
+                                <img class="card-img-top" src="{% static '/cooperative/assets/img/image.png' %}" />
+                                <div class="card-body">
+                                <a href="{% url 'Monthly_Unbalanced_transactions' %}">
+                                    <div class="text-muted card-subtitle">Non Balanced Deductions</div>
+                                    <div>Details</div></a>
+                                </div>
+                                <div class="card-footer">
+                                    <a href="{% url 'Monthly_Unbalanced_transactions' %}" class="text-info"><i class="fa fa-star"></i> Load</a>
+                                    <span class="pull-right text-muted font-13"></span>
+                                </div>
+                                </a>
+                            </div>
+                            <div class="card">
+                                <img class="card-img-top" src="{% static '/cooperative/assets/img/image.png' %}" />
+                                <div class="card-body">
+                               
+                                    <div class="text-muted card-subtitle">Others</div>
+                                    <div>Details</div>
+                                </div>
+                                <div class="card-footer">
+                                    <a class="text-info"><i class="fa fa-star"></i> Follow</a>
+                                    <span class="pull-right text-muted font-13">Dec 4</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div><br>
+            </div>
+            
+
+
+    <div class="sidenav-backdrop backdrop"></div>
+    <div class="preloader-backdrop">
+        <div class="page-preloader">Loading</div>
+    </div>
+{% endblock %}

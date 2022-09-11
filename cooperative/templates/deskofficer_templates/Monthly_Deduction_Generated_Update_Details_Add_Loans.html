@@ -5,10 +5,10 @@
             <div class="page-content fade-in-up">
                 <div class="row">
                   
-                    <div class="col-xl-8">
+                    <div class="col-xl-10">
                         <div class="ibox">
                             <div class="ibox-head">
-                                <div class="ibox-title">Available Loans | {{member.get_full_name}} | {{member.coop_no}} | <a href="">Back</a></div>
+                                <div class="ibox-title">Available Loans | {{member.get_full_name}} | {{member.coop_no}} | <a href="{% url 'Monthly_Deduction_Generated_Update_Details_load' return_pk status %}">Back</a></div>
                             </div>
                             <div class="ibox-body">
                                 <table class="table table-bordered">
@@ -39,7 +39,28 @@
                     </div>
                 </div>
             
-           
+                <div class="row btn-list-mrg-5">
+                    <div class="col-md-8">
+                        <div class="ibox">
+                            <div class="ibox-head">
+                                <div class="ibox-title">Other Tasks</div>
+                                
+                            </div>
+                            <div class="ibox-body">
+                                <p>Please Use Default Windows Back Command </p>
+                                <a href="{% url 'Uploading_Existing_Loans_Preview' member.pk %}" class="btn btn-primary">Fresh Balance B/F</a>
+                                <a href="{% url 'Uploading_Existing_Additional_Loans_Preview' member.pk %}" class="btn btn-success">Additional Balance B/F</a>
+                                <a  href="{% url 'Members_Ledger_Balance_Update_Transaction_load' member.pk %}" class="btn btn-warning">Ledger Update</a>
+                                
+                              
+                                <a href="{% url 'Uploaded_Existing_Loan_Revert_Preview_All' member.pk %}" class="btn btn-danger">Reverse Loans</a>
+                             
+                             
+                            </div>
+                        </div>
+                    </div>
+                   
+                </div>
             </div>
   <div class="sidenav-backdrop backdrop"></div>
     <div class="preloader-backdrop">

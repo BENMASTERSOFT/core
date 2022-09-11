@@ -35,7 +35,7 @@
                                                 <td>{{loan.amount_paid}}</td>
                                                
                                                 <td>({% widthratio loan.balance 1 -1 %})</td>
-                                                <td><a href="" class="btn btn-success">{{loan.repayment}}</a>
+                                                <td>{{loan.repayment}}
                                                 </td>
                                                 <td>{{loan.start_date}}</td>
                                                 <td><a href="{% url 'Members_Dashboard_Loan_Ledger_transaction_details' loan.loan_number member.pk %}" class="btn btn-primary">View</a></td>

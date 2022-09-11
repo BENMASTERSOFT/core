@@ -1039,6 +1039,7 @@ class Xmas_Savings_Generated(DateObjectsModels):
 
 class Xmas_Savings_Shortlist(DateObjectsModels):
     CHOICES=(
+        ("NONE",'NONE'),
         ("CASH",'CASH'),
         ("TRANSFERRED",'TRANSFERRED')
         )
@@ -1048,7 +1049,7 @@ class Xmas_Savings_Shortlist(DateObjectsModels):
     balance=models.DecimalField(max_digits=20,decimal_places = 2,default=0)
     period=models.DateField()
     batch=models.CharField(max_length=100)
-    payment_channel=models.CharField(max_length=100,choices=CHOICES,default='CASH')
+    payment_channel=models.CharField(max_length=100,choices=CHOICES,default='NONE')
     status=models.CharField(max_length=20,choices=TRANSACTION_STATUS,default='UNTREATED')
     bank_account=models.ForeignKey(MembersBankAccounts,on_delete=models.CASCADE,blank=True,null=True)
     account_status=models.CharField(max_length=30,choices=YESNO,default="NO")
@@ -1106,7 +1107,7 @@ class SavingsUploaded(DateObjectsModels):
 
     transaction_period=models.DateField(blank=True,null=True)
     status= models.CharField(max_length=20,choices=TRANSACTION_STATUS,default='UNTREATED')
-
+    standing_order_update=models.CharField(max_length=20,choices=YESNO,default='YES')
 
     # class Meta(DateObjectsModels.Meta):
     #     db_table="Savings_Uploaded"
@@ -1349,6 +1350,7 @@ class MonthlyDeductionList(DateObjectsModels):
     repayment=models.DecimalField(max_digits=20,decimal_places = 2,default=0)
     penalty=models.DecimalField(max_digits=20,decimal_places = 2,default=0)
     processing_status=models.CharField(max_length=20,choices=PROCESSING_STATUS,default='UNPROCESSED')
+    rectified=models.CharField(max_length=20,choices=YESNO,default='NO')
     salary_institution=models.ForeignKey(SalaryInstitution,on_delete=models.CASCADE)
     status= models.CharField(max_length=20,choices=TRANSACTION_STATUS,default='UNTREATED')
 
@@ -1776,7 +1778,7 @@ class Commodity_Product_List(DateObjectsModels):
     product_name=models.CharField(max_length=255)
     product_model=models.CharField(max_length=100,blank=True,null=True)
     details=models.TextField(blank=True,null=True)
-    # amount=models.DecimalField(max_digits=20,decimal_places = 2,default=0)
+    no_in_pack= models.PositiveSmallIntegerField(validators=[MinValueValidator(0)],default=1)
     status= models.CharField(max_length=20,choices=MEMBERSHIP_STATUS,default='ACTIVE')
 
 
@@ -1790,6 +1792,7 @@ class Company_Products(DateObjectsModels):
     company=models.ForeignKey(Companies,on_delete=models.CASCADE)
     amount=models.DecimalField(max_digits=20,decimal_places = 2,default=0)
     coop_amount=models.DecimalField(max_digits=20,decimal_places = 2,default=0)
+    interest= models.DecimalField(max_digits=20,decimal_places = 2,blank=True,null=True)
     period=models.ForeignKey(Commodity_Period,on_delete=models.CASCADE,blank=True,null=True)
     batch=models.ForeignKey(Commodity_Period_Batch,on_delete=models.CASCADE,blank=True,null=True)
     status= models.CharField(max_length=20,choices=MEMBERSHIP_STATUS,default='ACTIVE')
@@ -1797,6 +1800,37 @@ class Company_Products(DateObjectsModels):
 
     # class Meta(DateObjectsModels.Meta):
     #     db_table="company_products"
+
+class Members_Xmas_Commodity_Loan_Products_Selection_Summary(DateObjectsModels):
+    member=models.ForeignKey(Members,on_delete=models.CASCADE)
+    period=models.ForeignKey(Commodity_Period,on_delete=models.CASCADE,blank=True,null=True)
+    batch=models.ForeignKey(Commodity_Period_Batch,on_delete=models.CASCADE,blank=True,null=True)
+    amount=models.DecimalField(max_digits=20,decimal_places = 2,default=0)
+    interest= models.DecimalField(max_digits=20,decimal_places = 2,blank=True,null=True)
+    ticket=models.CharField(max_length=255,blank=True,null=True)
+    duration= models.PositiveSmallIntegerField(validators=[MinValueValidator(0)],default=0)
+    status= models.CharField(max_length=20,choices=TRANSACTION_STATUS,default='UNTREATED')
+    
+
+    # class Meta(DateObjectsModels.Meta):
+    #     db_table="Members_Xmas_Commodity_Loan_Products_Selection_Summary"
+
+
+class Members_Xmas_Commodity_Loan_Products_Selection(DateObjectsModels):
+    member=models.ForeignKey(Members,on_delete=models.CASCADE)
+    product=models.ForeignKey(Company_Products,on_delete=models.CASCADE)
+    quantity=models.IntegerField(default=0)
+    company_price=models.DecimalField(max_digits=20,decimal_places = 2,default=0)
+    coop_price=models.DecimalField(max_digits=20,decimal_places = 2,default=0)
+    interest= models.DecimalField(max_digits=20,decimal_places = 2,blank=True,null=True)
+    ticket=models.CharField(max_length=255,blank=True,null=True)
+    admin_charges = models.DecimalField(max_digits=20,decimal_places = 2,blank=True,null=True)
+    duration= models.PositiveSmallIntegerField(validators=[MinValueValidator(0)],default=0)
+    status= models.CharField(max_length=20,choices=TRANSACTION_STATUS,default='UNTREATED')
+    selection_completed=models.CharField(max_length=20,choices=YESNO,default='NO')
+
+    # class Meta(DateObjectsModels.Meta):
+    #     db_table="Members_Xmas_Commodity_Loan_Products_Selection"
 
 
 
@@ -2006,6 +2040,17 @@ class PersonalLedger(DateObjectsModels):
 
     # class Meta(DateObjectsModels.Meta):
     #     db_table="Personal_Ledger"
+
+
+class PersonalLedgerWithoutBalanceBF(DateObjectsModels):
+    member=models.ForeignKey(Members,on_delete=models.CASCADE)
+    transaction=models.ForeignKey(TransactionTypes,on_delete=models.CASCADE,blank=True,null=True)
+    account_number=models.CharField(max_length=255)
+    particulars=models.CharField(max_length=255)
+    status=models.CharField(max_length=20,choices=TRANSACTION_STATUS,default='UNTREATED')
+
+    # class Meta(DateObjectsModels.Meta):
+    #     db_table="PersonalLedgerWithoutBalanceBF"
 
 
 class FailedLoanPenaltyRecords(DateObjectsModels):
@@ -2371,6 +2416,19 @@ class NonMemberAccountDeductions(DateObjectsModels):
 
     # class Meta(DateObjectsModels.Meta):
     #     db_table="Non_Member_Account_Deductions"
+
+
+class WrongfulDeductionTransfer(DateObjectsModels):
+    source=models.ForeignKey(NonMemberAccountDeductions,on_delete=models.CASCADE)
+    member=models.ForeignKey(Members,on_delete=models.CASCADE)
+    amount=models.DecimalField(max_digits=20,decimal_places = 2,default=0)
+    amount_posted=models.DecimalField(max_digits=20,decimal_places = 2,default=0)
+    balance=models.DecimalField(max_digits=20,decimal_places = 2,default=0)
+    transaction_period=models.DateField(blank=True,null=True)
+    transaction_status= models.CharField(max_length=20,choices=TRANSACTION_STATUS,default='UNTREATED')
+
+    # class Meta(DateObjectsModels.Meta):
+    #     db_table="WrongfulDeductionTransfer"
 
 class MonthlyOverdeductionsRefund(DateObjectsModels):
     member=models.ForeignKey(Members,on_delete=models.CASCADE)

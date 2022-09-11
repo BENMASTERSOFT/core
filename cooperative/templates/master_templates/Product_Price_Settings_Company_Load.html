@@ -9,7 +9,10 @@
                       <div class="col-xl-8">
                         <div class="ibox">
                             <div class="ibox-head">
-                                <div class="ibox-title">LIST OF COMPANIES | {{period.title}} | {{batch.title}} | {{transaction.name}}| <a href="{% url 'admin_home' %}" class="btn btn-secondary">Back</a></div>
+                                <div class="ibox-title">LIST OF COMPANIES | {{period.title}} | {{batch.title}} |<a href="{% url 'admin_home' %}" class="btn btn-secondary">Back</a></div>
+                            </div>
+                            <div class="ibox-head">
+                                <div class="ibox-title"> {{transaction.name}}</div>
                             </div>
                             <div class="ibox-body">
                                 <table class="table">

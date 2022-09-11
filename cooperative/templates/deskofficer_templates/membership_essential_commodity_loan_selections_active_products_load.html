@@ -1,0 +1,60 @@
+{% extends 'deskofficer_templates/base_template.html' %}
+{% load static %}
+
+{% block content %}
+            <div class="page-content fade-in-up">
+                <div class="row">
+                 
+                    <div class="col-xl-10">
+                        <div class="ibox">
+                            <div class="ibox-head">
+                                <div class="ibox-title">PRODUCTS WITH SELECTIONS | <a href="{% url 'membership_essential_commodity_loan_selections_active_products_xls' period.pk batch.pk %}" class="btn btn-secondary">Export</a> |<a href="{% url 'membership_essential_commodity_loan_selections_active_Period_Transactions_load_product' %}">Back</a> </div>
+                            </div>
+                            <div class="ibox-body">
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Product Name</th>
+                                            <th>Packs</th>
+                                            <th>Units</th>
+                                            <th>Quantity</th>
+                                            <th>No in Pack</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for item in product_array %}
+                                        <tr>
+                                            <td>{{forloop.counter}}</td>
+                                            <td>{{item.1}}</td>
+                                            <td>{{item.2}}</td>
+                                            <td>
+                                            {% if item.3 %}
+                                                {{item.3}}
+                                            {% endif %}
+                                            </td>
+                                            <td> 
+                                            {% if item.4 %}
+                                                {{item.4}}
+                                            {% endif %}
+                                            </td>
+                                            <td>{{item.5}}</td>
+                                           
+                                            <td><a href="{% url 'membership_essential_commodity_loan_selections_products_details' period.pk batch.pk item.1 %}">View</a></td>
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+              
+           
+            </div>
+  <div class="sidenav-backdrop backdrop"></div>
+    <div class="preloader-backdrop">
+        <div class="page-preloader">Loading</div>
+    </div>
+{% endblock %}
