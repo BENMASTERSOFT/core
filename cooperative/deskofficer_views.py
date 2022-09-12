@@ -27158,7 +27158,7 @@ def membership_termination_search(request):
 	title="Search Membership Request Termination"
 	form = searchForm(request.POST or None)
 
-	return render(request,'deskofficer_templates/membership_termination_search.html',{'form':form,'title':title,'task_array':task_array})
+	return render(request,'deskofficer_templates/membership_termination_search.html',{'form':form,'title':title,'task_array':task_array,'default_password':default_password,'task_enabler_array':task_enabler_array,'tasks':tasks})
 
 
 def membership_termination_list_load(request):
@@ -27190,6 +27190,7 @@ def membership_termination_list_load(request):
 	context={
 	'members':members,
 	'title':title,
+	# 'tasks':tasks,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
 	'default_password':default_password,
@@ -27297,6 +27298,7 @@ def membership_termination_transactions_load(request,pk):
 		form.fields['loan_amount'].initial = total_loan
 	form.fields['comments'].initial = "Please for your Consideration"
 	context={
+	# 'tasks':tasks,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
 	'default_password':default_password,
@@ -33837,7 +33839,7 @@ def Desk_Executive_Users_Tasks_Preview(request,pk):
 
 
 	context={
-	'tasks':tasks,
+	# 'tasks':tasks,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
 	'default_password':default_password,
@@ -33928,7 +33930,7 @@ def Desk_Desk_Office_Tasks_Preview(request,pk):
 
 
 	context={
-	'tasks':tasks,
+	# 'tasks':tasks,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
 	'default_password':default_password,
@@ -34018,7 +34020,7 @@ def Desk_Shop_Users_Tasks_Preview(request,pk):
 
 
 	context={
-	'tasks':tasks,
+	# 'tasks':tasks,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
 	'default_password':default_password,
@@ -34076,7 +34078,7 @@ def desk_trending_commodity_signatories(request):
 		return HttpResponseRedirect(reverse('desk_trending_commodity_signatories'))
 
 	context={
-	'tasks':tasks,
+	# 'tasks':tasks,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
 	'default_password':default_password,
@@ -34120,7 +34122,7 @@ def desk_addCompanies(request):
 			messages.success(request,"Record Added Successfully")
 			return  HttpResponseRedirect(reverse('desk_addCompanies'))
 	context={
-	'tasks':tasks,
+	# 'tasks':tasks,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
 	'default_password':default_password,
@@ -34150,7 +34152,7 @@ def desk_Manage_Companies(request):
 
 	companies=Companies.objects.all()
 	context={
-	'tasks':tasks,
+	# 'tasks':tasks,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
 	'default_password':default_password,
@@ -34190,7 +34192,7 @@ def desk_Manage_Companies_update(request,pk):
 		company.save()
 		return HttpResponseRedirect(reverse('desk_Manage_Companies'))
 	context={
-	'tasks':tasks,
+	# 'tasks':tasks,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
 	'default_password':default_password,
@@ -34243,7 +34245,7 @@ def desk_addCommodityCategory(request):
 
 	records=Commodity_Categories.objects.all()
 	context={
-	'tasks':tasks,
+	# 'tasks':tasks,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
 	'default_password':default_password,
@@ -34300,7 +34302,7 @@ def desk_addCommodityCategorySub(request,pk):
 
 
 	context={
-	'tasks':tasks,
+	# 'tasks':tasks,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
 	'default_password':default_password,
@@ -34350,7 +34352,7 @@ def desk_Manage_Commodity_Categories_Title_Update(request,pk):
 
 	form.fields['title'].initial= record.title
 	context={
-	'task_array':task_array,'tasks':tasks,
+	# 'task_array':task_array,'tasks':tasks,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
 	'default_password':default_password,
@@ -34382,7 +34384,7 @@ def desk_Manage_Commodity_Categories_Core_properties_Transactions_Load(request):
 
 	records =TransactionTypes.objects.filter(category='NON-MONETARY')
 	context={
-	'tasks':tasks,
+	# 'tasks':tasks,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
 	'default_password':default_password,
@@ -34415,7 +34417,7 @@ def desk_Manage_Commodity_Categories_Core_Values(request,pk):
 	records=Commodity_Categories.objects.filter(transaction=transaction)
 
 	context={
-	'tasks':tasks,
+	# 'tasks':tasks,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
 	'default_password':default_password,
@@ -34476,7 +34478,7 @@ def desk_Manage_Commodity_Categories_Core_properties(request,pk):
 	admin_charges_form.fields['admin_charges_required'].initial=record.admin_charges_required
 	guarantor_form.fields['guarantor_required'].initial=record.guarantor_required
 	context={
-	'tasks':tasks,
+	# 'tasks':tasks,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
 	'default_password':default_password,
@@ -34507,7 +34509,7 @@ def desk_Manage_Commodity_Categories_Peripherals_Transactions_Load(request):
 
 	records =TransactionTypes.objects.filter(category='NON-MONETARY')
 	context={
-	'tasks':tasks,
+	# 'tasks':tasks,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
 	'default_password':default_password,
@@ -34539,7 +34541,7 @@ def desk_Manage_Commodity_Categories_Peripherals(request,pk):
 
 
 	context={
-	'tasks':tasks,
+	# 'tasks':tasks,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
 	'default_password':default_password,
@@ -34645,7 +34647,7 @@ def desk_Manage_Commodity_Categories_Update(request,pk):
 	form.fields['admin_charges'].initial=record.admin_charges
 
 	context={
-	'tasks':tasks,
+	# 'tasks':tasks,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
 	'default_password':default_password,
@@ -34674,7 +34676,7 @@ def desk_Commodity_Products_Add_Transactions_Load(request):
 
 	records =TransactionTypes.objects.filter(category='NON-MONETARY')
 	context={
-	'tasks':tasks,
+	# 'tasks':tasks,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
 	'default_password':default_password,
@@ -34703,7 +34705,7 @@ def desk_Commodity_Products_Add_Transactions_Categories_Load(request,pk):
 
 	records =Commodity_Categories.objects.filter(transaction_id=pk)
 	context={
-	'tasks':tasks,
+	# 'tasks':tasks,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
 	'default_password':default_password,
@@ -34732,7 +34734,7 @@ def desk_Commodity_Products_Add_Transactions_Sub_Categories_Load(request,pk):
 	category =Commodity_Categories.objects.get(id=pk)
 	records= Commodity_Category_Sub.objects.filter(category=category)
 	context={
-	'tasks':tasks,
+	# 'tasks':tasks,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
 	'default_password':default_password,
@@ -34787,7 +34789,7 @@ def desk_Commodity_Products_add(request,pk):
 
 		return HttpResponseRedirect(reverse('desk_Commodity_Products_add',args=(pk,)))
 	context={
-	'tasks':tasks,
+	# 'tasks':tasks,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
 	'default_password':default_password,
@@ -34835,7 +34837,7 @@ def desk_Commodity_Products_Manage_Transactions_Load(request):
 
 	records =TransactionTypes.objects.filter(category='NON-MONETARY')
 	context={
-	'tasks':tasks,
+	# 'tasks':tasks,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
 	'default_password':default_password,
@@ -34866,7 +34868,7 @@ def desk_Commodity_Products_Manage_Category_Load(request,pk):
 	# records=Commodity_Product_List.objects.filter(category__transaction=transaction)
 
 	context={
-	'tasks':tasks,
+	# 'tasks':tasks,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
 	'default_password':default_password,
@@ -34897,7 +34899,7 @@ def desk_Commodity_Products_Manage_Sub_Category_Load(request,pk):
 	records=Commodity_Category_Sub.objects.filter(category=category)
 
 	context={
-	'tasks':tasks,
+	# 'tasks':tasks,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
 	'default_password':default_password,
@@ -34931,7 +34933,7 @@ def desk_Commodity_Products_Manage_Load(request,pk):
 	records=Commodity_Product_List.objects.filter(sub_category=sub_category).order_by('product_name')
 
 	context={
-	'tasks':tasks,
+	# 'tasks':tasks,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
 	'default_password':default_password,
@@ -34986,7 +34988,7 @@ def desk_Commodity_Products_Manage_Update(request,pk):
 	form.fields['status'].initial = record.status
 
 	context={
-	'tasks':tasks,
+	# 'tasks':tasks,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
 	'default_password':default_password,
@@ -35039,7 +35041,7 @@ def desk_Product_Linking_Period_Load(request):
 		return HttpResponseRedirect(reverse('desk_Product_Linking_Company_Load',args=(period_obj, batch_obj,transaction_obj)))
 	form=Product_Linking_Period_Load_form(request.POST or None)
 	context={
-	'tasks':tasks,
+	# 'tasks':tasks,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
 	'default_password':default_password,
@@ -35075,7 +35077,7 @@ def desk_Product_Linking_Company_Load(request,period_obj,batch_obj,transaction_o
 	transaction=TransactionTypes.objects.get(id=transaction_obj)
 
 	context={
-	'tasks':tasks,
+	# 'tasks':tasks,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
 	'default_password':default_password,
@@ -35113,7 +35115,7 @@ def desk_Product_Linking_Category_Load(request,period_obj,batch_obj,transaction_
 
 	categories=Commodity_Categories.objects.filter(transaction=transaction)
 	context={
-	'tasks':tasks,
+	# 'tasks':tasks,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
 	'default_password':default_password,
@@ -35152,7 +35154,7 @@ def desk_Product_Linking_Sub_Category_Load(request,period_obj,batch_obj,transact
 
 	sub_categories = Commodity_Category_Sub.objects.filter(category=category)
 	context={
-	'tasks':tasks,
+	# 'tasks':tasks,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
 	'default_password':default_password,
@@ -35192,7 +35194,7 @@ def desk_Product_Linking_Sub_Category_Load_All(request,period_obj,batch_obj,tran
 
 
 	context={
-	'tasks':tasks,
+	# 'tasks':tasks,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
 	'default_password':default_password,
@@ -35272,7 +35274,7 @@ def desk_Product_Linking_Details_Preview_All(request,comp_pk,pk,period_pk,batch_
 	form.fields['product_model'].initial=product.product_model
 	form.fields['details'].initial=product.details
 	context={
-	'tasks':tasks,
+	# 'tasks':tasks,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
 	'default_password':default_password,
@@ -35313,7 +35315,7 @@ def desk_Product_Linking_Available_Product_Load_All(request,period_obj,batch_obj
 	linked_records = Company_Products.objects.filter(company=company,period=period,batch=batch).order_by('product__product_name')
 
 	context={
-	'tasks':tasks,
+	# 'tasks':tasks,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
 	'default_password':default_password,
@@ -35359,7 +35361,7 @@ def desk_Product_Linking_Details(request,pk,period_pk,batch_pk,transaction_pk,co
 	linked_records = Company_Products.objects.filter(company=company,period=period,batch=batch,product__sub_category=sub_cat).order_by('product__product_name')
 
 	context={
-	'tasks':tasks,
+	# 'tasks':tasks,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
 	'default_password':default_password,
@@ -35456,7 +35458,7 @@ def desk_Product_Linking_Details_Preview(request,comp_pk,pk,period_pk,batch_pk,t
 		form.fields['coop_amount'].initial=0
 
 	context={
-	'tasks':tasks,
+	# 'tasks':tasks,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
 	'default_password':default_password,
@@ -35553,7 +35555,7 @@ def desk_Product_Settings_Period_Load(request):
 		return HttpResponseRedirect(reverse('desk_Product_Price_Settings_Company_Load',args=(period_obj, batch_obj,transaction_obj)))
 	form=Product_Linking_Period_Load_form(request.POST or None)
 	context={
-	'tasks':tasks,
+	# 'tasks':tasks,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
 	'default_password':default_password,
@@ -35589,7 +35591,7 @@ def desk_Product_Price_Settings_Company_Load(request,period_obj,batch_obj,transa
 	transaction=TransactionTypes.objects.get(id=transaction_obj)
 
 	context={
-	'tasks':tasks,
+	# 'tasks':tasks,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
 	'default_password':default_password,
@@ -35628,7 +35630,7 @@ def desk_Product_Price_Settings_Category_Load(request,period_obj,batch_obj,trans
 	categories=Commodity_Categories.objects.filter(transaction=transaction)
 
 	context={
-	'tasks':tasks,
+	# 'tasks':tasks,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
 	'default_password':default_password,
@@ -35667,7 +35669,7 @@ def desk_Product_Price_Settings_Sub_Category_Load(request,period_obj,batch_obj,t
 
 	sub_categories = Commodity_Category_Sub.objects.filter(category=category)
 	context={
-	'tasks':tasks,
+	# 'tasks':tasks,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
 	'default_password':default_password,
@@ -35712,7 +35714,7 @@ def desk_Product_Price_Settings_details(request,period_obj,batch_obj,transaction
 	records=Company_Products.objects.filter(company=company,period=period,batch=batch,product__sub_category__category__transaction=transaction,product__sub_category=sub_category)
 
 	context={
-	'tasks':tasks,
+	# 'tasks':tasks,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
 	'default_password':default_password,
@@ -35793,7 +35795,7 @@ def desk_Product_Price_Settings_Update(request,comp_pk,pk):
 	form.fields['status'].initial=record.status
 
 	context={
-	'tasks':tasks,
+	# 'tasks':tasks,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
 	'default_password':default_password,
@@ -35845,7 +35847,7 @@ def desk_CooperativeBankAccounts_add(request):
 		return HttpResponseRedirect(reverse('desk_CooperativeBankAccounts_add'))
 
 	context={
-	'tasks':tasks,
+	# 'tasks':tasks,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
 	'default_password':default_password,
@@ -35905,7 +35907,7 @@ def desk_CooperativeBankAccounts_Update(request,pk):
 		record.save()
 		return HttpResponseRedirect(reverse('desk_CooperativeBankAccounts_add'))
 	context={
-	'tasks':tasks,
+	# 'tasks':tasks,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
 	'default_password':default_password,
@@ -35944,7 +35946,10 @@ def desk_Product_Duration_Settings_Period_Load(request):
 		return HttpResponseRedirect(reverse('desk_Product_Duration_Settings_Service_Load',args=(period_obj, batch_obj,transaction_obj)))
 	form=Product_Linking_Period_Load_form(request.POST or None)
 	context={
+	# 'tasks':tasks,
 	'task_array':task_array,
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	'form':form,
 	# 'period':period,
 	# 'batch':batch,
@@ -36006,7 +36011,10 @@ def desk_Product_Duration_Settings_Service_Load(request,period_obj,batch_obj,tra
 	form.fields['start_date'].initial=now
 	form.fields['stop_date'].initial=now
 	context={
+	# 'tasks':tasks,
 	'task_array':task_array,
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
 	'durations':durations,
 	'period':period,
 	'batch':batch,
@@ -36022,3 +36030,283 @@ def desk_Product_Duration_Settings_Service_Delete(request,pk,period_obj,batch_ob
 	messages.success(request,'Record Deleted Successfully')
 	return HttpResponseRedirect(reverse('desk_Product_Duration_Settings_Service_Load',args=(period_obj,batch_obj,transaction_obj)))
 
+def desk_addTitles(request):
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	task_array=[]
+	for task in tasks:
+		task_array.append(task.task.title)
+
+	task_enabler=TransactionEnabler.objects.filter(status="YES")
+	task_enabler_array=[]
+	for item in task_enabler:
+		task_enabler_array.append(item.title)
+
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES" 
+
+
+
+	title="Add Titles"
+	items= Titles.objects.all()
+	form = addTitlesForm(request.POST or None)
+	if request.method ==  "POST":
+		form = addTitlesForm(request.POST)
+		if form.is_valid():
+			title=form.cleaned_data["title"]
+			record = Titles(title=title)
+			record.save()
+			messages.success(request,"Record Added Successfully")
+		return	HttpResponseRedirect(reverse('desk_addTitles'))
+	context={
+	# 'tasks':tasks,
+	'task_array':task_array,
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
+	'form':form,
+	'items':items,
+	'url':'desk_addTitles',
+	'button_text':"Add Record",
+	'title':title,
+	}
+	return render(request,'deskofficer_templates/control_panel/desk_add_single_item.html', context)
+
+
+def desk_Manage_Titles(request):
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	task_array=[]
+	for task in tasks:
+		task_array.append(task.task.title)
+
+	task_enabler=TransactionEnabler.objects.filter(status="YES")
+	task_enabler_array=[]
+	for item in task_enabler:
+		task_enabler_array.append(item.title)
+
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES" 
+
+
+	title="Manage Titles"
+	items= Titles.objects.all()
+
+
+	context={
+	# 'tasks':tasks,
+	'task_array':task_array,
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
+	'items':items,
+	'title':title,
+	}
+	return render(request,'deskofficer_templates/control_panel/desk_Manage_Titles.html', context)
+
+
+def desk_Manage_Titles_Processing(request,pk):
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	task_array=[]
+	for task in tasks:
+		task_array.append(task.task.title)
+
+	task_enabler=TransactionEnabler.objects.filter(status="YES")
+	task_enabler_array=[]
+	for item in task_enabler:
+		task_enabler_array.append(item.title)
+
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES" 
+
+
+	form=Manage_Departments_Processing_form(request.POST or None)
+	title="Manage Titles"
+	item= Titles.objects.get(id=pk)
+
+	if request.method == 'POST':
+		title=request.POST.get('title')
+
+		item.title=title
+		item.save()
+		return HttpResponseRedirect(reverse('desk_Manage_Titles'))
+	form.fields['title'].initial=item.title
+	context={
+	# 'tasks':tasks,
+	'task_array':task_array,
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
+	'form':form,
+	'item':item,
+	'title':title,
+	}
+	return render(request,'deskofficer_templates/control_panel/desk_Manage_Titles_Processing.html', context)
+
+
+def desk_Manage_Titles_Delete(request,pk):
+	title= Titles.objects.get(id=pk)
+	if Members.objects.filter(title=title).exists():
+		messages.error(request, f"{title.title} is already in Use ")
+		return HttpResponseRedirect(reverse('desk_Manage_Titles'))
+	title.delete()
+	return HttpResponseRedirect(reverse('desk_Manage_Titles'))
+
+	
+
+def Event_Manager_DashBoard(request):
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	task_array=[]
+	for task in tasks:
+		task_array.append(task.task.title)
+
+	task_enabler=TransactionEnabler.objects.filter(status="YES")
+	task_enabler_array=[]
+	for item in task_enabler:
+		task_enabler_array.append(item.title)
+
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES" 
+
+	context={
+	'task_array':task_array,
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
+	}
+	return render(request,'deskofficer_templates/Event_Manager_DashBoard.html', context)
+
+def Event_Program_Register(request):
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	task_array=[]
+	for task in tasks:
+		task_array.append(task.task.title)
+
+	task_enabler=TransactionEnabler.objects.filter(status="YES")
+	task_enabler_array=[]
+	for item in task_enabler:
+		task_enabler_array.append(item.title)
+
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES" 
+
+	form=Event_Program_Register_form(request.POST or None)
+	tdate=get_current_date(now)
+	processed_by=CustomUser.objects.get(id=request.user.id)
+	processed_by=processed_by.username
+
+	if request.method == 'POST':
+		title=request.POST.get('title')
+		
+		if not title:
+			messages.error(request,'Title Missing')
+			return HttpResponseRedirect(reverse('Event_Program_Register'))
+		
+		pdate=request.POST.get('pdate')
+	
+
+		date_format = '%Y-%m-%d'
+		dtObj = datetime.datetime.strptime(pdate, date_format)
+		pdate=get_current_date(dtObj)
+
+
+		
+		if Event_Title.objects.filter(title=title,pdate=pdate).exists():
+			messages.error(request,'Record Already Exist')
+			return HttpResponseRedirect(reverse('Event_Program_Register'))
+		
+		Event_Title(title=title,pdate=pdate,tdate=tdate,processed_by=processed_by).save()
+		return HttpResponseRedirect(reverse('Event_Program_Register'))
+	
+	form.fields['pdate'].initial=get_current_date(now)
+	context={
+	'task_array':task_array,
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
+	'form':form,
+	}
+	return render(request,'deskofficer_templates/Event_Program_Register.html', context)
+
+
+
+def Event_Program_Manage_search(request):
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	task_array=[]
+	for task in tasks:
+		task_array.append(task.task.title)
+
+
+
+	task_enabler=TransactionEnabler.objects.filter(status="YES")
+	task_enabler_array=[]
+	for item in task_enabler:
+		task_enabler_array.append(item.title)
+
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
+	title="Search Programs and Events"
+	form = searchForm(request.POST or None)
+	return render(request,'deskofficer_templates/Event_Program_Manage_search.html',{'form':form,'title':title,'task_array':task_array,
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,})
+
+
+
+def Event_Program_Manage_list_load(request):
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	task_array=[]
+	for task in tasks:
+		task_array.append(task.task.title)
+
+
+
+	task_enabler=TransactionEnabler.objects.filter(status="YES")
+	task_enabler_array=[]
+	for item in task_enabler:
+		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
+
+	title="Update Membership Request"
+	form = searchForm(request.POST)
+	# events=Event_Title.objects.all()
+	# print("===================================")
+	# for item in events:
+	# 	print(item.title)
+	# print("*****************************************")
+	events=[]
+	if request.method == "POST":
+	
+		if not request.POST.get("title"):
+			messages.error(request,'No record found')
+			return HttpResponseRedirect(reverse('Event_Program_Manage_search'))
+
+		events=Event_Title.objects.filter(Q(title__icontains=form['title'].value())).filter(status='UNTREATED')
+		if not events:
+			messages.error(request,'No Record Found')
+			return HttpResponseRedirect(reverse('Event_Program_Manage_search'))
+
+	context={
+	'events':events,
+	'title':title,
+	'task_array':task_array,
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
+	}
+	return render(request,'deskofficer_templates/Event_Program_Manage_list_load.html',context)
+
+
+def Event_Program_Manage_Delete(request,pk):
+	Event_Title.objects.filter(id=pk).delete()
+	return HttpResponseRedirect(reverse('Event_Program_Manage_search'))
+		

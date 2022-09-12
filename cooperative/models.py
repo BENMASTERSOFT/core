@@ -837,6 +837,32 @@ class Members(DateObjectsModels):
         else:
             return ""
 
+
+class Event_Title(DateObjectsModels):
+    title=models.CharField(max_length=255)
+    pdate=models.DateField()
+    status= models.CharField(max_length=20,choices=TRANSACTION_STATUS,default='UNTREATED')
+
+    # class Meta(DateObjectsModels.Meta):
+    #     db_table="Event_Title"
+
+
+class Events(DateObjectsModels):
+    PARTICIPANT = (
+                ('MEMBER','MEMBER'),
+                ('NON MEMBER','NON MEMBER'),
+                )
+    title=models.ForeignKey(Event_Title,on_delete=models.CASCADE)
+    participant_id=models.CharField(max_length=255)
+    name=models.CharField(max_length=255)
+    phone_no=models.CharField(max_length=255)
+    participant=models.CharField(max_length=20,choices=PARTICIPANT,default='MEMBER')
+    status= models.CharField(max_length=20,choices=TRANSACTION_STATUS,default='UNTREATED')
+
+    # class Meta(DateObjectsModels.Meta):
+    #     db_table="Events"
+
+
 class MembersBankAccounts(DateObjectsModels):
     member_id=models.ForeignKey(Members,on_delete=models.CASCADE)
     bank=models.ForeignKey(Banks,on_delete=models.CASCADE)

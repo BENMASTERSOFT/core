@@ -2491,6 +2491,15 @@ class Cash_Deposit_Loans_form(forms.Form):
    purpose= forms.CharField(widget=forms.Textarea(attrs={"rows":2, "cols":50}))
 
 
+class Event_Program_Register_form(forms.Form):
+   pdate = forms.DateField(label='Date', label_suffix=" : ",
+                             required=True, disabled=False,
+                             widget=DateInput(attrs={'class': 'form-control'}),
+                             error_messages={'required': "This field is required."})
+   title=forms.CharField(label="Title",max_length=50,required=True,widget=forms.TextInput(attrs={"class":"form-control"}))
+
+ 
+
 
 # class Cash_Withdrawal_form(forms.Form):
 

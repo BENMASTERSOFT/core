@@ -602,6 +602,10 @@ urlpatterns = [
     path('desk_CooperativeBankAccounts_Remove/<str:pk>/', deskofficer_views.desk_CooperativeBankAccounts_Remove, name='desk_CooperativeBankAccounts_Remove'),
     path('desk_CooperativeBankAccounts_Update/<str:pk>/', deskofficer_views.desk_CooperativeBankAccounts_Update, name='desk_CooperativeBankAccounts_Update'),
 
+    path('desk_addTitles/', deskofficer_views.desk_addTitles,name='desk_addTitles'),
+    path('desk_Manage_Titles/', deskofficer_views.desk_Manage_Titles,name='desk_Manage_Titles'),
+    path('desk_Manage_Titles_Processing/<str:pk>/', deskofficer_views.desk_Manage_Titles_Processing, name='desk_Manage_Titles_Processing'),
+    path('desk_Manage_Titles_Delete/<str:pk>/', deskofficer_views.desk_Manage_Titles_Delete, name='desk_Manage_Titles_Delete'),
 
     path('membership_request/', deskofficer_views.membership_request,name='membership_request'),
     path('membership_request_complete_search/', deskofficer_views.membership_request_complete_search,name='membership_request_complete_search'),
@@ -1524,8 +1528,12 @@ urlpatterns = [
     path('Rental_Services_Management_Process_Details/<str:pk>/<str:contact>/', deskofficer_views.Rental_Services_Management_Process_Details,name='Rental_Services_Management_Process_Details'),
     path('Rental_Services_Management_Process_Completed/<str:pk>/<str:b_date>/', deskofficer_views.Rental_Services_Management_Process_Completed,name='Rental_Services_Management_Process_Completed'),
 
-    # path('index/', deskofficer_views.index,name='index'),
+    path('Event_Manager_DashBoard/', deskofficer_views.Event_Manager_DashBoard,name='Event_Manager_DashBoard'),
+    path('Event_Program_Register/', deskofficer_views.Event_Program_Register,name='Event_Program_Register'),
 
+    path('Event_Program_Manage_search/', deskofficer_views.Event_Program_Manage_search,name='Event_Program_Manage_search'),
+    path('Event_Program_Manage_list_load/', deskofficer_views.Event_Program_Manage_list_load,name='Event_Program_Manage_list_load'),
+    path('Event_Program_Manage_Delete/<str:pk>/', deskofficer_views.Event_Program_Manage_Delete,name='Event_Program_Manage_Delete'),
 
     ################################################################################
     #################################### DAY END TRANSACTIONS ####################################

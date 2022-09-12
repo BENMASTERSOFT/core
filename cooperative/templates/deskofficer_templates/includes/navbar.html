@@ -665,7 +665,24 @@
                             </li>
                         </ul>
                     </li>
-                    {% endif %}
+                {% endif %}
+
+                    <li>
+                        <a href="javascript:;"><i class="sidebar-item-icon fa fa-edit"></i>
+                            <span class="nav-label">Events and Programs </span><i class="fa fa-angle-left arrow"></i></a>
+                        <ul class="nav-2-level collapse">
+
+                            <li>
+                                <a href="{% url 'Event_Manager_DashBoard' %}" style="color:lightyellow;">Event Register</a>
+                            </li>
+                             <li>
+                                <a href="{% url 'membership_termination_approved_list_processing_list_load' %}" style="color:lightyellow;">Event Recorder</a>
+                            </li>
+                           
+                      
+                        </ul>
+                    </li>
+
                 {% if 'SHARE UPDATE APPROVAL'  in task_array or 'SHOP CREDIT SALES APPROVALS'  in task_array or 'TRANSACTION ADJUSTMENT APPROVAL'  in task_array or 'STANDING ORDER SUSPENSION APPROVAL'  in task_array  %}
 
                 <li class="heading">APPROVALS</li>
