@@ -841,8 +841,20 @@ def deskofficer_home(request):
 	if Staff.objects.filter(admin=request.user,default_password='YES'):
 		default_password="YES"
 	StandingOrderAccounts.objects.filter(amount=0).delete()
-
-	
+	# x = 10
+	# members = Members.objects.all()
+	# member_array=[]
+	# for item in members:
+	# 	member_array.append(int(item.coop_no))
+		
+	# print(member_array)
+	# if x in member_array:
+	# 	print(f'{x} noted')
+		# if int(item.coop_no) in range(1,2000):
+		# 	pass
+		# else:
+		# 	print(f'{item.coop_no} done')
+		
 	# TransactionAjustmentRequest.objects.filter().delete()
 
 
@@ -16010,7 +16022,8 @@ def Monthly_Deduction_Generated_Update_Details_load(request, pk, status):
 	transaction_period=member.transaction_period
 
 	records=MonthlyDeductionList.objects.filter(member=member.member,transaction_period=transaction_period)
-	
+	# records.delete()
+	# return HttpResponse("OK")
 	queryset1=MonthlyDeductionList.objects.filter(member=member.member,transaction_period=transaction_period)
 	for item in queryset1:
 		amount=item.amount
@@ -16028,7 +16041,7 @@ def Monthly_Deduction_Generated_Update_Details_load(request, pk, status):
 	record_array=[]
 	for item in records:
 		standing_order_amount=0
-		
+		standing_order=[]
 		if StandingOrderAccounts.objects.filter(transaction__account_number=item.account_number).exists():
 			standing_order=StandingOrderAccounts.objects.get(transaction__account_number=item.account_number)
 			standing_order_amount=abs(standing_order.amount)
@@ -16047,7 +16060,8 @@ def Monthly_Deduction_Generated_Update_Details_load(request, pk, status):
 
 					record_array.append((ledger.transaction.name,ledger.account_number,abs(ledger.balance),abs(loan_repay.repayment),abs(item.amount),item.pk))
 		else:
-			record_array.append((standing_order.transaction.transaction.name,standing_order.transaction.account_number,abs(standing_order.amount),abs(standing_order_amount),item.amount,item.pk))
+			if standing_order:
+				record_array.append((standing_order.transaction.transaction.name,standing_order.transaction.account_number,abs(standing_order.amount),abs(standing_order_amount),item.amount,item.pk))
 	
 	context={
 	'total_schedule':total_schedule,
@@ -26862,7 +26876,7 @@ def Cash_Withdrawal_Transactions_load(request,pk):
 
 	if request.method=="POST" and 'btn_fetch' in request.POST:
 		transaction_id=request.POST.get('transactions')
-		transaction=WithdrawableTransactions.objects.get(transaction_id=transaction_id)
+		transaction=WithdrawableTransactions.objects.get(id=transaction_id)
 
 		member_selected=MembersAccountsDomain.objects.get(member=member,transaction=transaction.transaction)
 
@@ -26900,6 +26914,9 @@ def Cash_Withdrawal_Transactions_load(request,pk):
 			account_number=member_selected.account_number
 
 
+		transaction_date_id=request.POST.get('tdate')
+		transaction_date=get_current_date(datetime.datetime.strptime(tdate_id, '%Y-%m-%d'))
+
 		withdrawal_amount=request.POST.get('amount')
 		narration=request.POST.get('narration')
 
@@ -26914,7 +26931,8 @@ def Cash_Withdrawal_Transactions_load(request,pk):
 				messages.info(request,'You still have Open Transaction')
 				return HttpResponseRedirect(reverse('Cash_Withdrawal_Transactions_load',args=(pk,)))
 
-			record=MembersCashWithdrawalsApplication(approval_status=approval_status,tdate=current_date,member=member_selected,
+			record=MembersCashWithdrawalsApplication(approval_status=approval_status,transaction_date=transaction_date,member=member_selected,
+				tdate=current_date,
 				amount=withdrawal_amount,
 				narration=narration,
 				processed_by=processed_by.username,
@@ -26933,6 +26951,7 @@ def Cash_Withdrawal_Transactions_load(request,pk):
 		if member_selected.loan_lock.title == 'NO':
 			button_enabled=True
 
+	form.fields['tdate'].initial=get_current_date(now)
 	context={
 	'button_enabled':button_enabled,
 	'member_selected':member_selected,

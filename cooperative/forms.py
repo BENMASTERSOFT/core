@@ -2499,7 +2499,28 @@ class Event_Program_Register_form(forms.Form):
    title=forms.CharField(label="Title",max_length=50,required=True,widget=forms.TextInput(attrs={"class":"form-control"}))
 
  
+class Cash_Withdrawal_form(forms.Form):
+   transaction_list=[]
+   try:
+      transactions = WithdrawableTransactions.objects.filter(status='UNLOCKED')
+      for transaction in transactions:
+         small_transaction=(transaction.id,transaction.transaction.name)
+         transaction_list.append(small_transaction)
+   except:
+      transaction_list=[]
+   transactions = forms.ChoiceField(label="Transactions", choices=transaction_list,widget=forms.Select(attrs={"class":"form-control"}))
 
+   narration=forms.CharField(label="Narration",max_length=50,required=True,widget=forms.TextInput(attrs={"class":"form-control"}))
+   tdate = forms.DateField(label='Date', label_suffix=" : ",
+                             required=True, disabled=False,
+                             widget=DateInput(attrs={'class': 'form-control'}),
+                             error_messages={'required': "This field is required."})
+   amount = forms.DecimalField(initial=0,label='Amount', label_suffix=" : ", min_value=0,  max_digits=20,
+                              widget=forms.NumberInput(attrs={'class': 'form-control'}),
+                              decimal_places=2, required=True,
+                              disabled = False,
+                              error_messages={'required': "Please Enter Amount"})
+  
 
 # class Cash_Withdrawal_form(forms.Form):
 
