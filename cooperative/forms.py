@@ -2521,6 +2521,21 @@ class Cash_Withdrawal_form(forms.Form):
                               disabled = False,
                               error_messages={'required': "Please Enter Amount"})
   
+class Monthly_Auxillary_Deduction_Rectification_Reset_form(forms.Form):
+   salary_institution_list=[]
+   try:
+      salary_institutions = SalaryInstitution.objects.all().order_by('rank')
+      for salary_institution in salary_institutions:
+         small_salary_institution=(salary_institution.id,salary_institution.title)
+         salary_institution_list.append(small_salary_institution)
+   except:
+      salary_institution_list=[]
+   salary_institution = forms.ChoiceField(label="Salary Institution", choices=salary_institution_list,widget=forms.Select(attrs={"class":"form-control"}))
+
+   tdate = forms.DateField(label='Date', label_suffix=" : ",
+                             required=True, disabled=False,
+                             widget=DateInput(attrs={'class': 'form-control'}),
+                             error_messages={'required': "This field is required."})
 
 # class Cash_Withdrawal_form(forms.Form):
 

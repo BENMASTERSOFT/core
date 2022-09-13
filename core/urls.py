@@ -1051,6 +1051,8 @@ urlpatterns = [
     path('Monthly_Auxillary_Deduction_Generated_Export_Institution_Load/', deskofficer_views.Monthly_Auxillary_Deduction_Generated_Export_Institution_Load,name='Monthly_Auxillary_Deduction_Generated_Export_Institution_Load'),
     path('Monthly_Auxillary_Deduction_Generated_Export_period_Load/<str:pk>/', deskofficer_views.Monthly_Auxillary_Deduction_Generated_Export_period_Load,name='Monthly_Auxillary_Deduction_Generated_Export_period_Load'),
 
+    path('Monthly_Auxillary_Deduction_Rectification_Reset/', deskofficer_views.Monthly_Auxillary_Deduction_Rectification_Reset,name='Monthly_Auxillary_Deduction_Rectification_Reset'),
+    
     path('upload_AuxillaryDeductionsResource/<str:pk>/', deskofficer_views.upload_AuxillaryDeductionsResource,name='upload_AuxillaryDeductionsResource'),
 
     path('AuxillaryMerger/<str:salary_id>/<str:trans_id>/', deskofficer_views.AuxillaryMerger,name='AuxillaryMerger'),

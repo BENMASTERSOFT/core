@@ -16343,6 +16343,60 @@ def Monthly_Auxillary_Deduction_Generated_Export_Institution_Load(request):
 	return render(request,'deskofficer_templates/Monthly_Auxillary_Deduction_Generated_Export_Institution_Load.html',context)
 
 
+def Monthly_Auxillary_Deduction_Rectification_Reset(request):
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	task_array=[]
+	for task in tasks:
+		task_array.append(task.task.title)
+
+	task_enabler=TransactionEnabler.objects.filter(status="YES")
+	task_enabler_array=[]
+	for item in task_enabler:
+		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
+
+	status="ACTIVE"
+
+	form=Monthly_Auxillary_Deduction_Rectification_Reset_form(request.POST or None)
+	if request.method == "POST":
+		transaction_period_id=request.POST.get('tdate')
+		transaction_period=datetime.datetime.strptime(transaction_period_id, '%Y-%m-%d')
+
+		salary_institution_id=request.POST.get('salary_institution')
+		salary_institution=SalaryInstitution.objects.get(id=salary_institution_id)
+
+
+		MonthlyDeductionList.objects.filter(salary_institution=salary_institution,transaction_period=transaction_period).update(amount_deducted=0,balance=0,repayment=0,status='UNTREATED')
+		MonthlyGroupGeneratedTransactions.objects.filter(salary_institution=salary_institution,transaction_period=transaction_period).delete()
+		MonthlyDeductionListGenerated.objects.filter(salary_institution=salary_institution,transaction_period=transaction_period).delete()
+
+
+
+
+		MonthlyJointDeductionList.objects.filter(salary_institution=salary_institution,transaction_period=transaction_period).delete()
+		MonthlyJointDeductionGeneratedTransactions.objects.filter(salary_institution=salary_institution,transaction_period=transaction_period).delete()
+		MonthlyJointDeductionGenerated.objects.filter(salary_institution=salary_institution,transaction_period=transaction_period).delete()
+		
+		AccountDeductions.objects.filter(salary_institution=salary_institution,transaction_period=transaction_period).delete()
+		AuxillaryDeductions.objects.filter(salary_institution=salary_institution,transaction_period=transaction_period).delete()
+	
+
+		return HttpResponseRedirect(reverse('Monthly_Auxillary_Deduction_Rectification_Reset'))
+	form.fields['tdate'].initial=get_current_date(now)
+	context={
+	# 'items':items,
+	'form':form,
+	'task_array':task_array,
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
+	}
+	return render(request,'deskofficer_templates/Monthly_Auxillary_Deduction_Rectification_Reset.html',context)
+
+
 
 def Monthly_Auxillary_Deduction_Generated_Export_period_Load(request,pk):
 	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
