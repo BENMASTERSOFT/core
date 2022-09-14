@@ -60,6 +60,8 @@
                                 </div><br></div>
                         </div>
                     </div>
+                    
+
                     <div class="col-md-6">
                         <div class="ibox">
                             <div class="ibox-head">
@@ -69,6 +71,37 @@
                                 </div>
                             </div>
                             <div class="ibox-body">
+                                 <div class="card" style="width:300px;">
+                                    <a href="{% url 'Members_Dashboard_Load_Standing_Orders' member.pk %}"><img class="card-img-top" src="{% static '/cooperative/assets/img/blog/standing_order1.jpg' %}" /></a>
+                                    <div class="card-body">
+                                        <h4 class="card-title">Standing Orders</h4>
+                                        <div class="text-muted card-subtitle">Savings</div>
+                                   
+                                    </div>
+                                    <div class="card-footer">
+                                        <a href="{% url 'Members_Dashboard_Load_Standing_Orders' member.pk %}" class="text-info"><i class="fa fa-star"></i> View</a>
+                                      
+                                    </div>
+                                </div>
+                                
+                                <h5 class="m-t-20 m-b-20">Monthly Transactions</h5>
+                             
+ 
+                                <div class="card" style="width:300px;">
+                                    <a href="{% url 'Members_Dashboard_Load_Monthly_Deductions' member.pk %}"><img class="card-img-top" src="{% static '/cooperative/assets/img/blog/savings3.jpg' %}" /></a>
+                                    <div class="card-body">
+                                        <h4 class="card-title">Monthly Deduction</h4>
+                                       
+                                    </div>
+                                
+                                    <div class="card-footer">
+                                        <a href="{% url 'Members_Dashboard_Load_Monthly_Deductions' member.pk %}" class="text-info"><i class="fa fa-star"></i> View</a>
+                                       
+                                    </div>
+                                </div>
+
+
+                               <br>
                                 <div class="card" style="width:300px;">
                                     <a href="#"><img class="card-img-top" src="{% static '/cooperative/assets/img/blog/ledger3.jpg' %}" /></a>
                                     <div class="card-body">
@@ -95,36 +128,7 @@
                                     </div>
                                 </div>
                                 <br><br>
-                                <div class="card" style="width:300px;">
-                                    <a href="{% url 'Members_Dashboard_Load_Standing_Orders' member.pk %}"><img class="card-img-top" src="{% static '/cooperative/assets/img/blog/standing_order1.jpg' %}" /></a>
-                                    <div class="card-body">
-                                        <h4 class="card-title">Standing Orders</h4>
-                                        <div class="text-muted card-subtitle">Savings</div>
-                                   
-                                    </div>
-                                    <div class="card-footer">
-                                        <a href="{% url 'Members_Dashboard_Load_Standing_Orders' member.pk %}" class="text-info"><i class="fa fa-star"></i> View</a>
-                                      
-                                    </div>
-                                </div>
-                                <h5 class="m-t-20 m-b-20">Monthly Transactions</h5>
-                             
- 
-                                <div class="card" style="width:300px;">
-                                    <a href="{% url 'Members_Dashboard_Load_Monthly_Deductions' member.pk %}"><img class="card-img-top" src="{% static '/cooperative/assets/img/blog/savings3.jpg' %}" /></a>
-                                    <div class="card-body">
-                                        <h4 class="card-title">Monthly Deduction</h4>
-                                       
-                                    </div>
-                                
-                                    <div class="card-footer">
-                                        <a href="{% url 'Members_Dashboard_Load_Monthly_Deductions' member.pk %}" class="text-info"><i class="fa fa-star"></i> View</a>
-                                       
-                                    </div>
-                                </div>
 
-
-                               <br>
                                
                                 <div class="card" style="width:300px;">
                                     <a href=""><img class="card-img-top" src="{% static '/cooperative/assets/img/blog/loan5.jpg' %}" /></a>

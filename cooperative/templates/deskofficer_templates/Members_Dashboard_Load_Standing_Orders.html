@@ -30,9 +30,9 @@
                                     <td>{{item.updated_at|date:"D, d M, Y"}}</td>
                                     <td>{{item.status}}</td>
                                     <td>
-                                      {% comment %}   
-                                        <a href="{% url 'Auxillary_Savings_Deduction_Generate' item.transaction.transaction.pk member.pk %}" class="btn btn-primary">Generate</a>
-                                {% endcomment %}
+                                      
+                                        <a href="{% url 'Members_Dashboard_Load_Standing_Orders_Update' item.pk %}" class="btn btn-primary">Update</a>
+                              
                                    </td>
                                 </tr>
                             {% endfor %}

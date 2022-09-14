@@ -3940,7 +3940,7 @@ def export_Transaction_Adjustment_Manage_xls(request):
 
 
 
-def Transaction_adjustment_search(request):
+def Transaction_adjustment_Transaction_Period(request):
 	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
 	task_array=[]
 	for task in tasks:
@@ -3957,15 +3957,51 @@ def Transaction_adjustment_search(request):
 	if Staff.objects.filter(admin=request.user,default_password='YES'):
 		default_password="YES"
 
-	title="Search Membership for Adjustment"
+	form = Cash_Deposit_Summary_form(request.POST or None)
+	if request.method == 'POST':
+		current_date_id=request.POST.get('current_date')
+		dtObj = datetime.datetime.strptime(current_date_id, '%Y-%m-%d')
+		current_date=get_current_date(dtObj)
+		return HttpResponseRedirect(reverse('Transaction_adjustment_search',args=(current_date,)))
+
+
+	form.fields['current_date'].initial=get_current_date(now)
+	context={
+	'form':form,
+	'task_array':task_array,
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
+	}
+	return render(request,'deskofficer_templates/Transaction_adjustment_Transaction_Period.html',context)
+
+
+
+def Transaction_adjustment_search(request,pk):
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	task_array=[]
+	for task in tasks:
+		task_array.append(task.task.title)
+
+
+
+	task_enabler=TransactionEnabler.objects.filter(status="YES")
+	task_enabler_array=[]
+	for item in task_enabler:
+		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
+	title=f"Adjustment for the period of {pk}"
 	form = searchForm(request.POST or None)
 
-	return render(request,'deskofficer_templates/Transaction_adjustment_search.html',{'form':form,'title':title,'task_array':task_array,
+	return render(request,'deskofficer_templates/Transaction_adjustment_search.html',{'form':form,'transaction_period':pk,'title':title,'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
 	'default_password':default_password,})
 
 
-def Transaction_adjustment_List_load(request):
+def Transaction_adjustment_List_load(request,pk):
 	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
 	task_array=[]
 	for task in tasks:
@@ -3993,6 +4029,7 @@ def Transaction_adjustment_List_load(request):
 
 	context={
 	'members':members,
+	'transaction_period':pk,
 	'title':title,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
@@ -4001,7 +4038,7 @@ def Transaction_adjustment_List_load(request):
 	return render(request,'deskofficer_templates/Transaction_adjustment_List_load.html',context)
 
 
-def Transaction_adjustment_Transactions_load(request,pk):
+def Transaction_adjustment_Transactions_load(request,pk,transaction_period):
 	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
 	task_array=[]
 	for task in tasks:
@@ -4036,6 +4073,7 @@ def Transaction_adjustment_Transactions_load(request,pk):
 
 	context={
 	'form':form,
+	'transaction_period':transaction_period,
 	'member':member,
 	'transactions':transactions,
 	'active_transactions':active_transactions,
@@ -15336,7 +15374,7 @@ def Monthly_Deductions_Cash_Transfer_Source_Load_Loan_Update(request,pk,account_
 
 
 
-def Monthly_Unbalanced_transactions(request):
+def Monthly_Overdeduction_transactions(request):
 	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
 	task_array=[]
 	for task in tasks:
@@ -15356,6 +15394,7 @@ def Monthly_Unbalanced_transactions(request):
 	form=TransactionPeriod_view_form(request.POST or None)
 	processing_status="UNPROCESSED"
 	records=[]
+	
 	if request.method=="POST":
 		transaction_period_id=request.POST.get('transaction_period')
 		
@@ -15363,8 +15402,6 @@ def Monthly_Unbalanced_transactions(request):
 		transaction_period=TransactionPeriods.objects.get(id=transaction_period_id)
 		transaction_period=get_current_date(transaction_period.transaction_period)
 
-		# return HttpResponse(transaction_period)
-		# records=MonthlyJointDeductionGenerated.objects.filter(transaction_period=transaction_period,processing_status=processing_status).filter(~Q(balance=0))
 		records=MonthlyJointDeductionGenerated.objects.filter(transaction_period=transaction_period,processing_status=processing_status).filter(Q(balance__gt=0))
 
 
@@ -15377,7 +15414,7 @@ def Monthly_Unbalanced_transactions(request):
 	'task_enabler_array':task_enabler_array,
 	'default_password':default_password,
 	}
-	return render(request,'deskofficer_templates/Monthly_Unbalanced_transactions.html',context)
+	return render(request,'deskofficer_templates/Monthly_Overdeduction_transactions.html',context)
 
 
 
@@ -16547,6 +16584,10 @@ def Monthly_Unbalanced_transactions_Processing_Loans(request,pk):
 	submission_status=False
 	if request.method == "POST" and 'btn_fetch' in request.POST:
 		account_type_id = request.POST.get("account_type")
+		if not account_type_id:
+			messages.error(request,'No Loan Available')
+			return HttpResponseRedirect(reverse('Monthly_Unbalanced_transactions_Processing_Loans',args=(pk,)))
+		
 		account_type=LoansRepaymentBase.objects.get(id=account_type_id)
 
 		account_number=account_type.loan_number
@@ -29999,20 +30040,26 @@ def Monthly_Deductions_All_Records_Report_Period(request):
 	if Staff.objects.filter(admin=request.user,default_password='YES'):
 		default_password="YES"
 
-	periods=TransactionPeriods.objects.all().order_by('transaction_period')
-
+	# periods=TransactionPeriods.objects.all().order_by('transaction_period')
+	form=Monthly_Deductions_All_Records_Report_Period_form(request.POST or None)
 
 	records=[]
 	if request.method == 'POST':
-		transaction_period_id = request.POST.get('period')
-		transaction_period=TransactionPeriods.objects.get(id=transaction_period_id)
+		transaction_period_id = request.POST.get('tdate')
+		date_format = '%Y-%m-%d'
+		dtObj = datetime.datetime.strptime(transaction_period_id, date_format)
+		transaction_period=get_current_date(dtObj)
+
+
+		
 
 		records=MonthlyDeductionListGenerated.objects.filter(transaction_period=transaction_period)
 
-
+	form.fields['tdate'].initial=get_current_date(now)
 	context={
+	'form':form,
 	'records':records,
-	'periods':periods,
+	# 'periods':periods,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
 	'default_password':default_password,
@@ -30756,6 +30803,46 @@ def Members_Dashboard_Load_Standing_Orders(request,pk):
 	'default_password':default_password,
 	}
 	return render(request,'deskofficer_templates/Members_Dashboard_Load_Standing_Orders.html',context)
+
+def Members_Dashboard_Load_Standing_Orders_Update(request,pk):
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	task_array=[]
+	for task in tasks:
+		task_array.append(task.task.title)
+
+
+	task_enabler=TransactionEnabler.objects.filter(status="YES")
+	task_enabler_array=[]
+	for item in task_enabler:
+		task_enabler_array.append(item.title)
+
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
+	form=Members_Dashboard_Load_Standing_Orders_Update_Form(request.POST or None)
+	record=StandingOrderAccounts.objects.get(id=pk)
+	if request.method == 'POST':
+		amount=request.POST.get('current_amount')
+		if not amount or float(amount)<=0:
+			messages.error(request,"Invalid amount specification")
+			return HttpResponseRedirect(reverse('Members_Dashboard_Load_Standing_Orders_Update',args=(pk,)))
+	
+		record.amount=amount
+		record.save()
+		return HttpResponseRedirect(reverse('Members_Dashboard_Load_Standing_Orders',args=(record.transaction.member.pk,)))
+	
+	form.fields['existing_amount'].initial=record.amount
+	form.fields['current_amount'].initial=record.amount
+	context={
+	'form':form,
+	'record':record,
+	'task_array':task_array,
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
+	}
+	return render(request,'deskofficer_templates/Members_Dashboard_Load_Standing_Orders_Update.html',context)
 
 
 def Members_Dashboard_Loan_Ledger_transaction_details(request,pk,member_pk):

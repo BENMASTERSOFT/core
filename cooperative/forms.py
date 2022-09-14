@@ -2537,6 +2537,16 @@ class Monthly_Auxillary_Deduction_Rectification_Reset_form(forms.Form):
                              widget=DateInput(attrs={'class': 'form-control'}),
                              error_messages={'required': "This field is required."})
 
+class Monthly_Deductions_All_Records_Report_Period_form(forms.Form):
+  
+   tdate = forms.DateField(label='Date', label_suffix=" : ",
+                             required=True, disabled=False,
+                             widget=DateInput(attrs={'class': 'form-control'}),
+                             error_messages={'required': "This field is required."})
+
+
+
+
 # class Cash_Withdrawal_form(forms.Form):
 
 #    try:
@@ -3336,6 +3346,23 @@ class Essential_Commodity_Product_Select_Form(forms.Form):
    quantity = forms.IntegerField(initial=0,label='Request Quantity', label_suffix=" : ",
                   widget=forms.NumberInput(attrs={'class': 'form-control','autocomplete':'off'}),
                   disabled = False)
+
+
+
+class Members_Dashboard_Load_Standing_Orders_Update_Form(forms.Form):
+   existing_amount = forms.DecimalField(initial=0,label='Existing Amount', label_suffix=" : ",
+                              widget=forms.NumberInput(attrs={'class': 'form-control','readonly':'readonly'}),
+                              decimal_places=2, required=True,
+                              disabled = False)
+   current_amount = forms.DecimalField(initial=0,label='Current Amount', label_suffix=" : ",
+                              widget=forms.NumberInput(attrs={'class': 'form-control'}),
+                              decimal_places=2, required=True,
+                              disabled = False)
+   
+
+
+
+
 
 
 # class Essential_Commodity_Product_Selection_Summary_Form(forms.Form):

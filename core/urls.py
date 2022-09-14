@@ -703,9 +703,11 @@ urlpatterns = [
     path('export_Transaction_Adjustment_Manage_xls/', deskofficer_views.export_Transaction_Adjustment_Manage_xls,name='export_Transaction_Adjustment_Manage_xls'),
 
 
-    path('Transaction_adjustment_search/', deskofficer_views.Transaction_adjustment_search,name='Transaction_adjustment_search'),
-    path('Transaction_adjustment_List_load/', deskofficer_views.Transaction_adjustment_List_load,name='Transaction_adjustment_List_load'),
-    path('Transaction_adjustment_Transactions_load/<str:pk>/', deskofficer_views.Transaction_adjustment_Transactions_load,name='Transaction_adjustment_Transactions_load'),
+    path('Transaction_adjustment_Transaction_Period/', deskofficer_views.Transaction_adjustment_Transaction_Period,name='Transaction_adjustment_Transaction_Period'),
+    path('Transaction_adjustment_search/<str:pk>/', deskofficer_views.Transaction_adjustment_search,name='Transaction_adjustment_search'),
+    path('Transaction_adjustment_List_load/<str:pk>/', deskofficer_views.Transaction_adjustment_List_load,name='Transaction_adjustment_List_load'),
+    
+    path('Transaction_adjustment_Transactions_load/<str:pk>/<str:transaction_period', deskofficer_views.Transaction_adjustment_Transactions_load,name='Transaction_adjustment_Transactions_load'),
     path('Transaction_adjustment_Transactions_Accounts_load/<str:pk>/<str:return_pk>/', deskofficer_views.Transaction_adjustment_Transactions_Accounts_load,name='Transaction_adjustment_Transactions_Accounts_load'),
     path('Transaction_adjustment_Transactions_Accounts_Remove/<str:pk>/', deskofficer_views.Transaction_adjustment_Transactions_Accounts_Remove,name='Transaction_adjustment_Transactions_Accounts_Remove'),
 
@@ -1076,7 +1078,7 @@ urlpatterns = [
     path('Monthly_Deductions_Cash_Transfer_Source_Load_Savings/<str:pk>/', deskofficer_views.Monthly_Deductions_Cash_Transfer_Source_Load_Savings,name='Monthly_Deductions_Cash_Transfer_Source_Load_Savings'),
     path('Monthly_Deductions_Cash_Transfer_Source_Load_Savings_Update/<str:pk>/<str:account_id>/', deskofficer_views.Monthly_Deductions_Cash_Transfer_Source_Load_Savings_Update,name='Monthly_Deductions_Cash_Transfer_Source_Load_Savings_Update'),
 
-    path('Monthly_Unbalanced_transactions/', deskofficer_views.Monthly_Unbalanced_transactions,name='Monthly_Unbalanced_transactions'),
+    path('Monthly_Overdeduction_transactions/', deskofficer_views.Monthly_Overdeduction_transactions,name='Monthly_Overdeduction_transactions'),
     path('Monthly_Unbalanced_transactions_Processing/<str:pk>/', deskofficer_views.Monthly_Unbalanced_transactions_Processing,name='Monthly_Unbalanced_transactions_Processing'),
     path('Monthly_Unbalanced_transactions_Processing_Savings/<str:pk>/', deskofficer_views.Monthly_Unbalanced_transactions_Processing_Savings,name='Monthly_Unbalanced_transactions_Processing_Savings'),
     path('Monthly_Unbalanced_transactions_Processing_Loans/<str:pk>/', deskofficer_views.Monthly_Unbalanced_transactions_Processing_Loans,name='Monthly_Unbalanced_transactions_Processing_Loans'),
@@ -1260,6 +1262,8 @@ urlpatterns = [
     path('Members_Dashboard_Load/<str:pk>/', deskofficer_views.Members_Dashboard_Load,name='Members_Dashboard_Load'),
     path('Members_Dashboard_Loan_Ledger_transaction_details/<str:pk>/<str:member_pk>/', deskofficer_views.Members_Dashboard_Loan_Ledger_transaction_details,name='Members_Dashboard_Loan_Ledger_transaction_details'),
     path('Members_Dashboard_Load_Standing_Orders/<str:pk>/', deskofficer_views.Members_Dashboard_Load_Standing_Orders,name='Members_Dashboard_Load_Standing_Orders'),
+    path('Members_Dashboard_Load_Standing_Orders_Update/<str:pk>/', deskofficer_views.Members_Dashboard_Load_Standing_Orders_Update,name='Members_Dashboard_Load_Standing_Orders_Update'),
+    
     path('Members_Dashboard_Load_Savings_Ledger/<str:pk>/', deskofficer_views.Members_Dashboard_Load_Savings_Ledger,name='Members_Dashboard_Load_Savings_Ledger'),
     path('Members_Dashboard_Load_Loan_Ledger/<str:pk>/', deskofficer_views.Members_Dashboard_Load_Loan_Ledger,name='Members_Dashboard_Load_Loan_Ledger'),
     path('Members_Dashboard_Load_Monthly_Deductions/<str:pk>/', deskofficer_views.Members_Dashboard_Load_Monthly_Deductions,name='Members_Dashboard_Load_Monthly_Deductions'),
