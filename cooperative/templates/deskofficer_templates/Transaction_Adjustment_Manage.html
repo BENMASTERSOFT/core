@@ -7,7 +7,9 @@
                     <div class="col-xl-12">
                         <div class="ibox">
                             <div class="ibox-head">
-                                <div class="ibox-title">Pending Adjustment Request | <a href="{% url 'export_Transaction_Adjustment_Manage_xls' %}" class="btn btn-secondary">Export</a></div>
+                                <div class="ibox-title">Pending Adjustment Request | <a href="{% url 'export_Transaction_Adjustment_Manage_xls' %}" class="btn btn-secondary">Export</a>
+                                | <a href="{% url 'Transaction_Adjustment_Manage_Period_Load' %}">Back</a>
+                                </div>
                             </div>
                             <div class="ibox-body">
                                 <table class="table">
@@ -17,6 +19,7 @@
                                             <th>{{col}}</th>
                                             
                                             {% endfor %}
+                                            
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -31,7 +34,7 @@
                                             <td>{{record.5 | default_if_none:"&nbsp;"}}</td>
                                             <td>{{record.6 | default_if_none:"&nbsp;"}}</td>
                                             <td>{{record.7 | default_if_none:"&nbsp;"}}</td>
-                                          
+                                            <td><a href="{% url 'Transaction_Adjustment_Manage_Details' record.0 transaction_period %}">View</a></td>
                                             
                                           
                                         </tr>

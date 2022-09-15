@@ -3804,7 +3804,45 @@ def Standing_Order_Suspension_Transaction_Activation_Approval_Processing_Process
 	return HttpResponseRedirect(reverse('Standing_Order_Suspension_Transaction_Activation_Approval_Processing_Load'))
 
 
-def Transaction_Adjustment_Manage(request):
+
+
+def Transaction_Adjustment_Manage_Period_Load(request):
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	task_array=[]
+	for task in tasks:
+		task_array.append(task.task.title)
+
+
+
+	task_enabler=TransactionEnabler.objects.filter(status="YES")
+	task_enabler_array=[]
+	for item in task_enabler:
+		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
+	form=Cash_Deposit_Summary_form(request.POST or None)
+	if request.method == 'POST':
+		transaction_period=request.POST.get('current_date')
+
+		dtObj = datetime.datetime.strptime(transaction_period, '%Y-%m-%d')
+		transaction_period=get_current_date(dtObj)
+
+		return HttpResponseRedirect(reverse('Transaction_Adjustment_Manage',args=(transaction_period,)))
+	form.fields['current_date'].initial=get_current_date(now)
+	context={
+	'form':form,
+	'task_array':task_array,
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
+
+	}
+	return render(request,'deskofficer_templates/Transaction_Adjustment_Manage_Period_Load.html',context)
+
+
+def Transaction_Adjustment_Manage(request,transaction_period):
 	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
 	task_array=[]
 	for task in tasks:
@@ -3825,7 +3863,7 @@ def Transaction_Adjustment_Manage(request):
 	transactions=TransactionTypes.objects.filter(source__title='SAVINGS')
 
 
-	members=TransactionAjustmentRequest.objects.filter(approval_status='PENDING',status='UNTREATED').order_by('member__member__coop_no').values_list('member__member__coop_no','member__member__admin__last_name','member__member__admin__first_name','member__member__middle_name').distinct()
+	members=TransactionAjustmentRequest.objects.filter(effective_date=transaction_period,approval_status='PENDING',status='UNTREATED').order_by('member__member__coop_no').values_list('member__member__coop_no','member__member__admin__last_name','member__member__admin__first_name','member__member__middle_name').distinct()
 
 	members_array=[]
 	for record in members:
@@ -3835,6 +3873,7 @@ def Transaction_Adjustment_Manage(request):
 	for transaction in transactions:
 		columns.append(transaction.name)
 	columns.append("TOTAL")
+	columns.append("ACTION")
 
 	order_list_array=[]
 	for member in members_array:
@@ -3858,6 +3897,7 @@ def Transaction_Adjustment_Manage(request):
 		order_list_array.append(order_array)
 
 	context={
+	'transaction_period':transaction_period,
 	'transactions':transactions,
 	'columns':columns,
 	'order_list_array':order_list_array,
@@ -3867,6 +3907,96 @@ def Transaction_Adjustment_Manage(request):
 
 	}
 	return render(request,'deskofficer_templates/Transaction_Adjustment_Manage.html',context)
+
+
+
+def Transaction_Adjustment_Manage_Details(request,pk,transaction_period):
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	task_array=[]
+	for task in tasks:
+		task_array.append(task.task.title)
+
+	task_enabler=TransactionEnabler.objects.filter(status="YES")
+	task_enabler_array=[]
+	for item in task_enabler:
+		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
+
+	member=Members.objects.get(coop_no=pk)
+	records=TransactionAjustmentRequest.objects.filter(member__member=member,effective_date=transaction_period,approval_status='PENDING',status='UNTREATED')
+
+	
+	context={
+	'member':member,
+	'records':records,
+	'transaction_period':transaction_period,
+	'task_array':task_array,
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
+
+	}
+	return render(request,'deskofficer_templates/Transaction_Adjustment_Manage_Details.html',context)
+
+
+def Transaction_Adjustment_Manage_Details_Update(request,pk,member_pk,transaction_period):
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	task_array=[]
+	for task in tasks:
+		task_array.append(task.task.title)
+
+	task_enabler=TransactionEnabler.objects.filter(status="YES")
+	task_enabler_array=[]
+	for item in task_enabler:
+		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
+	form=Members_Dashboard_Load_Standing_Orders_Update_Form(request.POST or None)
+	member=Members.objects.get(id=member_pk)
+	record=TransactionAjustmentRequest.objects.get(id=pk)
+	transaction=record.member.transaction
+	minimum_amount=transaction.minimum_amount
+
+	if request.method == "POST":
+		amount=request.POST.get('current_amount')
+
+		if float(amount) == 0:
+			if CompulsorySavings.objects.filter(transaction=transaction).exists():
+				messages.info(request,'This is a compulsory savings, it canot be Zero(0)')
+				return HttpResponseRedirect(reverse('Transaction_Adjustment_Manage_Details_Update',args=(pk, member_pk,transaction_period)))
+
+			pass
+
+		elif float(amount) < float(minimum_amount):
+			messages.info(request,'The amount specified is less then the Minimum Amount of ' +  str(minimum_amount) + ' allowed')
+			return HttpResponseRedirect(reverse('Transaction_Adjustment_Manage_Details_Update',args=(pk, member_pk,transaction_period)))
+
+
+		record.amount=amount
+		record.save()
+		return HttpResponseRedirect(reverse('Transaction_Adjustment_Manage_Details',args=(member.coop_no,transaction_period,)))
+	
+	form.fields['existing_amount'].initial=record.amount
+	form.fields['current_amount'].initial=record.amount
+	context={
+	'form':form,
+	'member':member,
+	'record':record,
+	'transaction_period':transaction_period,
+	'task_array':task_array,
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
+
+	}
+	return render(request,'deskofficer_templates/Transaction_Adjustment_Manage_Details_Update.html',context)
+
+
 
 def export_Transaction_Adjustment_Manage_xls(request):
 
@@ -3940,7 +4070,8 @@ def export_Transaction_Adjustment_Manage_xls(request):
 
 
 
-def Transaction_adjustment_Transaction_Period(request):
+
+def Transaction_adjustment_search(request):
 	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
 	task_array=[]
 	for task in tasks:
@@ -3957,46 +4088,15 @@ def Transaction_adjustment_Transaction_Period(request):
 	if Staff.objects.filter(admin=request.user,default_password='YES'):
 		default_password="YES"
 
-	form = Cash_Deposit_Summary_form(request.POST or None)
-	if request.method == 'POST':
-		current_date_id=request.POST.get('current_date')
-		dtObj = datetime.datetime.strptime(current_date_id, '%Y-%m-%d')
-		current_date=get_current_date(dtObj)
-		return HttpResponseRedirect(reverse('Transaction_adjustment_search',args=(current_date,)))
+	if AdjustmentPeriods.objects.filter(status='ACTIVE').exists():
+		adjustment_period=AdjustmentPeriods.objects.get(status='ACTIVE')
+	else:
+		adjustment_period=get_current_date(now)
 
-
-	form.fields['current_date'].initial=get_current_date(now)
-	context={
-	'form':form,
-	'task_array':task_array,
-	'task_enabler_array':task_enabler_array,
-	'default_password':default_password,
-	}
-	return render(request,'deskofficer_templates/Transaction_adjustment_Transaction_Period.html',context)
-
-
-
-def Transaction_adjustment_search(request,pk):
-	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
-	task_array=[]
-	for task in tasks:
-		task_array.append(task.task.title)
-
-
-
-	task_enabler=TransactionEnabler.objects.filter(status="YES")
-	task_enabler_array=[]
-	for item in task_enabler:
-		task_enabler_array.append(item.title)
-
-	default_password="NO"
-	if Staff.objects.filter(admin=request.user,default_password='YES'):
-		default_password="YES"
-
-	title=f"Adjustment for the period of {pk}"
+	title=f"Adjustment for the period of  {get_print_date(adjustment_period.transaction_period)}"
 	form = searchForm(request.POST or None)
 
-	return render(request,'deskofficer_templates/Transaction_adjustment_search.html',{'form':form,'transaction_period':pk,'title':title,'task_array':task_array,
+	return render(request,'deskofficer_templates/Transaction_adjustment_search.html',{'form':form,'transaction_period':adjustment_period.transaction_period,'title':title,'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
 	'default_password':default_password,})
 
@@ -4067,7 +4167,7 @@ def Transaction_adjustment_Transactions_load(request,pk,transaction_period):
 		transaction_id=request.POST.get('transactions')
 		transaction=TransactionTypes.objects.get(id=transaction_id)
 
-		return HttpResponseRedirect(reverse('Transaction_adjustment_Transactions_Accounts_load',args=(transaction.pk,pk,)))
+		return HttpResponseRedirect(reverse('Transaction_adjustment_Transactions_Accounts_load',args=(transaction.pk,pk,transaction_period,)))
 
 
 
@@ -4085,7 +4185,7 @@ def Transaction_adjustment_Transactions_load(request,pk,transaction_period):
 	return render(request,'deskofficer_templates/Transaction_adjustment_Transactions_load.html',context)
 
 
-def Transaction_adjustment_Transactions_Accounts_load(request,pk, return_pk):
+def Transaction_adjustment_Transactions_Accounts_load(request,pk, return_pk,transaction_period):
 	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
 	task_array=[]
 	for task in tasks:
@@ -4110,6 +4210,10 @@ def Transaction_adjustment_Transactions_Accounts_load(request,pk, return_pk):
 	minimum_amount=transaction.minimum_amount
 	member=Members.objects.get(id=return_pk)
 
+	default_account_number=f'{transaction.code}{member.coop_no}'
+	active_transaction_account_name=transaction.name
+	default_amount=0
+
 	form=Transaction_adjustment_selection_form(request.POST or None)
 	member_selected=MembersAccountsDomain.objects.get(member=member,transaction=transaction)
 
@@ -4117,59 +4221,105 @@ def Transaction_adjustment_Transactions_Accounts_load(request,pk, return_pk):
 	if request.method=="POST":
 		tdate=get_current_date(now)
 		account_number=request.POST.get("account_number")
-		transaction=StandingOrderAccounts.objects.get(transaction__account_number=account_number)
+		# transaction=StandingOrderAccounts.objects.get(transaction__account_number=account_number)
+		
 		amount = request.POST.get('amount')
-		effective_date=request.POST.get('effective_date')
 
-		if TransactionAjustmentRequest.objects.filter(member=member_selected,status='UNTREATED').exists():
+		if TransactionAjustmentRequest.objects.filter(effective_date=transaction_period,member=member_selected,status='UNTREATED').exists():
 			messages.info(request,'You still have an Incomplete Transactions')
-			return HttpResponseRedirect(reverse('Transaction_adjustment_Transactions_Accounts_load',args=(pk, return_pk,)))
+			return HttpResponseRedirect(reverse('Transaction_adjustment_Transactions_Accounts_load',args=(pk, return_pk,transaction_period)))
 
 		if float(amount) == 0:
-			if CompulsorySavings.objects.filter(transaction=transaction.transaction.transaction).exists():
+			if CompulsorySavings.objects.filter(transaction=transaction).exists():
 				messages.info(request,'This is a compulsory savings, it canot be Zero(0)')
-				return HttpResponseRedirect(reverse('Transaction_adjustment_Transactions_Accounts_load',args=(pk, return_pk,)))
+				return HttpResponseRedirect(reverse('Transaction_adjustment_Transactions_Accounts_load',args=(pk, return_pk,transaction_period)))
 
 			pass
 
 		elif float(amount) < float(minimum_amount):
 			messages.info(request,'The amount specified is less then the Minimum Amount of ' +  str(minimum_amount) + ' allowed')
-			return HttpResponseRedirect(reverse('Transaction_adjustment_Transactions_Accounts_load',args=(pk, return_pk,)))
+			return HttpResponseRedirect(reverse('Transaction_adjustment_Transactions_Accounts_load',args=(pk, return_pk,transaction_period)))
 
 
-		record=TransactionAjustmentRequest(processed_by=processed_by.username,approval_status='PENDING',tdate=tdate,status='UNTREATED',member=member_selected,amount=amount,effective_date=effective_date)
+		record=TransactionAjustmentRequest(processed_by=processed_by.username,approval_status='PENDING',tdate=tdate,status='UNTREATED',member=member_selected,amount=amount,effective_date=transaction_period)
 		record.save()
-		return HttpResponseRedirect(reverse('Transaction_adjustment_Transactions_load',args=(return_pk,)))
+		return HttpResponseRedirect(reverse('Transaction_adjustment_Transactions_load',args=(return_pk,transaction_period)))
 
 	active_transactions=StandingOrderAccounts.objects.filter(transaction=member_selected).first()
+	
+	form.fields['effective_date'].initial=now
 	if active_transactions:
-		form.fields['effective_date'].initial=now
-
-		context={
-		'active_transactions':active_transactions,
-		'form':form,
-		'pk':pk,
-		'return_pk':return_pk,
-		'task_array':task_array,
-		'task_enabler_array':task_enabler_array,
-	'default_password':default_password,
-		}
-		return render(request,'deskofficer_templates/Transaction_adjustment_Transactions_Accounts_load.html',context)
+		active_transaction_account_name=active_transactions.transaction.transaction.name
+		active_transaction_account_number=active_transactions.transaction.account_number
+		active_transaction_amount=active_transactions.amount
+		
 	else:
-		messages.info(request,'No active account for this Transaction')
-		return HttpResponseRedirect(reverse('Transaction_adjustment_Transactions_load',args=(return_pk,)))
+
+		active_transaction_account_number=default_account_number
+		active_transaction_amount=default_amount
+	
+	context={
+	'transaction_period':transaction_period,
+	'active_transaction_account_name':active_transaction_account_name,
+	'active_transaction_account_number':active_transaction_account_number,
+	'active_transaction_amount':active_transaction_amount,
+	'form':form,
+	'pk':pk,
+	'return_pk':return_pk,
+	'task_array':task_array,
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
+	}
+	return render(request,'deskofficer_templates/Transaction_adjustment_Transactions_Accounts_load.html',context)
 
 
 def Transaction_adjustment_Transactions_Accounts_Remove(request,pk):
 	record=TransactionAjustmentRequest.objects.get(id=pk)
 	return_pk=record.member.member_id
 	record.delete()
-	return HttpResponseRedirect(reverse('Transaction_adjustment_Transactions_load', args=(return_pk,)))
+	return HttpResponseRedirect(reverse('Transaction_adjustment_Transactions_load', args=(return_pk,record.effective_date,)))
+
+
+
+def Transaction_Adjustment_Approved_View_List_Period_Load(request):
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	task_array=[]
+	for task in tasks:
+		task_array.append(task.task.title)
+
+
+
+	task_enabler=TransactionEnabler.objects.filter(status="YES")
+	task_enabler_array=[]
+	for item in task_enabler:
+		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
+	form=Cash_Deposit_Summary_form(request.POST or None)
+	if request.method == 'POST':
+		transaction_period=request.POST.get('current_date')
+
+		dtObj = datetime.datetime.strptime(transaction_period, '%Y-%m-%d')
+		transaction_period=get_current_date(dtObj)
+
+		return HttpResponseRedirect(reverse('Transaction_Adjustment_Approved_View_List_Load',args=(transaction_period,)))
+	form.fields['current_date'].initial=get_current_date(now)
+	context={
+	'form':form,
+	'task_array':task_array,
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
+
+	}
+	return render(request,'deskofficer_templates/Transaction_Adjustment_Approved_View_List_Period_Load.html',context)
 
 
 
 
-def Transaction_Adjustment_Approved_View_List_Load(request):
+def Transaction_Adjustment_Approved_View_List_Load(request,transaction_period):
 	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
 	task_array=[]
 	for task in tasks:
@@ -4184,15 +4334,90 @@ def Transaction_Adjustment_Approved_View_List_Load(request):
 	if Staff.objects.filter(admin=request.user,default_password='YES'):
 		default_password="YES"
 
-	records=TransactionAjustmentRequest.objects.filter(approval_status='APPROVED',status='UNTREATED')
+	transactions=TransactionTypes.objects.filter(source__title='SAVINGS')
 
+
+	members=TransactionAjustmentRequest.objects.filter(effective_date=transaction_period,approval_status='APPROVED',status='UNTREATED').order_by('member__member__coop_no').values_list('member__member__coop_no','member__member__admin__last_name','member__member__admin__first_name','member__member__middle_name').distinct()
+
+	members_array=[]
+	for record in members:
+		members_array.append((record[0],f'{record[1]} {record[2]} {record[3]}'))
+
+	columns=['#','MEMBER ID', 'NAME']
+	for transaction in transactions:
+		columns.append(transaction.name)
+	columns.append("TOTAL")
+	columns.append("ACTION")
+
+	order_list_array=[]
+	for member in members_array:
+		order_array=[]
+
+		queryset=  TransactionAjustmentRequest.objects.filter(member__member__coop_no=member[0],approval_status='APPROVED',status='UNTREATED').aggregate(total_cash=Sum('amount'))
+		total_amount=queryset['total_cash']
+
+		for transaction in transactions:
+			value=''
+			if TransactionAjustmentRequest.objects.filter(member__member__coop_no=member[0],member__transaction=transaction,approval_status='APPROVED',status='UNTREATED').exists():
+				record=TransactionAjustmentRequest.objects.get(member__member__coop_no=member[0],member__transaction=transaction,approval_status='APPROVED',status='UNTREATED')
+				value=record.amount
+
+			order_array.append(value)
+
+		order_array.insert(0,member[0])
+		order_array.insert(1,member[1])
+		order_array.append(total_amount)
+
+		order_list_array.append(order_array)
+
+	button_enabled=False
+	if order_list_array:
+		button_enabled=True
 	context={
+	'transaction_period':transaction_period,
+	'transactions':transactions,
+	'button_enabled':button_enabled,
+	'columns':columns,
+	'order_list_array':order_list_array,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
 	'default_password':default_password,
-	'records':records,
+
 	}
+
 	return render(request,'deskofficer_templates/Transaction_Adjustment_Approved_View_List_Load.html',context)
+
+
+def Transaction_Adjustment_Approved_View_List_Upload_all(request,transaction_period):
+	tdate=get_current_date(now)
+	processed_by=CustomUser.objects.get(id=request.user.id)
+	processed_by=processed_by.username
+	amount_exist=0
+	stop_date=get_current_date(now)
+
+	members=TransactionAjustmentRequest.objects.filter(effective_date=transaction_period,approval_status='APPROVED',status='UNTREATED')
+	for member in members:
+		if StandingOrderAccounts.objects.filter(transaction__account_number=member.member.account_number).exists():
+			if member.amount and float(member.amount)>0:
+				StandingOrderAccounts.objects.filter(transaction__account_number=member.member.account_number).update(amount=member.amount,tdate=tdate,processed_by=processed_by)
+			else:
+				StandingOrderAccounts.objects.filter(transaction__account_number=member.member.account_number).delete()
+		else:
+			if member.amount and float(member.amount)>0:
+				StandingOrderAccounts(transaction=member.member,amount=member.amount,tdate=tdate,processed_by=processed_by).save()
+	
+		if StandingOrderAccounts.objects.filter(transaction__account_number=member.member.account_number).exists():
+			queryset=StandingOrderAccounts.objects.get(transaction__account_number=member.member.account_number)
+			amount_exist=queryset.amount
+			start_date=queryset.tdate
+	
+		
+	TransactionAjustmentHistory(member=member.member,amount=amount_exist,start_date=start_date,stop_date=stop_date).save()
+
+	TransactionAjustmentRequest.objects.filter(effective_date=transaction_period,approval_status='APPROVED',status='UNTREATED').update(status='TREATED')
+	return HttpResponseRedirect(reverse('Transaction_Adjustment_Approved_View_List_Period_Load'))
+
+
 
 
 
@@ -4297,6 +4522,7 @@ def Transaction_Savings_Adjustment_Approved_Processed(request,pk,member_pk):
 	amount_exist=record.member.standingorderaccounts.amount
 	start_date=record.member.standingorderaccounts.updated_at
 	stop_date=tdate
+	
 	TransactionAjustmentHistory(member=member,amount=amount_exist,start_date=start_date,stop_date=stop_date).save()
 
 	if float(amount) == 0:
@@ -12816,6 +13042,60 @@ def TransactionPeriodsUpdate(request,pk):
 def TransactionPeriodsDelete(request,pk):
 	TransactionPeriods.objects.get(id=pk).delete()
 	return HttpResponseRedirect(reverse('TransactionPeriodManager'))
+
+def AdjustmentPeriodManager(request):
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	task_array=[]
+	for task in tasks:
+		task_array.append(task.task.title)
+
+	task_enabler=TransactionEnabler.objects.filter(status="YES")
+	task_enabler_array=[]
+	for item in task_enabler:
+		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
+
+	status='INACTIVE'
+	records=AdjustmentPeriods.objects.all().order_by('transaction_period')
+	form=TransactionPeriod_form(request.POST or None)
+	if request.method=="POST":
+		transaction_period=request.POST.get('transaction_period')
+		if TransactionPeriods.objects.filter(transaction_period=transaction_period).exists():
+			return HttpResponseRedirect(reverse('AdjustmentPeriodManager'))
+
+		record=AdjustmentPeriods(transaction_period=transaction_period,status=status)
+		record.save()
+		return HttpResponseRedirect(reverse('AdjustmentPeriodManager'))
+	form.fields['transaction_period'].initial=now
+
+	context={
+	'form':form,
+	'records':records,
+	'task_array':task_array,
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
+	}
+	return render(request,'deskofficer_templates/AdjustmentPeriodManager.html',context)
+
+
+def AdjustmentPeriodsUpdate(request,pk):
+	status='ACTIVE'
+	status1='INACTIVE'
+
+	all_record_update=AdjustmentPeriods.objects.all().update(status=status1)
+	record=AdjustmentPeriods.objects.get(id=pk)
+	record.status=status
+	record.save()
+	return HttpResponseRedirect(reverse('AdjustmentPeriodManager'))
+
+
+def AdjustmentPeriodsDelete(request,pk):
+	AdjustmentPeriods.objects.get(id=pk).delete()
+	return HttpResponseRedirect(reverse('AdjustmentPeriodManager'))
 
 
 #########################################################
@@ -31527,7 +31807,8 @@ def Initial_Shares_Update_preview(request,pk):
 	return render(request,'deskofficer_templates/Initial_Shares_Update_preview.html',context)
 
 
-def Transaction_Adjustment_Approval_list_Load(request):
+
+def Transaction_Adjustment_Approval_list_Period_Load(request):
 	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
 	task_array=[]
 	for task in tasks:
@@ -31544,11 +31825,53 @@ def Transaction_Adjustment_Approval_list_Load(request):
 	if Staff.objects.filter(admin=request.user,default_password='YES'):
 		default_password="YES"
 
+	form=Cash_Deposit_Summary_form(request.POST or None)
+	if request.method == 'POST':
+		transaction_period=request.POST.get('current_date')
+
+		dtObj = datetime.datetime.strptime(transaction_period, '%Y-%m-%d')
+		transaction_period=get_current_date(dtObj)
+
+		return HttpResponseRedirect(reverse('Transaction_Adjustment_Approval_list_Load',args=(transaction_period,)))
+	form.fields['current_date'].initial=get_current_date(now)
+	context={
+	'form':form,
+	'task_array':task_array,
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
+
+	}
+	return render(request,'deskofficer_templates/Transaction_Adjustment_Approval_list_Period_Load.html',context)
+
+
+
+def Transaction_Adjustment_Approval_list_Load(request,transaction_period):
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	task_array=[]
+	for task in tasks:
+		task_array.append(task.task.title)
+
+
+	task_enabler=TransactionEnabler.objects.filter(status="YES")
+	task_enabler_array=[]
+	for item in task_enabler:
+		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
 	processed_by=CustomUser.objects.get(id=request.user.id)
 	approval_status='PENDING'
-	records=TransactionAjustmentRequest.objects.filter(approval_status=approval_status).exclude(processed_by=processed_by.username)
-
+	# records=TransactionAjustmentRequest.objects.filter(effective_date=transaction_period,approval_status=approval_status).exclude(processed_by=processed_by.username)
+	records=TransactionAjustmentRequest.objects.filter(effective_date=transaction_period,approval_status=approval_status) #.exclude(processed_by=processed_by.username)
+	button_enabled=False
+	if records:
+		button_enabled=True
+	
 	context={
+	'button_enabled':button_enabled,
+	'transaction_period':transaction_period,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
 	'default_password':default_password,
@@ -31567,6 +31890,17 @@ def Transaction_Adjustment_Approval_Process(request,pk):
 	record.approved_at=tdate
 	record.save()
 	return HttpResponseRedirect(reverse('Transaction_Adjustment_Approval_list_Load'))
+
+
+
+def Transaction_Adjustment_Approval_Process_All(request,pk):
+	approval_officer=CustomUser.objects.get(id=request.user.id)
+	tdate=get_current_date(now)
+	approval_status='APPROVED'
+	TransactionAjustmentRequest.objects.filter(effective_date=pk).update(approval_status=approval_status,approval_officer=approval_officer.username,approved_at=tdate)
+
+	return HttpResponseRedirect(reverse('Transaction_Adjustment_Approval_list_Period_Load'))
+
 
 
 def Transaction_Loan_Adjustment_Approval_list_Load(request):

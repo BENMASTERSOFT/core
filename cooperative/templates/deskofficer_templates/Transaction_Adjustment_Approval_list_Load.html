@@ -10,7 +10,12 @@
             <div class="page-content fade-in-up">
                 <div class="ibox">
                     <div class="ibox-head">
-                        <div class="ibox-title">TRANSACTION ADJUSTMENT REGISTER</div>
+                        <div class="ibox-title">TRANSACTION ADJUSTMENT REGISTER 
+                        {% if button_enabled %}
+
+                            | <a href="{% url 'Transaction_Adjustment_Approval_Process_All' transaction_period %}" class="btn btn-success">APPROVE ALL</a>
+                        {% endif %}
+                        </div>
                     </div>
                     <div class="ibox-body">
                         <table class="table table-striped table-bordered table-hover" id="example-table" cellspacing="0" width="100%">

@@ -448,6 +448,13 @@ class TransactionPeriods(DateObjectsModels):
     # class Meta(DateObjectsModels.Meta):
     #     db_table="Transaction_Periods"
 
+class AdjustmentPeriods(DateObjectsModels):
+    transaction_period=models.DateField()
+    status= models.CharField(max_length=20,choices=MEMBERSHIP_STATUS,default='ACTIVE')
+
+    # class Meta(DateObjectsModels.Meta):
+    #     db_table="AdjustmentPeriods"
+
 
 
 class InvoiceHeader(DateObjectsModels):

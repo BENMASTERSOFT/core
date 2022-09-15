@@ -699,20 +699,24 @@ urlpatterns = [
     path('standing_order_drop_account/<str:pk>/', deskofficer_views.standing_order_drop_account,name='standing_order_drop_account'),
 
 
-    path('Transaction_Adjustment_Manage/', deskofficer_views.Transaction_Adjustment_Manage,name='Transaction_Adjustment_Manage'),
+    path('Transaction_Adjustment_Manage_Period_Load/', deskofficer_views.Transaction_Adjustment_Manage_Period_Load,name='Transaction_Adjustment_Manage_Period_Load'),
+    path('Transaction_Adjustment_Manage/<str:transaction_period>/', deskofficer_views.Transaction_Adjustment_Manage,name='Transaction_Adjustment_Manage'),
+    path('Transaction_Adjustment_Manage_Details/<str:pk>/<str:transaction_period>/', deskofficer_views.Transaction_Adjustment_Manage_Details,name='Transaction_Adjustment_Manage_Details'),
+    path('Transaction_Adjustment_Manage_Details_Update/<str:pk>/<str:member_pk>/<str:transaction_period>/', deskofficer_views.Transaction_Adjustment_Manage_Details_Update,name='Transaction_Adjustment_Manage_Details_Update'),
+    
     path('export_Transaction_Adjustment_Manage_xls/', deskofficer_views.export_Transaction_Adjustment_Manage_xls,name='export_Transaction_Adjustment_Manage_xls'),
 
-
-    path('Transaction_adjustment_Transaction_Period/', deskofficer_views.Transaction_adjustment_Transaction_Period,name='Transaction_adjustment_Transaction_Period'),
-    path('Transaction_adjustment_search/<str:pk>/', deskofficer_views.Transaction_adjustment_search,name='Transaction_adjustment_search'),
+    path('Transaction_adjustment_search/', deskofficer_views.Transaction_adjustment_search,name='Transaction_adjustment_search'),
     path('Transaction_adjustment_List_load/<str:pk>/', deskofficer_views.Transaction_adjustment_List_load,name='Transaction_adjustment_List_load'),
     
-    path('Transaction_adjustment_Transactions_load/<str:pk>/<str:transaction_period', deskofficer_views.Transaction_adjustment_Transactions_load,name='Transaction_adjustment_Transactions_load'),
-    path('Transaction_adjustment_Transactions_Accounts_load/<str:pk>/<str:return_pk>/', deskofficer_views.Transaction_adjustment_Transactions_Accounts_load,name='Transaction_adjustment_Transactions_Accounts_load'),
+    path('Transaction_adjustment_Transactions_load/<str:pk>/<str:transaction_period>/', deskofficer_views.Transaction_adjustment_Transactions_load,name='Transaction_adjustment_Transactions_load'),
+    path('Transaction_adjustment_Transactions_Accounts_load/<str:pk>/<str:return_pk>/<str:transaction_period>/', deskofficer_views.Transaction_adjustment_Transactions_Accounts_load,name='Transaction_adjustment_Transactions_Accounts_load'),
     path('Transaction_adjustment_Transactions_Accounts_Remove/<str:pk>/', deskofficer_views.Transaction_adjustment_Transactions_Accounts_Remove,name='Transaction_adjustment_Transactions_Accounts_Remove'),
 
 
-    path('Transaction_Adjustment_Approved_View_List_Load/', deskofficer_views.Transaction_Adjustment_Approved_View_List_Load,name='Transaction_Adjustment_Approved_View_List_Load'),
+    path('Transaction_Adjustment_Approved_View_List_Period_Load/', deskofficer_views.Transaction_Adjustment_Approved_View_List_Period_Load,name='Transaction_Adjustment_Approved_View_List_Period_Load'),
+    path('Transaction_Adjustment_Approved_View_List_Load/<str:transaction_period>/', deskofficer_views.Transaction_Adjustment_Approved_View_List_Load,name='Transaction_Adjustment_Approved_View_List_Load'),
+    path('Transaction_Adjustment_Approved_View_List_Upload_all/<str:transaction_period>/', deskofficer_views.Transaction_Adjustment_Approved_View_List_Upload_all,name='Transaction_Adjustment_Approved_View_List_Upload_all'),
 
     path('Transaction_Savings_Adjustment_Approved_List_search/', deskofficer_views.Transaction_Savings_Adjustment_Approved_List_search,name='Transaction_Savings_Adjustment_Approved_List_search'),
     path('Transaction_Savings_Adjustment_Approved_List_load/', deskofficer_views.Transaction_Savings_Adjustment_Approved_List_load,name='Transaction_Savings_Adjustment_Approved_List_load'),
@@ -959,6 +963,10 @@ urlpatterns = [
     path('TransactionPeriodManager/', deskofficer_views.TransactionPeriodManager,name='TransactionPeriodManager'),
     path('TransactionPeriodsUpdate/<str:pk>/', deskofficer_views.TransactionPeriodsUpdate,name='TransactionPeriodsUpdate'),
     path('TransactionPeriodsDelete/<str:pk>/', deskofficer_views.TransactionPeriodsDelete,name='TransactionPeriodsDelete'),
+    
+    path('AdjustmentPeriodManager/', deskofficer_views.AdjustmentPeriodManager,name='AdjustmentPeriodManager'),
+    path('AdjustmentPeriodsUpdate/<str:pk>/', deskofficer_views.AdjustmentPeriodsUpdate,name='AdjustmentPeriodsUpdate'),
+    path('AdjustmentPeriodsDelete/<str:pk>/', deskofficer_views.AdjustmentPeriodsDelete,name='AdjustmentPeriodsDelete'),
 
     path('Monthly_Deduction_Salary_Institution_Load/', deskofficer_views.Monthly_Deduction_Salary_Institution_Load,name='Monthly_Deduction_Salary_Institution_Load'),
     path('Monthly_Individual_Transactions_Load/<str:pk>/', deskofficer_views.Monthly_Individual_Transactions_Load,name='Monthly_Individual_Transactions_Load'),
@@ -1337,8 +1345,10 @@ urlpatterns = [
     path('Initial_Shares_Update_List_Load/', deskofficer_views.Initial_Shares_Update_List_Load,name='Initial_Shares_Update_List_Load'),
     path('Initial_Shares_Update_preview/<str:pk>/', deskofficer_views.Initial_Shares_Update_preview,name='Initial_Shares_Update_preview'),
 
-    path('Transaction_Adjustment_Approval_list_Load/', deskofficer_views.Transaction_Adjustment_Approval_list_Load,name='Transaction_Adjustment_Approval_list_Load'),
+    path('Transaction_Adjustment_Approval_list_Period_Load/', deskofficer_views.Transaction_Adjustment_Approval_list_Period_Load,name='Transaction_Adjustment_Approval_list_Period_Load'),
+    path('Transaction_Adjustment_Approval_list_Load/<str:transaction_period>/', deskofficer_views.Transaction_Adjustment_Approval_list_Load,name='Transaction_Adjustment_Approval_list_Load'),
     path('Transaction_Adjustment_Approval_Process/<str:pk>/', deskofficer_views.Transaction_Adjustment_Approval_Process,name='Transaction_Adjustment_Approval_Process'),
+    path('Transaction_Adjustment_Approval_Process_All/<str:pk>/', deskofficer_views.Transaction_Adjustment_Approval_Process_All,name='Transaction_Adjustment_Approval_Process_All'),
 
     path('Transaction_Loan_Adjustment_Approval_list_Load/', deskofficer_views.Transaction_Loan_Adjustment_Approval_list_Load,name='Transaction_Loan_Adjustment_Approval_list_Load'),
     path('Transaction_Loan_Adjustment_Approval_list_Process/<str:pk>/', deskofficer_views.Transaction_Loan_Adjustment_Approval_list_Process,name='Transaction_Loan_Adjustment_Approval_list_Process'),

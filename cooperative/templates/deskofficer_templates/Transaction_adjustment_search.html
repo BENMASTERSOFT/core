@@ -8,7 +8,7 @@
     <div class="container-fluid" id="wrapper">
         <div class="row">
             <div class="col-lg-6 col-lg-offset-4" id="content">
-                <h5>{{title}}</h5> 
+                <h5>{{title}} </h5> 
                 <form action="{% url 'Transaction_adjustment_List_load' transaction_period %}" method="POST" role="form">
                     {% csrf_token %}
                     <div class="form-group">

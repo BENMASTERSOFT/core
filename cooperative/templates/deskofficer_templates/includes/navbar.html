@@ -124,13 +124,13 @@
                                     <span class="nav-label" style="color:greenyellow;">Savings Adjustment</span><i class="fa fa-angle-left arrow"></i></a>
                                 <ul class="nav-3-level collapse">
                                     <li>
-                                        <a href="{% url 'Transaction_adjustment_Transaction_Period' %}" style="color:lightyellow;">Place Request</a>
+                                        <a href="{% url 'Transaction_adjustment_search' %}" style="color:lightyellow;">Place Request</a>
                                     </li>
                                     <li>
-                                        <a href="{% url 'Transaction_Adjustment_Manage' %}" style="color:lightyellow;">Manage Adjustment Request</a>
+                                        <a href="{% url 'Transaction_Adjustment_Manage_Period_Load' %}" style="color:lightyellow;">Manage Adjustment Request</a>
                                     </li>
                                     <li>
-                                        <a href="{% url 'Transaction_Adjustment_Approved_View_List_Load' %}" style="color:lightyellow;">View Approved List</a>
+                                        <a href="{% url 'Transaction_Adjustment_Approved_View_List_Period_Load' %}" style="color:lightyellow;">Upload Adjustments</a>
                                     </li>  
                                     <li>
                                         <a href="{% url 'Transaction_Savings_Adjustment_Approved_List_search' %}" style="color:lightyellow;">Process Request</a>
@@ -404,16 +404,14 @@
                         <a href="javascript:;"><i class="sidebar-item-icon fa fa-sitemap"></i>
                             <span class="nav-label">Monthly Deductions</span><i class="fa fa-angle-left arrow"></i></a>
                         <ul class="nav-2-level collapse">
-                            <li>
-                                <a href="{% url 'TransactionPeriodManager' %}" style="color:lightyellow;">Transaction Period Manager</a>
-                            </li>
+                            
                             <li>
                                 <a href="{% url 'Monthly_Deductions_OutgoingTransactions' %}" style="color:lightyellow;">Outgoing Transactions</a>
                             </li>
                                    
                            
 
-
+                         {% comment %}
                             <li>
                                 <a href="javascript:;">
                                     <span class="nav-label">Outgoing Transactions</span><i class="fa fa-angle-left arrow"></i></a>
@@ -438,10 +436,10 @@
 
 
                                 </ul>
-                            </li>
+                            </li> {% endcomment %}
 
                             <li>
-                                <a href="{% url 'Monthly_Deductions_IncomingTransactions' %}">Incoming Transactions</a>
+                                <a href="{% url 'Monthly_Deductions_IncomingTransactions' %}" style="color:lightyellow;">Incoming Transactions</a>
                             </li>
                            
 
@@ -499,9 +497,10 @@
                                     <li>
                                         <a href="{% url 'Monthly_Auxillary_Deduction_Generated_Export_Institution_Load' %}" style="color:lightyellow;">Export Auxillary Transaction</a>
                                     </li> 
+                                    {% comment %}
                                     <li>
                                         <a href="{% url 'Monthly_Auxillary_Deduction_Rectification_Reset' %}" style="color:lightyellow;">Reset Auxillary Transaction</a>
-                                    </li>
+                                    </li>{% endcomment %}
                                     
 
                                 </ul>
@@ -716,7 +715,7 @@
                               {% if 'TRANSACTION ADJUSTMENT APPROVAL'  in task_array %}
 
                                    <li>
-                                       <a href="{% url 'Transaction_Adjustment_Approval_list_Load' %}" style="color:lightyellow;">Standing Order Adjustment</a>
+                                       <a href="{% url 'Transaction_Adjustment_Approval_list_Period_Load' %}" style="color:lightyellow;">Standing Order Adjustment</a>
                                     </li>
                                     <li>
                                         <a href="{% url 'Transaction_Loan_Adjustment_Approval_list_Load' %}" style="color:lightyellow;">Loans Repayment Adjustment</a>
