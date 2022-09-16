@@ -30,8 +30,8 @@
                                     <td>{{item.updated_at|date:"D, d M, Y"}}</td>
                                     <td>{{item.status}}</td>
                                     <td>
-                                      
-                                        <a href="{% url 'Members_Dashboard_Load_Standing_Orders_Update' item.pk %}" class="btn btn-primary">Update</a>
+                                      {% comment %}
+                                        <a href="{% url 'Members_Dashboard_Load_Standing_Orders_Update' item.pk %}" class="btn btn-primary">Update</a>{% endcomment %}
                               
                                    </td>
                                 </tr>

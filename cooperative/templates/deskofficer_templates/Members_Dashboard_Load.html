@@ -15,7 +15,7 @@
                                 </div>
                             </div>
                             <div class="ibox-body">
-                                <div class="card" style="width:300px;">
+                                <div class="card" style="width:350px;">
                                     <a href="#"><img class="card-img-top" src="{% static '/cooperative/assets/img/blog/profile.jpg' %}" /></a>
                                     <div class="card-body">
                                         <h4 class="card-title">Phone: {{member.phone_number}}</h4> 
@@ -26,38 +26,73 @@
                                        <a href="{% url 'Norminal_Roll_Update_Coop_Number_Update_Members_Dashboard' member.pk %}" class="btn btn-default btn-sm"><i class="fa fa-plus"></i> Edit Coop No</a>| <a href="{% url 'Norminal_Roll_Update_Members_Dashboard' member.pk %}" class="btn btn-default btn-sm"><i class="fa fa-plus"></i> Edit Info</a>
                                     </div>
                                 </div><br>
-                                <div class="card" style="width:300px;">
+                                <div class="card" style="width:350px;">
                                     <a href="{% url 'Members_Dashboard_Load_Savings_Ledger' member.pk %}"><img class="card-img-top" src="{% static '/cooperative/assets/img/blog/savings5.jpg' %}" /></a>
                                     <div class="card-body">
                                         <p class="card-text">Savings Transactions</p>
-                                        <a  href="{% url 'Members_Dashboard_Load_Savings_Ledger' member.pk %}" class="link-blue"><i class="fa fa-comments"></i> SAVINGS</a>
+                                        <a  href="{% url 'Members_Dashboard_Load_Savings_Ledger' member.pk %}" class="link-blue"><i class="fa fa-comments"></i> SAVINGS</a> 
+
+                                        | <a  href="{% url 'Cash_Deposit_Savings_Load' member.pk %}" class="link-blue"><i class="fa fa-comments"></i> DEPOSIT</a>      
+
+                                        | <a  href="{% url 'Cash_Withdrawal_Transactions_load' member.pk %}" class="link-blue"><i class="fa fa-comments"></i> WITHDRAWAL</a> 
                                     </div>
                                 </div><br>
-                                <div class="card" style="width:300px;">
+                                <div class="card" style="width:350px;">
                                     <div class="card-body">
-                                        <h4 class="card-title"><a href="{% url 'Members_Dashboard_Load_Loan_Ledger' member.pk %}">LOANS</a></h4>
+                                        <h4 class="card-title">
+
+                                            <a href="{% url 'Members_Dashboard_Load_Loan_Ledger' member.pk %}">ACTIVE LOANS</a> | 
+                                            <a href="{% url 'Cash_Deposit_Loans_Preview' member.pk %}">CASH DEPOSITS</a>
+
+                                        </h4>
                                         
-                                        <p class="card-text">Loan Transactions</p>
+                                        <p class="card-text"> <a href="{% url 'Members_Dashboard_Load_Loan_Ledger_History'  member.pk %}">Loan History</a>  
+
+                                        |  <a href="#">Cleared Loans</a> 
+
+                                        </p>
                                     </div>
                                     <a href="{% url 'Members_Dashboard_Load_Loan_Ledger' member.pk %}"><img class="card-img-top" src="{% static '/cooperative/assets/img/blog/loan4.jpg' %}" /></a>
                                 </div><br>
                                 
 
                             
-                                <div class="card" style="width:300px;">
+                                <div class="card" style="width:350px;">
                                     <a href="{% url 'Members_Dashboard_Load_Cooperative_Shop' member.pk %}"><img class="card-img-top" src="{% static '/cooperative/assets/img/blog/shop1.jpg' %}" /></a>
                                     <div class="card-body">
                                         <p class="card-text">Cooperative Shop</p>
                                         <a  href="{% url 'Members_Dashboard_Load_Cooperative_Shop' member.pk %}" class="link-blue"><i class="fa fa-comments"></i> Shop</a>
                                     </div>
                                 </div><br>
-                                <div class="card" style="width:300px;">
+                                <div class="card" style="width:350px;">
                                     <img class="card-img-top" src="{% static '/cooperative/assets/img/blog/savings2.jpg' %}" />
                                     <div class="card-body">
-                                        <p class="card-text">Cash Transaction</p>
-                                        <a  href="#" class="link-blue"><i class="fa fa-comments"></i> Deposit</a> | <a  href="#" class="link-blue"><i class="fa fa-comments"></i> Withdrawal</a>
+                                        <p class="card-text">Bank Details</p>
+                                        <a  href="{% url 'Members_Bank_Accounts' member.pk %}" class="link-blue"><i class="fa fa-comments"></i> Create Account</a> | <a  href="{% url 'Members_Bank_Accounts_edit_details_load' member.pk %}" class="link-blue"><i class="fa fa-comments"></i> Manage Account</a>
                                     </div>
-                                </div><br></div>
+                                </div><br>
+                                 <div class="card" style="width:400px;">
+                                    <a href="#"><img class="card-img-top" src="{% static '/cooperative/assets/img/blog/profile.jpg' %}" /></a>
+                                    <div class="card-body">
+                                        
+                                        <h4 class="card-title"> IPPIS No: {{member.ippis_no}}</h4>
+                                        
+                                        <p class="card-text">Membership Termination</p>
+                                        
+                                       <a href="{% url 'membership_termination_transactions_load' member.pk %}" class="btn btn-default btn-sm"><i class="fa fa-plus"></i> Request</a>
+
+
+
+                                       | <a href="#" class="btn btn-default btn-sm"><i class="fa fa-plus"></i> Manage Request</a>
+
+                                       | <a href="{% url 'membership_termination_approved_list_processing_preview' member.pk %}" class="btn btn-default btn-sm"><i class="fa fa-plus"></i> Process Request</a>
+
+                                       <br><br>
+                                        <a href="{% url 'membership_termination_maturity_date_exception_process' member.pk %}" class="btn btn-default btn-sm"><i class="fa fa-plus"></i> Maturity Date Exception</a> 
+                                       | <a href="{% url 'membership_termination_maturity_date_exception_approved_list_load'  %}" class="btn btn-default btn-sm"><i class="fa fa-plus"></i> Process Exception</a>
+                                    </div>
+                                </div><br>
+                            </div>
                         </div>
                     </div>
                     
@@ -71,7 +106,7 @@
                                 </div>
                             </div>
                             <div class="ibox-body">
-                                 <div class="card" style="width:300px;">
+                                 <div class="card" style="width:350px;">
                                     <a href="{% url 'Members_Dashboard_Load_Standing_Orders' member.pk %}"><img class="card-img-top" src="{% static '/cooperative/assets/img/blog/standing_order1.jpg' %}" /></a>
                                     <div class="card-body">
                                         <h4 class="card-title">Standing Orders</h4>
@@ -79,7 +114,10 @@
                                    
                                     </div>
                                     <div class="card-footer">
-                                        <a href="{% url 'Members_Dashboard_Load_Standing_Orders' member.pk %}" class="text-info"><i class="fa fa-star"></i> View</a>
+                                        
+                                        <a href="{% url 'standing_order_form' member.pk %}" class="text-info"><i class="fa fa-star"></i> Create</a>
+                                        |  <a href="{% url 'Members_Dashboard_Load_Standing_Orders' member.pk %}" class="text-info"><i class="fa fa-star"></i> View</a>
+                                        | <a href="{% url 'Members_Dashboard_Load_Standing_Orders' member.pk %}" class="text-info"><i class="fa fa-star"></i> History</a>
                                       
                                     </div>
                                 </div>
@@ -87,7 +125,7 @@
                                 <h5 class="m-t-20 m-b-20">Monthly Transactions</h5>
                              
  
-                                <div class="card" style="width:300px;">
+                                <div class="card" style="width:350px;">
                                     <a href="{% url 'Members_Dashboard_Load_Monthly_Deductions' member.pk %}"><img class="card-img-top" src="{% static '/cooperative/assets/img/blog/savings3.jpg' %}" /></a>
                                     <div class="card-body">
                                         <h4 class="card-title">Monthly Deduction</h4>
@@ -96,13 +134,17 @@
                                 
                                     <div class="card-footer">
                                         <a href="{% url 'Members_Dashboard_Load_Monthly_Deductions' member.pk %}" class="text-info"><i class="fa fa-star"></i> View</a>
+
+                                        |<a href="{% url 'Members_Dashboard_Load_Monthly_Deductions' member.pk %}" class="text-info"><i class="fa fa-star"></i> Over Deductions</a>
+
+                                        |<a href="{% url 'Members_Dashboard_Load_Monthly_Deductions' member.pk %}" class="text-info"><i class="fa fa-star"></i> Under Deductions</a>
                                        
                                     </div>
                                 </div>
 
 
                                <br>
-                                <div class="card" style="width:300px;">
+                                <div class="card" style="width:350px;">
                                     <a href="#"><img class="card-img-top" src="{% static '/cooperative/assets/img/blog/ledger3.jpg' %}" /></a>
                                     <div class="card-body">
                                         <h4 class="card-title">SHARES</h4>
@@ -111,49 +153,43 @@
                                     </div>
                                     <div class="card-footer">
                                         <a href="#" class="text-info"><i class="fa fa-star"></i> View</a>
+
+                                        | <a href="{% url 'Cash_Deposit_Shares_Preview' share_code.pk %}" class="text-info"><i class="fa fa-star"></i> Cash Deposit</a>
                                       
                                     </div>
                                 </div>
                                 <br><br>
-                                <div class="card" style="width:300px;">
+                                <div class="card" style="width:350px;">
                                     <a href="{% url 'Members_Dashboard_Load_Welfare_Transactions' member.pk %}"><img class="card-img-top" src="{% static '/cooperative/assets/img/blog/welfare1.jpg' %}" /></a>
                                     <div class="card-body">
                                         <h4 class="card-title">Welfare</h4>
-                                        
-                                   
                                     </div>
                                     <div class="card-footer">
                                         <a href="{% url 'Members_Dashboard_Load_Welfare_Transactions' member.pk %}" class="text-info"><i class="fa fa-star"></i> View</a>
+
+                                        | <a href="{% url 'Cash_Deposit_Welfare_Preview' welfare_code.pk %}" class="text-info"><i class="fa fa-star"></i> Cash Deposit</a>
                                       
                                     </div>
                                 </div>
                                 <br><br>
-
-                               
-                                <div class="card" style="width:300px;">
+                                <div class="card" style="width:350px;">
                                     <a href=""><img class="card-img-top" src="{% static '/cooperative/assets/img/blog/loan5.jpg' %}" /></a>
                                     <div class="card-body">
-                                        <h4 class="card-title">Cleared Loans</h4>
+                                        <h4 class="card-title">Next of Kin</h4>
                                        
                                     </div>
                                 
                                     <div class="card-footer">
-                                        <a class="text-info"><i class="fa fa-star"></i> View</a>
+                                        <a href="{% url 'addMembersNextOfKins' member.pk %}" class="text-info"><i class="fa fa-star"></i> Add</a>
+
+                                        |<a href="{% url 'Members_Next_Of_Kins_Manage_NOK_Load' member.pk %}" class="text-info"><i class="fa fa-star"></i> Manage</a>
                                        
                                     </div>
                                 </div>
-                                  <div class="card" style="width:300px;">
-                                    <div class="card-body">
-                                        <h4 class="card-title">Over Deductions</h4>
-                                     
-                                        <p class="card-text">Details</p>
-                                        <div class="pull-right">
-                                            <span class="text-muted">Mastersoft</span>
-                                            <img class="img-circle m-l-10" src="" style="width:28px;" />
-                                        </div>
-                                    </div>
-                                </div><br></div>
+                             
+                                <br>
                             </div>
+                          
                         </div>
                     </div>
                 </div>

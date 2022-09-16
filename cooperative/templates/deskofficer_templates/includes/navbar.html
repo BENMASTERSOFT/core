@@ -16,12 +16,8 @@
                     </a>
                 </li>
 
-                <li class="heading" style="color:greenyellow;"> FREQUENTLY USED </li>
-               {% if  'CONTROL PANEL' in task_array %}
-                <li>
-                    <a href="{% url 'control_panel' %}" style="color:yellow;">Control Panel</a>
-                </li>
-                {% endif %}
+                <li class="heading" style="color:green;"> FREQUENTLY USED </li>
+             
                 <li>
                     <a href="{% url 'Members_Dashboard_Search' %}" style="color:yellow;">Members Dashboard</a>
                 </li>
@@ -33,6 +29,12 @@
                 </li> 
                 <li>
                     <a href="{% url 'membership_registration_applicant_search' %}" style="color:yellow;">Membership Registration</a>
+                </li> 
+                 <li>
+                    <a href="{% url 'Transaction_adjustment_search' %}" style="color:yellow;">Standing Order Adjustment</a>
+                </li>
+                 <li>
+                    <a href="{% url 'Transaction_Loan_adjustment_search' %}" style="color:yellow;">Loan Repayment Adjustment</a>
                 </li> 
                 <li>
                     <a href="{% url 'Norminal_Roll_List_Load' %}" style="color:yellow;">Norminal Roll</a>
@@ -103,9 +105,10 @@
                             <li>
                                 <a href="{% url 'standing_order_list_load' %}" style="color:lightyellow;">Group Standing Orders</a>
                             </li>
+                            {% comment %}
                             <li>
                                 <a href="{% url 'standing_order_selected_search' %}" style="color:lightyellow;">Selected Standing Order</a>
-                            </li>
+                            </li>{% endcomment %}
                             <li>
                                 <a href="{% url 'standing_order_reactivate_account_search' %}" style="color:lightyellow;">Reactivate Standing Order</a>
                             </li>
@@ -132,9 +135,10 @@
                                     <li>
                                         <a href="{% url 'Transaction_Adjustment_Approved_View_List_Period_Load' %}" style="color:lightyellow;">Upload Adjustments</a>
                                     </li>  
+                                    {% comment %}
                                     <li>
                                         <a href="{% url 'Transaction_Savings_Adjustment_Approved_List_search' %}" style="color:lightyellow;">Process Request</a>
-                                    </li>
+                                    </li>{% endcomment %}
                                 </ul>
                             </li>
 
@@ -201,6 +205,7 @@
                     </ul>
                 </li>
                {% endif %}
+               {% comment %}
                 {% if 'CASH DEPOSIT' in task_array %}
                     <li>
                         <a href="javascript:;"><i class="sidebar-item-icon fa fa-edit"></i>
@@ -223,6 +228,7 @@
                         </ul>
                     </li>
                 {% endif %}
+                {% endcomment %}
                 {% if 'CASH WITHDRAWAL' in task_array %}
                     <li>
                         <a href="javascript:;"><i class="sidebar-item-icon fa fa-sitemap"></i>
@@ -282,11 +288,12 @@
                            <li>
                                 <a href="{% url 'Norminal_Roll_Search' %}" style="color:lightyellow;">Norminal Roll</a>
                             </li>
+                            {% comment %}
                             <li>
-                                <a href="{% url 'Norminal_Roll_Without_Phone_Number_List_Load' %}" style="color:lightyellow;">Update Cooperative Number</a>
-                            </li>
+                                <a href="{% url 'Norminal_Roll_Update_Coop_Number_Search' %}" style="color:lightyellow;">Update Cooperative Number</a>
+                            </li>{% endcomment %}
                             <li>
-                                <a href="{% url 'Norminal_Roll_Update_Coop_Number_Search' %}" style="color:lightyellow;">Without Phone Number</a>
+                                <a href="{% url 'Norminal_Roll_Without_Phone_Number_List_Load' %}" style="color:lightyellow;">Without Phone Number</a>
                             </li>
                         </ul>
                     </li>
@@ -338,13 +345,14 @@
                         <a href="javascript:;"><i class="sidebar-item-icon fa fa-edit"></i>
                             <span class="nav-label">Next of Kin</span><i class="fa fa-angle-left arrow"></i></a>
                         <ul class="nav-2-level collapse">
-
+                            {% comment %}
                             <li>
                                 <a href="{% url 'Members_Next_Of_Kins_search' %}" style="color:lightyellow;">Add Next of Kin</a>
                             </li>
                             <li>
                                 <a href="{% url 'Members_Next_Of_Kins_Manage_search' %}" style="color:lightyellow;">Manage Next of Kin</a>
                             </li>
+                             {% endcomment %}
                             <li>
                                 <a href="{% url 'Members_Without_Next_of_Kin_list_load' %}" style="color:lightyellow;">Members Without NOK</a>
                             </li>
@@ -529,7 +537,7 @@
                     </li>
                 {% endif %}
 
-                 
+                 {% comment %}
                 {% if 'BANK ACCOUNTS'  in task_array %}
                     <li>
                         <a href="javascript:;"><i class="sidebar-item-icon fa fa-bar-chart"></i>
@@ -545,6 +553,7 @@
                         </ul>
                     </li>
                 {% endif %}
+                {% endcomment %}
                 {% if 'RENTAL SERVICES'  in task_array %}
                  <li>
                         <a href="javascript:;"><i class="sidebar-item-icon fa fa-bar-chart"></i>
@@ -1031,7 +1040,11 @@
                         </ul>
                     </li>
                 {% endif %}
-
+                  {% if  'CONTROL PANEL' in task_array %}
+                <li>
+                    <a href="{% url 'control_panel' %}" style="color:yellow;">Control Panel</a>
+                </li>
+                {% endif %}
 
                 {% comment %}
                     <li>

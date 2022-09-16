@@ -925,7 +925,7 @@ class Member_Salary_Adjustment(DateObjectsModels):
 
 
 class MemberShipTerminationRequest(DateObjectsModels):
-    member= models.ForeignKey(Members,on_delete=models.CASCADE)
+    member= models.OneToOneField(Members,on_delete=models.CASCADE)
     termination=models.ForeignKey(Termination_Types,on_delete=models.CASCADE)
     loan_amount=models.DecimalField(max_digits=20,decimal_places = 2)
     maturity_date=models.DateField(blank=True,null=True)

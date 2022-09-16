@@ -50,7 +50,7 @@
                                     <td>{{member.approval_comment}}</td>
                                     <td>{{member.approved_at}}</td>
             
-                                    <td><a href="{% url 'membership_termination_approved_list_processing_preview' member.pk %}" class="btn btn-primary">Proceed</a></td>
+                                    <td><a href="{% url 'membership_termination_approved_list_processing_preview' member.member.pk %}" class="btn btn-primary">Proceed</a></td>
                                 </tr>
                             {% endfor %}
                                

@@ -841,6 +841,8 @@ def deskofficer_home(request):
 	if Staff.objects.filter(admin=request.user,default_password='YES'):
 		default_password="YES"
 	StandingOrderAccounts.objects.filter(amount=0).delete()
+	# members = Members.objects.all().update(status='ACTIVE')
+	# PersonalLedger.objects.filter(member__coop_no='00002').update(status='ACTIVE')
 	# x = 10
 	# members = Members.objects.all()
 	# member_array=[]
@@ -4160,6 +4162,7 @@ def Transaction_adjustment_Transactions_load(request,pk,transaction_period):
 	member_selected=MembersAccountsDomain.objects.filter(member=member).first()
 	records=TransactionAjustmentRequest.objects.filter(member__member=member_selected.member_id,status='UNTREATED')
 
+	queryset=StandingOrderAccounts.objects.filter(transaction__member=member)
 	transactions=[]
 	active_transactions=[]
 
@@ -4172,6 +4175,7 @@ def Transaction_adjustment_Transactions_load(request,pk,transaction_period):
 
 
 	context={
+	'queryset':queryset,
 	'form':form,
 	'transaction_period':transaction_period,
 	'member':member,
@@ -4394,6 +4398,7 @@ def Transaction_Adjustment_Approved_View_List_Upload_all(request,transaction_per
 	processed_by=processed_by.username
 	amount_exist=0
 	stop_date=get_current_date(now)
+	start_date=get_current_date(now)
 
 	members=TransactionAjustmentRequest.objects.filter(effective_date=transaction_period,approval_status='APPROVED',status='UNTREATED')
 	for member in members:
@@ -4413,7 +4418,7 @@ def Transaction_Adjustment_Approved_View_List_Upload_all(request,transaction_per
 	
 		
 	TransactionAjustmentHistory(member=member.member,amount=amount_exist,start_date=start_date,stop_date=stop_date).save()
-
+	
 	TransactionAjustmentRequest.objects.filter(effective_date=transaction_period,approval_status='APPROVED',status='UNTREATED').update(status='TREATED')
 	return HttpResponseRedirect(reverse('Transaction_Adjustment_Approved_View_List_Period_Load'))
 
@@ -4649,6 +4654,8 @@ def Transaction_Loan_adjustment_Transaction_Preview(request,pk,loan_code):
 	if Staff.objects.filter(admin=request.user,default_password='YES'):
 		default_password="YES"
 
+	transaction_period=AdjustmentPeriods.objects.get(status='ACTIVE')
+	transaction_period=transaction_period.transaction_period
 	form=Transaction_Loan_adjustment_selection_form(request.POST or None)
 
 	member=Members.objects.get(id=pk)
@@ -4666,6 +4673,7 @@ def Transaction_Loan_adjustment_Transaction_Preview(request,pk,loan_code):
 	'default_password':default_password,
 	'member':member,
 	'loan':loan,
+	'transaction_period':transaction_period,
 	'form':form,
 	}
 	return render(request,'deskofficer_templates/Transaction_Loan_adjustment_Transaction_Preview.html',context)
@@ -4673,6 +4681,8 @@ def Transaction_Loan_adjustment_Transaction_Preview(request,pk,loan_code):
 
 def Transaction_Loan_adjustment_Transaction_Process(request,pk,loan_code):
 	# member=Members.objects.get(id=pk)
+	transaction_period=AdjustmentPeriods.objects.get(status='ACTIVE')
+	transaction_period=transaction_period.transaction_period
 
 	loan=LoansRepaymentBase.objects.get(id=loan_code)
 	loan_amount=loan.loan_amount
@@ -4697,7 +4707,7 @@ def Transaction_Loan_adjustment_Transaction_Process(request,pk,loan_code):
 		purpose=request.POST.get('purpose')
 		repayment=request.POST.get('repayment')
 		amount=request.POST.get('amount')
-		effective_date=now
+		effective_date=transaction_period
 
 		if allow_reduction == False:
 			# return HttpResponse(f' Not Allowed {allow_reduction}')
@@ -4709,7 +4719,7 @@ def Transaction_Loan_adjustment_Transaction_Process(request,pk,loan_code):
 				messages.info(request,"No Change Made in " + str(expected_repayment) + " to pay off this loan in " +  str(remaining_months) + " month(s) interval" )
 				return HttpResponseRedirect(reverse('Transaction_Loan_adjustment_Transaction_Preview',args=(pk,loan_code,)))
 
-	
+		
 		if TransactionLoanAjustmentRequest.objects.filter(member=loan,status='UNTREATED'):
 			messages.info(request,'You still have an Incomplete Transactions')
 			return HttpResponseRedirect(reverse('Transaction_Loan_adjustment_Transaction_Preview',args=(pk,loan_code,)))
@@ -13063,12 +13073,17 @@ def AdjustmentPeriodManager(request):
 	records=AdjustmentPeriods.objects.all().order_by('transaction_period')
 	form=TransactionPeriod_form(request.POST or None)
 	if request.method=="POST":
+		
 		transaction_period=request.POST.get('transaction_period')
+		
 		if TransactionPeriods.objects.filter(transaction_period=transaction_period).exists():
+			
 			return HttpResponseRedirect(reverse('AdjustmentPeriodManager'))
 
+	
 		record=AdjustmentPeriods(transaction_period=transaction_period,status=status)
 		record.save()
+		
 		return HttpResponseRedirect(reverse('AdjustmentPeriodManager'))
 	form.fields['transaction_period'].initial=now
 
@@ -15741,7 +15756,8 @@ def upload_AuxillaryDeductionsResource(request,pk):
 
 		imported_data = dataset.load(new_account_deductions.read(),format='xls')
 		for data in imported_data:
-			value = AuxillaryDeductions(tdate=tdate,salary_institution=salary_institution,
+			value = AuxillaryDeductions(tdate=tdate,
+					salary_institution=salary_institution,
 					transaction_period=transaction_period,
 					ippis_no=str(data[0]),
 					name=data[1],
@@ -25697,7 +25713,7 @@ def Cash_Deposit_Welfare_Preview(request,pk):
 	tdate=get_current_date(now)
 	processed_by=CustomUser.objects.get(id=request.user.id)
 
-
+	# return HttpResponse(pk)
 	member=MembersAccountsDomain.objects.get(id=pk)
 
 	if request.method=="POST":
@@ -27635,7 +27651,7 @@ def membership_termination_transactions_load(request,pk):
 
 	if request.method =="POST":
 
-		loan_amount=request.POST.get('loan_amount')
+		loan_amount=abs(float(request.POST.get('loan_amount')))
 		termination_id=request.POST.get('termination_types')
 		termination = Termination_Types.objects.get(id=termination_id)
 		comment=request.POST.get('comment')
@@ -27686,10 +27702,10 @@ def membership_termination_transactions_load(request,pk):
 			messages.error(request,'Termination not Allowed while on loan, see the Management')
 			return HttpResponseRedirect(reverse('membership_termination_transactions_load',args=(pk,)))
 
-		return HttpResponseRedirect(reverse(membership_termination_search))
+		return HttpResponseRedirect(reverse('Members_Dashboard_Load',args=(member.pk,)))
 	form.fields['date_applied'].initial = now
 	if total_loan:
-		form.fields['loan_amount'].initial = total_loan
+		form.fields['loan_amount'].initial = abs(total_loan)
 	form.fields['comments'].initial = "Please for your Consideration"
 	context={
 	# 'tasks':tasks,
@@ -27769,7 +27785,11 @@ def membership_termination_approved_list_processing_preview(request,pk):
 	approval_status='PENDING'
 	processing_status='UNPROCESSED'
 	lock_status='LOCKED'
-	member=MemberShipTerminationRequest.objects.get(id=pk)
+	if MemberShipTerminationRequest.objects.filter(member=pk).exists():
+		member=MemberShipTerminationRequest.objects.get(member=pk)
+	else:
+		return HttpResponseRedirect(reverse('Members_Dashboard_Load',args=(pk,)))
+	
 	savings=MembersAccountsDomain.objects.filter(member=member.member)
 	schedule_status='UNSCHEDULED'
 
@@ -27870,7 +27890,7 @@ def membership_termination_approved_list_processing_preview(request,pk):
 		member.status=status2
 		member.save()
 
-		return HttpResponseRedirect(reverse('membership_termination_approved_list_processing_list_load'))
+		return HttpResponseRedirect(reverse('Members_Dashboard_Load',args=(pk,)))
 	context={
 	'record_array':record_array,
 	'member':member,
@@ -28057,7 +28077,10 @@ def membership_termination_maturity_date_exception_process(request,pk):
 	processed_by=CustomUser.objects.get(id=request.user.id)
 	tdate=get_current_date(now)
 
-	applicant=MemberShipTermination.objects.get(id=pk)
+	applicant=[]
+	if MemberShipTermination.objects.filter(id=pk).exists():
+		applicant=MemberShipTermination.objects.filter(id=pk).last()
+	
 	if request.method == "POST":
 		reasons=request.POST.get('comment')
 
@@ -30842,8 +30865,15 @@ def Members_Dashboard_Load(request,pk):
 		default_password="YES"
 	
 	member=Members.objects.get(id=pk)
-	
+	transaction=TransactionTypes.objects.get(code='800')
+	transaction1=TransactionTypes.objects.get(code='700')
+	welfare_code=MembersAccountsDomain.objects.get(transaction=transaction,member=member)
+	share_code=MembersAccountsDomain.objects.get(transaction=transaction1,member=member)
+
 	context={
+	'share_code':share_code,
+	'welfare_code':welfare_code,
+	'member':member,
 	'member':member,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
@@ -31005,6 +31035,36 @@ def Members_Dashboard_Load_Loan_Ledger(request,pk):
 
 	member=Members.objects.get(id=pk)
 	loans=LoansRepaymentBase.objects.filter(member=member).filter(Q(balance__lt=0))
+	context={
+	'loans':loans,
+	'member':member,
+	'task_array':task_array,
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
+	}
+	return render(request,'deskofficer_templates/Members_Dashboard_Load_Loan_Ledger.html',context)
+
+
+def Members_Dashboard_Load_Loan_Ledger_History(request,pk):
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	task_array=[]
+	for task in tasks:
+		task_array.append(task.task.title)
+
+
+
+	task_enabler=TransactionEnabler.objects.filter(status="YES")
+	task_enabler_array=[]
+	for item in task_enabler:
+		task_enabler_array.append(item.title)
+
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
+	member=Members.objects.get(id=pk)
+	loans=LoansRepaymentBase.objects.filter(member=member).filter(Q(balance__gt=0) | Q(balance=0))
 	context={
 	'loans':loans,
 	'member':member,

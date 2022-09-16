@@ -1,6 +1,6 @@
 {% extends 'deskofficer_templates/base_template.html' %}
 {% load static %}
-
+{% load mathfilters %}
 {% block content %}
             <div class="page-content fade-in-up">
                 <div class="row">
@@ -28,13 +28,13 @@
                                             <td>{{item.transaction.name}}</td>
                                             <td>{{item.loan_number}}</td>
                                             
-                                            <td>({% widthratio item.balance|floatformat:2 1 -1  %})</td>
+                                            <td>{{item.balance|mul:-1}}</td>
                                             <td><a href="" class="btn btn-primary">Details</a></td>
                                         </tr>
                                     {% endfor %}
                                     <tr>
                                         <td colspan="3">Total</td>
-                                        <td>{{total_loan}}</td>
+                                        <td>{{total_loan|mul:-1}}</td>
                                         <td></td>
                                     </tr>
                                     </tbody>

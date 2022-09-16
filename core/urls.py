@@ -1274,6 +1274,7 @@ urlpatterns = [
     
     path('Members_Dashboard_Load_Savings_Ledger/<str:pk>/', deskofficer_views.Members_Dashboard_Load_Savings_Ledger,name='Members_Dashboard_Load_Savings_Ledger'),
     path('Members_Dashboard_Load_Loan_Ledger/<str:pk>/', deskofficer_views.Members_Dashboard_Load_Loan_Ledger,name='Members_Dashboard_Load_Loan_Ledger'),
+    path('Members_Dashboard_Load_Loan_Ledger_History/<str:pk>/', deskofficer_views.Members_Dashboard_Load_Loan_Ledger_History,name='Members_Dashboard_Load_Loan_Ledger_History'),
     path('Members_Dashboard_Load_Monthly_Deductions/<str:pk>/', deskofficer_views.Members_Dashboard_Load_Monthly_Deductions,name='Members_Dashboard_Load_Monthly_Deductions'),
     path('Members_Dashboard_Load_Welfare_Transactions/<str:pk>/', deskofficer_views.Members_Dashboard_Load_Welfare_Transactions,name='Members_Dashboard_Load_Welfare_Transactions'),
     path('Members_Dashboard_Load_Cooperative_Shop/<str:pk>/', deskofficer_views.Members_Dashboard_Load_Cooperative_Shop,name='Members_Dashboard_Load_Cooperative_Shop'),
