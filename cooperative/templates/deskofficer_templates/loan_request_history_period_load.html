@@ -74,6 +74,7 @@
                             <thead>
                                 <tr>
                                     <th>#</th>
+                                    <th>PK</th>
                                     <th>Member ID</th>
                                     <th>Name</th>
                                     <th>Description</th>
@@ -86,6 +87,7 @@
                             <tfoot>
                                 <tr>
                                     <th>#</th>
+                                    <th>PK</th>
                                     <th>Member ID</th>
                                     <th>Name</th>
                                     <th>Description</th>
@@ -99,6 +101,7 @@
                                {% for loan in exist_loans %}
                                         <tr>
                                             <td>{{forloop.counter}}</td>
+                                            <td>{{loan.pk}}</td>
                                             <td>{{loan.member.coop_no}}</td>
                                             <td>{{loan.member.get_full_name}}</td>
                                             <td>{{loan.loan.name}}</td>

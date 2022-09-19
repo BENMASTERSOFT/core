@@ -18,7 +18,7 @@
                                             <th>Transaction</th>
                                             <th>Account Number</th>
                                             <th>Amount</th>
-                                            <th>Action</th>
+                                            <th colspan="2">Action</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -29,7 +29,16 @@
                                             <td>{{item.1}}</td>
                                             <td>{{item.2}}</td>
                                            
-                                            <td><a href="{% url 'membership_dashboard_transaction_details' item.1 %}" class="btn btn-primary">View</a></td>
+                                            <td><a href="{% url 'membership_dashboard_transaction_details' item.1 %}" class="btn btn-primary">View</a></td> 
+                                            <td>
+                                                {% if item.3 == 'YES' %}
+                                                <a href="{% url 'Members_Savings_Fund_Transfer_Routes' item.1 %}" class="btn btn-success">Transfer</a>
+                                                {% else %}
+                                                    Transfer Not Allowed
+                                                {% endif %}
+
+                                            </td>
+                                                
                                          
                                         </tr>
                                     {% endfor %}

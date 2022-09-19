@@ -636,6 +636,7 @@ class TransactionTypes(DateObjectsModels):
     auto_stop_savings= models.CharField(default='NO',choices=YESNO,max_length=15)
     form_print=models.CharField(max_length=20,choices=YESNO,default='NO')
     loan_path=models.CharField(max_length=20,choices=LOAN_PATH,default='NONE')
+    transfer_enabled=models.CharField(default='NO',choices=YESNO,max_length=15)
 
 
     # class Meta(DateObjectsModels.Meta):
@@ -1187,6 +1188,8 @@ class LoanRequest(DateObjectsModels):
     gross_pay=models.DecimalField(max_digits=20,decimal_places = 2,default=0)
     net_pay=models.DecimalField(max_digits=20,decimal_places = 2,default=0)
     savings=models.DecimalField(max_digits=20,decimal_places = 2,default=0)
+    saving_status=  models.CharField(max_length=30,choices=YESNO,default='NO')
+    ignore_restriction=  models.CharField(max_length=30,choices=YESNO,default='NO')
     existing_loan_balance=models.DecimalField(max_digits=20,decimal_places = 2,default=0)
     image=models.FileField(blank=True,null=True)
     transaction_status= models.CharField(max_length=20,choices=TRANSACTION_STATUS,default='UNTREATED')
@@ -1245,6 +1248,7 @@ class LoanFormIssuance(DateObjectsModels):
     date_approved=models.DateField(blank=True,null=True)
     loan_path= models.CharField(max_length=20,choices=LOAN_PATH,default='PROJECT')
     status= models.CharField(max_length=20,choices=TRANSACTION_STATUS,default='UNTREATED')
+    print_status= models.CharField(max_length=20,choices=YESNO,default='NO')
 
     # class Meta(DateObjectsModels.Meta):
     #     db_table="Loan_Form_Issuance"
@@ -1256,7 +1260,7 @@ class LoanApplication(DateObjectsModels):
     interest=models.DecimalField(max_digits=20,decimal_places = 2,default=0)
     admin_charge=models.DecimalField(max_digits=20,decimal_places = 2,default=0)
     comment=models.TextField(blank=True,null=True)
-    # description=models.CharField(max_length=255,blank=True,null=True)
+    ignore_restriction=  models.CharField(max_length=30,choices=YESNO,default='NO')
     gross_pay=models.DecimalField(max_digits=20,decimal_places = 2,default=0)
     net_pay=models.DecimalField(max_digits=20,decimal_places = 2,default=0)
     image=models.FileField(blank=True,null=True)
@@ -1520,6 +1524,27 @@ class TransactionLoanAjustmentRequest(DateObjectsModels):
 
     # class Meta(DateObjectsModels.Meta):
     #     db_table="Transaction_Loan_Adjustment_Request"
+
+
+
+class Saving_Fund_Transfer_History(DateObjectsModels):
+    member=models.ForeignKey(Members,on_delete=models.CASCADE)
+    sources_account_name=models.CharField(max_length=255)
+    sources_accoun_number=models.CharField(max_length=255)    
+    destination_account_name=models.CharField(max_length=255)
+    destination_accoun_number=models.CharField(max_length=255)
+    amount=models.DecimalField(max_digits=20,decimal_places = 2)
+    particulars= models.TextField()
+    
+
+    # class Meta(DateObjectsModels.Meta):
+    #     db_table="Saving_Fund_Transfer_History"
+
+
+
+
+
+
 
 class LoanLessRepaymentEnable(DateObjectsModels):
     status= models.CharField(max_length=30,choices=YESNO,default='NO')

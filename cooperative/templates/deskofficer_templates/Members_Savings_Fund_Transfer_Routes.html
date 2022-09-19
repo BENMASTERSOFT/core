@@ -1,0 +1,50 @@
+{% extends 'deskofficer_templates/base_template.html' %}
+{% load static %}
+
+{% block content %}
+            <div class="page-content fade-in-up">
+                <div class="row">
+                    <div class="col-xl-8">
+                        <div class="ibox">
+                            <div class="ibox-head">
+                                <div class="ibox-title">SAVINGS FUND TRANSFER ROUTES | {{saving.transaction.name}}|{{saving.account_number}} | <a href="{% url 'Members_Dashboard_Load_Savings_Ledger' saving.member.pk %}">Back</a></div>
+                            </div>
+                            <div class="ibox-body">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>DESCRIPTION</th>
+                                            <th>ACTION</th>
+                                         
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>1</td>
+                                            <td>LOANS</td>
+                                            <td><a href="{% url 'Members_Savings_Fund_Transfer_Loan_Load' saving.account_number %}" class="btn btn-primary">View</a></td>
+                                       
+                                        </tr>
+                                        <tr>
+                                            <td>2</td>
+                                            <td>SAVINGS</td>
+                                            <td><a href="{% url 'Members_Savings_Fund_Transfer_Savings_Routes' saving.account_number %}" class="btn btn-primary">View</a></td>
+                                   
+                                        </tr>
+                                        
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                  
+                </div>
+              
+           
+            </div>
+  <div class="sidenav-backdrop backdrop"></div>
+    <div class="preloader-backdrop">
+        <div class="page-preloader">Loading</div>
+    </div>
+{% endblock %}

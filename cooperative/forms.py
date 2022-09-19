@@ -3360,6 +3360,43 @@ class Members_Dashboard_Load_Standing_Orders_Update_Form(forms.Form):
                               disabled = False)
    
 
+class loan_approved_amount_form(forms.Form):
+   loan_amount = forms.DecimalField(initial=0,label='Loan Amount', label_suffix=" : ",
+                              widget=forms.NumberInput(attrs={'class': 'form-control','readonly':'readonly'}),
+                              decimal_places=2, required=True,
+                              disabled = False)
+   default_amount = forms.DecimalField(initial=0,label='Default Amount', label_suffix=" : ",
+                              widget=forms.NumberInput(attrs={'class': 'form-control','readonly':'readonly'}),
+                              decimal_places=2, required=True,
+                              disabled = False)
+   
+   approved_amount = forms.DecimalField(initial=0,label='Approved Amount', label_suffix=" : ",
+                              widget=forms.NumberInput(attrs={'class': 'form-control'}),
+                              decimal_places=2, required=True,
+                              disabled = False)
+   
+
+
+class Members_Savings_Fund_Transfer_Savings_Details_form(forms.Form):
+   source_account_name=forms.CharField(label="Source Name",max_length=250,widget=forms.TextInput(attrs={"class":"form-control",'readonly':'readonly'}),required=True)
+   source_account_number=forms.CharField(label="Source Number",max_length=250,widget=forms.TextInput(attrs={"class":"form-control",'readonly':'readonly'}),required=True)
+   destination_account_name=forms.CharField(label="Destination Name",max_length=250,widget=forms.TextInput(attrs={"class":"form-control",'readonly':'readonly'}),required=True)
+   destination_account_number=forms.CharField(label="Destination Number",max_length=250,widget=forms.TextInput(attrs={"class":"form-control",'readonly':'readonly'}),required=True)
+   
+
+
+   balance = forms.DecimalField(initial=0,label='Balance', label_suffix=" : ",
+                              widget=forms.NumberInput(attrs={'class': 'form-control','readonly':'readonly'}),
+                              decimal_places=2, required=True,
+                              disabled = False)
+   amount = forms.DecimalField(initial=0,label='Amount', label_suffix=" : ",
+                              widget=forms.NumberInput(attrs={'class': 'form-control'}),
+                              decimal_places=2, required=True,
+                              disabled = False)
+   
+   narration= forms.CharField(widget=forms.Textarea(attrs={"rows":2, "cols":55}),required=True)
+   
+
 
 
 

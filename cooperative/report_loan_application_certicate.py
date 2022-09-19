@@ -231,21 +231,26 @@ def _loanApplicationCerticateGenBodyTable(width, height,pk):
 	]
 
 	heightList=[
-	height * 10 /100,
 	height * 9 /100,
 	height * 9 /100,
-	height * 9 /100,
-	height * 9 /100,
-	height * 9 /100,
-	height * 9 /100,
-	height * 9 /100,
-	height * 9 /100,
+	height * 8 /100,
+	height * 8 /100,
+	height * 8 /100,
+	height * 8 /100,
+	height * 8 /100,
+	height * 8 /100,
+	height * 8 /100,
+	height * 8 /100,
 	height * 9 /100,
 	height * 9 /100,
 	
 	]
 	# [_genPriceListTable(width,heightList[1])],
-
+	if applicant.interest_deduction == "SOURCE":
+		cash_recieved=float(applicant.loan_amount)-(float(applicant.interest) + float(applicant.admin_charge))
+	else:
+		cash_recieved=float(applicant.loan_amount)- float(applicant.admin_charge)
+	
 	res = Table([
 		['','LOAN NUMBER',applicant.loan_number],
 		['','LOAN TYPE',applicant.transaction.name],
@@ -254,10 +259,11 @@ def _loanApplicationCerticateGenBodyTable(width, height,pk):
 		['','STOP DATE',get_print_date(applicant.stop_date)],
 		['','LOAN AMOUNT',f'=N={applicant.loan_amount}'],
 		['','MONTHLY REPAYMENT',f'=N={applicant.repayment}'],
-		['','IINTEREST DEDUCTION',applicant.interest_deduction],
+		['','INTEREST DEDUCTION',applicant.interest_deduction],
 		['','INTEREST AMOUNT',f'=N={applicant.interest}'],
-		['','IINTEREST RATE',f'{applicant.interest_rate}%'],
+		['','INTEREST RATE',f'{applicant.interest_rate}%'],
 		['','ADMIN CHARGES',f'=N={applicant.admin_charge}'],
+		['','CASH RECEIVED',f'=N={cash_recieved}'],
 		],
 		widthList,
 		heightList

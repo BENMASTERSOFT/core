@@ -320,9 +320,9 @@ def Loan_Application_IssueanceParagraphAmountApplied(receipt_id):
 	amount_in_words=p.number_to_words(amount_converted).title()
 	amount_saved =record.amount_saved
 
-	
+	amount_saved_converted=str(amount_saved)[:-3]
 	p = inflect.engine()
-	amount_saved_in_words=p.number_to_words(amount_saved).title()
+	amount_saved_in_words=p.number_to_words(amount_saved_converted).title()
 
 
 	# naira_sign= str('\u20a6')

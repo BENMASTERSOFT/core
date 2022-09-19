@@ -1,0 +1,45 @@
+{% extends 'deskofficer_templates/base_template.html' %}
+{% load static %}
+
+{% block content %}
+            <div class="page-content fade-in-up">
+                <div class="row">
+                    <div class="col-xl-8">
+                        <div class="ibox">
+                            <div class="ibox-head">
+                                <div class="ibox-title">FUND TRANSFER FROM | {{source_saving.transaction.name}} | {{source_saving.account_number}} | <a href="{% url 'Members_Savings_Fund_Transfer_Routes' source_saving.account_number %}">Back</a></div>
+                            </div>
+                            <div class="ibox-body">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Description</th>
+                                            <th>Account Number</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for item in destination_savings %}
+                                        <tr>
+                                            <td>{{forloop.counter}}</td>
+                                            <td>{{item.transaction.name}}</td>
+                                            <td>{{item.account_number}}</td>
+                                            <td><a href="{% url 'Members_Savings_Fund_Transfer_Savings_Details' source_saving.account_number item.pk %}">Details</a></td>
+                                        </tr>
+                                       {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                   
+                </div>
+              
+           
+            </div>
+  <div class="sidenav-backdrop backdrop"></div>
+    <div class="preloader-backdrop">
+        <div class="page-preloader">Loading</div>
+    </div>
+{% endblock %}

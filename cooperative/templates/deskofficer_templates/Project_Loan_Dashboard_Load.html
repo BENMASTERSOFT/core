@@ -61,7 +61,7 @@
                 <a href="{% url 'loan_request_shortlisting_load' %}">Proceed</a> | 
                   <a href="{% url 'loan_request_shortlisting_view_load' %}">Active</a>
                   | <a href="{% url 'loan_request_order_KIV' %}">KIV</a>
-                  | <a href="#">History</a>
+                  | <a href="{% url 'loan_request_order_Shortlisting_history' %}">History</a>
               </div>
               <!-- /.card-body -->
             </div>
@@ -79,7 +79,8 @@
               <!-- /.card-header -->
               <div class="card-body">
                 <a href="{% url 'loan_request_approved_Issue_form_period_load' %}">Proceed</a> |
-                <a href="{% url 'loan_application_request_form_issuanace_reprint_search' %}">Reprint</a>
+                <a href="{% url 'loan_application_request_form_issuanace_reprint_search' %}">Reprint</a> |
+                <a href="{% url 'loan_application_request_form_issuanace_History_Period_Load' %}">View</a>
               </div>
               <!-- /.card-body -->
             </div>

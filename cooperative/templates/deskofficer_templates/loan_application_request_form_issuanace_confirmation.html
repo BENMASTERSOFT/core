@@ -14,8 +14,8 @@
 
 	                <a class="btn btn-success" href="{% url 'Loan_Application_Issueance_Form_Print' applicant.receipt %}" target="_blank">Loan Application Form</a>
 	                
-	                <a href="{% url 'Project_Loan_Dashboard_Load'  %}" class="btn btn-secondary">Close</a>
-	                <a href="{% url 'loan_request_approved_Issue_form_transactions_load' transaction_type %}" class="btn btn-primary">Back</a>
+	                <a href="{% url 'Project_Loan_Dashboard_Load'  %}" class="btn btn-secondary">Close</a>|
+	               <input type="button" class="btn btn-secondary" value="Back" onclick="history.back()"/>
 	            </p>
 	        
         </div>

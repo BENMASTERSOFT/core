@@ -35,7 +35,7 @@
                  
                 </div>
                 <div class="row">
-                    <div class="col-xl-10">
+                    <div class="col-xl-12">
                         <div class="ibox">
                             <div class="ibox-head">
                                 <div class="ibox-title">{{member.member.get_full_name}} | Personal Ledger Details |  <input type="button" class="btn btn-secondary" value="Back" onclick="history.back()"/></div>
@@ -50,6 +50,7 @@
                                             <th>Credit</th>
                                             <th>Balance</th>
                                             <th>Date</th>
+                                            <th>Processed By</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -68,6 +69,7 @@
                                             {% endif %}
                                             </td>
                                             <td>{{record.transaction_period}}</td>
+                                            <td>{{record.processed_by}}</td>
                                          
                                         </tr>
                                     {% endfor %}

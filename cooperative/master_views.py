@@ -6853,8 +6853,32 @@ def CooperativeBankAccounts_Update(request,pk):
     return render(request,'master_templates/CooperativeBankAccounts_Update.html',context)
 
 #######################################################################
-################## WITHDRAWAL CONTROLLER ##############################
+################## WITHDRAWALand TRANSFERABLE  CONTROLLER ##############################
 #######################################################################
+
+def TransferableController(request):
+    task_array=[]
+    if not request.user.user_type == '1':
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
+    transactions=TransactionTypes.objects.filter(source__title='SAVINGS')
+    context={
+    'task_array':task_array,
+    'transactions':transactions,
+    }
+    return render(request,'master_templates/TransferableController.html',context)
+
+
+def TransferableController_Update(request,pk):
+    transaction=TransactionTypes.objects.get(id=pk)
+    if transaction.transfer_enabled == "YES":
+        transaction.transfer_enabled='NO'
+    else:
+        transaction.transfer_enabled='YES'
+    transaction.save()
+
+    return HttpResponseRedirect(reverse('TransferableController'))
 
 
 
@@ -6935,6 +6959,9 @@ def WithdrawalController_Process(request,pk):
         transaction.withdrawal_status='LOCKED'
     transaction.save()
     return HttpResponseRedirect(reverse('WithdrawalController'))
+
+
+
 
 #######################################################################
 ############################ SHOP #####################################
@@ -7307,9 +7334,9 @@ def Loan_application_approval_period_load(request):
     if request.method == 'POST':
         
         loan_id = request.POST.get('loans')
-        loan = TransactionTypes.objects.get(id=loan_id)
+ 
 
-        exist_loans = LoanApplicationShortListing.objects.filter(applicant__applicant__loan=loan,status='UNTREATED',processing_status='UNPROCESSED',approval_status='PENDING')
+        return HttpResponseRedirect(reverse('Loan_application_approval_List_load',args=(loan_id,)))
 
     context={
     'exist_loans':exist_loans,
@@ -7320,9 +7347,29 @@ def Loan_application_approval_period_load(request):
     return render(request,'master_templates/Loan_application_approval_period_load.html',context)
 
 
+def Loan_application_approval_List_load(request,loan_id):
+    task_array=[]
+    if not request.user.user_type == '1':
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
+
+    
+    loan = TransactionTypes.objects.get(id=loan_id)
+    exist_loans = LoanApplicationShortListing.objects.filter(applicant__applicant__loan=loan,status='UNTREATED',processing_status='UNPROCESSED',approval_status='PENDING')
+
+    context={
+    'exist_loans':exist_loans,
+    'return_pk':loan_id,
+    'task_array':task_array,
+
+    }
+    return render(request,'master_templates/Loan_application_approval_List_load.html',context)
 
 
-def Loan_application_approval_details(request,pk):
+
+
+def Loan_application_approval_details(request,pk, return_pk):
     form = Loan_application_approval_form(request.POST or None)
     task_array=[]
     if not request.user.user_type == '1':
@@ -7332,6 +7379,8 @@ def Loan_application_approval_details(request,pk):
    
     loan=LoanApplicationShortListing.objects.get(id=pk)
     loan_comment=LoanApplication.objects.get(id=loan.applicant.pk)
+
+ 
 
     loan_analysis=LoanApplicationSettings.objects.filter(applicant_id=loan_comment.pk,category='ANALYSIS')
     loan_summary=LoanApplicationSettings.objects.filter(applicant_id=loan_comment.pk,category='SUMMARY')
@@ -7363,7 +7412,7 @@ def Loan_application_approval_details(request,pk):
         loan.approval_officer=approval_officer
         loan.save()
 
-        return HttpResponseRedirect(reverse('Loan_application_approval_period_load'))
+        return HttpResponseRedirect(reverse('Loan_application_approval_List_load',args=(return_pk,)))
 
     form.fields['amount'].initial=loan_comment.loan_amount
     form.fields['comment'].initial="Please Process"

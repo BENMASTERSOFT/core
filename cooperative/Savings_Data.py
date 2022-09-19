@@ -8,7 +8,7 @@ def get_standing_orders(applicant):
 
 
 def get_standing_orders_sum(applicant):
-    savings_sum=StandingOrderAccounts.objects.filter(transaction__member_id=applicant).aggregate(total_amount=Sum('amount'))
+    savings_sum=StandingOrderAccounts.objects.filter(transaction__member_id=applicant).exclude(transaction__transaction__code='102').aggregate(total_amount=Sum('amount'))
     total_savings=savings_sum['total_amount']
     return total_savings
 

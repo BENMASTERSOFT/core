@@ -144,36 +144,19 @@
                 
             </div>
 
-            <div class="row">
-                    <div class="col-xl-12">
-                        <div class="ibox">
-                            
-                            <div class="ibox-body">
-                                <table class="table">
-
-                                    <tbody>
-                                        <tr>
-                                            <td>1</td>
-                                            <td>Last Used Net Pay</td>
-                                            <td>{{applicant.member.last_used_net_pay}}</td>
-                                           
-                                        </tr>
-                                        
-                                        
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                   
-                </div>
+            
         </div>
     </div>
    <div class="row">   
-        <div class="col-xl-8">
+        <div class="col-xl-12">
             <div class="ibox">
                 <div class="ibox-head">
-                    <div class="ibox-title">Available Attachments | <a href="{% url 'loan_request_preview' applicant.id %}" class="btn btn-success">Continue</a></div>
+                     
+                    <div class="ibox-title">Available Attachments | Last Used Net Pay | {{applicant.member.last_used_net_pay}}
+                   
+                     </div>
+
+              
                 </div>
                 <div class="ibox-body">
                     <table class="table table-bordered">
@@ -202,10 +185,52 @@
                 </div>
             </div>
         </div>
-  
-    
     </div>
 
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="ibox">
+                            <div class="ibox-head">
+                                <div class="ibox-title">Transaction Processing</div>
+                                
+                            </div>
+                            <div class="ibox-body">
+                               <form class="form-horizontal" method="POST" action="" enctype="multipart/form-data" novalidate>
+                                    {% csrf_token %}
+                                    <div class="row">
+                                        <div class="col-sm-12 form-group">
+                                            <label>Loan Amount</label>
+                                            {{form.loan_amount}}
+                                        </div>
+                                        
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-sm-12 form-group">
+                                            <label>Default Approved Amount</label>
+                                            {{form.default_amount}}
+                                        </div>
+                                        
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-sm-12 form-group">
+                                            <label>Certified Approved Amount</label>
+                                            {{form.approved_amount}}
+                                        </div>
+                                        
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        {% if button_enabled %}
+                                        <button class="btn btn-success" type="submit" name="btn-continue">Continue</button>
+                                        {% endif %}
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+                 
+                </div>
 
 </div>
   <div class="sidenav-backdrop backdrop"></div>
