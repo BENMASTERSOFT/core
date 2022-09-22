@@ -5921,6 +5921,218 @@ def stock_status_list_details(request,pk):
 	return render(request,'shop_templates/stock_status_list_details.html',context)
 
 
+def monthly_deductions_salary_institution_select_Aux(request):
+	task_array=[]
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	for task in tasks:
+		task_array.append(task.task.title)
+
+	status='ACTIVE'
+	records=SalaryInstitution.objects.all()
+	transaction_period=TransactionPeriods.objects.get(status=status)
+	transaction_period=transaction_period.transaction_period
+
+	context={
+	'task_array':task_array,
+	'records':records,
+	'transaction_period':transaction_period,
+	}
+	return render(request,'shop_templates/monthly_deductions_salary_institution_select_Aux.html',context)
+
+
+def monthly_individual_deductions_generate_Aux(request,pk):
+
+	processed_by=CustomUser.objects.get(id=request.user.id)
+	processed_by=processed_by.username
+
+
+	tdate=get_current_date(now)
+
+
+	form=shop_monthly_deductions_generate_form(request.POST or None)
+	task_array=[]
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	for task in tasks:
+		task_array.append(task.task.title)
+
+	transaction=TransactionTypes.objects.get(name='SHOP')
+	transaction_period=TransactionPeriods.objects.get(status='ACTIVE')
+	transaction_period=transaction_period.transaction_period
+
+	processing_status="UNPROCESSED"
+	status='UNTREATED'
+	salary_institution=SalaryInstitution.objects.get(id=pk)
+	schedule_status='UNSCHEDULED'
+	schedule_status1='SCHEDULED'
+
+
+	if MonthlyGeneratedTransactions.objects.filter(salary_institution=salary_institution,transaction_period=transaction_period,transaction=transaction).exists():
+		messages.error(request,'Transactions already Generated for this Period')
+		return HttpResponseRedirect(reverse('monthly_deductions_salary_institution_select'))
+
+	# members=members_credit_sales_summary.objects.filter(processing_status=processing_status,trans_code__member__salary_institution=salary_institution,status=status)
+	members=members_shop_credit_loans.objects.filter(member__salary_institution=salary_institution,schedule_status=schedule_status).filter(Q(balance__lt=0))
+
+	if not members:
+		messages.error(request,'No Available Record for this Transactions')
+		return HttpResponseRedirect(reverse('monthly_deductions_salary_institution_select'))
+
+
+	queryset=  members_shop_credit_loans.objects.filter(member__salary_institution=salary_institution,schedule_status=schedule_status).filter(Q(balance__lt=0)).aggregate(total_cash=Sum('balance'))
+	grand_total=queryset['total_cash']
+
+	if grand_total:
+		grand_total=grand_total
+	else:
+		grand_total=0
+
+
+
+	if request.method == 'POST':
+
+		for member in members:
+			MonthlyShopdeductionList(member=member.member,
+											transaction_period=transaction_period,
+											transaction=transaction,
+											account_number=member.loan_number,
+											amount=member.loan_amount,
+											amount_deducted=0,balance=member.loan_amount,
+											status=status,
+											processing_status=processing_status,
+											salary_institution=salary_institution,
+											processed_by=processed_by,
+											tdate=tdate
+											).save()
+
+			schedule_status="SCHEDULED"
+
+			members_shop_credit_loans.objects.filter(loan_number=member.loan_number).update(schedule_status=schedule_status1)
+
+		MonthlyGeneratedTransactions(tdate=tdate,processed_by=processed_by,salary_institution=salary_institution,transaction_period=transaction_period,transaction=transaction,transaction_status=status).save()
+
+		return HttpResponseRedirect(reverse('monthly_deductions_salary_institution_select'))
+
+
+	date_time_obj = get_current_date(transaction_period)
+
+
+	form.fields['transaction_period'].initial=date_time_obj.strftime("%a,%d %b, %Y")
+	context={
+	'task_array':task_array,
+	'members':members,
+	'transaction_period':transaction_period,
+	'salary_institution':salary_institution,
+	'form':form,
+	'grand_total':abs(grand_total),
+	}
+	return render(request,'shop_templates/monthly_individual_deductions_generate_Aux.html',context)
+
+
+
+
+
+def monthly_grouped_deductions_salary_institution_select_Aux(request):
+	task_array=[]
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	for task in tasks:
+		task_array.append(task.task.title)
+
+	status='ACTIVE'
+	records=SalaryInstitution.objects.all()
+	transaction_period=TransactionPeriods.objects.get(status=status)
+	transaction_period=transaction_period.transaction_period
+	context={
+	'task_array':task_array,
+	'records':records,
+	'transaction_period':transaction_period,
+	}
+	return render(request,'shop_templates/monthly_grouped_deductions_salary_institution_select_Aux.html',context)
+
+
+def monthly_grouped_deductions_generated_Aux(request,pk):
+	task_array=[]
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	for task in tasks:
+		task_array.append(task.task.title)
+
+	status='ACTIVE'
+
+	salary_institution=SalaryInstitution.objects.get(id=pk)
+	transaction_period=TransactionPeriods.objects.get(status=status)
+	transaction_period=transaction_period.transaction_period
+
+
+	
+	tdate=get_current_date(now)
+	processed_by=CustomUser.objects.get(id=request.user.id)
+	processed_by=processed_by.username
+
+	transaction=TransactionTypes.objects.get(code=600)
+	
+	MonthlyShopdeductionList_Aux.objects.filter(transaction_period=transaction_period,member__salary_institution=salary_institution,processing_status='UNPROCESSED',status='TREATED').update(status='UNTREATED')
+	records=MonthlyShopdeductionList_Aux.objects.filter(transaction_period=transaction_period,salary_institution=salary_institution,processing_status='UNPROCESSED',status='UNTREATED').order_by('member__member_id').values_list('member__member_id','member__ippis_no','member__admin__last_name','member__admin__first_name','member__middle_name').distinct()
+	
+	if not records:
+		messages.error(request,"No Record Found for this Transaction or It's Already Generated")
+		return HttpResponseRedirect(reverse('monthly_grouped_deductions_salary_institution_select_Aux'))
+
+	deduction_array=[]
+	grand_total=0
+	for record in records:
+
+		queryset=  MonthlyShopdeductionList_Aux.objects.filter(member__member_id=record[0],transaction_period=transaction_period).aggregate(total_cash=Sum('amount'))
+		total_amount=queryset['total_cash']
+		grand_total=float(grand_total) + float(total_amount)
+		deduction_array.append((record[0][13:],record[2] + " " + record[3]+ " " + record[4],record[1],total_amount))
+
+
+	if request.method == 'POST':
+		if MonthlyShopGroupGeneratedTransactions.objects.filter(transaction=transaction,salary_institution=salary_institution,transaction_period=transaction_period).exists():
+			messages.error(request,"This Transaction is Already Generated")
+			return HttpResponseRedirect(reverse('monthly_grouped_deductions_generated_Aux',args=(pk,)))
+
+		for record in records:
+			member=Members.objects.get(member_id=record[0])
+
+			queryset=  MonthlyShopdeductionList_Aux.objects.filter(member__member_id=record[0],transaction_period=transaction_period).aggregate(total_cash=Sum('amount'))
+			total_amount=queryset['total_cash']
+
+
+			MonthlyShopdeductionListGenerated(member=member,
+															coop_amount=total_amount,
+															account_amount=0,balance=0,
+															transaction_period=transaction_period,
+															processing_status='UNPROCESSED',
+															processed_by=processed_by,
+															status='UNTREATED',
+															salary_institution=salary_institution,
+															tdate=tdate).save()
+
+		MonthlyShopGroupGeneratedTransactions(transaction=transaction,
+										salary_institution=salary_institution,
+										transaction_period=transaction_period,
+										processed_by=processed_by,
+										transaction_status='UNTREATED',
+										tdate=tdate
+										).save()
+
+		MonthlyDeductionGenerationHeading(salary_institution=salary_institution,transaction_period=transaction_period,heading="SHOP",status='UNTREATED').save()
+
+		MonthlyShopdeductionList_Aux.objects.filter(transaction_period=transaction_period,salary_institution=salary_institution,processing_status='UNPROCESSED',status='UNTREATED').update(status='TREATED')
+
+		return HttpResponseRedirect(reverse('monthly_grouped_deductions_salary_institution_select_Aux'))
+
+	context={
+	'task_array':task_array,
+	'records':deduction_array,
+	'transaction_period':transaction_period,
+	'salary_institution':salary_institution,
+	'grand_total':grand_total,
+	}
+	return render(request,'shop_templates/monthly_grouped_deductions_generated_Aux.html',context)
+
+
+
 def monthly_deductions_salary_institution_select(request):
 	task_array=[]
 	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
@@ -6129,6 +6341,7 @@ def monthly_grouped_deductions_generated(request,pk):
 	'grand_total':grand_total,
 	}
 	return render(request,'shop_templates/monthly_grouped_deductions_generated.html',context)
+
 
 
 def Shop_Account_Deductions_Upload_salary_institution_select(request):
@@ -8866,16 +9079,132 @@ def CashBook_Shop_Display(request):
 
 
 
+def Deduction_Upload_Period_Load(request):
+	task_array=[]
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	for task in tasks:
+		task_array.append(task.task.title)
+
+	form=Monthly_Deductions_Transaction_Period_Institution_load_Form(request.POST or None)
+	items=ItemWriteOffReasons.objects.all()
+	if request.method == 'POST':
+		salary_institution_id=request.POST.get("salary_institution")
+		salary_institution=SalaryInstitution.objects.get(id=salary_institution_id)
+
+		transaction_period=request.POST.get('transaction_period')
+		return HttpResponseRedirect(reverse('Deduction_Upload_Member_Search',args=(transaction_period,salary_institution.pk)))
+	
+	form.fields['transaction_period'].initial=get_current_date(now)
+	context={
+	'task_array':task_array,
+	'form':form,
+	'items':items,
+	}
+	return render(request,'shop_templates/Deduction_Upload_Period_Load.html',context)
 
 
 
 
+def Deduction_Upload_Member_Search(request,period_pk,salary_pk):
+	task_array=[]
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	for task in tasks:
+		task_array.append(task.task.title)
+	transaction_period = datetime.strptime(period_pk, '%Y-%m-%d')
+	transaction_period=get_current_date(transaction_period)
+	salary_institution=SalaryInstitution.objects.get(id=salary_pk)
+	records=MonthlyShopdeductionList_Aux.objects.filter(salary_institution=salary_institution,transaction_period=transaction_period)
+	title="Shop Deduction Update"
+	form = searchForm(request.POST or None)
+	return render(request,'shop_templates/Deduction_Upload_Member_Search.html',{'records':records,'form':form,'title':title,'period_pk':period_pk,'salary_pk':salary_pk,'task_array':task_array,'salary_institution':salary_institution,})
 
 
 
 
+def Deduction_Upload_Member_list_load(request,period_pk,salary_pk):
+	task_array=[]
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	for task in tasks:
+		task_array.append(task.task.title)
+
+	title="Membership Deduction"
+	if request.method == "POST":
+		form = searchForm(request.POST)
+		status="ACTIVE"
+		if not form['title'].value():
+			messages.error(request,'Please enter search')
+			return HttpResponseRedirect(reverse('Deduction_Upload_Member_Search'))
+
+		members=searchMembersForShopDeduction(form['title'].value(),status,salary_pk)
+
+		if not members:
+			messages.error(request,'No record found')
+			return HttpResponseRedirect(reverse('Deduction_Upload_Member_Search',args=(period_pk,salary_pk,)))
+
+	context={
+	'period_pk':period_pk,
+	'task_array':task_array,
+	'salary_pk':salary_pk,
+	'members':members,
+	'title':title,
+	}
+	return render(request,'shop_templates/Deduction_Upload_Member_list_load.html',context)
 
 
+def Deduction_Upload_Member_Deduction_Upload(request,pk,period_pk,salary_pk):
+	task_array=[]
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	for task in tasks:
+		task_array.append(task.task.title)
+
+	form=Monthly_Deduction_Generated_Update_Details_Process_Form(request.POST or None)
+	member=Members.objects.get(id=pk)
+	
+	transaction_period = datetime.strptime(period_pk, '%Y-%m-%d')
+	transaction_period=get_current_date(transaction_period)
+
+	salary_institution=SalaryInstitution.objects.get(id=salary_pk)
+	tdate=get_current_date(now)
+	processed_by=CustomUser.objects.get(id=request.user.id)
+	processed_by=processed_by.username
+
+	if request.method ==  'POST':
+		amount=request.POST.get('amount')
+		if not amount or float(amount)<=0:
+			messages.error(request,'Invalid Amount Specification')
+			return HttpResponseRedirect(reverse('Deduction_Upload_Member_Deduction_Upload',args=(pk,period_pk,salary_pk,)))
+		
+		loan_number=generate_number(600,member.coop_no,now)
+
+		MonthlyShopdeductionList_Aux(member=member,
+								transaction_period=transaction_period,
+								account_number=loan_number,
+								amount=amount,
+								amount_deducted=0,
+								balance=-float(amount),
+								status='UNTREATED',
+								processing_status='UNPROCESSED',
+								salary_institution=salary_institution,
+								processed_by=processed_by,
+								tdate=tdate
+								).save()
+		return HttpResponseRedirect(reverse('Deduction_Upload_Member_Search',args=(period_pk,salary_pk,)))
+
+	context={
+	'period_pk':period_pk,
+	'task_array':task_array,
+	'salary_pk':salary_pk,
+	'salary_institution':salary_institution,
+	'member':member,
+	'form':form,
+	}
+	return render(request,'shop_templates/Deduction_Upload_Member_Deduction_Upload.html',context)
+
+
+
+def Deduction_Upload_Member_Deduction_Upload_Delete(request,pk,period_pk,salary_pk):
+	MonthlyShopdeductionList_Aux.objects.filter(id=pk).delete()
+	return HttpResponseRedirect(reverse('Deduction_Upload_Member_Search',args=(period_pk,salary_pk,)))
 
 
 

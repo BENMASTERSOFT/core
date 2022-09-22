@@ -297,6 +297,16 @@
                                 <a href="{% url 'Shop_Account_Deductions_Upload_salary_institution_select' %}">Process Account Deductions</a>
                             </li>
 
+
+
+                             <li>
+                                <a href="{% url 'monthly_deductions_salary_institution_select_Aux' %}">Aux Individual Deductions</a>
+                            </li>
+
+                            <li>
+                                <a href="{% url 'monthly_grouped_deductions_salary_institution_select_Aux' %}">Aux Grouped Deductions Generation</a>
+                            </li>
+                            
                         </ul>
                     </li>
                 {% endif %}
@@ -582,7 +592,9 @@
                     </li>
                     {% endif %}
 
-
+                    <li>
+                        <a href="{% url 'Deduction_Upload_Period_Load' %}">Deduction Uploads</a>
+                    </li>
                 </ul>
             </div>
         </nav>

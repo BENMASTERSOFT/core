@@ -2375,6 +2375,22 @@ class members_credit_loans_Cash_Receipt_Year_End_Transaction(DateObjectsModels):
 
 
 
+class MonthlyShopdeductionList_Aux(DateObjectsModels):
+    member=models.ForeignKey(Members,on_delete=models.CASCADE)
+    transaction_period=models.DateField(blank=True,null=True)
+    account_number=models.CharField(max_length=255,blank=True,null=True)
+    amount=models.DecimalField(max_digits=20,decimal_places = 2,default=0)
+    amount_deducted=models.DecimalField(max_digits=20,decimal_places = 2,default=0)
+    balance=models.DecimalField(max_digits=20,decimal_places = 2,default=0)
+
+    salary_institution=models.ForeignKey(SalaryInstitution,on_delete=models.CASCADE)
+    status= models.CharField(max_length=20,choices=TRANSACTION_STATUS,default='UNTREATED')
+    processing_status= models.CharField(max_length=20,choices=PROCESSING_STATUS,default='UNPROCESSED')
+
+    # class Meta(DateObjectsModels.Meta):
+    #     db_table="MonthlyShopdeductionList_Aux"
+
+
 class MonthlyShopdeductionList(DateObjectsModels):
     member=models.ForeignKey(Members,on_delete=models.CASCADE)
     transaction_period=models.DateField(blank=True,null=True)
@@ -2462,6 +2478,26 @@ class MonthlyJointDeductionGenerated(DateObjectsModels):
     # class Meta(DateObjectsModels.Meta):
     #     db_table="MonthlyJointDeductionGenerated"
 
+class Monthly_Deduction_Normalization_List(DateObjectsModels):
+    CATEGORY=(
+        ("EQUAL",'EQUAL'),
+        ("NOT EQUAL",'NOT EQUAL'),
+        ("DROPPED",'DROPPED'),
+        ("NEW MEMBER",'NEW MEMBER'),
+        )
+    member=models.ForeignKey(Members,on_delete=models.CASCADE)
+    transaction_period=models.DateField(blank=True,null=True)
+    amount=models.DecimalField(max_digits=20,decimal_places = 2,default=0)
+
+   
+    salary_institution=models.ForeignKey(SalaryInstitution,on_delete=models.CASCADE)
+    status= models.CharField(max_length=20,choices=TRANSACTION_STATUS,default='UNTREATED')
+    category= models.CharField(max_length=20,choices=CATEGORY,default='NEW MEMBER')
+    processing_status= models.CharField(max_length=20,choices=PROCESSING_STATUS,default='UNPROCESSED')
+    
+    # class Meta(DateObjectsModels.Meta):
+    #     db_table="Monthly_Deduction_Normalization_List"
+
 
 
 class NonMemberAccountDeductions(DateObjectsModels):
@@ -2497,6 +2533,7 @@ class MonthlyOverdeductionsRefund(DateObjectsModels):
 
     # class Meta(DateObjectsModels.Meta):
         #     db_table="Monthly_Over_deductions_Refund"
+
 
 
 class Members_Cash_Sales_Selected(DateObjectsModels):

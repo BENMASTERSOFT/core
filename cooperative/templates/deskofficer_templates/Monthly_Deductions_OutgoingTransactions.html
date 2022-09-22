@@ -75,6 +75,51 @@
                                 <img class="card-img-top" src="{% static '/cooperative/assets/img/image.png' %}" />
                                 <div class="card-body">
                                
+                                     <div class="text-muted card-subtitle">Deductions Normalization</div>
+                                    <div>Details</div>
+                                </div>
+                                <div class="card-footer">
+                                    <a href="{% url 'Monthly_Deduction_Normalization_Institution_Load' %}" class="text-info"><i class="fa fa-star"></i> Load</a>
+                                    <span class="pull-right text-muted font-13"></span>
+                                </div>
+                                </a>
+                            </div>
+                              <div class="card">
+                                <a href="#">
+                                <img class="card-img-top" src="{% static '/cooperative/assets/img/image.png' %}" />
+                                <div class="card-body">
+                                <a href="#">
+                                    <div class="text-muted card-subtitle">View Normalized List</div>
+                                    <div><a href="{% url 'Monthly_Deduction_Normalized_Details_Institution_Load' %}">Details</a> </div></a>
+                                </div>
+                                <div class="card-footer">
+                                    <a href="{% url 'Monthly_Deduction_Normalization_View_Institution_Load' %}" class="text-info"><i class="fa fa-star"></i> Load</a>
+                                    <span class="pull-right text-muted font-13"></span>
+                                </div>
+                                </a>
+                            </div>
+                            <div class="card">
+                                <a href="{% url 'Monthly_Deductions_Transaction_Period_Institution_load' %}">
+                                <img class="card-img-top" src="{% static '/cooperative/assets/img/image.png' %}" />
+                                <div class="card-body">
+                                
+                                    <div class="text-muted card-subtitle">Monthly Deductions</div>
+                                    <div><a href="{% url 'Monthly_Deductions_Transaction_Period_Institution_load' %}"> Details</a></div>
+                                </div>
+                                <div class="card-footer">
+                                    <a href="{% url 'Monthly_Deductions_Transaction_Period_Institution_load' %}" class="text-info"><i class="fa fa-star"></i> Load</a>
+                                  
+                                </div>
+                                </a>
+                            </div>
+                          
+                            
+
+                            <div class="card">
+                                <a href="{% url 'Monthly_Deduction_excel_Export_Institution_Load' %}">
+                                <img class="card-img-top" src="{% static '/cooperative/assets/img/image.png' %}" />
+                                <div class="card-body">
+                               
                                      <div class="text-muted card-subtitle">Exporting To Excel</div>
                                     <div>Details</div>
                                 </div>
@@ -84,50 +129,11 @@
                                 </div>
                                 </a>
                             </div>
-                            
-                            <div class="card">
-                                <a href="{% url 'Monthly_Deductions_Transaction_Period_Institution_load' %}">
-                                <img class="card-img-top" src="{% static '/cooperative/assets/img/image.png' %}" />
-                                <div class="card-body">
-                                
-                                    <div class="text-muted card-subtitle">Mothly Deductions</div>
-                                    <div><a href="{% url 'Monthly_Deductions_Transaction_Period_Institution_load' %}"> Details</a></div>
-                                </div>
-                                <div class="card-footer">
-                                    <a href="{% url 'Monthly_Deductions_Transaction_Period_Institution_load' %}" class="text-info"><i class="fa fa-star"></i> Load</a>
-                                  
-                                </div>
-                                </a>
-                            </div>
-                            <div class="card">
-                                <a href="#">
-                                <img class="card-img-top" src="{% static '/cooperative/assets/img/image.png' %}" />
-                                <div class="card-body">
-                                <a href="#">
-                                    <div class="text-muted card-subtitle">Others</div>
-                                    <div>Details</div></a>
-                                </div>
-                                <div class="card-footer">
-                                    <a href="#" class="text-info"><i class="fa fa-star"></i> Load</a>
-                                    <span class="pull-right text-muted font-13"></span>
-                                </div>
-                                </a>
-                            </div>
-                            <div class="card">
-                                <img class="card-img-top" src="{% static '/cooperative/assets/img/image.png' %}" />
-                                <div class="card-body">
-                               
-                                    <div class="text-muted card-subtitle">Others3</div>
-                                    <div>Details</div>
-                                </div>
-                                <div class="card-footer">
-                                    <a class="text-info"><i class="fa fa-star"></i> Follow</a>
-                                    <span class="pull-right text-muted font-13">Dec 4</span>
-                                </div>
-                            </div>
                         </div>
                     </div>
                 </div><br>
+
+                
             </div>
             
 

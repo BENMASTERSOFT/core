@@ -1,6 +1,6 @@
 {% extends 'deskofficer_templates/base_template.html' %}
 {% load static %}
-
+{% load mathfilters %}
 {% block content %}
             <div class="page-content fade-in-up">
                 <div class="row">
@@ -9,7 +9,12 @@
                             <div class="ibox-head">
                                 <div class="ibox-title">{{member.member.get_full_name}}| {{member.member.coop_no}} | Deduction Details
                                 |<a href="{% url 'Monthly_Deduction_Generated_Update_Details_Add_Savings' member.member.pk transaction_period salary_institution.pk member.pk status %}" class="btn btn-primary">Add Savings</a>
+                                
                                 |<a href="{% url 'Monthly_Deduction_Generated_Update_Details_Add_Loans' member.member.pk transaction_period salary_institution.pk member.pk status %}" class="btn btn-secondary">Add Loans</a> 
+                                
+                              |<a href="{% url 'Monthly_Deduction_Generated_Update_Details_Add_Shop' member.member.pk transaction_period salary_institution.pk member.pk status %}" class="btn btn-warning">Add Shop</a> 
+                                
+
                                 | <a href="{% url 'Monthly_Auxillary_Deduction_Generated_Update_Transaction_List_Load' transaction_period salary_institution.pk status %}">Back</a>
                                 </div>
                                 
@@ -60,13 +65,18 @@
                                             <td>{{record.4}}</td>
                                           
                                             <td>
-                                            
+                                            {% if record.6 == 'MAIN' %}
                                                 <a href="{% url 'Monthly_Deduction_Generated_Update_Details_Process' record.5 member_pk status %}" class="btn btn-primary">Update</a>
+                                           
+                                            {% endif %}
                                              
                                             </td> 
                                             <td>
-                                            
+                                             {% if record.6 == 'MAIN' %}
                                                 <a href="{% url 'Monthly_Deduction_Generated_Update_Details_Remove' record.5 %}" class="btn btn-danger">Remove</a>
+                                             {% else %}
+                                                <a href="{% url 'Monthly_Deduction_Generated_Update_Details_Shop_Remove' record.5 %}" class="btn btn-danger">Remove</a>
+                                            {% endif %}
                                              
                                             </td>
                                               
@@ -74,9 +84,11 @@
                                     {% endfor %}
                                     <tr>
                                         <td></td>
-                                        <td colspan="3">SUMMARY</td>
-                                        <td>{{total_schedule}}</td>
-                                        <td>{{total_amount}}</td>
+                                        <td>SUMMARY</td>
+                                       
+                                        <td colspan="2"><span style="font-size: 16px;font-weight: bold;"> Diff: {{ member.amount_deducted|sub:total_amount }}</span></td>
+                                        <td><span style="font-size: 16px;font-weight: bold;">{{standing_order_amount}}</span></td>
+                                        <td><span style="font-size: 16px;font-weight: bold;">{{total_amount}}</span></td>
                                         <td>Target</td>
                                         <td> <span style="font-size: 16px;font-weight: bold;">{{member.amount_deducted}}</span></td>
                                     </tr>

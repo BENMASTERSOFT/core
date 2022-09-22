@@ -498,6 +498,12 @@ urlpatterns = [
 
     path('deskofficer_home/', deskofficer_views.deskofficer_home,name='deskofficer_home'),
     path('control_panel/', deskofficer_views.control_panel,name='control_panel'),
+    path('MemberShip_Deactivate_search/', deskofficer_views.MemberShip_Deactivate_search,name='MemberShip_Deactivate_search'),
+    path('MemberShip_Deactivate_list_load/', deskofficer_views.MemberShip_Deactivate_list_load,name='MemberShip_Deactivate_list_load'),
+    path('MemberShip_Deactivate_Process/<str:pk>/', deskofficer_views.MemberShip_Deactivate_Process,name='MemberShip_Deactivate_Process'),
+    path('MemberShip_Activate_Process/<str:pk>/', deskofficer_views.MemberShip_Activate_Process,name='MemberShip_Activate_Process'),
+    path('MemberShip_Deactivate_Loan_Load/<str:pk>/', deskofficer_views.MemberShip_Deactivate_Loan_Load,name='MemberShip_Deactivate_Loan_Load'),
+    path('MemberShip_Deactivate_Loan_Process/<str:pk>/', deskofficer_views.MemberShip_Deactivate_Loan_Process,name='MemberShip_Deactivate_Loan_Process'),
 
     path('Useraccount_manager/', deskofficer_views.Useraccount_manager,name='Useraccount_manager'),
 
@@ -1019,6 +1025,24 @@ urlpatterns = [
     path('MonthlyJointDeductionsGenerate/<str:pk>/', deskofficer_views.MonthlyJointDeductionsGenerate,name='MonthlyJointDeductionsGenerate'),
     path('MonthlyJointDeductionsGenerateDetails/<str:pk>/<str:member_pk>/', deskofficer_views.MonthlyJointDeductionsGenerateDetails,name='MonthlyJointDeductionsGenerateDetails'),
 
+    
+    path('Monthly_Deduction_Normalization_View_Institution_Load/', deskofficer_views.Monthly_Deduction_Normalization_View_Institution_Load,name='Monthly_Deduction_Normalization_View_Institution_Load'),
+    path('export_Monthly_Deduction_Normalization_List_xls/<str:salary_pk>/<str:tday>/<str:tmonth>/<str:tyear>/', deskofficer_views.export_Monthly_Deduction_Normalization_List_xls,name='export_Monthly_Deduction_Normalization_List_xls'),
+    
+    path('Monthly_Deduction_Normalized_Details_Institution_Load/', deskofficer_views.Monthly_Deduction_Normalized_Details_Institution_Load,name='Monthly_Deduction_Normalized_Details_Institution_Load'),
+    path('Monthly_Deduction_Normalized_Details/<str:salary_id>/<str:tday>/<str:tmonth>/<str:tyear>/', deskofficer_views.Monthly_Deduction_Normalized_Details,name='Monthly_Deduction_Normalized_Details'),
+
+    path('Monthly_Deduction_Normalization_Institution_Load/', deskofficer_views.Monthly_Deduction_Normalization_Institution_Load,name='Monthly_Deduction_Normalization_Institution_Load'),
+    path('Monthly_Deduction_Normalization_Sources_load/<str:pk>/', deskofficer_views.Monthly_Deduction_Normalization_Sources_load,name='Monthly_Deduction_Normalization_Sources_load'),
+    path('Monthly_Deduction_Normalization_List_Merge/<str:salary_pk>/<str:rday>/<str:rmonth>/<str:ryear>/', deskofficer_views.Monthly_Deduction_Normalization_List_Merge,name='Monthly_Deduction_Normalization_List_Merge'),
+    
+
+    # path('Monthly_Deduction_Normalization_Lists_Merge/<str:salary_pk>/<str:rday>/<str:rmonth>/<str:ryear>/', deskofficer_views.Monthly_Deduction_Normalization_Lists_Merge,name='Monthly_Deduction_Normalization_Lists_Merge'),
+    
+    path('Monthly_Deduction_Normalization_List_load/<str:salary_id>/<str:rday>/<str:rmonth>/<str:ryear>/', deskofficer_views.Monthly_Deduction_Normalization_List_load,name='Monthly_Deduction_Normalization_List_load'),
+    path('Monthly_Deduction_Normalization_List_Processed/<str:salary_pk>/<str:ref_period>/', deskofficer_views.Monthly_Deduction_Normalization_List_Processed,name='Monthly_Deduction_Normalization_List_Processed'),
+
+    
 
     path('Monthly_Deduction_excel_Export_Institution_Load/', deskofficer_views.Monthly_Deduction_excel_Export_Institution_Load,name='Monthly_Deduction_excel_Export_Institution_Load'),
     path('Monthly_Deduction_excel_Export_load/<str:pk>/', deskofficer_views.Monthly_Deduction_excel_Export_load,name='Monthly_Deduction_excel_Export_load'),
@@ -1055,7 +1079,9 @@ urlpatterns = [
     path('Monthly_Deduction_Generated_Update_Details_Add_Savings_Select/<str:pk>/<str:member_pk>/<str:trans_id>/<str:salary_id>/<str:return_pk>/<str:status>/', deskofficer_views.Monthly_Deduction_Generated_Update_Details_Add_Savings_Select,name='Monthly_Deduction_Generated_Update_Details_Add_Savings_Select'),
 
     path('Monthly_Deduction_Generated_Update_Details_Add_Loans/<str:pk>/<str:trans_id>/<str:salary_id>/<str:return_pk>/<str:status>/', deskofficer_views.Monthly_Deduction_Generated_Update_Details_Add_Loans,name='Monthly_Deduction_Generated_Update_Details_Add_Loans'),
-    path('Monthly_Deduction_Generated_Update_Details_Add_Loans_Select/<str:pk>/<str:member_pk>/<str:trans_id>/<str:salary_id>/<str:return_pk>/', deskofficer_views.Monthly_Deduction_Generated_Update_Details_Add_Loans_Select,name='Monthly_Deduction_Generated_Update_Details_Add_Loans_Select'),
+    path('Monthly_Deduction_Generated_Update_Details_Add_Loans_Select/<str:pk>/<str:member_pk>/<str:trans_id>/<str:salary_id>/<str:return_pk>/<str:status>/', deskofficer_views.Monthly_Deduction_Generated_Update_Details_Add_Loans_Select,name='Monthly_Deduction_Generated_Update_Details_Add_Loans_Select'),
+    path('Monthly_Shop_Deduction_Institution_Load/', deskofficer_views.Monthly_Shop_Deduction_Institution_Load,name='Monthly_Shop_Deduction_Institution_Load'),
+    path('Monthly_Shop_Deduction_List_Load/<str:pday>/<str:pmonth>/<str:pyear>/<str:salary_pk>/', deskofficer_views.Monthly_Shop_Deduction_List_Load,name='Monthly_Shop_Deduction_List_Load'),
 
     path('Monthly_Deductions_Transaction_Period_Institution_load/', deskofficer_views.Monthly_Deductions_Transaction_Period_Institution_load,name='Monthly_Deductions_Transaction_Period_Institution_load'),
     path('Monthly_Deductions_Transaction_Summary_Load/<str:period_pk>/<str:salary_pk>/', deskofficer_views.Monthly_Deductions_Transaction_Summary_Load,name='Monthly_Deductions_Transaction_Summary_Load'),
@@ -1664,6 +1690,10 @@ urlpatterns = [
     path('Upload_Commodity_Product_Loan_Products_Uploaded_Details/<str:pk>/', deskofficer_views.Upload_Commodity_Product_Loan_Products_Uploaded_Details,name='Upload_Commodity_Product_Loan_Products_Uploaded_Details'),
     path('Upload_Commodity_Product_Loan_Ledger_Posting/<str:pk>/', deskofficer_views.Upload_Commodity_Product_Loan_Ledger_Posting,name='Upload_Commodity_Product_Loan_Ledger_Posting'),
 
+    path('Monthly_Deduction_Generated_Update_Details_Add_Shop/<str:pk>/<str:trans_id>/<str:salary_id>/<str:return_pk>/<str:status>/', deskofficer_views.Monthly_Deduction_Generated_Update_Details_Add_Shop,name='Monthly_Deduction_Generated_Update_Details_Add_Shop'),
+    path('Monthly_Deduction_Generated_Update_Details_Add_Shop_Select/<str:pk>/<str:member_pk>/<str:trans_id>/<str:salary_id>/<str:return_pk>/<str:status>/', deskofficer_views.Monthly_Deduction_Generated_Update_Details_Add_Shop_Select,name='Monthly_Deduction_Generated_Update_Details_Add_Shop_Select'),
+    path('Monthly_Deduction_Generated_Update_Details_Shop_Remove/<str:pk>/', deskofficer_views.Monthly_Deduction_Generated_Update_Details_Shop_Remove,name='Monthly_Deduction_Generated_Update_Details_Shop_Remove'),
+
 
 
 
@@ -1837,9 +1867,14 @@ urlpatterns = [
     path('stock_status_list_load/', shop_views.stock_status_list_load,name='stock_status_list_load'),
     path('stock_status_list_details/<str:pk>/', shop_views.stock_status_list_details,name='stock_status_list_details'),
 
+    path('monthly_deductions_salary_institution_select_Aux/', shop_views.monthly_deductions_salary_institution_select_Aux,name='monthly_deductions_salary_institution_select_Aux'),
+    path('monthly_individual_deductions_generate_Aux/<str:pk>/', shop_views.monthly_individual_deductions_generate_Aux,name='monthly_individual_deductions_generate_Aux'),
 
     path('monthly_deductions_salary_institution_select/', shop_views.monthly_deductions_salary_institution_select,name='monthly_deductions_salary_institution_select'),
     path('monthly_individual_deductions_generate/<str:pk>/', shop_views.monthly_individual_deductions_generate,name='monthly_individual_deductions_generate'),
+    
+    path('monthly_grouped_deductions_salary_institution_select_Aux/', shop_views.monthly_grouped_deductions_salary_institution_select_Aux,name='monthly_grouped_deductions_salary_institution_select_Aux'),
+    path('monthly_grouped_deductions_generated_Aux/<str:pk>/', shop_views.monthly_grouped_deductions_generated_Aux,name='monthly_grouped_deductions_generated_Aux'),
 
     path('monthly_grouped_deductions_salary_institution_select/', shop_views.monthly_grouped_deductions_salary_institution_select,name='monthly_grouped_deductions_salary_institution_select'),
     path('monthly_grouped_deductions_generated/<str:pk>/', shop_views.monthly_grouped_deductions_generated,name='monthly_grouped_deductions_generated'),
@@ -2009,6 +2044,13 @@ urlpatterns = [
     path('Expenditure_Year_End_Summary/', shop_views.Expenditure_Year_End_Summary,name='Expenditure_Year_End_Summary'),
 
     path('CashBook_Shop_Display/', shop_views.CashBook_Shop_Display,name='CashBook_Shop_Display'),
+
+    path('Deduction_Upload_Period_Load/', shop_views.Deduction_Upload_Period_Load,name='Deduction_Upload_Period_Load'),
+    path('Deduction_Upload_Member_Search/<str:period_pk>/<str:salary_pk>/', shop_views.Deduction_Upload_Member_Search,name='Deduction_Upload_Member_Search'),
+    path('Deduction_Upload_Member_list_load/<str:period_pk>/<str:salary_pk>/', shop_views.Deduction_Upload_Member_list_load,name='Deduction_Upload_Member_list_load'),
+    path('Deduction_Upload_Member_Deduction_Upload/<str:pk>/<str:period_pk>/<str:salary_pk>/', shop_views.Deduction_Upload_Member_Deduction_Upload,name='Deduction_Upload_Member_Deduction_Upload'),
+    path('Deduction_Upload_Member_Deduction_Upload_Delete/<str:pk>/<str:period_pk>/<str:salary_pk>/', shop_views.Deduction_Upload_Member_Deduction_Upload_Delete,name='Deduction_Upload_Member_Deduction_Upload_Delete'),
+    
 
     path('load_branches/', shop_views.load_branches,name='ajax_load_branches'),
 

@@ -95,9 +95,9 @@
                                             <td> {{standing_order.lock_status}}                                           </td>
                                             <td> {{standing_order.status}}                                           </td>
                                             <td>
-                                                 {% if standing_order.lock_status == 'OPEN' %}
+                                                 {% if standing_order.lock_status == 'OPEN' %}{% endif %}
                                                 <a href="{% url 'standing_order_remove' standing_order.pk %}" class="btn btn-danger">Remove</a>
-                                                {% endif %}
+                                                
                                             </td>
                                          
                                         </tr>

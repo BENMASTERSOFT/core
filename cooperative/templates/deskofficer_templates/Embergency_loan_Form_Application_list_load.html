@@ -22,6 +22,7 @@
                                     <th>#</th>
                                     <th>Member ID</th>
                                     <th>Name</th>
+                                    <th>ID</th>
                                  
                                     <th>Action</th>
                                 </tr>
@@ -31,6 +32,7 @@
                                     <th>#</th>
                                     <th>Member ID</th>
                                     <th>Name</th>
+                                    <th>ID</th>
                                  
                                     <th>Action</th>
                                 </tr>
@@ -40,7 +42,9 @@
                                 <tr>
                                     <td>{{forloop.counter}}</td>
                                     <td>{{member.member.coop_no}}</td>
-                                    <td>{{member.member.get_full_name}}</td>
+                                    <td>{{member.member.get_full_name}}</td> 
+
+                                    <td>{{member.pk}}</td>
                                     
                               
                                     <td>

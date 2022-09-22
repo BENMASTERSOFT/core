@@ -9,14 +9,14 @@
         <div class="row">
             <div class="col-lg-6 col-lg-offset-4" id="content">
                 <h5>{{title}}</h5> 
-                <form action="{% url 'Members_Bank_Accounts_edit_list_load' %}" method="POST" role="form">
+                <form action="{% url 'MemberShip_Deactivate_list_load' %}" method="POST" role="form">
                     {% csrf_token %}
                     <div class="form-group">
                         <div class="input-group">
                          {{form.title}}
                              <span class="input-group-btn">
                                 <button type="submit" class="btn btn-primary" id="add-btn">Search </button> 
-                                 <a href="{% url 'Members_Bank_Account_Dashboard_Load' %}" class="btn btn-secondary">Back</a> 
+                               
                              </span>
                         </div>
                     </div>

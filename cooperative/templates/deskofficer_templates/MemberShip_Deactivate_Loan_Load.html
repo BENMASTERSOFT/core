@@ -1,0 +1,56 @@
+{% extends 'deskofficer_templates/base_template.html' %}
+{% load static %}
+
+{% block content %}
+            <div class="page-content fade-in-up">
+                <div class="row">
+                   
+                    <div class="col-xl-12">
+                        <div class="ibox">
+                            <div class="ibox-head">
+                                <div class="ibox-title">Available Loans</div>
+                            </div>
+                            <div class="ibox-body">
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Description</th>
+                                            <th>Loan Number</th>
+                                            <th>Loan Amount</th>
+                                            <th>Amount Paid</th>
+                                            <th>Balance</th>
+                                            <th>Start Date</th>
+                                            <th>Status</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for record in records %}
+                                        <tr>
+                                            <td>{{forloop.counter}}</td>
+                                            <td>{{record.transaction.name}}</td>
+                                            <td>{{record.loan_number}}</td>
+                                            <td>{{record.loan_amount}}</td>
+                                            <td>{{record.amount_paid}}</td>
+                                            <td>{{record.balance}}</td>
+                                            <td>{{record.stop_date}}</td>
+                                            <td>{{record.stop_date}}</td>
+                                            <td>{{record.status}}</td>
+                                            <td><a href="{% url 'MemberShip_Deactivate_Loan_Process' record.pk %}" class="btn btn-warning">Process</a></td>
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+               
+           
+            </div>
+  <div class="sidenav-backdrop backdrop"></div>
+    <div class="preloader-backdrop">
+        <div class="page-preloader">Loading</div>
+    </div>
+{% endblock %}
