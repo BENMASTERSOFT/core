@@ -91,9 +91,9 @@ TICKET_STATUS=(
         ("CLOSED","CLOSED")
         )
 RECEIPT_TYPES=(
-        ('NONE','NONE'),
+        # ('NONE','NONE'),
         ('AUTO','AUTO'),
-        ('MANUAL','MANUAL')
+        # ('MANUAL','MANUAL')
         )
 RECEIPT_STATUS=(
         ('UNUSED','UNUSED'),
@@ -1710,6 +1710,24 @@ class Stock_form(forms.Form):
                               disabled = False,
                               error_messages={'required': "Please Enter Unit Selling Price"})
 
+   expiry_date = forms.DateField(label='Expiry Date', label_suffix=" : ",
+                             required=True, disabled=False,
+                             widget=DateInput(attrs={'class': 'form-control'}),
+                             error_messages={'required': "This field is required."})
+
+class Auction_Stock_form(forms.Form):
+
+   code=forms.CharField(label="Code",max_length=255,widget=forms.TextInput(attrs={"class":"form-control",'autocomplete':'off','readonly':'readonly'}))
+   item_name=forms.CharField(label="Item Name",max_length=255,widget=forms.TextInput(attrs={"class":"form-control",'readonly':'readonly'}))
+
+
+   unit_selling_price = forms.DecimalField(initial=0,label='Unit Selling Price', label_suffix=" : ", min_value=0,  max_digits=20,
+                              widget=forms.NumberInput(attrs={'class': 'form-control'}),
+                              decimal_places=2, required=False,
+                              disabled = False,
+                              error_messages={'required': "Please Enter Unit Selling Price"})
+
+   comment= forms.CharField(widget=forms.Textarea(attrs={"rows":5, "cols":50}))
 
 
 
@@ -1792,6 +1810,10 @@ class Stock_Update_form(forms.Form):
                               disabled = False,
                               error_messages={'required': "Please Enter Unit Selling Price"})
 
+   expiry_date = forms.DateField(label='Expiry Date', label_suffix=" : ",
+                             required=True, disabled=False,
+                             widget=DateInput(attrs={'class': 'form-control'}),
+                             error_messages={'required': "This field is required."})
 
 
 class members_credit_issue_item_form(forms.Form):
@@ -1806,14 +1828,32 @@ class members_credit_issue_item_form(forms.Form):
                               widget=forms.NumberInput(attrs={'class': 'form-control'}),
                              help_text="This value is greater than or equal to 0 & less than or equal to 100.",
                              disabled = False, error_messages={'required': "Please Enter quantity."})
+   no_in_pack = forms.IntegerField(initial=1,label='No in Pack', label_suffix=" : ", min_value=0, required=True,
+                              widget=forms.NumberInput(attrs={'class': 'form-control','readonly':'readonly'}),
+                             help_text="This value is greater than or equal to 0 & less than or equal to 100.",
+                             disabled = False, error_messages={'required': "Please Enter quantity."})
 
    unit_selling_price = forms.DecimalField(initial=0,label='Unit Selling Price', label_suffix=" : ", min_value=0,  max_digits=20,
                               widget=forms.NumberInput(attrs={'class': 'form-control'}),
                               decimal_places=2, required=False,
                               disabled = True,
-                              error_messages={'required': "Please Enter Unit Selling Price"})
+                              error_messages={'required': "Total Amount"})
 
 
+
+   total_amount = forms.DecimalField(initial=0,label='Total Amount', label_suffix=" : ", min_value=0,  max_digits=20,
+                              widget=forms.NumberInput(attrs={'class': 'form-control','readonly':'readonly'}),
+                              decimal_places=2, required=True,
+                              disabled = False,
+                              error_messages={'required': "Total Amount"})
+
+
+   amount_paid = forms.DecimalField(initial=0,label='Amount Paid', label_suffix=" : ", min_value=0,  max_digits=20,
+                              widget=forms.NumberInput(attrs={'class': 'form-control'}),
+                              decimal_places=2, required=False,
+                              error_messages={'required': "Amount Paid"})
+
+# class members_credit_issue_item_Compute_form(forms.Form):
 class Members_Credit_Sales_external_fascilities_form(forms.Form):
    description=forms.CharField(label="Description",max_length=255,widget=forms.TextInput(attrs={"class":"form-control"}),disabled = False)
 
@@ -1911,6 +1951,7 @@ class loan_request_approved_list_form_sales_form(forms.Form):
                               decimal_places=2, required=True,
                               disabled = False,
                               error_messages={'required': "Please Enter Amount"})
+   
    receipt = forms.IntegerField(label='Enter Receipt No', label_suffix=" : ", min_value=0, required=True,
                               widget=forms.NumberInput(attrs={'class': 'form-control','autocomplete':'off'}),
                              help_text="This value is greater than or equal to 0 & less than or equal to 100.",
@@ -1936,11 +1977,24 @@ class loan_application_processing_form(forms.Form):
                               decimal_places=2, required=True,
                               disabled = False,
                               error_messages={'required': "Please Enter Amount"})
+   prev_amount_saved = forms.DecimalField(initial=0,label='Prev. Saved Amount', label_suffix=" : ", min_value=0,  max_digits=20,
+                              widget=forms.NumberInput(attrs={'class': 'form-control','readonly':'readonly'}),
+                              decimal_places=2, required=True,
+                              disabled = False,
+                              error_messages={'required': "Please Enter Amount"})
+   new_amount_saved = forms.DecimalField(initial=0,label='New Saved Amount', label_suffix=" : ", min_value=0,  max_digits=20,
+                              widget=forms.NumberInput(attrs={'class': 'form-control'}),
+                              decimal_places=2, required=True,
+                              disabled = False,
+                              error_messages={'required': "Please Enter Amount"})
 
    date_applied = forms.DateField(label='Application Date', label_suffix=" : ",
                              required=True, disabled=False,
                              widget=DateInput(attrs={'class': 'form-control'}),
                              error_messages={'required': "This field is required."})
+
+
+   comment= forms.CharField(widget=forms.Textarea(attrs={"rows":2, "cols":62}))
 
 
 
@@ -2370,14 +2424,28 @@ class MembersInitialShare_update_form(forms.Form):
 
 
 class Members_Share_Purchase_Request_form(forms.Form):
-   units = forms.IntegerField(initial=0,label='Units', label_suffix=" : ", min_value=0,  required=True,
-                                 widget=forms.NumberInput(attrs={'class': 'form-control'}),
-                                help_text="This value is greater than or equal to 0 & less than or equal to 100.",
-                                disabled = False, error_messages={'required': "Please Maximum Unit."})
+   units = forms.DecimalField(initial=0,label='Units', label_suffix=" : ", min_value=0,  max_digits=20,
+                              widget=forms.NumberInput(attrs={'class': 'form-control'}),
+                              decimal_places=2, required=True,
+                              disabled = False,
+                              error_messages={'required': "Please Enter Amount"})
+   total_cost = forms.DecimalField(initial=0,label='Unit ', label_suffix=" : ", min_value=0,  max_digits=20,
+                              widget=forms.NumberInput(attrs={'class': 'form-control','readonly':'readonly'}),
+                              decimal_places=2, required=True,
+                              disabled = False,
+                              error_messages={'required': "Please Enter Amount"})
+
+   existing_shares = forms.DecimalField(initial=0,label='shares ', label_suffix=" : ", min_value=0,  max_digits=20,
+                              widget=forms.NumberInput(attrs={'class': 'form-control','readonly':'readonly'}),
+                              decimal_places=2, required=True,
+                              disabled = False,
+                              error_messages={'required': "Please Enter Amount"})
+
 
 
 
 class Existing_Shares_Upload_form(forms.Form):
+   year=forms.CharField(label="year",max_length=5,widget=forms.TextInput(attrs={"class":"form-control"}),required=True)
    shares_amount = forms.DecimalField(initial=0,label='Shares Amount', label_suffix=" : ", min_value=0,  max_digits=20,
                               widget=forms.NumberInput(attrs={'class': 'form-control'}),
                               decimal_places=2, required=True,
@@ -2389,9 +2457,12 @@ class Existing_Shares_Upload_form(forms.Form):
                               disabled = False,
                               error_messages={'required': "Please Enter Amount"})
 
-   shares = forms.IntegerField(initial=0,label='Duration', label_suffix=" : ", min_value=0, required=True,
-                              widget=forms.NumberInput(attrs={'class': 'form-control','autocomplete':'off'}),
-                             disabled = False, error_messages={'required': "Please Enter Shares"})
+   shares = forms.DecimalField(initial=0,label='shares ', label_suffix=" : ", min_value=0,  max_digits=20,
+                              widget=forms.NumberInput(attrs={'class': 'form-control','readonly':'readonly'}),
+                              decimal_places=2, required=True,
+                              disabled = False,
+                              error_messages={'required': "Please Enter Amount"})
+
 
    effective_date = forms.DateField(label='Effective Date', label_suffix=" : ",
                              required=True, disabled=False,
@@ -2521,6 +2592,35 @@ class Cash_Withdrawal_form(forms.Form):
                               disabled = False,
                               error_messages={'required': "Please Enter Amount"})
   
+
+class Cash_Withdrawal_Request_Approval_Processing_form(forms.Form):
+   
+   comment=forms.CharField(label="comment",max_length=50,required=True,widget=forms.TextInput(attrs={"class":"form-control",}))
+   approval_status = forms.ChoiceField(label="Title", choices=APPROVAL_STATUS,widget=forms.Select(attrs={"class":"form-control"}))
+   narration=forms.CharField(label="Narration",max_length=50,required=True,widget=forms.TextInput(attrs={"class":"form-control",'readonly':'readonly',}))
+   approval_date = forms.DateField(label='Date', label_suffix=" : ",
+                             required=True, disabled=False,
+                             widget=DateInput(attrs={'class': 'form-control'}),
+                             error_messages={'required': "This field is required."})
+   ledger_balance = forms.DecimalField(initial=0,label='Ledger Balance', label_suffix=" : ", min_value=0,  max_digits=20,
+                              widget=forms.NumberInput(attrs={'class': 'form-control','readonly':'readonly',}),
+                              decimal_places=2, required=True,
+                              disabled = False,
+                              error_messages={'required': "Please Enter Amount"})
+   applied_amount = forms.DecimalField(initial=0,label='Applied Amount', label_suffix=" : ", min_value=0,  max_digits=20,
+                              widget=forms.NumberInput(attrs={'class': 'form-control','readonly':'readonly',}),
+                              decimal_places=2, required=True,
+                              disabled = False,
+                              error_messages={'required': "Please Enter Amount"})
+   approved_amount = forms.DecimalField(initial=0,label='Amount', label_suffix=" : ", min_value=0,  max_digits=20,
+                              widget=forms.NumberInput(attrs={'class': 'form-control'}),
+                              decimal_places=2, required=True,
+                              disabled = False,
+                              error_messages={'required': "Please Enter Amount"})
+  
+
+
+
 class Monthly_Auxillary_Deduction_Rectification_Reset_form(forms.Form):
    salary_institution_list=[]
    try:
@@ -2580,7 +2680,7 @@ class Monthly_Deductions_All_Records_Report_Period_form(forms.Form):
 class WithdrawalController_form(forms.Form):
    transaction_list=[]
    try:
-      transactions = TransactionTypes.objects.filter(source__title='SAVINGS').filter(~Q(code='104'))
+      transactions = TransactionTypes.objects.filter(source__title='SAVINGS') #.filter(~Q(code='104'))
       for transaction in transactions:
          small_transaction=(transaction.id,transaction.name)
          transaction_list.append(small_transaction)
@@ -3052,7 +3152,7 @@ class Item_Write_off_product_form(forms.Form):
 
    details= forms.CharField(widget=forms.Textarea(attrs={"rows":2, "cols":55}))
    unit_cost_price = forms.DecimalField(initial=0,label='Unit Cost Price', label_suffix=" : ", min_value=1,  max_digits=20,
-                              widget=forms.NumberInput(attrs={'class': 'form-control'}),
+                              widget=forms.NumberInput(attrs={'class': 'form-control',}),
                               decimal_places=2, required=True,
                               disabled = False,
                               error_messages={'required': "Please Add Cost Price"})
@@ -3389,12 +3489,23 @@ class Members_Savings_Fund_Transfer_Savings_Details_form(forms.Form):
                               widget=forms.NumberInput(attrs={'class': 'form-control','readonly':'readonly'}),
                               decimal_places=2, required=True,
                               disabled = False)
+  
+   loan_balance = forms.DecimalField(initial=0,label='Loan Balance', label_suffix=" : ",
+                              widget=forms.NumberInput(attrs={'class': 'form-control','readonly':'readonly'}),
+                              decimal_places=2, required=True,
+                              disabled = False)
+  
+
    amount = forms.DecimalField(initial=0,label='Amount', label_suffix=" : ",
                               widget=forms.NumberInput(attrs={'class': 'form-control'}),
                               decimal_places=2, required=True,
                               disabled = False)
    
    narration= forms.CharField(widget=forms.Textarea(attrs={"rows":2, "cols":55}),required=True)
+   
+
+class SharesActiveYearForm(forms.Form):
+   year=forms.CharField(label="year",max_length=5,widget=forms.TextInput(attrs={"class":"form-control"}),required=True)
    
 
 
@@ -3931,6 +4042,7 @@ class Individual_Capture_Form(forms.Form):
    first_name =forms.CharField(label="First Name",max_length=255,widget=forms.TextInput(attrs={"class":"form-control"}),required=True)
    middle_name =forms.CharField(label="Middle Name",max_length=255,widget=forms.TextInput(attrs={"class":"form-control"}))
    month_joined = forms.ChoiceField(label="Month Joined", choices=MONTH_LIST,widget=forms.Select(attrs={"class":"form-control"}))
+   status = forms.ChoiceField(label="Month Joined", choices=MEMBERSHIP_STATUS,widget=forms.Select(attrs={"class":"form-control"}))
    year_joined = forms.ChoiceField(label="Year Joined", choices=year_array,widget=forms.Select(attrs={"class":"form-control"}))
    # year_joined =forms.CharField(label="Year Joined",max_length=4,widget=forms.TextInput(attrs={"class":"form-control"}),required=True)
    phone_number =forms.CharField(label="Phone Number",max_length=11,widget=forms.TextInput(attrs={"class":"form-control"}),required=True)
@@ -3944,6 +4056,9 @@ class Individual_Capture_Form(forms.Form):
    except:
       salary_institution_list=[]
    salary_institution = forms.ChoiceField(label="Salary Institution", choices=salary_institution_list,widget=forms.Select(attrs={"class":"form-control"}))
+
+
+
 
 
 class Termination_Loan_Allowed_load_Form(forms.Form):
@@ -4183,7 +4298,7 @@ class Expired_Products_Main_Tracking_Write_Off_Form(forms.Form):
                                 required=True, disabled=False,
                                 widget=DateInput(attrs={'class': 'form-control'}),
                                 error_messages={'required': "This field is required."})
-
+   comment=forms.CharField(label="Reasons",max_length=255,widget=forms.TextInput(attrs={"class":"form-control"}),required=True)
 
 class Expired_Products_Auction_Tracking_Write_Off_Form(forms.Form):
    available_quantity = forms.IntegerField(initial=0,label='Available Quantity', label_suffix=" : ", min_value=0,  required=False,
@@ -4708,6 +4823,17 @@ class Members_Ledger_Balance_Update_Loan_Account_Form(forms.Form):
 
 
 class Manual_Ledger_Posting_Ledger_details_Form(forms.Form):
+   CHOICES=(
+      ('TRANSFER','TRANSFER'),
+      ('CHEQUE','CHEQUE'),
+      )
+   particulars=forms.CharField(label="Particulars",max_length=255,widget=forms.TextInput(attrs={"class":"form-control",'readonly':'readonly'}),required=True)
+   cheque_number=forms.CharField(label="Cheque Number",max_length=255,widget=forms.TextInput(attrs={"class":"form-control"}),required=True)
+   others=forms.CharField(label="Transaction",max_length=255,widget=forms.TextInput(attrs={"class":"form-control",'readonly':'readonly'}),required=True)
+
+   channel = forms.ChoiceField(label="Payment Channels", choices=CHOICES,widget=forms.Select(attrs={"class":"form-control"}))
+
+
    balance_amount = forms.DecimalField(initial=0,label='Existing Amount', label_suffix=" : ", min_value=0,  max_digits=20,
                               widget=forms.NumberInput(attrs={'class': 'form-control','readonly':'readonly'}),
                               decimal_places=2, required=True,
@@ -4718,10 +4844,28 @@ class Manual_Ledger_Posting_Ledger_details_Form(forms.Form):
                               decimal_places=2, required=True,
                               disabled = False,
                               error_messages={'required': "Please Enter Amount Paid"})
+   
+   balance_exist= forms.DecimalField(initial=0,label='Balance Exist', label_suffix=" : ", min_value=0,  max_digits=20,
+                              widget=forms.NumberInput(attrs={'class': 'form-control','readonly':'readonly'}),
+                              decimal_places=2, required=True,
+                              disabled = False,
+                              error_messages={'required': "Please Enter Amount Paid"})
+   withdrawal_amount= forms.DecimalField(initial=0,label='Withdrawal Amount', label_suffix=" : ", min_value=0,  max_digits=20,
+                              widget=forms.NumberInput(attrs={'class': 'form-control','readonly':'readonly'}),
+                              decimal_places=2, required=True,
+                              disabled = False,
+                              error_messages={'required': "Please Enter Amount Paid"})
+   applied_amount= forms.DecimalField(initial=0,label='Applied Amount', label_suffix=" : ", min_value=0,  max_digits=20,
+                              widget=forms.NumberInput(attrs={'class': 'form-control','readonly':'readonly'}),
+                              decimal_places=2, required=True,
+                              disabled = False,
+                              error_messages={'required': "Please Enter Amount Paid"})
+
    period = forms.DateField(label='Transaction Date', label_suffix=" : ",
                                 required=True, disabled=False,
                                 widget=DateInput(attrs={'class': 'form-control'}),
                                 error_messages={'required': "This field is required."})
+
 
    last_transaction_period = forms.DateField(label='Last_Transaction Date', label_suffix=" : ",
                                 required=True, disabled=False,
@@ -4887,6 +5031,7 @@ class Monthly_Deductions_Cash_Transfer_Source_Load_Loan_Update_Form(forms.Form):
 
 class membership_essential_commodity_loan_Company_products_selections_update_Form(forms.Form):
   product_name=forms.CharField(label="description",max_length=255,widget=forms.TextInput(attrs={"class":"form-control",'readonly':'readonly'}),required=True)
+  comment=forms.CharField(label="Reasons",max_length=255,widget=forms.TextInput(attrs={"class":"form-control"}),required=True)
   existing_quantity = forms.IntegerField(initial=0,label='Quantity', label_suffix=" : ", min_value=0,  required=False,
                                  widget=forms.NumberInput(attrs={'class': 'form-control','readonly':'readonly'}),
                                 disabled = False, error_messages={'required': "Please Min Unit"})
@@ -4911,10 +5056,102 @@ class Monthly_Deductions_Transaction_Period_Institution_load_Form(forms.Form):
    except:
       salary_institution_list=[]
    salary_institution = forms.ChoiceField(label="Salary Institution", choices=salary_institution_list,widget=forms.Select(attrs={"class":"form-control"}))
-     
+  
+
+class Members_Dashboard_Loan_Deduction_Generate_Period_form(forms.Form):
+   transaction_period = forms.DateField(label='Transaction Period', label_suffix=" : ",
+                                required=True, disabled=False,
+                                widget=DateInput(attrs={'class': 'form-control'}),
+                                error_messages={'required': "This field is required."})
+  
+   repayment = forms.DecimalField(initial=0,label='Repayment Amount', label_suffix=" : ", min_value=0,  max_digits=20,
+                              widget=forms.NumberInput(attrs={'class': 'form-control','readonly':'readonly'}),
+                              decimal_places=2, required=True,
+                              disabled = False,
+                              error_messages={'required': "Please Enter Amount Paid"})
+   amount= forms.DecimalField(initial=0,label='Amount', label_suffix=" : ", min_value=0,  max_digits=20,
+                              widget=forms.NumberInput(attrs={'class': 'form-control'}),
+                              decimal_places=2, required=True,
+                              disabled = False,
+                              error_messages={'required': "Please Enter Amount Paid"})
+
 
 class Norminal_Roll_Without_Phone_Number_Update_Form(forms.Form):
     phone_number=forms.CharField(label="description",max_length=255,widget=forms.TextInput(attrs={"class":"form-control"}),required=True)
+
+
+
+class Cash_Withdrawal_Transactions_details_Form(forms.Form):
+   CHOICES=(
+      ('TRANSFER','TRANSFER'),
+      ('CHEQUE','CHEQUE'),
+      )
+   # particulars=forms.CharField(label="Particulars",max_length=255,widget=forms.TextInput(attrs={"class":"form-control",}),required=True)
+   cheque_number=forms.CharField(label="Cheque Number",max_length=255,widget=forms.TextInput(attrs={"class":"form-control"}),required=True)
+   others=forms.CharField(label="Transaction",max_length=255,widget=forms.TextInput(attrs={"class":"form-control",'readonly':'readonly'}),required=True)
+
+   channel = forms.ChoiceField(label="Payment Channels", choices=CHOICES,widget=forms.Select(attrs={"class":"form-control"}))
+
+
+   balance_amount = forms.DecimalField(initial=0,label='Existing Amount', label_suffix=" : ", min_value=0,  max_digits=20,
+                              widget=forms.NumberInput(attrs={'class': 'form-control','readonly':'readonly'}),
+                              decimal_places=2, required=True,
+                              disabled = False,
+                              error_messages={'required': "Please Enter Amount Paid"})
+   amount= forms.DecimalField(initial=0,label='Amount', label_suffix=" : ", min_value=0,  max_digits=20,
+                              widget=forms.NumberInput(attrs={'class': 'form-control'}),
+                              decimal_places=2, required=True,
+                              disabled = False,
+                              error_messages={'required': "Please Enter Amount Paid"})
+   
+   balance_exist= forms.DecimalField(initial=0,label='Balance Exist', label_suffix=" : ", min_value=0,  max_digits=20,
+                              widget=forms.NumberInput(attrs={'class': 'form-control','readonly':'readonly'}),
+                              decimal_places=2, required=True,
+                              disabled = False,
+                              error_messages={'required': "Please Enter Amount Paid"})
+   withdrawal_amount= forms.DecimalField(initial=0,label='Withdrawal Amount', label_suffix=" : ", min_value=0,  max_digits=20,
+                              widget=forms.NumberInput(attrs={'class': 'form-control','readonly':'readonly'}),
+                              decimal_places=2, required=True,
+                              disabled = False,
+                              error_messages={'required': "Please Enter Amount Paid"})
+   applied_amount= forms.DecimalField(initial=0,label='Applied Amount', label_suffix=" : ", min_value=0,  max_digits=20,
+                              widget=forms.NumberInput(attrs={'class': 'form-control','readonly':'readonly'}),
+                              decimal_places=2, required=True,
+                              disabled = False,
+                              error_messages={'required': "Please Enter Amount Paid"})
+
+   period = forms.DateField(label='Transaction Date', label_suffix=" : ",
+                                required=True, disabled=False,
+                                widget=DateInput(attrs={'class': 'form-control'}),
+                                error_messages={'required': "This field is required."})
+
+
+   last_transaction_period = forms.DateField(label='Last_Transaction Date', label_suffix=" : ",
+                                required=True, disabled=False,
+                                widget=DateInput(attrs={'class': 'form-control','readonly':'readonly'}),
+                                error_messages={'required': "This field is required."})
+   account_number = forms.IntegerField(initial=0,label='Account Number', label_suffix=" : ", min_value=0,  required=False,
+                                 widget=forms.NumberInput(attrs={'class': 'form-control','readonly':'readonly'}),
+                                disabled = False, error_messages={'required': "Please Min Unit"})
+
+   transaction=forms.CharField(label="Transaction",max_length=255,widget=forms.TextInput(attrs={"class":"form-control",'readonly':'readonly'}),required=True)
+
+   account_list=[]
+
+   try:
+      accounts = CooperativeBankAccounts.objects.all()
+      for account in accounts:
+         small_account=(account.id,'{}-{}'.format(account.bank.title,account.account_number))
+         account_list.append(small_account)
+   except:
+      account_list=[]
+
+   account=forms.ChoiceField(label="Account",choices=account_list,widget=forms.Select(attrs={"class":"form-control"}))
+
+
+
+class Cooperative_Shop_Deduction_Interval_form(forms.Form):
+   interval=forms.CharField(label="Interval",max_length=2,widget=forms.TextInput(attrs={"class":"form-control"}),required=True)
 
 
 # CURRENT DATE

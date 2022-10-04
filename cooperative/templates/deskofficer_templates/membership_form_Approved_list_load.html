@@ -22,7 +22,8 @@
                                     <th>Middle Name</th>
                                     <th>Date Approved</th>
                                   
-                                    <th>Action</th>
+                                    <th></th>
+                                    <th></th>
                                 </tr>
                             </thead>
                             <tfoot>
@@ -33,7 +34,8 @@
                                     <th>Middle Name</th>
                                     <th>Date Approved</th>
                                    
-                                    <th>Action</th>
+                                    <th></th>
+                                    <th></th>
                                 </tr>
                             </tfoot>
                             <tbody>
@@ -47,6 +49,9 @@
                                     <td>
                                         <a href="{% url 'membership_form_sales_preview' applicant.pk  %}" class="btn btn-primary">View Details</a>
                                         <a href="{% url 'membership_form_sales_issue' applicant.pk %}" class="btn btn-success">Issue Form</a>
+                                    </td>      
+                                    <td>
+                                        <a href="{% url 'membership_form_Approved_drop' applicant.pk %}" class="btn btn-danger">Drop</a>
                                     </td>
                                     
                                

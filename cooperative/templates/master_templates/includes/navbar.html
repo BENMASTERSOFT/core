@@ -756,6 +756,9 @@
                                     <li>
                                         <a href="{% url 'Loan_application_approval_period_load' %}">Loan Application</a>
                                     </li>
+                                     <li>
+                                        <a href="{% url 'Loan_application_upgrade_approval_list_load' %}">Loan Update Approval</a>
+                                    </li>
                                  {% endif %}
                                 </ul>
                             </li>
@@ -832,7 +835,20 @@
 
                         </ul>
                     </li>
-
+                     <li class="heading">INTERNAL AUDITOR</li>
+                     <li>
+                    <a href="" style="color:yellow;">Shop Purchases Confirmation</a>
+                    </li>
+                    <li>
+                        <a href="{% url 'Item_Write_off_Approval' %}" style="color:yellow;">Item Write-off Confirmation</a>
+                    </li> 
+                    <li>
+                        <a href="{% url 'Item_Auction_Approval' %}" style="color:yellow;">Item Auction Corfirmation</a>
+                    </li> 
+                    <li>
+                        <a href="{% url 'Auction_Price_Update_Request_Aproval' %}" style="color:yellow;">Auction Price Change</a>
+                    </li> 
+                    
 
                 </ul>
             </div>

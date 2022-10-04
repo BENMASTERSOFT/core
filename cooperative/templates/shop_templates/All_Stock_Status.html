@@ -10,10 +10,13 @@
             <div class="page-content fade-in-up">
                 <div class="ibox">
                     <div class="ibox-head">
-                        {% comment %}<div class="ibox-title">STOCK STATUS|<a href="{% url 'All_Stock_Status_Pdf' %}" class="btn btn-primary">Print PDF</a> </div> {% endcomment %}
+                        {% comment %}<div class="ibox-title">STOCK STATUS|<a href="{% url 'All_Stock_Status_Pdf' %}" class="btn btn-primary">Print PDF1</a> </div> 
 
 
-                        <div class="ibox-title">STOCK STATUS|<a href="{% url 'GeneratePdf' %}" class="btn btn-primary">Print PDF</a> </div>
+                        <div class="ibox-title">STOCK STATUS|<a href="{% url 'GeneratePdf' %}" class="btn btn-primary">Print PDF</a> </div>  
+                        {% endcomment %}
+
+                        <div class="ibox-title">STOCK STATUS | <a href="{% url 'export_All_Stock_xls' %}" class="btn btn-primary">Export</a> </div>
                     </div>
                     <div class="ibox-body">
                         <table class="table table-striped table-bordered table-hover" id="example-table" cellspacing="0" width="100%">
@@ -22,8 +25,12 @@
                                     <th>#</th>
                                     <th>Code</th>
                                     <th>Item Name</th>
+                                    <th>Details</th>
+                                    <th>S. Price</th>
+                                    <th>C. Price</th>
                                     <th>Quantity</th>
                                     <th>Min Qty</th>
+                                    <th>Action</th>
                                     
                                 </tr>
                             </thead>
@@ -32,8 +39,15 @@
                                     <th>#</th>
                                     <th>Code</th>
                                     <th>Item Name</th>
+                                    <th>Details</th>
+                                    <th>S. Price</th>
+                                    <th>C. Price</th>
                                     <th>Quantity</th>
                                     <th>Min Qty</th>
+                                    <th>Action</th>
+                                    
+                                </tr>
+                            </tfoot></th>
                                     
                                 </tr>
                             </tfoot>
@@ -43,8 +57,16 @@
                                     <td>{{forloop.counter}}</td>
                                     <td>{{record.code}}</td>
                                     <td>{{record.item_name}}</td>
+                                    <td>
+                                    {% if not record.details == 'NONE' and not record.details == 'None' %}
+                                    {{record.details}}
+                                    {% endif %}
+                                </td>
+                                    <td>{{record.unit_selling_price}}</td>
+                                    <td>{{record.unit_cost_price}}</td>
                                     <td>{{record.quantity}}</td>
                                     <td>{{record.re_order_level}}</td>
+                                    <td><a href="{% url 'All_Stock_Auction_Request' record.pk %}">Auction Request</a></td>
                                     
                                 </tr>
                                    {% endfor %} 
@@ -55,6 +77,43 @@
                     </div>
                 </div>
                
+                 <div class="row">
+                    
+                    <div class="col-xl-10">
+                        <div class="ibox">
+                            <div class="ibox-head">
+                                <div class="ibox-title">Auction Products Awaiting Approval</div>
+                            </div>
+                            <div class="ibox-body">
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Code</th>
+                                            <th>Item Name</th>
+                                            <th>Quanity</th>
+                                            <th>Status</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for item in queryset %}
+                                        <tr>
+                                            <td>{{forloop.counter}}</td>
+                                            <td>{{item.stock.code}}</td>
+                                            <td>{{item.stock.item_name}}</td>
+                                            <td>{{item.quantity}}</td>
+                                            <td>{{item.approval_status}}</td>
+                                            <td><a href="{% url 'All_Stock_Auction_Request_Delete' item.pk %}" class="btn btn-danger">Drop</a></td>
+                                          
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
   
     

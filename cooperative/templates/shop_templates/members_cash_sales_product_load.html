@@ -71,7 +71,7 @@
                                         <td>
                                             {% if item.quantity  or item.unit_selling_price  %}
                                           
-                                                <a href="{% url 'members_cash_sales_item_issue' item.pk member.id %}" class="btn btn-success btn-xs m-r-5">Normal</a>
+                                                <a href="{% url 'members_cash_sales_item_issue' item.pk member.id 0 'False' 1 %}" class="btn btn-success btn-xs m-r-5">Normal</a>
                                             {% endif %}
                                                 <a href="{% url 'members_cash_sales_auction_item_issue' item.code member.id ticket_holder %}" class="btn btn-primary btn-xs m-r-5">Auction</a>
                                         </td>
@@ -101,6 +101,8 @@
                                 <th>Description </th>
                                 <th>Quantity</th>
                                 <th>Unit Prices</th>
+                                <th>Total</th>                        
+                                <th>Discount</th>                        
                                 <th>Total Amount</th>                        
                                 <th>Sources</th>                        
                                 <th>Action</th>
@@ -115,6 +117,8 @@
                                 <td>{{select_item.product.item_name}}</td>
                                 <td>{{select_item.quantity}}</td>
                                 <td>{{select_item.unit_selling_price}}</td>
+                                <td>{{select_item.total_amount}}</td>
+                                <td>{{select_item.discount}}</td>
                                 <td>{{select_item.total}}</td>
                                 <td>{{select_item.sources}}</td>
                         

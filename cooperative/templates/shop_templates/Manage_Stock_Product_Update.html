@@ -55,6 +55,12 @@
                                         <div class="col-sm-8">
                                             {{form.item_name}}
                                         </div>
+                                    </div>    
+                                    <div class="form-group row">
+                                        <label class="col-sm-4 col-form-label">Details</label>
+                                        <div class="col-sm-8">
+                                            {{form.details}}
+                                        </div>
                                     </div>
                                     {% if product.lock_status == 'OPEN' %}
                                     <div class="form-group row">
@@ -88,6 +94,16 @@
                                         <div class="col-sm-8">
                                             {{form.re_order_level}}
                                         </div>
+                                    </div>      
+                                    <div class="form-group row">
+                                        <label class="col-sm-4 col-form-label">Expiry Date</label>
+                                        <div class="col-sm-8">
+                                            <label class="ui-checkbox" style="color:blue;">
+                                            <input type="checkbox" name="expirydate">
+                                            <span class="input-span"></span>Add Expiry Date</label>
+                                            {{form.expiry_date}}
+                                        </div>
+
                                     </div>
 
                                     <div class="form-group row">

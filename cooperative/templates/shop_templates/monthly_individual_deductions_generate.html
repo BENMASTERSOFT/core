@@ -59,8 +59,8 @@
                                     <td>{{ forloop.counter}}</td>
                                     <td>{{member.member.get_member_Id}}</td>
                                     <td>{{member.member.get_full_name}}</td>
-                                    <td>{{member.loan_number}}</td>
-                                    <td>{{member.balance|stringformat:"+d"|slice:"1:"}}</td>
+                                    <td>{{member.account_number}}</td>
+                                    <td>{{member.total_amount|stringformat:"+d"|slice:"1:"}}</td>
                                     <td>{{member.member.ippis_no}}</td>
                                 </tr>
                             {% endfor %}

@@ -42,15 +42,16 @@
                             <li>
                                 <a href="{% url 'Delete_Daily_Sales' %}">Delete</a>
                             </li>
-                            <li>
-                                <a href="{% url 'Delete_Daily_Sales1' %}">Delete 1</a>
-                            </li>
+                           
 
                         </ul>
                     </li>
 
                 {% endcomment %}
-
+                <li>
+                    <a href="{% url 'Delete_Daily_Sales' %}">Delete</a>
+                </li>
+               
                 <li>
                     <a href="{% url 'members_credit_sales_status_search' %}"><i class="sidebar-item-icon fa fa-calendar"></i>
                         <span class="nav-label">Sales Status</span>
@@ -287,6 +288,12 @@
                         <ul class="nav-2-level collapse">
 
                              <li>
+                                <a href="{% url 'monthly_deductions_Scheduling_Period_Load' %}">Deductions Scheduling</a>
+                            </li>   
+                            <li>
+                                <a href="{% url 'monthly_deductions_salary_institution_select' %}">Failed Deductions Re-Scheduling</a>
+                            </li> 
+                            <li>
                                 <a href="{% url 'monthly_deductions_salary_institution_select' %}">Individual Deductions</a>
                             </li>
 

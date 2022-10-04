@@ -1,0 +1,47 @@
+{% extends 'deskofficer_templates/base_template.html' %}
+{% load static %}
+
+{% block content %}
+            <div class="page-content fade-in-up">
+                <div class="row">
+                    <div class="col-xl-8">
+                        <div class="ibox">
+                            <div class="ibox-head">
+                                <div class="ibox-title">Transacyion Loan Loack | {{member.get_full_name}} | {{member.coop_no}} | <a href="{% url 'control_panel' %}">Back</a> </div>
+                            </div>
+                            <div class="ibox-body">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Description</th>
+                                            <th>Account Mumber</th>
+                                            <th>Loan Lock Status</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for record in records %}
+                                        <tr>
+                                            <td>{{forloop.counter}}</td>
+                                            <td>{{record.transaction.name}}</td>
+                                            <td>{{record.account_number}}</td>
+                                            <td>{{record.loan_lock}}</td>
+                                            <td><a href="{% url 'MemberShip_Transaction_Account_Manager_Transactions_Update' record.pk %}" class="btn btn-primary">Update</a></td>
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                  
+                </div>
+               
+           
+            </div>
+  <div class="sidenav-backdrop backdrop"></div>
+    <div class="preloader-backdrop">
+        <div class="page-preloader">Loading</div>
+    </div>
+{% endblock %}

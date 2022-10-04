@@ -4,90 +4,71 @@
 {% block content %}
             <div class="page-content fade-in-up">
                 <div class="row">
-                    <div class="col-md-6">
+                    <div class="col-md-8">
                         <div class="ibox">
                             <div class="ibox-head">
-                                <div class="ibox-title">Basic form</div>
-                                <div class="ibox-tools">
-                                    <a class="ibox-collapse"><i class="fa fa-minus"></i></a>
-                                    <a class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-ellipsis-v"></i></a>
-                                    <div class="dropdown-menu dropdown-menu-right">
-                                        <a class="dropdown-item">option 1</a>
-                                        <a class="dropdown-item">option 2</a>
-                                    </div>
-                                </div>
+                                <div class="ibox-title">Cash Withdrawal Approval | {{record.member.member.get_full_name}} | {{record.member.member.coop_no}}</div>
+                                
                             </div>
                             <div class="ibox-body">
-                                <form>
+                                <form method ="POST" action="">
+                                    {% csrf_token %}
                                     <div class="row">
-                                        <div class="col-sm-6 form-group">
-                                            <label>First Name</label>
-                                            <input class="form-control" type="text" placeholder="First Name">
+                                        <div class="col-sm-12 form-group">
+                                            <label>Ledger Balance as at Application Date</label>
+                                           {{form.ledger_balance}}
                                         </div>
-                                        <div class="col-sm-6 form-group">
-                                            <label>Last Name</label>
-                                            <input class="form-control" type="text" placeholder="First Name">
+                                       
+                                    </div>
+                                    
+                                    <div class="row">
+                                        <div class="col-sm-12 form-group">
+                                            <label>Purpose</label>
+                                           {{form.narration}}
                                         </div>
+                                       
                                     </div>
-                                    <div class="form-group">
-                                        <label>Email</label>
-                                        <input class="form-control" type="text" placeholder="Email address">
-                                    </div>
-                                    <div class="form-group">
-                                        <label>Password</label>
-                                        <input class="form-control" type="password" placeholder="Password">
-                                    </div>
-                                    <div class="form-group">
-                                        <label class="ui-checkbox">
-                                            <input type="checkbox">
-                                            <span class="input-span"></span>Remamber me</label>
-                                    </div>
-                                    <div class="form-group">
-                                        <button class="btn btn-default" type="submit">Submit</button>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
 
-                    <div class="col-md-6">
-                        <div class="ibox">
-                            <div class="ibox-head">
-                                <div class="ibox-title">Horizontal Form</div>
-                                <div class="ibox-tools">
-                                    <a class="ibox-collapse"><i class="fa fa-minus"></i></a>
-                                    <a class="fullscreen-link"><i class="fa fa-expand"></i></a>
-                                </div>
-                            </div>
-                            <div class="ibox-body">
-                                <form class="form-horizontal">
+                                     
                                     <div class="form-group row">
-                                        <label class="col-sm-2 col-form-label">Email</label>
-                                        <div class="col-sm-10">
-                                            <input class="form-control" type="text" placeholder="Email address">
+                                        <label class="col-sm-4 col-form-label">Amount to Withdraw</label>
+                                        <div class="col-sm-8">
+                                            {{form.applied_amount}}
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group row">
+                                        <label class="col-sm-4 col-form-label">Approved Amount</label>
+                                        <div class="col-sm-8">
+                                            {{form.approved_amount}}
+                                        </div>
+                                    </div>
+
+                                    
+
+
+                                    <div class="form-group row">
+                                        <label class="col-sm-4 col-form-label">Approval Status</label>
+                                        <div class="col-sm-8">
+                                            {{form.approval_status}}
+                                        </div>
+                                    </div>   
+                                    <div class="form-group row">
+                                        <label class="col-sm-4 col-form-label">Comment</label>
+                                        <div class="col-sm-8">
+                                            {{form.comment}}
                                         </div>
                                     </div>
                                     <div class="form-group row">
-                                        <label class="col-sm-2 col-form-label">Password</label>
-                                        <div class="col-sm-10">
-                                            <input class="form-control" type="password" placeholder="Password">
+                                        <label class="col-sm-4 col-form-label">Approval Date</label>
+                                        <div class="col-sm-8">
+                                            {{form.approval_date}}
                                         </div>
                                     </div>
+                                  
+                                 
                                     <div class="form-group row">
-                                        <label class="col-sm-2 col-form-label">Gender</label>
-                                        <div class="col-sm-10">
-                                            <input class="form-control" type="password" placeholder="Password">
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <div class="col-sm-10 ml-sm-auto">
-                                            <label class="ui-checkbox ui-checkbox-gray">
-                                                <input type="checkbox">
-                                                <span class="input-span"></span>Remamber me</label>
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <div class="col-sm-10 ml-sm-auto">
+                                        <div class="col-sm-8 ml-sm-auto">
                                             <button class="btn btn-info" type="submit">Submit</button>
                                         </div>
                                     </div>
@@ -95,28 +76,10 @@
                             </div>
                         </div>
                     </div>
+
                 </div>
 
-             <div class="row">
-                    <div class="col-md-6">
-                        <div class="ibox">
-                            <div class="ibox-head">
-                                <div class="ibox-title">Inline Form</div>
-                            </div>
-                            <div class="ibox-body">
-                                <form class="form-inline">
-                                    <label class="sr-only" for="ex-email">Email</label>
-                                    <input class="form-control mb-2 mr-sm-2 mb-sm-0" id="ex-email" type="text" placeholder="Email address">
-                                    <label class="sr-only" for="ex-pass">Email</label>
-                                    <input class="form-control mb-2 mr-sm-2 mb-sm-0" id="ex-pass" type="password" placeholder="Password">
-                                    
-                                    <button class="btn btn-success" type="submit">Login</button>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+             
             
             </div>
             

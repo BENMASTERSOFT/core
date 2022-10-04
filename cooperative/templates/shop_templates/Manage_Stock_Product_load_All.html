@@ -24,10 +24,12 @@
                                     <th>Description</th>
                                     <th>Quantity</th>
                                     <th>Re-Order Qty</th>
+                                    <th>No in Pack</th>
                                     <th>Unit Selling Price</th>
                                     <th>Unit Cost Price</th>
 
-                                    <th>Action</th>
+                                    <th></th>
+                                    <th></th>
                                 </tr>
                             </thead>
                             <tfoot>
@@ -38,10 +40,12 @@
                                     <th>Description</th>
                                     <th>Quantity</th>
                                     <th>Re-Order Qty</th>
+                                    <th>No in Pack</th>
                                     <th>Unit Selling Price</th>
                                     <th>Unit Cost Price</th>
 
-                                    <th>Action</th>
+                                    <th></th>
+                                    <th></th>
                                 </tr>
                             </tfoot>
                             <tbody>
@@ -50,15 +54,21 @@
                                     <td>{{forloop.counter}}</td>
                                     <td>{{stock.code}}</td>
                                     <td>{{stock.item_name}}</td>
-                                    <td>{{stock.details}}</td>
                                     <td>
-                                        {% if stock.lock_status.title == 'OPEN' %}
+                                    {% if not stock.details == 'NONE' and not stock.details == 'None' %}
+                                    {{stock.details}}
+                                    {% endif %}
+                                </td>
+                                   
+                                    <td>
+                                        {% if stock.lock_status == 'OPEN' %}
                                            {{stock.quantity}} <span style="color:green;"><sub><small>OPEN</small> </sub> </span>
                                         {% else %}
                                               {{stock.quantity}} <span style="color:red;"><sub><small>LOCKED</small> </sub> </span>
                                         {% endif %}
                                     </td>
                                     <td>{{stock.re_order_level}}</td>
+                                    <td>{{stock.no_in_pack}}</td>
                                     <td>{{stock.unit_selling_price}}</td>
                                     <td>{{stock.unit_cost_price}}</td>
 
@@ -66,10 +76,15 @@
                                         {% if stock.lock_status == 'OPEN' %}
                                             <a href="{% url 'Manage_Stock_Product_Update_All' stock.id %}" > Update</a>
                                        {% endif %}
-                                        {% if stock.delete_status %}
+                                      
+                                        
+                                    </td> 
+                                    <td>
+                                      
+                                        {% if stock.delete_status %}{% endif %}
 
-                                            <a href="{% url 'Manage_Stock_Product_delete_All' stock.id %}" > Delete</a>
-                                        {% endif %}
+                                            <a href="{% url 'Manage_Stock_Product_delete_All' stock.id %}" class="btn btn-danger"> Delete</a>
+                                        
                                     </td>
 
                                 </tr>

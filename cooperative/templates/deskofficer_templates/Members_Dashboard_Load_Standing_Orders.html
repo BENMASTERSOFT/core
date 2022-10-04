@@ -4,10 +4,10 @@
 {% block content %}
             <div class="page-content fade-in-up">
                 <div class="row">
-                    <div class="col-xl-10">
+                    <div class="col-xl-12">
                         <div class="ibox">
                             <div class="ibox-head">
-                                <div class="ibox-title">{{member.get_full_name}} | {{member.coop_no}} | Standing Orders | <a href="{% url 'standing_order_form' member.pk %}">Add Standing Order</a> | <a href="{% url 'Members_Dashboard_Load' member.pk %}">Back</a></div>
+                                <div class="ibox-title">{{member.get_full_name}} | {{member.coop_no}} | Standing Orders | <a href="{% url 'standing_order_form' member.pk %}">Add Standing Order</a> | <a href="{% url 'Members_Dashboard_Load_Standing_Orders_Generate_Deduction_Period' member.pk %}" class="btn btn-success">Generate Deduction</a>| <a href="{% url 'Members_Dashboard_Load' member.pk %}">Back</a></div>
                             </div>
                             <div class="ibox-body">
                                 <table class="table">
@@ -18,7 +18,7 @@
                                             <th>Amount</th>
                                             <th>Effective Date</th>
                                             <th>Status</th>
-                                            <th>Action</th>
+                                            <th colspan="2">Action</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -30,8 +30,13 @@
                                     <td>{{item.updated_at|date:"D, d M, Y"}}</td>
                                     <td>{{item.status}}</td>
                                     <td>
-                                      {% comment %}
-                                        <a href="{% url 'Members_Dashboard_Load_Standing_Orders_Update' item.pk %}" class="btn btn-primary">Update</a>{% endcomment %}
+                                      {% comment %}{% endcomment %}
+                                        <a href="{% url 'Members_Dashboard_Load_Standing_Orders_Update' item.pk %}" class="btn btn-primary">Update</a>
+                              
+                                   </td>
+                                   <td>
+                                     
+                                        <a href="{% url 'Members_Dashboard_Load_Standing_Orders_Update' item.pk %}" class="btn btn-danger">Delete</a>
                               
                                    </td>
                                 </tr>

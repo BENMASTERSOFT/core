@@ -10,7 +10,7 @@
                             <div class="col-md-12">
                                 <div class="ibox">
                                         <div class="ibox-head">
-                                            <div class="ibox-title">Loan    Application |  <a href="{% url 'loan_application_approved_transaction_period_load' applicant.loan.pk %}">Back</a>
+                                            <div class="ibox-title">Loan    Application |  <a href="{% url 'loan_application_approved_transaction_period_load' %}">Back</a>
                                             </div>
                                         </div> <div class="ibox-head">
                                             <div class="ibox-title"> {{applicant.member.coop_no}} - {{applicant.member.get_full_name}}
@@ -68,6 +68,7 @@
                                                 </div>
                                             </div> 
                                             <div class="form-group row">
+
                                                 <label class="col-sm-3 col-form-label">Date Applied</label>
                                                 <div class="col-sm-9">
                                                     {{form.date_applied}}
@@ -78,7 +79,7 @@
                                             <div class="form-group row">
                                                 <div class="col-sm-9 ml-sm-auto">
                                                     <button class="btn btn-info" type="submit" name="application">Submit</button>
-                                                    
+                                             
                                                 </div>
                                             </div>
                                              <p>Please Click on <b>Submit</b> to Activate Transaction in this Page</p>

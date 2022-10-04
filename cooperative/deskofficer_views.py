@@ -843,6 +843,31 @@ def deskofficer_home(request):
 		default_password="YES"
 	StandingOrderAccounts.objects.filter(amount=0).delete()
 	
+
+
+	# MembersAccountsDomain.objects.filter(transaction__code='800').delete()
+	# MembersAccountsDomain.objects.filter(transaction__code='700').delete()
+	# MembersAccountsDomain.objects.filter(transaction__code='600').delete()
+	# LoanApplicationShortListing.objects.filter(id='1').delete()
+	# queryset=MembersShareAccountsMain.objects.all()
+	# for item in queryset:
+	# 	MembersShareAccountsMain.objects.filter(id=item.pk).update(account_number=f'700{item.year}{item.member.coop_no}')
+
+
+
+
+	# PersonalLedger.objects.filter(id=4635).update(debit=257165,credit=0,balance=-257165)
+	# PersonalLedger.objects.filter(id=8453).update(credit=30250.00,balance=-226915)
+	# PersonalLedger.objects.filter(id=12565).update(credit=30250.00,balance=-196665)
+
+	# queryset=MembersShareAccountsMain.objects.all()
+	# for item in queryset: 
+	# 	total_shares=float(item.total_cost)/float(item.unit_cost)
+	# 	shares = "{:.2f}".format(total_shares)
+	# 	MembersShareAccountsMain.objects.filter(id=item.pk).update(shares=shares)
+	
+
+
 	# LoansRepaymentBase.objects.all().update(base_amount=F('loan_amount'))
 	
 
@@ -1158,7 +1183,7 @@ def membership_request_complete_search(request):
 	title="Search Membership Request Completion"
 	form = searchForm(request.POST or None)
 
-	return render(request,'deskofficer_templates/membership_request_complete_search.html',{'form':form,'title':title,'task_array':task_array})
+	return render(request,'deskofficer_templates/membership_request_complete_search.html',{'form':form,'title':title,'task_array':task_array,'default_password':default_password,'task_enabler_array':task_enabler_array,})
 
 
 def membership_request_complete_load(request):
@@ -1871,6 +1896,48 @@ def membership_form_sales_Search(request):
 	'default_password':default_password,})
 
 
+
+# def membership_form_sales_list_load(request):
+# 	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+# 	task_array=[]
+# 	for task in tasks:
+# 		task_array.append(task.task.title)
+
+
+
+# 	task_enabler=TransactionEnabler.objects.filter(status="YES")
+# 	task_enabler_array=[]
+# 	for item in task_enabler:
+# 		task_enabler_array.append(item.title)
+
+# 	default_password="NO"
+# 	if Staff.objects.filter(admin=request.user,default_password='YES'):
+# 		default_password="YES"
+
+
+# 	form = searchForm(request.POST)
+# 	applicants=[]
+# 	if request.method == "POST":
+# 		if not form['title'].value():
+# 			return HttpResponseRedirect(reverse('membership_form_sales_Search'))
+
+# 		applicants=MemberShipRequest.objects.filter(Q(phone_number__icontains=form['title'].value()) | Q(first_name__icontains=form['title'].value()) | Q(last_name__icontains=form['title'].value()) | Q(middle_name__icontains=form['title'].value())).filter(transaction_status='UNTREATED',approval_status='APPROVED')
+
+# 		if not applicants:
+# 			messages.error(request,'No Record Found')
+# 			return HttpResponseRedirect(reverse('membership_form_sales_Search'))
+
+
+
+# 	context={
+# 	'applicants':applicants,
+# 	'task_array':task_array,
+# 	'task_enabler_array':task_enabler_array,
+# 	'default_password':default_password,
+# 	}
+# 	return render(request,'deskofficer_templates/membership_form_sales_list_load.html',context)
+
+
 def membership_form_sales_list_load(request):
 	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
 	task_array=[]
@@ -1887,22 +1954,8 @@ def membership_form_sales_list_load(request):
 	default_password="NO"
 	if Staff.objects.filter(admin=request.user,default_password='YES'):
 		default_password="YES"
-
-
-	form = searchForm(request.POST)
-	applicants=[]
-	if request.method == "POST":
-		if not form['title'].value():
-			return HttpResponseRedirect(reverse('membership_form_sales_Search'))
-
-		applicants=MemberShipRequest.objects.filter(Q(phone_number__icontains=form['title'].value()) | Q(first_name__icontains=form['title'].value()) | Q(last_name__icontains=form['title'].value()) | Q(middle_name__icontains=form['title'].value())).filter(transaction_status='UNTREATED',approval_status='APPROVED')
-
-		if not applicants:
-			messages.error(request,'No Record Found')
-			return HttpResponseRedirect(reverse('membership_form_sales_Search'))
-
-
-
+	applicants=MemberShipRequest.objects.filter(transaction_status='UNTREATED',approval_status='APPROVED') #,form_issance_status='NO'
+	
 	context={
 	'applicants':applicants,
 	'task_array':task_array,
@@ -1912,7 +1965,11 @@ def membership_form_sales_list_load(request):
 	return render(request,'deskofficer_templates/membership_form_sales_list_load.html',context)
 
 
-
+def membership_form_sales_delete(request,pk):
+	MemberShipRequest.objects.filter(id=pk).delete()
+	return HttpResponseRedirect(reverse('membership_form_sales_list_load'))
+	
+	
 
 def membership_form_sales_preview(request,pk):
 	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
@@ -2163,6 +2220,9 @@ def membership_form_Approved_list_load(request):
 	return render(request,'deskofficer_templates/membership_form_Approved_list_load.html',context)
 
 
+def membership_form_Approved_drop(request,pk):
+	MemberShipRequest.objects.filter(id=pk).delete()
+	return HttpResponseRedirect(reverse('membership_form_Approved_list_load'))
 
 
 
@@ -2191,6 +2251,46 @@ def membership_registration_applicant_search(request):
 	'default_password':default_password,})
 
 
+# def membership_registration_applicant_list_load(request):
+# 	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+# 	task_array=[]
+# 	for task in tasks:
+# 		task_array.append(task.task.title)
+
+
+
+# 	task_enabler=TransactionEnabler.objects.filter(status="YES")
+# 	task_enabler_array=[]
+# 	for item in task_enabler:
+# 		task_enabler_array.append(item.title)
+
+# 	default_password="NO"
+# 	if Staff.objects.filter(admin=request.user,default_password='YES'):
+# 		default_password="YES"
+
+
+# 	title="Update Membership Request"
+# 	form = searchForm(request.POST)
+
+# 	if request.method == "POST":
+# 		if not request.POST.get("title"):
+# 			return HttpResponseRedirect(reverse('membership_registration_applicant_search'))
+
+# 		applicants=MemberShipFormSalesRecord.objects.filter(Q(applicant__phone_number__icontains=form['title'].value()) | Q(applicant__first_name__icontains=form['title'].value()) | Q(applicant__last_name__icontains=form['title'].value()) | Q(applicant__middle_name__icontains=form['title'].value())).filter(status='UNTREATED')
+# 		if not applicants:
+# 			messages.error(request,'No Record Found')
+# 			return HttpResponseRedirect(reverse('membership_registration_applicant_search'))
+
+# 	context={
+# 	'applicants':applicants,
+# 	'title':title,
+# 	'task_array':task_array,
+# 	'task_enabler_array':task_enabler_array,
+# 	'default_password':default_password,
+# 	}
+# 	return render(request,'deskofficer_templates/membership_registration_applicant_list_load.html',context)
+
+
 
 def membership_registration_applicant_list_load(request):
 	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
@@ -2211,17 +2311,9 @@ def membership_registration_applicant_list_load(request):
 
 
 	title="Update Membership Request"
-	form = searchForm(request.POST)
-
-	if request.method == "POST":
-		if not request.POST.get("title"):
-			return HttpResponseRedirect(reverse('membership_registration_applicant_search'))
-
-		applicants=MemberShipFormSalesRecord.objects.filter(Q(applicant__phone_number__icontains=form['title'].value()) | Q(applicant__first_name__icontains=form['title'].value()) | Q(applicant__last_name__icontains=form['title'].value()) | Q(applicant__middle_name__icontains=form['title'].value())).filter(status='UNTREATED')
-		if not applicants:
-			messages.error(request,'No Record Found')
-			return HttpResponseRedirect(reverse('membership_registration_applicant_search'))
-
+	
+	applicants=MemberShipFormSalesRecord.objects.filter(status='UNTREATED')
+		
 	context={
 	'applicants':applicants,
 	'title':title,
@@ -2231,7 +2323,11 @@ def membership_registration_applicant_list_load(request):
 	}
 	return render(request,'deskofficer_templates/membership_registration_applicant_list_load.html',context)
 
-
+def membership_registration_applicant_drop(request,pk):
+	MemberShipFormSalesRecord.objects.filter(id=pk).delete()
+	return HttpResponseRedirect(reverse('membership_registration_applicant_list_load'))
+		
+	
 
 
 def membership_registration_register_confirmation(request,pk):
@@ -2509,7 +2605,7 @@ def membership_registration_register(request,pk):
 		share_account=MembersAccountsDomain(loan_lock=loan_lock,status=account_status,member=user.members,transaction=share_transaction,account_number=share_account)
 		share_account.save()
 
-		share_record=MembersShareAccounts(tdate=tdate,status=status2,member=share_account,shares=shares,unit_cost=unit_cost,total_cost=total_cost,effective_date=tdate,year=now.year,processed_by=processed_by.username)
+		share_record=MembersShareAccountsMain(tdate=tdate,status=status2,member=share_account,shares=shares,unit_cost=unit_cost,total_cost=total_cost,effective_date=tdate,year=now.year,processed_by=processed_by.username)
 		share_record.save()
 
 		particulars=share_transaction.name + " INITIAL PURCHASE OF " + str(shares) + ' BY ' + str(unit_cost) + " PER A UNIT"
@@ -2654,7 +2750,7 @@ def Members_Account_Creation_preview(request,pk):
 
 
 	member=Members.objects.get(id=pk)
-	transactions=TransactionTypes.objects.filter(~Q(source__title="LOAN") & ~Q(source__title='GENERAL')  & ~Q(code='701'))
+	transactions=TransactionTypes.objects.filter(~Q(code='600') & ~Q(code='700') & ~Q(source__title="LOAN") & ~Q(source__title='GENERAL')  & ~Q(code='701'))
 	records=MembersAccountsDomain.objects.filter(member=member)
 
 	context={
@@ -2702,7 +2798,7 @@ def Members_Account_Creation_preview_all(request):
 
 
 
-	transactions=TransactionTypes.objects.filter(~Q(source__title="LOAN") & ~Q(source__title='GENERAL')  & ~Q(code='701'))
+	transactions=TransactionTypes.objects.filter(~Q(code='600') & ~Q(code='700') & ~Q(source__title="LOAN") & ~Q(source__title='GENERAL')  & ~Q(code='701'))
 	records=MembersAccountsDomain.objects.all().order_by('member_id')
 
 	context={
@@ -2756,7 +2852,7 @@ def Members_Multiple_Account_Creation_preview(request):
 
 	status="ACTIVE"
 	members=Members.objects.filter(status=status)
-	transactions=TransactionTypes.objects.filter(~Q(source__title="LOAN") & ~Q(source__title='GENERAL')  & ~Q(code='701'))
+	transactions=TransactionTypes.objects.filter(~Q(code='600') & ~Q(code='700') & ~Q(code='800') & ~Q(source__title="LOAN") & ~Q(source__title='GENERAL')  & ~Q(code='701'))
 
 	context={
 	'members':members,
@@ -2769,10 +2865,8 @@ def Members_Multiple_Account_Creation_preview(request):
 
 
 def Members_Multiple_Account_Creation_process(request):
-
 	members=Members.objects.filter(status='ACTIVE')
-	transactions=TransactionTypes.objects.filter(~Q(source__title="LOAN") & ~Q(source__title='GENERAL'))
-
+	transactions=TransactionTypes.objects.filter(~Q(code='600') & ~Q(code='700') & ~Q(code='800') & ~Q(source__title="LOAN") & ~Q(source__title='GENERAL'))
 
 	count=0
 	for member in members:
@@ -2826,8 +2920,6 @@ def Members_Account_Without_Balance_Brought_Forward(request):
 			
 			task=record.particulars[:7]	
 			if len(str(record.account_number))>6 and task=='Monthly':
-					
-				
 					PersonalLedgerWithoutBalanceBF(member=record.member,
 													transaction=record.transaction,
 													account_number=record.account_number,
@@ -2836,8 +2928,6 @@ def Members_Account_Without_Balance_Brought_Forward(request):
 													tdate=tdate
 													).save()
 					records=PersonalLedgerWithoutBalanceBF.objects.filter(status='UNTREATED')
-		
-	# print(k)
 
 	context={
 	'records':records,
@@ -5277,22 +5367,24 @@ def Embergency_loan_Form_Application_list_load(request):
 		default_password="YES"
 
 	title="Loan Request order"
-	form = searchForm(request.POST)
 
-	if request.method == "POST":
-		if request.POST.get("title")=="":
-			return HttpResponseRedirect(reverse('Embergency_loan_Form_Application_search'))
 
-		members=LoanFormIssuance.objects.filter(Q(member__admin__first_name__icontains=form['title'].value()) | Q(member__admin__last_name__icontains=form['title'].value()) | Q(member__middle_name__icontains=form['title'].value()) | Q(member__coop_no__icontains=form['title'].value())).filter(status='UNTREATED')
 
-		context={
-		'members':members,
-		'title':title,
-		'task_array':task_array,
-		'task_enabler_array':task_enabler_array,
-		'default_password':default_password,
-		}
-		return render(request,'deskofficer_templates/Embergency_loan_Form_Application_list_load.html',context)
+	members=LoanFormIssuance.objects.filter(status='UNTREATED')
+
+	context={
+	'members':members,
+	'title':title,
+	'task_array':task_array,
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
+	}
+	return render(request,'deskofficer_templates/Embergency_loan_Form_Application_list_load.html',context)
+
+
+def Embergency_loan_Form_Application_Drop(request,pk):
+	LoanFormIssuance.objects.filter(id=pk).delete()
+	return HttpResponseRedirect(reverse('Embergency_loan_Form_Application_list_load'))
 
 
 def Emergency_loan_application_form_processing(request,pk):
@@ -6436,7 +6528,7 @@ def emergency_loan_application_shortlisting_list_load(request):
 	return render(request,'deskofficer_templates/emergency_loan_application_shortlisting_list_load.html',context)
 
 
-def emergency_loan_application_shortlisting_records_load(request,pk):
+def emergency_loan_application_shortlisting_records_load(request):
 	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
 	task_array=[]
 	for task in tasks:
@@ -6458,9 +6550,8 @@ def emergency_loan_application_shortlisting_records_load(request,pk):
 
 	form=emergency_loan_request_order_form(request.POST or None)
 
-	loan = TransactionTypes.objects.get(id=pk)
 
-	records = LoanApplication.objects.filter(applicant__loan=loan,transaction_status='UNTREATED')
+	records = LoanApplication.objects.filter(transaction_status='UNTREATED')
 
 	context={
 	'records':records,
@@ -6644,7 +6735,7 @@ def emergency_Loan_application_processing_period_load(request):
 	return render(request,'deskofficer_templates/emergency_Loan_application_processing_period_load.html',context)
 
 
-def emergency_Loan_application_processing_records_load(request,pk):
+def emergency_Loan_application_processing_records_load(request):
 	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
 	task_array=[]
 	for task in tasks:
@@ -6661,9 +6752,9 @@ def emergency_Loan_application_processing_records_load(request,pk):
 		default_password="YES"
 
 
-	loan = TransactionTypes.objects.get(id=pk)
+	# loan = TransactionTypes.objects.get(id=pk)
 
-	exist_loans = LoanApplicationShortListing.objects.filter(applicant__applicant__loan=loan,status='UNTREATED',approval_status='APPROVED')
+	exist_loans = LoanApplicationShortListing.objects.filter(status='UNTREATED',approval_status='APPROVED')
 
 	context={
 	'exist_loans':exist_loans,
@@ -8380,7 +8471,39 @@ def loan_request_shortlisting_load(request):
 	return render(request,'deskofficer_templates/loan_request_shortlisting_load.html',context)
 
 
-def loan_request_shortlisting_application_Load(request,pk):
+
+# def loan_request_shortlisting_application_Load(request,pk):
+# 	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+# 	task_array=[]
+# 	for task in tasks:
+# 		task_array.append(task.task.title)
+
+# 	task_enabler=TransactionEnabler.objects.filter(status="YES")
+# 	task_enabler_array=[]
+# 	for item in task_enabler:
+# 		task_enabler_array.append(item.title)
+
+# 	default_password="NO"
+# 	if Staff.objects.filter(admin=request.user,default_password='YES'):
+# 		default_password="YES"
+
+# 	form=loan_request_order_form(request.POST or None)
+# 	exist_loans=[]
+
+# 	loan = TransactionTypes.objects.get(id=pk)
+# 	exist_loans = LoanRequest.objects.filter(loan=loan,submission_status='SUBMITTED',transaction_status='UNTREATED',loan_path='PROJECT')
+
+# 	context={
+# 	'exist_loans':exist_loans,
+# 	'pk':pk,
+# 	'task_array':task_array,
+# 	'task_enabler_array':task_enabler_array,
+# 	'default_password':default_password,
+# 	}
+# 	return render(request,'deskofficer_templates/loan_request_shortlisting_application_Load.html',context)
+
+
+def loan_request_shortlisting_application_Load(request):
 	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
 	task_array=[]
 	for task in tasks:
@@ -8398,12 +8521,12 @@ def loan_request_shortlisting_application_Load(request,pk):
 	form=loan_request_order_form(request.POST or None)
 	exist_loans=[]
 
-	loan = TransactionTypes.objects.get(id=pk)
-	exist_loans = LoanRequest.objects.filter(loan=loan,submission_status='SUBMITTED',transaction_status='UNTREATED',loan_path='PROJECT')
+	# loan = TransactionTypes.objects.get(id=pk)
+	exist_loans = LoanRequest.objects.filter(submission_status='SUBMITTED',transaction_status='UNTREATED',loan_path='PROJECT')
 
 	context={
 	'exist_loans':exist_loans,
-	'pk':pk,
+	
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
 	'default_password':default_password,
@@ -8684,7 +8807,7 @@ def loan_request_approved_Issue_form_period_load(request):
 
 
 
-def loan_request_approved_Issue_form_transactions_load(request,pk):
+def loan_request_approved_Issue_form_transactions_load(request):
 	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
 	task_array=[]
 	for task in tasks:
@@ -8702,9 +8825,9 @@ def loan_request_approved_Issue_form_transactions_load(request,pk):
 	applicants=[]
 
 
-	loan = TransactionTypes.objects.get(id=pk)
 
-	applicants = LoanRequestShortListing.objects.filter(applicant__loan=loan,approval_status='APPROVED',status='UNTREATED')
+
+	applicants = LoanRequestShortListing.objects.filter(approval_status='APPROVED',status='UNTREATED')
 	context={
 
 	'applicants':applicants,
@@ -9102,15 +9225,82 @@ def loan_application_approved_period_load(request):
 	}
 	return render(request,'deskofficer_templates/loan_application_approved_period_load.html',context)
 
+def loan_application_Amount_Upgrade_drop(request,pk):
+	LoanApprovedAmountUpgrade.objects.filter(id=pk).delete()
+	return HttpResponseRedirect(reverse('loan_application_approved_transaction_period_load'))
+	
 
-
-def loan_application_approved_transaction_period_load(request,pk):
+def loan_application_Amount_Upgrade(request,pk):
 	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
 	task_array=[]
 	for task in tasks:
 		task_array.append(task.task.title)
 
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
+	task_enabler=TransactionEnabler.objects.filter(status="YES")
+	task_enabler_array=[]
+	for item in task_enabler:
+		task_enabler_array.append(item.title)
+
+	tdate = get_current_date(now)
+	processed_by=CustomUser.objects.get(id=request.user.id)
+	processed_by=processed_by.username
+
+	applicant=LoanFormIssuance.objects.get(id=pk)
+	form=loan_application_processing_form(request.POST or None)
+
+	records=LoanApprovedAmountUpgrade.objects.filter(applicant=applicant)
+	if  request.method =='POST':
+		loan_new_amount=request.POST.get('loan_new_amount')		
+		new_amount_saved=request.POST.get('new_amount_saved')
+
+		comment=request.POST.get('comment')
+
+		if not loan_new_amount or float(loan_new_amount)<=0:
+			messages.error(request,'New Loan Amount Missing')
+			return HttpResponseRedirect(reverse('loan_application_Amount_Upgrade',args=(pk,)))
+		
+		if not comment:
+			messages.error(request,'Please Add the Reasons')
+			return HttpResponseRedirect(reverse('loan_application_Amount_Upgrade',args=(pk,)))
+		
+		if LoanApprovedAmountUpgrade.objects.filter(applicant=applicant).exists():
+			messages.error(request,'Please there is an accplication for this Transaction, consult the Management')
+			return HttpResponseRedirect(reverse('loan_application_Amount_Upgrade',args=(pk,)))
+		
+
+		LoanApprovedAmountUpgrade(applicant=applicant,
+								existing_amount=applicant.loan_amount,
+								prev_amount_saved=applicant.amount_saved,
+								new_amount=loan_new_amount,
+								new_amount_saved=new_amount_saved,
+								reasons=comment,
+								tdate=tdate,
+								processed_by=processed_by
+								).save()
+		return HttpResponseRedirect(reverse('loan_application_Amount_Upgrade',args=(pk,)))
+	form.fields['loan_amount'].initial=applicant.loan_amount
+	form.fields['prev_amount_saved'].initial=applicant.amount_saved
+	context={
+	'records':records,
+	'form':form,
+	'applicant':applicant,
+	'task_array':task_array,
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
+	}
+	return render(request,'deskofficer_templates/loan_application_Amount_Upgrade.html',context)
+
+
+def loan_application_approved_transaction_period_load(request):
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	task_array=[]
+	for task in tasks:
+		task_array.append(task.task.title)
 
 	task_enabler=TransactionEnabler.objects.filter(status="YES")
 	task_enabler_array=[]
@@ -9127,8 +9317,8 @@ def loan_application_approved_transaction_period_load(request,pk):
 	transaction=[]
 	loan=[]
 
-	loan = TransactionTypes.objects.get(id=pk)
-	applicants = LoanFormIssuance.objects.filter(loan=loan,status='UNTREATED',loan_path='PROJECT',print_status='YES')
+
+	applicants = LoanFormIssuance.objects.filter(status='UNTREATED',loan_path='PROJECT',print_status='YES')
 	context={
 	'transaction':loan,
 	'applicants':applicants,
@@ -9200,11 +9390,13 @@ def loan_application_form_processing(request,pk):
 	if  request.method =='POST' and 'application' in request.POST:
 		exist_amount=record_exist.approved_amount
 		new_amount=request.POST.get('loan_new_amount')
+		allow_amount=request.POST.get('allow-amount')
 
 		if float(new_amount)<=0:
 			messages.error(request,'Invalid Loan Amount Specification')
 			return HttpResponseRedirect(reverse('loan_application_form_processing', args=(pk,)))
 
+		
 		if float(exist_amount) < float(new_amount):
 			messages.error(request,'You cannot apply for Amount beyond the already approved amount of ' + str(exist_amount))
 			return HttpResponseRedirect(reverse('loan_application_form_processing', args=(pk,)))
@@ -10241,7 +10433,7 @@ def loan_application_shortlisting_list_load(request):
 	return render(request,'deskofficer_templates/loan_application_shortlisting_list_load.html',context)
 
 
-def loan_application_shortlisting_records_load(request,pk):
+def loan_application_shortlisting_records_load(request):
 	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
 	task_array=[]
 	for task in tasks:
@@ -10257,12 +10449,11 @@ def loan_application_shortlisting_records_load(request,pk):
 	if Staff.objects.filter(admin=request.user,default_password='YES'):
 		default_password="YES"
 
-	loan = TransactionTypes.objects.get(id=pk)
 
-	records = LoanApplication.objects.filter(applicant__loan=loan,transaction_status='UNTREATED')
+
+	records = LoanApplication.objects.filter(transaction_status='UNTREATED')
 
 	context={
-	'loan':loan,
 	'records':records,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
@@ -10491,7 +10682,7 @@ def Loan_application_processing_period_load(request):
 	return render(request,'deskofficer_templates/Loan_application_processing_period_load.html',context)
 
 
-def Loan_application_processing_records_load(request,pk):
+def Loan_application_processing_records_load(request):
 	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
 	task_array=[]
 	for task in tasks:
@@ -10510,9 +10701,9 @@ def Loan_application_processing_records_load(request,pk):
 	form=loan_request_order_form(request.POST or None)
 
 
-	loan = TransactionTypes.objects.get(id=pk)
+	# loan = TransactionTypes.objects.get(id=pk)
 
-	exist_loans = LoanApplicationShortListing.objects.filter(applicant__applicant__loan_path='PROJECT',applicant__applicant__loan=loan,status='UNTREATED',approval_status='APPROVED')
+	exist_loans = LoanApplicationShortListing.objects.filter(applicant__applicant__loan_path='PROJECT',status='UNTREATED',approval_status='APPROVED')
 
 	context={
 	'exist_loans':exist_loans,
@@ -14920,33 +15111,22 @@ def Monthly_Deduction_Normalized_Details(request,salary_id,tday,tmonth,tyear):
 
 	for member in members:
 		order_array=[]
-		queryset=  MonthlyDeductionList.objects.filter(member=member.member,salary_institution=salary_institution,transaction_period=transaction_period).aggregate(total_cash=Sum('amount'))
-		total_main=queryset['total_cash']
-		if not total_main:
-			total_main=0
-
-		queryset=  MonthlyShopdeductionList.objects.filter(member=member.member,salary_institution=salary_institution,transaction_period=transaction_period).aggregate(total_cash=Sum('amount'))
-		total_shop=queryset['total_cash']
-		if not total_shop:
-			total_shop=0
-
-		total_amount=float(total_main) + float(total_shop)
 		
 		for transaction in transactions:
 
 			value=''
-			# if MonthlyDeductionList.objects.filter(member=member.member,transaction=transaction,salary_institution=salary_institution,transaction_period=transaction_period).exists():
-			# 	records=MonthlyDeductionList.objects.filter(member=member.member,transaction=transaction,salary_institution=salary_institution,transaction_period=transaction_period)
-			# 	value=0
-			# 	for item in records:
-			# 		value=float(value)+ float(item.amount)
-			
-			
-			if MonthlyShopdeductionList.objects.filter(member=member.member,transaction=transaction,salary_institution=salary_institution,transaction_period=transaction_period).exists():
-				records=MonthlyShopdeductionList.objects.filter(member=member.member,transaction=transaction,salary_institution=salary_institution,transaction_period=transaction_period)
+			if MonthlyDeductionList.objects.filter(member=member.member,transaction=transaction,salary_institution=salary_institution,transaction_period=transaction_period).exists():
+				records=MonthlyDeductionList.objects.filter(member=member.member,transaction=transaction,salary_institution=salary_institution,transaction_period=transaction_period)
 				value=0
 				for item in records:
 					value=float(value)+ float(item.amount)
+			
+			
+			if MonthlyJointDeductionList.objects.filter(member=member.member,transaction='SHOP',salary_institution=salary_institution,transaction_period=transaction_period).exists():
+				record=MonthlyJointDeductionList.objects.get(member=member.member,transaction='SHOP',salary_institution=salary_institution,transaction_period=transaction_period)
+				value=0
+				if record.amount:
+					value=float(value)+ float(record.amount)
 			order_array.append(value)
 
 
@@ -14954,11 +15134,12 @@ def Monthly_Deduction_Normalized_Details(request,salary_id,tday,tmonth,tyear):
 		order_array.insert(0,member.member.coop_no)
 		order_array.insert(1,member.member.ippis_no)
 		order_array.insert(2,member.member.get_full_name)
-		order_array.append(total_amount)
+		order_array.append(member.amount)
 
 		order_list_array.append(order_array)
 
 	context={
+	'transaction_period':transaction_period,
 	'columns':columns,
 	'salary_institution':salary_institution,
 	'members':members,
@@ -14969,6 +15150,88 @@ def Monthly_Deduction_Normalized_Details(request,salary_id,tday,tmonth,tyear):
 	'default_password':default_password,
 	}
 	return render(request,'deskofficer_templates/Monthly_Deduction_Normalized_Details.html',context)
+
+
+def Monthly_Deduction_Normalized_Details_export_xls(request,salary_id,tday,tmonth,tyear):
+	transaction_period=date(int(tyear),int(tmonth),int(tday))
+	transaction_period=get_current_date(transaction_period)
+	salary_institution=SalaryInstitution.objects.get(id=salary_id)
+	transactions=TransactionTypes.objects.filter(Q(source__title='SAVINGS') | Q(source__title='LOAN') | Q(source__title='SHOP')).exclude(code=400)
+
+
+
+	members=MonthlyJointDeductionGenerated.objects.filter(salary_institution=salary_institution,transaction_period=transaction_period)
+	
+	columns=['MEMBER ID','IPPIS', 'NAME']
+
+	for transaction in transactions:
+		columns.append(transaction.name)
+
+
+	columns.append("TOTAL")
+
+	order_list_array=[]
+
+	for member in members:
+		order_array=[]
+		
+		for transaction in transactions:
+
+			value=''
+			if MonthlyDeductionList.objects.filter(member=member.member,transaction=transaction,salary_institution=salary_institution,transaction_period=transaction_period).exists():
+				records=MonthlyDeductionList.objects.filter(member=member.member,transaction=transaction,salary_institution=salary_institution,transaction_period=transaction_period)
+				value=0
+				for item in records:
+					value=float(value)+ float(item.amount)
+			
+			
+			if MonthlyJointDeductionList.objects.filter(member=member.member,transaction='SHOP',salary_institution=salary_institution,transaction_period=transaction_period).exists():
+				record=MonthlyJointDeductionList.objects.get(member=member.member,transaction='SHOP',salary_institution=salary_institution,transaction_period=transaction_period)
+				value=0
+				if record.amount:
+					value=float(value)+ float(record.amount)
+			order_array.append(value)
+
+
+
+		order_array.insert(0,member.member.coop_no)
+		order_array.insert(1,member.member.ippis_no)
+		order_array.insert(2,member.member.get_full_name)
+		order_array.append(member.amount)
+
+		order_list_array.append(order_array)
+
+
+
+	response = HttpResponse(content_type='application/ms-excel')
+	response['Content-Disposition'] = 'attachment; filename="deductions.xls"'
+
+	wb = xlwt.Workbook(encoding='utf-8')
+	ws = wb.add_sheet('Users Data') # this will make a sheet named Users Data
+
+	row_num = 0  # Sheet header, first row
+
+	font_style = xlwt.XFStyle()
+	font_style.font.bold = True
+
+	# columns = ['Member ID', 'File No', 'IPPIS No', 'Name','Amount']
+
+	for col_num in range(len(columns)):
+		ws.write(row_num, col_num, columns[col_num], font_style) # at 0 row 0 column
+
+	font_style = xlwt.XFStyle()  # Sheet body, remaining rows
+
+	# rows = MonthlyJointDeductionGenerated.objects.filter(salary_institution=salary_institution,transaction_period=transaction_period).values_list('member__coop_no','member__file_no','member__ippis_no','member__full_name', 'amount').order_by('member__coop_no')
+
+	for row in order_list_array:
+		row_num += 1
+		for col_num in range(len(row)):
+			ws.write(row_num, col_num, row[col_num], font_style)
+	wb.save(response)
+
+	return response
+
+
 
 
 def Monthly_Deduction_excel_Export_Institution_Load(request):
@@ -15272,7 +15535,17 @@ def Monthly_Deductions_Transaction_Summary_Detail_Branch_Details(request,pk,peri
 	return render(request,'deskofficer_templates/Monthly_Deductions_Transaction_Summary_Detail_Branch_Details.html',context)
 
 
+def Monthly_Deductions_Transaction_Summary_Detail_Branch_Details_Delete(request,pk,salary_pk,period_pk,member_pk):
+	
+	member=Members.objects.get(id=member_pk)
+	salary_institution=SalaryInstitution.objects.get(id=salary_pk)
+	record=MonthlyDeductionList.objects.get(id=pk)
+	
+	# date_format = '%Y-%m-%d'
 
+	# period_pk = datetime.datetime.strptime(period_pk, date_format)
+	return HttpResponseRedirect(reverse('Monthly_Deductions_Transaction_Summary_Detail_Branch_Details',args=(member_pk,salary_institution.pk,period_pk,)))
+	
 
 def Monthly_Deduction_Transaction_Reverse_Institution_load(request):
 	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
@@ -16873,8 +17146,7 @@ def AuxillaryMerger(request,salary_id,trans_id):
 			ippis = str(item.ippis_no)[:-2]
 			item.ippis_no=ippis
 			item.save()
-			# AuxillaryDeductions.objects.filter(id=item.pk).update(ippis_no=ippis_no)
-			# print(ippis)
+			
 
 	# return HttpResponse(k)
 	records=AuxillaryDeductions.objects.filter(salary_institution=salary_institution,transaction_period=transaction_period,transaction_status='UNTREATED')
@@ -16889,9 +17161,7 @@ def AuxillaryMerger(request,salary_id,trans_id):
 	record_treated=AuxillaryDeductions.objects.filter(salary_institution=salary_institution,transaction_period=transaction_period,transaction_status='TREATED')
 	record_untreated=AuxillaryDeductions.objects.filter(salary_institution=salary_institution,transaction_period=transaction_period,transaction_status='UNTREATED')
 
-	# print(f'Treated Record {record_treated.count()}')
-	# print(f'Untreated Record {record_untreated.count()}')
-
+	
 
 	form.fields['transaction_period'].initial=transaction_period
 	context={
@@ -17613,6 +17883,7 @@ def Monthly_Shop_Deduction_List_Load(request,pday,pmonth,pyear,salary_pk):
 	}
 	return render(request,'deskofficer_templates/Monthly_Shop_Deduction_List_Load.html',context)
 
+
 def Monthly_Auxillary_Deduction_Generated_Export_Institution_Load(request):
 	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
 	task_array=[]
@@ -17672,6 +17943,7 @@ def Monthly_Auxillary_Deduction_Rectification_Reset(request):
 
 
 		MonthlyDeductionList.objects.filter(salary_institution=salary_institution,transaction_period=transaction_period).update(amount_deducted=0,balance=0,repayment=0,status='UNTREATED')
+		
 		MonthlyGroupGeneratedTransactions.objects.filter(salary_institution=salary_institution,transaction_period=transaction_period).delete()
 		MonthlyDeductionListGenerated.objects.filter(salary_institution=salary_institution,transaction_period=transaction_period).delete()
 
@@ -17683,7 +17955,7 @@ def Monthly_Auxillary_Deduction_Rectification_Reset(request):
 		MonthlyJointDeductionGenerated.objects.filter(salary_institution=salary_institution,transaction_period=transaction_period).delete()
 		
 		AccountDeductions.objects.filter(salary_institution=salary_institution,transaction_period=transaction_period).delete()
-		AuxillaryDeductions.objects.filter(salary_institution=salary_institution,transaction_period=transaction_period).delete()
+		# AuxillaryDeductions.objects.filter(salary_institution=salary_institution,transaction_period=transaction_period).delete()
 	
 
 		return HttpResponseRedirect(reverse('Monthly_Auxillary_Deduction_Rectification_Reset'))
@@ -18254,7 +18526,7 @@ def Manual_Ledger_Posting_search(request):
 		task_array.append(task.task.title)
 
 
-
+	print("fffff")
 	task_enabler=TransactionEnabler.objects.filter(status="YES")
 	task_enabler_array=[]
 	for item in task_enabler:
@@ -18278,7 +18550,6 @@ def Manual_Ledger_Posting_List_load(request):
 	task_array=[]
 	for task in tasks:
 		task_array.append(task.task.title)
-
 
 
 	task_enabler=TransactionEnabler.objects.filter(status="YES")
@@ -18309,6 +18580,7 @@ def Manual_Ledger_Posting_List_load(request):
 	return render(request,'deskofficer_templates/Manual_Ledger_Posting_List_load.html',context)
 
 
+
 def Manual_Ledger_Posting_Transactions_List_load(request,pk):
 	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
 	task_array=[]
@@ -18330,7 +18602,6 @@ def Manual_Ledger_Posting_Transactions_List_load(request,pk):
 	savings=TransactionTypes.objects.filter(source__title='SAVINGS')
 	loans=TransactionTypes.objects.filter(source__title='LOAN')
 
-
 	context={
 	'member':member,
 	'savings':savings,
@@ -18340,6 +18611,7 @@ def Manual_Ledger_Posting_Transactions_List_load(request,pk):
 	'default_password':default_password,
 	}
 	return render(request,'deskofficer_templates/Manual_Ledger_Posting_Transactions_List_load.html',context)
+
 
 
 def Manual_Ledger_Posting_Ledger_details_load(request,pk,member_pk):
@@ -18388,6 +18660,7 @@ def Manual_Ledger_Posting_Ledger_details_load(request,pk,member_pk):
 		debit=0
 		credit=float(amount)
 		balance=float(ledger_balance)+float(credit)
+
 		particulars = f'{particulars} {transaction_period}'
 		status='ACTIVE'
 		tdate=get_current_date(now)
@@ -18411,7 +18684,7 @@ def Manual_Ledger_Posting_Ledger_details_load(request,pk,member_pk):
 
 	form.fields['particulars'].initial=particulars
 	form.fields['last_transaction_period'].initial=ledger_last_trans_period
-	form.fields['period'].initial=transaction_period
+	form.fields['period'].initial=get_current_date(now)
 	form.fields['balance_amount'].initial=ledger_balance
 	form.fields['transaction'].initial=transaction.name
 	form.fields['account_number'].initial=account_number
@@ -18425,188 +18698,6 @@ def Manual_Ledger_Posting_Ledger_details_load(request,pk,member_pk):
 	}
 	return render(request,'deskofficer_templates/Manual_Ledger_Posting_Ledger_details_load.html',context)
 
-
-
-
-def Manual_Ledger_Posting_Reverse_search(request):
-	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
-	task_array=[]
-	for task in tasks:
-		task_array.append(task.task.title)
-
-
-
-	task_enabler=TransactionEnabler.objects.filter(status="YES")
-	task_enabler_array=[]
-	for item in task_enabler:
-		task_enabler_array.append(item.title)
-
-	default_password="NO"
-	if Staff.objects.filter(admin=request.user,default_password='YES'):
-		default_password="YES"
-
-	title="Search Membership for Ledger Posting"
-	form = searchForm(request.POST or None)
-
-	return render(request,'deskofficer_templates/Manual_Ledger_Posting_Reverse_search.html',{'form':form,'task_array':task_array,
-	'task_enabler_array':task_enabler_array,
-	'title':title,
-	'default_password':default_password,})
-
-
-def Manual_Ledger_Posting_Reverse_List_load(request):
-	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
-	task_array=[]
-	for task in tasks:
-		task_array.append(task.task.title)
-
-
-
-	task_enabler=TransactionEnabler.objects.filter(status="YES")
-	task_enabler_array=[]
-	for item in task_enabler:
-		task_enabler_array.append(item.title)
-
-	default_password="NO"
-	if Staff.objects.filter(admin=request.user,default_password='YES'):
-		default_password="YES"
-
-
-	form = searchForm(request.POST)
-
-	if request.method == "POST":
-		if request.POST.get("title")=="":
-			return HttpResponseRedirect(reverse('Manual_Ledger_Posting_Reverse_search'))
-
-		members=searchMembers(form['title'].value(),'ACTIVE')
-
-	context={
-	'members':members,
-
-	'task_array':task_array,
-	'task_enabler_array':task_enabler_array,
-	'default_password':default_password,
-	}
-	return render(request,'deskofficer_templates/Manual_Ledger_Posting_Reverse_List_load.html',context)
-
-
-def Manual_Ledger_Posting_Transactions_Reverse_List_load(request,pk):
-	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
-	task_array=[]
-	for task in tasks:
-		task_array.append(task.task.title)
-
-
-
-	task_enabler=TransactionEnabler.objects.filter(status="YES")
-	task_enabler_array=[]
-	for item in task_enabler:
-		task_enabler_array.append(item.title)
-
-	default_password="NO"
-	if Staff.objects.filter(admin=request.user,default_password='YES'):
-		default_password="YES"
-
-	member=Members.objects.get(id=pk)
-	savings=TransactionTypes.objects.filter(source__title='SAVINGS')
-	loans=TransactionTypes.objects.filter(source__title='LOAN')
-
-
-	context={
-	'member':member,
-	'savings':savings,
-	'loans':loans,
-	'task_array':task_array,
-	'task_enabler_array':task_enabler_array,
-	'default_password':default_password,
-	}
-	return render(request,'deskofficer_templates/Manual_Ledger_Posting_Transactions_Reverse_List_load.html',context)
-
-
-def Manual_Ledger_Posting_Ledger_details_Reverse_load(request,pk,member_pk):
-	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
-	task_array=[]
-	for task in tasks:
-		task_array.append(task.task.title)
-
-
-
-	task_enabler=TransactionEnabler.objects.filter(status="YES")
-	task_enabler_array=[]
-	for item in task_enabler:
-		task_enabler_array.append(item.title)
-
-	default_password="NO"
-	if Staff.objects.filter(admin=request.user,default_password='YES'):
-		default_password="YES"
-
-
-	form=Manual_Ledger_Posting_Ledger_details_Form(request.POST or None)
-	transaction_period=TransactionPeriods.objects.get(status="ACTIVE")
-	transaction_period=transaction_period.transaction_period
-	member=Members.objects.get(id=member_pk)
-	transaction=TransactionTypes.objects.get(id=pk)
-	account_id=MembersAccountsDomain.objects.get(transaction=transaction,member=member)
-	account_number=account_id.account_number
-	ledger_balance=get_ledger_balance(account_number)
-	ledger_last_trans_period=get_ledger_last_transaction_period(account_number)
-	particulars = 'Reverse of Monthly deduction contribution for the period ending'
-	tdate=get_current_date(now)
-	if request.method=="POST":
-		particulars=request.POST.get('particulars')
-		transaction_period_id=request.POST.get('period')
-
-
-		date_format = '%Y-%m-%d'
-		dtObj = datetime.datetime.strptime(transaction_period_id, date_format)
-		transaction_period=get_current_date(dtObj)
-
-		amount=request.POST.get('amount')
-
-		if not amount or float(amount)<=0:
-			messages.error(request,'Invalid amount Specification')
-			return HttpResponseRedirect(reverse('Manual_Ledger_Posting_Ledger_details_Reverse_load',args=(pk,member_pk,)))
-
-
-		credit=0
-		debit=float(amount)
-		balance=float(ledger_balance)-float(debit)
-		particulars = f'MANUAL POSTING: {particulars} {transaction_period}'
-		status='ACTIVE'
-		tdate=get_current_date(now)
-		processed_by=CustomUser.objects.get(id=request.user.id)
-		processed_by=processed_by.username
-
-		post_to_ledger(
-			member,
-			transaction,
-			account_number,
-			particulars,
-			debit,
-			credit,
-			balance,
-			transaction_period,
-			status,
-			tdate,processed_by
-			)
-		PersonalLedgerManualPosting(sources='SAVINGS',transaction_type='DEBIT',transaction=account_id,particulars=particulars,amount=credit,processed_by=processed_by,tdate=tdate).save()
-		return HttpResponseRedirect(reverse('Manual_Ledger_Posting_Transactions_Reverse_List_load',args=(member_pk,)))
-
-	form.fields['particulars'].initial=particulars
-	form.fields['last_transaction_period'].initial=ledger_last_trans_period
-	form.fields['period'].initial=transaction_period
-	form.fields['balance_amount'].initial=ledger_balance
-	form.fields['transaction'].initial=transaction.name
-	form.fields['account_number'].initial=account_number
-	context={
-	'member':member,
-	'transaction':transaction,
-	'form':form,
-	'task_array':task_array,
-	'task_enabler_array':task_enabler_array,
-	'default_password':default_password,
-	}
-	return render(request,'deskofficer_templates/Manual_Ledger_Posting_Ledger_details_Reverse_load.html',context)
 
 def Manual_Ledger_Posting_Loans_List_load(request,pk,member_pk):
 	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
@@ -18760,6 +18851,193 @@ def Manual_Ledger_Posting_Loans_Processing_load(request,pk,trans_id,member_pk):
 	'default_password':default_password,
 	}
 	return render(request,'deskofficer_templates/Manual_Ledger_Posting_Loans_Processing_load.html',context)
+
+
+
+
+def Manual_Ledger_Posting_Reverse_search(request):
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	task_array=[]
+	for task in tasks:
+		task_array.append(task.task.title)
+
+
+
+	task_enabler=TransactionEnabler.objects.filter(status="YES")
+	task_enabler_array=[]
+	for item in task_enabler:
+		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
+	title="Search Membership for Ledger Posting"
+	form = searchForm(request.POST or None)
+
+	return render(request,'deskofficer_templates/Manual_Ledger_Posting_Reverse_search.html',{'form':form,'task_array':task_array,
+	'task_enabler_array':task_enabler_array,
+	'title':title,
+	'default_password':default_password,})
+
+
+def Manual_Ledger_Posting_Reverse_List_load(request):
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	task_array=[]
+	for task in tasks:
+		task_array.append(task.task.title)
+
+
+	print("1111111111111111111111111111111111111")
+	task_enabler=TransactionEnabler.objects.filter(status="YES")
+	task_enabler_array=[]
+	for item in task_enabler:
+		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
+
+	form = searchForm(request.POST)
+
+	if request.method == "POST":
+		if request.POST.get("title")=="":
+			return HttpResponseRedirect(reverse('Manual_Ledger_Posting_Reverse_search'))
+
+		members=searchMembers(form['title'].value(),'ACTIVE')
+
+	context={
+	'members':members,
+
+	'task_array':task_array,
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
+	}
+	return render(request,'deskofficer_templates/Manual_Ledger_Posting_Reverse_List_load.html',context)
+
+
+def Manual_Ledger_Posting_Transactions_Reverse_List_load(request,pk):
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	task_array=[]
+	for task in tasks:
+		task_array.append(task.task.title)
+
+
+
+	task_enabler=TransactionEnabler.objects.filter(status="YES")
+	task_enabler_array=[]
+	for item in task_enabler:
+		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
+	member=Members.objects.get(id=pk)
+	savings=TransactionTypes.objects.filter(source__title='SAVINGS')
+	loans=TransactionTypes.objects.filter(source__title='LOAN')
+
+
+	context={
+	'member':member,
+	'savings':savings,
+	'loans':loans,
+	'task_array':task_array,
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
+	}
+	return render(request,'deskofficer_templates/Manual_Ledger_Posting_Transactions_Reverse_List_load.html',context)
+
+
+def Manual_Ledger_Posting_Ledger_details_Reverse_load(request,pk,member_pk):
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	task_array=[]
+	for task in tasks:
+		task_array.append(task.task.title)
+
+
+	task_enabler=TransactionEnabler.objects.filter(status="YES")
+	task_enabler_array=[]
+	for item in task_enabler:
+		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
+
+	form=Manual_Ledger_Posting_Ledger_details_Form(request.POST or None)
+	transaction_period=TransactionPeriods.objects.get(status="ACTIVE")
+	transaction_period=transaction_period.transaction_period
+	member=Members.objects.get(id=member_pk)
+	transaction=TransactionTypes.objects.get(id=pk)
+	account_id=MembersAccountsDomain.objects.get(transaction=transaction,member=member)
+	account_number=account_id.account_number
+	ledger_balance=get_ledger_balance(account_number)
+	
+	ledger_last_trans_period=get_ledger_last_transaction_period(account_number)
+	particulars = 'Reverse of Monthly deduction contribution for the period ending'
+	tdate=get_current_date(now)
+	if request.method=="POST":
+		particulars=request.POST.get('particulars')
+		transaction_period_id=request.POST.get('period')
+
+
+		date_format = '%Y-%m-%d'
+		dtObj = datetime.datetime.strptime(transaction_period_id, date_format)
+		transaction_period=get_current_date(dtObj)
+
+		amount=request.POST.get('amount')
+
+		if not amount or float(amount)<=0:
+			messages.error(request,'Invalid amount Specification')
+			return HttpResponseRedirect(reverse('Manual_Ledger_Posting_Ledger_details_Reverse_load',args=(pk,member_pk,)))
+
+
+		credit=0
+		debit=float(amount)
+		balance=float(ledger_balance)-float(debit)
+		particulars = f'MANUAL POSTING: {particulars} {transaction_period}'
+		status='ACTIVE'
+		tdate=get_current_date(now)
+		processed_by=CustomUser.objects.get(id=request.user.id)
+		processed_by=processed_by.username
+
+		post_to_ledger(
+			member,
+			transaction,
+			account_number,
+			particulars,
+			debit,
+			credit,
+			balance,
+			transaction_period,
+			status,
+			tdate,processed_by
+			)
+		PersonalLedgerManualPosting(sources='SAVINGS',transaction_type='DEBIT',transaction=transaction,particulars=particulars,amount=credit,processed_by=processed_by,tdate=tdate).save()
+		return HttpResponseRedirect(reverse('Manual_Ledger_Posting_Transactions_Reverse_List_load',args=(member_pk,)))
+
+	form.fields['particulars'].initial=particulars
+	form.fields['last_transaction_period'].initial=ledger_last_trans_period
+	form.fields['period'].initial=transaction_period
+	form.fields['balance_amount'].initial=ledger_balance
+	form.fields['transaction'].initial=transaction.name
+	form.fields['account_number'].initial=account_number
+	context={
+	'member':member,
+	'transaction':transaction,
+	'form':form,
+	'task_array':task_array,
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
+	}
+	return render(request,'deskofficer_templates/Manual_Ledger_Posting_Ledger_details_Reverse_load.html',context)
+
+
+
+
 
 
 #########################################################
@@ -20811,7 +21089,7 @@ def Individual_Capture(request):
 
 	form=Individual_Capture_Form(request.POST or None)
 	if request.method == "POST":
-		
+		status=request.POST.get('status')
 		title_id=request.POST.get('title')
 		title=Titles.objects.get(id=title_id)
 
@@ -20874,7 +21152,8 @@ def Individual_Capture(request):
 		if CustomUser.objects.filter(email=email).exists():
 			email=first_name + last_name + str(ippis_no).zfill(5) + "@fetha.gov.ng"
 
-
+		
+		
 		item=MemberShipRequest(title=title,submission_status=submission_status,
 			transaction_status=transaction_status1,
 			first_name=first_name,last_name=last_name,
@@ -20921,46 +21200,48 @@ def Individual_Capture(request):
 		user_type=user_type_obj.code
 
 
-		# try:
-		user = CustomUser.objects.create_user(username=username,password=password,email=email,last_name=last_name,first_name=first_name,user_type=int(user_type))
-		user.members.applicant=record
-		user.members.member_id=member_id
-		user.members.coop_no=str(coop_no).zfill(5)
-		user.members.title=title
-		user.members.middle_name=middle_name
-		user.members.full_name=str(first_name) + ' ' + str(last_name) + ' ' + str(middle_name)
-		user.members.phone_number=phone_number
-		user.members.salary_institution=salary_institution
-		user.members.file_no=file_no
-		user.members.ippis_no=ippis_no
-		user.members.date_joined=date_joined
+		try:
 
-		user.members.status=status
-		user.members.savings_status=savings_status
-		user.members.loan_status=loan_status
-		user.members.shares_status=shares_status
-		user.members.welfare_status=welfare_status
+			user = CustomUser.objects.create_user(username=username,password=password,email=email,last_name=last_name,first_name=first_name,user_type=int(user_type))
+			user.members.applicant=record
+			user.members.member_id=member_id
+			user.members.coop_no=str(coop_no).zfill(5)
+			user.members.title=title
+			user.members.middle_name=middle_name
+			user.members.full_name=str(first_name) + ' ' + str(last_name) + ' ' + str(middle_name)
+			user.members.phone_number=phone_number
+			user.members.salary_institution=salary_institution
+			user.members.file_no=file_no
+			user.members.ippis_no=ippis_no
+			user.members.date_joined=date_joined
 
-		user.members.date_of_first_appointment=date_hired
-		user.members.dob=dob
-		user.processed_by=processed_by
-		user.members.date_joined_status=date_joined_status
+			user.members.status=status
+			user.members.savings_status=savings_status
+			user.members.loan_status=loan_status
+			user.members.shares_status=shares_status
+			user.members.welfare_status=welfare_status
 
-		if chk_fappt:
-			user.members.date_of_first_appointment_status=date_of_first_appointment_status
+			user.members.date_of_first_appointment=date_hired
+			user.members.dob=dob
+			user.processed_by=processed_by
+			user.status=status
+			user.members.date_joined_status=date_joined_status
 
-		if chk_dob:
-			user.members.dob_status=dob_status
+			if chk_fappt:
+				user.members.date_of_first_appointment_status=date_of_first_appointment_status
 
-		user.save()
+			if chk_dob:
+				user.members.dob_status=dob_status
+
+			user.save()
 
 
-		# except:
-		# 	applicant.delete()
-		# 	user.delete()
-		# 	record.delete()
-		# 	messages.error(request,'This member is not registered for obvious reasons, please concult the Administrator')
-		# 	return HttpResponseRedirect(reverse("Individual_Capture"))
+		except:
+			applicant.delete()
+			user.delete()
+			record.delete()
+			messages.error(request,'This member is not registered for obvious reasons, please concult the Administrator')
+			return HttpResponseRedirect(reverse("Individual_Capture"))
 
 		transactions=TransactionTypes.objects.filter(~Q(source__title="LOAN") & ~Q(source__title='GENERAL') & ~Q(code='701'))
 
@@ -20977,6 +21258,7 @@ def Individual_Capture(request):
 
 	form.fields['dob'].initial = now
 	form.fields['date_hired'].initial = now
+	form.fields['status'].initial = "ACTIVE"
 	context={
 	'form':form,
 	# 'records':records,
@@ -21035,7 +21317,7 @@ def Individual_Capture_Delete_List_load(request):
 	if request.method == "POST":
 		if request.POST.get("title")=="":
 			messages.info(request,"Please Enter a search data")
-			return HttpResponseRedirect(reverse('Individual_Capture_Delete_Search('))
+			return HttpResponseRedirect(reverse('Individual_Capture_Delete_Search'))
 
 		records=Members.objects.filter(Q(file_no__icontains=form['title'].value()) |Q(ippis_no__icontains=form['title'].value()) |Q(phone_number__icontains=form['title'].value()) | Q(admin__first_name__icontains=form['title'].value()) | Q(admin__last_name__icontains=form['title'].value()) | Q(middle_name__icontains=form['title'].value())).filter(status=status)
 		if records.count() <= 0:
@@ -25443,14 +25725,56 @@ def Members_Ledger_Balance_Update_Loan_Account_Preview(request,pk,member_pk):
 ############################################################
 ##################### MEMBERS SHARE ########################
 ############################################################
+def Shares_Active_Year(request):
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	task_array=[]
+	for task in tasks:
+		task_array.append(task.task.title)
+
+	task_enabler=TransactionEnabler.objects.filter(status="YES")
+	task_enabler_array=[]
+	for item in task_enabler:
+		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
+	form=SharesActiveYearForm(request.POST or None)
+
+	record=[]
+	if SharesActiveYear.objects.filter().exists():
+		record=SharesActiveYear.objects.all().first()
+	
+	if request.method == "POST":
+		year=request.POST.get('year')		
+		if record:
+			record.year=year
+			record.save()
+		else:
+			SharesActiveYear(year=year).save()
+
+		return HttpResponseRedirect(reverse('Shares_Active_Year'))
+	if record:
+		form.fields['year'].initial=record.year
+	else:
+		form.fields['year'].initial=now.year
+	context={
+	'form':form,
+	'record':record,
+	'task_array':task_array,
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
+	}
+	return render(request,'deskofficer_templates/Shares_Active_Year.html',context)
+
+
 
 def Members_Shares_Upload_Search(request):
 	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
 	task_array=[]
 	for task in tasks:
 		task_array.append(task.task.title)
-
-
 
 	task_enabler=TransactionEnabler.objects.filter(status="YES")
 	task_enabler_array=[]
@@ -25499,7 +25823,7 @@ def Members_Shares_Upload_list_load(request):
 			return HttpResponseRedirect(reverse('Members_Shares_Upload_Search'))
 
 
-		records=Members.objects.filter(Q(file_no__icontains=form['title'].value()) |Q(ippis_no__icontains=form['title'].value()) |Q(phone_number__icontains=form['title'].value()) | Q(admin__first_name__icontains=form['title'].value()) | Q(admin__last_name__icontains=form['title'].value()) | Q(middle_name__icontains=form['title'].value())).filter(status=status,shares_status=shares_status,member_category='OLD')
+		records=Members.objects.filter(Q(file_no__icontains=form['title'].value()) |Q(ippis_no__icontains=form['title'].value()) |Q(phone_number__icontains=form['title'].value()) | Q(admin__first_name__icontains=form['title'].value()) | Q(admin__last_name__icontains=form['title'].value()) | Q(middle_name__icontains=form['title'].value())).filter(shares_status=shares_status,member_category='OLD').order_by('coop_no')
 		if records.count() <= 0:
 			messages.info(request,"No Record Found")
 			return HttpResponseRedirect(reverse('Members_Shares_Upload_Search'))
@@ -25522,7 +25846,125 @@ def Members_Shares_Upload_Preview(request,pk):
 	for task in tasks:
 		task_array.append(task.task.title)
 
+	task_enabler=TransactionEnabler.objects.filter(status="YES")
+	task_enabler_array=[]
+	for item in task_enabler:
+		task_enabler_array.append(item.title)
 
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
+	form=Existing_Shares_Upload_form(request.POST or None)
+
+	processed_by=CustomUser.objects.get(id=request.user.id)
+	processed_by=processed_by.username
+
+	status='UNTREATED'
+	status1='ACTIVE'
+	shares_status='VERIFIED'
+
+
+	member1=Members.objects.get(id=pk)
+	tdate=get_current_date(now)
+
+	unit_share_cost=0
+	if MembersShareConfigurations.objects.all().exists():
+		unit_share_cost=MembersShareConfigurations.objects.all().first()
+		unit_share_cost=unit_share_cost.unit_cost
+
+
+	transaction=TransactionTypes.objects.get(code=700)
+
+	total_shares=0
+	member=[]
+
+
+	if request.method=="POST" and 'btn-upload' in request.POST:
+		year=request.POST.get('year')
+		
+
+		if MembersShareAccountsMain.objects.filter(member=member1,transaction=transaction,year=year).exists():
+			member=MembersShareAccountsMain.objects.get(member=member1,transaction=transaction,year=year)
+			account_number=member.account_number
+		else:
+			account_number=f'{transaction.code}{year}{member1.coop_no}'
+		
+		shares_amount=request.POST.get('shares_amount')
+		
+		total_shares=float(shares_amount)/float(unit_share_cost)
+		shares = "{:.2f}".format(total_shares)
+
+		
+		if MembersShareAccountsMain.objects.filter(member=member1,transaction=transaction,year=year).exists():
+			member=MembersShareAccountsMain.objects.get(member=member1,transaction=transaction,year=year)
+			account_number=member.account_number
+			
+			MembersShareAccountsMain.objects.filter(member=member1,transaction=transaction,year=year).update(shares=shares,
+										unit_cost=unit_share_cost,
+										total_cost=shares_amount,
+										tdate=tdate,
+										processed_by=processed_by)
+		else:
+			record=MembersShareAccountsMain(member=member1,transaction=transaction,
+										account_number=account_number,
+										shares=float(shares),
+										unit_cost=unit_share_cost,
+										total_cost=shares_amount,
+										year=year,
+										status=status,
+										tdate=tdate,
+										processed_by=processed_by)
+			record.save()
+
+	
+		debit=0
+		credit=shares_amount
+		balance=shares_amount
+
+		particulars=f'Balance Broght Forward as at  {tdate} with shares of {shares}'
+		post_to_ledger(member1,
+						transaction,
+						account_number,
+						particulars,
+						debit,
+						credit,
+						balance,
+						tdate,
+						status1,
+						tdate,processed_by
+						)
+
+
+		member1.shares_status=shares_status
+		member1.save()
+
+		return HttpResponseRedirect(reverse('Members_Shares_Upload_Search'))
+	
+	if SharesActiveYear.objects.filter().exists():
+		year=SharesActiveYear.objects.first().year
+	else:
+		year=get_current_date(now).year
+		
+	form.fields['shares_amount'].initial= 20000
+	form.fields['unit_cost'].initial= unit_share_cost
+	form.fields['year'].initial= year
+	context={
+	'member':member,
+	'member1':member1,
+	'form':form,
+	'task_array':task_array,
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
+	}
+	return render(request,'deskofficer_templates/Members_Shares_Upload_Preview.html',context)
+
+
+def Members_Shares_Upload_All_list_load(request):
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	task_array=[]
+	for task in tasks:
+		task_array.append(task.task.title)
 
 	task_enabler=TransactionEnabler.objects.filter(status="YES")
 	task_enabler_array=[]
@@ -25533,6 +25975,41 @@ def Members_Shares_Upload_Preview(request,pk):
 	if Staff.objects.filter(admin=request.user,default_password='YES'):
 		default_password="YES"
 
+
+	title="LIST OF MEMBERS"
+
+	status="ACTIVE"
+	shares_status = 'PENDING'
+
+
+	records=Members.objects.filter(status=status,shares_status=shares_status).order_by('coop_no')
+	context={
+	'records':records,
+	'title':title,
+	'task_array':task_array,
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
+	}
+	return render(request,'deskofficer_templates/Members_Shares_Upload_All_list_load.html',context)
+
+
+
+def Members_Shares_Upload_Preview_All(request,pk):
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	task_array=[]
+	for task in tasks:
+		task_array.append(task.task.title)
+
+
+
+	task_enabler=TransactionEnabler.objects.filter(status="YES")
+	task_enabler_array=[]
+	for item in task_enabler:
+		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
 
 
 	form=Existing_Shares_Upload_form(request.POST or None)
@@ -25558,51 +26035,60 @@ def Members_Shares_Upload_Preview(request,pk):
 
 	total_shares=0
 	member=[]
-	if MembersAccountsDomain.objects.filter(member=member1,transaction=transaction).exists():
-		member=MembersAccountsDomain.objects.get(member=member1,transaction=transaction)
 
 
 	if request.method=="POST" and 'btn-upload' in request.POST:
+		year=request.POST.get('year')
+		
 
-		transaction_period=TransactionPeriods.objects.get(status='ACTIVE')
+		if MembersShareAccountsMain.objects.filter(member=member1,transaction=transaction,year=year).exists():
+			member=MembersShareAccountsMain.objects.get(member=member1,transaction=transaction,year=year)
+			account_number=member.account_number
+			
+		else:
+			account_number=f'{transaction.code}{year}{member1.coop_no}'
+		
 		shares_amount=request.POST.get('shares_amount')
-
+	
+		# if len(shares_amount)<5:
+		# 	messages.error(request,'Please Amount specified is invalid')
+		# 	return HttpResponseRedirect(reverse('Members_Shares_Upload_Preview_All',args=(pk,)))
+		
+		# if float(shares_amount) % float(unit_share_cost)>0:
+		# 	messages.error(request,f'Please Amount specified is invalid, it must in units of {unit_share_cost}')
+		# 	return HttpResponseRedirect(reverse('Members_Shares_Upload_Preview',args=(pk,)))
 
 		total_shares=float(shares_amount)/float(unit_share_cost)
 		shares = "{:.2f}".format(total_shares)
 
+		
+		if MembersShareAccountsMain.objects.filter(member=member1,transaction=transaction,year=year).exists():
+			member=MembersShareAccountsMain.objects.get(member=member1,transaction=transaction,year=year)
+		
+			MembersShareAccountsMain.objects.filter(member=member1,transaction=transaction,year=year).update(shares=float(shares),
+										unit_cost=unit_share_cost,
+										total_cost=shares_amount,										
+										tdate=tdate,
+										processed_by=processed_by)
+		else:
+		
+			record=MembersShareAccountsMain(member=member1,transaction=transaction,
+										account_number=account_number,
+										shares=float(shares),
+										unit_cost=unit_share_cost,
+										total_cost=shares_amount,
+										year=year,
+										status=status,
+										tdate=tdate,
+										processed_by=processed_by)
+			record.save()
 
-		effective_date=request.POST.get('effective_date')
-		date = parse_date(effective_date)
-
-
-		if not member:
-			messages.error(request,'Please There is no account member for this Transaction')
-			return HttpResponseRedirect(reverse('Members_Shares_Upload_Preview',args=(pk,)))
-
-		account_number=member.account_number
-
-
-		if MembersShareAccounts.objects.filter(member=member).exists():
-			messages.info(request,'Record Already Exist')
-			return HttpResponseRedirect(reverse('Members_Shares_Upload_Preview',args=(pk,)))
-
-		record=MembersShareAccounts(member=member,
-									shares=shares,
-									unit_cost=unit_share_cost,
-									total_cost=shares_amount,
-									effective_date=effective_date,
-									year=date.year,
-									status=status,
-									tdate=tdate,
-									processed_by=processed_by.username)
-		record.save()
-
+	
 		debit=0
 		credit=shares_amount
 		balance=shares_amount
 
-		particulars='Balance Broght Forward as at ' + str(transaction_period.transaction_period) + " with shares of " + str(shares)
+		particulars=f'Balance Broght Forward as at  {tdate} with shares of {shares}'
 		post_to_ledger(member1,
 						transaction,
 						account_number,
@@ -25610,7 +26096,7 @@ def Members_Shares_Upload_Preview(request,pk):
 						debit,
 						credit,
 						balance,
-						transaction_period.transaction_period,
+						tdate,
 						status1,
 						tdate,processed_by
 						)
@@ -25619,10 +26105,16 @@ def Members_Shares_Upload_Preview(request,pk):
 		member1.shares_status=shares_status
 		member1.save()
 
-		return HttpResponseRedirect(reverse('deskofficer_home'))
-
+		return HttpResponseRedirect(reverse('Members_Shares_Upload_All_list_load'))
+	if SharesActiveYear.objects.filter().exists():
+		year=SharesActiveYear.objects.first().year
+	else:
+		year=get_current_date(now).year
+	
+	
 	form.fields['unit_cost'].initial= unit_share_cost
-	form.fields['effective_date'].initial= now
+	form.fields['year'].initial= year
+	form.fields['shares_amount'].initial= 20000
 	context={
 	'member':member,
 	'member1':member1,
@@ -25631,8 +26123,128 @@ def Members_Shares_Upload_Preview(request,pk):
 	'task_enabler_array':task_enabler_array,
 	'default_password':default_password,
 	}
-	return render(request,'deskofficer_templates/Members_Shares_Upload_Preview.html',context)
+	return render(request,'deskofficer_templates/Members_Shares_Upload_Preview_All.html',context)
 
+
+
+def Members_Shares_Upload_Reverse_Search(request):
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	task_array=[]
+	for task in tasks:
+		task_array.append(task.task.title)
+
+
+
+	task_enabler=TransactionEnabler.objects.filter(status="YES")
+	task_enabler_array=[]
+	for item in task_enabler:
+		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
+
+
+	title="Search Members Shares Management"
+	form = searchForm(request.POST or None)
+
+	return render(request,'deskofficer_templates/Members_Shares_Upload_Reverse_Search.html',{'form':form,'title':title,'task_array':task_array,
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
+	})
+
+
+def Members_Shares_Upload_Reverse_list_load(request):
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	task_array=[]
+	for task in tasks:
+		task_array.append(task.task.title)
+
+	task_enabler=TransactionEnabler.objects.filter(status="YES")
+	task_enabler_array=[]
+	for item in task_enabler:
+		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
+
+	title="LIST OF MEMBERS"
+	form = searchForm(request.POST)
+	status="ACTIVE"
+	shares_status = 'PENDING'
+	if request.method == "POST":
+		if request.POST.get("title")=="":
+			messages.info(request,"Please Enter a search data")
+			return HttpResponseRedirect(reverse('Members_Shares_Upload_Reverse_Search'))
+
+
+		records=MembersShareAccountsMain.objects.filter(Q(member__coop_no__icontains=form['title'].value()) |Q(member__ippis_no__icontains=form['title'].value()) | Q(member__admin__first_name__icontains=form['title'].value()) | Q(member__admin__last_name__icontains=form['title'].value()) | Q(member__middle_name__icontains=form['title'].value())).filter(member__status=status)
+		if records.count() <= 0:
+			messages.info(request,"No Record Found")
+			return HttpResponseRedirect(reverse('Members_Shares_Upload_Reverse_Search'))
+
+
+		context={
+		'records':records,
+		'title':title,
+		'task_array':task_array,
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
+		}
+		return render(request,'deskofficer_templates/Members_Shares_Upload_Reverse_list_load.html',context)
+
+
+def Members_Shares_Upload_Reverse_Delete(request,pk):
+	record=MembersShareAccountsMain.objects.get(id=pk) 
+	PersonalLedger.objects.filter(account_number=record.account_number).delete()
+	Members.objects.filter(id=record.member_id).update(shares_status='PENDING')
+	record.delete()
+	return HttpResponseRedirect(reverse('Members_Shares_Upload_Reverse_Search'))
+
+
+def Members_Shares_Upload_Reverse_All_list_load(request):
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	task_array=[]
+	for task in tasks:
+		task_array.append(task.task.title)
+
+	task_enabler=TransactionEnabler.objects.filter(status="YES")
+	task_enabler_array=[]
+	for item in task_enabler:
+		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
+
+	title="LIST OF MEMBERS"
+	form = searchForm(request.POST)
+	status="ACTIVE"
+	shares_status = 'PENDING'
+
+	records=MembersShareAccountsMain.objects.all()
+
+
+	context={
+	'records':records,
+	'title':title,
+	'task_array':task_array,
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
+	}
+	return render(request,'deskofficer_templates/Members_Shares_Upload_Reverse_All_list_load.html',context)
+
+
+def Members_Shares_All_Upload_Reverse_Delete(request,pk):
+	record=MembersShareAccountsMain.objects.get(id=pk) 
+	PersonalLedger.objects.filter(account_number=record.account_number).delete()
+	Members.objects.filter(id=record.member_id).update(shares_status='PENDING')
+	record.delete()
+	return HttpResponseRedirect(reverse('Members_Shares_Upload_Reverse_All_list_load'))
 
 
 def Members_Initial_Shares_update_Search(request):
@@ -25692,20 +26304,19 @@ def Members_Initial_Shares_update_list_load(request):
 		if request.POST.get("title")=="":
 			return HttpResponseRedirect(reverse('Members_Initial_Shares_update_Search'))
 
-		members=MembersShareAccounts.objects.filter(Q(member__member__file_no__icontains=form['title'].value())
-													|Q(member__member__ippis_no__icontains=form['title'].value())
-													|Q(member__member__phone_number__icontains=form['title'].value())
-													|Q(member__member__admin__first_name__icontains=form['title'].value())
-													|Q(member__member__admin__last_name__icontains=form['title'].value())
-													|Q(member__member__middle_name__icontains=form['title'].value())).filter(Q(shares__lt=2))
+		members=MembersShareAccountsMain.objects.filter(Q(member__coop_no__icontains=form['title'].value())
+													|Q(member__ippis_no__icontains=form['title'].value())
+													|Q(member__admin__first_name__icontains=form['title'].value())
+													|Q(member__admin__last_name__icontains=form['title'].value())
+													|Q(member__middle_name__icontains=form['title'].value())).filter(Q(shares__lt=2))
 
 
 		context={
 		'members':members,
 		'title':title,
 		'task_array':task_array,
-	'task_enabler_array':task_enabler_array,
-	'default_password':default_password,
+		'task_enabler_array':task_enabler_array,
+		'default_password':default_password,
 		}
 		return render(request,'deskofficer_templates/Members_Initial_Shares_update_list_load.html',context)
 
@@ -25735,17 +26346,31 @@ def Members_Initial_Shares_update_preview(request,pk):
 		form.fields['unit_cost'].initial=record.unit_cost
 
 
-	member=MembersShareAccounts.objects.get(id=pk)
+	member=MembersShareAccountsMain.objects.get(id=pk)
 
 	if request.method=='POST':
 		status='UNTREATED'
 		approval_status='PENDING'
-
+		
+		amount=record.unit_cost
 		transaction_id=request.POST.get('transactions')
 		transaction=SharesDeductionSavings.objects.get(id=transaction_id)
 
-		amount=record.unit_cost
+		account_number=[]
+		ledger_balance=0
+		if MembersAccountsDomain.objects.filter(transaction=transaction.savings,member=member.member).exists():
+			queryset=MembersAccountsDomain.objects.get(transaction=transaction.savings,member=member.member)
+			account_number=queryset.account_number
+
+			ledger_balance=get_ledger_balance(account_number)
+		
+		if not ledger_balance or float(ledger_balance)<=0 or float(ledger_balance)< float(amount):
+			messages.info(request,'You do not enough Savings for this Transaction')
+			return HttpResponseRedirect(reverse('Members_Initial_Shares_update_preview',args=(pk,)))
+		
+		
 		processed_by=CustomUser.objects.get(id=request.user.id)
+		
 		if MembersShareInitialUpdateRequest.objects.filter(member=member,status=status).exists():
 			messages.info(request,'There is still an open transaction for this member')
 			return HttpResponseRedirect(reverse('Members_Initial_Shares_update_preview',args=(pk,)))
@@ -25755,6 +26380,7 @@ def Members_Initial_Shares_update_preview(request,pk):
 		messages.success(request,'Transaction Completed Successfully')
 		return HttpResponseRedirect(reverse('Members_Initial_Shares_update_Search'))
 	context={
+	'member':member,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
 	'default_password':default_password,
@@ -25809,36 +26435,45 @@ def Members_Initial_Shares_update_approved_processed(request,pk):
 	if Staff.objects.filter(admin=request.user,default_password='YES'):
 		default_password="YES"
 
-	transaction_period=TransactionPeriods.objects.get(status='ACTIVE')
+	transaction_period=get_current_date(now)
 	status1='ACTIVE'
 	status='TREATED'
 	processed_by=CustomUser.objects.get(id=request.user.id)
 	processed_by=processed_by.username
 
 	member=MembersShareInitialUpdateRequest.objects.get(id=pk)
-	account_number=member.member.member.account_number
+	account_number=member.member.account_number
+	
 	tdate=get_current_date(now)
-
-	ledger_balance=PersonalLedger.objects.filter(account_number=account_number).last()
+	# return HttpResponse(account_number)
+	ledger_balance=get_ledger_balance(account_number=account_number)
+	
 	if request.method=="POST":
 		savings_id=request.POST.get('savings')
 		savings=TransactionTypes.objects.get(name=savings_id)
 
 		amount=request.POST.get('amount')
+		if MembersShareAccountsMain.objects.filter(account_number=account_number).exists():
+			MembersShareAccountsMain.objects.filter(account_number=account_number).update(shares=F('shares')+1,total_cost=F('total_cost')+float(amount))
+		else:
+			messages.error(request,'Please Upload initial Share Balance')
+			return HttpResponseRedirect(reverse('Members_Initial_Shares_update_approved_processed',args=(pk,)))
+	
 		debit=0
 		credit=amount
-		balance=float(ledger_balance.balance) + float(amount)
+		balance=float(ledger_balance) + float(amount)
 
-		particulars='Initial Share Balance update as at ' + str(transaction_period.transaction_period) + " with shares: " + str(1) + " Deducted from " + str(savings.name)
+		particulars='Initial Share Balance update as at ' + str(transaction_period) + " with shares: " + str(1) + " Deducted from " + str(savings.name)
+		
 		post_to_ledger(
-						member.member.member.member,
-						member.member.member.transaction,
-						ledger_balance.account_number,
+						member.member.member,
+						member.member.transaction,
+						account_number,
 						particulars,
 						debit,
 						credit,
 						balance,
-						transaction_period.transaction_period,
+						transaction_period,
 						status1,
 						tdate,processed_by)
 
@@ -25853,7 +26488,7 @@ def Members_Initial_Shares_update_approved_processed(request,pk):
 	'task_enabler_array':task_enabler_array,
 	'default_password':default_password,
 	'member':member,
-	'ledger_balance':ledger_balance.balance,
+	'ledger_balance':ledger_balance,
 	}
 	return render(request,'deskofficer_templates/Members_Initial_Shares_update_approved_processed.html',context)
 
@@ -25907,7 +26542,7 @@ def Members_Share_Purchase_Request_list_load(request):
 		if request.POST.get("title")=="":
 			return HttpResponseRedirect(reverse('Members_Share_Purchase_Request_Search'))
 
-		members=MembersShareAccounts.objects.filter(Q(member__member__file_no__icontains=form['title'].value()) |Q(member__member__ippis_no__icontains=form['title'].value()) |Q(member__member__phone_number__icontains=form['title'].value()) | Q(member__member__admin__first_name__icontains=form['title'].value()) | Q(member__member__admin__last_name__icontains=form['title'].value()) | Q(member__member__middle_name__icontains=form['title'].value())).filter(member__member__status=status)
+		members=Members.objects.filter(Q(ippis_no__icontains=form['title'].value()) |Q(admin__first_name__icontains=form['title'].value()) | Q(admin__last_name__icontains=form['title'].value()) | Q(middle_name__icontains=form['title'].value())).filter(status=status)
 
 		context={
 		'members':members,
@@ -25937,16 +26572,19 @@ def Members_Share_Purchase_Request_View(request,pk):
 
 
 	form = Members_Share_Purchase_Request_form(request.POST or None)
-	member1=MembersShareAccounts.objects.get(id=pk)
-	account_number=member1.member.account_number
-	member=MembersAccountsDomain.objects.get(account_number=account_number)
+	transaction=TransactionTypes.objects.get(code='700')
+	member=Members.objects.get(id=pk)
+	queryset=MembersShareAccountsMain.objects.filter(member=member).aggregate(total_amount=Sum('total_cost'),total_shares=Sum('shares'))
+	total_cost=queryset['total_amount']
+	existing_share=queryset['total_shares']
 
+	
 	if request.method=="POST":
 		tdate=get_current_date(now)
 		status="UNTREATED"
 		max_unit = SharesUnits.objects.all().order_by('unit').last()
 
-		existing_share = member1.shares
+	
 		approval_status='PENDING'
 
 		units=request.POST.get('units')
@@ -25955,29 +26593,27 @@ def Members_Share_Purchase_Request_View(request,pk):
 			return HttpResponseRedirect(reverse('Members_Share_Purchase_Request_View',args=(pk,)))
 
 
-		if int(max_unit.unit) < (int(units) + int(existing_share)):
+		if float(max_unit.unit) < (float(units) + float(existing_share)):
 			messages.error(request,"You have exceed the Maximum Units")
 			return HttpResponseRedirect(reverse('Members_Share_Purchase_Request_View',args=(pk,)))
 
 
-		if MembersSharePurchaseRequest.objects.filter(member=member,status=status).exists():
+		if MembersSharePurchaseRequest.objects.filter(member__member=member.member,status=status).exists():
 			messages.error(request,"You Still Have an Open Transaction")
 			return HttpResponseRedirect(reverse('Members_Share_Purchase_Request_View',args=(pk,)))
 
-		record=MembersSharePurchaseRequest(tdate=tdate,member=member,approval_status=approval_status,units=units,status=status)
+		record=MembersSharePurchaseRequest(tdate=tdate,member=member.member,approval_status=approval_status,units=units,status=status)
 		record.save()
-		return HttpResponseRedirect(reverse('Members_Share_Purchase_Request_Search'))
+		return HttpResponseRedirect(reverse('Members_Dashboard_Load',args=(member.member.pk,)))
 
-	# form.fields['units'].initial=
 	context={
-
+	'total_cost':total_cost,
+	'existing_share':existing_share,
 	"form":form,
 	"member":member,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
 	'default_password':default_password,
-
-	'account_number':account_number,
 	}
 	return render(request,'deskofficer_templates/Members_Share_Purchase_Request_View.html',context)
 
@@ -26066,7 +26702,7 @@ def Members_Share_Purchase_Request_Manage_Details(request,pk):
 
 	member=MembersSharePurchaseRequest.objects.get(id=pk)
 
-	member1=MembersShareAccounts.objects.get(member__account_number=member.member.account_number)
+	member1=MembersShareAccountsMain.objects.get(member__account_number=member.member.account_number)
 	title="LIST OF MEMBERS"
 
 	form.fields['units'].initial=member.units
@@ -26194,8 +26830,19 @@ def Members_Share_Purchase_Request_Process_View(request,pk):
 	processed_by=processed_by.username
 
 	form=Members_Share_Purchase_Request_Process_View_Form(request.POST or None)
-	record=MembersSharePurchaseRequest.objects.get(id=pk)
-	member=MembersAccountsDomain.objects.get(account_number=record.member.account_number)
+	member=Members.objects.get(id=pk)
+	record=[]
+	if MembersSharePurchaseRequest.objects.filter(member__member=member,status='UNTREATED').exists():
+		record= MembersSharePurchaseRequest.objects.get(member__member=member,status='UNTREATED')
+	
+	else:
+		return HttpResponseRedirect(reverse('Members_Dashboard_Load', args=(pk,)))
+
+
+	# record=MembersSharePurchaseRequest.objects.get(id=pk)
+	if record:
+		member=MembersAccountsDomain.objects.get(account_number=record.member.account_number)
+	
 	transaction_receipt_category=TransactionTypes.objects.get(code='700')
 	status1='ACTIVE'
 	status='TREATED'
@@ -26258,25 +26905,25 @@ def Members_Share_Purchase_Request_Process_View(request,pk):
 										receipt=receipt,
 										purpose=purpose,
 										payment_date=payment_date,
-										processed_by=processed_by.username,
+										processed_by=processed_by,
 										status=status2,
 										tdate=tdate)
 		record_add.save()
 
-		if MembersShareAccounts.objects.filter(member=member).exists():
-			share_record=MembersShareAccounts.objects.filter(member=member).first()
+		if MembersShareAccountsMain.objects.filter(member=member).exists():
+			share_record=MembersShareAccountsMain.objects.filter(member=member).first()
 			share_record.shares = int(share_record.shares) + int(units)
 			share_record.unit_cost=unit_cost
 			share_record.total_cost=float(share_record.total_cost) + float(total_cost)
 			share_record.save()
 		else:
-			share_record=MembersShareAccounts(member=member,
+			share_record=MembersShareAccountsMain(member=member,
 											shares=units,
 											unit_cost=unit_cost,
 											total_cost=total_cost,
 											effective_date=now,
 											year=now.year,
-											processed_by=processed_by.username,
+											processed_by=processed_by,
 											status=status2,
 											tdate=tdate)
 			share_record.save()
@@ -26331,25 +26978,54 @@ def Members_Share_Purchase_Request_Process_View(request,pk):
 
 	if MembersShareConfigurations.objects.all().count()>0:
 		share_cost=MembersShareConfigurations.objects.first()
-		form.fields['payment_date'].initial=now
 		form.fields['unit_cost'].initial=share_cost.unit_cost
+		if record:
+			form.fields['total_cost'].initial= float(share_cost.unit_cost) * float(record.units)
+	
+	if record:
 		form.fields['units'].initial=record.units
-		form.fields['total_cost'].initial= float(share_cost.unit_cost) * float(record.units)
 
+	form.fields['payment_date'].initial=now
 
 
 	context={
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
 	'default_password':default_password,
-
-
 	'record':record,
 	'form':form,
 	'transaction_receipt_category':transaction_receipt_category,
 	}
 	return render(request,'deskofficer_templates/Members_Share_Purchase_Request_Process_View.html',context)
 
+def Members_Share_Account_Details(request,pk):
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	task_array=[]
+	for task in tasks:
+		task_array.append(task.task.title)
+
+
+
+	task_enabler=TransactionEnabler.objects.filter(status="YES")
+	task_enabler_array=[]
+	for item in task_enabler:
+		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
+	transaction=TransactionTypes.objects.get(code='700')
+	member=Members.objects.get(id=pk)
+	records=PersonalLedger.objects.filter(member=member,transaction=transaction).order_by('pk')
+
+	context={
+	'records':records,
+	'task_array':task_array,
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
+	}
+	return render(request,'deskofficer_templates/Members_Share_Account_Details.html',context)
 
 
 ############################################################
@@ -26671,8 +27347,8 @@ def Cash_Deposit_Shares_Preview(request,pk):
 			image_url=None
 
 
-		if MembersShareAccounts.objects.filter(member=member).exists():
-			record=MembersShareAccounts.objects.filter(member=member).first()
+		if MembersShareAccountsMain.objects.filter(member=member).exists():
+			record=MembersShareAccountsMain.objects.filter(member=member).first()
 
 			if (int(record.shares) + int(units)) > int(record.member.member.shares):
 				messages.info(request,'You have exceeded maximum shares allowed')
@@ -28384,21 +29060,21 @@ def Cash_Withdrawal_Transactions_load(request,pk):
 		current_date = get_current_date(now)
 		maturity_date=current_date + relativedelta(months=transaction.maturity)
 
-		if StandingOrderAccounts.objects.filter(transaction=member_selected).exists():
-			record = StandingOrderAccounts.objects.filter(transaction=member_selected).first()
-			if PersonalLedger.objects.filter(member=member,account_number=member_selected.account_number).exists():
-				ledger=PersonalLedger.objects.filter(member=member,account_number=member_selected.account_number).last()
-				ledger_blance=ledger.balance
-				account_number=member_selected.account_number
-			else:
-				messages.info(request,'You do not have any Balance in this Transaction')
-				return HttpResponseRedirect(reverse('Cash_Withdrawal_Transactions_load',args=(pk,)))
+		# if StandingOrderAccounts.objects.filter(transaction=member_selected).exists():
+			# record = StandingOrderAccounts.objects.filter(transaction=member_selected).first()
+
+		if PersonalLedger.objects.filter(member=member,account_number=member_selected.account_number).exists():
+			ledger=PersonalLedger.objects.filter(member=member,account_number=member_selected.account_number).last()
+			ledger_blance=ledger.balance
+			account_number=member_selected.account_number
+		else:
+			messages.info(request,'You do not have any Balance in this Transaction')
+			return HttpResponseRedirect(reverse('Cash_Withdrawal_Transactions_load',args=(pk,)))
 
 
 	if request.method=="POST" and 'btn_submit' in request.POST:
 		transaction_id=request.POST.get('transactions')
-		transaction=WithdrawableTransactions.objects.get(transaction_id=transaction_id)
-
+		transaction=WithdrawableTransactions.objects.get(id=transaction_id)
 		member_selected=MembersAccountsDomain.objects.get(member=member,transaction=transaction.transaction)
 
 		current_date = datetime.date.today()
@@ -28407,15 +29083,14 @@ def Cash_Withdrawal_Transactions_load(request,pk):
 		certification_status='PENDING'
 		approval_status='PENDING'
 
-		if StandingOrderAccounts.objects.filter(transaction=member_selected).exists():
-			record = StandingOrderAccounts.objects.filter(transaction=member_selected).first()
-			ledger=PersonalLedger.objects.filter(member=member,account_number=member_selected.account_number).last()
-			ledger_balance=ledger.balance
-			account_number=member_selected.account_number
+	
+		ledger=PersonalLedger.objects.filter(member=member,account_number=member_selected.account_number).last()
+		ledger_balance=ledger.balance
+		account_number=member_selected.account_number
 
 
 		transaction_date_id=request.POST.get('tdate')
-		transaction_date=get_current_date(datetime.datetime.strptime(tdate_id, '%Y-%m-%d'))
+		transaction_date=get_current_date(datetime.datetime.strptime(transaction_date_id, '%Y-%m-%d'))
 
 		withdrawal_amount=request.POST.get('amount')
 		narration=request.POST.get('narration')
@@ -28431,24 +29106,25 @@ def Cash_Withdrawal_Transactions_load(request,pk):
 				messages.info(request,'You still have Open Transaction')
 				return HttpResponseRedirect(reverse('Cash_Withdrawal_Transactions_load',args=(pk,)))
 
-			record=MembersCashWithdrawalsApplication(approval_status=approval_status,transaction_date=transaction_date,member=member_selected,
+			record=MembersCashWithdrawalsApplication(approval_status=approval_status,
+				member=member_selected,
 				tdate=current_date,
 				amount=withdrawal_amount,
 				narration=narration,
 				processed_by=processed_by.username,
 				ledger_balance=ledger_balance,
-				certification_status=certification_status,
 				maturity_date=maturity_date,
 				status=status
 				)
 			record.save()
 			# messages.success(request,'Transaction Completed Successfully')
-			return HttpResponseRedirect(reverse('deskofficer_home'))
+			return HttpResponseRedirect(reverse('Cash_Withdrawal_Search'))
 
 
 	button_enabled=False
+	
 	if member_selected:
-		if member_selected.loan_lock.title == 'NO':
+		if member_selected.loan_lock == 'NO':
 			button_enabled=True
 
 	form.fields['tdate'].initial=get_current_date(now)
@@ -28571,29 +29247,29 @@ def Cash_Withdrawal_Transactions_All_Uncleared_list_Load(request):
 
 
 
-def Cash_Withdrawal_Transactions_Approved_list_Search(request):
-	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
-	task_array=[]
-	for task in tasks:
-		task_array.append(task.task.title)
+# def Cash_Withdrawal_Transactions_Approved_list_Search(request):
+# 	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+# 	task_array=[]
+# 	for task in tasks:
+# 		task_array.append(task.task.title)
 
 
 
-	task_enabler=TransactionEnabler.objects.filter(status="YES")
-	task_enabler_array=[]
-	for item in task_enabler:
-		task_enabler_array.append(item.title)
+# 	task_enabler=TransactionEnabler.objects.filter(status="YES")
+# 	task_enabler_array=[]
+# 	for item in task_enabler:
+# 		task_enabler_array.append(item.title)
 
-	default_password="NO"
-	if Staff.objects.filter(admin=request.user,default_password='YES'):
-		default_password="YES"
+# 	default_password="NO"
+# 	if Staff.objects.filter(admin=request.user,default_password='YES'):
+# 		default_password="YES"
 
-	title="Search Members for Cash Withdrawal Status"
-	form = searchForm(request.POST or None)
+# 	title="Search Members for Cash Withdrawal Status"
+# 	form = searchForm(request.POST or None)
 
-	return render(request,'deskofficer_templates/Cash_Withdrawal_Transactions_Approved_list_Search.html',{'form':form,'title':title,'task_array':task_array,
-	'task_enabler_array':task_enabler_array,
-	'default_password':default_password,})
+# 	return render(request,'deskofficer_templates/Cash_Withdrawal_Transactions_Approved_list_Search.html',{'form':form,'title':title,'task_array':task_array,
+# 	'task_enabler_array':task_enabler_array,
+# 	'default_password':default_password,})
 
 
 
@@ -28615,30 +29291,9 @@ def Cash_Withdrawal_Transactions_Approved_list_Load(request):
 	if Staff.objects.filter(admin=request.user,default_password='YES'):
 		default_password="YES"
 
-	title="LIST OF MEMBERS FOR CASH WITHDRAWALS"
-	status="ACTIVE"
-
-	status1='UNTREATED'
-
-	form = search_with_date_Form(request.POST or None)
-	members=[]
-	if request.method == "POST":
-
-		if not request.POST.get("title"):
-			return HttpResponseRedirect(reverse('Cash_Withdrawal_Transactions_Approved_list_Search'))
-
-		start_date=request.POST.get('start_date')
-		stop_date=request.POST.get('stop_date')
-
-		date_format = '%Y-%m-%d'
-
-		dtObj=datetime.datetime.strptime(start_date, date_format)
-		start_date=get_current_date(dtObj)
-
-		dtObj = datetime.datetime.strptime(stop_date, date_format)
-		stop_date=get_current_date(dtObj)
-
-		members=MembersCashWithdrawalsApplication.objects.filter(tdate__range=[start_date,stop_date],status=status1).filter(Q(member__member__file_no__icontains=form['title'].value()) |Q(member__member__ippis_no__icontains=form['title'].value()) |Q(member__member__phone_number__icontains=form['title'].value()) | Q(member__member__admin__first_name__icontains=form['title'].value()) | Q(member__member__admin__last_name__icontains=form['title'].value()) | Q(member__member__middle_name__icontains=form['title'].value()))
+	title="LIST OF MEMBERS APPROVED CASH WITHDRAWALS"
+	
+	members=MembersCashWithdrawalsApplication.objects.filter(approval_status='APPROVED',status='UNTREATED')
 
 	context={
 	'members':members,
@@ -28652,17 +29307,11 @@ def Cash_Withdrawal_Transactions_Approved_list_Load(request):
 
 
 
-
-############################################################
-##################### MEMBERSHIP TERMINATION ##############
-############################################################
-
-def membership_termination_search(request):
+def Cash_Withdrawal_Transactions_details_load(request,pk):
 	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
 	task_array=[]
 	for task in tasks:
 		task_array.append(task.task.title)
-
 
 
 	task_enabler=TransactionEnabler.objects.filter(status="YES")
@@ -28674,47 +29323,136 @@ def membership_termination_search(request):
 	if Staff.objects.filter(admin=request.user,default_password='YES'):
 		default_password="YES"
 
-	title="Search Membership Request Termination"
-	form = searchForm(request.POST or None)
 
-	return render(request,'deskofficer_templates/membership_termination_search.html',{'form':form,'title':title,'task_array':task_array,'default_password':default_password,'task_enabler_array':task_enabler_array,'tasks':tasks})
+	form=Cash_Withdrawal_Transactions_details_Form(request.POST or None)
+	member=MembersCashWithdrawalsApplication.objects.get(id=pk)
+	transaction=member.member.transaction
 
-
-def membership_termination_list_load(request):
-	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
-	task_array=[]
-	for task in tasks:
-		task_array.append(task.task.title)
+	account_number=member.member.account_number
+	ledger_balance=get_ledger_balance(account_number)
+  
+	tdate=get_current_date(now)
 
 
+	accounts=MembersBankAccounts.objects.filter(member_id=member.member.member)
+	
+	if request.method=="POST":
+		channel=request.POST.get('channel')
+		
+		
+		chk_coop_account=request.POST.get('chk-coop-account')
+		if chk_coop_account:
+			coop_account_id=request.POST.get('account')
+			coop_account=CooperativeBankAccounts.objects.get(id=coop_account_id)
+		
+		chk_member_account=request.POST.get('chk-member-account')
 
-	task_enabler=TransactionEnabler.objects.filter(status="YES")
-	task_enabler_array=[]
-	for item in task_enabler:
-		task_enabler_array.append(item.title)
+		if chk_member_account:
+			member_account_id=request.POST.get('member_account')
+			member_account=MembersBankAccounts.objects.get(id=member_account_id)
 
-	default_password="NO"
-	if Staff.objects.filter(admin=request.user,default_password='YES'):
-		default_password="YES"
+		chk_cheque=request.POST.get('chk-cheque')
+		cheque_number=''
+		if chk_cheque:
+			cheque_number=request.POST.get('cheque_number')
+			if not cheque_number:
+				messages.error(request,'The Cheque/Account Number Missing')
+				return HttpResponseRedirect(reverse('Cash_Withdrawal_Transactions_details_load',args=(pk,)))
 
-	title="Membership Termination Request"
-	form = searchForm(request.POST)
-	status="ACTIVE"
-	members=[]
-	if request.method == "POST":
-		if not request.POST.get("title"):
-			return HttpResponseRedirect(reverse('membership_termination_search'))
-		members=searchMembers(form['title'].value(),status)
 
+		
+		payment_date_id=request.POST.get('period')
+		date_format = '%Y-%m-%d'
+		dtObj = datetime.datetime.strptime(payment_date_id, date_format)
+		payment_date=get_current_date(dtObj)
+
+		amount=member.approved_amount
+
+		
+
+		credit=0
+		debit=float(amount)
+		balance=float(ledger_balance)-float(debit)
+		
+		if channel=='TRANSFER' and chk_cheque:
+			messages.error(request,'Wrong option Selection')
+			return HttpResponseRedirect(reverse('Cash_Withdrawal_Transactions_details_load',args=(pk,)))
+		
+		if channel=='CHEQUE' and chk_member_account:
+			messages.error(request,'Wrong option Selection')
+			return HttpResponseRedirect(reverse('Cash_Withdrawal_Transactions_details_load',args=(pk,)))
+
+		if channel=='TRANSFER':
+			if chk_coop_account:
+				if chk_member_account:
+					particulars = f'CASH WITHDRAWALS THROUGH: {channel} FROM: {coop_account.bank.alias}({coop_account.account_number}) TO {member_account.bank.alias}({member_account.account_number})'
+				else:
+					particulars = f'CASH WITHDRAWALS THROUGH: {channel} FROM: {coop_account.bank.alias}({coop_account.account_number}))'
+			else:
+				if chk_member_account:
+					particulars = f'CASH WITHDRAWALS THROUGH: {channel} : TO {member_account.bank.alias}({member_account.account_number})'
+				else:
+					particulars = f'CASH WITHDRAWALS THROUGH: {channel}'
+
+		elif channel=='CHEQUE':
+			if chk_coop_account:
+				if chk_cheque:
+					particulars = f'CASH WITHDRAWALS THROUGH: {channel}({cheque_number} FROM: {coop_account.bank.alias}({coop_account.account_number})'
+				else:
+					particulars = f'CASH WITHDRAWALS THROUGH: {channel} FROM: {coop_account.bank.alias}({coop_account.account_number})'
+			else:
+				if chk_cheque:
+					particulars = f'CASH WITHDRAWALS THROUGH: {channel}({cheque_number})'
+				else:
+					particulars = f'CASH WITHDRAWALS THROUGH: {channel}'
+
+		status='ACTIVE'
+		tdate=get_current_date(now)
+		processed_by=CustomUser.objects.get(id=request.user.id)
+		processed_by=processed_by.username
+
+	
+	
+		post_to_ledger(
+		member.member.member,
+		transaction,
+		member.member.account_number,
+		particulars,
+		debit,
+		credit,
+		balance,
+		payment_date,
+		'ACTIVE',
+		tdate,processed_by
+		)
+		MembersCashWithdrawalsMain(transaction=transaction,member=member,particulars=particulars,amount=credit,processed_by=processed_by,tdate=tdate).save()
+		member.status='TREATED'
+		member.save()
+		return HttpResponseRedirect(reverse('Cash_Withdrawal_Transactions_Approved_list_Load'))
+
+	
+	form.fields['balance_exist'].initial=member.ledger_balance
+	form.fields['balance_amount'].initial=ledger_balance
+	form.fields['transaction'].initial=member.member.transaction.name
+	form.fields['account_number'].initial=member.member.account_number
+	form.fields['period'].initial=get_current_date(now)
+	form.fields['withdrawal_amount'].initial=member.approved_amount
+	form.fields['applied_amount'].initial=member.amount
 	context={
-	'members':members,
-	'title':title,
-	# 'tasks':tasks,
+	'member':member,
+	
+	'accounts':accounts,
+	'form':form,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
 	'default_password':default_password,
 	}
-	return render(request,'deskofficer_templates/membership_termination_list_load.html',context)
+	return render(request,'deskofficer_templates/Cash_Withdrawal_Transactions_details_load.html',context)
+
+
+############################################################
+##################### MEMBERSHIP TERMINATION ##############
+############################################################
 
 
 
@@ -28828,7 +29566,40 @@ def membership_termination_transactions_load(request,pk):
 	}
 	return render(request,'deskofficer_templates/membership_termination_transactions_load.html',context)
 
+def membership_termination_request_manager(request,pk):
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	task_array=[]
+	for task in tasks:
+		task_array.append(task.task.title)
 
+
+
+	task_enabler=TransactionEnabler.objects.filter(status="YES")
+	task_enabler_array=[]
+	for item in task_enabler:
+		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
+	member=Members.objects.get(id=pk)
+	records=MemberShipTerminationRequest.objects.filter(member=member,processing_status='UNPROCESSED',approval_status='PENDING')
+
+	context={
+	'task_array':task_array,
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
+	'records':records,
+	}
+	return render(request,'deskofficer_templates/membership_termination_request_manager.html',context)
+
+def membership_termination_request_drop(request,pk):
+	record=MemberShipTerminationRequest.objects.get(id=pk)
+	member_pk=record.member.pk
+	record.delete()
+	return HttpResponseRedirect(reverse('Members_Dashboard_Load',args=(member_pk,)))
+	
 
 def membership_termination_approved_list_processing_list_load(request):
 	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
@@ -28887,13 +29658,16 @@ def membership_termination_approved_list_processing_preview(request,pk):
 
 	title="Membership Termination Request"
 	tdate=get_current_date(now)
-	status1='INACTIVE'
+	status1='TERMINATED'
 	status="UNTREATED"
+	
 	status2="TREATED"
 	processed_by=CustomUser.objects.get(id=request.user.id)
 	approval_status='PENDING'
 	processing_status='UNPROCESSED'
 	lock_status='LOCKED'
+	
+
 	if MemberShipTerminationRequest.objects.filter(member=pk).exists():
 		member=MemberShipTerminationRequest.objects.get(member=pk)
 	else:
@@ -28904,95 +29678,36 @@ def membership_termination_approved_list_processing_preview(request,pk):
 
 
 	record_array=[]
+	total_savings=0
+	total_loans=0
 	for item in savings:
 		ledger=PersonalLedger.objects.filter(member=item.member,account_number=item.account_number).last()
 		if ledger:
+			total_savings=float(total_savings)+abs(float(ledger.balance))
 			record_array.append((ledger.transaction.name,ledger.account_number,0,ledger.balance))
 
 
 	loans=LoansRepaymentBase.objects.filter(member=member.member).filter(Q(balance__lt=0))
 	if loans:
 		for item in loans:
+			total_loans=float(total_loans)+abs(float(item.balance))
 			record_array.append((item.transaction.name,item.loan_number,abs(item.balance)))
-	amount=0
+	
+
+	
+
 	if request.method == 'POST':
-
-		for item in savings:
-			ledger=PersonalLedger.objects.filter(member=item.member,account_number=item.account_number).last()
-			if ledger:
-				amount=float(amount)+ float(ledger.balance)
-				MemberShipTerminationTransactionBalances(applicant=member,
-												account_number=ledger.account_number,
-												transaction=ledger.transaction,
-												debit=0,
-												credit=ledger.balance,
-												status=status,
-												processed_by=processed_by.username,
-												tdate=tdate).save()
-
-				post_to_ledger(member.member,
-					ledger.transaction,
-					ledger.account_number,
-					"Termination of Membership payoff ",
-					ledger.balance,
-					0,
-					0,
-					get_current_date(now),
-					status1,
-					tdate,processed_by)
-
-				PersonalLedger.objects.filter(account_number=ledger.account_number).update(status=status1)
-
-		if loans:
-			for item in loans:
-				amount=float(amount)+ float(item.balance)
-				MemberShipTerminationTransactionBalances(applicant=member,
-												account_number=item.loan_number,
-												transaction=item.transaction,
-												debit=abs(item.balance),
-												credit=0,
-												status=status,
-												processed_by=processed_by.username,
-												tdate=tdate).save()
-
-				post_to_ledger(member.member,
-					item.transaction,
-					item.loan_number,
-					"Termination of Membership payoff ",
-					0,
-					abs(item.balance),
-					0,
-					get_current_date(now),
-					status1,
-					tdate,processed_by)
-
-				PersonalLedger.objects.filter(account_number=item.loan_number).update(status=status1)
-
-				item.amount_paid=item.amount_paid + abs(item.balance)
-				item.balance=item.balance + abs(item.balance)
-				item.schedule_status=schedule_status
-				item.save()
-
-				LoansCleared(loan=item,processed_by=processed_by.username,status=status,tdate=tdate,comment="Termination of Membership").save()
-
-
-				item=LoansRepaymentBase.objects.get(loan_number=item.loan_number)
-				item.amount_paid=item.amount_paid + abs(item.balance)
-				item.balance=item.balance + abs(item.balance)
-				item.schedule_status=schedule_status
-				item.save()
+		if float(total_loans)>0 or float(total_savings)==0:
+			messages.error(request,'Please either savings made of Loans indepted needs attention')
+			return HttpResponseRedirect(reverse('membership_termination_approved_list_processing_preview',args=(pk,)))
 
 		MemberShipTermination(applicant=member,
-							amount=amount,
-							approval_status=approval_status,
-							processing_status=processing_status,
 							status=status,
-							lock_status=lock_status,
 							processed_by=processed_by.username,
 							tdate=tdate).save()
 
 		MembersAccountsDomain.objects.filter(member=member.member).update(status=status1)
-		StandingOrderAccounts.objects.filter(transaction__member=member.member).update(status=status1)
+		StandingOrderAccounts.objects.filter(transaction__member=member.member).delete()
 
 		Members.objects.filter(id=member.member_id).update(status=status1)
 
@@ -29094,7 +29809,11 @@ def membership_dashboard_transaction_details(request,pk):
 	return render(request,'deskofficer_templates/membership_dashboard_transaction_details.html',context)
 
 
-
+def membership_dashboard_transaction_details_delete(request,pk):
+	record=PersonalLedger.objects.get(id=pk)
+	account_number=record.account_number
+	record.delete()
+	return HttpResponseRedirect(reverse('membership_dashboard_transaction_details',args=(account_number,)))
 
 
 def membership_termination_maturity_date_exception_search(request):
@@ -31976,7 +32695,24 @@ def Members_Dashboard_Load(request,pk):
 	member=Members.objects.get(id=pk)
 	transaction=TransactionTypes.objects.get(code='800')
 	transaction1=TransactionTypes.objects.get(code='700')
+	
+	if MembersAccountsDomain.objects.filter(transaction=transaction,member=member).exists():
+		pass
+	else:
+		account_number=f'{transaction.code}{member.coop_no}'
+		record=MembersAccountsDomain(loan_lock='NO',status='ACTIVE',member=member,transaction=transaction,account_number=account_number)
+		record.save()
+	
 	welfare_code=MembersAccountsDomain.objects.get(transaction=transaction,member=member)
+
+
+	if MembersAccountsDomain.objects.filter(transaction=transaction1,member=member).exists():
+		pass
+	else:
+		account_number=f'{transaction1.code}{member.coop_no}'
+		record=MembersAccountsDomain(loan_lock='NO',status='ACTIVE',member=member,transaction=transaction1,account_number=account_number)
+		record.save()
+	
 	share_code=MembersAccountsDomain.objects.get(transaction=transaction1,member=member)
 
 	context={
@@ -32089,13 +32825,28 @@ def Members_Dashboard_Load_Monthly_Deductions(request,pk):
 	
 	transaction_period=TransactionPeriods.objects.get(status="ACTIVE")
 	transaction_period=transaction_period.transaction_period
-	records=MonthlyDeductionList.objects.filter(member=member,transaction_period=transaction_period)
 
-	deduction_sum=MonthlyDeductionList.objects.filter(member=member,transaction_period=transaction_period).aggregate(total=Sum('amount'),deduction=Sum('amount_deducted'))
+	record_array=[]
+	total_generated=0
+	total_deducted=0
+	records=MonthlyDeductionList.objects.filter(member=member,transaction_period=transaction_period)
+	for item in records:
+		total_generated=float(total_generated)+float(item.amount)
+		total_deducted=float(total_deducted)+float(item.amount_deducted)
+		record_array.append((item.transaction.name,item.account_number,item.amount,item.amount_deducted))
+	
+	if MonthlyJointDeductionList.objects.filter(member=member,transaction_period=transaction_period,transaction='SHOP').exists():
+		queryset=MonthlyJointDeductionList.objects.get(member=member,transaction_period=transaction_period,transaction='SHOP')
+		record_array.append(('SHOP',queryset.member.coop_no,queryset.amount,queryset.amount_deducted))
+		
+		total_generated=float(total_generated)+float(queryset.amount)
+		total_deducted=float(total_deducted)+float(queryset.amount_deducted)
+	
+	# deduction_sum=MonthlyDeductionList.objects.filter(member=member,transaction_period=transaction_period).aggregate(total=Sum('amount'),deduction=Sum('amount_deducted'))
 
 	
-	generated_amount=deduction_sum['total']
-	total_deduction=deduction_sum['deduction']
+	# generated_amount=deduction_sum['total']
+	# total_deduction=deduction_sum['deduction']
 
 	if request.method=="POST":
 		transaction_period_id=request.POST.get('transaction_period')
@@ -32103,16 +32854,38 @@ def Members_Dashboard_Load_Monthly_Deductions(request,pk):
 		dtObj = datetime.datetime.strptime(transaction_period_id, date_format)
 
 		transaction_period=get_current_date(dtObj)
-		records=MonthlyDeductionList.objects.filter(member=member,transaction_period=transaction_period)
-		deduction_sum=MonthlyDeductionList.objects.filter(member=member,transaction_period=transaction_period).aggregate(total=Sum('amount'),deduction=Sum('amount_deducted'))
+		
+		record_array=[]
+		total_generated=0
+		total_deducted=0
 
-		generated_amount=deduction_sum['total']
-		total_deduction=deduction_sum['deduction']
+		records=MonthlyDeductionList.objects.filter(member=member,transaction_period=transaction_period)
+		for item in records:
+			total_generated=float(total_generated)+float(item.amount)
+			total_deducted=float(total_deducted)+float(item.amount_deducted)
+			record_array.append((item.transaction.name,item.account_number,item.amount,item.amount_deducted))
+		
+		if MonthlyJointDeductionList.objects.filter(member=member,transaction_period=transaction_period,transaction='SHOP').exists():
+			queryset=MonthlyJointDeductionList.objects.get(member=member,transaction_period=transaction_period,transaction='SHOP')
+			record_array.append(('SHOP',queryset.member.coop_no,queryset.amount,queryset.amount_deducted))
+			
+			total_generated=float(total_generated)+float(queryset.amount)
+			total_deducted=float(total_deducted)+float(queryset.amount_deducted)
+		
+
+
+		# records=MonthlyDeductionList.objects.filter(member=member,transaction_period=transaction_period)
+		# deduction_sum=MonthlyDeductionList.objects.filter(member=member,transaction_period=transaction_period).aggregate(total=Sum('amount'),deduction=Sum('amount_deducted'))
+
+		# generated_amount=deduction_sum['total']
+		# total_deduction=deduction_sum['deduction']
 
 	form.fields['transaction_period'].initial=get_current_date(transaction_period)
 	context={
-	'generated_amount':generated_amount,
-	'total_deduction':total_deduction,
+	'record_array':record_array,
+	'total_generated':total_generated,
+	'total_deducted':total_deducted,
+
 	'transaction_period':transaction_period,
 	'records':records,
 	'member':member,
@@ -32130,13 +32903,10 @@ def Members_Dashboard_Load_Loan_Ledger(request,pk):
 	for task in tasks:
 		task_array.append(task.task.title)
 
-
-
 	task_enabler=TransactionEnabler.objects.filter(status="YES")
 	task_enabler_array=[]
 	for item in task_enabler:
 		task_enabler_array.append(item.title)
-
 
 	default_password="NO"
 	if Staff.objects.filter(admin=request.user,default_password='YES'):
@@ -32184,6 +32954,80 @@ def Members_Dashboard_Load_Loan_Ledger_History(request,pk):
 	return render(request,'deskofficer_templates/Members_Dashboard_Load_Loan_Ledger.html',context)
 
 
+def Members_Dashboard_Loan_Deduction_Generate_Period(request,pk):
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	task_array=[]
+	for task in tasks:
+		task_array.append(task.task.title)
+
+
+
+	task_enabler=TransactionEnabler.objects.filter(status="YES")
+	task_enabler_array=[]
+	for item in task_enabler:
+		task_enabler_array.append(item.title)
+
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
+	form=Members_Dashboard_Loan_Deduction_Generate_Period_form(request.POST or None)
+
+	tdate=get_current_date(now)
+	processed_by=CustomUser.objects.get(id=request.user.id)
+	processed_by=processed_by.username
+
+	loan=LoansRepaymentBase.objects.get(id=pk)
+	member=Members.objects.get(id=loan.member.pk)
+	
+	if request.method == 'POST':
+
+		transaction_period=request.POST.get('transaction_period')
+		dtObj = datetime.datetime.strptime(transaction_period, '%Y-%m-%d')
+		transaction_period=get_current_date(dtObj)
+
+		amount=request.POST.get('amount')
+		if not amount or float(amount)<=0:
+			messages.error(request,'Amount is missing')
+			return HttpResponseRedirect(reverse('Members_Dashboard_Loan_Deduction_Generate_Period',args=(pk,)))
+		
+		if MonthlyDeductionList.objects.filter(transaction_period=transaction_period,salary_institution=member.salary_institution).exists():
+			record=MonthlyDeductionList(member=member,
+										transaction_period=transaction_period,
+										transaction=loan.transaction,
+										account_number=loan.loan_number,
+										amount=amount,
+										amount_deducted=0,
+										balance=0,
+										repayment=amount,
+										penalty=0,
+										salary_institution=member.salary_institution,
+										processed_by=processed_by,
+										status='UNTREATED',
+										tdate=tdate,
+										processing_status='UNPROCESSED'
+										)
+			record.save()
+			return HttpResponseRedirect(reverse('Members_Dashboard_Load_Loan_Ledger_History',args=(member.pk,)))
+		
+		messages.error(request,'No existing Record Found')
+		return HttpResponseRedirect(reverse('Members_Dashboard_Loan_Deduction_Generate_Period',args=(pk,)))
+		
+	form.fields['transaction_period'].initial=tdate
+	form.fields['repayment'].initial=loan.repayment
+	form.fields['amount'].initial=loan.repayment
+	context={
+	'form':form,
+	'loan':loan,
+	'member':member,
+	'task_array':task_array,
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
+	}
+	return render(request,'deskofficer_templates/Members_Dashboard_Loan_Deduction_Generate_Period.html',context)
+
+
 
 def Members_Dashboard_Load_Savings_Ledger(request,pk):
 	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
@@ -32204,6 +33048,10 @@ def Members_Dashboard_Load_Savings_Ledger(request,pk):
 
 	member=Members.objects.get(id=pk)
 	savings=MembersAccountsDomain.objects.filter(member=member)
+	
+	enable_savings=False
+	if MemberShipTerminationRequest.objects.filter(member=member,approval_status='APPROVED',status='UNTREATED').exists():
+		enable_savings=True
 
 	savings_array=[]
 	for saving in savings:
@@ -32213,6 +33061,7 @@ def Members_Dashboard_Load_Savings_Ledger(request,pk):
 
 	context={
 	'savings_array':savings_array,
+	'enable_savings':enable_savings,
 	'member':member,
 	'task_array':task_array,
 	'task_enabler_array':task_enabler_array,
@@ -32602,6 +33451,7 @@ def Members_Savings_Fund_Transfer_Loan_Details(request,pk,dest_pk):
 	form.fields['balance'].initial=source_saving.balance
 	form.fields['destination_account_name'].initial=destination_loan.transaction.name
 	form.fields['destination_account_number'].initial=destination_loan.loan_number
+	form.fields['loan_balance'].initial=abs(destination_loan.balance)
 	context={
 	'form':form,
 	'source_saving':source_saving,
@@ -32647,6 +33497,7 @@ def Members_Dashboard_Load_Standing_Orders(request,pk):
 	}
 	return render(request,'deskofficer_templates/Members_Dashboard_Load_Standing_Orders.html',context)
 
+
 def Members_Dashboard_Load_Standing_Orders_Update(request,pk):
 	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
 	task_array=[]
@@ -32665,6 +33516,7 @@ def Members_Dashboard_Load_Standing_Orders_Update(request,pk):
 		default_password="YES"
 
 	form=Members_Dashboard_Load_Standing_Orders_Update_Form(request.POST or None)
+	
 	record=StandingOrderAccounts.objects.get(id=pk)
 	if request.method == 'POST':
 		amount=request.POST.get('current_amount')
@@ -32686,6 +33538,71 @@ def Members_Dashboard_Load_Standing_Orders_Update(request,pk):
 	'default_password':default_password,
 	}
 	return render(request,'deskofficer_templates/Members_Dashboard_Load_Standing_Orders_Update.html',context)
+
+
+
+def Members_Dashboard_Load_Standing_Orders_Generate_Deduction_Period(request,pk):
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	task_array=[]
+	for task in tasks:
+		task_array.append(task.task.title)
+
+
+	task_enabler=TransactionEnabler.objects.filter(status="YES")
+	task_enabler_array=[]
+	for item in task_enabler:
+		task_enabler_array.append(item.title)
+
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
+	form=Monthly_Deductions_Transaction_Period_Institution_load_Form(request.POST or None)
+	
+	member=Members.objects.get(id=pk)
+	
+	tdate=get_current_date(now)
+	processed_by=CustomUser.objects.get(id=request.user.id)
+	processed_by=processed_by.username
+
+	if request.method == 'POST':
+		transaction_period=request.POST.get('transaction_period')
+
+		date_format = '%Y-%m-%d'
+		dtObj = datetime.datetime.strptime(transaction_period, date_format)
+		transaction_period=get_current_date(dtObj)
+		
+		records=StandingOrderAccounts.objects.filter(transaction__member=member)
+		
+		if MonthlyDeductionList.objects.filter(salary_institution=member.salary_institution,transaction_period=transaction_period).exists():
+		
+			for record in records:
+				MonthlyDeductionList(
+		              member=member,
+		              transaction_period=transaction_period,
+		              transaction=record.transaction.transaction,
+		              account_number=record.transaction.account_number,
+		              amount=record.amount,
+		              balance=0,
+		              processing_status="UNPROCESSED",
+		              processed_by=processed_by,
+		              salary_institution=member.salary_institution,
+		              status='UNTREATED',
+		              tdate=tdate).save()
+			
+			return HttpResponseRedirect(reverse('Members_Dashboard_Load',args=(member.pk,)))
+		return HttpResponseRedirect(reverse('Members_Dashboard_Load_Standing_Orders_Generate_Deduction_Period',args=(pk,)))
+	form.fields['transaction_period'].initial=get_current_date(now)
+
+	context={
+	'form':form,
+	# 'record':record,
+	'task_array':task_array,
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
+	}
+	return render(request,'deskofficer_templates/Members_Dashboard_Load_Standing_Orders_Generate_Deduction_Period.html',context)
 
 
 def Members_Dashboard_Loan_Ledger_transaction_details(request,pk,member_pk):
@@ -33043,6 +33960,90 @@ def MemberShipFormSales_Report_individual_list_Load(request):
 		return render(request,'deskofficer_templates/MemberShipFormSales_Report_individual_list_Load.html',context)
 
 
+
+def MembersShare_Reports_list_Load(request):
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	task_array=[]
+	for task in tasks:
+		task_array.append(task.task.title)
+
+
+
+	task_enabler=TransactionEnabler.objects.filter(status="YES")
+	task_enabler_array=[]
+	for item in task_enabler:
+		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
+	members=MembersShareAccountsMain.objects.all()
+	members_array=[]
+	for item in range(1,2000):
+		if MembersShareAccountsMain.objects.filter(member__coop_no=str(item).zfill(5)):
+			queryset=MembersShareAccountsMain.objects.get(member__coop_no=str(item).zfill(5))
+			members_array.append((queryset.member.coop_no,queryset.member.get_full_name,queryset.account_number,queryset.unit_cost,queryset.total_cost,queryset.shares,queryset.year))
+		else:
+			members_array.append((str(item).zfill(5),'','','','','',''))
+	
+
+	context={
+	'members_array':members_array,
+	'task_array':task_array,
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
+
+	}
+	return render(request,'deskofficer_templates/MembersShare_Reports_list_Load.html',context)
+
+
+def export_MembersShare_Reports_xls(request):
+
+	response = HttpResponse(content_type='application/ms-excel')
+
+	response['Content-Disposition'] = 'attachment; filename="SHARE_REGISTER.xls"'
+
+	wb = xlwt.Workbook(encoding='utf-8')
+	ws = wb.add_sheet('Users Data') # this will make a sheet named Users Data
+
+	row_num = 0  # Sheet header, first row
+
+	font_style = xlwt.XFStyle()
+	font_style.font.bold = True
+
+
+
+	columns=['MEMBER ID', 'NAME','ACCOUNT NUMBER','UNIT COST','TOTAL COST','SHARES','YEAR']
+
+
+	for col_num in range(len(columns)):
+		ws.write(row_num, col_num, columns[col_num], font_style) # at 0 row 0 column
+
+	font_style = xlwt.XFStyle()  # Sheet body, remaining rows
+
+	members=MembersShareAccountsMain.objects.all()
+	members_array=[]
+	for item in range(1,2000):
+		if MembersShareAccountsMain.objects.filter(member__coop_no=str(item).zfill(5)):
+			queryset=MembersShareAccountsMain.objects.get(member__coop_no=str(item).zfill(5))
+			members_array.append((queryset.member.coop_no,queryset.member.get_full_name,queryset.account_number,queryset.unit_cost,queryset.total_cost,queryset.shares,queryset.year))
+		else:
+			members_array.append((str(item).zfill(5),'','','','','',''))
+	
+	# rows = Xmas_Savings_Shortlist.objects.filter(batch=batch,payment_channel=payment,status=status).values_list('transaction__member__member_id','transaction__member__full_name','transaction__account_number','bank_account__bank','bank_account__account_name', 'bank_account__account_number', 'amount')
+	rows = members_array
+
+	for row in rows:
+		row_num += 1
+		for col_num in range(len(row)):
+			ws.write(row_num, col_num, row[col_num], font_style)
+	wb.save(response)
+
+	return response
+
+
+
 ##############################################################
 ################### DAY END TRANSACTIONS ####################
 #############################################################
@@ -33199,8 +34200,6 @@ def members_credit_purchase_approval_preview(request,ticket):
 	for task in tasks:
 		task_array.append(task.task.title)
 
-
-
 	task_enabler=TransactionEnabler.objects.filter(status="YES")
 	task_enabler_array=[]
 	for item in task_enabler:
@@ -33209,8 +34208,6 @@ def members_credit_purchase_approval_preview(request,ticket):
 	default_password="NO"
 	if Staff.objects.filter(admin=request.user,default_password='YES'):
 		default_password="YES"
-
-
 
 	form=approval_form(request.POST or None)
 	records=members_credit_sales_analysis.objects.filter(trans_code__ticket=ticket)
@@ -33229,9 +34226,7 @@ def members_credit_purchase_approval_preview(request,ticket):
 	else:
 		credit_amount=0
 
-
 	balance_amount = float(credit_amount)-float(debit_amount)
-
 
 	selected_items =Members_Credit_Sales_Selected.objects.filter(ticket=ticket)
 	if not selected_items:
@@ -33298,8 +34293,6 @@ def Initial_Shares_Update_List_Load(request):
 	for task in tasks:
 		task_array.append(task.task.title)
 
-
-
 	task_enabler=TransactionEnabler.objects.filter(status="YES")
 	task_enabler_array=[]
 	for item in task_enabler:
@@ -33324,7 +34317,7 @@ def Initial_Shares_Update_List_Load(request):
 	'members':members,
 	'now':now,
 	}
-	return render(request,'deskofficer_templates/SEO/Initial_Shares_Update_List_Load.html',context)
+	return render(request,'deskofficer_templates/Initial_Shares_Update_List_Load.html',context)
 
 def Initial_Shares_Update_preview(request,pk):
 	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
@@ -33350,9 +34343,7 @@ def Initial_Shares_Update_preview(request,pk):
 	form.fields['amount'].initial=member.amount
 
 	if request.method=='POST':
-		approval_status_id=request.POST.get('approval_status')
-		approval_status=ApprovalStatus.objects.get(id=approval_status_id)
-
+		approval_status=request.POST.get('approval_status')
 		comment=request.POST.get('comment')
 		member.approval_status=approval_status
 		member.approval_comment=comment
@@ -33659,7 +34650,7 @@ def Norminal_Roll_List_Load(request):
 	if Staff.objects.filter(admin=request.user,default_password='YES'):
 		default_password="YES"
 
-	records=Members.objects.all().order_by('phone_number')
+	records=Members.objects.all().order_by('coop_no')
 
 	context={
 	'task_array':task_array,
@@ -34272,10 +35263,10 @@ def Members_Initial_Shares_Reports_Load(request):
 
 	members_array=[]
 	for member in members:
-		if MembersShareAccounts.objects.filter(Q(member__member=member) & Q(shares__lt=2)).exists():
-			record=MembersShareAccounts.objects.get(member__member=member)
+		if MembersShareAccountsMain.objects.filter(Q(member__member=member) & Q(shares__lt=2)).exists():
+			record=MembersShareAccountsMain.objects.get(member__member=member)
 			members_array.append((member.member_id,member.admin.last_name + " " + member.admin.first_name+ " " + member.middle_name,record.shares,member.pk))
-		elif  MembersShareAccounts.objects.exclude(member__member=member):
+		elif  MembersShareAccountsMain.objects.exclude(member__member=member):
 			members_array.append((member.member_id[13:],member.admin.last_name + " " + member.admin.first_name+ " " + member.middle_name,0,member.pk))
 
 
@@ -34383,9 +35374,9 @@ def Members_Individual_Shares_Report_Details(request,pk):
 	member=Members.objects.get(id=pk)
 	record=[]
 	queryset=[]
-	if MembersShareAccounts.objects.filter(member__member=member).exists():
+	if MembersShareAccountsMain.objects.filter(member__member=member).exists():
 
-		record=MembersShareAccounts.objects.get(member__member=member)
+		record=MembersShareAccountsMain.objects.get(member__member=member)
 		queryset=PersonalLedger.objects.filter(account_number=record.member.account_number)
 
 	context={
@@ -34418,7 +35409,7 @@ def Members_General_Shares_Report_List_Load(request):
 	title="LIST OF MEMBERS"
 	status='UNTREATED'
 
-	records=MembersShareAccounts.objects.filter(status=status)
+	records=MembersShareAccountsMain.objects.filter(status=status)
 
 	context={
 	'records':records,
@@ -35891,7 +36882,113 @@ def control_panel(request):
 
 
 
+def MemberShip_Transaction_Account_Manager_search(request):
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	task_array=[]
+	for task in tasks:
+		task_array.append(task.task.title)
 
+
+
+	task_enabler=TransactionEnabler.objects.filter(status="YES")
+	task_enabler_array=[]
+	for item in task_enabler:
+		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
+
+	title="Search Members"
+	form = searchForm(request.POST or None)
+
+	return render(request,'deskofficer_templates/MemberShip_Transaction_Account_Manager_search.html',{'form':form,'title':title,'task_array':task_array,
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,})
+
+
+def MemberShip_Transaction_Account_Manager_list_load(request):
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	task_array=[]
+	for task in tasks:
+		task_array.append(task.task.title)
+
+
+
+	task_enabler=TransactionEnabler.objects.filter(status="YES")
+	task_enabler_array=[]
+	for item in task_enabler:
+		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
+
+	title="Membership Deactivation"
+	status="ACTIVE"
+	form = searchForm(request.POST)
+
+	if request.method == "POST":
+		if request.POST.get("title")=="":
+			return HttpResponseRedirect(reverse('MemberShip_Transaction_Account_Manager_search'))
+
+		members=Members.objects.filter(Q(admin__first_name__icontains=form['title'].value()) | Q(admin__last_name__icontains=form['title'].value()) | Q(middle_name__icontains=form['title'].value()))
+
+		context={
+		'members':members,
+		'title':title,
+		'task_array':task_array,
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
+
+		}
+		return render(request,'deskofficer_templates/MemberShip_Transaction_Account_Manager_list_load.html',context)
+
+
+
+def MemberShip_Transaction_Account_Manager_Transactions_Load(request,pk):
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	task_array=[]
+	for task in tasks:
+		task_array.append(task.task.title)
+
+
+
+	task_enabler=TransactionEnabler.objects.filter(status="YES")
+	task_enabler_array=[]
+	for item in task_enabler:
+		task_enabler_array.append(item.title)
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES"
+
+	member=Members.objects.get(id=pk)
+	records=MembersAccountsDomain.objects.filter(member=member,transaction__source__title="SAVINGS").exclude(transaction__name='ORDINARY SAVINGS')
+	context={
+	'records':records,
+	'member':member,
+	
+	'task_array':task_array,
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
+
+	}
+	return render(request,'deskofficer_templates/MemberShip_Transaction_Account_Manager_Transactions_Load.html',context)
+
+
+
+def MemberShip_Transaction_Account_Manager_Transactions_Update(request,pk):
+	record=MembersAccountsDomain.objects.get(id=pk)
+	if record.loan_lock=="YES":
+		record.loan_lock = 'NO'
+	else:
+		record.loan_lock = 'YES'
+	record.save()
+
+	return HttpResponseRedirect(reverse('MemberShip_Transaction_Account_Manager_Transactions_Load',args=(record.member.pk,)))
 
 
 def MemberShip_Deactivate_search(request):
@@ -38598,3 +39695,52 @@ def Event_Program_Manage_Delete(request,pk):
 	Event_Title.objects.filter(id=pk).delete()
 	return HttpResponseRedirect(reverse('Event_Program_Manage_search'))
 		
+
+
+
+def Cooperative_Shop_Deduction_Interval(request):
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	task_array=[]
+	for task in tasks:
+		task_array.append(task.task.title)
+
+	task_enabler=TransactionEnabler.objects.filter(status="YES")
+	task_enabler_array=[]
+	for item in task_enabler:
+		task_enabler_array.append(item.title)
+
+
+	default_password="NO"
+	if Staff.objects.filter(admin=request.user,default_password='YES'):
+		default_password="YES" 
+	record=Shop_Deduction_Interval.objects.all().first()
+	form=Cooperative_Shop_Deduction_Interval_form(request.POST or None)
+	if request.method=="POST":
+		tdate=get_current_date(now)
+		processed_by=CustomUser.objects.get(id=request.user.id)
+		processed_by=processed_by.username
+
+		interval=request.POST.get('interval')
+		if not interval or float(int(interval))<=0:
+			messages.error(request,'Invalid Interval Specification')
+			return HttpResponseRedirect(reverse('Cooperative_Shop_Deduction_Interval'))
+		
+		if Shop_Deduction_Interval.objects.filter().exists():
+			Shop_Deduction_Interval.objects.filter().update(interval=interval)
+			messages.success(request,'Record Updated Successfully')
+		else:
+			Shop_Deduction_Interval(interval=interval,tdate=tdate,processed_by=processed_by).save()
+			messages.success(request,'Record Added Successfully')
+		return HttpResponseRedirect(reverse('Cooperative_Shop_Deduction_Interval'))
+	
+	if record:
+		form.fields['interval'].initial=record.interval
+	else:
+		form.fields['interval'].initial=3
+	context={
+	'form':form,
+	'task_array':task_array,
+	'task_enabler_array':task_enabler_array,
+	'default_password':default_password,
+	}
+	return render(request,'deskofficer_templates/control_panel/Cooperative_Shop_Deduction_Interval.html', context)

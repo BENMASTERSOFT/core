@@ -36,7 +36,7 @@
                                         <tr>
                                             <td>{{forloop.counter}}</td>
                                             <td>{{item.name}}</td>
-                                            <td><a href="{% url 'Manual_Ledger_Posting_Ledger_details_Reverse_load' item.pk member.pk %}" class="btn btn-primary">View</a></td>
+                                            <td><a href="{% url 'Manual_Ledger_Posting_Ledger_details_load' item.pk member.pk %}" class="btn btn-primary">View</a></td>
                                          
                                         </tr>
                                         {% endfor %}

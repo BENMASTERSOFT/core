@@ -20,6 +20,7 @@
                                             <th>Credit</th>
                                             <th>Balance</th>
                                             <th>Date</th>
+                                            <th>Pk</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -38,6 +39,7 @@
                                             {% endif %}
                                             </td>
                                             <td>{{record.transaction_period}}</td>
+                                            <td>{{record.pk}}</td>
                                          
                                         </tr>
                                     {% endfor %}

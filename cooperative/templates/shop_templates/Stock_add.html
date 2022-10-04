@@ -87,7 +87,16 @@
                                             {{form.re_order_level}}
                                         </div>
                                     </div>
+                                     <div class="form-group row">
+                                        <label class="col-sm-4 col-form-label">Expiry Date</label>
+                                        <div class="col-sm-8">
+                                            <label class="ui-checkbox" style="color:blue;">
+                                            <input type="checkbox" name="expirydate">
+                                            <span class="input-span"></span>Add Expiry Date</label>
+                                            {{form.expiry_date}}
+                                        </div>
 
+                                    </div>
                                     <div class="form-group row">
                                         <div class="col-sm-8 ml-sm-auto">
                                             <button class="btn btn-info" type="submit">Submit</button>
@@ -138,7 +147,8 @@
                                     <th>Unit Cost Price</th>
                                     <th>No in Pack</th>
                                     <th>Re-Order Level</th>
-                                    <th>Action</th>
+                                    <th></th>
+                                    <th></th>
                                 </tr>
                             </thead>
                             <tfoot>
@@ -152,7 +162,8 @@
                                     <th>Unit Cost Price</th>
                                     <th>No in Pack</th>
                                     <th>Re-Order Level</th>
-                                    <th>Action</th>
+                                    <th></th>
+                                    <th></th>
                                 </tr>
                             </tfoot>
                             <tbody>
@@ -161,17 +172,29 @@
                                     <td>{{forloop.counter}}</td>
                                     <td>{{product.code}}</td>
                                     <td>{{product.item_name}}</td>
-                                    <td>{{product.details|default_if_none:"&nbsp;"}}</td>
+                                    <td>
+                                    {% if not product.details == 'NONE' and not product.details == 'None' %}
+
+                                    {{product.details|default_if_none:"&nbsp;"}}
+                                    {% endif %}
+                                </td>
+                                   
+
                                     <td><a href="" data-toggle="modal" data-target="#modalquantity">{{product.quantity}}</a> </td>
                                     <td>{{product.unit_selling_price}}</td>
                                     <td>{{product.unit_cost_price}}</td>
                                     <td>{{product.no_in_pack}}</td>
                                     <td>{{product.re_order_level}}</td>
                                     <td>
-                                        {% if product.lock_status.title == 'OPEN' %}
+                                        {% if product.lock_status == 'OPEN' %}
                                         <a href="{% url 'Update_Stock' product.pk return_pk %}" class="btn btn-primary">Update</a>
                                         {% endif %}
 
+                                    </td>
+                                    <td>
+                                         {% if product.lock_status == 'OPEN' %}
+                                        <a href="{% url 'stock_add_delete' product.pk %}" class="btn btn-danger">Drop</a>
+                                        {% endif %}
                                     </td>
                                 </tr>
                              {% endfor %}

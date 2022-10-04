@@ -22,7 +22,7 @@
                                     <th>Date Applied</th>
                                     <th>Maturity Date</th>
                                     <th>President</th>
-                                    <th>Fin. Sec</th>
+                                   
                                     <th>Action</th>
                                 </tr>
                             </thead>
@@ -34,7 +34,7 @@
                                     <th>Date Applied</th>
                                     <th>Maturity Date</th>
                                     <th>President</th>
-                                    <th>Fin. Sec</th>
+                               
                                     <th>Action</th>
                                 </tr>
                             </tfoot>
@@ -47,8 +47,8 @@
                                     <td>{{applicant.created_at|date:"M d, Y"}}</td>
                                     <td>{{applicant.maturity_date|date:"M d, Y"}}</td>
                                     <td>{{applicant.approval_status}}</td>
-                                    <td>{{applicant.certification_status}}</td>
-                                    <td><a href="{% url 'savings_cash_withdrawal_preview' applicant.pk %}" class="btn btn-success">Preview</a></td>
+                                 
+                                    <td><a href="{% url 'Cash_Withdrawal_Transactions_details_load' applicant.pk %}" class="btn btn-success">Preview</a></td>
                                 </tr>
                                 
                             {% endfor %} 

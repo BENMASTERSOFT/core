@@ -21,7 +21,8 @@
                                     
                                     <th>Date Approved</th>
                                     <th>Receipt No</th>
-                                    <th>Action</th>
+                                    <th></th>
+                                    <th></th>
                                 </tr>
                             </thead>
                             <tfoot>
@@ -31,7 +32,8 @@
                                    
                                     <th>Date Approved</th>
                                     <th>Receipt No</th>
-                                    <th>Action</th>
+                                    <th></th>
+                                    <th></th>
                                 </tr>
                             </tfoot>
                             <tbody>
@@ -45,6 +47,10 @@
                                     <td>
                                        
                                         <a href="{% url 'membership_registration_register' applicant.id %}" class="btn btn-success">Register</a>
+                                    </td>
+                                    <td>
+                                       
+                                        <a href="{% url 'membership_registration_applicant_drop' applicant.id %}" class="btn btn-danger">Drop{{applicant.id}}</a>
                                     </td>
                                     
                                

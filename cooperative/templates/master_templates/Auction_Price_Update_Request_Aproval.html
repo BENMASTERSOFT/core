@@ -1,0 +1,52 @@
+{% extends 'master_templates/base_template.html' %}
+{% load static %}
+
+{% block content %}
+            <div class="page-content fade-in-up">
+                <div class="row">
+                    <div class="col-xl-12">
+                        <div class="ibox">
+                            <div class="ibox-head">
+                                <div class="ibox-title">Auction Price Update</div>
+                            </div>
+                            <div class="ibox-body">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Code</th>
+                                            <th>Item Name</th>
+                                            <th>Prev. Price</th>
+                                            <th>New. Price</th>
+                                            <th>Reasons</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for record in records %}
+                                        <tr>
+                                            <td>{{forloop.counter}}</td>
+                                            <td>{{record.stock.stock.code}}</td>
+                                            <td>{{record.stock.stock.item_name}}</td>
+                                            <td>{{record.stock.unit_selling_price}}</td>
+                                            <td>{{record.new_price}}</td>
+                                            <td>{{record.comment}}</td>
+                                            <td><a href="{% url 'Auction_Price_Update_Request_Aproval_Processed' record.pk %}" class="btn btn-primary">Approve</a></td>
+                                           
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                
+                </div>
+            
+           
+            </div>
+  <div class="sidenav-backdrop backdrop"></div>
+    <div class="preloader-backdrop">
+        <div class="page-preloader">Loading</div>
+    </div>
+{% endblock %}

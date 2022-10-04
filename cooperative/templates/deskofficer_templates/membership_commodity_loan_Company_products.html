@@ -42,6 +42,7 @@
                                     <th>Model</th>
                                     <th>Details</th>
                                     <th>Company Price</th>
+                                    <th>Coop Price</th>
                                   
                                     <th>Action</th>
                                 </tr>
@@ -53,6 +54,7 @@
                                     <th>Model</th>
                                     <th>Details</th>
                                     <th>Company Price</th>
+                                    <th>Coop Price</th>
                                  
                                     <th>Action</th>
                                 </tr>
@@ -67,6 +69,7 @@
                                     <td>{{record.product.details}}</td>
                                    
                                     <td>{{record.amount}}</td>
+                                    <td>{{record.coop_amount}}</td>
                                    
             
                                     <td><a href="{% url 'membership_commodity_loan_Company_products_details' company.pk record.pk member.pk period.pk batch.pk transaction.pk %}" class="btn btn-primary">Details</a></td>

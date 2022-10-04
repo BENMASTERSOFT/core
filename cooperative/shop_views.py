@@ -9,7 +9,7 @@ from cooperative.forms import *
 from django.db.models import Q
 from django.db.models import Count, Sum
 from django.utils import timezone
-
+import math
 from datetime import date
 import datetime
 from django.db.models import  F, CharField, Value as V
@@ -156,6 +156,8 @@ def shop_home(request):
 	approval_status='APPROVED'
 	members_credit_purchases=members_credit_sales_summary.objects.filter(status=status,approval_status=approval_status).count()
 
+	# Members_Credit_Sales_Selected.objects.all().delete()
+	# members_shop_credit_loans.objects.all().delete()
 
 
 	context={
@@ -298,6 +300,14 @@ def Stock_add(request,pk):
 
 	products = Stock.objects.filter(category_id=category)
 	if request.method=="POST":
+		expiry_status=request.POST.get('expirydate')
+		if expiry_status:
+			expiry_date=request.POST.get('expiry_date')
+			date_format = '%Y-%m-%d'
+			dtObj = datetime.strptime(expiry_date, date_format)
+			expiry_date=get_current_date(dtObj)
+
+
 		code=request.POST.get('code')
 		item_name=request.POST.get('item_name').upper()
 		details=request.POST.get('details').upper()
@@ -306,13 +316,21 @@ def Stock_add(request,pk):
 		no_in_pack=request.POST.get('no_in_pack')
 		unit_selling_price=request.POST.get('unit_selling_price')
 		unit_cost_price=request.POST.get('unit_cost_price')
-		record=Stock(lock_status=lock_status,category=category,code=code,item_name=item_name,details=details,quantity=quantity,re_order_level=re_order_level,no_in_pack=no_in_pack,unit_selling_price=unit_selling_price,unit_cost_price=unit_cost_price)
+
+		
+
+		record=Stock(lock_status=lock_status,category=category,code=str(code).zfill(5),item_name=item_name,details=details,quantity=quantity,re_order_level=re_order_level,no_in_pack=no_in_pack,unit_selling_price=unit_selling_price,unit_cost_price=unit_cost_price)
+		if expiry_status:
+		      record.expiring_date=expiry_date
 		record.save()
+
 		messages.success(request,"Record Added Successfully")
 		return HttpResponseRedirect(reverse('Stock_add',args=(pk,)))
 
 	if last_stock:
 		form.fields['code'].initial = int(last_stock.code) + 1
+	
+	form.fields['expiry_date'].initial = get_current_date(now)
 	context={
 	'task_array':task_array,
 	'form':form,
@@ -324,6 +342,12 @@ def Stock_add(request,pk):
 	return render(request,'shop_templates/Stock_add.html',context)
 
 
+def stock_add_delete(request,pk):
+	record=Stock.objects.get(id=pk)
+	return_pk=record.category_id
+	record.delete()
+	return HttpResponseRedirect(reverse('Stock_add',args=(return_pk,)))
+
 def Update_Stock(request,pk,return_pk):
 	task_array=[]
 	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
@@ -334,17 +358,15 @@ def Update_Stock(request,pk,return_pk):
 
 	product = Stock.objects.get(id=pk)
 
-	form.fields['code'].initial=product.code
-	form.fields['item_name'].initial=product.item_name
-	form.fields['details'].initial=product.details
-	form.fields['quantity'].initial=product.quantity
-	form.fields['re_order_level'].initial=product.re_order_level
-	form.fields['no_in_pack'].initial=product.no_in_pack
-	form.fields['unit_selling_price'].initial=product.unit_selling_price
-	form.fields['unit_cost_price'].initial=product.unit_cost_price
-	form.fields['category'].initial=product.category.id
 
 	if request.method=="POST":
+		expiry_status=request.POST.get('expirydate')
+		if expiry_status:
+			expiry_date=request.POST.get('expiry_date')
+			date_format = '%Y-%m-%d'
+			dtObj = datetime.strptime(expiry_date, date_format)
+			expiry_date=get_current_date(dtObj)
+
 		category_id=request.POST.get('category')
 		category=ProductCategory.objects.get(id=category_id)
 		code=request.POST.get('code')
@@ -364,9 +386,28 @@ def Update_Stock(request,pk,return_pk):
 		product.no_in_pack=no_in_pack
 		product.unit_selling_price=unit_selling_price
 		product.unit_cost_price=unit_cost_price
+		if expiry_status:
+			product.expiring_date=expiry_date
+
 		product.save()
 		messages.success(request,"Record Updated Successfully")
 		return HttpResponseRedirect(reverse('Stock_add',args=(return_pk,)))
+
+	form.fields['code'].initial=product.code
+	form.fields['item_name'].initial=product.item_name
+	form.fields['details'].initial=product.details
+	form.fields['quantity'].initial=product.quantity
+	form.fields['re_order_level'].initial=product.re_order_level
+	form.fields['no_in_pack'].initial=product.no_in_pack
+	form.fields['unit_selling_price'].initial=product.unit_selling_price
+	form.fields['unit_cost_price'].initial=product.unit_cost_price
+	form.fields['category'].initial=product.category.id
+	
+	if product.expiring_date:
+		form.fields['expiry_date'].initial=get_current_date(product.expiring_date)
+	else:
+		form.fields['expiry_date'].initial=get_current_date(now)
+
 
 	context={
 	'task_array':task_array,
@@ -375,6 +416,7 @@ def Update_Stock(request,pk,return_pk):
 	'return_pk':pk,
 	}
 	return render(request,'shop_templates/Stock_Update.html',context)
+
 
 
 def Manage_Stock_Product_load_All(request):
@@ -405,20 +447,20 @@ def Manage_Stock_Product_Update_All(request,pk):
 
 	product = Stock.objects.get(id=pk)
 
-	form.fields['code'].initial=product.code
-	form.fields['item_name'].initial=product.item_name
-	form.fields['quantity'].initial=product.quantity
-	form.fields['re_order_level'].initial=product.re_order_level
-	form.fields['no_in_pack'].initial=product.no_in_pack
-	form.fields['unit_selling_price'].initial=product.unit_selling_price
-	form.fields['unit_cost_price'].initial=product.unit_cost_price
-	form.fields['category'].initial=product.category.id
-
+	
 	if request.method=="POST":
+		expiry_status=request.POST.get('expirydate')
+		if expiry_status:
+			expiry_date=request.POST.get('expiry_date')
+			date_format = '%Y-%m-%d'
+			dtObj = datetime.strptime(expiry_date, date_format)
+			expiry_date=get_current_date(dtObj)
+
 		category_id=request.POST.get('category')
 		category=ProductCategory.objects.get(id=category_id)
 		code=request.POST.get('code')
 		item_name=request.POST.get('item_name')
+		details=request.POST.get('details')
 		if product.lock_status == 'OPEN':
 			quantity=request.POST.get('quantity')
 		re_order_level=request.POST.get('re_order_level')
@@ -428,6 +470,7 @@ def Manage_Stock_Product_Update_All(request,pk):
 		product.category=category
 		product.code=code
 		product.item_name=item_name.upper()
+		product.details=details.upper()
 
 		if product.lock_status == 'OPEN':
 			product.quantity=quantity
@@ -435,9 +478,28 @@ def Manage_Stock_Product_Update_All(request,pk):
 		product.no_in_pack=no_in_pack
 		product.unit_selling_price=unit_selling_price
 		product.unit_cost_price=unit_cost_price
+		if expiry_status:
+			product.expiring_date=expiry_date
+
 		product.save()
 		messages.success(request,"Record Updated Successfully")
 		return HttpResponseRedirect(reverse('Manage_Stock_Product_load_All'))
+	
+	form.fields['code'].initial=product.code
+	form.fields['item_name'].initial=product.item_name
+	form.fields['details'].initial=product.details
+	form.fields['quantity'].initial=product.quantity
+	form.fields['re_order_level'].initial=product.re_order_level
+	form.fields['no_in_pack'].initial=product.no_in_pack
+	form.fields['unit_selling_price'].initial=product.unit_selling_price
+	form.fields['unit_cost_price'].initial=product.unit_cost_price
+	form.fields['category'].initial=product.category.id
+
+	if product.expiring_date:
+		form.fields['expiry_date'].initial=get_current_date(product.expiring_date)
+	else:
+		form.fields['expiry_date'].initial=get_current_date(now)
+
 	context={
 	'task_array':task_array,
 	'form':form,
@@ -457,7 +519,7 @@ def Manage_Stock_Product_delete_All(request,pk):
 			messages.error(request,'This Product cannot be Deleted, it is alrady in Use')
 			return HttpResponseRedirect(reverse('Manage_Stock_Product_load_All',args=(pk,)))
 		else:
-			# record.delete()
+			product.delete()
 			return HttpResponseRedirect(reverse('Manage_Stock_search'))
 
 
@@ -537,22 +599,24 @@ def Manage_Stock_Product_Update(request,pk):
 
 	product = Stock.objects.get(id=pk)
 
-	form.fields['code'].initial=product.code
-	form.fields['item_name'].initial=product.item_name
-	form.fields['quantity'].initial=product.quantity
-	form.fields['re_order_level'].initial=product.re_order_level
-	form.fields['no_in_pack'].initial=product.no_in_pack
-	form.fields['unit_selling_price'].initial=product.unit_selling_price
-	form.fields['unit_cost_price'].initial=product.unit_cost_price
-	form.fields['category'].initial=product.category.id
 
 	if request.method=="POST":
+		expiry_status=request.POST.get('expirydate')
+		if expiry_status:
+			expiry_date=request.POST.get('expiry_date')
+			date_format = '%Y-%m-%d'
+			dtObj = datetime.strptime(expiry_date, date_format)
+			expiry_date=get_current_date(dtObj)
+
+
 		category_id=request.POST.get('category')
 		category=ProductCategory.objects.get(id=category_id)
 		code=request.POST.get('code')
 		item_name=request.POST.get('item_name')
+		details=request.POST.get('details')
 		if product.lock_status == 'OPEN':
 			quantity=request.POST.get('quantity')
+		
 		re_order_level=request.POST.get('re_order_level')
 		no_in_pack=request.POST.get('no_in_pack')
 		unit_selling_price=request.POST.get('unit_selling_price')
@@ -560,6 +624,11 @@ def Manage_Stock_Product_Update(request,pk):
 		product.category=category
 		product.code=code
 		product.item_name=item_name.upper()
+		if details:
+			product.details=details.upper()
+		else:
+			product.details='NONE'
+
 
 		if product.lock_status== 'OPEN':
 			product.quantity=quantity
@@ -567,13 +636,33 @@ def Manage_Stock_Product_Update(request,pk):
 		product.no_in_pack=no_in_pack
 		product.unit_selling_price=unit_selling_price
 		product.unit_cost_price=unit_cost_price
+		if expiry_status:
+			product.expiring_date=expiry_date
+		
 		product.save()
 		messages.success(request,"Record Updated Successfully")
 		return HttpResponseRedirect(reverse('Manage_Stock_Product_Update',args=(pk,)))
+	
+	form.fields['code'].initial=product.code
+	form.fields['item_name'].initial=product.item_name
+	form.fields['details'].initial=product.details
+	form.fields['quantity'].initial=product.quantity
+	form.fields['re_order_level'].initial=product.re_order_level
+	form.fields['no_in_pack'].initial=product.no_in_pack
+	form.fields['unit_selling_price'].initial=product.unit_selling_price
+	form.fields['unit_cost_price'].initial=product.unit_cost_price
+	form.fields['category'].initial=product.category.id
+	
+	if product.expiring_date:
+		form.fields['expiry_date'].initial=get_current_date(product.expiring_date)
+	else:
+		form.fields['expiry_date'].initial=get_current_date(now)
+
 	context={
 	'task_array':task_array,
 	'form':form,
 	'product':product,
+	'pk':pk,
 	}
 	return render(request,'shop_templates/Manage_Stock_Product_Update.html',context)
 
@@ -621,7 +710,6 @@ def Manage_Stock_Product_Lock_Multiple(request):
 def Manage_Stock_Product_UNLock_Multiple(request):
 	lock_status='OPEN'
 	stock_update=Stock.objects.all().update(lock_status=lock_status)
-
 	return HttpResponseRedirect(reverse('Manage_Stock_Product_Lock'))
 
 
@@ -651,7 +739,7 @@ def Item_Write_off_product_load(request):
 
 			if stocks:
 				context={
-	'task_array':task_array,
+					'task_array':task_array,
 
 					'stocks':stocks,
 					'title':title,
@@ -688,10 +776,10 @@ def Item_Write_off_product_Preview(request,pk):
 		reason_id=request.POST.get('reasons')
 		reason=ItemWriteOffReasons.objects.get(id=reason_id)
 		available_quantity=item.quantity
-		if item.unit_cost_price:
-			cost_price = item.unit_cost_price
-		else:
-			cost_price=request.POST.get('unit_cost_price')
+		cost_price=request.POST.get('unit_cost_price')
+		if not cost_price or float(cost_price)<=0:
+			messages.info(request,'Cost price is missing')
+			return HttpResponseRedirect(reverse('Item_Write_off_product_Preview',args=(pk,)))
 
 		quantity=request.POST.get('quantity')
 		total_cost = float(quantity)* float(cost_price)
@@ -709,6 +797,11 @@ def Item_Write_off_product_Preview(request,pk):
 			messages.info(request,'Please Update the Unit Cost Price')
 			return HttpResponseRedirect(reverse('Item_Write_off_product_Preview',args=(pk,)))
 
+		if ItemWriteOffTemp.objects.filter(product=item,approval_status="PENDING",status="UNTREATED",route="MAIN").exists():
+			messages.info(request,'Please there is still open transaction for this Product')
+			return HttpResponseRedirect(reverse('Item_Write_off_product_Preview',args=(pk,)))
+
+
 		record = ItemWriteOffTemp(details=details,tdate=tdate,product=item,reason=reason,quantity=quantity,cost_price=cost_price,total_cost=total_cost,processed_by=processed_by,approval_status="PENDING",status="UNTREATED",route="MAIN")
 		record.save()
 
@@ -722,10 +815,12 @@ def Item_Write_off_product_Preview(request,pk):
 	form.fields['item_name'].initial = item.item_name
 	form.fields['available_quantity'].initial = item.quantity
 	form.fields['unit_selling_price'].initial = item.unit_selling_price
+	form.fields['unit_cost_price'].initial = item.unit_cost_price
 
 	context={
 	'task_array':task_array,
 	'form':form,
+	'pk':pk,
 	}
 	return render(request,'shop_templates/Item_Write_off_product_Preview.html',context)
 
@@ -869,51 +964,6 @@ def Item_Write_off_manage_delete(request,pk):
 	ItemWriteOffTemp.objects.filter(id=pk).delete()
 	return HttpResponseRedirect(reverse("Item_Write_off_manage"))
 
-
-def Item_Write_off_Approval(request):
-	task_array=[]
-	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
-	for task in tasks:
-		task_array.append(task.task.title)
-
-	status='UNTREATED'
-	approval_status='PENDING'
-	records =ItemWriteOffTemp.objects.filter(approval_status=approval_status,status=status)
-
-	context={
-	'task_array':task_array,
-	'records':records,
-
-	}
-	return render(request,'shop_templates/Item_Write_off_Approval.html',context)
-
-
-def Item_Write_off_Approval_Preview(request,pk):
-	task_array=[]
-	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
-	for task in tasks:
-		task_array.append(task.task.title)
-
-	form = Item_Write_off_Approval_form(request.POST or None)
-	item = ItemWriteOffTemp.objects.get(id=pk)
-
-	form.fields['code'].initial = item.product.code
-	form.fields['item_name'].initial = item.product.item_name
-	form.fields['quantity'].initial = item.quantity
-	form.fields['reasons'].initial = item.reason.title
-	form.fields['details'].initial = item.details
-
-
-
-	if request.method =='POST':
-		item.approval_status="APPROVED"
-		item.save()
-		return HttpResponseRedirect(reverse('Item_Write_off_Approval'))
-	context={
-	'task_array':task_array,
-	'form':form,
-	}
-	return render(request,'shop_templates/Item_Write_off_Approval_Preview.html',context)
 
 
 
@@ -1322,8 +1372,11 @@ def Expiring_Date_Tracking_Product_Preview(request,pk):
 		stock.expiring_date=expiring_date
 		stock.save()
 		return HttpResponseRedirect(reverse('Expiring_Date_Tracking_search'))
-
-	form.fields['start_date'].initial=stock.expiring_date
+	
+	if stock.expiring_date:
+		form.fields['start_date'].initial=stock.expiring_date
+	else:
+		form.fields['start_date'].initial=now #
 	context={
 	'task_array':task_array,
 	'form':form,
@@ -1346,9 +1399,13 @@ def Expiring_Products_Tracking_Load(request):
 
 	if not expiry_date_interval:
 		# messages.error(request,'Missing Expiry Date Interval')
+	
 		return HttpResponseRedirect(reverse('shop_home'))
+
+	queryset=Stock_Auction_Request.objects.filter(status='UNTREATED')
 	stocks=Stock.objects.filter(Q(quantity__gt=0))
 	stock_array=[]
+
 	for stock in stocks:
 		stock_array.append((stock.code,stock.item_name,stock.details,stock.quantity,stock.expiring_date))
 
@@ -1373,6 +1430,7 @@ def Expiring_Products_Tracking_Load(request):
 	'task_array':task_array,
 	'stocks':stocks,
 	'new_stocks':new_stocks,
+	'queryset':queryset,
 	}
 	return render(request,'shop_templates/Expiring_Products_Tracking_Load.html',context)
 
@@ -1385,12 +1443,13 @@ def Expiring_Products_Tracking_Auction_Product_select(request,pk):
 
 	processed_by=CustomUser.objects.get(id=request.user.id)
 	processed_by=processed_by.username
-
+	tdate=get_current_date(now)
 	form=Expired_Products_Main_Tracking_Write_Off_Form(request.POST or None)
 
 	stock=Stock.objects.get(code=pk)
 
 	if request.method== 'POST':
+		comment=request.POST.get('comment')
 
 		date_format = '%Y-%m-%d'
 		quantity=request.POST.get('expiry_quantity')
@@ -1404,42 +1463,42 @@ def Expiring_Products_Tracking_Auction_Product_select(request,pk):
 			messages.error(request,'Quantity Expiry is missing')
 			return HttpResponseRedirect(reverse('Expiring_Products_Tracking_Auction_Product_select',args=(pk,)))
 
-			if int(quantity)>=int(stock.quantity):
+			if int(quantity)>int(stock.quantity):
 				messages.error(request,'Quantity selected cannot be more than the avaialable quantity')
 				return HttpResponseRedirect(reverse('Expiring_Products_Tracking_Auction_Product_select',args=(pk,)))
 
-		if Stock_Auction.objects.filter(stock=stock).exists():
-			record_exist=Stock_Auction.objects.filter(stock=stock).first()
-			if int(record_exist.quantity)>0:
-				record_exist.quantity=int(record_exist.quantity)+int(quantity)
-				record_exist.expiry_date2=stock.expiring_date
-				record_exist.unit_selling_price=unit_selling_price
-				record_exist.processed_by=processed_by
-			else:
-				record_exist.quantity=quantity
-				record_exist.expiry_date=stock.expiring_date
-				record_exist.expiry_date2=stock.expiring_date
-				record_exist.unit_selling_price=unit_selling_price
-				record_exist.processed_by=processed_by
-			record_exist.save()
-		else:
-			Stock_Auction(stock=stock,quantity=quantity,expiry_date=stock.expiring_date,expiry_date2=stock.expiring_date,unit_selling_price=unit_selling_price,processed_by=processed_by).save()
+		if Stock_Auction_Request.objects.filter(stock=stock,status='UNTREATED').exists():
+			messages.error(request,'There is an open transaction for this Product')
+			return HttpResponseRedirect(reverse('Expiring_Products_Tracking_Auction_Product_select',args=(pk,)))
+			
 
-
-		stock.expiring_date=expiry_date
-		stock.quantity=int(stock.quantity)-int(quantity)
-		stock.save()
+		Stock_Auction_Request(stock=stock,
+							quantity=quantity,
+							new_expiry_date=expiry_date,
+							unit_selling_price=unit_selling_price,
+							comment=comment,
+							tdate=tdate,
+							processed_by=processed_by,
+							).save()
+		
 		return HttpResponseRedirect(reverse('Expiring_Products_Tracking_Load'))
 
 	form.fields['available_quantity'].initial=stock.quantity
 	form.fields['unit_selling_price'].initial=stock.unit_selling_price
 	form.fields['expiry_date'].initial=get_current_date(now)
+	form.fields['comment'].initial='For your consideration'
 	context={
 	'task_array':task_array,
 	'stock':stock,
 	'form':form,
 	}
 	return render(request,'shop_templates/Expiring_Products_Tracking_Auction_Product_select.html',context)
+
+
+
+def Expiring_Products_Tracking_Auction_Product_select_delete(request,pk):
+	Stock_Auction_Request.objects.filter(id=pk).delete()
+	return HttpResponseRedirect(reverse('Expiring_Products_Tracking_Load'))
 
 
 def Expired_Products_Main_Tracking_Load(request):
@@ -1738,7 +1797,7 @@ def Members_Credit_sales_ledger_list_load(request):
 		return render(request,'shop_templates/Members_Credit_sales_ledger.html',context)
 
 
-def Members_Credit_sales_ledger_preview(request,pk):
+def Members_Credit_sales_transaction_load(request,pk):
 	task_array=[]
 	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
 	for task in tasks:
@@ -1746,9 +1805,7 @@ def Members_Credit_sales_ledger_preview(request,pk):
 
 	form=Members_Credit_sales_ledger_form(request.POST or None)
 	member = Members.objects.get(id=pk)
-	form.fields['start_date'].initial = now
-	form.fields['stop_date'].initial = now
-
+	
 
 	items=[]
 
@@ -1763,17 +1820,21 @@ def Members_Credit_sales_ledger_preview(request,pk):
 
 		tdate2 = datetime.strptime(stop_date, date_format)
 		account_number=str(600)+ str(member.get_member_Id)
-		items = coopshopledger(account_number,tdate1,tdate2)
+		# items = coopshopledger(account_number,tdate1,tdate2)
+		items = members_shop_credit_loans.objects.filter()
 
 	if request.method =="POST" and 'btn_print' in request.POST:
 		return HttpResponse("Printing")
+	
 
+	form.fields['start_date'].initial = now
+	form.fields['stop_date'].initial = now
 	context={
 	'task_array':task_array,
 	'form':form,
 	'items':items,
 	}
-	return render(request,'shop_templates/Members_Credit_sales_ledger_preview.html',context)
+	return render(request,'shop_templates/Members_Credit_sales_transaction_load.html',context)
 
 
 
@@ -1879,7 +1940,7 @@ def Members_Credit_sales_item_select(request,pk):
 
 
 
-def members_credit_issue_item(request,pk,member_id):
+def members_credit_issue_item(request,pk,member_id,total_amount,status,quantity):
 	task_array=[]
 	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
 	for task in tasks:
@@ -1888,75 +1949,102 @@ def members_credit_issue_item(request,pk,member_id):
 	form=members_credit_issue_item_form(request.POST or None)
 	member=Members.objects.get(id=member_id)
 	approval_status='PENDING'
-	status = 'UNTREATED'
+	product = Stock.objects.get(id=pk)
+	tdate =  get_current_date(now)
+	
+	button_show=status
+	status="UNTREATED"
+	processed_by=CustomUser.objects.get(id=request.user.id)
+	processed_by=processed_by.username
+	unit_selling_price=product.unit_selling_price
+	quantity=quantity
 
 	if members_credit_sales_summary.objects.filter(trans_code__member=member,approval_status=approval_status,status=status).exists():
 		messages.info(request,"You still have incomplete transaction, please discard or complete the existing transaction")
 		return HttpResponseRedirect(reverse('Members_Credit_sales_item_select', args=(member_id,)))
 
-
-
-	product = Stock.objects.get(id=pk)
-
-	form.fields['code'].initial=product.code
-	form.fields['item_name'].initial=product.item_name
-	form.fields['details'].initial=product.details
-	form.fields['available_quantity'].initial=product.quantity
-	form.fields['unit_selling_price'].initial=product.unit_selling_price
-
-	if request.method=="POST":
-		tdate =  get_current_date(now)
-
-		status="UNTREATED"
+	
+	
+	if request.method=="POST" and 'btn_display' in request.POST:
 		quantity=request.POST.get('issue_quantity')
+	
 		if int(quantity)<=0:
+			button_show=False
 			messages.error(request,"Quantity Selected cannot be Zero (0)")
-			return HttpResponseRedirect(reverse('members_credit_issue_item', args=(pk,member_id)))
+			return HttpResponseRedirect(reverse('members_credit_issue_item',args=(pk,member_id,0,button_show,quantity,)))
 
 		if int(quantity)>int(product.quantity):
+			button_show=False
 			messages.error(request,"Quantity Selected is more that Available Quantity")
-			return HttpResponseRedirect(reverse('members_credit_issue_item', args=(pk,member_id)))
-
-
-		unit_selling_price=product.unit_selling_price
+			return HttpResponseRedirect(reverse('members_credit_issue_item',args=(pk,member_id,0,button_show,quantity,)))
 
 		total=float(quantity) * float(unit_selling_price)
-		processed_by=CustomUser.objects.get(id=request.user.id)
-		processed_by=processed_by.username
+		button_show=True
+		return HttpResponseRedirect(reverse('members_credit_issue_item',args=(pk,member_id,total,button_show,quantity,)))
+	
+
+
+
+	if request.method=="POST" and 'btn_process' in request.POST:
+		total_cost=request.POST.get('total_amount')
+		amount_paid=request.POST.get('amount_paid')
+		
+		
+		if not amount_paid:
+			button_show=False
+			messages.error(request,'Invalid Amount Paid')
+			return HttpResponseRedirect(reverse('members_credit_issue_item',args=(pk,member_id,total_cost,button_show,quantity,)))
+		
+		if amount_paid and float(amount_paid)<0:
+			button_show=False
+			messages.error(request,'Invalid Amount Paid')
+			return HttpResponseRedirect(reverse('members_credit_issue_item',args=(pk,member_id,total_cost,button_show,quantity,)))
+	
+		if amount_paid and (float(amount_paid) > float(total_cost)):
+			button_show=False
+			messages.error(request,'Amount Paid cannot be more than the total amount')
+			return HttpResponseRedirect(reverse('members_credit_issue_item',args=(pk,member_id,total_cost,button_show,quantity,)))
+		
+
+		discount=float(total_cost)-float(amount_paid)
+		
 
 		if Members_Credit_Sales_Selected.objects.filter(member=member,status=status,processed_by=processed_by):
 			ticket_id=Members_Credit_Sales_Selected.objects.filter(member=member,status=status).first()
 			selected_ticket=ticket_id.ticket
 		else:
-			# _ticket=GeneralTicket.objects.first()
-			# selected_ticket=_ticket.ticket
+			
 			selected_ticket=get_ticket()
-
-
-			# _ticket.ticket = int(_ticket.ticket) + 1
-			# _ticket.save()
-
-			# selected_ticket=str(now.year) +  str(now.month) +  str(now.day) + str(now.hour) +  str(now.minute) + str(now.second)
 
 
 		if Members_Credit_Sales_Selected.objects.filter(sources='MAIN',member=member,product=product,status=status,processed_by=processed_by):
 			record_exist=Members_Credit_Sales_Selected.objects.filter(sources='MAIN',member=member,product=product,status=status).first()
 			record_exist.quantity=quantity
 			record_exist.unit_selling_price=unit_selling_price
-			record_exist.total=total
+			record_exist.total_amount=total_cost
+			record_exist.discount=discount
+			record_exist.total=amount_paid
 			record_exist.save()
 			return HttpResponseRedirect(reverse('Members_Credit_sales_item_select',args=(member_id,)))
 
-		record=Members_Credit_Sales_Selected(sources='MAIN',tdate=tdate,member=member,status=status,product=product,ticket=selected_ticket,quantity=quantity,unit_selling_price=unit_selling_price,total=total,processed_by=processed_by)
+		record=Members_Credit_Sales_Selected(total_amount=total_cost,discount=discount,sources='MAIN',tdate=tdate,member=member,status=status,product=product,ticket=selected_ticket,quantity=quantity,unit_selling_price=unit_selling_price,total=amount_paid,processed_by=processed_by)
 		record.save()
 		return HttpResponseRedirect(reverse('Members_Credit_sales_item_select',args=(member_id,)))
 
 
-
+	form.fields['code'].initial=product.code
+	form.fields['item_name'].initial=product.item_name
+	form.fields['details'].initial=product.details
+	form.fields['available_quantity'].initial=product.quantity
+	form.fields['unit_selling_price'].initial=product.unit_selling_price
+	form.fields['total_amount'].initial=total_amount
+	form.fields['amount_paid'].initial=total_amount
+	form.fields['issue_quantity'].initial=quantity
 	context={
 	'task_array':task_array,
 	'form':form,
 	'member':member,
+	'button_show':button_show,
 	}
 	return render(request,'shop_templates/members_credit_issue_item.html',context)
 
@@ -1985,11 +2073,6 @@ def members_credit_issue_auction_item(request,pk,member_id):
 
 	product = Stock_Auction.objects.get(stock__code=pk)
 
-	form.fields['code'].initial=product.stock.code
-	form.fields['item_name'].initial=product.stock.item_name
-	form.fields['details'].initial=product.stock.details
-	form.fields['available_quantity'].initial=product.quantity
-	form.fields['unit_selling_price'].initial=product.unit_selling_price
 
 	if request.method=="POST":
 		tdate =  get_current_date(now)
@@ -2003,7 +2086,6 @@ def members_credit_issue_auction_item(request,pk,member_id):
 		if int(quantity)>int(product.quantity):
 			messages.error(request,"Quantity Selected is more that Available Quantity")
 			return HttpResponseRedirect(reverse('members_credit_issue_auction_item', args=(pk,member_id)))
-
 
 		unit_selling_price=product.unit_selling_price
 
@@ -2022,19 +2104,26 @@ def members_credit_issue_auction_item(request,pk,member_id):
 			_ticket.ticket = int(_ticket.ticket) + 1
 			_ticket.save()
 
-		if Members_Credit_Sales_Selected.objects.filter(sources='AUCTION',member=member,product=product.stock,status=status,processed_by=processed_by):
+		if Members_Credit_Sales_Selected.objects.filter(sources='AUCTION',member=member,product=product.stock,status=status):
 			record_exist=Members_Credit_Sales_Selected.objects.filter(sources='AUCTION',member=member,product=product.stock,status=status).first()
 			record_exist.quantity=quantity
 			record_exist.unit_selling_price=unit_selling_price
+			record_exist.total_amount=total
+			record_exist.discount=0
 			record_exist.total=total
 			record_exist.save()
 			return HttpResponseRedirect(reverse('Members_Credit_sales_item_select',args=(member_id,)))
 
-		record=Members_Credit_Sales_Selected(sources='AUCTION',tdate=tdate,member=member,status=status,product=product.stock,ticket=selected_ticket,quantity=quantity,unit_selling_price=unit_selling_price,total=total,processed_by=processed_by)
+		record=Members_Credit_Sales_Selected(sources='AUCTION',tdate=tdate,member=member,status=status,product=product.stock,ticket=selected_ticket,quantity=quantity,unit_selling_price=unit_selling_price,total_amount=total,discount=0,total=total,processed_by=processed_by)
 		record.save()
 		return HttpResponseRedirect(reverse('Members_Credit_sales_item_select',args=(member_id,)))
 
 
+	form.fields['code'].initial=product.stock.code
+	form.fields['item_name'].initial=product.stock.item_name
+	form.fields['details'].initial=product.stock.details
+	form.fields['available_quantity'].initial=product.quantity
+	form.fields['unit_selling_price'].initial=product.unit_selling_price
 
 	context={
 	'task_array':task_array,
@@ -2377,21 +2466,13 @@ def members_credit_sales_approved_item_details(request,ticket):
 
 
 	item=members_credit_sales_summary.objects.get(trans_code__ticket=ticket)
+	member=item.trans_code
 	transaction=TransactionTypes.objects.get(code=600)
 
 
 	if request.method=="POST":
-
 		tdate =  get_current_date(now)
-
-		if MembersAccountsDomain.objects.filter(member=item.trans_code.member,transaction=transaction).exists():
-			member=MembersAccountsDomain.objects.get(member=item.trans_code.member,transaction=transaction)
-		else:
-			messages.error(request,"This Transaction Has no Account Number")
-			return HttpResponseRedirect(reverse('members_credit_sales_approved_item_details', args=(ticket,)))
-
 		receipt_types=request.POST.get('receipt_types')
-
 
 		if receipt_types=="MANUAL":
 			# return HttpResponse("MANUAL")
@@ -2422,19 +2503,19 @@ def members_credit_sales_approved_item_details(request,ticket):
 			return HttpResponseRedirect(reverse('members_credit_sales_approved_item_details',args=(ticket,)))
 
 
-		for item in items:
-			if item.sources == "MAIN":
-				product_update=Stock.objects.get(code=item.product.code)
+		for record in items:
+			if record.sources == "MAIN":
+				product_update=Stock.objects.get(code=record.product.code)
 
-				if int(item.quantity) > int(product_update.quantity):
-					messages.error(request,"Insufficient Quantity for product with code " + str(item.product.code))
+				if int(record.quantity) > int(product_update.quantity):
+					messages.error(request,"Insufficient Quantity for product with code " + str(record.product.code))
 					return HttpResponseRedirect(reverse('members_credit_sales_approved_item_details',args=(ticket,)))
 
-			elif item.sources=="AUCTION":
-				product_update=Stock_Auction.objects.get(stock__code=item.product.code)
+			elif record.sources=="AUCTION":
+				product_update=Stock_Auction.objects.get(stock__code=record.product.code)
 
-				if int(item.quantity) > int(product_update.quantity):
-					messages.error(request,"Insufficient Quantity for product with code " + str(item.product.code))
+				if int(record.quantity) > int(product_update.quantity):
+					messages.error(request,"Insufficient Quantity for product with code " + str(record.product.code))
 					return HttpResponseRedirect(reverse('members_credit_sales_approved_item_details',args=(ticket,)))
 
 
@@ -2443,62 +2524,56 @@ def members_credit_sales_approved_item_details(request,ticket):
 
 		sales_category='CREDIT'
 
-		for item in items:
-			name = item.member.get_full_name
-			if item.member.residential_address:
-				address=item.member.residential_address
+		for record in items:
+			name = record.member.get_full_name
+			if record.member.residential_address:
+				address=record.member.residential_address
 			else:
 				address="FETHA II CTCS"
-			phone_no=item.member.phone_number
-			item_name=item.product.item_name.upper()
-			item_code=item.product.code
-			quantity=item.quantity
-			unit_selling_price=item.unit_selling_price
-			total=item.total
+			phone_no=record.member.phone_number
+			item_name=record.product.item_name.upper()
+			item_code=record.product.code
+			quantity=record.quantity
+			unit_selling_price=record.unit_selling_price
+			total=record.total
 
-
-
-
-			record=Daily_Sales(sources=item.sources,sales_category=sales_category,tdate=tdate,receipt=receipt,name=name,phone_no=phone_no,address=address,product=item.product,ticket=item.ticket,quantity=quantity,unit_selling_price=unit_selling_price,total=total,processed_by=item.processed_by,status=status)
+			record=Daily_Sales(sources=record.sources,sales_category=sales_category,tdate=tdate,receipt=receipt,name=name,phone_no=phone_no,address=address,product=record.product,ticket=record.ticket,quantity=quantity,unit_selling_price=unit_selling_price,total=total,processed_by=record.processed_by,status=status)
 			record.save()
 
-			if item.sources == "MAIN":
+			if record.sources == "MAIN":
 				product_update=Stock.objects.get(code=item_code)
 				product_update.quantity=int(product_update.quantity)-int(quantity)
 				product_update.save()
-			elif item.sources == "AUCTION":
+			elif record.sources == "AUCTION":
 				product_update=Stock_Auction.objects.get(stock__code=item_code)
 				product_update.quantity=int(product_update.quantity)-int(quantity)
 				product_update.save()
 
 		selected=Daily_Sales.objects.filter(ticket=ticket).first()
 
-
 		record=Daily_Sales_Summary(tdate=tdate,receipt=receipt,sale=selected,amount=amount_due,status=status,processed_by=processed_by)
 		record.save()
 
+		# particulars="Purchases with receipt No " + str(receipt)
+		# balance_amount= -float(amount_due)
+		# debit_amount = amount_due
 
-		particulars="Purchases with receipt No " + str(receipt)
-		balance_amount= -float(amount_due)
-		debit_amount = amount_due
+		# if CooperativeShopLedger.objects.filter(member=member.member).exists():
+		# 	ledger_balance = CooperativeShopLedger.objects.filter(member=member.member).order_by('id').last()
 
-
-
-		if CooperativeShopLedger.objects.filter(member=member.member).exists():
-			ledger_balance = CooperativeShopLedger.objects.filter(member=member.member).order_by('id').last()
-
-			balance_amount=float(ledger_balance.balance) - float(amount_due)
+		# 	balance_amount=float(ledger_balance.balance) - float(amount_due)
 
 
-		record=CooperativeShopLedger(account_number=str(600) + str(member.member.get_member_Id),status=status2,tdate=tdate,receipt=receipt,member=member.member,particulars=particulars,debit=debit_amount,credit=0,balance=balance_amount,processed_by=processed_by)
-		record.save()
+		# record=CooperativeShopLedger(account_number=str(600) + str(member.member.get_member_Id),status=status2,tdate=tdate,receipt=receipt,member=member.member,particulars=particulars,debit=debit_amount,credit=0,balance=balance_amount,processed_by=processed_by)
+		# record.save()
 
 
 		item=members_credit_sales_summary.objects.get(trans_code__ticket=ticket)
-		item.status=status
+		item.status='TREATED'
 		item.save()
 
-		return HttpResponseRedirect(reverse('general_cash_issue_item_print_receipt',args=(ticket,)))
+		# return HttpResponseRedirect(reverse('general_cash_issue_item_print_receipt',args=(ticket,)))
+		return HttpResponseRedirect(reverse('members_credit_sales_approved_list'))
 
 	form.fields["receipt_types"].initial="AUTO"
 	context={
@@ -3425,7 +3500,7 @@ def members_cash_sales_processing(request,pk,pay_status):
 	return render(request,'shop_templates/members_cash_sales_processing.html',context)
 
 
-def members_cash_sales_item_issue(request,pk,member_id):
+def members_cash_sales_item_issue(request,pk,member_id,total_amount,status,quantity):
 	task_array=[]
 	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
 	for task in tasks:
@@ -3435,31 +3510,53 @@ def members_cash_sales_item_issue(request,pk,member_id):
 	product = Stock.objects.get(id=pk)
 	member=Members.objects.get(id=member_id)
 
-	form.fields['code'].initial=product.code
-	form.fields['item_name'].initial=product.item_name
-	form.fields['available_quantity'].initial=product.quantity
-	form.fields['unit_selling_price'].initial=product.unit_selling_price
+	processed_by=CustomUser.objects.get(id=request.user.id)
+	processed_by=processed_by.username
+	tdate =  get_current_date(now)
+	button_show=status
+	status="UNTREATED"	
+	unit_selling_price=product.unit_selling_price
+	total_amount=total_amount
+	issue_quantity=quantity
 
-	if request.method=="POST":
-		tdate =  get_current_date(now)
-
-
-		status="UNTREATED"
+	if request.method=="POST" and 'btn_display' in request.POST:
 		quantity=request.POST.get('issue_quantity')
 		if int(quantity)<=0:
+			button_show=False
 			messages.error(request,"Quantity Selected cannot be Zero (0)")
-			return HttpResponseRedirect(reverse('members_cash_sales_item_issue', args=(pk,member_id)))
+			return HttpResponseRedirect(reverse('members_cash_sales_item_issue', args=(pk,member_id,0,button_show,quantity,)))
 
 		if int(quantity)>int(product.quantity):
+			button_show=False
 			messages.error(request,"Quantity Selected is more that Available Quantity")
-			return HttpResponseRedirect(reverse('members_cash_sales_item_issue', args=(pk,member_id)))
-
-
-		unit_selling_price=product.unit_selling_price
+			return HttpResponseRedirect(reverse('members_cash_sales_item_issue', args=(pk,member_id,0,button_show,quantity,)))
 
 		total=float(quantity) * float(unit_selling_price)
-		processed_by=CustomUser.objects.get(id=request.user.id)
-		processed_by=processed_by.username
+		button_show=True
+	
+		return HttpResponseRedirect(reverse('members_cash_sales_item_issue',args=(pk,member_id,total,button_show,quantity,)))
+
+
+
+
+	if request.method=="POST" and 'btn_process' in request.POST:
+		quantity=request.POST.get("issue_quantity")
+		total_cost=request.POST.get('total_amount')
+		amount_paid=request.POST.get('amount_paid')
+
+		if amount_paid and float(amount_paid)<0:
+			button_show=False
+			messages.error(request,'Invalid discount Amount')
+			return HttpResponseRedirect(reverse('members_cash_sales_item_issue',args=(pk,member_id,total_cost,button_show,quantity,)))
+
+		if amount_paid and (float(amount_paid) > float(amount_paid)):
+			button_show=False
+			messages.error(request,'Amount Paid cannot be more than the total amount')
+			return HttpResponseRedirect(reverse('members_cash_sales_item_issue',args=(pk,member_id,total_cost,button_show,quantity,)))
+
+		discount=float(total_cost)-float(amount_paid)
+
+
 
 		if Members_Cash_Sales_Selected.objects.filter(member=member,status=status,processed_by=processed_by).exists():
 			ticket_id=Members_Cash_Sales_Selected.objects.filter(member=member,status=status).first()
@@ -3478,18 +3575,40 @@ def members_cash_sales_item_issue(request,pk,member_id):
 			record_exist=Members_Cash_Sales_Selected.objects.get(sources='MAIN',member=member,product=product,status=status,processed_by=processed_by) #.first()
 			record_exist.quantity=int(quantity)
 			record_exist.unit_selling_price=unit_selling_price
-			record_exist.total=total
+			record_exist.total_amount=total_cost
+			record_exist.discount=discount
+			record_exist.total=amount_paid
 			record_exist.save()
 			return HttpResponseRedirect(reverse('members_cash_sales_product_load',args=(member_id,selected_ticket,)))
 
-		record=Members_Cash_Sales_Selected(sources='MAIN',tdate=tdate,member=member,status=status,product=product,ticket=selected_ticket,quantity=quantity,unit_selling_price=unit_selling_price,total=total,processed_by=processed_by)
+		record=Members_Cash_Sales_Selected(total_amount=total_cost,
+											discount=discount,
+											sources='MAIN',
+											tdate=tdate,
+											member=member,
+											status=status,
+											product=product,
+											ticket=selected_ticket,
+											quantity=quantity,
+											unit_selling_price=unit_selling_price,
+											total=amount_paid,
+											processed_by=processed_by)
 		record.save()
 		return HttpResponseRedirect(reverse('members_cash_sales_product_load',args=(member_id,selected_ticket,)))
 
+	form.fields['code'].initial=product.code
+	form.fields['item_name'].initial=product.item_name
+	form.fields['available_quantity'].initial=product.quantity
+	form.fields['unit_selling_price'].initial=product.unit_selling_price
+	form.fields['total_amount'].initial=total_amount
+	form.fields['amount_paid'].initial=total_amount
+	form.fields['issue_quantity'].initial=issue_quantity
+	print(button_show)
 	context={
 	'task_array':task_array,
 	'form':form,
 	'member':member,
+	'button_show':button_show,
 	}
 	return render(request,'shop_templates/members_cash_sales_item_issue.html',context)
 
@@ -3672,7 +3791,7 @@ def general_cash_sales_select_remove(request,pk,cust_id,ticket):
 
 
 
-def general_cash_issue_item(request,pk,cust_id):
+def general_cash_issue_item(request,pk,cust_id,total_amount,status,quantity):
 	task_array=[]
 	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
 	for task in tasks:
@@ -3681,40 +3800,57 @@ def general_cash_issue_item(request,pk,cust_id):
 	processed_by=CustomUser.objects.get(id=request.user.id)
 	processed_by=processed_by.username
 
-	form =form=members_credit_issue_item_form(request.POST or None)
+	form =members_credit_issue_item_form(request.POST or None)
+	# form_compute =members_credit_issue_item_Compute_form(request.POST or None)
+	
 	customer=Customers.objects.get(id=cust_id)
 	product = Stock.objects.get(id=pk)
-	form.fields['code'].initial=product.code
-	form.fields['item_name'].initial=product.item_name
-	form.fields['available_quantity'].initial=product.quantity
-	form.fields['unit_selling_price'].initial=product.unit_selling_price
-	form.fields['issue_quantity'].initial=1
+	
 
-	if request.method == "POST":
-		tdate =  get_current_date(now)
+	total=0
+	discount=0
+	button_show=status
+	ticket_status="OPEN"
+	cust_status='ACTIVE'
+	status="UNTREATED"
+	status1='USED'
+	quantity=quantity
+	unit_selling_price=product.unit_selling_price
+	tdate =  get_current_date(now)
 
-
+	if request.method == "POST" and "product_select" in request.POST:
 		code_id =request.POST.get('code')
-
 		item=Stock.objects.get(code=request.POST.get('code'))
-
-		# return HttpResponse(item.code)
-
-		ticket_status="OPEN"
-		cust_status='ACTIVE'
-
-
-		status="UNTREATED"
-		status1='USED'
 
 		quantity=request.POST.get("issue_quantity")
 		if int(item.quantity) < int(quantity):
 			messages.error(request,"Quantity Selected is more Than Available Stock")
-			return HttpResponseRedirect(reverse('general_cash_issue_item',args=(pk,cust_id)))
+			return HttpResponseRedirect(reverse('general_cash_issue_item',args=(pk,cust_id,0,'False',quantity,)))
 
-		unit_selling_price=product.unit_selling_price
+		unit_selling_price=unit_selling_price
 
 		total=float(quantity) * float(unit_selling_price)
+		button_show=True
+		return HttpResponseRedirect(reverse('general_cash_issue_item',args=(pk,cust_id,total,button_show,quantity,)))
+	
+	if request.method == "POST" and "product_compute" in request.POST:
+		quantity=request.POST.get("issue_quantity")
+		total_cost=request.POST.get('total_amount')
+		amount_paid=request.POST.get('amount_paid')
+
+		if amount_paid and float(amount_paid)<0:
+			button_show=False
+			messages.error(request,'Invalid discount Amount')
+			return HttpResponseRedirect(reverse('general_cash_issue_item',args=(pk,cust_id,total_cost,button_show,quantity,)))
+
+		if amount_paid and (float(amount_paid) > float(amount_paid)):
+			button_show=False
+			messages.error(request,'Amount Paid cannot be more than the total amount')
+			return HttpResponseRedirect(reverse('general_cash_issue_item',args=(pk,cust_id,total_cost,button_show,quantity,)))
+		
+		discount=float(total_cost)-float(amount_paid)
+
+	
 		
 		if Customers.objects.filter(ticket_status=ticket_status,cust_status=cust_status,processed_by=processed_by).exists():
 			select_customer=Customers.objects.get(ticket_status=ticket_status,processed_by=processed_by)
@@ -3736,23 +3872,41 @@ def general_cash_issue_item(request,pk,cust_id):
 
 		if not selected_ticket:
 			messages.error(request,"Ticket not Available")
-			return HttpResponseRedirect(reverse('general_cash_issue_item',args=(pk,cust_id)))
+			return HttpResponseRedirect(reverse('general_cash_issue_item',args=(pk,cust_id,total_cost,button_show,quantity,)))
 
 
 		if General_Cash_Sales_Selected.objects.filter(sources='MAIN',product=product,ticket=selected_ticket).exists():
 			record=General_Cash_Sales_Selected.objects.get(sources='MAIN',product=product,ticket=selected_ticket)
 			record.quantity=quantity
+			record.total_amount=total_cost
+			record.discount=discount
+			record.total=amount_paid
+			record.unit_selling_price=unit_selling_price
 			record.save()
 			return HttpResponseRedirect(reverse('general_cash_sales_products_load',args=(cust_id,selected_ticket)))
 
-		record=General_Cash_Sales_Selected(sources='MAIN',tdate=tdate,customer=customer,product=product,ticket=selected_ticket,quantity=quantity,unit_selling_price=unit_selling_price,total=total,processed_by=processed_by,status=status)
+		record=General_Cash_Sales_Selected(total_amount=total_cost,discount=discount,total=amount_paid,sources='MAIN',tdate=tdate,customer=customer,product=product,ticket=selected_ticket,quantity=quantity,unit_selling_price=unit_selling_price,processed_by=processed_by,status=status)
 		record.save()
 
 		return HttpResponseRedirect(reverse('general_cash_sales_products_load',args=(cust_id,selected_ticket)))
+	
+
+	form.fields['code'].initial=product.code
+	form.fields['item_name'].initial=product.item_name
+	form.fields['available_quantity'].initial=product.quantity
+	form.fields['unit_selling_price'].initial=product.unit_selling_price
+	form.fields['issue_quantity'].initial=quantity
+	
+	form.fields['total_amount'].initial=total_amount
+	form.fields['amount_paid'].initial=total_amount
+	form.fields['no_in_pack'].initial=product.no_in_pack
+
 	context={
 	'task_array':task_array,
 	'form':form,
+	# 'form_compute':form_compute,
 	'customer':customer,
+	'button_show':button_show,
 	}
 	return render(request,"shop_templates/general_cash_issue_item.html",context)
 
@@ -3881,8 +4035,7 @@ def general_cash_issue_item_preview(request,ticket):
 			button_show=True
 
 	customer=Customers.objects.get(active_ticket=ticket)
-	# autoprint=YesNo.objects.all()
-	# autoFormPrint=FormAutoPrints.objects.get(title='SHOP SALES')
+
 
 	total_amount=0
 	total_item=0
@@ -4154,6 +4307,7 @@ def general_cash_load_existing_customers(request):
 		'ticket':'0'
 		}
 		return render(request,'shop_templates/general_cash_load_existing_customers.html',context)
+
 
 def Daily_Sales_Summarization(request,pk):
 	task_array=[]
@@ -4865,7 +5019,7 @@ def members_shop_sales_credit_generate(request,pk):
 		messages.error(request,'No record found')
 		return HttpResponseRedirect(reverse('members_shop_credit_loan_salary_institution_select'))
 
-	members=members_credit_sales_summary.objects.filter(processing_status=processing_status,trans_code__member__salary_institution=salary_institution,status=status).order_by('trans_code__member_id').values_list('trans_code__member_id','trans_code__member__member_id','trans_code__member__ippis_no','trans_code__member__admin__last_name','trans_code__member__admin__first_name','trans_code__member__middle_name').distinct()
+	members=members_credit_sales_summary.objects.filter(processing_status=processing_status,trans_code__member__salary_institution=salary_institution,status=status).order_by('trans_code__member_id').values_list('trans_code__member_id','trans_code__member__coop_no','trans_code__member__ippis_no','trans_code__member__admin__last_name','trans_code__member__admin__first_name','trans_code__member__middle_name').distinct()
 
 
 	queryset=  members_credit_sales_summary.objects.filter(processing_status=processing_status,trans_code__member__salary_institution=salary_institution,status=status).aggregate(total_cash=Sum('amount'))
@@ -4879,10 +5033,10 @@ def members_shop_sales_credit_generate(request,pk):
 	deduction_array=[]
 	for member in members:
 
-		queryset=  members_credit_sales_summary.objects.filter(trans_code__member__member_id=member[1],processing_status=processing_status,trans_code__member__salary_institution=salary_institution,status=status).aggregate(total_cash=Sum('amount'))
+		queryset=  members_credit_sales_summary.objects.filter(trans_code__member__coop_no=member[1],processing_status=processing_status,trans_code__member__salary_institution=salary_institution,status=status).aggregate(total_cash=Sum('amount'))
 		total_amount=queryset['total_cash']
 
-		deduction_array.append((member[1][13:],member[3] + " " + member[4]+ " " + member[5],member[2],total_amount))
+		deduction_array.append((member[1],member[3] + " " + member[4]+ " " + member[5],member[2],total_amount))
 
 
 	if request.method == 'POST':
@@ -4892,24 +5046,50 @@ def members_shop_sales_credit_generate(request,pk):
 
 		tdate=get_current_date(dtObj)
 
+		interval_record=Shop_Deduction_Interval.objects.all().first()
+		interval=interval_record.interval
+
+	
+		deduction_period_id = tdate+ relativedelta(months=int(interval))
+		
+		deduction_period=get_current_date(deduction_period_id)
+
+
+		# return HttpResponse(f'deduction Period {deduction_period} for {interval}')
 		processed_by=CustomUser.objects.get(id=request.user.id)
 		processed_by=processed_by.username
 
 		deduction_array=[]
 		for member in members:
-			record=Members.objects.get(member_id=member[1])
+			record=Members.objects.get(coop_no=member[1])
+		
 
-			queryset=  members_credit_sales_summary.objects.filter(trans_code__member__member_id=member[1],processing_status=processing_status,trans_code__member__salary_institution=salary_institution,status=status).aggregate(total_cash=Sum('balance'))
+			queryset=  members_credit_sales_summary.objects.filter(trans_code__member__coop_no=member[1],processing_status=processing_status,trans_code__member__salary_institution=salary_institution,status=status).aggregate(total_cash=Sum('balance'))
 			total_amount=abs(queryset['total_cash'])
-			my_id=member[1][13:]
+			my_id=member[1]
 
 			loan_number = generate_number(loan_code,my_id,now)
-			# deduction_array.append((member[1][13:],member[3] + " " + member[4]+ " " + member[5],member[2],total_amount,loan_number))
-
+		
+			
 			members_shop_credit_loans(member=record,account_name=transaction,loan_number=loan_number,
-											loan_amount=total_amount,amount_paid=0,balance=-total_amount,status=status2,processed_by=processed_by,schedule_status=schedule_status,tdate=tdate).save()
+											loan_amount=total_amount,status=status2,deduction_period=deduction_period,processed_by=processed_by,schedule_status=schedule_status,tdate=tdate).save()
+			
 
-			members_credit_sales_summary.objects.filter(trans_code__member__member_id=member[1],processing_status=processing_status,trans_code__member__salary_institution=salary_institution,status=status).update(loan_number=loan_number,processing_status=processing_status2)
+			particulars=f"Purchases as at {tdate} with credit number {str(loan_number)}"
+			balance_amount= -float(total_amount)
+			debit_amount = total_amount
+
+			if CooperativeShopLedger.objects.filter(member=record).exists():
+				ledger_balance = CooperativeShopLedger.objects.filter(member=record).last()
+
+				balance_amount=float(ledger_balance.balance) - float(total_amount)
+
+
+			query=CooperativeShopLedger(account_number=loan_number,status=status2,tdate=tdate,member=record,particulars=particulars,debit=debit_amount,credit=0,balance=balance_amount,processed_by=processed_by)
+			query.save()
+
+	
+			members_credit_sales_summary.objects.filter(trans_code__member__coop_no=member[1],processing_status=processing_status,trans_code__member__salary_institution=salary_institution,status=status).update(loan_number=loan_number,processing_status=processing_status2)
 
 
 		# queryset=  members_credit_sales_summary.objects.filter(processing_status=processing_status,trans_code__member__salary_institution=salary_institution,status=status).update(processing_status=processing_status2)
@@ -5971,7 +6151,7 @@ def monthly_individual_deductions_generate_Aux(request,pk):
 		return HttpResponseRedirect(reverse('monthly_deductions_salary_institution_select'))
 
 	# members=members_credit_sales_summary.objects.filter(processing_status=processing_status,trans_code__member__salary_institution=salary_institution,status=status)
-	members=members_shop_credit_loans.objects.filter(member__salary_institution=salary_institution,schedule_status=schedule_status).filter(Q(balance__lt=0))
+	members=members_shop_credit_loans.objects.filter(member__salary_institution=salary_institution,schedule_status=schedule_status)
 
 	if not members:
 		messages.error(request,'No Available Record for this Transactions')
@@ -6182,15 +6362,15 @@ def monthly_individual_deductions_generate(request,pk):
 		messages.error(request,'Transactions already Generated for this Period')
 		return HttpResponseRedirect(reverse('monthly_deductions_salary_institution_select'))
 
-	# members=members_credit_sales_summary.objects.filter(processing_status=processing_status,trans_code__member__salary_institution=salary_institution,status=status)
-	members=members_shop_credit_loans.objects.filter(member__salary_institution=salary_institution,schedule_status=schedule_status).filter(Q(balance__lt=0))
+	
+	members=MonthlyShopdeductionSchedules.objects.filter(member__salary_institution=salary_institution,transaction_period=transaction_period,processing_status='UNPROCESSED')
 
 	if not members:
 		messages.error(request,'No Available Record for this Transactions')
 		return HttpResponseRedirect(reverse('monthly_deductions_salary_institution_select'))
 
 
-	queryset=  members_shop_credit_loans.objects.filter(member__salary_institution=salary_institution,schedule_status=schedule_status).filter(Q(balance__lt=0)).aggregate(total_cash=Sum('balance'))
+	queryset=  MonthlyShopdeductionSchedules.objects.filter(member__salary_institution=salary_institution,transaction_period=transaction_period,processing_status='UNPROCESSED').aggregate(total_cash=Sum('total_amount'))
 	grand_total=queryset['total_cash']
 
 	if grand_total:
@@ -6198,17 +6378,15 @@ def monthly_individual_deductions_generate(request,pk):
 	else:
 		grand_total=0
 
-
-
 	if request.method == 'POST':
 
 		for member in members:
 			MonthlyShopdeductionList(member=member.member,
 											transaction_period=transaction_period,
 											transaction=transaction,
-											account_number=member.loan_number,
-											amount=member.loan_amount,
-											amount_deducted=0,balance=member.loan_amount,
+											account_number=member.account_number,
+											amount=member.total_amount,
+											amount_deducted=0,balance=0,
 											status=status,
 											processing_status=processing_status,
 											salary_institution=salary_institution,
@@ -6216,9 +6394,9 @@ def monthly_individual_deductions_generate(request,pk):
 											tdate=tdate
 											).save()
 
-			schedule_status="SCHEDULED"
+	
 
-			members_shop_credit_loans.objects.filter(loan_number=member.loan_number).update(schedule_status=schedule_status1)
+		MonthlyShopdeductionSchedules.objects.filter(member__salary_institution=salary_institution,transaction_period=transaction_period,processing_status='UNPROCESSED').update(processing_status='PROCESSED')
 
 		MonthlyGeneratedTransactions(tdate=tdate,processed_by=processed_by,salary_institution=salary_institution,transaction_period=transaction_period,transaction=transaction,transaction_status=status).save()
 
@@ -6241,6 +6419,99 @@ def monthly_individual_deductions_generate(request,pk):
 
 
 
+
+def monthly_deductions_Scheduling_Period_Load(request):
+	task_array=[]
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	for task in tasks:
+		task_array.append(task.task.title)
+
+	form=Monthly_Deductions_Transaction_Period_Institution_load_Form(request.POST or None)
+	if request.method=="POST":
+		transaction_period=request.POST.get('transaction_period')
+		date_format = '%Y-%m-%d'
+		dtObj = datetime.strptime(transaction_period, date_format)
+		transaction_period=get_current_date(dtObj)
+
+		salary_institution_id=request.POST.get('salary_institution')
+		salary_institution=SalaryInstitution.objects.get(id=salary_institution_id)
+
+		context={
+		'salary_institution':salary_institution,
+		'transaction_period':transaction_period,
+		}
+		return HttpResponseRedirect(reverse('monthly_deductions_Scheduling_Transaction_List_Load',args=(salary_institution.pk,transaction_period,)))
+
+	form.fields['transaction_period'].initial=get_current_date(now)
+	context={
+	'task_array':task_array,
+	'form':form,
+	}
+	return render(request,'shop_templates/monthly_deductions_Scheduling_Period_Load.html',context)
+
+
+
+def monthly_deductions_Scheduling_Transaction_List_Load(request,salary_pk,period_pk):
+	task_array=[]
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	for task in tasks:
+		task_array.append(task.task.title)
+
+	form=Monthly_Deductions_Transaction_Period_Institution_load_Form(request.POST or None)
+	salary_institution=SalaryInstitution.objects.get(id=salary_pk)
+	records=members_shop_credit_loans.objects.filter(Q(member__salary_institution=salary_institution) & Q(deduction_period=period_pk) & (Q(schedule_status='UNSCHEDULED') | Q(schedule_status='SUSPENDED')))
+	
+	if request.method=="POST":
+		transaction_period=request.POST.get('transaction_period')
+		date_format = '%Y-%m-%d'
+		dtObj = datetime.strptime(transaction_period, date_format)
+		transaction_period=get_current_date(dtObj)
+		tdate=get_current_date(now)
+		processed_by=CustomUser.objects.get(id=request.user.id)
+		processed_by=processed_by.username
+
+		queryset=members_shop_credit_loans.objects.filter(Q(member__salary_institution=salary_institution) & Q(deduction_period=period_pk) & Q(schedule_status='UNSCHEDULED'))
+		for item in queryset:
+			if MonthlyShopdeductionSchedules.objects.filter(member=item.member,transaction_period=transaction_period,salary_institution=salary_institution).exists():
+				record_exist=MonthlyShopdeductionSchedules.objects.get(member=item.member,transaction_period=transaction_period,salary_institution=salary_institution)
+				record_exist.main_amount=float(record_exist.main_amount)+float(item.loan_amount)
+				record_exist.total_amount=float(record_exist.main_amount)+float(record_exist.rescheduled_amount)
+				
+				record_exist.balance=-(float(record_exist.total_amount)-float(record_exist.amount_paid))
+				record_exist.save()
+			else:
+				account_number=generate_number(600,item.member.coop_no,now)
+				MonthlyShopdeductionSchedules(member=item.member,
+											transaction_period=transaction_period,
+											account_number=account_number,
+											salary_institution=salary_institution,
+											main_amount=item.loan_amount,
+											total_amount=item.loan_amount,
+											balance=-item.loan_amount,
+											tdate=tdate,
+											processed_by=processed_by).save()
+		members_shop_credit_loans.objects.filter(Q(member__salary_institution=salary_institution) & Q(deduction_period=period_pk) & Q(schedule_status='UNSCHEDULED')).update(schedule_status='SCHEDULED')
+		return HttpResponseRedirect(reverse('monthly_deductions_Scheduling_Transaction_List_Load',args=(salary_pk,period_pk,)))
+		
+	
+	form.fields['transaction_period'].initial=period_pk
+	context={
+	'task_array':task_array,
+	'records':records,
+	'salary_institution':salary_institution,
+	'period_pk':period_pk,
+	'form':form,
+	}
+	return render(request,'shop_templates/monthly_deductions_Scheduling_Transaction_List_Load.html',context)
+
+def monthly_deductions_Scheduling_Transaction_Suspend(request,pk,salary_pk,period_pk):
+	members_shop_credit_loans.objects.filter(id=pk).update(schedule_status='SUSPENDED')
+	return HttpResponseRedirect(reverse('monthly_deductions_Scheduling_Transaction_List_Load',args=(salary_pk,period_pk,)))
+
+def monthly_deductions_Scheduling_Transaction_UnSuspend(request,pk,salary_pk,period_pk):
+	members_shop_credit_loans.objects.filter(id=pk).update(schedule_status='UNSCHEDULED')
+	return HttpResponseRedirect(reverse('monthly_deductions_Scheduling_Transaction_List_Load',args=(salary_pk,period_pk,)))
+	
 
 def monthly_grouped_deductions_salary_institution_select(request):
 	task_array=[]
@@ -8495,13 +8766,154 @@ def All_Stock_Status(request):
 		task_array.append(task.task.title)
 
 	records=Stock.objects.all()
-
+	queryset= Stock_Auction_Request.objects.filter(status='UNTREATED')
 
 	context={
 	'task_array':task_array,
 	'records':records,
+	'queryset':queryset,
 	}
 	return render(request,'shop_templates/All_Stock_Status.html',context)
+
+
+def All_Stock_Auction_Request(request,pk):
+	task_array=[]
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	for task in tasks:
+		task_array.append(task.task.title)
+
+	form=Expired_Products_Main_Tracking_Write_Off_Form(request.POST or None)
+	record=Stock.objects.get(id=pk)
+
+	tdate=get_current_date(now)
+	processed_by=CustomUser.objects.get(id=request.user.id)
+	processed_by=processed_by.username
+
+	if request.POST:
+
+		btn_expiry=request.POST.get('btn-expiry')
+
+		expiry_date=request.POST.get('expiry_date')
+		date_format = '%Y-%m-%d'
+		new_expiry_date = datetime.strptime(expiry_date, date_format)
+
+		comment=request.POST.get('comment')
+		unit_selling_price=request.POST.get('unit_selling_price')
+		
+		if not comment:
+			messages.error(request,'Please State the Reason')
+			return HttpResponseRedirect(reverse('All_Stock_Auction_Request',args=(pk,)))
+
+
+		quantity=request.POST.get('expiry_quantity')
+		if not quantity or int(quantity)<=0:
+			messages.error(request,'Quantity is Missing')
+			return HttpResponseRedirect(reverse('All_Stock_Auction_Request',args=(pk,)))
+		
+		if int(quantity)>int(record.quantity):
+			messages.error(request,'Quantity entered cannot be greater than the Quantity in Stock')
+			return HttpResponseRedirect(reverse('All_Stock_Auction_Request',args=(pk,)))
+		
+		if Stock_Auction_Request.objects.filter(stock=record,status='UNTREATED').exists():
+			messages.error(request,'This product still have incomplete Transaction')
+			return HttpResponseRedirect(reverse('All_Stock_Auction_Request',args=(pk,)))
+		
+		if btn_expiry:
+			Stock_Auction_Request(stock=record,
+								quantity=quantity,
+								unit_selling_price=unit_selling_price,
+								new_expiry_date=new_expiry_date,
+								comment=comment,
+								tdate=tdate,
+								processed_by=processed_by
+								).save()
+		else:
+			Stock_Auction_Request(stock=record,
+								quantity=quantity,
+								unit_selling_price=unit_selling_price,
+								comment=comment,
+								tdate=tdate,
+								processed_by=processed_by
+								).save()
+		return HttpResponseRedirect(reverse('All_Stock_Status'))
+
+	form.fields['available_quantity'].initial=record.quantity
+	form.fields['expiry_quantity'].initial=record.quantity
+	form.fields['unit_selling_price'].initial=record.unit_selling_price
+	if record.expiring_date:
+		form.fields['expiry_date'].initial=get_current_date(record.expiring_date)
+	else:
+		form.fields['expiry_date'].initial=get_current_date(now)
+	context={
+	'task_array':task_array,
+	'form':form,
+	'record':record,
+	}
+	return render(request,'shop_templates/All_Stock_Auction_Request.html',context)
+
+
+def All_Stock_Auction_Request_Delete(request,pk):
+	Stock_Auction_Request.objects.filter(id=pk).delete()
+	return HttpResponseRedirect(reverse('All_Stock_Status'))
+
+
+def export_All_Stock_xls(request):
+	response = HttpResponse(content_type='application/ms-excel')
+	response['Content-Disposition'] = 'attachment; filename="PRODUCT_LIST.xls"'
+	wb = xlwt.Workbook(encoding='utf-8')
+	ws = wb.add_sheet('Users Data') # this will make a sheet named Users Data
+
+	row_num = 0  # Sheet header, first row
+
+	font_style = xlwt.XFStyle()
+	font_style.font.bold = True
+
+	columns = ['Code', 'Name', 'Details', 'Quantity', 'Unit Selling Price','Uni Cost Price','Min. Qty', 'Expiry Date']
+
+	for col_num in range(len(columns)):
+		ws.write(row_num, col_num, columns[col_num], font_style) # at 0 row 0 column
+
+	font_style = xlwt.XFStyle()  # Sheet body, remaining rows
+
+	records=Stock.objects.all()
+
+	records_array=[]
+	for record in records:
+		if not record.details == 'NONE' and not record.details == 'None':
+			details=record.details
+		else:
+			details=''
+
+		if record.unit_selling_price:
+			unit_selling_price=record.unit_selling_price
+		else:
+			unit_selling_price=''
+
+		if record.unit_cost_price:
+			unit_cost_price=record.unit_cost_price
+		else:
+			unit_cost_price=''
+		records_array.append((record.code,
+							record.item_name,							
+							details,
+							'',
+							unit_selling_price,
+							unit_cost_price,
+							record.re_order_level,
+							''))
+
+	# rows = Xmas_Savings_Shortlist.objects.filter(batch=batch,payment_channel=payment,status=status).values_list('transaction__member__member_id','transaction__member__full_name','transaction__account_number','bank_account__bank','bank_account__account_name', 'bank_account__account_number', 'amount')
+	rows = records_array
+
+	for row in rows:
+		row_num += 1
+		for col_num in range(len(row)):
+			ws.write(row_num, col_num, row[col_num], font_style)
+	wb.save(response)
+
+	return response
+
+
 
 
 def All_Auction_Stock_Status(request):
@@ -8512,14 +8924,66 @@ def All_Auction_Stock_Status(request):
 
 	records=Stock_Auction.objects.all()
 
+	queryset=Stock_Auction_Price_Update_Request.objects.filter(status='UNTREATED')
 
 	context={
 	'task_array':task_array,
 	'records':records,
+	'queryset':queryset,
 	}
 	return render(request,'shop_templates/All_Auction_Stock_Status.html',context)
 
 
+def All_Auction_Stock_Update_Request(request,pk):
+	task_array=[]
+	tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+	for task in tasks:
+		task_array.append(task.task.title)
+	tdate=get_current_date(now)
+	processed_by=CustomUser.objects.get(id=request.user.id)
+	processed_by=processed_by.username
+
+	record=Stock_Auction.objects.get(id=pk)
+	
+
+	form=Auction_Stock_form(request.POST or None)
+	if request.POST:
+		comment=request.POST.get('comment')
+		price=request.POST.get('unit_selling_price')
+		if not price:
+			messages.info(request,'Please Enter the Price')
+			return HttpResponseRedirect(reverse('All_Auction_Stock_Update_Request',args=(pk,)))
+	
+		if Stock_Auction_Price_Update_Request.objects.filter(stock=record,status='UNTREATED').exists():
+
+			messages.info(request,'Please you still have incomplete request for this product')
+			return HttpResponseRedirect(reverse('All_Auction_Stock_Update_Request',args=(pk,)))
+
+
+		Stock_Auction_Price_Update_Request(stock=record,
+										new_price=price,
+										comment=comment,
+										tdate=tdate,
+										processed_by=processed_by,
+										status='UNTREATED').save()
+		return HttpResponseRedirect(reverse('All_Auction_Stock_Status'))
+
+	form.fields['code'].initial=record.stock.code
+	form.fields['item_name'].initial=record.stock.item_name
+	form.fields['unit_selling_price'].initial=record.unit_selling_price
+	context={
+	'form':form,
+	'task_array':task_array,
+	'record':record,
+
+	}
+	return render(request,'shop_templates/All_Auction_Stock_Update_Request.html',context)
+
+
+def All_Auction_Stock_Update_Request_Drop(request,pk):
+	Stock_Auction_Price_Update_Request.objects.filter(id=pk).delete()
+	return HttpResponseRedirect(reverse('All_Auction_Stock_Status'))
+		
 
 def Purchase_Summary(request):
 	task_array=[]
@@ -9207,10 +9671,6 @@ def Deduction_Upload_Member_Deduction_Upload_Delete(request,pk,period_pk,salary_
 	return HttpResponseRedirect(reverse('Deduction_Upload_Member_Search',args=(period_pk,salary_pk,)))
 
 
-
-
-
-
 def Delete_Daily_Sales(request):
 	Members_Credit_Sales_Selected.objects.all().delete()
 	CooperativeShopLedger.objects.all().delete()
@@ -9222,24 +9682,4 @@ def Delete_Daily_Sales(request):
 	Daily_Cash_Deposit_Summary.objects.all().delete()
 	members_shop_credit_loans.objects.all().delete()
 	CashBook_Shop.objects.all().delete()
-	return HttpResponseRedirect(reverse('shop_home'))
-
-def Delete_Daily_Sales1(request):
-
-	MonthlyShopdeductionListGenerated.objects.all().delete()
-	MonthlyShopdeductionList.objects.all().delete()
-	MonthlyShopGroupGeneratedTransactions.objects.all().delete()
-	MonthlyJointDeductionList.objects.all().delete()
-	MonthlyJointDeductionGeneratedTransactions.objects.all().delete()
-	MonthlyJointDeductionGenerated.objects.all().delete()
-	MonthlyDeductionList.objects.all().delete()
-	MonthlyGeneratedTransactions.objects.all().delete()
-	MonthlyDeductionListGenerated.objects.all().delete()
-	MonthlyGroupGeneratedTransactions.objects.all().delete()
-	MonthlyDeductionGenerationHeading.objects.all().delete()
-	AccountDeductions.objects.all().delete()
-	NonMemberAccountDeductions.objects.all().delete()
-	MonthlyOverdeductionsRefund.objects.all().delete()
-
-
 	return HttpResponseRedirect(reverse('shop_home'))

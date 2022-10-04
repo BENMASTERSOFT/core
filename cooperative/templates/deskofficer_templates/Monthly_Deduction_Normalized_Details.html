@@ -6,13 +6,13 @@
    {% endblock custom_css %}
 {% block content %}
 
-      
+  
             <div class="page-content fade-in-up">
                 <div class="ibox">
                     <div class="ibox-head">
-                        <div class="ibox-title">Data Table</div>
+                        <div class="ibox-title">{{transaction_period}} Normalized Details | <a href="{% url 'Monthly_Deduction_Normalized_Details_export_xls' salary_institution.id transaction_period.day transaction_period.month transaction_period.year %}" class="btn btn-secondary">Export</a></div>
                     </div>
-                    <div class="ibox-body" style="height: 500px;width:900px;overflow: scroll;">
+                    <div class="ibox-body" style="height: 600px;width:1000px;overflow: scroll;">
                         
                         <table class="table table-striped table-bordered table-hover" id="example-table" cellspacing="0" width="100%">
                             <thead>

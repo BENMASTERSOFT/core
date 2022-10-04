@@ -36,6 +36,7 @@
 
                                         | <a  href="{% url 'Cash_Withdrawal_Transactions_load' member.pk %}" class="link-blue"><i class="fa fa-comments"></i> WITHDRAWAL</a> 
                                     </div>
+                                    
                                 </div><br>
                                 <div class="card" style="width:350px;">
                                     <div class="card-body">
@@ -83,7 +84,7 @@
 
 
 
-                                       | <a href="#" class="btn btn-default btn-sm"><i class="fa fa-plus"></i> Manage Request</a>
+                                       | <a href="{% url 'membership_termination_request_manager' member.pk %}" class="btn btn-default btn-sm"><i class="fa fa-plus"></i> Manage Request</a>
 
                                        | <a href="{% url 'membership_termination_approved_list_processing_preview' member.pk %}" class="btn btn-default btn-sm"><i class="fa fa-plus"></i> Process Request</a>
 
@@ -152,7 +153,10 @@
                                    
                                     </div>
                                     <div class="card-footer">
-                                        <a href="#" class="text-info"><i class="fa fa-star"></i> View</a>
+                                        <a href="{% url 'Members_Share_Account_Details' member.pk %}" class="text-info"><i class="fa fa-star"></i> View</a>
+
+                                        | <a href="{% url 'Members_Share_Purchase_Request_View' member.pk %}" class="text-info"><i class="fa fa-star"></i> Request</a>
+                                          | <a href="{% url 'Members_Share_Purchase_Request_Process_View' member.pk %}" class="text-info"><i class="fa fa-star"></i> Process Request</a>
 
                                         | <a href="{% url 'Cash_Deposit_Shares_Preview' share_code.pk %}" class="text-info"><i class="fa fa-star"></i> Cash Deposit</a>
                                       

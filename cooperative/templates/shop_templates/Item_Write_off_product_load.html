@@ -49,7 +49,12 @@
                                         <td>{{forloop.counter}}</td>
                                         <td>{{stock.code}}</td>
                                         <td>{{stock.item_name}}</td>
-                                        <td>{{stock.details}}</td>
+                                        <td>
+
+                                        {% if not stock.details == 'NONE' and not stock.details == 'None' %}
+                                         {{stock.details}}
+                                        {% endif %}
+                                    </td>
                                         <td>
                                         
                                                {{stock.quantity}} 

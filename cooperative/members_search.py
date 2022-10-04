@@ -1,6 +1,6 @@
 from .models import *
 from django.db.models import Q
-
+from django.http import HttpResponse, HttpResponseRedirect
 
 def generalMemberSearch(frm,status):
 	records=Members.objects.filter(Q(phone_number__icontains=frm) | Q(file_no__icontains=frm) | Q(ippis_no__icontains=frm)  | Q(admin__first_name__icontains=frm) | Q(admin__last_name__icontains=frm) | Q(middle_name__icontains=frm)).filter(status=status)
@@ -14,8 +14,9 @@ def searchMembersForShopDeduction(frm,status,salary_pk):
 
 	return records
 
+
 def searchMembers(frm,status):
-	records=Members.objects.filter(Q(coop_no__icontains=frm) | Q(ippis_no__icontains=frm)  | Q(admin__first_name__icontains=frm) | Q(admin__last_name__icontains=frm) | Q(middle_name__icontains=frm)).filter(status=status).order_by('coop_no')
+	records=Members.objects.filter(Q(coop_no__icontains=frm) | Q(admin__first_name__icontains=frm) | Q(admin__last_name__icontains=frm) | Q(middle_name__icontains=frm)).filter(status=status).order_by('coop_no')
 
 	return records
 

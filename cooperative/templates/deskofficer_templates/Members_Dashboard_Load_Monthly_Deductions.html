@@ -54,22 +54,22 @@
                                 </tr>
                             </thead>
                             <tbody>
-                               {% for record in records %}
+                               {% for record in record_array %}
                                     <tr>
                                         <td>{{forloop.counter}}</td>
                                    
-                                        <td>{{record.transaction.name}}</td>
-                                        <td>{{record.account_number}}</td>
-                                        <td>{{record.amount}}</td>
-                                        <td>{{record.amount_deducted}}</td>
+                                        <td>{{record.0}}</td>
+                                        <td>{{record.1}}</td>
+                                        <td>{{record.2}}</td>
+                                        <td>{{record.3}}</td>
                                        
                            
                                     </tr>
                                 {% endfor %}
                                 <tr>
                                     <td colspan="3"> TOTAL</td>
-                                    <td>{{generated_amount}}</td>
-                                    <td>{{total_deduction}}</td>
+                                    <td>{{total_generated}}</td>
+                                    <td>{{total_deducted}}</td>
                                    
                                 </tr>
                             </tbody>

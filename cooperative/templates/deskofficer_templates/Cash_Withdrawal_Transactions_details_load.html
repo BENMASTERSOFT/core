@@ -1,0 +1,141 @@
+{% extends 'deskofficer_templates/base_template.html' %}
+{% load static %}
+
+{% block content %}
+            <div class="page-content fade-in-up">
+                
+                <div class="row">
+                    <div class="col-md-10">
+                        <div class="ibox">
+                            <div class="ibox-head">
+                                <div class="ibox-title">Savings Transaction Posting to Ledger</div>
+                            </div>
+                            <div class="form-group">
+                                  {% if messages %}
+                                    
+                                      {% for message in messages %}
+                                      {% if message.tags == "error" %}
+                                      <div class="alert alert-danger" style="margin-top:10px">{{message}}</div>
+                                      
+                                      {% endif %}
+
+                                      {% if message.tags == "success" %}
+                                      <div class="alert alert-success" style="margin-top:10px">{{message}}</div>
+                                      
+                                      {% endif %}
+                                       {% if message.info == "info" %}
+                                      <div class="alert alert-success" style="margin-top:10px">{{message}}</div>
+                                      
+                                      {% endif %}
+                                      {% endfor %}
+                                  
+                                  {% endif %}
+                              </div>
+                            <div class="ibox-body">
+                                 <form class="form-horizontal" method="POST" action="" enctype="multipart/form-data" novalidate>
+                                         {% csrf_token %}
+                                    <div class="form-group row">
+                                        <label class="col-sm-4 col-form-label">Transaction</label>
+                                        <div class="col-sm-8">
+                                            {{form.transaction}}
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-sm-4 col-form-label">Account Number</label>
+                                        <div class="col-sm-8">
+                                            {{form.account_number}}
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-sm-4 col-form-label">Application Balance</label>
+                                        <div class="col-sm-8">
+                                            {{form.balance_exist}}
+                                        </div>
+                                    </div>  
+                                                                  
+                                    <div class="form-group row">
+                                        <label class="col-sm-4 col-form-label">Current Legder Balance</label>
+                                        <div class="col-sm-8">
+                                            {{form.balance_amount}}
+                                        </div>
+                                    </div>   
+                                    <div class="form-group row">
+                                        <label class="col-sm-4 col-form-label">Amount Applied</label>
+                                        <div class="col-sm-8">
+                                            {{form.applied_amount}}
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-sm-4 col-form-label">Amount to Withdraw</label>
+                                        <div class="col-sm-8">
+                                            {{form.withdrawal_amount}}
+                                        </div>
+                                    </div>    
+                                    <div class="form-group row">
+                                        <label class="col-sm-4 col-form-label">Payment Channel</label>
+                                        <div class="col-sm-8">
+                                            {{form.channel}}
+                                        </div>
+                                    </div>   
+
+                                    <div class="form-group row">
+                                        <label class="col-sm-4 col-form-label">Cooperative Account</label>
+                                        <div class="col-sm-8">
+                                            <label class="ui-checkbox">
+                                            <input type="checkbox" name='chk-coop-account'>
+                                            <span class="input-span"></span>Add Cooperative Account</label>
+                                            {{form.account}}
+                                        </div>
+                                    </div>  
+                                     
+                                    <div class="form-group row">
+
+                                        <label class="col-sm-4 col-form-label">Members Account</label>
+                                        <div class="col-sm-8">
+                                            <label class="ui-checkbox">
+                                            <input type="checkbox" name='chk-member-account'>
+                                            <span class="input-span"></span>Add Member Account | <a href="{% url 'Members_Bank_Accounts' member.member.member.pk %}">Upload Account</a></label>
+                                            <select class="form-control" name="member_account">
+                                              {% for account in accounts %}
+                                                <option value={{account.id }}> {{account.account_name}} ({{account.account_number}}={{account.bank.title}}) </option>
+                                              {% endfor %}
+                                            </select>
+                                        </div>
+                                    </div> 
+                                    <div class="form-group row">
+                                        <label class="col-sm-4 col-form-label">Cheque No</label>
+                                        <div class="col-sm-8">
+                                            <label class="ui-checkbox">
+                                            <input type="checkbox" name='chk-cheque'>
+                                            <span class="input-span"></span>Add Cheque Number></label>
+                                            {{form.cheque_number}}
+                                        </div>
+                                    </div> 
+                                 
+                                    <div class="form-group row">
+                                        <label class="col-sm-4 col-form-label">Payment Date</label>
+                                        <div class="col-sm-8">
+                                            {{form.period}}
+                                        </div>
+                                    </div> 
+                                 
+                                    
+                                    <div class="form-group row">
+                                        <div class="col-sm-8 ml-sm-auto">
+                                            <button class="btn btn-info" type="submit">Submit</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+
+
+    <div class="sidenav-backdrop backdrop"></div>
+    <div class="preloader-backdrop">
+        <div class="page-preloader">Loading</div>
+    </div>
+{% endblock %}

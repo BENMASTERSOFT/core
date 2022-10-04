@@ -1,0 +1,130 @@
+{% extends 'deskofficer_templates/base_template.html' %}
+{% load static %}
+
+{% block content %}
+            <div class="page-content fade-in-up">
+                
+                <div class="row">
+                   
+                    <div class="col-md-10">
+                        <div class="ibox">
+                            <div class="ibox-head">
+                                <div class="ibox-title">Loan Approved Amount Upgrate | {{applicant.member.get_full_name}} | {{applicant.member.coop_no}} | <a href="{% url 'loan_application_approved_transaction_period_load' %}">Back</a></div>
+                                
+                            </div>
+                             <div class="form-group">
+                              {% if messages %}
+                                
+                                  {% for message in messages %}
+                                  {% if message.tags == "error" %}
+                                  <div class="alert alert-danger" style="margin-top:10px">{{message}}</div>
+                                  
+                                  {% endif %}
+
+                                  {% if message.tags == "success" %}
+                                  <div class="alert alert-success" style="margin-top:10px">{{message}}</div>
+                                  
+                                  {% endif %}
+                                  {% endfor %}
+                              
+                              {% endif %}
+                          </div>
+                            <div class="ibox-body">
+                                <form class="form-horizontal" method="POST" action="" enctype="multipart/form-data" novalidate>
+                                    {% csrf_token %}
+                                    <div class="form-group row">
+                                        <label class="col-sm-5 col-form-label">Previously Approved Amount</label>
+                                        <div class="col-sm-7">
+                                            {{form.loan_amount}}
+                                        </div>
+                                    </div>    
+                                    <div class="form-group row">
+                                        <label class="col-sm-5 col-form-label">Previously Saved Amount</label>
+                                        <div class="col-sm-7">
+                                            {{form.prev_amount_saved}}
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-sm-5 col-form-label">Currently Approved Amount</label>
+                                        <div class="col-sm-7">
+                                            {{form.loan_new_amount}}
+                                            <p style="color:blue;">Please be aware that this figure is not passing through any criteria checks, any figure entered will be taken as the Loan Amount</p>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-sm-5 col-form-label">Currently Amount Saved</label>
+                                        <div class="col-sm-7">
+                                            {{form.new_amount_saved}}
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-sm-5 col-form-label">Reasons</label>
+                                        <div class="col-sm-7">
+                                            {{form.comment}}
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="form-group row">
+                                        <div class="col-sm-7 ml-sm-auto">
+                                            <button class="btn btn-info" type="submit">Submit</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                   
+                    <div class="col-xl-10">
+                        <div class="ibox">
+                            <div class="ibox-head">
+                                <div class="ibox-title">Active Apploication</div>
+                            </div>
+                            <div class="ibox-body">
+                                <table class="table table-bordered">
+                                    <thead class="thead-default">
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Existing Loan Amount</th>
+                                            <th>Existing Savings</th>
+                                            <th>New Loan Amount</th>
+                                            <th>New Savings</th>
+                                            <th>Comment</th>
+                                            <th>Status</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for record in records %}
+                                        <tr>
+                                            <td>{{forloop.counter}}</td>
+                                            <td>{{record.existing_amount}}</td>
+                                            <td>{{record.prev_amount_saved}}</td>
+                                            <td>{{record.new_amount}}</td>
+                                            <td>{{record.new_amount_saved}}</td>
+                                            <td>{{record.reasons}}</td>
+                                            <td>{{record.approval_status}}</td>
+                                            <td>
+                                                {% if record.approval_status == 'PENDING' %}
+                                                <a href="{% url 'loan_application_Amount_Upgrade_drop' record.pk %}" class="btn btn-danger">Drop</a></td>
+                                                {% endif %}
+                                          
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+
+
+    <div class="sidenav-backdrop backdrop"></div>
+    <div class="preloader-backdrop">
+        <div class="page-preloader">Loading</div>
+    </div>
+{% endblock %}

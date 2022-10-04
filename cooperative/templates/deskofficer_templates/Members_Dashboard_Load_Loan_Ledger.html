@@ -22,7 +22,8 @@
                                             <th>Balance</th>
                                             <th>Repayment</th>
                                             <th>Start Date</th>
-                                            <th>Action</th>
+                                            <th></th>
+                                            <th></th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -38,7 +39,8 @@
                                                 <td>{{loan.repayment}}
                                                 </td>
                                                 <td>{{loan.start_date}}</td>
-                                                <td><a href="{% url 'Members_Dashboard_Loan_Ledger_transaction_details' loan.loan_number member.pk %}" class="btn btn-primary">View</a></td>
+                                                <td><a href="{% url 'Members_Dashboard_Loan_Ledger_transaction_details' loan.loan_number member.pk %}" class="btn btn-primary">View</a></td> 
+                                                <td><a href="{% url 'Members_Dashboard_Loan_Deduction_Generate_Period' loan.pk %}" class="btn btn-success">Generate Deductions</a></td>
                                          
                                             </tr>
                                         {% endfor %}

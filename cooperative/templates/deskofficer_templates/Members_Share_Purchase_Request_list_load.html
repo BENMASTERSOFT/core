@@ -36,9 +36,7 @@
                                     <th>#</th>
                                      <th>Member ID</th> 
                                     <th>Name</th>
-                                    <th>Account Number</th>
-                                 
-                                    <th>Shares</th>
+                                  
                                     <th>Action</th>
                                  
                                 </tr>
@@ -48,9 +46,7 @@
                                     <th>#</th>
                                      <th>Member ID</th> 
                                     <th>Name</th>
-                                    <th>Account Number</th>
-                                  
-                                    <th>Shares</th>
+                                   
                                     <th>Action</th>
                                 </tr>
                             </tfoot>
@@ -58,10 +54,9 @@
                             {% for member in members %}
                                 <tr>
                                     <td>{{forloop.counter}}</td>
-                                    <td>{{member.member.member.get_member_Id}}</td>
-                                    <td>{{member.member.member.admin.get_full_name}} </td>
-                                    <td>{{member.member.account_number}} </td>
-                                    <td>{{member.shares}}</td>
+                                    <td>{{member.coop_no}}</td>
+                                    <td>{{member.get_full_name}} </td>
+                                   
                                     <td>
                                         <a href="{% url 'Members_Share_Purchase_Request_View' member.pk %}" class="btn btn-success">Request</a>
                                         

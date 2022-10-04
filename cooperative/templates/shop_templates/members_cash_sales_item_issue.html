@@ -4,10 +4,10 @@
 {% block content %}
             <div class="page-content fade-in-up">
                 <div class="row">
-                    <div class="col-md-6">
+                    <div class="col-md-8">
                         <div class="ibox">
                             <div class="ibox-head">
-                                <div class="ibox-title">ITEM SELECTION |  {{member.get_full_name}} | | <input type="button" class="btn btn-secondary" value="Back" onclick="history.back()"/></div>
+                                <div class="ibox-title">ITEM SELECTION |  {{member.get_full_name}} | {{member.coop_no}} | <input type="button" class="btn btn-secondary" value="Back" onclick="history.back()"/></div>
                                 
                             </div>
                               <div class="form-group">
@@ -63,9 +63,29 @@
                                    
                                     <div class="form-group row">
                                         <div class="col-sm-8 ml-sm-auto">
-                                            <button class="btn btn-info" type="submit">Select</button>
+                                            <button class="btn btn-info" type="submit" name="btn_display">Select</button>
                                         </div>
                                     </div>
+                                {% if button_show == 'True' %}
+                                    <div class="form-group row">
+                                        <label class="col-sm-4 col-form-label">Total Amount</label>
+                                        <div class="col-sm-8">
+                                             {{form.total_amount}}
+                                        </div>
+                                    </div> 
+                                    <div class="form-group row">
+                                        <label class="col-sm-4 col-form-label">Amount Paid</label>
+                                        <div class="col-sm-8">
+                                            {{form.amount_paid}}
+                                        </div>
+                                    </div>
+                                   
+                                    <div class="form-group row">
+                                        <div class="col-sm-8 ml-sm-auto">
+                                            <button class="btn btn-success" type="submit" name="btn_process">Select</button>
+                                        </div>
+                                    </div>
+                                {% endif %}
                                 </form>
                             </div>
                         </div>

@@ -7322,6 +7322,75 @@ def emergency_loan_application_approval_details(request,pk):
 
 
 
+def Loan_application_upgrade_approval_list_load(request):
+    task_array=[]
+    if not request.user.user_type == '1':
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
+
+    records=LoanApprovedAmountUpgrade.objects.filter(approval_status='PENDING')
+
+   
+    context={
+    'task_array':task_array,
+    'records':records,
+    }
+    return render(request,'master_templates/Loan_application_upgrade_approval_list_load.html',context)
+
+
+def Loan_application_upgrade_approved(request,pk):
+    task_array=[]
+    if not request.user.user_type == '1':
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
+
+    form=loan_application_processing_form(request.POST or None)
+    record=LoanApprovedAmountUpgrade.objects.get(id=pk)
+    member=record.applicant.member
+
+    tdate=get_current_date(now)
+    processed_by=CustomUser.objects.get(id=request.user.id)
+    processed_by=processed_by.username
+
+    if request.method == 'POST':
+        loan_new_amount=request.POST.get('loan_new_amount')
+        if not loan_new_amount or float(loan_new_amount)<=0:
+            messages.error(request,'Approved Amount missing')
+            return HttpResponseRedirect(reverse('Loan_application_upgrade_approved',args=(pk,)))
+
+
+        if LoanFormIssuance.objects.filter(member=member).exists():
+            queryset=LoanFormIssuance.objects.filter(member=member).first()
+            queryset.loan_amount=loan_new_amount
+            queryset.amount_saved=record.new_amount_saved
+            queryset.save()
+
+            record.approved_amount=loan_new_amount
+            record.date_approved=tdate
+            record.approval_officer=processed_by
+            record.approval_status='APPROVED'
+            record.save()
+
+        return HttpResponseRedirect(reverse('Loan_application_upgrade_approval_list_load'))
+
+    # return HttpResponseRedirect(reverse('Loan_application_approval_List_load',args=(loan_id,)))
+    form.fields['loan_amount'].initial=record.new_amount
+    form.fields['loan_new_amount'].initial=record.new_amount
+    context={
+
+    'form':form,
+    'task_array':task_array,
+
+    }
+    return render(request,'master_templates/Loan_application_upgrade_approved.html',context)
+
+
+   
+
+
+
 def Loan_application_approval_period_load(request):
     task_array=[]
     if not request.user.user_type == '1':
@@ -7827,10 +7896,46 @@ def Cash_Withdrawal_Request_Approval_Processing(request,pk):
         for task in tasks:
             task_array.append(task.task.title)
 
-
+    form=Cash_Withdrawal_Request_Approval_Processing_form(request.POST or None)
     record=MembersCashWithdrawalsApplication.objects.get(id=pk)
+    
+    processed_by=CustomUser.objects.get(id=request.user.id)
+    processed_by=processed_by.username
 
+    tdate=get_current_date(now)
+    if request.method == 'POST':
+        approved_amount=request.POST.get('approved_amount')
+        if approved_amount:
+            if float(approved_amount)>float(record.ledger_balance) or float(approved_amount)<=0:
+                return HttpResponse("Invalid Amount Specification")
+        
+
+        comment=request.POST.get('comment')
+
+        approval_status=request.POST.get('approval_status')
+        approved_date_id=request.POST.get("approval_date")
+        date_format = '%Y-%m-%d'
+        approved_date = datetime.datetime.strptime(approved_date_id, date_format)
+       
+        record.approval_comment=comment
+        record.approved_amount=approved_amount
+        record.approval_status=approval_status
+        record.approved_date=approved_date
+        record.approval_officer=processed_by
+        record.tdate=tdate
+        record.save()
+        return HttpResponseRedirect(reverse('Cash_Withdrawal_Request_Approval_List_Load'))
+
+    form.fields['approval_date'].initial=get_current_date(now)
+    form.fields['narration'].initial=record.narration
+    form.fields['ledger_balance'].initial=record.ledger_balance
+    form.fields['applied_amount'].initial=record.amount
+    form.fields['approved_amount'].initial=record.amount
+    form.fields['approval_status'].initial="APPROVED"
+    form.fields['comment'].initial="Please Process"
+ 
     context={
+     'form':form,
      'record':record,
      'task_array':task_array,
     }
@@ -8287,3 +8392,169 @@ def List_of_Users(request):
     'records':records,
     }
     return render(request,'master_templates/List_of_Users.html',context)
+
+
+
+def Auction_Price_Update_Request_Aproval(request):
+    task_array=[]
+    if not request.user.user_type == '1':
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
+    
+
+    records=Stock_Auction_Price_Update_Request.objects.filter(status='UNTREATED',approval_status='PENDING')
+   
+    context={
+    'task_array':task_array,
+    'records':records,
+    }
+    return render(request,'master_templates/Auction_Price_Update_Request_Aproval.html',context)
+
+
+def Auction_Price_Update_Request_Aproval_Processed(request,pk):
+    processed_by=CustomUser.objects.get(id=request.user.id)
+    processed_by=processed_by.username
+
+
+    record=Stock_Auction_Price_Update_Request.objects.get(id=pk)
+    record.stock.unit_selling_price=record.new_price
+    record.stock.save()
+
+    record.approval_officer=processed_by
+    record.approval_status='APPROVED'
+    record.approval_comment='APPROVED'
+    record.approved_date=get_current_date(now)
+    record.status='TREATED'
+    record.save()
+    return HttpResponseRedirect(reverse('Auction_Price_Update_Request_Aproval'))
+
+
+
+def Item_Write_off_Approval(request):
+    task_array=[]
+    if not request.user.user_type == '1':
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
+   
+    status='UNTREATED'
+    approval_status='PENDING'
+    records =ItemWriteOffTemp.objects.filter(approval_status=approval_status,status=status)
+
+    context={
+    'task_array':task_array,
+    'records':records,
+    }
+    return render(request,'master_templates/Item_Write_off_Approval.html',context)
+
+
+def Item_Write_off_Approval_Preview(request,pk):
+    task_array=[]
+    if not request.user.user_type == '1':
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
+    
+    form = Item_Write_off_Approval_form(request.POST or None)
+    item = ItemWriteOffTemp.objects.get(id=pk)
+
+    if request.method =='POST':
+        item.approval_status="APPROVED"
+        item.save()
+        return HttpResponseRedirect(reverse('Item_Write_off_Approval'))
+    
+
+
+    form.fields['code'].initial = item.product.code
+    form.fields['item_name'].initial = item.product.item_name
+    form.fields['quantity'].initial = item.quantity
+    form.fields['reasons'].initial = item.reason.title
+    form.fields['details'].initial = item.details
+
+    context={
+    'task_array':task_array,
+    'form':form,
+    }
+    return render(request,'master_templates/Item_Write_off_Approval_Preview.html',context)
+
+
+def Item_Auction_Approval(request):
+    task_array=[]
+    if not request.user.user_type == '1':
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
+   
+    status='UNTREATED'
+    approval_status='PENDING'
+    records =Stock_Auction_Request.objects.filter(approval_status=approval_status,status=status)
+
+    context={
+    'task_array':task_array,
+    'records':records,
+
+    }
+    return render(request,'master_templates/Item_Auction_Approval.html',context)
+
+
+def Item_Auction_Approval_Preview(request,pk):
+    task_array=[]
+    if not request.user.user_type == '1':
+        tasks=System_Users_Tasks_Model.objects.filter(user=request.user)
+        for task in tasks:
+            task_array.append(task.task.title)
+    
+
+    form = Item_Write_off_Approval_form(request.POST or None)
+    item = Stock_Auction_Request.objects.get(id=pk)
+
+
+    if request.method =='POST':
+        processed_by=CustomUser.objects.get(id=request.user.id)
+        processed_by=processed_by.username
+        tdate=get_current_date(now)
+
+        if Stock_Auction.objects.filter(stock=item.stock).exists():
+            record_exist=Stock_Auction.objects.filter(stock=item.stock).first()
+            if int(record_exist.quantity)>0:
+                record_exist.quantity=int(record_exist.quantity)+int(item.quantity)
+                record_exist.expiry_date2=item.new_expiry_date
+                record_exist.unit_selling_price=item.unit_selling_price
+                record_exist.processed_by=processed_by
+            else:
+                record_exist.quantity=quantity
+                record_exist.expiry_date=item.stock.expiring_date
+                record_exist.expiry_date2=item.new_expiry_date
+                record_exist.unit_selling_price=item.unit_selling_price
+                record_exist.processed_by=processed_by
+            record_exist.save()
+         
+        else:
+            Stock_Auction(stock=item.stock,quantity=item.quantity,expiry_date=item.stock.expiring_date,expiry_date2=item.new_expiry_date,unit_selling_price=item.unit_selling_price,tdate=tdate,processed_by=processed_by).save()
+        
+   # return HttpResponse("USHSHSHSH")     
+        
+        item.stock.expiring_date=item.new_expiry_date
+        item.stock.quantity=int(item.stock.quantity)-int(item.quantity)
+        item.stock.save()
+
+        
+        item.approval_status="APPROVED"
+        item.status="TREATED"
+        item.save()
+        return HttpResponseRedirect(reverse('Item_Auction_Approval'))
+    
+    form.fields['code'].initial = item.stock.code
+    form.fields['item_name'].initial = item.stock.item_name
+    form.fields['quantity'].initial = item.quantity
+    form.fields['reasons'].initial = item.comment
+    form.fields['details'].initial = item.stock.details
+
+
+    context={
+    'task_array':task_array,
+    'form':form,
+    }
+    return render(request,'master_templates/Item_Auction_Approval_Preview.html',context)
+

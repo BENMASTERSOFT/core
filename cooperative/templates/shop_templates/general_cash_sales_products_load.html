@@ -34,7 +34,8 @@
                                             <th>Unit Prices</th>
                                             <th>No in Pack</th>
                                          
-                                            <th>Action</th>
+                                            <th></th>
+                                            <th></th>
                                         </tr>
                                     </thead>
                                     <tfoot>
@@ -47,7 +48,8 @@
                                             <th>Unit Prices</th>
                                             <th>No in Pack</th>
                                      
-                                            <th>Action</th>
+                                            <th></th>
+                                            <th></th>
                                         </tr>
                                     </tfoot>
                                     <tbody>
@@ -56,15 +58,23 @@
                                             <td>{{forloop.counter}}</td>
                                             <td>{{item.code}}</td>
                                            <td>{{item.item_name}}</td>
-                                           <td>{{item.details}}</td>
+                                           <td>
+                                            {% if not item.details == 'NONE' and not item.details == 'None' %}
+                                           {{item.details}}
+                                           {% endif %}
+
+                                        </td>
+                                           
                                             <td>{{item.quantity}}</td>
                                              <td>{{item.unit_selling_price}}</td>
                                             <td>{{item.no_in_pack}}</td>
                                          
                                             <td>
-                                                   {% if item.quantity   or item.unit_selling_price  %}                                                   
-                                                  <a href="{% url 'general_cash_issue_item' item.pk customer.pk %}" class="btn btn-success btn-xs m-r-5">Normal</a>
+                                                {% if item.quantity   or item.unit_selling_price  %}                                                   
+                                                  <a href="{% url 'general_cash_issue_item' item.pk customer.pk 0 'False' 1 %}" class="btn btn-success btn-xs m-r-5">Normal</a>
                                                 {% endif %}
+                                            </td>
+                                            <td>
                                                   <a href="{% url 'general_cash_issue_auction_item' item.code customer.pk ticket %}" class="btn btn-primary btn-xs m-r-5">Auction</a>
                                             
                                             </td>
@@ -97,6 +107,8 @@
                                     <th>Quantity</th>
                                     <th>Unit Prices</th>
                                     <th>Total Amount</th>                        
+                                    <th>Discount</th>                        
+                                    <th>Total</th>                        
                                     <th>Sources</th>                        
                                     <th>Action</th>
                                 </tr>
@@ -110,6 +122,8 @@
                                     <td>{{select_item.product.item_name}}</td>
                                     <td>{{select_item.quantity}}</td>
                                     <td>{{select_item.unit_selling_price}}</td>
+                                    <td>{{select_item.total_amount}}</td>
+                                    <td>{{select_item.discount}}</td>
                                     <td>{{select_item.total}}</td>
                                     <td>{{select_item.sources}}</td>
                             
@@ -186,7 +200,7 @@
                                <div class="form-group row">
                                     <div class="col-sm-9 ml-sm-auto">
                                         <label class="ui-checkbox ui-checkbox-gray">
-                                            <input type="checkbox" name='cash_only'>
+                                            <input type="checkbox" name='cash_only' checked>
                                             <span class="input-span"></span>Cash Only</label>
                                     </div>
                                 </div>

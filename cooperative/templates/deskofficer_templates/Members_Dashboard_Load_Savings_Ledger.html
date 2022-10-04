@@ -31,12 +31,15 @@
                                            
                                             <td><a href="{% url 'membership_dashboard_transaction_details' item.1 %}" class="btn btn-primary">View</a></td> 
                                             <td>
+                                            {% if enable_savings == True %}
+                                                <a href="{% url 'Members_Savings_Fund_Transfer_Routes' item.1 %}" class="btn btn-success">Transfer</a>
+                                            {% else %}
                                                 {% if item.3 == 'YES' %}
                                                 <a href="{% url 'Members_Savings_Fund_Transfer_Routes' item.1 %}" class="btn btn-success">Transfer</a>
                                                 {% else %}
-                                                    Transfer Not Allowed
+                                                    Transfer Not Allowed 
                                                 {% endif %}
-
+                                            {% endif %}
                                             </td>
                                                 
                                          

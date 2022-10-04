@@ -19,7 +19,9 @@
                                             <th>Amount Generated</th>
                                             <th>Amount Deducted</th>
                                             <th>Difference</th>
-                                            <th>Ledger Details</th>
+                                            <th>Ledger</th>
+                                            <th>Update</th>
+                                            <th>Delete</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -39,6 +41,8 @@
                                             {% endif %}
 
                                             </td>
+                                        <td> <a href="" class="btn btn-primary">Update</a></td>
+                                        <td> <a href="{% url 'Monthly_Deductions_Transaction_Summary_Detail_Branch_Details_Delete' record.pk salary_institution.pk transaction_period member.pk %}" class="btn btn-danger">Delete</a></td>
                                       
                                         </tr>
                                     {% endfor %}

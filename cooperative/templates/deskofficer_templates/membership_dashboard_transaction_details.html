@@ -51,6 +51,8 @@
                                             <th>Balance</th>
                                             <th>Date</th>
                                             <th>Processed By</th>
+                                            <th>Pk</th>
+                                            <th>Action</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -70,6 +72,13 @@
                                             </td>
                                             <td>{{record.transaction_period}}</td>
                                             <td>{{record.processed_by}}</td>
+                                            <td>{{record.pk}}</td>
+                                            
+                                            <td>
+                                                {% comment %} {% endcomment %}
+                                                <a href="{% url 'membership_dashboard_transaction_details_delete' record.pk %}" class="btn btn-danger">Drop</a>
+                                             
+                                            </td>
                                          
                                         </tr>
                                     {% endfor %}

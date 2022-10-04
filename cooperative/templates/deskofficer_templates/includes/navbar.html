@@ -25,10 +25,10 @@
                     <a href="{% url 'membership_request' %}" style="color:yellow;">Membership Request</a>
                 </li> 
                 <li>
-                    <a href="{% url 'membership_form_sales_Search' %}" style="color:yellow;">Membership Form Sales</a>
+                    <a href="{% url 'membership_form_sales_list_load' %}" style="color:yellow;">Membership Form Sales</a>
                 </li> 
                 <li>
-                    <a href="{% url 'membership_registration_applicant_search' %}" style="color:yellow;">Membership Registration</a>
+                    <a href="{% url 'membership_registration_applicant_list_load' %}" style="color:yellow;">Membership Registration</a>
                 </li> 
                  <li>
                     <a href="{% url 'Transaction_adjustment_search' %}" style="color:yellow;">Standing Order Adjustment</a>
@@ -245,7 +245,7 @@
                                 <a href="{% url 'Cash_Withdrawal_Transactions_All_Uncleared_list_Load' %}" style="color:lightyellow;">All Uncleared Request</a>
                             </li>
                            <li>
-                                <a href="{% url 'Cash_Withdrawal_Transactions_Approved_list_Search' %}" style="color:lightyellow;">Approved Withrawal Request</a>
+                                <a href="{% url 'Cash_Withdrawal_Transactions_Approved_list_Load' %}" style="color:lightyellow;">Approved Withrawal Request</a>
                             </li>
 
                         </ul>
@@ -298,7 +298,7 @@
                         </ul>
                     </li>
                 {% endif %}
-                {% if 'SHARE MANAGEMENT'  in task_array and 'INITIAL SHARES MANAGER' in task_enabler_array %}
+                {% if 'SHARE MANAGEMENT'  in task_array and 'INITIAL SHARES MANAGER' in task_enabler_array %}  {% endif %}
                     <li>
                         <a href="javascript:;"><i class="sidebar-item-icon fa fa-sitemap"></i>
                             <span class="nav-label">Shares Manager</span><i class="fa fa-angle-left arrow"></i></a>
@@ -337,7 +337,7 @@
 
                         </ul>
                     </li>
-                {% endif %}
+               
 
 
                 {% if 'NEXT OF KIN'  in task_array %}
@@ -505,10 +505,10 @@
                                     <li>
                                         <a href="{% url 'Monthly_Auxillary_Deduction_Generated_Export_Institution_Load' %}" style="color:lightyellow;">Export Auxillary Transaction</a>
                                     </li> 
-                                    {% comment %}
+                                   
                                     <li>
                                         <a href="{% url 'Monthly_Auxillary_Deduction_Rectification_Reset' %}" style="color:lightyellow;">Reset Auxillary Transaction</a>
-                                    </li>{% endcomment %}
+                                    </li>
                                     
 
                                 </ul>
@@ -529,10 +529,10 @@
                             <span class="nav-label">Ledger Multi Operations</span><i class="fa fa-angle-left arrow"></i></a>
                         <ul class="nav-2-level collapse">
                             <li>
-                                <a href="{% url 'Manual_Ledger_Posting_search' %}" style="color:lightyellow;">Manual Ledger Posting</a>
+                                <a href="{% url 'Manual_Ledger_Posting_search' %}" style="color:lightyellow;">Manual Ledger Credit Transaction</a>
                             </li> 
                            <li>
-                                <a href="{% url 'Manual_Ledger_Posting_Reverse_search' %}" style="color:lightyellow;">Transaction Reverse</a>
+                                <a href="{% url 'Manual_Ledger_Posting_Reverse_search' %}" style="color:lightyellow;">Manual Ledger Debit Transaction</a>
                             </li>
 
                         </ul>
@@ -661,9 +661,7 @@
                             <span class="nav-label">Members Termination</span><i class="fa fa-angle-left arrow"></i></a>
                         <ul class="nav-2-level collapse">
 
-                            <li>
-                                <a href="{% url 'membership_termination_search' %}" style="color:lightyellow;">Termination Request</a>
-                            </li>
+                           
                              <li>
                                 <a href="{% url 'membership_termination_approved_list_processing_list_load' %}" style="color:lightyellow;">Termination Processing</a>
                             </li>
@@ -844,6 +842,10 @@
                                     
                                     <li>
                                         <a href="{% url 'PersonalLedger_Selected_Search' %}" style="color:lightyellow;">Personal Ledger</a>
+                                    </li>
+  
+                                    <li>
+                                        <a href="{% url 'MembersShare_Reports_list_Load' %}" style="color:lightyellow;">Shares Report</a>
                                     </li>
 
 
@@ -1031,13 +1033,31 @@
                                    
                                 </ul>
                             </li>
+                          <li>
+                                <a href="javascript:;">
+                                    <span class="nav-label">Members Shares</span><i class="fa fa-angle-left arrow"></i></a>
+                                <ul class="nav-3-level collapse">
+                                    <li>
+                                       <a href="{% url 'Members_Shares_Upload_Search' %}" style="color:lightyellow;">Uploading Individual Shares</a>
+                                    </li>
+                                    <li>
+                                       <a href="{% url 'Members_Shares_Upload_All_list_load' %}" style="color:lightyellow;">Uploading Gruop Shares</a>
+                                    </li>
+                                    
+                                    <li>
+                                       <a href="{% url 'Members_Shares_Upload_Reverse_All_list_load' %}" style="color:lightyellow;">All Shares Upload</a>
+                                    </li> 
+                                    <li>
+                                       <a href="{% url 'Members_Shares_Upload_Reverse_Search' %}" style="color:lightyellow;">Reverse Shares Upload</a>
+                                    </li>
+                                   
+                                </ul>
+                            </li>
+
                            <li>
                                <a href="{% url 'Members_Ledger_Balance_Update_Search' %}" style="color:lightyellow;">Updating Ledger Balance</a>
                             </li>
-                            <li>
-                               <a href="{% url 'Members_Shares_Upload_Search' %}" style="color:lightyellow;">Uploading Shares</a>
-                            </li>
-
+                          
                             <li>
                                <a href="{% url 'Members_Welfare_Upload_Search' %}" style="color:lightyellow;">Uploading Welfare</a>
                             </li>

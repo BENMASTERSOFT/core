@@ -8,6 +8,7 @@
 
       
             <div class="page-content fade-in-up">
+
                 <div class="ibox">
                     <div class="ibox-head">
                       <div class="ibox-title">STOCK STATUS|<a href="{% url 'GeneratePdf' %}" class="btn btn-primary">Print PDF</a> </div>
@@ -20,7 +21,9 @@
                                     <th>Code</th>
                                     <th>Item Name</th>
                                     <th>Quantity</th>
+                                    <th>Unit Price</th>
                                     <th>Expiry Date</th>
+                                    <th>Action</th>
                                     
                                 </tr>
                             </thead>
@@ -30,7 +33,9 @@
                                     <th>Code</th>
                                     <th>Item Name</th>
                                     <th>Quantity</th>
+                                    <th>Unit Price</th>
                                     <th>Expiry Date</th>
+                                    <th>Action</th>
                                     
                                 </tr>
                             </tfoot>
@@ -41,8 +46,9 @@
                                     <td>{{record.stock.code}}</td>
                                     <td>{{record.stock.item_name}}</td>
                                     <td>{{record.quantity}}</td>
+                                    <td>{{record.unit_selling_price}}</td>
                                     <td>{{record.expiry_date}}</td>
-                                    
+                                    <td><a href="{% url 'All_Auction_Stock_Update_Request' record.pk %}" class="btn btn-primary">Update Request</a></td>
                                 </tr>
                                    {% endfor %} 
                                
@@ -51,7 +57,45 @@
                         </table>
                     </div>
                 </div>
-               
+            
+                 <div class="row">
+                    <div class="col-xl-10">
+                        <div class="ibox">
+                            <div class="ibox-head">
+                                <div class="ibox-title">Product Awaiting Approval</div>
+                            </div>
+                            <div class="ibox-body">
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Code</th>
+                                            <th>Item Name</th>
+                                            <th>Prev. Proce</th>
+                                            <th>New Price</th>
+                                            <th>Date</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for item in queryset %}
+                                        <tr>
+                                            <td>{{forloop.counter}}</td>
+                                            <td>{{item.stock.stock.code}}</td>
+                                            <td>{{item.stock.stock.item_name}}</td>
+                                            <td>{{item.stock.unit_selling_price}}</td>
+                                            <td>{{item.new_price}}</td>
+                                            <td>{{item.tdate}}</td>
+                                            <td><a href="{% url 'All_Auction_Stock_Update_Request_Drop' item.pk %}">Drop</a></td>
+                                        
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
   
     
